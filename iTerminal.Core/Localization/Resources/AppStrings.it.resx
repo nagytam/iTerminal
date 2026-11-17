@@ -464,6 +464,189 @@
   <data name="Dialog.SystemInformation" xml:space="preserve">
     <value>Informazioni di sistema</value>
   </data>
+  <data name="SysInfo.Section.OperatingSystem" xml:space="preserve">
+    <value>Sistema operativo</value>
+  </data>
+  <data name="SysInfo.Section.Hardware" xml:space="preserve">
+    <value>Hardware</value>
+  </data>
+  <data name="SysInfo.Section.Cpu" xml:space="preserve">
+    <value>Processore</value>
+  </data>
+  <data name="SysInfo.Section.Memory" xml:space="preserve">
+    <value>Memoria</value>
+  </data>
+  <data name="SysInfo.Section.Gpu" xml:space="preserve">
+    <value>Grafica</value>
+  </data>
+  <data name="SysInfo.Section.Battery" xml:space="preserve">
+    <value>Batteria</value>
+  </data>
+  <data name="SysInfo.Section.Drives" xml:space="preserve">
+    <value>Unità</value>
+  </data>
+  <data name="SysInfo.Section.DiskIo" xml:space="preserve">
+    <value>I/O disco</value>
+  </data>
+  <data name="SysInfo.Section.NetworkIo" xml:space="preserve">
+    <value>I/O di rete</value>
+  </data>
+  <data name="SysInfo.Section.NetworkInterfaces" xml:space="preserve">
+    <value>Interfacce di rete</value>
+  </data>
+  <data name="SysInfo.Section.Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
+  <data name="SysInfo.Section.CurrentUser" xml:space="preserve">
+    <value>Utente corrente</value>
+  </data>
+  <data name="SysInfo.Section.Environment" xml:space="preserve">
+    <value>Variabili d'ambiente</value>
+  </data>
+  <data name="SysInfo.Label.MemoryUsed" xml:space="preserve">
+    <value>Memoria usata</value>
+  </data>
+  <data name="SysInfo.Label.OsDescription" xml:space="preserve">
+    <value>Descrizione del SO</value>
+  </data>
+  <data name="SysInfo.Label.Architecture" xml:space="preserve">
+    <value>Architettura del SO</value>
+  </data>
+  <data name="SysInfo.Label.Framework" xml:space="preserve">
+    <value>Framework</value>
+  </data>
+  <data name="SysInfo.Label.MachineName" xml:space="preserve">
+    <value>Nome computer</value>
+  </data>
+  <data name="SysInfo.Label.ProcessArch" xml:space="preserve">
+    <value>Architettura del processo</value>
+  </data>
+  <data name="SysInfo.Label.Process64Bit" xml:space="preserve">
+    <value>Processo a 64 bit</value>
+  </data>
+  <data name="SysInfo.Label.Model" xml:space="preserve">
+    <value>Modello</value>
+  </data>
+  <data name="SysInfo.Label.LogicalProcessors" xml:space="preserve">
+    <value>Processori logici</value>
+  </data>
+  <data name="SysInfo.Label.Load" xml:space="preserve">
+    <value>Carico</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalTotal" xml:space="preserve">
+    <value>Memoria fisica (totale)</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalAvailable" xml:space="preserve">
+    <value>Memoria disponibile</value>
+  </data>
+  <data name="SysInfo.Label.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="SysInfo.Label.Driver" xml:space="preserve">
+    <value>Driver</value>
+  </data>
+  <data name="SysInfo.Label.VideoMemory" xml:space="preserve">
+    <value>Memoria video</value>
+  </data>
+  <data name="SysInfo.Label.Status" xml:space="preserve">
+    <value>Stato</value>
+  </data>
+  <data name="SysInfo.Label.Percent" xml:space="preserve">
+    <value>Carica</value>
+  </data>
+  <data name="SysInfo.Label.Remaining" xml:space="preserve">
+    <value>Tempo rimanente</value>
+  </data>
+  <data name="SysInfo.Label.ToFull" xml:space="preserve">
+    <value>Tempo alla carica completa</value>
+  </data>
+  <data name="SysInfo.Label.Power" xml:space="preserve">
+    <value>Potenza</value>
+  </data>
+  <data name="SysInfo.Label.Health" xml:space="preserve">
+    <value>Stato di salute</value>
+  </data>
+  <data name="SysInfo.Label.Cycles" xml:space="preserve">
+    <value>Cicli di carica</value>
+  </data>
+  <data name="SysInfo.Label.Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="SysInfo.Label.Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="SysInfo.Label.RuntimeId" xml:space="preserve">
+    <value>ID runtime</value>
+  </data>
+  <data name="SysInfo.Label.ClrVersion" xml:space="preserve">
+    <value>Versione CLR</value>
+  </data>
+  <data name="SysInfo.Label.UserName" xml:space="preserve">
+    <value>Nome utente</value>
+  </data>
+  <data name="SysInfo.Label.Domain" xml:space="preserve">
+    <value>Dominio utente</value>
+  </data>
+  <data name="SysInfo.Label.Home" xml:space="preserve">
+    <value>Cartella personale</value>
+  </data>
+  <data name="SysInfo.Label.Total" xml:space="preserve">
+    <value>Totale</value>
+  </data>
+  <data name="SysInfo.Label.Used" xml:space="preserve">
+    <value>Usato</value>
+  </data>
+  <data name="SysInfo.Label.Free" xml:space="preserve">
+    <value>Libero</value>
+  </data>
+  <data name="SysInfo.Label.VolumeLabel" xml:space="preserve">
+    <value>Etichetta</value>
+  </data>
+  <data name="SysInfo.Battery.None" xml:space="preserve">
+    <value>nessuna batteria</value>
+  </data>
+  <data name="SysInfo.Battery.Charging" xml:space="preserve">
+    <value>in carica</value>
+  </data>
+  <data name="SysInfo.Battery.Discharging" xml:space="preserve">
+    <value>in scarica</value>
+  </data>
+  <data name="SysInfo.Battery.Full" xml:space="preserve">
+    <value>carica</value>
+  </data>
+  <data name="SysInfo.Battery.NotCharging" xml:space="preserve">
+    <value>non in carica</value>
+  </data>
+  <data name="SysInfo.Battery.Unknown" xml:space="preserve">
+    <value>sconosciuto</value>
+  </data>
+  <data name="SysInfo.State.NotReported" xml:space="preserve">
+    <value>non segnalato</value>
+  </data>
+  <data name="SysInfo.State.NotAnswering" xml:space="preserve">
+    <value>non risponde</value>
+  </data>
+  <data name="SysInfo.State.Measuring" xml:space="preserve">
+    <value>misura in corso</value>
+  </data>
+  <data name="SysInfo.State.NoTime" xml:space="preserve">
+    <value>nessun tempo</value>
+  </data>
+  <data name="SysInfo.State.NotReady" xml:space="preserve">
+    <value>non pronto</value>
+  </data>
+  <data name="SysInfo.Io.Read" xml:space="preserve">
+    <value>Lettura {0}</value>
+  </data>
+  <data name="SysInfo.Io.Write" xml:space="preserve">
+    <value>Scrittura {0}</value>
+  </data>
+  <data name="SysInfo.Io.Received" xml:space="preserve">
+    <value>Ricevuto {0}</value>
+  </data>
+  <data name="SysInfo.Io.Sent" xml:space="preserve">
+    <value>Inviato {0}</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Impostazioni di sistema</value>
   </data>

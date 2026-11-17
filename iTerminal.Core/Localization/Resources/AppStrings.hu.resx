@@ -464,6 +464,189 @@
   <data name="Dialog.SystemInformation" xml:space="preserve">
     <value>Rendszerinformáció</value>
   </data>
+  <data name="SysInfo.Section.OperatingSystem" xml:space="preserve">
+    <value>Operációs rendszer</value>
+  </data>
+  <data name="SysInfo.Section.Hardware" xml:space="preserve">
+    <value>Hardver</value>
+  </data>
+  <data name="SysInfo.Section.Cpu" xml:space="preserve">
+    <value>Processzor</value>
+  </data>
+  <data name="SysInfo.Section.Memory" xml:space="preserve">
+    <value>Memória</value>
+  </data>
+  <data name="SysInfo.Section.Gpu" xml:space="preserve">
+    <value>Grafika</value>
+  </data>
+  <data name="SysInfo.Section.Battery" xml:space="preserve">
+    <value>Akkumulátor</value>
+  </data>
+  <data name="SysInfo.Section.Drives" xml:space="preserve">
+    <value>Meghajtók</value>
+  </data>
+  <data name="SysInfo.Section.DiskIo" xml:space="preserve">
+    <value>Lemez-I/O</value>
+  </data>
+  <data name="SysInfo.Section.NetworkIo" xml:space="preserve">
+    <value>Hálózati I/O</value>
+  </data>
+  <data name="SysInfo.Section.NetworkInterfaces" xml:space="preserve">
+    <value>Hálózati interfészek</value>
+  </data>
+  <data name="SysInfo.Section.Runtime" xml:space="preserve">
+    <value>Futtatókörnyezet</value>
+  </data>
+  <data name="SysInfo.Section.CurrentUser" xml:space="preserve">
+    <value>Aktuális felhasználó</value>
+  </data>
+  <data name="SysInfo.Section.Environment" xml:space="preserve">
+    <value>Környezeti változók</value>
+  </data>
+  <data name="SysInfo.Label.MemoryUsed" xml:space="preserve">
+    <value>Memória-használat</value>
+  </data>
+  <data name="SysInfo.Label.OsDescription" xml:space="preserve">
+    <value>OS leírása</value>
+  </data>
+  <data name="SysInfo.Label.Architecture" xml:space="preserve">
+    <value>OS architektúra</value>
+  </data>
+  <data name="SysInfo.Label.Framework" xml:space="preserve">
+    <value>Keretrendszer</value>
+  </data>
+  <data name="SysInfo.Label.MachineName" xml:space="preserve">
+    <value>Gépnév</value>
+  </data>
+  <data name="SysInfo.Label.ProcessArch" xml:space="preserve">
+    <value>Folyamat architektúra</value>
+  </data>
+  <data name="SysInfo.Label.Process64Bit" xml:space="preserve">
+    <value>64 bites folyamat</value>
+  </data>
+  <data name="SysInfo.Label.Model" xml:space="preserve">
+    <value>Modell</value>
+  </data>
+  <data name="SysInfo.Label.LogicalProcessors" xml:space="preserve">
+    <value>Logikai processzorok</value>
+  </data>
+  <data name="SysInfo.Label.Load" xml:space="preserve">
+    <value>Terhelés</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalTotal" xml:space="preserve">
+    <value>Fizikai memória (összes)</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalAvailable" xml:space="preserve">
+    <value>Elérhető memória</value>
+  </data>
+  <data name="SysInfo.Label.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="SysInfo.Label.Driver" xml:space="preserve">
+    <value>Illesztőprogram</value>
+  </data>
+  <data name="SysInfo.Label.VideoMemory" xml:space="preserve">
+    <value>Videomemória</value>
+  </data>
+  <data name="SysInfo.Label.Status" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="SysInfo.Label.Percent" xml:space="preserve">
+    <value>Töltöttség</value>
+  </data>
+  <data name="SysInfo.Label.Remaining" xml:space="preserve">
+    <value>Hátralévő idő</value>
+  </data>
+  <data name="SysInfo.Label.ToFull" xml:space="preserve">
+    <value>Idő a teljes töltésig</value>
+  </data>
+  <data name="SysInfo.Label.Power" xml:space="preserve">
+    <value>Teljesítmény</value>
+  </data>
+  <data name="SysInfo.Label.Health" xml:space="preserve">
+    <value>Állapot (kapacitás)</value>
+  </data>
+  <data name="SysInfo.Label.Cycles" xml:space="preserve">
+    <value>Töltési ciklusok</value>
+  </data>
+  <data name="SysInfo.Label.Type" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="SysInfo.Label.Address" xml:space="preserve">
+    <value>Cím</value>
+  </data>
+  <data name="SysInfo.Label.RuntimeId" xml:space="preserve">
+    <value>Futtatókörnyezeti azonosító</value>
+  </data>
+  <data name="SysInfo.Label.ClrVersion" xml:space="preserve">
+    <value>CLR verzió</value>
+  </data>
+  <data name="SysInfo.Label.UserName" xml:space="preserve">
+    <value>Felhasználónév</value>
+  </data>
+  <data name="SysInfo.Label.Domain" xml:space="preserve">
+    <value>Felhasználói tartomány</value>
+  </data>
+  <data name="SysInfo.Label.Home" xml:space="preserve">
+    <value>Saját mappa</value>
+  </data>
+  <data name="SysInfo.Label.Total" xml:space="preserve">
+    <value>Összes</value>
+  </data>
+  <data name="SysInfo.Label.Used" xml:space="preserve">
+    <value>Használt</value>
+  </data>
+  <data name="SysInfo.Label.Free" xml:space="preserve">
+    <value>Szabad</value>
+  </data>
+  <data name="SysInfo.Label.VolumeLabel" xml:space="preserve">
+    <value>Címke</value>
+  </data>
+  <data name="SysInfo.Battery.None" xml:space="preserve">
+    <value>nincs akkumulátor</value>
+  </data>
+  <data name="SysInfo.Battery.Charging" xml:space="preserve">
+    <value>töltődik</value>
+  </data>
+  <data name="SysInfo.Battery.Discharging" xml:space="preserve">
+    <value>merül</value>
+  </data>
+  <data name="SysInfo.Battery.Full" xml:space="preserve">
+    <value>teljes</value>
+  </data>
+  <data name="SysInfo.Battery.NotCharging" xml:space="preserve">
+    <value>nem töltődik</value>
+  </data>
+  <data name="SysInfo.Battery.Unknown" xml:space="preserve">
+    <value>ismeretlen</value>
+  </data>
+  <data name="SysInfo.State.NotReported" xml:space="preserve">
+    <value>nincs jelentés</value>
+  </data>
+  <data name="SysInfo.State.NotAnswering" xml:space="preserve">
+    <value>nem válaszol</value>
+  </data>
+  <data name="SysInfo.State.Measuring" xml:space="preserve">
+    <value>mérés folyamatban</value>
+  </data>
+  <data name="SysInfo.State.NoTime" xml:space="preserve">
+    <value>nincs idő</value>
+  </data>
+  <data name="SysInfo.State.NotReady" xml:space="preserve">
+    <value>nincs készen</value>
+  </data>
+  <data name="SysInfo.Io.Read" xml:space="preserve">
+    <value>Olvasás {0}</value>
+  </data>
+  <data name="SysInfo.Io.Write" xml:space="preserve">
+    <value>Írás {0}</value>
+  </data>
+  <data name="SysInfo.Io.Received" xml:space="preserve">
+    <value>Fogadva {0}</value>
+  </data>
+  <data name="SysInfo.Io.Sent" xml:space="preserve">
+    <value>Küldve {0}</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Rendszerbeállítások</value>
   </data>
