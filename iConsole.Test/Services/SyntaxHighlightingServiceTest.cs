@@ -57,6 +57,11 @@ public class SyntaxHighlightingServiceTest
     [DataRow("fsharp", "F#")]
     [DataRow("dockerfile", "Build file")]
     [DataRow("Lua", "Lua")]
+    [DataRow("cobol", "COBOL")]
+    [DataRow("fortran", "FORTRAN")]
+    [DataRow("assembly", "Assembly")]
+    [DataRow("nasm", "Assembly")]
+    [DataRow("FORTRAN", "FORTRAN")]
     public void FindByName_UnderstandsFenceNames(string name, string expected)
     {
         Assert.AreEqual(expected, new SyntaxHighlightingService().FindByName(name)?.Name);
