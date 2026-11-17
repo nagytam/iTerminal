@@ -9977,4 +9977,7 @@
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Setzen Sie den Cursor auf eine Datei oder einen Ordner, oder markieren Sie vorher welche.</value>
   </data>
+  <data name="Menu.CopyFiles" xml:space="preserve">
+    <value>Dateien kopieren</value>
+  </data>
 </root>

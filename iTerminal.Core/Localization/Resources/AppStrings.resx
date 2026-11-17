@@ -10118,4 +10118,7 @@
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Put the cursor on a file or folder, or mark some, first.</value>
   </data>
+  <data name="Menu.CopyFiles" xml:space="preserve">
+    <value>Copy Files</value>
+  </data>
 </root>

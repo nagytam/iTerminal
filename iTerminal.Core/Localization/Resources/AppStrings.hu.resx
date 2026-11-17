@@ -9913,4 +9913,7 @@
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Helyezze a kurzort egy fájlra vagy mappára, vagy előbb jelöljön ki néhányat.</value>
   </data>
+  <data name="Menu.CopyFiles" xml:space="preserve">
+    <value>Fájlok másolása</value>
+  </data>
 </root>

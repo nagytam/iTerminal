@@ -9913,4 +9913,7 @@
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Posizioni il cursore su un file o una cartella, oppure ne selezioni prima alcuni.</value>
   </data>
+  <data name="Menu.CopyFiles" xml:space="preserve">
+    <value>Copia file</value>
+  </data>
 </root>
