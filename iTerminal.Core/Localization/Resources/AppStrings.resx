@@ -10112,4 +10112,10 @@
     <value>Ctrl+Up/Down:page  Tab:next field  Esc:close</value>
     <comment>The key hint on the bottom row of the Settings dialog.</comment>
   </data>
+  <data name="Notice.NothingToAct.Title" xml:space="preserve">
+    <value>Nothing selected</value>
+  </data>
+  <data name="Notice.NothingToAct.Message" xml:space="preserve">
+    <value>Put the cursor on a file or folder, or mark some, first.</value>
+  </data>
 </root>

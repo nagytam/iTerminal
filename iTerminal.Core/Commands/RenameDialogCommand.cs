@@ -1,12 +1,14 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Services;
 using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Commands;
 
 public class RenameDialogCommand(
     RenameDialog renameDialog,
-    IContentModelService contentModelService)
+    IContentModelService contentModelService,
+    INotificationService? notificationService = null)
     : ShowDialogCommand<RenameDialog>(renameDialog)
 {
     public override string Title => "Rename";
@@ -14,6 +16,16 @@ public class RenameDialogCommand(
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F6, false, false, false);
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool isHandled = await base.HandleKeyEventAsync(keyEvent);
+        if (!isHandled && Key?.IsIdentical(keyEvent) == true)
+        {
+            FileKeyRefusal.Notify(notificationService);
+        }
+        return isHandled;
+    }
 
     public override bool CanExecute()
     {

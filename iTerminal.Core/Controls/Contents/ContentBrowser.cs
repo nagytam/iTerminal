@@ -345,7 +345,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_copyDialog is not null)
         {
-            AddCommand(new CopyDialogCommand(_copyDialog, ContentModelService));
+            AddCommand(new CopyDialogCommand(_copyDialog, ContentModelService, _notificationService));
         }
         if (_createLinkDialog is not null)
         {
@@ -418,11 +418,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_deleteDialog is not null)
         {
-            AddCommand(new DeleteDialogCommand(_deleteDialog, ContentModelService));
+            AddCommand(new DeleteDialogCommand(_deleteDialog, ContentModelService, _notificationService));
         }
         if (_moveDialog is not null)
         {
-            AddCommand(new MoveDialogCommand(_moveDialog, ContentModelService));
+            AddCommand(new MoveDialogCommand(_moveDialog, ContentModelService, _notificationService));
         }
         if (_compressDialog is not null)
         {
