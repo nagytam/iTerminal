@@ -491,7 +491,9 @@ public class TextFileEditorDialog : Dialog
         {
             ViewSize = Parent.ViewSize;
             Position = new Position(0, 0);
-            Title = Url?.Shrink((int)ViewSize.Width - 4) ?? "Text file editor";
+            // The title says how to leave the editor, as the viewer's does: nothing else on screen does.
+            string closeHint = UiText.Get("Viewer.CloseHint", "  Esc:close");
+            Title = (Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - closeHint.Length)) ?? "Text file editor") + closeHint;
         }
 
         TextEditorControl.Position = new(1, 1);
