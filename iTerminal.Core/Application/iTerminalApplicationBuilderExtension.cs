@@ -368,6 +368,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockQuoteProvider, iTerminal.Core.Services.Stocks.YahooStockQuoteProvider>();
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockService, iTerminal.Core.Services.Stocks.StockService>();
         services.AddTransient<iTerminal.Core.Dialogs.Stocks.StockBrowserDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Terminal.MarketTerminalDialog>();
         // Ctrl+Shift+F4: the translator. A LibreTranslate-compatible API (Translation:ApiUrl) and the connected AI
         // model are two providers behind one service; a test replaces the providers so no run reaches the network.
         services.AddSingleton<iTerminal.Core.Services.Translation.ILanguageDetector, iTerminal.Core.Services.Translation.LanguageDetector>();
