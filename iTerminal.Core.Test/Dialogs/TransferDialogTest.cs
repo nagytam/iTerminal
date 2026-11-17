@@ -105,6 +105,19 @@ public class TransferDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task ALocalDestinationReadsAsAPathLikeTheSource()
+    {
+        // The box and the Target line showed "file://C:...", while the Source line above them shows the path.
+        var dialog = Copy(ContentModels().Object);
+        await ShowAsync(dialog);
+
+        Assert.IsFalse(dialog.TextBoxTarget.Text.StartsWith("file://", StringComparison.Ordinal), dialog.TextBoxTarget.Text);
+        Assert.IsFalse(dialog.TargetPreviewForTest.Contains("file://", StringComparison.Ordinal), dialog.TargetPreviewForTest);
+        StringAssert.Contains(dialog.TextBoxTarget.Text, "dst");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task TheDialogIsSizedToItsContent()
     {
         var dialog = Copy(ContentModels().Object);
