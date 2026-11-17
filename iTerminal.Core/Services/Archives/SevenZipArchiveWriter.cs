@@ -201,7 +201,7 @@ public sealed partial class SevenZipArchiveWriter(IExternalProcessRunner runner,
     }
 
     /// <summary>The folder every local item's path starts with, after its entry name is taken off.</summary>
-    private static string? CommonRoot(IReadOnlyList<ArchiveItem> items)
+    internal static string? CommonRoot(IReadOnlyList<ArchiveItem> items)
     {
         string? root = null;
         foreach (var item in items.Where(i => i.LocalPath is not null))
@@ -228,13 +228,13 @@ public sealed partial class SevenZipArchiveWriter(IExternalProcessRunner runner,
     }
 
     /// <summary>The distinct first segments of the entry names: what 7-Zip is told to add, recursively.</summary>
-    private static List<string> TopLevelNames(IReadOnlyList<ArchiveItem> items) =>
+    internal static List<string> TopLevelNames(IReadOnlyList<ArchiveItem> items) =>
         [.. items
             .Select(i => i.EntryName.Replace('\\', '/').TrimStart('/').Split('/')[0])
             .Where(n => n.Length > 0)
             .Distinct(StringComparer.Ordinal)];
 
-    private static async Task StageAsync(IReadOnlyList<ArchiveItem> items, string staging, CancellationToken cancellationToken)
+    internal static async Task StageAsync(IReadOnlyList<ArchiveItem> items, string staging, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(staging);
         foreach (var item in items)

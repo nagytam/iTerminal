@@ -106,6 +106,9 @@ public sealed class ArchivesSteps
     [Given(@"{string} is a RAR archive")]
     public void ValueIsARARArchive(string value1) => throw new PendingStepException();
 
-    [Then(@"the message says that 7-Zip is needed to open a RAR archive")]
-    public void TheMessageSaysThat7ZipIsNeededToOpenARARArchive() => throw new PendingStepException();
+    [Given(@"unrar is not installed")]
+    public void GivenUnrarIsNotInstalled() => throw new PendingStepException();
+
+    [Then(@"the message says that 7-Zip or unrar is needed to open a RAR archive")]
+    public void TheMessageSaysThat7ZipOrUnrarIsNeededToOpenARARArchive() => throw new PendingStepException();
 }

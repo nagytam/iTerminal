@@ -41,6 +41,8 @@ public class CompressDialog : FormDialog
     private readonly ComboBox<ArchiveEncryption> _comboEncryption;
     private readonly CheckBox _checkBoxEncryptNames;
     private readonly CheckBox _checkBoxReplace;
+    private bool _replaceForced;
+    private bool _replaceBeforeForced;
     private readonly Label _labelHint;
     private readonly Label _errorLabel;
     private readonly Button _compressButton;
@@ -315,6 +317,28 @@ public class CompressDialog : FormDialog
         _comboEncryption.IsEnabled = hasPassword && format.Encryptions.Count > 1;
         _checkBoxEncryptNames.IsEnabled = hasPassword && format.CanEncryptNames;
 
+        // A format that cannot keep the archive's copy (RAR) replaces the name, and the choice is shown as made.
+        if (format.CanKeepExisting)
+        {
+            _checkBoxReplace.IsEnabled = true;
+            if (_replaceForced)
+            {
+                _checkBoxReplace.IsChecked = _replaceBeforeForced;
+                _replaceForced = false;
+            }
+        }
+        else
+        {
+            if (!_replaceForced)
+            {
+                _replaceBeforeForced = _checkBoxReplace.IsChecked;
+                _replaceForced = true;
+            }
+
+            _checkBoxReplace.IsChecked = true;
+            _checkBoxReplace.IsEnabled = false;
+        }
+
         var levelHint = DescribeLevelHint(format.LevelHint);
         var hint = format.HasLevels ? string.Format(UiText.Get("Compress.LevelLine", "Level: {0}."), levelHint) : levelHint + ".";
         if (!format.SupportsPassword)
@@ -412,7 +436,7 @@ public class CompressDialog : FormDialog
             password.Length > 0 ? password : null,
             Encryption,
             EncryptNames && format.CanEncryptNames && password.Length > 0,
-            ReplaceExisting), null);
+            ReplaceExisting || !format.CanKeepExisting), null);
     }
 
     public void Reset()
@@ -482,6 +506,7 @@ public class CompressDialog : FormDialog
         "0 stores, 1 is fastest, 9 is ultra" => UiText.Get("Compress.Hint.SevenZip", "0 stores, 1 is fastest, 9 is ultra"),
         "1 is fastest, 9 is smallest" => UiText.Get("Compress.Hint.Tar", "1 is fastest, 9 is smallest"),
         "TAR does not compress" => UiText.Get("Compress.Hint.NoCompress", "TAR does not compress"),
+        "0 stores, 1 is fastest, 5 is smallest" => UiText.Get("Compress.Hint.Rar", "0 stores, 1 is fastest, 5 is smallest"),
         _ => english,
     };
 }

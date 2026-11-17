@@ -18,6 +18,9 @@ public enum ArchiveWriterKind
 
     /// <summary>Written by the 7-Zip command-line tool, which has to be installed.</summary>
     SevenZip,
+
+    /// <summary>Written by the RAR command-line tool (RARLAB's <c>rar</c>), which has to be installed.</summary>
+    RarCli,
 }
 
 /// <summary>
@@ -32,6 +35,7 @@ public enum ArchiveWriterKind
 /// <param name="LevelHint">What the levels mean, for the dialog's hint line.</param>
 /// <param name="Encryptions">The ciphers a password can use; empty when the format takes no password.</param>
 /// <param name="CanEncryptNames">Whether the listing itself can be hidden behind the password (7z's header encryption).</param>
+/// <param name="CanKeepExisting">Whether a name the archive already has can keep the archive's copy (the "replace files" choice). RAR always replaces.</param>
 public sealed record ArchiveFormat(
     string Name,
     IReadOnlyList<string> Extensions,
@@ -41,7 +45,8 @@ public sealed record ArchiveFormat(
     int DefaultLevel,
     string LevelHint,
     IReadOnlyList<ArchiveEncryption> Encryptions,
-    bool CanEncryptNames)
+    bool CanEncryptNames,
+    bool CanKeepExisting = true)
 {
     public string Extension => Extensions[0];
 
@@ -74,8 +79,13 @@ public sealed record ArchiveFormat(
         "TAR does not compress",
         [], CanEncryptNames: false);
 
+    public static readonly ArchiveFormat Rar = new(
+        "RAR", [".rar"], ArchiveWriterKind.RarCli, 0, 5, 3,
+        "0 stores, 1 is fastest, 5 is smallest",
+        [ArchiveEncryption.Aes256], CanEncryptNames: true, CanKeepExisting: false);
+
     /// <summary>Every format the app can write, the default first.</summary>
-    public static IReadOnlyList<ArchiveFormat> All { get; } = [Zip, SevenZip, TarGz, TarBz2, Tar];
+    public static IReadOnlyList<ArchiveFormat> All { get; } = [Zip, SevenZip, TarGz, TarBz2, Tar, Rar];
 
     /// <summary>
     /// The format a file name says it is, or null. Longest ending first, so <c>x.tar.gz</c> is a
@@ -94,6 +104,10 @@ public sealed record ArchiveFormat(
             .FirstOrDefault(pair => path.EndsWith(pair.extension, StringComparison.OrdinalIgnoreCase))
             .format;
     }
+
+    /// <summary>RAR and its comic-book name, the only archives read by unrar or written by rar.</summary>
+    internal static bool IsRarName(string fileName) =>
+        fileName.EndsWith(".rar", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".cbr", StringComparison.OrdinalIgnoreCase);
 
     /// <summary><paramref name="path"/> with whichever archive ending it has replaced by this format's.</summary>
     public string ApplyExtension(string path)

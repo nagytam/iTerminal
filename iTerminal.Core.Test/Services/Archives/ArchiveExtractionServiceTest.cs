@@ -38,8 +38,8 @@ public class ArchiveExtractionServiceTest
         }
     }
 
-    private static ArchiveExtractionService Service(Func<string?>? sevenZip = null) =>
-        new(new FakeProcessRunner(), sevenZip ?? (() => null));
+    private static ArchiveExtractionService Service(Func<string?>? sevenZip = null, Func<string?>? unrar = null) =>
+        new(new FakeProcessRunner(), sevenZip ?? (() => null), unrar ?? (() => null));
 
     private List<ArchiveItem> Items() =>
     [
@@ -194,9 +194,10 @@ public class ArchiveExtractionServiceTest
 
         Assert.IsTrue(service.IsArchive("x.rar"));
         Assert.IsFalse(service.IsArchive("x.txt"));
-        Assert.AreEqual(".rar archives need 7-Zip installed.", service.WhyCannotExtract("x.rar"));
+        Assert.AreEqual("RAR archives need 7-Zip or unrar installed.", service.WhyCannotExtract("x.rar"));
         Assert.IsNull(service.WhyCannotExtract("x.zip"), "ZIP needs nothing installed");
         Assert.IsNull(Service(() => "7z").WhyCannotExtract("x.rar"));
+        Assert.IsNull(Service(unrar: () => "unrar").WhyCannotExtract("x.rar"), "unrar reads RAR without 7-Zip");
     }
 
     [Timeout(60_000)]
@@ -235,13 +236,21 @@ public class ArchiveExtractionServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
-    [DataRow("issue-01.cbr", ".cbr")]
     [DataRow("issue-01.cb7", ".cb7")]
-    public void ComicBookRarAndSevenZipNeedSevenZipToUnpack(string name, string ending)
+    public void ComicBookSevenZipNeedsSevenZipToUnpack(string name, string ending)
     {
         Assert.IsTrue(Service().IsArchive(name));
         Assert.AreEqual($"{ending} archives need 7-Zip installed.", Service().WhyCannotExtract(name));
         Assert.IsNull(Service(() => "7z").WhyCannotExtract(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ComicBookRarNeedsSevenZipOrUnrarToUnpack()
+    {
+        Assert.AreEqual("RAR archives need 7-Zip or unrar installed.", Service().WhyCannotExtract("issue-01.cbr"));
+        Assert.IsNull(Service(() => "7z").WhyCannotExtract("issue-01.cbr"));
+        Assert.IsNull(Service(unrar: () => "unrar").WhyCannotExtract("issue-01.cbr"));
     }
 
     [Timeout(60_000)]

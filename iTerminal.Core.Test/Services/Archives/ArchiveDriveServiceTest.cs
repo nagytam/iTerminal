@@ -42,8 +42,8 @@ public class ArchiveDriveServiceTest
         }
     }
 
-    private static ArchiveDriveService Service(Func<string?>? sevenZip = null) =>
-        new(new FakeProcessRunner(), sevenZip ?? (() => null));
+    private static ArchiveDriveService Service(Func<string?>? sevenZip = null, Func<string?>? unrar = null) =>
+        new(new FakeProcessRunner(), sevenZip ?? (() => null), unrar ?? (() => null));
 
     [Timeout(60_000)]
     [TestMethod]
@@ -166,13 +166,24 @@ public class ArchiveDriveServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
-    [DataRow("issue-01.cbr")]
     [DataRow("issue-01.cb7")]
-    public void ComicBookRarAndSevenZipNeedSevenZip(string name)
+    public void ComicBookSevenZipNeedsSevenZip(string name)
     {
         Assert.IsTrue(ArchiveDriveService.LooksBrowsable(name), "offered even without 7-Zip, so the footer can say what is missing");
         Assert.IsFalse(Service().CanBrowse(name));
         Assert.IsTrue(Service(() => "7z").CanBrowse(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("issue-01.cbr")]
+    [DataRow("issue-01.rar")]
+    public void RarNeedsSevenZipOrUnrarToBrowse(string name)
+    {
+        Assert.IsTrue(ArchiveDriveService.LooksBrowsable(name), "offered even without a RAR tool, so the footer can say what is missing");
+        Assert.IsFalse(Service().CanBrowse(name));
+        Assert.IsTrue(Service(() => "7z").CanBrowse(name));
+        Assert.IsTrue(Service(unrar: () => "unrar").CanBrowse(name));
     }
 
     [Timeout(60_000)]

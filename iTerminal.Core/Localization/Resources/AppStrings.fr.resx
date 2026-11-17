@@ -9967,4 +9967,13 @@
   <data name="CmdDesc.76098275" xml:space="preserve">
     <value>Ouvre le terminal de marché : une ligne de commande pour chercher n'importe quelle action, un bandeau de cours et la liste de suivi en moniteur.</value>
   </data>
+  <data name="Dep.RarPurpose" xml:space="preserve">
+    <value>Création d'archives RAR</value>
+  </data>
+  <data name="Dep.UnrarPurpose" xml:space="preserve">
+    <value>Ouverture et extraction d'archives RAR sans 7-Zip</value>
+  </data>
+  <data name="Compress.Hint.Rar" xml:space="preserve">
+    <value>0 stocke, 1 est le plus rapide, 5 le plus compact</value>
+  </data>
 </root>

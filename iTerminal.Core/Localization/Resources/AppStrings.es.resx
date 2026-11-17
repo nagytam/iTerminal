@@ -9967,4 +9967,13 @@
   <data name="CmdDesc.76098275" xml:space="preserve">
     <value>Abre el terminal de mercado: una línea de comandos para buscar cualquier acción, una cinta de cotizaciones y la lista de seguimiento como monitor.</value>
   </data>
+  <data name="Dep.RarPurpose" xml:space="preserve">
+    <value>Crear archivos RAR</value>
+  </data>
+  <data name="Dep.UnrarPurpose" xml:space="preserve">
+    <value>Abrir y descomprimir archivos RAR sin 7-Zip</value>
+  </data>
+  <data name="Compress.Hint.Rar" xml:space="preserve">
+    <value>0 almacena, 1 es el más rápido, 5 el más pequeño</value>
+  </data>
 </root>

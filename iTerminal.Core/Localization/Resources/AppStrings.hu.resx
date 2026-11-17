@@ -9967,4 +9967,13 @@
   <data name="CmdDesc.76098275" xml:space="preserve">
     <value>Megnyitja a piaci terminált: parancssor bármely részvény kereséséhez, árszalag és a figyelőlista monitorként.</value>
   </data>
+  <data name="Dep.RarPurpose" xml:space="preserve">
+    <value>RAR-archívumok létrehozása</value>
+  </data>
+  <data name="Dep.UnrarPurpose" xml:space="preserve">
+    <value>RAR-archívumok megnyitása és kicsomagolása 7-Zip nélkül</value>
+  </data>
+  <data name="Compress.Hint.Rar" xml:space="preserve">
+    <value>0 tárol, 1 a leggyorsabb, 5 a legkisebb</value>
+  </data>
 </root>

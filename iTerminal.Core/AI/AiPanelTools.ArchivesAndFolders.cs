@@ -296,6 +296,7 @@ public partial class AiPanelTools
             "tar.gz" or "tgz" or "targz" or "gz" => ArchiveFormat.TarGz,
             "tar.bz2" or "tbz2" or "tarbz2" or "bz2" => ArchiveFormat.TarBz2,
             "tar" => ArchiveFormat.Tar,
+            "rar" => ArchiveFormat.Rar,
             _ => null,
         };
     }

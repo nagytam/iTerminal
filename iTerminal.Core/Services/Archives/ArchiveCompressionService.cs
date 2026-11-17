@@ -5,20 +5,23 @@ namespace iTerminal.Core.Services.Archives;
 /// <summary>
 /// See <see cref="IArchiveCompressionService"/>. Hands each format to its writer:
 /// <see cref="ManagedArchiveWriter"/> for ZIP and the TAR family, <see cref="SevenZipArchiveWriter"/>
-/// for 7z when 7-Zip is installed.
+/// for 7z when 7-Zip is installed, and <see cref="RarArchiveWriter"/> for RAR when the <c>rar</c> program is.
 /// </summary>
-public sealed class ArchiveCompressionService(IExternalProcessRunner runner, SevenZipArchiveWriter? sevenZip = null)
+public sealed class ArchiveCompressionService(IExternalProcessRunner runner, SevenZipArchiveWriter? sevenZip = null, RarArchiveWriter? rar = null)
     : IArchiveCompressionService
 {
     private readonly SevenZipArchiveWriter _sevenZip = sevenZip ?? new SevenZipArchiveWriter(runner);
+    private readonly RarArchiveWriter _rar = rar ?? new RarArchiveWriter(runner);
 
     public IReadOnlyList<ArchiveFormat> AvailableFormats =>
         [.. ArchiveFormat.All.Where(f => WhyUnavailable(f) is null)];
 
-    public string? WhyUnavailable(ArchiveFormat format) =>
-        format.Writer == ArchiveWriterKind.SevenZip && !_sevenZip.IsAvailable
-            ? "7z needs 7-Zip installed"
-            : null;
+    public string? WhyUnavailable(ArchiveFormat format) => format.Writer switch
+    {
+        ArchiveWriterKind.SevenZip when !_sevenZip.IsAvailable => "7z needs 7-Zip installed",
+        ArchiveWriterKind.RarCli when !_rar.IsAvailable => "RAR needs the rar program installed",
+        _ => null,
+    };
 
     public Task<CompressionResult> CompressAsync(
         string archivePath,
@@ -38,8 +41,11 @@ public sealed class ArchiveCompressionService(IExternalProcessRunner runner, Sev
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(archivePath))!);
-        return options.Format.Writer == ArchiveWriterKind.SevenZip
-            ? _sevenZip.WriteAsync(archivePath, items, options, progress, cancellationToken)
-            : ManagedArchiveWriter.WriteAsync(archivePath, items, options, progress, cancellationToken);
+        return options.Format.Writer switch
+        {
+            ArchiveWriterKind.SevenZip => _sevenZip.WriteAsync(archivePath, items, options, progress, cancellationToken),
+            ArchiveWriterKind.RarCli => _rar.WriteAsync(archivePath, items, options, progress, cancellationToken),
+            _ => ManagedArchiveWriter.WriteAsync(archivePath, items, options, progress, cancellationToken),
+        };
     }
 }

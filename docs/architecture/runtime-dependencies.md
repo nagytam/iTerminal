@@ -17,6 +17,8 @@ Components the app needs at run time but does not ship are downloaded into the d
 - **`OnlineQuoteJob` waits** while Playwright is not installed, and a failed launch calls `InvalidateInstalled` so the dialog offers Chromium again. It no longer runs `pwsh playwright.ps1`.
 - The end-to-end suite replaces the service with `SandboxServices.Dependencies` (nothing to install, no offer) and omits the check job, so no run downloads anything or opens the offer over the panels.
 
+- **`RarRuntimeDependency` and `UnrarRuntimeDependency` are system tools for RAR archives** (`SystemToolRuntimeDependency`, the same contract as ffmpeg). `rar` writes RAR archives (the Compress dialog and the AI tool) and `unrar` reads them when 7-Zip is not installed. Both are installed through the package manager (winget `RARLab.WinRAR` on Windows, which keeps `Rar.exe` and `UnRAR.exe` in `%ProgramFiles%\WinRAR`, off the PATH and looked for there; Homebrew, apt, dnf, zypper, pacman and apk `rar` / `unrar`) and are never bundled: RARLAB's compressor is not free software. The version is the banner `rar` or `unrar` prints with no arguments. Passwords go to them on stdin, never on the command line.
+
 ### Self-update (`Services/Updates/`, `UpdateDialog`, `UpdateCheckJob`)
 iTerminal checks its own GitHub repository (`nagytam/iTerminal`) for a stable release newer than the running build, using the same `GitHubReleaseFeed` as Ollama. The compare is over the whole version, so release builds numbered `0.0.0.<run>` order correctly (the dependencies' `ToString(3)` would drop the build number).
 

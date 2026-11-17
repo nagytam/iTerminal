@@ -80,8 +80,9 @@ Feature: Compressing and extracting archives
     When I move the cursor to "docs.rar" and press "Enter"
     Then the left panel lists "readme.txt"
 
-  Scenario: A RAR archive without 7-Zip says why it cannot be opened
+  Scenario: A RAR archive without 7-Zip or unrar says why it cannot be opened
     Given 7-Zip is not installed
+    And unrar is not installed
     And "docs.rar" is a RAR archive
     When I move the cursor to "docs.rar" and press "Enter"
-    Then the message says that 7-Zip is needed to open a RAR archive
+    Then the message says that 7-Zip or unrar is needed to open a RAR archive
