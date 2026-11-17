@@ -145,10 +145,12 @@ public class CompressDialogReplaceTest
         await ShowAsync(dialog);
         dialog.Format = ArchiveFormat.Gzip;
         dialog.ArchivePath = Path.Combine(Target, "a.gz");
+        var original = dialog.ArchivePath;
+        dialog.FocusArchiveNameForTest();
         dialog.AskToReplace(dialog.ArchivePath, () => Task.CompletedTask);
 
         await dialog.HandleKeyEventAsync(Key('y'));
 
-        StringAssert.EndsWith(dialog.ArchivePath, "a.gz", "the name is unchanged");
+        Assert.AreEqual(original, dialog.ArchivePath, "the y answers the question and is not typed into the name");
     }
 }

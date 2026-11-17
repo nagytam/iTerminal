@@ -152,6 +152,7 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
     internal bool IsEncryptNamesEnabledForTest => _checkBoxEncryptNames.IsEnabled;
     internal bool IsReplaceExistingEnabledForTest => _checkBoxReplace.IsEnabled;
     internal string ReplaceQuestionForTest => _replaceQuestion ?? string.Empty;
+    internal void FocusArchiveNameForTest() => _textBoxArchive.SetFocus();
     internal bool IsReplaceCheckPending => _pendingCheck is not null;
 
     public CompressDialog(

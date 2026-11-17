@@ -78,8 +78,11 @@ public class ArchiveFormatSingleStreamTest
     }
 
     [TestMethod]
-    public async Task AGzipOrBzip2OfTwoItemsIsRefused()
+    [DataRow("GZIP")]
+    [DataRow("BZIP2")]
+    public async Task AGzipOrBzip2OfTwoItemsIsRefused(string formatName)
     {
+        var format = ArchiveFormat.All.Single(f => f.Name == formatName);
         var service = new ArchiveCompressionService(new FakeProcessRunner(), new SevenZipArchiveWriter(new FakeProcessRunner(), () => null));
         var items = new List<ArchiveItem>
         {
@@ -88,8 +91,8 @@ public class ArchiveFormatSingleStreamTest
         };
 
         var error = await AsyncAssert.ThrowsAsync<NotSupportedException>(() =>
-            service.CompressAsync(Path.Combine(Path.GetTempPath(), "never.gz"), items, new CompressionOptions(ArchiveFormat.Gzip, 6), null, CancellationToken.None));
-        StringAssert.Contains(error.Message, "holds one file");
+            service.CompressAsync(Path.Combine(Path.GetTempPath(), "never.x"), items, new CompressionOptions(format, 6), null, CancellationToken.None));
+        Assert.AreEqual($"{formatName} holds one file: compress one file, or choose an archive format.", error.Message);
     }
 
     [TestMethod]
@@ -98,7 +101,8 @@ public class ArchiveFormatSingleStreamTest
         var service = new ArchiveCompressionService(new FakeProcessRunner(), new SevenZipArchiveWriter(new FakeProcessRunner(), () => null));
         var items = new List<ArchiveItem> { new("docs/", true, 0, DateTime.Now) };
 
-        await AsyncAssert.ThrowsAsync<NotSupportedException>(() =>
+        var error = await AsyncAssert.ThrowsAsync<NotSupportedException>(() =>
             service.CompressAsync(Path.Combine(Path.GetTempPath(), "never.gz"), items, new CompressionOptions(ArchiveFormat.Gzip, 6), null, CancellationToken.None));
+        Assert.AreEqual("GZIP holds one file: compress one file, or choose an archive format.", error.Message);
     }
 }
