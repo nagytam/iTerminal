@@ -689,10 +689,12 @@ public class HotKeys : StatusBarItem
             }
         }
 
-        // 2. Leave buttons out, the expendable ones first, keeping at least half of them.
+        // 2. Leave buttons out, the expendable ones first, keeping at least two. Below a readable word length a button goes
+        // before its word is cut further: at 60 columns seven keys with two-letter words ("[F5-Co][F6-Re][F7-Fi]") read as
+        // nothing, where four with whole words do.
         foreach (var index in DropOrder(titles))
         {
-            if (included.Count(i => i) <= (parts.Count + 1) / 2)
+            if (included.Count(i => i) <= 2)
             {
                 break;
             }
