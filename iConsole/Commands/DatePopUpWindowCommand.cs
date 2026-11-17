@@ -6,7 +6,7 @@ namespace iConsole.Commands;
 public class DatePopUpWindowCommand(DatePopUpWindow datePopUpWindow) 
     : Command
 {
-    public override string Title => "Calendar";
+    public override string Title => "Date pop-up";
     public override string Description => "Show the calendar pop-up.";
 
     private DatePopUpWindow _datePopUpWindow { get; init; } = datePopUpWindow;

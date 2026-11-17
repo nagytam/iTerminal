@@ -1975,4 +1975,8 @@
     <value>Press the focused button, or tick or untick the focused check box.</value>
     <comment>Press the focused button, or tick or untick the focused check box.</comment>
   </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Date pop-up</value>
+    <comment>Date pop-up</comment>
+  </data>
 </root>

@@ -1959,4 +1959,8 @@
     <value>Nyomja meg a fókuszált gombot, vagy jelölje be vagy ki a fókuszált jelölőnégyzetet.</value>
     <comment>Nyomja meg a fókuszált gombot, vagy jelölje be vagy ki a fókuszált jelölőnégyzetet.</comment>
   </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Dátum-felugró</value>
+    <comment>Date pop-up</comment>
+  </data>
 </root>
