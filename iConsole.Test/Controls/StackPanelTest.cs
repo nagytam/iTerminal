@@ -149,4 +149,44 @@ public class StackPanelTest
         new StackPanel(Theme()) { ViewSize = new Size(0, 0) }.Draw(new ScreenBuffer(5, 5));
         Create(5, 5, Orientation.Vertical).Draw(new ScreenBuffer(5, 5));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Wrap_RowStartsANewLineWhenTheNextChildDoesNotFit()
+    {
+        StackPanel panel = Create(10, 3, Orientation.Horizontal);
+        panel.Wrap = true;
+        panel.Gap = 1;
+        panel.Add(new Fill(Theme(), 'a') { ViewSize = new Size(4, 1) });
+        panel.Add(new Fill(Theme(), 'b') { ViewSize = new Size(4, 1) });
+        panel.Add(new Fill(Theme(), 'c') { ViewSize = new Size(4, 1) });
+
+        ScreenBuffer screen = ScreenBuffer.Render(panel, 10, 3);
+
+        // Two children fit on the first line (4 + 1 + 4); the third goes on the next line, one line plus the gap lower.
+        Assert.AreEqual("aaaa bbbb", screen.Line(0).TrimEnd());
+        Assert.AreEqual("", screen.Line(1).TrimEnd());
+        Assert.AreEqual("cccc", screen.Line(2).TrimEnd());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Wrap_ColumnLinesAreAsThickAsTheirThickestChild_AndAlignWithinThem()
+    {
+        StackPanel panel = Create(6, 4, Orientation.Vertical);
+        panel.Wrap = true;
+        panel.CrossAlignment = StackAlignment.End;
+        panel.Add(new Fill(Theme(), 'a') { ViewSize = new Size(2, 1) }, SizeRule.Fixed(2));
+        panel.Add(new Fill(Theme(), 'b') { ViewSize = new Size(4, 1) }, SizeRule.Fixed(2));
+        panel.Add(new Fill(Theme(), 'c') { ViewSize = new Size(3, 1) }, SizeRule.Fixed(2));
+
+        ScreenBuffer screen = ScreenBuffer.Render(panel, 6, 4);
+
+        // a and b fill the first column (4 rows); its thickness is b's width, 4, so a sits at the end of it.
+        // c does not fit below them and starts the second column, which is 3 wide and clipped at the right edge.
+        Assert.AreEqual("  aacc", screen.Line(0));
+        Assert.AreEqual("  aacc", screen.Line(1));
+        Assert.AreEqual("bbbb  ", screen.Line(2));
+        Assert.AreEqual("bbbb  ", screen.Line(3));
+    }
 }
