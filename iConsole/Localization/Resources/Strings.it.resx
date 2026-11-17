@@ -1973,4 +1973,22 @@
   <data name="Status.LineColumn" xml:space="preserve">
     <value>Rig {0}/{1} Col {2}/{3}</value>
   </data>
+  <data name="Prompt.HintAccept" xml:space="preserve">
+    <value>Invio: accetta    Esc: annulla</value>
+  </data>
+  <data name="Prompt.HintFilterChoose" xml:space="preserve">
+    <value>Digita per filtrare    Invio: scegli    Esc: annulla</value>
+  </data>
+  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
+    <value>Spazio: segna    Invio: conferma    Esc: annulla</value>
+  </data>
+  <data name="Prompt.HintYes" xml:space="preserve">
+    <value>Invio: sì    Esc: annulla</value>
+  </data>
+  <data name="Prompt.HintNo" xml:space="preserve">
+    <value>Invio: no    Esc: annulla</value>
+  </data>
+  <data name="Prompt.HintCancel" xml:space="preserve">
+    <value>Esc: annulla</value>
+  </data>
 </root>
