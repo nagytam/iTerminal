@@ -9967,4 +9967,8 @@
   <data name="Menu.ShowHiddenFiles" xml:space="preserve">
     <value>Versteckte Dateien anzeigen</value>
   </data>
+  <data name="Settings.Hint" xml:space="preserve">
+    <value>Strg+Auf/Ab:Seite  Tab:nächstes Feld  Esc:schließen</value>
+    <comment>The key hint on the bottom row of the Settings dialog.</comment>
+  </data>
 </root>

@@ -1,3 +1,4 @@
+using iConsole.Controls;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -9,6 +10,7 @@ namespace iTerminal.Core.Dialogs;
 public class SettingsDialog : Dialog
 {
     private Tab _tab { get; set; }
+    private readonly Label _hintLabel;
 
     public SettingsDialog(
         ISettingsService settingsService,
@@ -23,6 +25,9 @@ public class SettingsDialog : Dialog
         Title = iConsole.Localization.UiText.Get("Menu.Settings", "Settings");
         _tab = new Tab(themeService) { Orientation = Orientation.Vertical };
         AddControl(_tab);
+        // The keys to change the page and leave: a dialog of eight pages should say how to move between them.
+        _hintLabel = new Label(iConsole.Localization.UiText.Get("Settings.Hint", "Ctrl+Up/Down:page  Tab:next field  Esc:close"), themeService);
+        AddControl(_hintLabel);
         var tabPageGlobal = new SettingsGlobalTabPage(themeService, settingsService);
         _tab.AddTabPage(tabPageGlobal);
         var tabPageNetwork = new SettingsNetworkTabPage(themeService);
@@ -48,8 +53,11 @@ public class SettingsDialog : Dialog
             CenterInParent(Parent.ViewSize * 0.8);
         }
 
+        // The pages take every row but the bottom one, which holds the key hint.
         _tab.Position = new Position(1, 1);
-        _tab.ViewSize = new Size(ViewSize.Width - 2, ViewSize.Height - 2);
+        _tab.ViewSize = new Size(ViewSize.Width - 2, ViewSize.Height - 3);
+        _hintLabel.Position = new Position(1, ViewSize.Height - 2);
+        _hintLabel.ViewSize = new Size(ViewSize.Width - 2, 1);
 
         base.OnInitializeLayout();
     }

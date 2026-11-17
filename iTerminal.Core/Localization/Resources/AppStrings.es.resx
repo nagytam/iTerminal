@@ -9903,4 +9903,8 @@
   <data name="Menu.ShowHiddenFiles" xml:space="preserve">
     <value>Mostrar archivos ocultos</value>
   </data>
+  <data name="Settings.Hint" xml:space="preserve">
+    <value>Ctrl+↑/↓:página  Tab:campo siguiente  Esc:cerrar</value>
+    <comment>The key hint on the bottom row of the Settings dialog.</comment>
+  </data>
 </root>
