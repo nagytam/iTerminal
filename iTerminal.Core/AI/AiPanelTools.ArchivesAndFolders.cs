@@ -29,7 +29,7 @@ public partial class AiPanelTools
     private IReadOnlyList<AITool> CreateArchiveAndFolderTools() =>
     [
         AIFunctionFactory.Create(CompressEntries, "compress_entries",
-            "Pack the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) into a new archive in the other panel's folder (or the same folder when intoOtherPanel=false). format: zip (default), 7z, tar.gz, tar.bz2 or tar; the archive name gets the right ending. Refuses to touch an archive that already exists unless addToExisting=true. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
+            "Pack the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) into a new archive in the other panel's folder (or the same folder when intoOtherPanel=false). format: zip (default), 7z, tar.gz, tar.bz2, tar, tar.xz, gz, bz2 or xz; the archive name gets the right ending. gz, bz2 and xz hold exactly one item, and tar.xz, gz, bz2 and xz replace an existing archive rather than adding to it (addToExisting=true replaces it). Refuses to touch an archive that already exists unless addToExisting=true. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(ExtractArchives, "extract_archives",
             "Unpack the marked archives of a panel (or the one under the cursor; or the names given, ';'-separated) into the other panel's folder (or the same folder when intoOtherPanel=false). Each archive goes into a folder of its own unless eachIntoOwnFolder=false. Existing files are kept unless overwrite=true. Password-protected archives are reported, not opened. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(ListArchiveFormats, "list_archive_formats",
@@ -86,7 +86,7 @@ public partial class AiPanelTools
         ArchiveFormat? chosen = ParseFormat(format, archiveName);
         if (chosen is null)
         {
-            return "Error: format must be one of zip, 7z, tar.gz, tar.bz2, tar.";
+            return "Error: format must be one of zip, 7z, tar.gz, tar.bz2, tar, tar.xz, gz, bz2, xz.";
         }
         if (!compressionService.AvailableFormats.Contains(chosen))
         {
@@ -105,6 +105,11 @@ public partial class AiPanelTools
             return problem;
         }
 
+        if (chosen.OneFileOnly && sources.Count != 1)
+        {
+            return $"Error: {chosen.Name} holds one file: pass exactly one item.";
+        }
+
         string finalName = chosen.ApplyExtension(archiveName);
         Url archiveUrl = new(UrlPath.Child(folderModel.Url.FullUrl, finalName, isFolder: false));
         IFileSystem archiveSystem = fileSystemResolver.Resolve(archiveUrl, folderModel, "Compress");
@@ -118,10 +123,16 @@ public partial class AiPanelTools
             return "Error: the archive cannot contain itself.";
         }
 
-        string operation = archiveExists
-            ? $"adding {sources.Count} item(s) to existing archive {archiveUrl.FullUrl}"
-            : $"creating archive {archiveUrl.FullUrl} from {sources.Count} item(s)";
-        List<string> actions = sources.Select(sourceUrl => $"Add {sourceUrl.FullUrl} to {archiveUrl.FullUrl}").ToList();
+        // A format that replaces its target says so: the existing archive is overwritten, not added to.
+        bool replaces = archiveExists && !chosen.AddsToExisting;
+        string operation = replaces
+            ? $"replacing existing archive {archiveUrl.FullUrl} with {sources.Count} item(s)"
+            : archiveExists
+                ? $"adding {sources.Count} item(s) to existing archive {archiveUrl.FullUrl}"
+                : $"creating archive {archiveUrl.FullUrl} from {sources.Count} item(s)";
+        List<string> actions = sources.Select(sourceUrl => replaces
+            ? $"Replace {archiveUrl.FullUrl} with {sourceUrl.FullUrl}"
+            : $"Add {sourceUrl.FullUrl} to {archiveUrl.FullUrl}").ToList();
         string? refusal = await RequestMutationApprovalAsync(operation, actions, confirmed);
         if (refusal is not null)
         {
@@ -293,9 +304,13 @@ public partial class AiPanelTools
         {
             "zip" => ArchiveFormat.Zip,
             "7z" or "7zip" or "sevenzip" => ArchiveFormat.SevenZip,
-            "tar.gz" or "tgz" or "targz" or "gz" => ArchiveFormat.TarGz,
-            "tar.bz2" or "tbz2" or "tarbz2" or "bz2" => ArchiveFormat.TarBz2,
+            "tar.gz" or "tgz" or "targz" => ArchiveFormat.TarGz,
+            "tar.bz2" or "tbz2" or "tarbz2" => ArchiveFormat.TarBz2,
+            "tar.xz" or "txz" => ArchiveFormat.TarXz,
             "tar" => ArchiveFormat.Tar,
+            "gz" => ArchiveFormat.Gzip,
+            "bz2" => ArchiveFormat.Bzip2,
+            "xz" => ArchiveFormat.Xz,
             _ => null,
         };
     }

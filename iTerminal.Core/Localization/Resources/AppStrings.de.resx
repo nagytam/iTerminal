@@ -4640,6 +4640,24 @@
   <data name="Compress.AddsToExisting" xml:space="preserve">
     <value>Fügt dem vorhandenen Archiv hinzu.</value>
   </data>
+  <data name="Compress.ReplacesExisting" xml:space="preserve">
+    <value>Ersetzt das vorhandene Archiv.</value>
+  </data>
+  <data name="Compress.OneFileOnly" xml:space="preserve">
+    <value>{0} enthält nur eine Datei: markieren Sie eine Datei oder wählen Sie ein anderes Format.</value>
+  </data>
+  <data name="Compress.ReplaceConfirm" xml:space="preserve">
+    <value>{0} ersetzen? (y/n)</value>
+  </data>
+  <data name="Compress.CheckingArchive" xml:space="preserve">
+    <value>Archiv wird geprüft…</value>
+  </data>
+  <data name="DialogHint.ReplaceArchive" xml:space="preserve">
+    <value>Archiv ersetzen</value>
+  </data>
+  <data name="DialogHint.KeepArchive" xml:space="preserve">
+    <value>Archiv behalten</value>
+  </data>
   <data name="Compress.NoPassword" xml:space="preserve">
     <value>{0} unterstützt kein Kennwort.</value>
   </data>
@@ -5285,8 +5303,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>Die markierten Dateien und Ordner oder den unter dem Cursor nach einem Muster umbenennen.</value>
   </data>
-  <data name="CmdDesc.6916d198" xml:space="preserve">
-    <value>Das Archiv unter dem Cursor als Ordner öffnen (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG mit 7-Zip).</value>
+  <data name="CmdDesc.920092ad" xml:space="preserve">
+    <value>Das Archiv unter dem Cursor als Ordner öffnen (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2, GZ; 7z, RAR, CAB, XZ, ISO, IMG, VMDK, WIM, DMG mit 7-Zip).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>Den ausgewählten Ordner öffnen oder dem übergeordneten Eintrag folgen.</value>

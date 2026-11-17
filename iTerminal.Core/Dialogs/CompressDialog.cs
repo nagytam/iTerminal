@@ -27,7 +27,7 @@ namespace iTerminal.Core.Dialogs;
 /// and the hint line says what the levels mean and whether the archive is new or being added
 /// to.</para>
 /// </summary>
-public class CompressDialog : FormDialog
+public class CompressDialog : FormDialog, ITransientOverlayHost
 {
     private readonly IContentModelService _contentModelService;
     private readonly IArchiveCompressionService _compressionService;
@@ -46,6 +46,17 @@ public class CompressDialog : FormDialog
     private readonly Button _compressButton;
     private readonly Button _cancelButton;
     private bool _syncing;
+
+    /// <summary>The y/n question on the error row while an existing archive waits to be replaced, or null.</summary>
+    private string? _replaceQuestion;
+
+    /// <summary>What to do when the question is answered with y: the write itself.</summary>
+    private Func<Task>? _replaceProceed;
+
+    /// <summary>A replace target that is not local is looked up on a background task; this is that lookup until OnIdle takes it.</summary>
+    private PendingReplaceCheck? _pendingCheck;
+
+    private sealed record PendingReplaceCheck(Task<bool> Exists, string ArchivePath, Func<Task> Proceed);
 
     /// <summary>Rows: border, blank, source, six form rows, two check boxes, hint, error, blank, buttons, border.</summary>
     internal const int DialogHeight = 17;
@@ -113,7 +124,14 @@ public class CompressDialog : FormDialog
 
     public Label ErrorMessage => _errorLabel;
 
-    protected override void ClearError() => _errorLabel.Text = string.Empty;
+    // The replace question stays on the error row until it is answered; other keys do not clear it.
+    protected override void ClearError()
+    {
+        if (_replaceQuestion is null && _pendingCheck is null)
+        {
+            _errorLabel.Text = string.Empty;
+        }
+    }
 
     internal string HintForTest => _hintFull;
 
@@ -130,6 +148,9 @@ public class CompressDialog : FormDialog
     internal bool IsPasswordEnabledForTest => _password.IsEnabled;
     internal bool IsEncryptionEnabledForTest => _comboEncryption.IsEnabled;
     internal bool IsEncryptNamesEnabledForTest => _checkBoxEncryptNames.IsEnabled;
+    internal bool IsReplaceExistingEnabledForTest => _checkBoxReplace.IsEnabled;
+    internal string ReplaceQuestionForTest => _replaceQuestion ?? string.Empty;
+    internal bool IsReplaceCheckPending => _pendingCheck is not null;
 
     public CompressDialog(
         IContentModelService contentModelService,
@@ -314,6 +335,7 @@ public class CompressDialog : FormDialog
         var hasPassword = format.SupportsPassword && Password.Length > 0;
         _comboEncryption.IsEnabled = hasPassword && format.Encryptions.Count > 1;
         _checkBoxEncryptNames.IsEnabled = hasPassword && format.CanEncryptNames;
+        _checkBoxReplace.IsEnabled = format.AddsToExisting;
 
         var levelHint = DescribeLevelHint(format.LevelHint);
         var hint = format.HasLevels ? string.Format(UiText.Get("Compress.LevelLine", "Level: {0}."), levelHint) : levelHint + ".";
@@ -325,7 +347,12 @@ public class CompressDialog : FormDialog
         var unavailable = ArchiveFormat.All.Where(f => !_comboFormat.Items.Contains(f))
             .Select(f => _compressionService.WhyUnavailable(f))
             .FirstOrDefault(reason => reason is not null);
-        _hintFull = (ExistsLocally(ArchivePath) ? iConsole.Localization.UiText.Get("Compress.AddsToExisting", "Adds to the existing archive.") + " " : string.Empty)
+        // A replacing format says so whether or not an archive is there: a remote target is not looked at here.
+        var existing = !format.AddsToExisting
+            ? iConsole.Localization.UiText.Get("Compress.ReplacesExisting", "Replaces the existing archive.") + " "
+            : !ExistsLocally(ArchivePath) ? string.Empty
+            : iConsole.Localization.UiText.Get("Compress.AddsToExisting", "Adds to the existing archive.") + " ";
+        _hintFull = existing
             + hint
             + (unavailable is null ? string.Empty : $" ({unavailable}.)");
         ShowHint();
@@ -400,6 +427,12 @@ public class CompressDialog : FormDialog
             return (null, string.Format(iConsole.Localization.UiText.Get("Compress.NameFormatMismatch", "The name ends in {0}, but the format is {1}."), named.Extension, format.Name));
         }
 
+        // A folder is not told apart here; the writer refuses one when the task starts.
+        if (format.OneFileOnly && SourceUrls.Count != 1)
+        {
+            return (null, string.Format(iConsole.Localization.UiText.Get("Compress.OneFileOnly", "{0} holds one file: mark one file, or choose another format."), format.Name));
+        }
+
         var password = format.SupportsPassword ? Password : string.Empty;
         if (password.Length > 0 && password != PasswordConfirmation)
         {
@@ -412,7 +445,8 @@ public class CompressDialog : FormDialog
             password.Length > 0 ? password : null,
             Encryption,
             EncryptNames && format.CanEncryptNames && password.Length > 0,
-            ReplaceExisting), null);
+            // A format that replaces its target has no entries to keep, so the setting would be ignored.
+            format.AddsToExisting && ReplaceExisting), null);
     }
 
     public void Reset()
@@ -422,7 +456,113 @@ public class CompressDialog : FormDialog
         Password = string.Empty;
         PasswordConfirmation = string.Empty;
         _errorLabel.Text = string.Empty;
+        _pendingCheck = null;
+        CancelReplaceQuestion();
     }
+
+    #region Replacing an existing archive
+
+    /// <summary>
+    /// Asks before a replacing format writes over an existing archive. The question goes on the error
+    /// row; y runs <paramref name="proceed"/>, and any other key cancels it, so nothing is written
+    /// without y.
+    /// </summary>
+    internal void AskToReplace(string archivePath, Func<Task> proceed)
+    {
+        _replaceQuestion = string.Format(iConsole.Localization.UiText.Get("Compress.ReplaceConfirm", "Replace {0}? (y/n)"), Path.GetFileName(archivePath.TrimEnd('/', '\\')));
+        _replaceProceed = proceed;
+
+        // The question takes the hint line, the one just above the buttons, which is where the dialog's footer words are.
+        _hintFull = _replaceQuestion;
+        ShowHint();
+    }
+
+    /// <summary>
+    /// A remote target is looked up on a background task, so the key path never waits on it. OnIdle
+    /// asks, or goes on, when the answer lands. Enter does nothing while it is pending.
+    /// </summary>
+    internal void BeginReplaceCheck(Task<bool> exists, string archivePath, Func<Task> proceed)
+    {
+        _pendingCheck = new PendingReplaceCheck(exists, archivePath, proceed);
+        _errorLabel.Text = iConsole.Localization.UiText.Get("Compress.CheckingArchive", "Checking the archive…");
+    }
+
+    private void CancelReplaceQuestion()
+    {
+        var wasAsking = _replaceQuestion is not null;
+        _replaceQuestion = null;
+        _replaceProceed = null;
+        _errorLabel.Text = string.Empty;
+        if (wasAsking)
+        {
+            UpdateEnabledFields();
+        }
+    }
+
+    bool ITransientOverlayHost.IsOverlayOpen => _replaceQuestion is not null;
+
+    /// <summary>Esc takes the question down and leaves the dialog open; a second Esc closes the dialog.</summary>
+    void ITransientOverlayHost.CloseOverlay() => CancelReplaceQuestion();
+
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        if (_pendingCheck is not { } check || !check.Exists.IsCompleted)
+        {
+            return;
+        }
+
+        _pendingCheck = null;
+        _errorLabel.Text = string.Empty;
+        if (check.Exists.IsFaulted)
+        {
+            _errorLabel.Text = check.Exists.Exception?.GetBaseException().Message ?? string.Empty;
+        }
+        else if (check.Exists.Result)
+        {
+            AskToReplace(check.ArchivePath, check.Proceed);
+        }
+        else
+        {
+            // Nothing to replace: the write starts. It reports its own failures on the error row.
+            _ = check.Proceed();
+        }
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (_replaceQuestion is not null)
+        {
+            // The name box has focus, so the question takes the key first: a y is not typed into the name.
+            var proceed = _replaceProceed;
+            CancelReplaceQuestion();
+            if (keyEvent.ConsoleKey == ConsoleKey.Y && proceed is not null)
+            {
+                await proceed();
+            }
+
+            return true;
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_replaceQuestion is not null)
+        {
+            yield return ("Y", iConsole.Localization.UiText.Get("DialogHint.ReplaceArchive", "Replace the archive"));
+            yield return ("Any other key", iConsole.Localization.UiText.Get("DialogHint.KeepArchive", "Keep the archive"));
+            yield break;
+        }
+
+        foreach (var hint in base.GetKeyHints())
+        {
+            yield return hint;
+        }
+    }
+
+    #endregion
 
     /// <summary>Enter, or the Compress button: starts the <see cref="CompressTask"/> and closes the dialog.</summary>
     private sealed class CompressCommand(
@@ -440,7 +580,7 @@ public class CompressDialog : FormDialog
         public override async Task ExecuteAsync(object? args)
         {
             var dialog = Control as CompressDialog ?? Control?.Parent as CompressDialog;
-            if (dialog is null)
+            if (dialog is null || dialog.IsReplaceCheckPending)
             {
                 return;
             }
@@ -452,6 +592,41 @@ public class CompressDialog : FormDialog
                 return;
             }
 
+            if (options.Format.AddsToExisting)
+            {
+                await Write(dialog, options);
+                return;
+            }
+
+            // A format that replaces its target asks first when there is an archive to replace. A local
+            // target is a stat on this path; a remote one is looked up on a background task.
+            Func<Task> proceed = () => Write(dialog, options);
+            try
+            {
+                var archiveUrl = new Url(dialog.ArchivePath);
+                if (archiveUrl.ContainerType != ContainerType.FileSystem)
+                {
+                    dialog.BeginReplaceCheck(Task.Run(() => ResolveFileSystem(archiveUrl).ExistsFile(archiveUrl)), dialog.ArchivePath, proceed);
+                    return;
+                }
+
+                if (ExistsLocally(dialog.ArchivePath))
+                {
+                    dialog.AskToReplace(dialog.ArchivePath, proceed);
+                    return;
+                }
+            }
+            catch (Exception exception)
+            {
+                dialog.ErrorMessage.Text = exception.Message;
+                return;
+            }
+
+            await proceed();
+        }
+
+        private async Task Write(CompressDialog dialog, CompressionOptions options)
+        {
             try
             {
                 var archiveUrl = new Url(dialog.ArchivePath);
