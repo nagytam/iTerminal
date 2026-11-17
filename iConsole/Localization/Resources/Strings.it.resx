@@ -1951,4 +1951,12 @@
   <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
     <value>globale</value>
   </data>
+  <data name="CmdTitle.f1a3511a" xml:space="preserve">
+    <value>Premi o spunta</value>
+    <comment>Premi o spunta</comment>
+  </data>
+  <data name="CmdDesc.bbf604eb" xml:space="preserve">
+    <value>Premi il pulsante a fuoco, o spunta o togli la spunta alla casella a fuoco.</value>
+    <comment>Premi il pulsante a fuoco, o spunta o togli la spunta alla casella a fuoco.</comment>
+  </data>
 </root>

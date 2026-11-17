@@ -1951,4 +1951,12 @@
   <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
     <value>global</value>
   </data>
+  <data name="CmdTitle.f1a3511a" xml:space="preserve">
+    <value>Pulsar o marcar</value>
+    <comment>Pulsar o marcar</comment>
+  </data>
+  <data name="CmdDesc.bbf604eb" xml:space="preserve">
+    <value>Pulsa el botón enfocado o marca o desmarca la casilla enfocada.</value>
+    <comment>Pulsa el botón enfocado o marca o desmarca la casilla enfocada.</comment>
+  </data>
 </root>

@@ -1967,4 +1967,12 @@
   <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
     <value>global</value>
   </data>
+  <data name="CmdTitle.f1a3511a" xml:space="preserve">
+    <value>Press or tick</value>
+    <comment>Press or tick</comment>
+  </data>
+  <data name="CmdDesc.bbf604eb" xml:space="preserve">
+    <value>Press the focused button, or tick or untick the focused check box.</value>
+    <comment>Press the focused button, or tick or untick the focused check box.</comment>
+  </data>
 </root>

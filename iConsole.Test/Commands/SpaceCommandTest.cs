@@ -26,5 +26,14 @@ public class SpaceCommandTest
 
         mockCmd.Verify(c => c.RunAsync(null), Times.AtLeastOnce);
     }
-}
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Help_ShowsSpaceWithADescriptionInsteadOfRepeatingItsName()
+    {
+        var space = new SpaceCommand();
+
+        Assert.AreNotEqual("Space", space.Title, "The help line must not read \"Space  Space\".");
+        Assert.AreNotEqual(space.Title, space.Description, "A description that only repeats the title is left out of the help.");
+    }
+}
