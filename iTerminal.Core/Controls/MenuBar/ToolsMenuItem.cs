@@ -38,6 +38,7 @@ public class ToolsMenuItem : MenuItem
         SystemSettingsDialog? systemSettingsDialog = null,
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
+        iTerminal.Core.Dialogs.Terminal.MarketTerminalDialog? marketTerminalDialog = null,
         iTerminal.Core.Dialogs.Map.MapDialog? mapDialog = null,
         iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null,
         iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
@@ -96,6 +97,7 @@ public class ToolsMenuItem : MenuItem
         if (networkToolsDialog is not null) groups["net"].Add(new NetworkToolsDialogCommand(networkToolsDialog));
         if (packageManagerDialog is not null) groups["files"].Add(new PackageManagerDialogCommand(packageManagerDialog));
         if (stockBrowserDialog is not null) groups["office"].Add(new StockBrowserDialogCommand(stockBrowserDialog));
+        if (marketTerminalDialog is not null) groups["office"].Add(new MarketTerminalDialogCommand(marketTerminalDialog));
         if (calculatorDialog is not null) groups["office"].Add(new CalculatorDialogCommand(calculatorDialog));
         if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) groups["office"].Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         if (userGroupManagerDialog is not null && UserGroupManagerDialogCommand.IsSupported) groups["sys"].Add(new UserGroupManagerDialogCommand(userGroupManagerDialog));

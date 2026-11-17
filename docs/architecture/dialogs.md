@@ -167,6 +167,14 @@ Tools > Translator: a text box, a From language (or *Detect language*), a To lan
 - **Layout gotcha.** `TextViewerControl` (and the editor) centre themselves in their parent on every layout, so two side by side need the position-preserving `PaneEditor`/`PaneViewer` subclasses, and both must be `CanFocus` for Tab to reach them. Tab only moves among siblings, so they are direct children of the dialog, not of a wrapper pane.
 - **The end-to-end suite replaces the providers** (`SandboxServices.Translation`): no run reaches the network or the model.
 
+### Market terminal (`MarketTerminalDialog`, Alt+Shift+F7, `Dialogs/Terminal/`)
+A full-screen, command-line market view in the style of a trading terminal, on the same stock services as the stock browser (Tools > Office). The top line is a command line: type a symbol (`VOD.L`) or a company name and press Enter, and the security screen below the monitor shows its name, exchange and currency, the last price with its change, the previous close and volume, the day's range, where the price sits in the year's range, and the last trade. Enter on an empty line shows the monitor's cursor row; Up/Down move through the monitor; F5 refreshes both. A ticker tape across the second line lists every watched stock.
+
+- **A lookup never joins the watchlist.** `IStockService.QuoteAsync` asks the source for one symbol and keeps nothing. A name that has no quote of its own is looked up through its best search hit, and the screen says so when nothing is found.
+- **Lookups are parked, like the currency converter's.** The lookup runs on a background task and parks its result; `OnIdle` applies it on the UI thread. Only the newest lookup may land, so an older one that finishes late is dropped. Tests have no idle job, so they pump `OnIdle` themselves.
+- **Reuses the stock browser's rows.** The monitor is the browser's `StockListBox` and its column formatting, so the two always agree on prices and colours.
+- **The end-to-end suite needs no sandbox replacement:** the lookups go through `IStockService`, which the suite already replaces with `SandboxServices.StockQuotes`.
+
 ### Currency converter (`CurrencyConverterDialog`, Ctrl+Shift+F5, `Services/Currency/`)
 Tools > Currency Converter: an amount, a From and a To currency; the result and the rate both ways are shown as you type. F5 downloads the rates again, F6 swaps the currencies. The choices are kept in the `CurrencyConverter.*` settings.
 
