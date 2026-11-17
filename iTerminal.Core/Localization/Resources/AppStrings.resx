@@ -464,6 +464,189 @@
   <data name="Dialog.SystemInformation" xml:space="preserve">
     <value>System Information</value>
   </data>
+  <data name="SysInfo.Section.OperatingSystem" xml:space="preserve">
+    <value>Operating System</value>
+  </data>
+  <data name="SysInfo.Section.Hardware" xml:space="preserve">
+    <value>Hardware</value>
+  </data>
+  <data name="SysInfo.Section.Cpu" xml:space="preserve">
+    <value>Processor</value>
+  </data>
+  <data name="SysInfo.Section.Memory" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="SysInfo.Section.Gpu" xml:space="preserve">
+    <value>Graphics</value>
+  </data>
+  <data name="SysInfo.Section.Battery" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="SysInfo.Section.Drives" xml:space="preserve">
+    <value>Drives</value>
+  </data>
+  <data name="SysInfo.Section.DiskIo" xml:space="preserve">
+    <value>Disk I/O</value>
+  </data>
+  <data name="SysInfo.Section.NetworkIo" xml:space="preserve">
+    <value>Network I/O</value>
+  </data>
+  <data name="SysInfo.Section.NetworkInterfaces" xml:space="preserve">
+    <value>Network Interfaces</value>
+  </data>
+  <data name="SysInfo.Section.Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
+  <data name="SysInfo.Section.CurrentUser" xml:space="preserve">
+    <value>Current User</value>
+  </data>
+  <data name="SysInfo.Section.Environment" xml:space="preserve">
+    <value>Environment Variables</value>
+  </data>
+  <data name="SysInfo.Label.MemoryUsed" xml:space="preserve">
+    <value>Memory used</value>
+  </data>
+  <data name="SysInfo.Label.OsDescription" xml:space="preserve">
+    <value>OS Description</value>
+  </data>
+  <data name="SysInfo.Label.Architecture" xml:space="preserve">
+    <value>OS Architecture</value>
+  </data>
+  <data name="SysInfo.Label.Framework" xml:space="preserve">
+    <value>Framework</value>
+  </data>
+  <data name="SysInfo.Label.MachineName" xml:space="preserve">
+    <value>Machine Name</value>
+  </data>
+  <data name="SysInfo.Label.ProcessArch" xml:space="preserve">
+    <value>Process Arch</value>
+  </data>
+  <data name="SysInfo.Label.Process64Bit" xml:space="preserve">
+    <value>64-bit Process</value>
+  </data>
+  <data name="SysInfo.Label.Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SysInfo.Label.LogicalProcessors" xml:space="preserve">
+    <value>Logical processors</value>
+  </data>
+  <data name="SysInfo.Label.Load" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalTotal" xml:space="preserve">
+    <value>Physical Memory (total)</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalAvailable" xml:space="preserve">
+    <value>Available Memory</value>
+  </data>
+  <data name="SysInfo.Label.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="SysInfo.Label.Driver" xml:space="preserve">
+    <value>Driver</value>
+  </data>
+  <data name="SysInfo.Label.VideoMemory" xml:space="preserve">
+    <value>Video memory</value>
+  </data>
+  <data name="SysInfo.Label.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="SysInfo.Label.Percent" xml:space="preserve">
+    <value>Charge</value>
+  </data>
+  <data name="SysInfo.Label.Remaining" xml:space="preserve">
+    <value>Time remaining</value>
+  </data>
+  <data name="SysInfo.Label.ToFull" xml:space="preserve">
+    <value>Time to full</value>
+  </data>
+  <data name="SysInfo.Label.Power" xml:space="preserve">
+    <value>Power</value>
+  </data>
+  <data name="SysInfo.Label.Health" xml:space="preserve">
+    <value>Health</value>
+  </data>
+  <data name="SysInfo.Label.Cycles" xml:space="preserve">
+    <value>Cycle count</value>
+  </data>
+  <data name="SysInfo.Label.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="SysInfo.Label.Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="SysInfo.Label.RuntimeId" xml:space="preserve">
+    <value>Runtime ID</value>
+  </data>
+  <data name="SysInfo.Label.ClrVersion" xml:space="preserve">
+    <value>CLR Version</value>
+  </data>
+  <data name="SysInfo.Label.UserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="SysInfo.Label.Domain" xml:space="preserve">
+    <value>User Domain</value>
+  </data>
+  <data name="SysInfo.Label.Home" xml:space="preserve">
+    <value>Home Directory</value>
+  </data>
+  <data name="SysInfo.Label.Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="SysInfo.Label.Used" xml:space="preserve">
+    <value>Used</value>
+  </data>
+  <data name="SysInfo.Label.Free" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="SysInfo.Label.VolumeLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="SysInfo.Battery.None" xml:space="preserve">
+    <value>no battery</value>
+  </data>
+  <data name="SysInfo.Battery.Charging" xml:space="preserve">
+    <value>charging</value>
+  </data>
+  <data name="SysInfo.Battery.Discharging" xml:space="preserve">
+    <value>discharging</value>
+  </data>
+  <data name="SysInfo.Battery.Full" xml:space="preserve">
+    <value>full</value>
+  </data>
+  <data name="SysInfo.Battery.NotCharging" xml:space="preserve">
+    <value>not charging</value>
+  </data>
+  <data name="SysInfo.Battery.Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="SysInfo.State.NotReported" xml:space="preserve">
+    <value>not reported</value>
+  </data>
+  <data name="SysInfo.State.NotAnswering" xml:space="preserve">
+    <value>not answering</value>
+  </data>
+  <data name="SysInfo.State.Measuring" xml:space="preserve">
+    <value>measuring</value>
+  </data>
+  <data name="SysInfo.State.NoTime" xml:space="preserve">
+    <value>no time</value>
+  </data>
+  <data name="SysInfo.State.NotReady" xml:space="preserve">
+    <value>not ready</value>
+  </data>
+  <data name="SysInfo.Io.Read" xml:space="preserve">
+    <value>Read {0}</value>
+  </data>
+  <data name="SysInfo.Io.Write" xml:space="preserve">
+    <value>Write {0}</value>
+  </data>
+  <data name="SysInfo.Io.Received" xml:space="preserve">
+    <value>Received {0}</value>
+  </data>
+  <data name="SysInfo.Io.Sent" xml:space="preserve">
+    <value>Sent {0}</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>System Settings</value>
   </data>
@@ -4525,6 +4708,15 @@
   </data>
   <data name="Update.ClosesDuring" xml:space="preserve">
     <value>iTerminal closes while the installer runs.</value>
+  </data>
+  <data name="Update.NoPortableArchive" xml:space="preserve">
+    <value>This release has no portable archive yet.</value>
+  </data>
+  <data name="Update.ClosesDuringPortable" xml:space="preserve">
+    <value>iTerminal closes while its files are replaced, then starts again.</value>
+  </data>
+  <data name="Update.PortableDescription" xml:space="preserve">
+    <value>Download the new release and replace this copy of iTerminal with it.</value>
   </data>
   <data name="Update.DownloadFrom" xml:space="preserve">
     <value>Download it from {0}</value>
@@ -9188,6 +9380,15 @@
   <data name="Form.To" xml:space="preserve">
     <value>To</value>
   </data>
+  <data name="About.Release" xml:space="preserve">
+    <value>Release</value>
+  </data>
+  <data name="About.ReleasePackage" xml:space="preserve">
+    <value>Package</value>
+  </data>
+  <data name="About.ReleasePortable" xml:space="preserve">
+    <value>Portable</value>
+  </data>
   <data name="About.Version" xml:space="preserve">
     <value>Version</value>
   </data>
@@ -10138,5 +10339,39 @@
   </data>
   <data name="Menu.CopyFiles" xml:space="preserve">
     <value>Copy Files</value>
+  </data>
+  <data name="Dialog.MarketTerminal" xml:space="preserve">
+    <value>Market Terminal</value>
+  </data>
+  <data name="Hints.MarketTerminal" xml:space="preserve">
+    <value>Enter:look up or show the row  ↑↓:monitor  F5:refresh  Esc:close</value>
+  </data>
+  <data name="Market.Prompt" xml:space="preserve">
+    <value>Look up  ›</value>
+  </data>
+  <data name="Market.Placeholder" xml:space="preserve">
+    <value>AAPL, VOD.L or a company name, then Enter</value>
+  </data>
+  <data name="Market.Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="Market.NoSecurity" xml:space="preserve">
+    <value>Type a symbol or company name and press Enter.</value>
+  </data>
+  <data name="Market.Looking" xml:space="preserve">
+    <value>Looking up {0}…</value>
+  </data>
+  <data name="Market.NotFound" xml:space="preserve">
+    <value>No quote for {0}. Check the symbol; other exchanges add a suffix, such as VOD.L.</value>
+  </data>
+  <data name="Market.LookUp" xml:space="preserve">
+    <value>Look up the symbol, or show the chosen row</value>
+  </data>
+  <data name="CmdTitle.231d197e" xml:space="preserve">
+    <value>Market Terminal</value>
+  </data>
+  <data name="CmdDesc.76098275" xml:space="preserve">
+    <value>Open the market terminal: a command line to look up any stock, a ticker tape and the watchlist as a monitor.</value>
+    <comment>Open the market terminal: a command line to look up any stock, a ticker tape and the watchlist as a monitor.</comment>
   </data>
 </root>

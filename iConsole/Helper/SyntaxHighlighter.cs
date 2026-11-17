@@ -236,6 +236,81 @@ public static class SyntaxHighlighter
         "identity", "explain", "use", "replace", "merge", "fetch", "next", "only", "rows", "first", "last",
     ];
 
+    /// <summary>
+    /// COBOL reserved words: the divisions, the data and procedure clauses, the statements and their phrases. COBOL is
+    /// case-insensitive and its names use hyphens (<c>WS-TOTAL</c>, <c>END-IF</c>), so they are matched as whole words.
+    /// </summary>
+    private static readonly string[] CobolKeywords =
+    [
+        "identification", "environment", "data", "procedure", "division", "section", "program-id", "author", "date-written",
+        "date-compiled", "configuration", "input-output", "file-control", "select", "assign", "organization", "access", "mode",
+        "sequential", "indexed", "relative", "record", "key", "file", "fd", "sd", "working-storage", "local-storage", "linkage",
+        "file-section", "value", "values", "pic", "picture", "comp", "comp-1", "comp-2", "comp-3", "binary", "display",
+        "occurs", "redefines", "filler", "usage", "sign", "leading", "trailing", "separate", "justified", "blank", "zero",
+        "zeros", "zeroes", "spaces", "high-values", "low-values", "quote", "quotes", "all", "copy", "replace", "using",
+        "returning", "reference", "content", "move", "corresponding", "corr", "add", "subtract", "multiply", "divide",
+        "giving", "remainder", "by", "to", "from", "into", "compute", "if", "then", "else", "end-if", "evaluate", "end-evaluate",
+        "when", "other", "also", "perform", "end-perform", "until", "varying", "times", "thru", "through", "go", "goto",
+        "stop", "run", "exit", "program", "call", "cancel", "goback", "accept", "initialize", "inspect", "tallying",
+        "replacing", "string", "unstring", "delimited", "delimiter", "pointer", "open", "close", "input", "output", "i-o",
+        "extend", "read", "write", "rewrite", "delete", "start", "at", "end", "end-read", "end-write", "end-start",
+        "end-delete", "end-add", "end-subtract", "end-multiply", "end-divide", "end-compute", "end-call", "end-string",
+        "end-unstring", "invalid", "not", "next", "return", "end-return", "sort", "merge", "search", "end-search", "set", "release",
+        "continue", "rounded", "size", "on", "overflow", "exception", "error", "and", "or", "is", "equal", "greater", "less",
+        "than", "numeric", "alphabetic", "class", "condition", "true", "false", "positive", "negative", "first", "last", "lock",
+        "unlock", "ascending", "descending", "index", "in", "of", "function", "intrinsic", "upon", "exec", "end-exec",
+        "debugging", "use", "report", "initiate", "generate", "terminate", "suppress", "allocate", "free",
+    ];
+
+    /// <summary>
+    /// Fortran keywords: the program units, declarations, control constructs, I/O statements, the logical constants and the
+    /// common intrinsic functions. Fortran is case-insensitive, and <c>endif</c> and <c>end if</c> are both spellings.
+    /// </summary>
+    private static readonly string[] FortranKeywords =
+    [
+        "program", "end", "endprogram", "subroutine", "endsubroutine", "function", "endfunction", "module", "endmodule",
+        "submodule", "endsubmodule", "contains", "use", "only", "rename", "implicit", "none", "import", "integer", "real",
+        "double", "precision", "complex", "logical", "character", "type", "endtype", "class", "dimension", "parameter",
+        "allocatable", "pointer", "target", "intent", "in", "out", "inout", "optional", "save", "data", "common",
+        "equivalence", "external", "intrinsic", "interface", "endinterface", "procedure", "extends", "abstract", "public",
+        "private", "protected", "sequence", "kind", "len", "result", "recursive", "pure", "elemental", "impure",
+        "if", "then", "else", "elseif", "endif", "do", "while", "enddo", "concurrent", "select", "case", "endselect", "default",
+        "where", "elsewhere", "endwhere", "forall", "endforall", "go", "to", "goto", "continue", "cycle", "exit", "return",
+        "stop", "pause", "call", "print", "write", "read", "open", "close", "inquire", "rewind", "backspace", "endfile",
+        "format", "allocate", "deallocate", "nullify", "associate", "endassociate", "block", "endblock", "critical",
+        "endcritical", "error", "sync", "all", "images", "unit", "file", "status", "iostat", "err", "end", "true", "false",
+        "sqrt", "abs", "sin", "cos", "exp", "log", "size", "shape", "sum", "product", "maxval", "minval", "trim", "allocated",
+        "present", "merge", "len_trim", "associated",
+    ];
+
+    /// <summary>
+    /// Assembly mnemonics and directives for x86 and x86-64 in NASM, MASM and GNU as syntax, the common registers, and the
+    /// data and section directives. Assembly is written in either case, so the list is matched without regard to case.
+    /// </summary>
+    private static readonly string[] AssemblyKeywords =
+    [
+        "mov", "movzx", "movsx", "movsxd", "movs", "movsb", "movsw", "movsd", "movq", "movabs", "lea", "push", "pop", "pushf", "popf",
+        "add", "adc", "sub", "sbb", "inc", "dec", "neg", "mul", "imul", "div", "idiv", "cmp", "test", "and", "or", "xor", "not",
+        "shl", "shr", "sal", "sar", "rol", "ror", "shld", "shrd", "bt", "bsf", "bsr", "cmov", "xchg", "cmpxchg", "bswap",
+        "jmp", "je", "jne", "jz", "jnz", "jg", "jge", "jl", "jle", "ja", "jae", "jb", "jbe", "js", "jns", "jo", "jno", "jc", "jnc",
+        "jcxz", "jecxz", "jrcxz", "loop", "loope", "loopne", "call", "ret", "retn", "retf", "leave", "enter", "int", "into", "iret",
+        "syscall", "sysenter", "sysexit", "nop", "hlt", "cli", "sti", "clc", "stc", "cld", "std", "cpuid", "rdtsc", "in", "out",
+        "rep", "repe", "repne", "repz", "repnz", "cbw", "cwd", "cdq", "cqo", "cwde", "cdqe", "stosb", "stosw", "stosd", "stosq",
+        "lodsb", "lodsw", "lodsd", "lodsq", "scasb", "scasw", "scasd", "scasq", "cmpsb", "cmpsw", "cmpsd", "cmpsq",
+        "addss", "addsd", "subss", "subsd", "mulss", "mulsd", "divss", "divsd", "movss", "movsd", "movaps", "movups", "movdqa",
+        "movdqu", "pxor", "paddd", "paddq", "vmovdqu", "vmovdqa", "vpxor", "vaddps", "vmulps", "ldr", "str", "b", "bl", "bx",
+        "blx", "cbz", "cbnz", "adr", "adrp", "stp", "ldp", "svc", "ret",
+        "db", "dw", "dd", "dq", "dt", "resb", "resw", "resd", "resq", "rest", "equ", "times", "section", "segment", "global",
+        "globl", "extern", "external", "org", "align", "alignb", "bits", "use16", "use32", "use64", "struc", "endstruc", "macro",
+        "endmacro", "proc", "endp", "ends", "assume", "include", "incbin", "label", "ptr", "offset", "byte", "word", "dword",
+        "qword", "text", "data", "bss", "rodata", "type", "size", "ascii", "asciz", "string", "quad", "long", "short", "zero",
+        "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rsp", "rbp", "rip", "eax", "ebx", "ecx", "edx", "esi", "edi", "esp", "ebp", "eip",
+        "ax", "bx", "cx", "dx", "si", "di", "sp", "bp", "al", "bl", "cl", "dl", "ah", "bh", "ch", "dh", "ah", "sil", "dil",
+        "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "r8d", "r9d", "r10d", "r11d", "r12d", "r13d", "r14d", "r15d",
+        "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7", "ymm0", "ymm1", "ymm2", "ymm3", "st0",
+        "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "w0", "w1", "w2", "w3", "sp", "lr", "pc",
+    ];
+
     private static readonly string[] MarkupKeywords = [];
 
     private static readonly string[] DataKeywords = ["true", "false", "null", "yes", "no", "on", "off"];
@@ -364,6 +439,20 @@ public static class SyntaxHighlighter
          "true", "false", "null", "self", "parent"],
         ["//", "#"], ("/*", "*/"), "\"'", ignoreCase: true, variableSigils: "$");
 
+    // COBOL is case-insensitive, its names are hyphenated, and a doubled quote is the only way to put a quote in a literal.
+    // The fixed-format comment (an asterisk in column 7) is not recognised: columns are not tracked.
+    private static readonly SyntaxLanguage Cobol = new(
+        "COBOL", CobolKeywords, ["*>"], null, "\"'", ignoreCase: true, stringEscape: '\0', hyphenatedWords: true, doubledQuotes: true);
+
+    // Fortran is case-insensitive; '!' starts a comment in free form, and a doubled quote is the only quote escape.
+    // Assembly: ';' starts a comment in NASM and MASM, '#' in GNU as on x86, and '//' or '@' in GNU as on ARM.
+    // Strings take backslash escapes (GNU as and NASM), and a '$' or '%' sigil is ignored, so registers are plain words.
+    private static readonly SyntaxLanguage Assembly = new(
+        "Assembly", AssemblyKeywords, [";", "#", "//"], ("/*", "*/"), "\"'", ignoreCase: true);
+
+    private static readonly SyntaxLanguage Fortran = new(
+        "FORTRAN", FortranKeywords, ["!"], null, "\"'", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
+
     private static readonly SyntaxLanguage VisualBasic = new(
         "Visual Basic",
         ["AddHandler", "As", "Boolean", "ByRef", "ByVal", "Case", "Catch", "Class", "Const", "Dim", "Do", "Double", "Each", "Else",
@@ -410,6 +499,9 @@ public static class SyntaxHighlighter
         [".tf"] = Config, [".tfvars"] = Config, [".gitignore"] = Config,
         [".java"] = Java, [".js"] = JavaScript, [".jsx"] = JavaScript, [".mjs"] = JavaScript,
         [".ts"] = TypeScript, [".tsx"] = TypeScript, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = Php,
+        [".cob"] = Cobol, [".cbl"] = Cobol, [".cobol"] = Cobol, [".cpy"] = Cobol,
+        [".asm"] = Assembly, [".s"] = Assembly, [".nasm"] = Assembly,
+        [".f"] = Fortran, [".for"] = Fortran, [".f77"] = Fortran, [".f90"] = Fortran, [".f95"] = Fortran, [".f03"] = Fortran, [".f08"] = Fortran, [".ftn"] = Fortran,
         [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
         [".py"] = Python, [".pyw"] = Python, [".rb"] = Ruby, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
         [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
@@ -424,7 +516,7 @@ public static class SyntaxHighlighter
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, TypeScript, PowerShell, Python, Ruby, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, TypeScript, PowerShell, Python, Ruby, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log, Cobol, Fortran, Assembly];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)

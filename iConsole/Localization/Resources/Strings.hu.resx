@@ -1970,4 +1970,25 @@
   <data name="Viewer.CloseHint" xml:space="preserve">
     <value>  Esc:bezár</value>
   </data>
+  <data name="Status.LineColumn" xml:space="preserve">
+    <value>Sor {0}/{1} Oszl {2}/{3}</value>
+  </data>
+  <data name="Prompt.HintAccept" xml:space="preserve">
+    <value>Enter: elfogad    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintFilterChoose" xml:space="preserve">
+    <value>Gépelés a szűréshez    Enter: választ    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
+    <value>Space: jelöl    Enter: megerősít    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintYes" xml:space="preserve">
+    <value>Enter: igen    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintNo" xml:space="preserve">
+    <value>Enter: nem    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintCancel" xml:space="preserve">
+    <value>Esc: mégse</value>
+  </data>
 </root>

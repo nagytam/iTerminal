@@ -380,7 +380,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync("row 000");
 
         await _app.PressAsync("Down");
-        await _app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Y: 1/300", StringComparison.Ordinal)), "Down to move the cursor");
+        await _app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Ln 2/300", StringComparison.Ordinal)), "Down to move the cursor");
         await _app.PressAsync("PageDown");
         await _app.WaitUntilAsync(s => !s.Contains("row 000"), "PageDown to move on");
         await _app.PressAsync("End");

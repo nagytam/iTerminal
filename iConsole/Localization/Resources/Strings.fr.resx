@@ -1970,4 +1970,25 @@
   <data name="Viewer.CloseHint" xml:space="preserve">
     <value>  Échap:fermer</value>
   </data>
+  <data name="Status.LineColumn" xml:space="preserve">
+    <value>Ln {0}/{1} Col {2}/{3}</value>
+  </data>
+  <data name="Prompt.HintAccept" xml:space="preserve">
+    <value>Entrée: valider    Échap: annuler</value>
+  </data>
+  <data name="Prompt.HintFilterChoose" xml:space="preserve">
+    <value>Taper pour filtrer    Entrée: choisir    Échap: annuler</value>
+  </data>
+  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
+    <value>Espace: marquer    Entrée: confirmer    Échap: annuler</value>
+  </data>
+  <data name="Prompt.HintYes" xml:space="preserve">
+    <value>Entrée: oui    Échap: annuler</value>
+  </data>
+  <data name="Prompt.HintNo" xml:space="preserve">
+    <value>Entrée: non    Échap: annuler</value>
+  </data>
+  <data name="Prompt.HintCancel" xml:space="preserve">
+    <value>Échap: annuler</value>
+  </data>
 </root>

@@ -1,92 +1,69 @@
-using iConsole.Localization;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Text;
+using iConsole.Controls.Charts;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Dialogs;
+using iConsole.Localization;
 using iConsole.Services;
-using iConsole.Controls.Charts;
-using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using System.Text;
+using iTerminal.Core.Services.SystemInfo;
 
 namespace iTerminal.Core.Dialogs;
 
+/// <summary>
+/// The system information report (Ctrl+F11). The dialog probes nothing: it watches the sampler while it is open, reads
+/// the snapshot the sampler publishes, and formats it. Every word is looked up through the localizer, so a language
+/// change re-formats the current snapshot without touching the machine again.
+/// </summary>
 public class SystemInfoDialog : Dialog
 {
     private const int HistoryLength = 120;
-    private const long SampleIntervalMs = 1000;
+    private const int LabelWidth = 18;
 
     private readonly TextViewerControl _textViewerControl;
     private readonly Gauge _memoryGauge;
     private readonly LineChart _memoryTrend;
     private readonly List<double> _memoryHistory = [];
-    private long _lastSampleTick = long.MinValue;
+    private readonly ISystemSampler _sampler;
+    private readonly ILocalizer _localizer;
+    private IDisposable? _watch;
+    private SystemSnapshot? _shown;
+    private volatile bool _languageChanged;
+    private bool _closed;
 
-    public SystemInfoDialog(IThemeService themeService)
+    public SystemInfoDialog(IThemeService themeService, ISystemSampler sampler, ILocalizer localizer)
         : base(nameof(SystemInfoDialog), themeService)
     {
-        Title = iConsole.Localization.UiText.Get("Dialog.SystemInformation", "System Information");
+        _sampler = sampler;
+        _localizer = localizer;
+        Title = UiText.Get("Dialog.SystemInformation", "System Information");
         _textViewerControl = new TextViewerControl(false, themeService);
         AddControl(_textViewerControl);
 
-        // A live strip under the report: how much of the machine's memory this process holds, and the trend.
-        _memoryGauge = new Gauge(themeService) { Label = UiText.Get("Field.MemoryThisProcess", "Memory (this process)"), ViewSize = new Size(1, 1) };
+        // A live strip under the report: how much of the machine's physical memory is in use, and the trend.
+        _memoryGauge = new Gauge(themeService) { Label = UiText.Get("SysInfo.Label.MemoryUsed", "Memory used"), ViewSize = new Size(1, 1) };
         _memoryTrend = new LineChart(themeService) { Foreground = Color.Cyan, ViewSize = new Size(1, 2) };
         AddControl(_memoryGauge);
         AddControl(_memoryTrend);
     }
 
+    /// <summary>The memory use the strip has been fed, one value per snapshot, oldest first.</summary>
     internal IReadOnlyList<double> MemoryHistoryForTest => _memoryHistory;
 
-    internal void SampleMemory()
-    {
-        double available = Math.Max(1, GC.GetGCMemoryInfo().TotalAvailableMemoryBytes);
-        double ratio = Math.Clamp(Environment.WorkingSet / available, 0, 1);
-        _memoryHistory.Add(ratio);
-        if (_memoryHistory.Count > HistoryLength)
-        {
-            _memoryHistory.RemoveAt(0);
-        }
-
-        _memoryGauge.Value = ratio;
-        _memoryTrend.Values = _memoryHistory.ToArray();
-    }
-
-    public override void OnIdle()
-    {
-        base.OnIdle();
-        long now = Environment.TickCount64;
-        if (now - _lastSampleTick >= SampleIntervalMs)
-        {
-            _lastSampleTick = now;
-            SampleMemory();
-        }
-    }
+    /// <summary>The lines the report shows now.</summary>
+    internal IReadOnlyList<string> LinesForTest => [.. _textViewerControl.TextModel.Lines];
 
     internal const string CollectingText = "  Collecting system information…";
-
-    /// <summary>
-    /// The collection the dialog last started. Nothing awaits it — it exists so a test can wait
-    /// for the report instead of polling.
-    /// </summary>
-    internal Task InfoTask { get; private set; } = Task.CompletedTask;
-
-    internal IReadOnlyList<string> LinesForTest => [.. _textViewerControl.TextModel.Lines.AsSnapshot()];
 
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
 
-        // Collected off the key handler: DriveInfo.IsReady on a disconnected network drive, and the
-        // network-interface walk, can each take seconds — and the dialog used to show nothing at all
-        // until both were done.
         _textViewerControl.TextModel.Lines = [CollectingText];
-        InfoTask = Task.Run(() =>
-        {
-            _textViewerControl.TextModel.Lines = [.. BuildSystemInfo().TrimEnd().Split(Environment.NewLine)];
-            StateHasChanged();
-        });
+        _watch = _sampler.Watch();
+        _localizer.LanguageChanged += OnLanguageChanged;
     }
 
     public override void OnInitializeLayout()
@@ -108,115 +85,315 @@ public class SystemInfoDialog : Dialog
         base.OnInitializeLayout();
     }
 
-    /// <summary>How long, in all, the report waits for the drives to say how full they are.</summary>
-    private static readonly TimeSpan DriveProbeBudget = TimeSpan.FromSeconds(3);
-
-    private static string DriveLine(DriveInfo drive)
+    public override void OnIdle()
     {
-        try
-        {
-            if (!drive.IsReady)
-            {
-                return $"  {drive.Name,-6} {drive.DriveType,-10} (not ready)";
-            }
+        base.OnIdle();
 
-            var totalGb = drive.TotalSize / 1024.0 / 1024 / 1024;
-            var freeGb = drive.TotalFreeSpace / 1024.0 / 1024 / 1024;
-            var usedGb = (drive.TotalSize - drive.TotalFreeSpace) / 1024.0 / 1024 / 1024;
-            return $"  {drive.Name,-6} {drive.DriveType,-10} {drive.DriveFormat,-8}  " +
-                   $"Total: {totalGb,8:N2} GB  Used: {usedGb,8:N2} GB  Free: {freeGb,8:N2} GB  " +
-                   $"{BarChart.BuildBar(drive.TotalSize == 0 ? 0 : (double)(drive.TotalSize - drive.TotalFreeSpace) / drive.TotalSize, 10).Replace(' ', '░')}  " +
-                   $"Label: {drive.VolumeLabel}";
-        }
-        catch
+        SystemSnapshot? snapshot = _sampler.Current;
+        bool languageChanged = _languageChanged;
+        _languageChanged = false;
+        if (snapshot is null)
         {
-            return $"  {drive.Name,-6} (access denied)";
+            return;
+        }
+
+        if (!ReferenceEquals(snapshot, _shown) || languageChanged)
+        {
+            bool newSnapshot = !ReferenceEquals(snapshot, _shown);
+            _shown = snapshot;
+            _textViewerControl.TextModel.Lines = [.. BuildReport(snapshot).Split(Environment.NewLine)];
+            if (newSnapshot)
+            {
+                FeedMemoryStrip(snapshot);
+            }
         }
     }
 
-    internal static string BuildSystemInfo()
+    public override void Close()
+    {
+        base.Close();
+
+        if (!_closed)
+        {
+            _closed = true;
+            _localizer.LanguageChanged -= OnLanguageChanged;
+            _watch?.Dispose();
+            _watch = null;
+        }
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e) => _languageChanged = true;
+
+    private void FeedMemoryStrip(SystemSnapshot snapshot)
+    {
+        if (snapshot.PhysicalMemoryTotal.State != ProbeState.Ok || snapshot.PhysicalMemoryAvailable.State != ProbeState.Ok)
+        {
+            return;
+        }
+
+        ulong total = snapshot.PhysicalMemoryTotal.Value;
+        if (total == 0)
+        {
+            return;
+        }
+
+        double used = Math.Clamp((double)(total - snapshot.PhysicalMemoryAvailable.Value) / total, 0, 1);
+        _memoryHistory.Add(used);
+        if (_memoryHistory.Count > HistoryLength)
+        {
+            _memoryHistory.RemoveAt(0);
+        }
+
+        _memoryGauge.Value = used;
+        _memoryTrend.Values = _memoryHistory.ToArray();
+    }
+
+    private string Text(string key, string fallback) =>
+        _localizer.TryGet(key, out string value) && value.Length > 0 ? value : fallback;
+
+    private string Format(string key, string fallback, params object?[] args) =>
+        string.Format(CultureInfo.CurrentCulture, Text(key, fallback), args);
+
+    private string Label(string key, string fallback) => Text(key, fallback).PadRight(LabelWidth);
+
+    private string Header(string key, string fallback) => $"══ {Text(key, fallback)} ".PadRight(64, '═');
+
+    private string StateWord(ProbeState state) => state switch
+    {
+        ProbeState.NotAnswering => Text("SysInfo.State.NotAnswering", "not answering"),
+        ProbeState.Measuring => Text("SysInfo.State.Measuring", "measuring"),
+        _ => Text("SysInfo.State.NotReported", "not reported"),
+    };
+
+    private string Value<T>(Probed<T> probed, Func<T, string> format) =>
+        probed.State == ProbeState.Ok && probed.Value is { } value ? format(value) : StateWord(probed.State);
+
+    private static string Gigabytes(double bytes) => (bytes / 1024 / 1024 / 1024).ToString("N2", CultureInfo.CurrentCulture) + " GB";
+
+    private static string Rate(double bytesPerSecond) =>
+        bytesPerSecond >= 1024 * 1024
+            ? (bytesPerSecond / 1024 / 1024).ToString("N2", CultureInfo.CurrentCulture) + " MB/s"
+            : (bytesPerSecond / 1024).ToString("N1", CultureInfo.CurrentCulture) + " KB/s";
+
+    private string BatteryStatusWord(BatteryStatus status) => status switch
+    {
+        BatteryStatus.Charging => Text("SysInfo.Battery.Charging", "charging"),
+        BatteryStatus.Discharging => Text("SysInfo.Battery.Discharging", "discharging"),
+        BatteryStatus.Full => Text("SysInfo.Battery.Full", "full"),
+        BatteryStatus.NotCharging => Text("SysInfo.Battery.NotCharging", "not charging"),
+        _ => Text("SysInfo.Battery.Unknown", "unknown"),
+    };
+
+    private string Duration(TimeSpan? time) =>
+        time is { } span ? $"{(int)span.TotalHours}:{span.Minutes:00} h" : Text("SysInfo.State.NoTime", "no time");
+
+    internal string BuildReport(SystemSnapshot s)
     {
         var sb = new StringBuilder();
 
-        // ── Operating System ──────────────────────────────────────────────
-        sb.AppendLine("══ Operating System ══════════════════════════════════════════");
-        sb.AppendLine($"  OS Description   : {RuntimeInformation.OSDescription}");
-        sb.AppendLine($"  OS Architecture  : {RuntimeInformation.OSArchitecture}");
-        sb.AppendLine($"  OS Version       : {Environment.OSVersion}");
-        sb.AppendLine($"  Platform         : {Environment.OSVersion.Platform}");
-        sb.AppendLine($"  64-bit OS        : {Environment.Is64BitOperatingSystem}");
-        sb.AppendLine($"  System Directory : {Environment.SystemDirectory}");
-        sb.AppendLine($"  System Uptime    : {TimeSpan.FromMilliseconds(Environment.TickCount64):d\\d\\ hh\\:mm\\:ss}");
-
-        // ── Hardware ──────────────────────────────────────────────────────
+        sb.AppendLine(Header("SysInfo.Section.OperatingSystem", "Operating System"));
+        sb.AppendLine($"  {Label("SysInfo.Label.OsDescription", "OS Description")}: {Value(s.OperatingSystem, v => v)}");
+        sb.AppendLine($"  {Label("SysInfo.Label.Architecture", "OS Architecture")}: {Value(s.Architecture, v => v)}");
+        sb.AppendLine($"  {Label("SysInfo.Label.Framework", "Framework")}: {Value(s.Framework, v => v)}");
         sb.AppendLine();
-        sb.AppendLine("══ Hardware ══════════════════════════════════════════════════");
-        sb.AppendLine($"  Machine Name     : {Environment.MachineName}");
-        sb.AppendLine($"  Processor Count  : {Environment.ProcessorCount}");
-        sb.AppendLine($"  Process Arch     : {RuntimeInformation.ProcessArchitecture}");
-        sb.AppendLine($"  64-bit Process   : {Environment.Is64BitProcess}");
 
-        var totalMemoryMb = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024;
-        sb.AppendLine($"  Available Memory : {totalMemoryMb:N0} MB");
-
-        // ── Runtime ───────────────────────────────────────────────────────
+        sb.AppendLine(Header("SysInfo.Section.Hardware", "Hardware"));
+        sb.AppendLine($"  {Label("SysInfo.Label.MachineName", "Machine Name")}: {Environment.MachineName}");
+        sb.AppendLine($"  {Label("SysInfo.Label.ProcessArch", "Process Arch")}: {RuntimeInformation.ProcessArchitecture}");
+        sb.AppendLine($"  {Label("SysInfo.Label.Process64Bit", "64-bit Process")}: {Environment.Is64BitProcess}");
         sb.AppendLine();
-        sb.AppendLine("══ Runtime ═══════════════════════════════════════════════════");
-        sb.AppendLine($"  Framework        : {RuntimeInformation.FrameworkDescription}");
-        sb.AppendLine($"  Runtime ID       : {RuntimeInformation.RuntimeIdentifier}");
-        sb.AppendLine($"  CLR Version      : {Environment.Version}");
 
-        // ── Current User ──────────────────────────────────────────────────
+        sb.AppendLine(Header("SysInfo.Section.Cpu", "Processor"));
+        sb.AppendLine($"  {Label("SysInfo.Label.Model", "Model")}: {Value(s.CpuModel, v => v)}");
+        sb.AppendLine($"  {Label("SysInfo.Label.LogicalProcessors", "Logical processors")}: {Value(s.LogicalProcessors, v => v.ToString(CultureInfo.CurrentCulture))}");
+        sb.AppendLine($"  {Label("SysInfo.Label.Load", "Load")}: {Value(s.CpuLoadPercent, v => v.ToString("N0", CultureInfo.CurrentCulture) + " %")}");
         sb.AppendLine();
-        sb.AppendLine("══ Current User ══════════════════════════════════════════════");
-        sb.AppendLine($"  User Name        : {Environment.UserName}");
-        sb.AppendLine($"  User Domain      : {Environment.UserDomainName}");
-        sb.AppendLine($"  Home Directory   : {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}");
 
-        // ── Drives ────────────────────────────────────────────────────────
+        sb.AppendLine(Header("SysInfo.Section.Memory", "Memory"));
+        sb.AppendLine($"  {Label("SysInfo.Label.PhysicalTotal", "Physical Memory (total)")}: {Value(s.PhysicalMemoryTotal, v => Gigabytes(v))}");
+        sb.AppendLine($"  {Label("SysInfo.Label.PhysicalAvailable", "Available Memory")}: {Value(s.PhysicalMemoryAvailable, v => Gigabytes(v))}");
         sb.AppendLine();
-        sb.AppendLine("══ Drives ════════════════════════════════════════════════════");
-        // Every drive is asked at the same moment and only waited for a few seconds in all: a mapped
-        // network drive whose server is switched off can take a minute to answer, one drive after
-        // another, and the whole report waited for them.
-        var drives = DriveInfo.GetDrives();
-        var driveLines = drives.Select(drive => Task.Run(() => DriveLine(drive))).ToArray();
-        Task.WaitAll(driveLines, DriveProbeBudget);
-        for (int i = 0; i < drives.Length; i++)
+
+        sb.AppendLine(Header("SysInfo.Section.Gpu", "Graphics"));
+        if (s.Gpus.State == ProbeState.Ok && s.Gpus.Value is { Count: > 0 } gpus)
         {
-            sb.AppendLine(driveLines[i].IsCompletedSuccessfully
-                ? driveLines[i].Result
-                : $"  {drives[i].Name,-6} (not answering)");
+            foreach (GpuReading gpu in gpus)
+            {
+                sb.AppendLine($"  {Label("SysInfo.Label.Name", "Name")}: {gpu.Name}");
+                sb.AppendLine($"  {Label("SysInfo.Label.Driver", "Driver")}: {gpu.Driver ?? StateWord(ProbeState.NotReported)}");
+                sb.AppendLine($"  {Label("SysInfo.Label.VideoMemory", "Video memory")}: {(gpu.VideoMemoryBytes is { } vram ? Gigabytes(vram) : StateWord(ProbeState.NotReported))}");
+            }
+        }
+        else
+        {
+            sb.AppendLine($"  {Label("SysInfo.Label.Name", "Name")}: {StateWord(s.Gpus.State)}");
         }
 
-        // ── Network Interfaces ────────────────────────────────────────────
+        sb.AppendLine($"  {Label("SysInfo.Label.Load", "Load")}: {Value(s.GpuLoadPercent, v => v.ToString("N0", CultureInfo.CurrentCulture) + " %")}");
         sb.AppendLine();
-        sb.AppendLine("══ Network Interfaces ════════════════════════════════════════");
-        foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
+
+        sb.AppendLine(Header("SysInfo.Section.Battery", "Battery"));
+        if (s.BatteryNames.State == ProbeState.Ok && s.BatteryNames.Value is { Count: 0 })
         {
-            sb.AppendLine($"  {nic.Name,-30}  Type: {nic.NetworkInterfaceType,-18}  Status: {nic.OperationalStatus}");
-            try
+            sb.AppendLine("  " + Text("SysInfo.Battery.None", "no battery"));
+        }
+        else if (s.BatteryNames.State != ProbeState.Ok)
+        {
+            sb.AppendLine("  " + StateWord(s.BatteryNames.State));
+        }
+
+        foreach (NamedProbe<BatteryReading> battery in s.Batteries)
+        {
+            if (battery.Value.State != ProbeState.Ok || battery.Value.Value is not { } b)
             {
-                var ip = nic.GetIPProperties();
-                foreach (var addr in ip.UnicastAddresses)
+                sb.AppendLine($"  {battery.Name}: {StateWord(battery.Value.State)}");
+                continue;
+            }
+
+            sb.AppendLine($"  {Label("SysInfo.Label.Name", "Name")}: {battery.Name}");
+            sb.AppendLine($"  {Label("SysInfo.Label.Status", "Status")}: {BatteryStatusWord(b.Status)}");
+            sb.AppendLine($"  {Label("SysInfo.Label.Percent", "Charge")}: {(b.Percent is { } p ? p.ToString("N0", CultureInfo.CurrentCulture) + " %" : StateWord(ProbeState.NotReported))}");
+            sb.AppendLine($"  {Label("SysInfo.Label.Remaining", "Time remaining")}: {Duration(b.TimeRemaining)}");
+            if (b.Status == BatteryStatus.Charging)
+            {
+                sb.AppendLine($"  {Label("SysInfo.Label.ToFull", "Time to full")}: {Duration(b.TimeToFull)}");
+            }
+
+            if (b.PowerWatts is { } watts)
+            {
+                sb.AppendLine($"  {Label("SysInfo.Label.Power", "Power")}: {watts.ToString("N2", CultureInfo.CurrentCulture)} W");
+            }
+
+            if (b.DesignWattHours is { } design && b.FullWattHours is { } full && design > 0)
+            {
+                sb.AppendLine($"  {Label("SysInfo.Label.Health", "Health")}: {(full / design * 100).ToString("N0", CultureInfo.CurrentCulture)} %");
+            }
+            else
+            {
+                sb.AppendLine($"  {Label("SysInfo.Label.Health", "Health")}: {StateWord(ProbeState.NotReported)}");
+            }
+
+            if (b.Cycles is { } cycles)
+            {
+                sb.AppendLine($"  {Label("SysInfo.Label.Cycles", "Cycle count")}: {cycles}");
+            }
+
+            if (b.Manufacturer is not null || b.Model is not null)
+            {
+                sb.AppendLine($"  {Label("SysInfo.Label.Model", "Model")}: {b.Manufacturer} {b.Model}".TrimEnd());
+            }
+        }
+
+        sb.AppendLine();
+
+        sb.AppendLine(Header("SysInfo.Section.Drives", "Drives"));
+        if (s.DriveNames.State != ProbeState.Ok)
+        {
+            sb.AppendLine("  " + StateWord(s.DriveNames.State));
+        }
+
+        foreach (NamedProbe<DriveReading> drive in s.Drives)
+        {
+            sb.AppendLine(DriveLine(drive));
+        }
+
+        sb.AppendLine();
+
+        sb.AppendLine(Header("SysInfo.Section.DiskIo", "Disk I/O"));
+        if (s.DiskNames.State != ProbeState.Ok)
+        {
+            sb.AppendLine("  " + StateWord(s.DiskNames.State));
+        }
+
+        foreach (NamedProbe<DiskRate> disk in s.Disks)
+        {
+            sb.AppendLine($"  {disk.Name,-16} {RateLine(disk.Value, d => Format("SysInfo.Io.Read", "Read {0}", Rate(d.ReadBytesPerSecond)), d => Format("SysInfo.Io.Write", "Write {0}", Rate(d.WriteBytesPerSecond)))}");
+        }
+
+        sb.AppendLine();
+
+        sb.AppendLine(Header("SysInfo.Section.NetworkIo", "Network I/O"));
+        if (s.NetworkNames.State != ProbeState.Ok)
+        {
+            sb.AppendLine("  " + StateWord(s.NetworkNames.State));
+        }
+
+        foreach (NamedProbe<NetworkRate> network in s.Network)
+        {
+            sb.AppendLine($"  {network.Name,-30} {RateLine(network.Value, n => Format("SysInfo.Io.Received", "Received {0}", Rate(n.ReceivedBytesPerSecond)), n => Format("SysInfo.Io.Sent", "Sent {0}", Rate(n.SentBytesPerSecond)))}");
+        }
+
+        sb.AppendLine();
+
+        sb.AppendLine(Header("SysInfo.Section.NetworkInterfaces", "Network Interfaces"));
+        if (s.Interfaces.State == ProbeState.Ok && s.Interfaces.Value is { } interfaces)
+        {
+            foreach (InterfaceReading nic in interfaces)
+            {
+                sb.AppendLine($"  {nic.Name,-30}  {Label("SysInfo.Label.Type", "Type")}: {nic.Type,-18}  {Label("SysInfo.Label.Status", "Status")}: {nic.Status}");
+                foreach (string address in nic.Addresses)
                 {
-                    sb.AppendLine($"    {"",30}  Address: {addr.Address}");
+                    sb.AppendLine($"    {string.Empty,30}  {Label("SysInfo.Label.Address", "Address")}: {address}");
                 }
             }
-            catch { /* skip interfaces that deny access */ }
+        }
+        else
+        {
+            sb.AppendLine("  " + StateWord(s.Interfaces.State));
         }
 
-        // ── Environment Variables ─────────────────────────────────────────
         sb.AppendLine();
-        sb.AppendLine("══ Environment Variables ═════════════════════════════════════");
-        foreach (System.Collections.DictionaryEntry entry in
-                 Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process)
-                     .Cast<System.Collections.DictionaryEntry>()
-                     .OrderBy(e => e.Key?.ToString(), StringComparer.OrdinalIgnoreCase))
+
+        sb.AppendLine(Header("SysInfo.Section.Runtime", "Runtime"));
+        sb.AppendLine($"  {Label("SysInfo.Label.RuntimeId", "Runtime ID")}: {RuntimeInformation.RuntimeIdentifier}");
+        sb.AppendLine($"  {Label("SysInfo.Label.ClrVersion", "CLR Version")}: {Environment.Version}");
+        sb.AppendLine();
+
+        sb.AppendLine(Header("SysInfo.Section.CurrentUser", "Current User"));
+        sb.AppendLine($"  {Label("SysInfo.Label.UserName", "User Name")}: {Value(s.UserName, v => v)}");
+        sb.AppendLine($"  {Label("SysInfo.Label.Domain", "User Domain")}: {Value(s.UserDomain, v => v)}");
+        sb.AppendLine($"  {Label("SysInfo.Label.Home", "Home Directory")}: {Value(s.HomeFolder, v => v)}");
+        sb.AppendLine();
+
+        sb.AppendLine(Header("SysInfo.Section.Environment", "Environment Variables"));
+        if (s.EnvironmentVariables.State == ProbeState.Ok && s.EnvironmentVariables.Value is { } variables)
         {
-            sb.AppendLine($"  {entry.Key,-40} = {entry.Value}");
+            foreach (KeyValuePair<string, string> variable in variables)
+            {
+                sb.AppendLine($"  {variable.Key,-40} = {variable.Value}");
+            }
+        }
+        else
+        {
+            sb.AppendLine("  " + StateWord(s.EnvironmentVariables.State));
         }
 
         return sb.ToString();
     }
+
+    private string DriveLine(NamedProbe<DriveReading> drive)
+    {
+        if (drive.Value.State != ProbeState.Ok || drive.Value.Value is not { } d)
+        {
+            return $"  {drive.Name,-6} {StateWord(drive.Value.State)}";
+        }
+
+        if (!d.IsReady)
+        {
+            return $"  {d.Name,-6} {d.DriveType,-10} ({Text("SysInfo.State.NotReady", "not ready")})";
+        }
+
+        double used = d.TotalBytes - d.FreeBytes;
+        return $"  {d.Name,-6} {d.DriveType,-10} {d.Format,-8}  " +
+               $"{Text("SysInfo.Label.Total", "Total")}: {Gigabytes(d.TotalBytes)}  " +
+               $"{Text("SysInfo.Label.Used", "Used")}: {Gigabytes(used)}  " +
+               $"{Text("SysInfo.Label.Free", "Free")}: {Gigabytes(d.FreeBytes)}  " +
+               $"{BarChart.BuildBar(d.TotalBytes == 0 ? 0 : used / d.TotalBytes, 10).Replace(' ', '░')}  " +
+               $"{Text("SysInfo.Label.VolumeLabel", "Label")}: {d.Label}";
+    }
+
+    private string RateLine<T>(Probed<T> probed, Func<T, string> first, Func<T, string> second) =>
+        probed.State == ProbeState.Ok && probed.Value is { } value
+            ? $"{first(value)}  {second(value)}"
+            : StateWord(probed.State);
 }

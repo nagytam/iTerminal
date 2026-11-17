@@ -130,7 +130,7 @@ public sealed class TextPromptDialog<T> : PromptDialog<T>
         base.Draw(buffer);
         WriteRow(buffer, 0, _prompt.Question, Foreground, Background, isBold: true);
         WriteRow(buffer, 2, Message, Error, Background);
-        WriteRow(buffer, 3, "Enter: accept    Esc: cancel", Hint, Background);
+        WriteRow(buffer, 3, UiText.Get("Prompt.HintAccept", "Enter: accept    Esc: cancel"), Hint, Background);
     }
 }
 
@@ -267,7 +267,7 @@ public sealed class SelectionPromptDialog<T> : ChoicePromptDialog<T, T>
     {
     }
 
-    protected override string HintText => "Type to filter    Enter: choose    Esc: cancel";
+    protected override string HintText => UiText.Get("Prompt.HintFilterChoose", "Type to filter    Enter: choose    Esc: cancel");
 
     protected override void OnEnter()
     {
@@ -295,7 +295,7 @@ public sealed class MultiSelectionPromptDialog<T> : ChoicePromptDialog<T, IReadO
 
     protected override bool MarksChoices => true;
 
-    protected override string HintText => "Space: mark    Enter: confirm    Esc: cancel";
+    protected override string HintText => UiText.Get("Prompt.HintMarkConfirm", "Space: mark    Enter: confirm    Esc: cancel");
 
     protected override bool TypesIntoFilter(char c) => c != ' ';
 
@@ -378,9 +378,9 @@ public sealed class ConfirmationPromptDialog : PromptDialog<bool?>
         WriteRow(buffer, 2, "[Y] Yes    [N] No", Foreground, Background);
         var fallback = _prompt.DefaultValue switch
         {
-            true => "Enter: yes    Esc: cancel",
-            false => "Enter: no    Esc: cancel",
-            _ => "Esc: cancel",
+            true => UiText.Get("Prompt.HintYes", "Enter: yes    Esc: cancel"),
+            false => UiText.Get("Prompt.HintNo", "Enter: no    Esc: cancel"),
+            _ => UiText.Get("Prompt.HintCancel", "Esc: cancel"),
         };
         WriteRow(buffer, 3, fallback, Hint, Background);
     }

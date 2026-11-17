@@ -37,6 +37,12 @@ public interface IStockService
     Task<IReadOnlyList<StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// The quote for any symbol the source knows, watched or not. Nothing is kept: the market terminal looks a stock
+    /// up without putting it on the list. Null when the source does not know the symbol or cannot be reached.
+    /// </summary>
+    Task<StockQuote?> QuoteAsync(string symbol, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Puts a stock on the list after checking that the source can quote it. Throws
     /// <see cref="InvalidOperationException"/> in words the user can act on — already listed, or no quote.
     /// </summary>
@@ -246,6 +252,18 @@ public sealed class StockService : IStockService, IDisposable
 
     public Task<IReadOnlyList<StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
         _provider.SearchAsync(query, cancellationToken);
+
+    public async Task<StockQuote?> QuoteAsync(string symbol, CancellationToken cancellationToken = default)
+    {
+        symbol = Normalize(symbol);
+        if (symbol.Length == 0)
+        {
+            return null;
+        }
+
+        var quotes = await _provider.GetQuotesAsync([symbol], cancellationToken);
+        return quotes.TryGetValue(symbol, out var quote) ? quote : null;
+    }
 
     public async Task RefreshAsync(CancellationToken cancellationToken = default)
     {

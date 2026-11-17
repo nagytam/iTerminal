@@ -747,15 +747,29 @@ public class EnvironmentVariablesDialog : Dialog
         DrawHeader(buffer, iw, colorScheme);
         DrawRows(buffer, iw, colorScheme, visible);
         DrawForm(buffer, iw, colorScheme, Selected(visible));
-        Put(buffer, 1, ih - 1, iw - 2, FooterText(), colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, ih - 1, iw - 2, FooterText(iw - 2), colorScheme.Foreground, colorScheme.Background);
     }
 
-    private string FooterText() => _mode switch
+    /// <summary>
+    /// The footer for the current mode, shortened to <paramref name="width"/> by dropping keys from its middle. The last key
+    /// (the close key) is kept: on a narrow screen the end of the line was clipped, and "Esc close" went with it.
+    /// </summary>
+    private string FooterText(int width)
     {
-        Mode.Form => UiText.Get("EnvVars.FooterForm", "Enter next field  Tab/Shift+Tab move  Esc discard"),
-        Mode.Filter => UiText.Get("EnvVars.FooterFilter", "Type to filter  Enter keep  Esc clear"),
-        _ => UiText.Get("EnvVars.FooterBrowse", "N new  E change  D delete  S scope  R reload  / filter  Esc close"),
-    };
+        string text = _mode switch
+        {
+            Mode.Form => UiText.Get("EnvVars.FooterForm", "Enter next field  Tab/Shift+Tab move  Esc discard"),
+            Mode.Filter => UiText.Get("EnvVars.FooterFilter", "Type to filter  Enter keep  Esc clear"),
+            _ => UiText.Get("EnvVars.FooterBrowse", "N new  E change  D delete  S scope  R reload  / filter  Esc close"),
+        };
+        var keys = text.Split("  ").ToList();
+        while (text.Length > width && keys.Count > 2)
+        {
+            keys.RemoveAt(keys.Count - 2);
+            text = string.Join("  ", keys);
+        }
+        return text;
+    }
 
     private void DrawScopes(IBuffer buffer, int iw, ColorScheme colorScheme, int shown)
     {

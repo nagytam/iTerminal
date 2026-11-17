@@ -86,6 +86,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private INotificationService? _notificationService { get; set; }
     private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
     private iTerminal.Core.Dialogs.Git.GitSyncDialog? _gitSyncDialog { get; set; }
+    private readonly iConsole.Viewers.FileViewerRegistry? _fileViewers;
+    private readonly iConsole.Viewers.FileEditorRegistry? _fileEditors;
 
     public ContentBrowser(
         string name,
@@ -147,9 +149,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
         iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
         iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null,
-        iTerminal.Core.Services.RenameUndoService? renameUndoService = null)
+        iTerminal.Core.Services.RenameUndoService? renameUndoService = null,
+        iConsole.Viewers.FileViewerRegistry? fileViewers = null,
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null)
         : base(themeService)
     {
+        _fileViewers = fileViewers;
+        _fileEditors = fileEditors;
         _webBrowserDialog = webBrowserDialog;
         _gitService = gitService;
         _gitSyncDialog = gitSyncDialog;
@@ -434,11 +440,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog, harViewerDialog: _harViewerDialog, parquetViewerDialog: _parquetViewerDialog, markdownViewerDialog: _markdownViewerDialog, yamlViewerDialog: _yamlViewerDialog, tomlViewerDialog: _tomlViewerDialog, dbfViewerDialog: _dbfViewerDialog));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog, harViewerDialog: _harViewerDialog, parquetViewerDialog: _parquetViewerDialog, markdownViewerDialog: _markdownViewerDialog, yamlViewerDialog: _yamlViewerDialog, tomlViewerDialog: _tomlViewerDialog, dbfViewerDialog: _dbfViewerDialog, fileViewers: _fileViewers));
         }
         if (_textFileEditorDialog is not null)
         {
-            AddCommand(new EditTextFileDialogCommand(_textFileEditorDialog, ContentModelService, _fileAssociations));
+            AddCommand(new EditTextFileDialogCommand(_textFileEditorDialog, ContentModelService, _fileAssociations, _fileEditors));
         }
         if (_openWithDialog is not null)
         {

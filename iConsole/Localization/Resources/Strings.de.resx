@@ -1970,4 +1970,25 @@
   <data name="Viewer.CloseHint" xml:space="preserve">
     <value>  Esc:schließen</value>
   </data>
+  <data name="Status.LineColumn" xml:space="preserve">
+    <value>Z {0}/{1} Sp {2}/{3}</value>
+  </data>
+  <data name="Prompt.HintAccept" xml:space="preserve">
+    <value>Enter: übernehmen    Esc: abbrechen</value>
+  </data>
+  <data name="Prompt.HintFilterChoose" xml:space="preserve">
+    <value>Tippen zum Filtern    Enter: wählen    Esc: abbrechen</value>
+  </data>
+  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
+    <value>Leertaste: markieren    Enter: bestätigen    Esc: abbrechen</value>
+  </data>
+  <data name="Prompt.HintYes" xml:space="preserve">
+    <value>Enter: ja    Esc: abbrechen</value>
+  </data>
+  <data name="Prompt.HintNo" xml:space="preserve">
+    <value>Enter: nein    Esc: abbrechen</value>
+  </data>
+  <data name="Prompt.HintCancel" xml:space="preserve">
+    <value>Esc: abbrechen</value>
+  </data>
 </root>

@@ -12,7 +12,7 @@ public class SyntaxLanguagesTest
     [
         "x.kt", "x.ts", "x.cs", "x.java", "x.c", "x.cpp", "x.go", "x.rs", "x.js", "x.ps1", "x.py", "x.sh", "x.yml", "x.toml",
         "x.ini", "x.env", "x.properties", "x.sql", "x.html", "x.json", ".gitignore", "x.bat", "x.lua", "x.r", "x.pl",
-        "x.php", "x.vb", "x.fs", "x.rb", "Dockerfile", "x.log",
+        "x.php", "x.vb", "x.fs", "x.rb", "Dockerfile", "x.log", "x.cob", "x.f90", "x.asm",
     ];
 
     /// <summary>The colour test helper: every span of <paramref name="line"/>, as (text, kind).</summary>
@@ -68,6 +68,10 @@ public class SyntaxLanguagesTest
     [DataRow("x.r", "x <- TRUE # c", "TRUE", null, "# c", "R")]
     [DataRow("x.pl", "my $x = \"s\"; # c", "my", "\"s\"", "# c", "Perl")]
     [DataRow("x.php", "<?php echo \"s\"; // c", "echo", "\"s\"", "// c", "PHP")]
+    [DataRow("x.cob", "       MOVE \"s\" TO WS-NAME. *> c", "MOVE", "\"s\"", "*> c", "COBOL")]
+    [DataRow("x.f90", "x = 'it''s' ! c", null, "'it''s'", "! c", "FORTRAN")]
+    [DataRow("x.asm", "mov rax, 1 ; c", "mov", null, "; c", "Assembly")]
+    [DataRow("x.s", "    ldr x0, [sp] // c", "ldr", null, "// c", "Assembly")]
     [DataRow("x.vb", "Dim x As String = \"s\" ' c", "Dim", "\"s\"", "' c", "Visual Basic")]
     [DataRow("x.fs", "let x = \"s\" // c", "let", "\"s\"", "// c", "F#")]
     [DataRow("x.log", "2026-03-01 INFO \"x\" failed", "INFO", "\"x\"", null, "Log")]
@@ -150,6 +154,93 @@ public class SyntaxLanguagesTest
         CollectionAssert.DoesNotContain(spans, ("elif", SyntaxKind.Keyword));
         CollectionAssert.DoesNotContain(spans, ("None", SyntaxKind.Keyword));
         CollectionAssert.DoesNotContain(spans, ("UNLESS", SyntaxKind.Keyword));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Cobol_IsCaseInsensitive_AndHyphenatedNamesAreOneWord()
+    {
+        var spans = Spans("x.cob", "perform until ws-eof end-perform ws-eof-flag");
+
+        CollectionAssert.Contains(spans, ("perform", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("until", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("end-perform", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(spans, ("ws", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(spans, ("eof", SyntaxKind.Keyword));
+        CollectionAssert.Contains(Spans("x.cob", "MOVE 1 TO x"), ("MOVE", SyntaxKind.Keyword));
+        CollectionAssert.Contains(Spans("x.cob", "move 1 to x"), ("move", SyntaxKind.Keyword));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Cobol_DoubledQuoteStaysInsideALiteral_AndAStarGreaterThanStartsAComment()
+    {
+        var spans = Spans("x.cob", "DISPLAY 'it''s' *> say it");
+
+        CollectionAssert.Contains(spans, ("'it''s'", SyntaxKind.String));
+        CollectionAssert.Contains(spans, ("*> say it", SyntaxKind.Comment));
+        CollectionAssert.DoesNotContain(Spans("x.cob", "COMPUTE x = y * 2"), ("*", SyntaxKind.Comment));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Fortran_IsCaseInsensitive_AndColoursItsNumbersAndLogicalConstants()
+    {
+        var spans = Spans("x.f90", "IF (done .EQV. .TRUE.) THEN ! go");
+
+        CollectionAssert.Contains(spans, ("IF", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("THEN", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("TRUE", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("! go", SyntaxKind.Comment));
+        CollectionAssert.Contains(Spans("x.f90", "x = 1.0d0 + 2.5_dp"), ("1.0d0", SyntaxKind.Number));
+        CollectionAssert.Contains(Spans("x.f90", "x = 1.0d0 + 2.5_dp"), ("2.5_dp", SyntaxKind.Number));
+        CollectionAssert.DoesNotContain(Spans("x.f90", "x = 1"), ("x", SyntaxKind.Keyword));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("x.cob", "COBOL")]
+    [DataRow("x.CBL", "COBOL")]
+    [DataRow("x.cpy", "COBOL")]
+    [DataRow("x.f", "FORTRAN")]
+    [DataRow("x.F90", "FORTRAN")]
+    [DataRow("x.for", "FORTRAN")]
+    [DataRow("x.f77", "FORTRAN")]
+    [DataRow("x.asm", "Assembly")]
+    [DataRow("x.S", "Assembly")]
+    [DataRow("x.nasm", "Assembly")]
+    public void CobolAndFortran_HaveTheirOwnExtensions(string file, string expected)
+    {
+        Assert.AreEqual(expected, SyntaxHighlighter.ForFile(file)!.Name);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("example.cob", "COBOL", "IDENTIFICATION", "PERFORM")]
+    [DataRow("example.f90", "FORTRAN", "program", "implicit")]
+    [DataRow("example.py", "Python", "import", "def")]
+    [DataRow("example.php", "PHP", "class", "function")]
+    [DataRow("example.asm", "Assembly", "section", "syscall")]
+    public void SampleFiles_ShowTheirKeywordsAndStrings(string sample, string language, string keyword, string otherKeyword)
+    {
+        string path = iConsole.Test.Common.SampleFiles.Path(sample);
+        SyntaxLanguage? found = SyntaxHighlighter.ForFile(path);
+        Assert.AreEqual(language, found!.Name);
+
+        var kinds = new List<(string Text, SyntaxKind Kind)>();
+        bool inComment = false;
+        foreach (string line in File.ReadAllLines(path))
+        {
+            List<SyntaxSpan> spans = [];
+            inComment = SyntaxHighlighter.Tokenize(found, line, inComment, spans);
+            kinds.AddRange(spans.Select(s => (line.Substring(s.Start, s.Length), s.Kind)));
+        }
+
+        CollectionAssert.Contains(kinds, (keyword, SyntaxKind.Keyword), $"{sample} should colour {keyword}");
+        CollectionAssert.Contains(kinds, (otherKeyword, SyntaxKind.Keyword));
+        Assert.IsTrue(kinds.Any(k => k.Kind == SyntaxKind.String), $"{sample} should have a string");
+        Assert.IsTrue(kinds.Any(k => k.Kind == SyntaxKind.Comment), $"{sample} should have a comment");
+        Assert.IsTrue(kinds.Any(k => k.Kind == SyntaxKind.Number), $"{sample} should have a number");
     }
 
     [Timeout(60_000)]

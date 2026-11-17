@@ -212,6 +212,11 @@ public static class iTerminalApplicationBuilderExtension
         });
         services.AddSingleton<ProcessService>();
         services.AddTransient<FileViewerDialog>();
+        // Viewer and editor plug-ins. Any IFileViewer or IFileEditor registered in the container is offered F3 and F4 files
+        // ahead of the built-in viewers and the text editor; the registries order them by Priority. Registering one here
+        // (or in another extension) is all a plug-in needs.
+        services.AddSingleton<iConsole.Viewers.FileViewerRegistry>();
+        services.AddSingleton<iConsole.Viewers.FileEditorRegistry>();
         services.AddSingleton<iTerminal.Core.Services.Dotnet.IDotnetSolutionService, iTerminal.Core.Services.Dotnet.DotnetSolutionService>();
         services.AddTransient<iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog>();
         services.AddSingleton<iTerminal.Core.Services.PackageManager.IPackageManagerService>(_ =>
@@ -363,6 +368,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockQuoteProvider, iTerminal.Core.Services.Stocks.YahooStockQuoteProvider>();
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockService, iTerminal.Core.Services.Stocks.StockService>();
         services.AddTransient<iTerminal.Core.Dialogs.Stocks.StockBrowserDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Terminal.MarketTerminalDialog>();
         // Ctrl+Shift+F4: the translator. A LibreTranslate-compatible API (Translation:ApiUrl) and the connected AI
         // model are two providers behind one service; a test replaces the providers so no run reaches the network.
         services.AddSingleton<iTerminal.Core.Services.Translation.ILanguageDetector, iTerminal.Core.Services.Translation.LanguageDetector>();
@@ -510,6 +516,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<MoveDialog>();
         services.AddTransient<MultiRenameDialog>();
         services.AddTransient<AboutDialog>();
+        services.AddSingleton<iTerminal.Core.Services.SystemInfo.ISystemProbeFactory, iTerminal.Core.Services.SystemInfo.SystemProbeFactory>();
+        services.AddSingleton<iTerminal.Core.Services.SystemInfo.ISampleClock, iTerminal.Core.Services.SystemInfo.SystemSampleClock>();
+        services.AddSingleton<iTerminal.Core.Services.SystemInfo.ISystemSampler, iTerminal.Core.Services.SystemInfo.SystemSampler>();
         services.AddTransient<SystemInfoDialog>();
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISystemSettingsService, iTerminal.Core.Services.SystemSettings.SystemSettingsService>();
         services.AddTransient<SystemSettingsDialog>();

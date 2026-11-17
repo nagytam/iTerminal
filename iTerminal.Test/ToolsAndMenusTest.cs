@@ -108,7 +108,7 @@ public class ToolsAndMenusTest
 
         await small.WaitForTextAsync("Hello from the left panel.");
         await small.WaitUntilAsync(
-            s => s.Lines.Any(l => l.Contains("[F3-FindNext][F7-Search]", StringComparison.Ordinal) && l.Contains("X: 0/", StringComparison.Ordinal)),
+            s => s.Lines.Any(l => l.Contains("[F3-FindNext][F7-Search]", StringComparison.Ordinal) && l.Contains("Col 1/", StringComparison.Ordinal)),
             "the buttons that fit to be stacked from the left, with nothing drawn over them");
     }
 
