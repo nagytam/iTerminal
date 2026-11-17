@@ -1970,4 +1970,7 @@
   <data name="Viewer.CloseHint" xml:space="preserve">
     <value>  Esc:chiudi</value>
   </data>
+  <data name="Status.LineColumn" xml:space="preserve">
+    <value>Rig {0}/{1} Col {2}/{3}</value>
+  </data>
 </root>
