@@ -12,7 +12,8 @@ public class SyntaxLanguagesTest
     [
         "x.kt", "x.ts", "x.cs", "x.java", "x.c", "x.cpp", "x.go", "x.rs", "x.js", "x.ps1", "x.py", "x.sh", "x.yml", "x.toml",
         "x.ini", "x.env", "x.properties", "x.sql", "x.html", "x.json", ".gitignore", "x.bat", "x.lua", "x.r", "x.pl",
-        "x.php", "x.vb", "x.fs", "x.rb", "Dockerfile", "x.log", "x.cob", "x.f90", "x.asm",
+        "x.php", "x.vb", "x.fs", "x.rb", "Dockerfile", "x.log", "x.cob", "x.f90", "x.asm", "x.m", "x.swift", "x.dart", "x.pas",
+        "x.dpr", "x.tsql", "x.plsql", "x.pgsql", "x.mysql",
     ];
 
     /// <summary>The colour test helper: every span of <paramref name="line"/>, as (text, kind).</summary>
@@ -74,6 +75,16 @@ public class SyntaxLanguagesTest
     [DataRow("x.s", "    ldr x0, [sp] // c", "ldr", null, "// c", "Assembly")]
     [DataRow("x.vb", "Dim x As String = \"s\" ' c", "Dim", "\"s\"", "' c", "Visual Basic")]
     [DataRow("x.fs", "let x = \"s\" // c", "let", "\"s\"", "// c", "F#")]
+    [DataRow("x.r", "f <- function() return('s') # c", "function", "'s'", "# c", "R")]
+    [DataRow("x.m", "if x, disp(\"s\"), end % c", "if", "\"s\"", "% c", "MATLAB")]
+    [DataRow("x.swift", "let x = \"s\" // c", "let", "\"s\"", "// c", "Swift")]
+    [DataRow("x.dart", "final x = 's'; // c", "final", "'s'", "// c", "Dart")]
+    [DataRow("x.pas", "begin WriteLn('s') end { c }", "begin", "'s'", "{ c }", "Pascal")]
+    [DataRow("x.dpr", "var s: string = 's'; // c", "var", "'s'", "// c", "Delphi")]
+    [DataRow("x.tsql", "DECLARE @n INT = 1; SELECT N'it''s' -- c", "DECLARE", "'it''s'", "-- c", "T-SQL")]
+    [DataRow("x.plsql", "BEGIN RAISE; END; -- c", "BEGIN", null, "-- c", "PL/SQL")]
+    [DataRow("x.pgsql", "SELECT 'a' ILIKE 'b' RETURNING x; -- c", "ILIKE", "'a'", "-- c", "PostgreSQL")]
+    [DataRow("x.mysql", "SELECT \"a\" FROM `t` # c", "SELECT", "\"a\"", "# c", "MySQL")]
     [DataRow("x.log", "2026-03-01 INFO \"x\" failed", "INFO", "\"x\"", null, "Log")]
     [DataRow("Dockerfile", "RUN echo \"x\" # c", "RUN", "\"x\"", "# c", "Build file")]
     public void ColoursItsOwnRules(string file, string line, string? keyword, string? text, string? comment, string language)
@@ -221,6 +232,19 @@ public class SyntaxLanguagesTest
     [DataRow("example.py", "Python", "import", "def")]
     [DataRow("example.php", "PHP", "class", "function")]
     [DataRow("example.asm", "Assembly", "section", "syscall")]
+    [DataRow("example.sql", "SQL", "CREATE", "GROUP")]
+    [DataRow("example.r", "R", "function", "repeat")]
+    [DataRow("example.m", "MATLAB", "function", "end")]
+    [DataRow("example.swift", "Swift", "struct", "guard")]
+    [DataRow("example.dart", "Dart", "class", "final")]
+    [DataRow("example.pas", "Pascal", "program", "begin")]
+    [DataRow("example.dpr", "Delphi", "class", "try")]
+    [DataRow("example.vb", "Visual Basic", "Module", "Sub")]
+    [DataRow("example.fs", "F#", "let", "match")]
+    [DataRow("example.tsql", "T-SQL", "DECLARE", "BEGIN")]
+    [DataRow("example.plsql", "PL/SQL", "PROCEDURE", "LOOP")]
+    [DataRow("example.pgsql", "PostgreSQL", "RETURNING", "WITH")]
+    [DataRow("example.mysql", "MySQL", "AUTO_INCREMENT", "DELIMITER")]
     public void SampleFiles_ShowTheirKeywordsAndStrings(string sample, string language, string keyword, string otherKeyword)
     {
         string path = iConsole.Test.Common.SampleFiles.Path(sample);
@@ -302,5 +326,87 @@ public class SyntaxLanguagesTest
     {
         CollectionAssert.Contains(Spans("x.cpp", "1'000e-3"), ("1'000e-3", SyntaxKind.Number));
         CollectionAssert.DoesNotContain(Spans("x.cpp", "0x1'e-3"), ("0x1'e-3", SyntaxKind.Number));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("x.m", "MATLAB")]
+    [DataRow("x.M", "MATLAB")]
+    [DataRow("x.mm", "C-like")]
+    [DataRow("x.swift", "Swift")]
+    [DataRow("x.dart", "Dart")]
+    [DataRow("x.pas", "Pascal")]
+    [DataRow("x.pp", "Pascal")]
+    [DataRow("x.lpr", "Pascal")]
+    [DataRow("x.dpr", "Delphi")]
+    [DataRow("x.dpk", "Delphi")]
+    [DataRow("x.R", "R")]
+    [DataRow("x.tsql", "T-SQL")]
+    [DataRow("x.plsql", "PL/SQL")]
+    [DataRow("x.pls", "PL/SQL")]
+    [DataRow("x.pkb", "PL/SQL")]
+    [DataRow("x.pgsql", "PostgreSQL")]
+    [DataRow("x.psql", "PostgreSQL")]
+    [DataRow("x.mysql", "MySQL")]
+    [DataRow("x.sql", "SQL")]
+    public void NewLanguages_HaveTheirOwnExtensions(string file, string expected)
+    {
+        Assert.AreEqual(expected, SyntaxHighlighter.ForFile(file)!.Name);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("MATLAB", "MATLAB")]
+    [DataRow("octave", "MATLAB")]
+    [DataRow("swift", "Swift")]
+    [DataRow("dart", "Dart")]
+    [DataRow("pascal", "Pascal")]
+    [DataRow("delphi", "Delphi")]
+    [DataRow("object pascal", "Delphi")]
+    [DataRow("objc", "C-like")]
+    [DataRow("vb", "Visual Basic")]
+    [DataRow("r", "R")]
+    [DataRow("t-sql", "T-SQL")]
+    [DataRow("tsql", "T-SQL")]
+    [DataRow("pl/sql", "PL/SQL")]
+    [DataRow("postgres", "PostgreSQL")]
+    [DataRow("mysql", "MySQL")]
+    public void NewLanguages_AreFoundByTheirNames(string name, string expected)
+    {
+        Assert.AreEqual(expected, new SyntaxHighlightingService().FindByName(name)!.Name);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TSql_TreatsAtSignNamesAsVariablesNotKeywords()
+    {
+        CollectionAssert.Contains(Spans("x.tsql", "DECLARE @select INT"), ("DECLARE", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(Spans("x.tsql", "DECLARE @select INT"), ("select", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(Spans("x.tsql", "SELECT @@ROWCOUNT"), ("ROWCOUNT", SyntaxKind.Keyword));
+        CollectionAssert.Contains(Spans("x.tsql", "GO"), ("GO", SyntaxKind.Keyword));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void MySql_HashStartsAComment_AndBackslashEscapesAQuote()
+    {
+        CollectionAssert.Contains(Spans("x.mysql", "SELECT 'it\\'s' # c"), ("'it\\'s'", SyntaxKind.String));
+        CollectionAssert.Contains(Spans("x.mysql", "SELECT 1 # c"), ("# c", SyntaxKind.Comment));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void PostgreSql_HasNoBackslashEscape_AndDoubledQuoteStaysInside()
+    {
+        CollectionAssert.Contains(Spans("x.pgsql", "SELECT 'it''s', 'a\\' FROM t"), ("'it''s'", SyntaxKind.String));
+        CollectionAssert.Contains(Spans("x.pgsql", "SELECT 'a\\' FROM t"), ("'a\\'", SyntaxKind.String));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Pascal_IsCaseInsensitive_AndADoubledQuoteIsOneQuote()
+    {
+        CollectionAssert.Contains(Spans("x.pas", "BEGIN WriteLn('it''s') END"), ("BEGIN", SyntaxKind.Keyword));
+        CollectionAssert.Contains(Spans("x.pas", "WriteLn('it''s')"), ("'it''s'", SyntaxKind.String));
     }
 }

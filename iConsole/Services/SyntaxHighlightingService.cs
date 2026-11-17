@@ -66,8 +66,11 @@ public sealed class SyntaxHighlightingService : ISyntaxHighlightingService
         ["kotlin"] = ".kt", ["python"] = ".py", ["python3"] = ".py", ["ruby"] = ".rb", ["perl"] = ".pl", ["bash"] = ".sh",
         ["shell"] = ".sh", ["sh"] = ".sh", ["powershell"] = ".ps1", ["pwsh"] = ".ps1", ["yaml"] = ".yml", ["docker"] = "Dockerfile",
         ["make"] = "Makefile", ["fsharp"] = ".fs", ["f#"] = ".fs", ["vbnet"] = ".vb", ["vb.net"] = ".vb", ["batch"] = ".bat",
-        ["markup"] = ".xml", ["config"] = ".ini", ["json5"] = ".jsonc", ["golang"] = ".go", ["objc"] = ".m", ["objective-c"] = ".m",
-        ["assembler"] = ".asm", ["assembly"] = ".asm", ["nasm"] = ".asm", ["gas"] = ".s",
+        ["markup"] = ".xml", ["config"] = ".ini", ["json5"] = ".jsonc", ["golang"] = ".go", ["objc"] = ".mm", ["objective-c"] = ".mm",
+        ["assembler"] = ".asm", ["assembly"] = ".asm", ["nasm"] = ".asm", ["gas"] = ".s", ["octave"] = ".m", ["vb"] = ".vb",
+        ["freepascal"] = ".pas", ["object pascal"] = ".dpr", ["objectpascal"] = ".dpr",
+        ["tsql"] = ".tsql", ["mssql"] = ".tsql", ["pl/sql"] = ".plsql", ["plsql"] = ".plsql", ["oracle"] = ".plsql",
+        ["postgres"] = ".pgsql", ["postgresql"] = ".pgsql", ["pgsql"] = ".pgsql", ["mariadb"] = ".mysql",
     };
 
     private readonly Lock _gate = new();
