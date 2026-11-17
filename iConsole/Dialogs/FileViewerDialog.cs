@@ -306,11 +306,11 @@ public class FileViewerDialog : Dialog
     }
 
     /// <summary>The keys the hex dump adds: the offset key, and the way back to the text.</summary>
-    private static string HexHints() => " [HEX]  F4:Text  F5:Offset";
+    private static string HexHints() => iConsole.Localization.UiText.Get("Viewer.HexTitleHints", " [HEX]  F4:Text  F5:Offset  Esc:close");
 
     /// <summary>The keys the text view adds; the wrap key says whether wrapping is on.</summary>
     private string TextHints() =>
-        string.Format(iConsole.Localization.UiText.Get("Viewer.TitleHints", "  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage"), _textViewerControl.WrapLines ? "[on]" : string.Empty);
+        string.Format(iConsole.Localization.UiText.Get("Viewer.TitleHints", "  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage  Esc:close"), _textViewerControl.WrapLines ? "[on]" : string.Empty);
 
     public override void OnInitializeActionButtons()
     {

@@ -1283,7 +1283,7 @@
     <value>Navigáció a menükben:</value>
   </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
-    <value>  F2:Sortörés{0}  F4:Hex  F5:Sor  F8:Kódlap</value>
+    <value>  F2:Sortörés{0}  F4:Hex  F5:Sor  F8:Kódlap  Esc:bezárás</value>
   </data>
   <data name="Viewer.Disassembling" xml:space="preserve">
     <value>Visszafejtés folyamatban…</value>
@@ -1962,5 +1962,9 @@
   <data name="CmdTitle.77b9c680" xml:space="preserve">
     <value>Dátum-felugró</value>
     <comment>Date pop-up</comment>
+  </data>
+  <data name="Viewer.HexTitleHints" xml:space="preserve">
+    <value> [HEX]  F4:Szöveg  F5:Eltolás  Esc:bezárás</value>
+    <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
   </data>
 </root>

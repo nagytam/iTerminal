@@ -1283,7 +1283,7 @@
     <value>Navegación por los menús:</value>
   </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
-    <value>  F2:Ajuste{0}  F4:Hex  F5:Línea  F8:Codificación</value>
+    <value>  F2:Ajuste{0}  F4:Hex  F5:Línea  F8:Codificación  Esc:cerrar</value>
   </data>
   <data name="Viewer.Disassembling" xml:space="preserve">
     <value>Desensamblando…</value>
@@ -1962,5 +1962,9 @@
   <data name="CmdTitle.77b9c680" xml:space="preserve">
     <value>Ventana de fecha</value>
     <comment>Date pop-up</comment>
+  </data>
+  <data name="Viewer.HexTitleHints" xml:space="preserve">
+    <value> [HEX]  F4:Texto  F5:Desplaz.  Esc:cerrar</value>
+    <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
   </data>
 </root>
