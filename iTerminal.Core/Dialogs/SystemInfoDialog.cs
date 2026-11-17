@@ -30,6 +30,7 @@ public class SystemInfoDialog : Dialog
     private readonly ILocalizer _localizer;
     private IDisposable? _watch;
     private SystemSnapshot? _shown;
+    private bool _shownFailing;
     private volatile bool _languageChanged;
     private bool _closed;
 
@@ -55,13 +56,16 @@ public class SystemInfoDialog : Dialog
     /// <summary>The lines the report shows now.</summary>
     internal IReadOnlyList<string> LinesForTest => [.. _textViewerControl.TextModel.Lines];
 
-    internal const string CollectingText = "  Collecting system information…";
+    /// <summary>The English placeholder, the fallback when no language has the key. Tests compare with it.</summary>
+    internal const string CollectingFallback = "Collecting system information…";
+
+    internal const string CollectingText = "  " + CollectingFallback;
 
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
 
-        _textViewerControl.TextModel.Lines = [CollectingText];
+        _textViewerControl.TextModel.Lines = [.. CollectingLines(false)];
         _watch = _sampler.Watch();
         _localizer.LanguageChanged += OnLanguageChanged;
     }
@@ -92,16 +96,25 @@ public class SystemInfoDialog : Dialog
         SystemSnapshot? snapshot = _sampler.Current;
         bool languageChanged = _languageChanged;
         _languageChanged = false;
+        bool failing = _sampler.PassFailing;
         if (snapshot is null)
         {
+            // No pass has succeeded yet: the placeholder stays, with the failure notice if the passes are failing.
+            if (languageChanged || failing != _shownFailing)
+            {
+                _shownFailing = failing;
+                _textViewerControl.TextModel.Lines = [.. CollectingLines(failing)];
+            }
+
             return;
         }
 
-        if (!ReferenceEquals(snapshot, _shown) || languageChanged)
+        if (!ReferenceEquals(snapshot, _shown) || languageChanged || failing != _shownFailing)
         {
             bool newSnapshot = !ReferenceEquals(snapshot, _shown);
             _shown = snapshot;
-            _textViewerControl.TextModel.Lines = [.. BuildReport(snapshot).Split(Environment.NewLine)];
+            _shownFailing = failing;
+            _textViewerControl.TextModel.Lines = [.. BuildReport(snapshot, failing).Split(Environment.NewLine)];
             if (newSnapshot)
             {
                 FeedMemoryStrip(snapshot);
@@ -154,6 +167,19 @@ public class SystemInfoDialog : Dialog
     private string Format(string key, string fallback, params object?[] args) =>
         string.Format(CultureInfo.CurrentCulture, Text(key, fallback), args);
 
+    /// <summary>The placeholder while no pass has succeeded, with the failure notice when the passes are failing.</summary>
+    private IEnumerable<string> CollectingLines(bool failing)
+    {
+        yield return "  " + Text("SysInfo.Collecting", CollectingFallback);
+        if (failing)
+        {
+            yield return string.Empty;
+            yield return "  " + StaleText();
+        }
+    }
+
+    private string StaleText() => Text("SysInfo.Stale", "The last sample failed; the values shown may be out of date.");
+
     private string Label(string key, string fallback) => Text(key, fallback).PadRight(LabelWidth);
 
     private string Header(string key, string fallback) => $"══ {Text(key, fallback)} ".PadRight(64, '═');
@@ -187,7 +213,7 @@ public class SystemInfoDialog : Dialog
     private string Duration(TimeSpan? time) =>
         time is { } span ? $"{(int)span.TotalHours}:{span.Minutes:00} h" : Text("SysInfo.State.NoTime", "no time");
 
-    internal string BuildReport(SystemSnapshot s)
+    internal string BuildReport(SystemSnapshot s, bool failing)
     {
         var sb = new StringBuilder();
 
@@ -366,6 +392,12 @@ public class SystemInfoDialog : Dialog
         else
         {
             sb.AppendLine("  " + StateWord(s.EnvironmentVariables.State));
+        }
+
+        if (failing)
+        {
+            sb.AppendLine();
+            sb.AppendLine("  " + StaleText());
         }
 
         return sb.ToString();
