@@ -51,7 +51,7 @@ public class MenuShortcutTest
             new CompareFoldersDialog(contentModelService, new FileSystemResolver(null!, null!, null!, null!, contentModelService), theme));
         yield return new NavigateMenuItem(
             contentModelService, null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(),
-            new SettingsService(), guard.Object, null!, theme,
+            new SettingsService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), null!, theme,
             shellCommand: new iTerminal.Core.Commands.InteractiveShellCommand(contentModelService, Mock.Of<iTerminal.Core.Services.Shell.IInteractiveShellService>()),
             sortDialog: new SortDialog(new SettingsService(), theme));
         yield return new ToolsMenuItem(null!, null!, null!, null!, contentModelService, null!, null!, null!, null!, null!, theme);

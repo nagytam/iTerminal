@@ -102,7 +102,8 @@ public class FolderSelectorWithFilePanelsTest
         // only after the focused panel has declined the chord, which is true either way.
         var openCommand = new FolderSelectorDialogCommand(
             contentModelService, folderHistory, new DriveInfoModel(), new FolderIndexModel(),
-            Mock.Of<IBeepService>(), new DateTimeProviderService(), settingsService, frequentGuard, themeService);
+            Mock.Of<IBeepService>(), new DateTimeProviderService(), settingsService, frequentGuard, themeService,
+            Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>());
         screen.AddCommand(openCommand);
 
         await screen.OnInitializeAsync();

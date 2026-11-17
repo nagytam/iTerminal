@@ -55,7 +55,7 @@ public class RealHotKeysRoutingTest
         var hotKeys = new HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, iPhoneDialog, null!, null!, null!, null!, null!, null!,
-            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService, gitService: gitService, gitSyncDialog: gitSyncDialog);
+            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), gitService: gitService, gitSyncDialog: gitSyncDialog);
 
         var statusBar = new iConsole.Controls.StatusBar.StatusBar(themeService) { ViewSize = new Size(120, 1) };
         statusBar.AddControl(hotKeys);

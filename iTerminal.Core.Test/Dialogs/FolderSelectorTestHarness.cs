@@ -3,6 +3,7 @@ using iConsole.Display;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Model;
+using iTerminal.Core.Model.Network;
 using iTerminal.Core.Services;
 using Moq;
 
@@ -59,7 +60,28 @@ internal sealed class FolderSelectorTestHarness
         var frequentExecutionGuardService = new Mock<IFrequentExecutionGuardService>();
         frequentExecutionGuardService.Setup(g => g.Execute(It.IsAny<Action>())).Callback<Action>(a => a());
         FrequentExecutionGuardService = frequentExecutionGuardService.Object;
+
+        // The network services answer with nothing unless a test gives them something: the scan finds no
+        // hosts and there are no saved connections.
+        var networkDiscoveryService = new Mock<INetworkDiscoveryService>();
+        networkDiscoveryService.Setup(s => s.ScanAsync(It.IsAny<CancellationToken>())).Returns(NoHosts());
+        NetworkDiscoveryServiceMock = networkDiscoveryService;
+
+        var networkProfileService = new Mock<INetworkProfileService>();
+        networkProfileService.Setup(s => s.GetAll()).Returns(new List<NetworkConnectionProfile>());
+        NetworkProfileServiceMock = networkProfileService;
     }
+
+    private static async IAsyncEnumerable<DiscoveredHost> NoHosts()
+    {
+        await Task.CompletedTask;
+        yield break;
+    }
+
+    public Mock<INetworkDiscoveryService> NetworkDiscoveryServiceMock { get; }
+    public Mock<INetworkProfileService> NetworkProfileServiceMock { get; }
+    public INetworkDiscoveryService NetworkDiscoveryService => NetworkDiscoveryServiceMock.Object;
+    public INetworkProfileService NetworkProfileService => NetworkProfileServiceMock.Object;
 
     public IThemeService ThemeService { get; }
     public ISettingsService SettingsService { get; }

@@ -10180,4 +10180,37 @@
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 memorizza, 1 è il più veloce, 5 il più piccolo</value>
   </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>Apri l'host sotto il cursore, o vai alla condivisione sotto il cursore.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> Ricerca di host SMB nella rete locale…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>Host SMB ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Condivisioni su {0} ({1}) — Backspace: host</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>ricerca…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>Su {0} non sono elencate condivisioni senza accesso. Salva prima una connessione nel browser di rete (Ctrl+N).</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>salvato</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Torna dalle condivisioni di un host all'elenco degli host.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>Cerca di nuovo gli host SMB nella rete.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>Seleziona host o condivisione SMB</value>
+  </data>
 </root>

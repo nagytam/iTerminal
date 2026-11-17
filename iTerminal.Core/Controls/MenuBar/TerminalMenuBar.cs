@@ -57,6 +57,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IFrequentExecutionGuardService frequentExecutionGuardService,
+        INetworkDiscoveryService networkDiscoveryService,
+        INetworkProfileService networkProfileService,
         Content content,
         // Tools
         TerminalDialog terminalDialog,
@@ -232,6 +234,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             dateTimeProviderService,
             settingsService,
             frequentExecutionGuardService,
+            networkDiscoveryService,
+            networkProfileService,
             content,
             themeService,
             helpDialog,

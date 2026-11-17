@@ -46,9 +46,14 @@ appear on. `GitLens` shares the same service.
   committing), tags, rebase, cherry-pick, and a multi-line commit body.
 
 ### The folder selector (`iTerminal.Core/Dialogs/FolderSelector*.cs`)
-Ctrl+F1 opens `FolderSelectorDialog`: a vertical `Tab` whose seven pages are the seven ways of naming
-a folder — Favourites, Drives, Recent, Places, Folder Tree, SSH, Path. Whichever page is up, the
+Ctrl+F1 opens `FolderSelectorDialog`: a vertical `Tab` whose eight pages are the eight ways of naming
+a folder — Favourites, Drives, Recent, Places, Folder Tree, SSH, Path, SMB. Whichever page is up, the
 keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
+
+**SMB (`FolderSelectorSmbTabPage`, Ctrl+7)** is the network neighbourhood for SMB. The list starts with the hosts that answered on port 445 in a scan (`INetworkDiscoveryService`) and the saved SMB connections; Enter on a host lists its shares, Enter on a share goes to `smb://[user@]host/share/` and closes the selector, and Backspace returns to the hosts.
+
+- **A login-protected share is reached through a saved connection.** A host that lists no shares without a login says so on the status line and points at the Network Browser (Ctrl+N), which saves one. A saved connection's login replaces the discovered share of the same name, so the address carries the user name.
+- **The scan never runs on the render thread.** It runs on a background task, is stopped after `ScanLimit` (30 s), and parks its hosts under a lock; `OnIdle` applies them to the list. The row rules live in `SmbBrowserRows`, which the tests pin without a screen.
 
 **Recent** is most-recently-used first: `FolderHistoryService.Add` takes the folder out of the list if it is there, puts it on top, and drops the least recently used past the maximum. The list is saved in that order, so it survives a restart.
 

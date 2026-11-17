@@ -10180,4 +10180,37 @@
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 stocke, 1 est le plus rapide, 5 le plus compact</value>
   </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>Ouvrir l'hôte sous le curseur, ou aller à la ressource partagée sous le curseur.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> Recherche d'hôtes SMB sur le réseau local…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>Hôtes SMB ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Ressources partagées sur {0} ({1}) — Retour arrière : hôtes</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>recherche…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>Aucune ressource partagée n'est listée sur {0} sans identifiants. Enregistrez d'abord une connexion dans le navigateur réseau (Ctrl+N).</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>enregistré</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Revenir des ressources partagées d'un hôte à la liste des hôtes.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>Rechercher de nouveau les hôtes SMB sur le réseau.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>Choisir un hôte ou une ressource SMB</value>
+  </data>
 </root>

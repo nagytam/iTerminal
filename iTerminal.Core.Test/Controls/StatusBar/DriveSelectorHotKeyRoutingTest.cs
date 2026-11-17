@@ -80,7 +80,7 @@ public class DriveSelectorHotKeyRoutingTest
         var hotKeys = new iTerminal.Core.Controls.StatusBar.HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             contentModelService, folderHistory, driveInfoModel, folderIndexModel, Mock.Of<IBeepService>(), new DateTimeProviderService(),
-            settingsService, frequentGuard.Object, themeService);
+            settingsService, frequentGuard.Object, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>());
         var statusBar = new iTerminal.Core.Controls.StatusBar.TerminalStatusBar(
             new iConsole.Controls.PopUpWindows.DatePopUpWindow(themeService), hotKeys, themeService);
 

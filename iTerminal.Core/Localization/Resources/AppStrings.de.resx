@@ -10244,4 +10244,37 @@
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 speichert, 1 ist am schnellsten, 5 ist am kleinsten</value>
   </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>Den Host unter dem Cursor öffnen oder zur Freigabe unter dem Cursor gehen.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> Suche nach SMB-Hosts im lokalen Netzwerk…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>SMB-Hosts ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Freigaben auf {0} ({1}) — Rücktaste: Hosts</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>suche…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>Auf {0} sind ohne Anmeldung keine Freigaben sichtbar. Speichern Sie zuerst eine Verbindung im Netzwerk-Browser (Strg+N).</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>gespeichert</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Von den Freigaben eines Hosts zurück zur Hostliste.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>SMB-Hosts im Netzwerk erneut suchen.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>SMB-Host oder Freigabe auswählen</value>
+  </data>
 </root>
