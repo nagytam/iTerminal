@@ -1967,4 +1967,7 @@
     <value> [HEX]  F4:Text  F5:Offset  Esc:schließen</value>
     <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
   </data>
+  <data name="Viewer.CloseHint" xml:space="preserve">
+    <value>  Esc:schließen</value>
+  </data>
 </root>
