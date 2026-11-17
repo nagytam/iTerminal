@@ -14,7 +14,7 @@ public class HiddenFilesTest
     [TestInitialize]
     public async Task StartAsync() => _app = await TerminalApp.StartAsync(seed: (left, _) =>
     {
-        var path = Path.Combine(left, "secret.txt");
+        var path = Path.Combine(left, ".secret.txt");
         File.WriteAllText(path, "hidden");
         File.SetAttributes(path, FileAttributes.Hidden);
     });
@@ -26,12 +26,12 @@ public class HiddenFilesTest
     [TestMethod]
     public async Task CtrlShiftSHidesAndShowsTheHiddenFileRows()
     {
-        await _app.WaitUntilAsync(s => s.Contains("secret.txt"), "the hidden file to be listed while hidden files are shown");
+        await _app.WaitUntilAsync(s => s.Contains(".secret.txt"), "the hidden file to be listed while hidden files are shown");
 
         Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+S"));
-        await _app.WaitUntilAsync(s => !s.Contains("secret.txt"), "the hidden file to leave both panels");
+        await _app.WaitUntilAsync(s => !s.Contains(".secret.txt"), "the hidden file to leave both panels");
 
         Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+S"));
-        await _app.WaitUntilAsync(s => s.Contains("secret.txt"), "the hidden file to come back");
+        await _app.WaitUntilAsync(s => s.Contains(".secret.txt"), "the hidden file to come back");
     }
 }
