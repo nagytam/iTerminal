@@ -5,6 +5,7 @@ using iTerminal.Core.Services;
 using iTerminal.Core.Services.Archives;
 using iTerminal.Core.Tasks;
 using iTerminal.Core.Test.Helper;
+using Moq;
 
 namespace iTerminal.Core.Test.Tasks;
 
@@ -100,6 +101,34 @@ public class CompressTaskTest
         using var zip = new ZipArchive(new MemoryStream(file!.Content!));
         CollectionAssert.IsSubsetOf(new[] { "notes.txt", "photos/2024/a.jpg" }, zip.Entries.Select(e => e.FullName).ToArray(),
             "the second run fetched the archive and added to it");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AGzipOnAnotherDriveReplacesTheArchiveWithoutFetchingTheOldOne()
+    {
+        // GZIP replaces its archive, so the old one is never brought down: only the new file goes up.
+        var drive = new Mock<IFileSystem>();
+        drive.Setup(d => d.ExistsFile(It.IsAny<Url>())).Returns(true);
+        drive.Setup(d => d.StreamToAsync(It.IsAny<Url>(), It.IsAny<Stream>(), It.IsAny<IProgress<long>?>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        var uploaded = new MemoryStream();
+        drive.Setup(d => d.StreamFromAsync(It.IsAny<Url>(), It.IsAny<Stream>(), It.IsAny<IProgress<long>?>(), It.IsAny<CancellationToken>()))
+            .Callback<Url, Stream, IProgress<long>?, CancellationToken>((_, source, _, _) => source.CopyTo(uploaded))
+            .Returns(Task.CompletedTask);
+        IFileSystem Route(Url url) => url.ContainerType == ContainerType.MemoryDrive ? drive.Object : _fileSystem;
+
+        var task = new CompressTask(Service(), [FileUrl("notes.txt")], Route, new Url("memdrive://pack.gz"), new CompressionOptions(ArchiveFormat.Gzip, 6));
+        await task.RunAsync();
+
+        Assert.IsNull(task.Error, task.Description);
+        drive.Verify(d => d.StreamToAsync(It.IsAny<Url>(), It.IsAny<Stream>(), It.IsAny<IProgress<long>?>(), It.IsAny<CancellationToken>()), Times.Never,
+            "the existing archive is not downloaded");
+        drive.Verify(d => d.StreamFromAsync(It.IsAny<Url>(), It.IsAny<Stream>(), It.IsAny<IProgress<long>?>(), It.IsAny<CancellationToken>()), Times.Once);
+        uploaded.Position = 0;
+        using var gzip = new ICSharpCode.SharpZipLib.GZip.GZipInputStream(uploaded);
+        using var text = new StreamReader(gzip);
+        Assert.AreEqual("notes", text.ReadToEnd(), "the archive holds the new file alone");
     }
 
     [Timeout(60_000)]

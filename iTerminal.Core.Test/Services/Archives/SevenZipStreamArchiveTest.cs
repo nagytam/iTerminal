@@ -110,6 +110,26 @@ public class SevenZipStreamArchiveTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task ATarXzReplacesTheOldArchiveAndKeepsNone()
+    {
+        RequireSevenZip();
+        var archive = Path.Combine(_root, "out.tar.xz");
+        await Service().CompressAsync(archive, [Entry("old.txt", Src("docs", "b.md"))], new CompressionOptions(ArchiveFormat.TarXz, 6), null, CancellationToken.None);
+
+        await Service().CompressAsync(archive, [Entry("a.txt", Src("a.txt"))], new CompressionOptions(ArchiveFormat.TarXz, 6), null, CancellationToken.None);
+
+        using var tar = new TarInputStream(new MemoryStream(await DecompressWithSevenZip(archive)), Encoding.UTF8);
+        var names = new List<string>();
+        while (tar.GetNextEntry() is { } entry)
+        {
+            names.Add(entry.Name);
+        }
+
+        CollectionAssert.AreEqual(new[] { "a.txt" }, names, "replaced, not added to");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task ACancelledXzWriteLeavesNoArchiveAndNoTemporaryFile()
     {
         RequireSevenZip();

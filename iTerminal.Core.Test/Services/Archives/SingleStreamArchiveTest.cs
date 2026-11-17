@@ -99,6 +99,21 @@ public class SingleStreamArchiveTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task ANewBzip2FileReplacesTheOldOneAndKeepsNone()
+    {
+        var archive = Archive("notes.txt.bz2");
+        await Write(archive, Source("old.txt", "previous content that must not survive"), ArchiveFormat.Bzip2);
+
+        await Write(archive, Source("new.txt", "fresh"), ArchiveFormat.Bzip2);
+
+        using var file = FileIO.OpenRead(archive);
+        using var bzip2 = new BZip2InputStream(file);
+        using var text = new StreamReader(bzip2, Encoding.UTF8);
+        Assert.AreEqual("fresh", text.ReadToEnd(), "replaced, not added to");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ACancelledWriteLeavesTheOldArchiveAndNoTemporaryFile()
     {
         var archive = Archive("notes.txt.bz2");
