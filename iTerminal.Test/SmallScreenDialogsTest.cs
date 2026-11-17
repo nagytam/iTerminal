@@ -73,7 +73,7 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Contacts");
         await narrow.WaitUntilAsync(
             s => new[] { "Name:", "Email:", "Phone:", "Company:", "Notes:" }.All(field => s.Lines.Any(l => l.Contains(field)))
-                && s.Lines.Any(l => l.Contains("Esc close") || l.Contains("Esc:close")),
+                && s.Lines.Any(l => l.Contains("Esc:close")),
             "all five fields and the footer on rows of their own");
         string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
         Assert.IsTrue(last.TrimStart().StartsWith('╚') && !last.Contains("Notes:"), narrow.Screen.Dump());
@@ -101,7 +101,7 @@ public class SmallScreenDialogsTest
         await narrow.PressAsync("Ctrl+Shift+F1");
 
         await narrow.WaitForTextAsync("BitTorrent");
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog, whole");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc:close")), "the hint that closes the dialog, whole");
     }
 
     [Timeout(120_000)]
@@ -115,7 +115,7 @@ public class SmallScreenDialogsTest
         await narrow.PressAsync(chord);
 
         await narrow.WaitForTextAsync(title);
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(prompt)) && s.Lines.Any(l => l.Contains("Esc close")), "the prompt and the hint that closes the dialog");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(prompt)) && s.Lines.Any(l => l.Contains("Esc:close")), "the prompt and the hint that closes the dialog");
         string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
         Assert.IsTrue(last.TrimStart().StartsWith('╚') && !last.Contains(prompt), narrow.Screen.Dump());
     }
@@ -150,7 +150,7 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("6-Path")), "the last tab name");
         string[] lines = narrow.Screen.Lines.ToArray();
         int lastTab = Array.FindIndex(lines, l => l.Contains("6-Path"));
-        int footer = Array.FindIndex(lines, l => l.Contains("Esc cancel"));
+        int footer = Array.FindIndex(lines, l => l.Contains("Esc:cancel"));
         Assert.IsTrue(footer > lastTab, "the dialog's bottom border must come after the last tab name\n" + narrow.Screen.Dump());
         Assert.IsFalse(lines.Skip(footer + 1).Any(l => l.Contains("╠") || l.Contains("-Path")), narrow.Screen.Dump());
     }
@@ -369,7 +369,7 @@ public class SmallScreenDialogsTest
         await narrow.PressAsync("Ctrl+D");
 
         await narrow.WaitForTextAsync("Calendar");
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc:close")), "the hint that closes the dialog");
         Assert.IsTrue(narrow.Screen.Lines[narrow.Screen.Height - 1].TrimStart().StartsWith("╚═") && narrow.Screen.Lines[narrow.Screen.Height - 1].Count(c => c == '═') >= 40, narrow.Screen.Dump());
     }
 
@@ -648,7 +648,7 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Streams and attributes");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("choose")), "the hint line");
         string hint = narrow.Screen.Lines.First(l => l.Contains("choose"));
-        Assert.IsTrue(hint.Contains("Esc close") || !hint.Contains("Esc"), narrow.Screen.Dump());
+        Assert.IsTrue(hint.Contains("Esc:close") || !hint.Contains("Esc"), narrow.Screen.Dump());
     }
 
     [Timeout(120_000)]
