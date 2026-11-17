@@ -314,7 +314,9 @@ public class GitClientDialog : SplitPaneDialog
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
-        _startDirectory = _contentModelService.Url?.Path ?? Directory.GetCurrentDirectory();
+        // The panel the key was pressed on. Url asks for the focused panel, and the dialog holds the focus now, so it
+        // would fall back to the right-hand panel.
+        _startDirectory = _contentModelService.GetLastContentModel()?.Url.Path ?? _contentModelService.Url?.Path ?? Directory.GetCurrentDirectory();
         StartRefresh(reloadLog: true);
     }
 

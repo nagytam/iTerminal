@@ -278,6 +278,31 @@ public class SearchPreviewAndDrivesTest
         }
     }
 
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlGOpensTheRepositoryOfThePanelItWasPressedOn()
+    {
+        // The dialog takes the focus, so the panels read as unfocused while it is up. The client has to ask for the
+        // panel the key was pressed on, not whichever panel the lookup falls back to (the right one).
+        _app = await TerminalApp.StartAsync(seed: (left, _) =>
+        {
+            Git(left, "init", "-b", "main");
+            Git(left, "config", "user.email", "test@example.com");
+            Git(left, "config", "user.name", "Test");
+            Git(left, "config", "core.autocrlf", "false");
+            File.WriteAllText(Path.Combine(left, "history.txt"), "as committed");
+            Git(left, "add", "history.txt");
+            Git(left, "commit", "-m", "add history");
+            File.WriteAllText(Path.Combine(left, "history.txt"), "changed since");
+        });
+
+        await _app.PressAsync("Ctrl+G");
+        await _app.Driver.WaitForModalAsync<iTerminal.Core.Dialogs.Git.GitClientDialog>();
+        var screen = await _app.WaitForTextAsync("Working tree: history.txt");
+
+        Assert.IsFalse(screen.Contains("Not a git repository"), screen.Dump());
+    }
+
     private static void Git(string folder, params string[] arguments)
     {
         var startInfo = new System.Diagnostics.ProcessStartInfo("git")
