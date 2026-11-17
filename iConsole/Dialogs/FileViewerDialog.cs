@@ -283,8 +283,7 @@ public class FileViewerDialog : Dialog
             // The text view cannot take the focus; what matters is that the hidden hex dump no longer holds it.
             _hexViewer.ResetFocus();
         }
-        Title =(Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer")
-            + (_hexMode ? HexHints() : TextHints());
+        Title = ComposeTitle();
         StateHasChanged();
     }
 
@@ -311,6 +310,24 @@ public class FileViewerDialog : Dialog
     /// <summary>The keys the text view adds; the wrap key says whether wrapping is on.</summary>
     private string TextHints() =>
         string.Format(iConsole.Localization.UiText.Get("Viewer.TitleHints", "  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage  Esc:close"), _textViewerControl.WrapLines ? "[on]" : string.Empty);
+
+    /// <summary>
+    /// The title: the file's path, then the keys this view takes. Beside the path the full key list does not fit on a narrow
+    /// screen, and it was clipped away entirely, leaving the title with no hint at all. Then only the close key is kept.
+    /// </summary>
+    private string ComposeTitle()
+    {
+        int room = (int)ViewSize.Width - 14 - CloseActionView.Length;
+        string hints = _hexMode ? HexHints() : TextHints();
+        if (hints.Length > room - MinimumPathWidth)
+        {
+            hints = iConsole.Localization.UiText.Get("Viewer.CloseHint", "  Esc:close");
+        }
+        return (Url?.Shrink(Math.Max(4, room - hints.Length)) ?? "Viewer") + hints;
+    }
+
+    /// <summary>The path keeps at least this many cells before the keys are cut down to the close key.</summary>
+    private const int MinimumPathWidth = 20;
 
     public override void OnInitializeActionButtons()
     {
@@ -538,8 +555,7 @@ public class FileViewerDialog : Dialog
         {
             ViewSize = Parent.ViewSize;
             Position = new Position(0, 0);
-            Title = Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer";
-            Title += _hexMode ? HexHints() : TextHints();
+            Title = ComposeTitle();
         }
 
         _textViewerControl.Position = new(1, 1);
