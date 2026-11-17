@@ -123,8 +123,8 @@ public class HotKeys : StatusBarItem
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);
-        var deleteDialogCommand = new DeleteDialogCommand(deleteDialog, contentModelService);
-        var renameDialogCommand = new RenameDialogCommand(renameDialog, contentModelService);
+        var deleteDialogCommand = new DeleteDialogCommand(deleteDialog, contentModelService, notificationService);
+        var renameDialogCommand = new RenameDialogCommand(renameDialog, contentModelService, notificationService);
         AddCommand(new DiskManagerDialogCommand(diskManagerDialog));
         if (diskUsageDialog is not null)
         {
@@ -144,7 +144,7 @@ public class HotKeys : StatusBarItem
         AddCommand(new IPhoneBrowserDialogCommand(iPhoneBrowserDialog));
         AddCommand(new iTerminal.Core.Commands.Music.MusicPanelsCommand(contentModelService));
         var quitCommand = new QuitWithConfirmationCommand(taskManager, promptService);
-        var copyDialogCommand = new CopyDialogCommand(copyDialog, contentModelService);
+        var copyDialogCommand = new CopyDialogCommand(copyDialog, contentModelService, notificationService);
         var aboutDialogCommand = new AboutDialogCommand(aboutDialog);
         var systemInfoDialogCommand = new SystemInfoDialogCommand(systemInfoDialog);
         AddCommand(systemInfoDialogCommand);

@@ -1,12 +1,14 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Services;
 using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Commands;
 
 public class MoveDialogCommand(
     MoveDialog moveDialog,
-    IContentModelService contentModelService)
+    IContentModelService contentModelService,
+    INotificationService? notificationService = null)
     : ShowDialogCommand<MoveDialog>(moveDialog)
 {
     public override string Title => "Move";
@@ -14,6 +16,16 @@ public class MoveDialogCommand(
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F6, true, false, false);
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool isHandled = await base.HandleKeyEventAsync(keyEvent);
+        if (!isHandled && Key?.IsIdentical(keyEvent) == true)
+        {
+            FileKeyRefusal.Notify(notificationService);
+        }
+        return isHandled;
+    }
 
     public override bool CanExecute()
     {

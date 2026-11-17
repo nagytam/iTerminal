@@ -9907,4 +9907,10 @@
     <value>Ctrl+↑/↓:lap  Tab:következő mező  Esc:bezárás</value>
     <comment>The key hint on the bottom row of the Settings dialog.</comment>
   </data>
+  <data name="Notice.NothingToAct.Title" xml:space="preserve">
+    <value>Nincs kijelölés</value>
+  </data>
+  <data name="Notice.NothingToAct.Message" xml:space="preserve">
+    <value>Helyezze a kurzort egy fájlra vagy mappára, vagy előbb jelöljön ki néhányat.</value>
+  </data>
 </root>

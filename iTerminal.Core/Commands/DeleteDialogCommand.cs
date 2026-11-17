@@ -1,12 +1,14 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Services;
 using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Commands;
 
 public class DeleteDialogCommand(
     DeleteDialog deleteDialog,
-    IContentModelService contentModelService)
+    IContentModelService contentModelService,
+    INotificationService? notificationService = null)
     : ShowDialogCommand<DeleteDialog>(deleteDialog)
 {
     public override string Title => "Delete";
@@ -14,6 +16,16 @@ public class DeleteDialogCommand(
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F8, false, false, false);
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool isHandled = await base.HandleKeyEventAsync(keyEvent);
+        if (!isHandled && Key?.IsIdentical(keyEvent) == true)
+        {
+            FileKeyRefusal.Notify(notificationService);
+        }
+        return isHandled;
+    }
 
     public override bool CanExecute()
     {

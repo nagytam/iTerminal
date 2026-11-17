@@ -9907,4 +9907,10 @@
     <value>Ctrl+↑/↓:pagina  Tab:campo successivo  Esc:chiudi</value>
     <comment>The key hint on the bottom row of the Settings dialog.</comment>
   </data>
+  <data name="Notice.NothingToAct.Title" xml:space="preserve">
+    <value>Nessuna selezione</value>
+  </data>
+  <data name="Notice.NothingToAct.Message" xml:space="preserve">
+    <value>Posizioni il cursore su un file o una cartella, oppure ne selezioni prima alcuni.</value>
+  </data>
 </root>

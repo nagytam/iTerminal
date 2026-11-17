@@ -1,12 +1,14 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Services;
 using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Commands;
 
 public class CopyDialogCommand(
     CopyDialog copyDialog,
-    IContentModelService contentModelService)
+    IContentModelService contentModelService,
+    INotificationService? notificationService = null)
     : ShowDialogCommand<CopyDialog>(copyDialog)
 {
     public override string Title => "Copy";
@@ -14,6 +16,16 @@ public class CopyDialogCommand(
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F5, false, false, false);
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool isHandled = await base.HandleKeyEventAsync(keyEvent);
+        if (!isHandled && Key?.IsIdentical(keyEvent) == true)
+        {
+            FileKeyRefusal.Notify(notificationService);
+        }
+        return isHandled;
+    }
 
     public override bool CanExecute()
     {
