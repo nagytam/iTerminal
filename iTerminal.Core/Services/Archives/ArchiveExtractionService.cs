@@ -51,10 +51,11 @@ public interface IArchiveExtractionService
 /// <para><b>Nothing is written outside the target folder.</b> An entry named <c>../../evil.exe</c>
 /// (the "zip slip") is refused and counted, not followed. 7-Zip refuses such paths itself.</para>
 /// </summary>
-public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func<string?>? locate = null)
+public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func<string?>? locate = null, Func<string?>? locateUnrar = null)
     : IArchiveExtractionService
 {
     private readonly Lazy<string?> _sevenZip = new(locate ?? SevenZipArchiveWriter.FindExecutable);
+    private readonly UnrarArchiveReader _unrar = new(runner, locateUnrar);
 
     /// <summary>Endings read in-process, longest first so <c>.tar.gz</c> is not taken for <c>.gz</c>.</summary>
     // .cbz, .cbt, .cbr and .cb7 are comic-book names for ZIP, TAR, RAR and 7z, so they unpack like their containers.
@@ -71,6 +72,9 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
     private static string? EndingOf(string fileName, IEnumerable<string> endings) =>
         endings.OrderByDescending(e => e.Length).FirstOrDefault(e => fileName.EndsWith(e, StringComparison.OrdinalIgnoreCase));
 
+    /// <summary>RAR is read by 7-Zip when it is installed, else by unrar.</summary>
+    private static bool IsRar(string fileName) => ArchiveFormat.IsRarName(fileName);
+
     private static string? ManagedEnding(string fileName) => EndingOf(fileName, ManagedEndings);
 
     private static string? SevenZipEnding(string fileName) =>
@@ -85,9 +89,17 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
             return $"{Path.GetFileName(fileName)} is not an archive this app can unpack.";
         }
 
-        return SevenZipEnding(fileName) is { } ending && SevenZipExecutable is null
-            ? $"{ending} archives need 7-Zip installed."
-            : null;
+        if (SevenZipEnding(fileName) is not { } ending || SevenZipExecutable is not null)
+        {
+            return null;
+        }
+
+        if (IsRar(fileName))
+        {
+            return _unrar.IsAvailable ? null : "RAR archives need 7-Zip or unrar installed.";
+        }
+
+        return $"{ending} archives need 7-Zip installed.";
     }
 
     public string FolderNameFor(string fileName)
@@ -111,6 +123,11 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         }
 
         Directory.CreateDirectory(targetFolder);
+        if (IsRar(archivePath) && SevenZipExecutable is null)
+        {
+            return await ExtractWithUnrarAsync(archivePath, targetFolder, options, progress, cancellationToken);
+        }
+
         var ending = ManagedEnding(archivePath);
         return ending switch
         {
@@ -373,6 +390,25 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         "--",
         archivePath,
     ];
+
+    /// <summary>
+    /// A RAR with no 7-Zip installed: unrar unpacks it. Its names are listed first, and an archive holding one that
+    /// would land outside the folder is refused whole, as unrar's own path handling is not relied on. It reports no
+    /// skipped files, as it does not say which.
+    /// </summary>
+    private async Task<ExtractionResult> ExtractWithUnrarAsync(
+        string archivePath, string targetFolder, ExtractionOptions options, IProgress<ArchiveProgress>? progress, CancellationToken cancellationToken)
+    {
+        var listed = await _unrar.ListAsync(archivePath, cancellationToken);
+        if (listed.FirstOrDefault(entry => SafePath(targetFolder, entry.RawPath) is null) is { } unsafeEntry)
+        {
+            throw new IOException($"{Path.GetFileName(archivePath)} holds {unsafeEntry.RawPath}, which would be written outside the folder: refused.");
+        }
+
+        var before = CountFiles(targetFolder);
+        await _unrar.ExtractAsync(archivePath, targetFolder, options, progress, cancellationToken);
+        return new ExtractionResult(Math.Max(0, CountFiles(targetFolder) - before), 0);
+    }
 
     private async Task<ExtractionResult> ExtractWithSevenZipAsync(
         string archivePath, string targetFolder, ExtractionOptions options, IProgress<ArchiveProgress>? progress, CancellationToken cancellationToken)

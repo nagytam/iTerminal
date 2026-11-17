@@ -6,12 +6,13 @@ namespace iTerminal.Core.Services.Archives;
 /// See <see cref="IArchiveCompressionService"/>. Hands each format to its writer:
 /// <see cref="ManagedArchiveWriter"/> for ZIP, the TAR family, and the single-file GZIP and BZIP2
 /// streams; <see cref="SevenZipArchiveWriter"/> for 7z and <see cref="SevenZipStreamWriter"/> for XZ
-/// and TAR.XZ, both when 7-Zip is installed.
+/// and TAR.XZ, both when 7-Zip is installed, and <see cref="RarArchiveWriter"/> for RAR when the <c>rar</c> program is.
 /// </summary>
-public sealed class ArchiveCompressionService(IExternalProcessRunner runner, SevenZipArchiveWriter? sevenZip = null)
+public sealed class ArchiveCompressionService(IExternalProcessRunner runner, SevenZipArchiveWriter? sevenZip = null, RarArchiveWriter? rar = null)
     : IArchiveCompressionService
 {
     private readonly SevenZipArchiveWriter _sevenZip = sevenZip ?? new SevenZipArchiveWriter(runner);
+    private readonly RarArchiveWriter _rar = rar ?? new RarArchiveWriter(runner);
 
     // Its own writer when none was given: both look 7-Zip up on their own, so a test's stub reaches both only when it is passed in.
     private readonly SevenZipStreamWriter _sevenZipStream = new(runner, sevenZip ?? new SevenZipArchiveWriter(runner));
@@ -19,10 +20,12 @@ public sealed class ArchiveCompressionService(IExternalProcessRunner runner, Sev
     public IReadOnlyList<ArchiveFormat> AvailableFormats =>
         [.. ArchiveFormat.All.Where(f => WhyUnavailable(f) is null)];
 
-    public string? WhyUnavailable(ArchiveFormat format) =>
-        (format.Writer is ArchiveWriterKind.SevenZip or ArchiveWriterKind.SevenZipStream) && !_sevenZip.IsAvailable
-            ? $"{format.Name} needs 7-Zip installed"
-            : null;
+    public string? WhyUnavailable(ArchiveFormat format) => format.Writer switch
+    {
+        ArchiveWriterKind.SevenZip or ArchiveWriterKind.SevenZipStream when !_sevenZip.IsAvailable => $"{format.Name} needs 7-Zip installed",
+        ArchiveWriterKind.RarCli when !_rar.IsAvailable => "RAR needs the rar program installed",
+        _ => null,
+    };
 
     public Task<CompressionResult> CompressAsync(
         string archivePath,
@@ -53,6 +56,7 @@ public sealed class ArchiveCompressionService(IExternalProcessRunner runner, Sev
             ArchiveWriterKind.SingleStream => ManagedArchiveWriter.WriteSingleStreamAsync(archivePath, items, options, progress, cancellationToken),
             ArchiveWriterKind.SevenZip => _sevenZip.WriteAsync(archivePath, items, options, progress, cancellationToken),
             ArchiveWriterKind.SevenZipStream => _sevenZipStream.WriteAsync(archivePath, items, options, progress, cancellationToken),
+            ArchiveWriterKind.RarCli => _rar.WriteAsync(archivePath, items, options, progress, cancellationToken),
             _ => throw new NotSupportedException($"No writer for {options.Format.Name}."),
         };
     }

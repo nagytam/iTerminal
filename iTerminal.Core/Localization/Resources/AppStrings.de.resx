@@ -10232,4 +10232,13 @@
   <data name="CmdDesc.76098275" xml:space="preserve">
     <value>Öffnet das Marktterminal: eine Kommandozeile für jede Aktie, ein Kursband und die Beobachtungsliste als Monitor.</value>
   </data>
+  <data name="Dep.RarPurpose" xml:space="preserve">
+    <value>RAR-Archive erstellen</value>
+  </data>
+  <data name="Dep.UnrarPurpose" xml:space="preserve">
+    <value>RAR-Archive öffnen und entpacken, ohne 7-Zip</value>
+  </data>
+  <data name="Compress.Hint.Rar" xml:space="preserve">
+    <value>0 speichert, 1 ist am schnellsten, 5 ist am kleinsten</value>
+  </data>
 </root>

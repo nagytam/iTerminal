@@ -646,6 +646,8 @@ public static class iTerminalApplicationBuilderExtension
 
         // Likewise ffmpeg and ffprobe, for the video and picture viewers and the audio formats without a managed decoder.
         services.AddSingleton<IRuntimeDependency, FfmpegRuntimeDependency>();
+        services.AddSingleton<IRuntimeDependency, iTerminal.Core.Services.RuntimeDependencies.RarRuntimeDependency>();
+        services.AddSingleton<IRuntimeDependency, iTerminal.Core.Services.RuntimeDependencies.UnrarRuntimeDependency>();
         services.AddSingleton<IRuntimeDependency, YtDlpRuntimeDependency>();
 
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped

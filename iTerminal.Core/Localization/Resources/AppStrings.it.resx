@@ -10168,4 +10168,13 @@
   <data name="CmdDesc.76098275" xml:space="preserve">
     <value>Apre il terminale di mercato: una riga di comando per cercare qualsiasi titolo, un nastro delle quotazioni e la lista di controllo come monitor.</value>
   </data>
+  <data name="Dep.RarPurpose" xml:space="preserve">
+    <value>Creazione di archivi RAR</value>
+  </data>
+  <data name="Dep.UnrarPurpose" xml:space="preserve">
+    <value>Apertura ed estrazione di archivi RAR senza 7-Zip</value>
+  </data>
+  <data name="Compress.Hint.Rar" xml:space="preserve">
+    <value>0 memorizza, 1 è il più veloce, 5 il più piccolo</value>
+  </data>
 </root>

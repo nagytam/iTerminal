@@ -308,6 +308,7 @@ public partial class AiPanelTools
             "tar.bz2" or "tbz2" or "tarbz2" => ArchiveFormat.TarBz2,
             "tar.xz" or "txz" => ArchiveFormat.TarXz,
             "tar" => ArchiveFormat.Tar,
+            "rar" => ArchiveFormat.Rar,
             "gz" => ArchiveFormat.Gzip,
             "bz2" => ArchiveFormat.Bzip2,
             "xz" => ArchiveFormat.Xz,

@@ -46,8 +46,10 @@ public interface IArchiveDriveService : IEntryListingFileSystem
 /// listing, and a TAR.GZ cannot be listed without decompressing all of it. Folders an archive does
 /// not store as entries of their own (most ZIPs) are inferred from the paths below them.</para>
 /// </summary>
-public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<string?>? locateSevenZip = null) : IArchiveDriveService
+public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<string?>? locateSevenZip = null, Func<string?>? locateUnrar = null) : IArchiveDriveService
 {
+    private readonly UnrarArchiveReader _unrar = new(runner, locateUnrar);
+
     // Comic-book archives are the same containers under other names: .cbz is ZIP, .cbt is TAR, .cbr and .cb7 are RAR and 7z.
     // JAR, APK, NUPKG, VSIX, WAR, MSIX, APPX and EPUB are ZIP files with their own names: a Java archive, an Android package,
     // a NuGet package, a Visual Studio extension, a Java web application, a Windows app package and an e-book.
@@ -84,7 +86,7 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
         EndingOf(fileName, ZipEndings) is not null
         || EndingOf(fileName, TarEndings) is not null
         || EndingOf(fileName, SingleFileEndings) is not null
-        || (IsSevenZipBrowsable(fileName) && _sevenZip.Value is not null);
+        || (IsSevenZipBrowsable(fileName) && (_sevenZip.Value is not null || (IsRar(fileName) && _unrar.IsAvailable)));
 
     /// <summary>A TAR.XZ is two layers, and listing it would show one file, its tar. It is not browsed (it is unpacked with Shift+F5).</summary>
     internal static bool IsTarXz(string fileName) => fileName.EndsWith(".tar.xz", StringComparison.OrdinalIgnoreCase);
@@ -95,6 +97,9 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
     /// <summary>A lone <c>.xz</c>: one compressed file, listed and read through 7-Zip.</summary>
     private static bool IsLoneXz(string archivePath) =>
         archivePath.EndsWith(".xz", StringComparison.OrdinalIgnoreCase) && !IsTarXz(archivePath);
+
+    /// <summary>RAR is read by 7-Zip when it is installed, else by unrar.</summary>
+    private static bool IsRar(string fileName) => ArchiveFormat.IsRarName(fileName);
 
     #region Listing
     public async Task<IReadOnlyList<IEntry>> ListAsync(Url url, CancellationToken cancellationToken)
@@ -160,6 +165,7 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
         var entries = EndingOf(archivePath, ZipEndings) is not null ? await Task.Run(() => ReadZipIndex(archivePath), cancellationToken)
             : EndingOf(archivePath, TarEndings) is { } ending ? await Task.Run(() => ReadTarIndex(archivePath, ending, cancellationToken), cancellationToken)
             : EndingOf(archivePath, SingleFileEndings) is { } singleEnding ? await Task.Run(() => ReadSingleFileIndex(archivePath, singleEnding, cancellationToken), cancellationToken)
+            : IsRar(archivePath) && _sevenZip.Value is null ? (await _unrar.ListAsync(archivePath, cancellationToken)).ToList()
             : await ReadSevenZipIndexAsync(archivePath, cancellationToken);
         var index = WithImpliedFolders(entries);
         _indexes[archivePath] = (info.Length, info.LastWriteTimeUtc, index);
@@ -416,6 +422,12 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
                     target.Write(buffer, 0, read);
                 }
             }, cancellationToken);
+            return;
+        }
+
+        if (IsRar(archivePath) && _sevenZip.Value is null)
+        {
+            await _unrar.StreamEntryAsync(archivePath, entry.RawPath, target, cancellationToken);
             return;
         }
 

@@ -36,7 +36,7 @@ public class ExtractDialogTest
         }
     }
 
-    private static ArchiveExtractionService Service(bool sevenZip = false) => new(new FakeProcessRunner(), () => sevenZip ? "7z" : null);
+    private static ArchiveExtractionService Service(bool sevenZip = false) => new(new FakeProcessRunner(), () => sevenZip ? "7z" : null, () => null);
 
     /// <summary>The test folder's listing plus two archives: a.zip and b.rar.</summary>
     private (ExtractDialog Dialog, MarkableTestModel Model, IContentModelService Service) Create(bool sevenZip = false)
@@ -84,7 +84,7 @@ public class ExtractDialogTest
 
         Assert.AreEqual("Extract 2 archives", dialog.Title, "the folder and the plain files are not archives");
         StringAssert.Contains(dialog.SourceLabelForTest, "a.zip, b.rar");
-        Assert.AreEqual(".rar archives need 7-Zip installed.", dialog.ErrorMessage.Text);
+        Assert.AreEqual("RAR archives need 7-Zip or unrar installed.", dialog.ErrorMessage.Text);
         StringAssert.Contains(dialog.LandingForTest, "a folder per archive");
     }
 
@@ -95,14 +95,14 @@ public class ExtractDialogTest
         var (dialog, model, _) = Create();
         model.SetMarks("*", marked: true, includeFolders: true);
         await ShowAsync(dialog);
-        Assert.AreEqual(".rar archives need 7-Zip installed.", dialog.ErrorMessage.Text);
+        Assert.AreEqual("RAR archives need 7-Zip or unrar installed.", dialog.ErrorMessage.Text);
 
         dialog.ErrorMessage.Text = "The disk is full.";
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
         Assert.AreEqual("The disk is full.", dialog.ErrorMessage.Text, "moving on does not clear it");
 
         await dialog.HandleKeyEventAsync(Char('x'));
-        Assert.AreEqual(".rar archives need 7-Zip installed.", dialog.ErrorMessage.Text);
+        Assert.AreEqual("RAR archives need 7-Zip or unrar installed.", dialog.ErrorMessage.Text);
     }
 
     [Timeout(60_000)]

@@ -41,6 +41,8 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
     private readonly ComboBox<ArchiveEncryption> _comboEncryption;
     private readonly CheckBox _checkBoxEncryptNames;
     private readonly CheckBox _checkBoxReplace;
+    private bool _replaceForced;
+    private bool _replaceBeforeForced;
     private readonly Label _labelHint;
     private readonly Label _errorLabel;
     private readonly Button _compressButton;
@@ -338,6 +340,28 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
         _checkBoxEncryptNames.IsEnabled = hasPassword && format.CanEncryptNames;
         _checkBoxReplace.IsEnabled = format.AddsToExisting;
 
+        // A format that cannot keep the archive's copy (RAR) replaces the name, and the choice is shown as made.
+        if (format.CanKeepExisting)
+        {
+            _checkBoxReplace.IsEnabled = format.AddsToExisting;
+            if (_replaceForced)
+            {
+                _checkBoxReplace.IsChecked = _replaceBeforeForced;
+                _replaceForced = false;
+            }
+        }
+        else
+        {
+            if (!_replaceForced)
+            {
+                _replaceBeforeForced = _checkBoxReplace.IsChecked;
+                _replaceForced = true;
+            }
+
+            _checkBoxReplace.IsChecked = true;
+            _checkBoxReplace.IsEnabled = false;
+        }
+
         var levelHint = DescribeLevelHint(format.LevelHint);
         var hint = format.HasLevels ? string.Format(UiText.Get("Compress.LevelLine", "Level: {0}."), levelHint) : levelHint + ".";
         if (!format.SupportsPassword)
@@ -447,7 +471,8 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
             Encryption,
             EncryptNames && format.CanEncryptNames && password.Length > 0,
             // A format that replaces its target has no entries to keep, so the setting would be ignored.
-            format.AddsToExisting && ReplaceExisting), null);
+            // RAR adds to an archive but always replaces a name it has, so it is passed as replacing.
+            (format.AddsToExisting && ReplaceExisting) || !format.CanKeepExisting), null);
     }
 
     public void Reset()
@@ -658,6 +683,7 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
         "0 stores, 1 is fastest, 9 is ultra" => UiText.Get("Compress.Hint.SevenZip", "0 stores, 1 is fastest, 9 is ultra"),
         "1 is fastest, 9 is smallest" => UiText.Get("Compress.Hint.Tar", "1 is fastest, 9 is smallest"),
         "TAR does not compress" => UiText.Get("Compress.Hint.NoCompress", "TAR does not compress"),
+        "0 stores, 1 is fastest, 5 is smallest" => UiText.Get("Compress.Hint.Rar", "0 stores, 1 is fastest, 5 is smallest"),
         _ => english,
     };
 }

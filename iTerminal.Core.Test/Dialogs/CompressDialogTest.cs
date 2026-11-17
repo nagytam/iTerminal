@@ -224,7 +224,7 @@ public class CompressDialogTest
     [DataRow("x.tar", "TAR")]
     [DataRow("x.tbz2", "TAR.BZ2")]
     [DataRow("x.7z", "7z")]
-    [DataRow("x.rar", null)]
+    [DataRow("x.rar", "RAR")]
     public void TheFormatIsReadFromTheName(string name, string? format)
     {
         Assert.AreEqual(format, ArchiveFormat.FromFileName(name)?.Name);

@@ -196,7 +196,7 @@ public class AiPanelToolsArchivesAndFoldersTest
         File.WriteAllText(Path.Combine(_right, "pack.zip"), "not really a zip");
 
         StringAssert.Contains(await _tools.CompressEntries("pack", "left", "a.txt"), "already exists");
-        StringAssert.StartsWith(await _tools.CompressEntries("pack", "left", "a.txt", format: "rar"), "Error:");
+        StringAssert.StartsWith(await _tools.CompressEntries("pack", "left", "a.txt", format: "lha"), "Error:");
         Assert.AreEqual("not really a zip", File.ReadAllText(Path.Combine(_right, "pack.zip")));
     }
 
