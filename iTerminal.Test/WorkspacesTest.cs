@@ -25,7 +25,7 @@ public class WorkspacesTest
         await OpenManagerAsync();
 
         await _app.WaitForTextAsync("No workspaces yet. S saves the screen as it is now");
-        await _app.WaitForTextAsync("Enter switch  1-9 jump  S save  U update  R rename  D delete  Esc close");
+        await _app.WaitForTextAsync("Enter switch  1-9 jump  S save  U update  R rename  D delete  Esc:close");
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();
     }
@@ -65,7 +65,7 @@ public class WorkspacesTest
 
         await small.WaitUntilAsync(
             s => s.Lines.Any(l => l.Contains("Workspaces", StringComparison.Ordinal) && l.TrimEnd().EndsWith('╗'))
-                 && s.Lines.Any(l => l.Contains("Esc close", StringComparison.Ordinal)),
+                 && s.Lines.Any(l => l.Contains("Esc:close", StringComparison.Ordinal)),
             "the dialog with its border and key hints inside the screen");
     }
 }
