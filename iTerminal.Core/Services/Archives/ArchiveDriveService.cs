@@ -55,10 +55,11 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
     private static readonly string[] TarEndings = [".tar.gz", ".tar.bz2", ".tar.zst", ".tgz", ".tbz2", ".tbz", ".tzst", ".tar", ".cbt"];
 
     // A lone .bz2 or .zst holds one file, named after the archive.
-    private static readonly string[] SingleFileEndings = [".bz2", ".zst"];
+    private static readonly string[] SingleFileEndings = [".bz2", ".gz", ".zst"];
 
     // Debian and RPM packages are 7-Zip's ar and rpm handlers, CHM is a Windows help file, ARJ an old DOS archive and LZMA a single compressed file.
-    private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab", ".img", ".vmdk", ".wim", ".dmg", ".cbr", ".cb7", ".deb", ".rpm", ".chm", ".arj", ".lzma"];
+    // A lone .xz holds one file, named after the archive (see ReadSevenZipIndexAsync). A .tar.xz would match this too, so it is excluded by IsTarXz.
+    private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab", ".img", ".vmdk", ".wim", ".dmg", ".cbr", ".cb7", ".deb", ".rpm", ".chm", ".arj", ".lzma", ".xz"];
 
     private readonly Lazy<string?> _sevenZip = new(locateSevenZip ?? SevenZipArchiveWriter.FindExecutable);
     private readonly ConcurrentDictionary<string, (long Size, DateTime Time, IReadOnlyList<ArchiveIndexEntry> Index)> _indexes = new(StringComparer.OrdinalIgnoreCase);
@@ -77,13 +78,23 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
         EndingOf(fileName, ZipEndings) is not null
         || EndingOf(fileName, TarEndings) is not null
         || EndingOf(fileName, SingleFileEndings) is not null
-        || EndingOf(fileName, SevenZipEndings) is not null;
+        || IsSevenZipBrowsable(fileName);
 
     public bool CanBrowse(string fileName) =>
         EndingOf(fileName, ZipEndings) is not null
         || EndingOf(fileName, TarEndings) is not null
         || EndingOf(fileName, SingleFileEndings) is not null
-        || (EndingOf(fileName, SevenZipEndings) is not null && _sevenZip.Value is not null);
+        || (IsSevenZipBrowsable(fileName) && _sevenZip.Value is not null);
+
+    /// <summary>A TAR.XZ is two layers, and listing it would show one file, its tar. It is not browsed (it is unpacked with Shift+F5).</summary>
+    internal static bool IsTarXz(string fileName) => fileName.EndsWith(".tar.xz", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsSevenZipBrowsable(string fileName) =>
+        EndingOf(fileName, SevenZipEndings) is not null && !IsTarXz(fileName);
+
+    /// <summary>A lone <c>.xz</c>: one compressed file, listed and read through 7-Zip.</summary>
+    private static bool IsLoneXz(string archivePath) =>
+        archivePath.EndsWith(".xz", StringComparison.OrdinalIgnoreCase) && !IsTarXz(archivePath);
 
     #region Listing
     public async Task<IReadOnlyList<IEntry>> ListAsync(Url url, CancellationToken cancellationToken)
@@ -134,6 +145,11 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
         if (!info.Exists)
         {
             throw new FileNotFoundException($"{Path.GetFileName(archivePath)} is gone.", archivePath);
+        }
+
+        if (IsTarXz(archivePath))
+        {
+            throw new InvalidOperationException($"{Path.GetFileName(archivePath)} is not browsed: unpack it with Shift+F5.");
         }
 
         if (_indexes.TryGetValue(archivePath, out var cached) && cached.Size == info.Length && cached.Time == info.LastWriteTimeUtc)
@@ -264,7 +280,22 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
         }
 
         // A lone LZMA or XZ stream has no path of its own: 7-Zip names its one file after the archive, without its ending.
-        return ParseSevenZipListing(text, Path.GetFileNameWithoutExtension(archivePath));
+        var entries = ParseSevenZipListing(text, Path.GetFileNameWithoutExtension(archivePath));
+        if (!IsLoneXz(archivePath))
+        {
+            return entries;
+        }
+
+        // A lone .xz is named after the archive, without its ending, as ReadSingleFileIndex names one. The size is 7-Zip's when it gives one.
+        var name = Path.GetFileName(archivePath)[..^".xz".Length];
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            name = "extracted";
+        }
+
+        var size = entries.Count > 0 ? entries[0].Size : 0;
+        var modified = entries.Count > 0 ? entries[0].Modified : File.GetLastWriteTime(archivePath);
+        return [new ArchiveIndexEntry(name, name, IsFolder: false, size, modified)];
     }
 
     /// <param name="singleStreamName">The name for a stream that has a method but no path (a lone compressed file); null to skip such blocks.</param>
@@ -389,7 +420,9 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
         }
 
         var executable = _sevenZip.Value ?? throw new InvalidOperationException("This archive needs 7-Zip installed.");
-        var result = await runner.RunToStreamAsync(executable, ["x", "-so", "-bd", "--", archivePath, entry.RawPath], target, null, _ => Task.CompletedTask, cancellationToken);
+        // A lone .xz has no path inside it for 7-Zip to name: the whole stream is the one file.
+        string[] arguments = IsLoneXz(archivePath) ? ["x", "-so", "-bd", "--", archivePath] : ["x", "-so", "-bd", "--", archivePath, entry.RawPath];
+        var result = await runner.RunToStreamAsync(executable, arguments, target, null, _ => Task.CompletedTask, cancellationToken);
         if (!result.Success)
         {
             throw new IOException(result.StandardError.Contains("password", StringComparison.OrdinalIgnoreCase)

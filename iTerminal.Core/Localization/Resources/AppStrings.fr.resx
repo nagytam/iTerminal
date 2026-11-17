@@ -4457,6 +4457,24 @@
   <data name="Compress.AddsToExisting" xml:space="preserve">
     <value>Ajoute à l’archive existante.</value>
   </data>
+  <data name="Compress.ReplacesExisting" xml:space="preserve">
+    <value>Remplace l’archive existante.</value>
+  </data>
+  <data name="Compress.OneFileOnly" xml:space="preserve">
+    <value>{0} ne contient qu’un fichier : marquez un fichier ou choisissez un autre format.</value>
+  </data>
+  <data name="Compress.ReplaceConfirm" xml:space="preserve">
+    <value>Remplacer {0} ? (y/n)</value>
+  </data>
+  <data name="Compress.CheckingArchive" xml:space="preserve">
+    <value>Vérification de l’archive…</value>
+  </data>
+  <data name="DialogHint.ReplaceArchive" xml:space="preserve">
+    <value>Remplacer l’archive</value>
+  </data>
+  <data name="DialogHint.KeepArchive" xml:space="preserve">
+    <value>Garder l’archive</value>
+  </data>
   <data name="Compress.NoPassword" xml:space="preserve">
     <value>{0} n’accepte pas de mot de passe.</value>
   </data>
@@ -5093,8 +5111,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>Renommer les fichiers et dossiers marqués, ou celui sous le curseur, selon un modèle.</value>
   </data>
-  <data name="CmdDesc.6916d198" xml:space="preserve">
-    <value>Ouvrir l’archive sous le curseur comme un dossier (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2 ; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG avec 7-Zip).</value>
+  <data name="CmdDesc.920092ad" xml:space="preserve">
+    <value>Ouvrir l’archive sous le curseur comme un dossier (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2, GZ ; 7z, RAR, CAB, XZ, ISO, IMG, VMDK, WIM, DMG avec 7-Zip).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>Ouvrir le dossier sélectionné ou suivre l’entrée parente.</value>

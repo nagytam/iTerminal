@@ -53,7 +53,8 @@ public sealed class CompressTask(
                 workFolder = Path.Combine(Path.GetTempPath(), "iTerminal-pack-" + Guid.NewGuid().ToString("N")[..8]);
                 Directory.CreateDirectory(workFolder);
                 workPath = Path.Combine(workFolder, archiveName);
-                if (target.ExistsFile(archiveUrl))
+                // A format that replaces its target (GZIP, BZIP2, XZ, TAR.XZ) writes a new file: nothing to fetch.
+                if (options.Format.AddsToExisting && target.ExistsFile(archiveUrl))
                 {
                     Description = string.Join(Environment.NewLine, UiText.Get("Task.Compress", "Compress"), archiveName, UiText.Get("Task.FetchingArchiveToAdd", "fetching the archive to add to…"));
                     await using var download = new FileStream(workPath, FileMode.Create, FileAccess.Write);

@@ -24,14 +24,14 @@ A two-panel, keyboard-driven file manager and developer toolbox for the terminal
 | `iphone://` | iPhone file access (AFC) |
 | `docker://` | Container file systems, logs, start/stop/restart |
 | `git://` | Browse any revision, branch, tag or commit without checkout |
-| `archive://`, `zip://`, `gz://`, `targz://` | Archives as folders (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB and the ISO, IMG, VMDK, WIM, DMG disk images with 7-Zip) |
+| `archive://`, `zip://`, `gz://`, `targz://` | Archives as folders (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2, GZ; 7z, RAR, CAB, XZ and the ISO, IMG, VMDK, WIM, DMG disk images with 7-Zip) |
 | `recycle://` | Recycle bin / trash, restore and delete for good |
 | `memdrive://` | In-memory drive |
 | `search://`, `preview://` | Search results and quick preview |
 | `musiccatalog://`, `musicplaylist://` | Music library and queue |
 
 ### Archives
-- Compress (Alt+F5): ZIP (AES-256/ZipCrypto), 7z, TAR.GZ, TAR.BZ2, TAR; add to existing archives
+- Compress (Alt+F5): ZIP (AES-256/ZipCrypto), 7z, TAR.GZ, TAR.BZ2, TAR; add to existing archives. GZIP, BZIP2, XZ and TAR.XZ are single compressed streams: GZIP and BZIP2 hold one file, XZ and TAR.XZ need 7-Zip, and all four replace an existing file (see `docs/architecture/file-operations.md`)
 - Extract (Shift+F5) with safe path handling and password support
 
 ### Music player

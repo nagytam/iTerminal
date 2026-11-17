@@ -4457,6 +4457,24 @@
   <data name="Compress.AddsToExisting" xml:space="preserve">
     <value>Hozzáadja a meglévő archívumhoz.</value>
   </data>
+  <data name="Compress.ReplacesExisting" xml:space="preserve">
+    <value>Felülírja a meglévő archívumot.</value>
+  </data>
+  <data name="Compress.OneFileOnly" xml:space="preserve">
+    <value>{0} egyetlen fájlt tartalmaz: jelöljön meg egy fájlt, vagy válasszon másik formátumot.</value>
+  </data>
+  <data name="Compress.ReplaceConfirm" xml:space="preserve">
+    <value>Felülírja: {0}? (y/n)</value>
+  </data>
+  <data name="Compress.CheckingArchive" xml:space="preserve">
+    <value>Archívum ellenőrzése…</value>
+  </data>
+  <data name="DialogHint.ReplaceArchive" xml:space="preserve">
+    <value>Archívum felülírása</value>
+  </data>
+  <data name="DialogHint.KeepArchive" xml:space="preserve">
+    <value>Archívum megtartása</value>
+  </data>
   <data name="Compress.NoPassword" xml:space="preserve">
     <value>A(z) {0} nem támogat jelszót.</value>
   </data>
@@ -5093,8 +5111,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) átnevezése minta szerint.</value>
   </data>
-  <data name="CmdDesc.6916d198" xml:space="preserve">
-    <value>A kurzor alatti archívum megnyitása mappaként (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG a 7-Zippel).</value>
+  <data name="CmdDesc.920092ad" xml:space="preserve">
+    <value>A kurzor alatti archívum megnyitása mappaként (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2, GZ; 7z, RAR, CAB, XZ, ISO, IMG, VMDK, WIM, DMG a 7-Zippel).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>A kijelölt mappa megnyitása, vagy a szülőbejegyzés követése.</value>
