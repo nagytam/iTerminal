@@ -249,7 +249,8 @@ public class AiChatService : IAiChatService
         .. _panelTools.Create(),
 
         AIFunctionFactory.Create(
-            () => _contentModelService.Url?.Path ?? "/",
+            // The AI bar holds the focus, so no panel is focused: the panel the user was working in is the last one focused.
+            () => (_contentModelService.GetLastContentModel()?.Url ?? _contentModelService.Url)?.Path ?? "/",
             "get_current_path",
             "Get the path currently shown in the focused file panel"),
 
