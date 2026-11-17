@@ -67,6 +67,7 @@ public sealed class SyntaxHighlightingService : ISyntaxHighlightingService
         ["shell"] = ".sh", ["sh"] = ".sh", ["powershell"] = ".ps1", ["pwsh"] = ".ps1", ["yaml"] = ".yml", ["docker"] = "Dockerfile",
         ["make"] = "Makefile", ["fsharp"] = ".fs", ["f#"] = ".fs", ["vbnet"] = ".vb", ["vb.net"] = ".vb", ["batch"] = ".bat",
         ["markup"] = ".xml", ["config"] = ".ini", ["json5"] = ".jsonc", ["golang"] = ".go", ["objc"] = ".m", ["objective-c"] = ".m",
+        ["assembler"] = ".asm", ["assembly"] = ".asm", ["nasm"] = ".asm", ["gas"] = ".s",
     };
 
     private readonly Lock _gate = new();
