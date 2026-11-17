@@ -10108,4 +10108,8 @@
   <data name="Menu.ShowHiddenFiles" xml:space="preserve">
     <value>Show Hidden Files</value>
   </data>
+  <data name="Settings.Hint" xml:space="preserve">
+    <value>Ctrl+Up/Down:page  Tab:next field  Esc:close</value>
+    <comment>The key hint on the bottom row of the Settings dialog.</comment>
+  </data>
 </root>

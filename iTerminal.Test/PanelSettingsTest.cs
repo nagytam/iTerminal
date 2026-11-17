@@ -132,4 +132,18 @@ public class PanelSettingsTest
 
         await _app.WaitUntilAsync(s => RowOfLeft("file10.txt", s) > 0 && RowOfLeft("file10.txt", s) < RowOfLeft("file2.txt", s), "character by character, file10 before file2");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheSettingsDialogSaysHowToMoveBetweenPagesAndLeave()
+    {
+        // Eight pages and no visible key for them: the bottom row of the dialog is the only place the keys are said.
+        await StartAsync();
+        await _app.PressAsync("Shift+F8");
+        await _app.Driver.WaitForModalAsync<SettingsDialog>();
+
+        var screen = await _app.WaitForTextAsync("Ctrl+Up/Down:page");
+
+        Assert.IsTrue(screen.Contains("Esc:close"), screen.Dump());
+    }
 }
