@@ -124,10 +124,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
-        run: >-
-          gh release create "v$VERSION" packages/*
-          --repo "$GITHUB_REPOSITORY"
-          --target "${{ github.event.pull_request.merge_commit_sha }}"
-          --title "iTerminal $VERSION"
-          --notes "Built from #$PR_NUMBER: $PR_TITLE"
-          --generate-notes
+        run: |
+          # The Linux artifact keeps the folders the packages were built in, so the download nests them. Attach the files only:
+          # a folder in the list makes gh fail after the release is created.
+          mapfile -t assets < <(find packages -type f)
+          [ "${#assets[@]}" -gt 0 ] || { echo "No packages were downloaded"; exit 1; }
+          gh release create "v$VERSION" "${assets[@]}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "${{ github.event.pull_request.merge_commit_sha }}" \
+            --title "iTerminal $VERSION" \
+            --notes "Built from #$PR_NUMBER: $PR_TITLE" \
+            --generate-notes
