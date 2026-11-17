@@ -202,6 +202,21 @@ public class AiPanelToolsArchivesAndFoldersTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task Compress_AcceptsTheSingleStreamFormatNames()
+    {
+        File.WriteAllText(Path.Combine(_left, "a.txt"), "x");
+
+        // Only previews: nothing is written. GZIP and BZIP2 are written in-process; XZ and TAR.XZ need 7-Zip,
+        // which this test does not have, so for them the refusal names the format, which shows it was recognised.
+        StringAssert.Contains(await _tools.CompressEntries("pack", "left", "a.txt", format: "gz"), "pack.gz");
+        StringAssert.Contains(await _tools.CompressEntries("pack", "left", "a.txt", format: "bz2"), "pack.bz2");
+        StringAssert.Contains(await _tools.CompressEntries("pack", "left", "a.txt", format: "xz"), "XZ cannot be written here");
+        StringAssert.Contains(await _tools.CompressEntries("pack", "left", "a.txt", format: "txz"), "TAR.XZ cannot be written here");
+        Assert.IsFalse((await _tools.CompressEntries("pack", "left", "a.txt", format: "gz")).Contains("format must be one of"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Extract_IgnoresNonArchives()
     {
         File.WriteAllText(Path.Combine(_left, "a.txt"), "x");

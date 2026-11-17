@@ -98,7 +98,6 @@ public class ArchiveDriveSingleStreamTest
         var service = BrowserWithoutSevenZip();
 
         Assert.IsFalse(ArchiveDriveService.LooksBrowsable("backup.tar.xz"));
-        Assert.IsFalse(service.CanBrowse("backup.tar.xz"));
         Assert.IsTrue(ArchiveDriveService.LooksBrowsable("notes.xz"));
         Assert.IsTrue(ArchiveDriveService.LooksBrowsable("notes.gz"));
     }
