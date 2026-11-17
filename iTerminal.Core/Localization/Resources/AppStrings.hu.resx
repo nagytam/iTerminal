@@ -1694,7 +1694,7 @@
     <value>Nagyobb, MB</value>
   </data>
   <data name="Field.BlankAny" xml:space="preserve">
-    <value>üres: bármely</value>
+    <value>üres: mind</value>
   </data>
   <data name="Field.OlderDays" xml:space="preserve">
     <value>Régebbi, nap</value>
