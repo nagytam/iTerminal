@@ -464,6 +464,189 @@
   <data name="Dialog.SystemInformation" xml:space="preserve">
     <value>Systeminformationen</value>
   </data>
+  <data name="SysInfo.Section.OperatingSystem" xml:space="preserve">
+    <value>Betriebssystem</value>
+  </data>
+  <data name="SysInfo.Section.Hardware" xml:space="preserve">
+    <value>Hardware</value>
+  </data>
+  <data name="SysInfo.Section.Cpu" xml:space="preserve">
+    <value>Prozessor</value>
+  </data>
+  <data name="SysInfo.Section.Memory" xml:space="preserve">
+    <value>Arbeitsspeicher</value>
+  </data>
+  <data name="SysInfo.Section.Gpu" xml:space="preserve">
+    <value>Grafik</value>
+  </data>
+  <data name="SysInfo.Section.Battery" xml:space="preserve">
+    <value>Akku</value>
+  </data>
+  <data name="SysInfo.Section.Drives" xml:space="preserve">
+    <value>Laufwerke</value>
+  </data>
+  <data name="SysInfo.Section.DiskIo" xml:space="preserve">
+    <value>Datenträger-E/A</value>
+  </data>
+  <data name="SysInfo.Section.NetworkIo" xml:space="preserve">
+    <value>Netzwerk-E/A</value>
+  </data>
+  <data name="SysInfo.Section.NetworkInterfaces" xml:space="preserve">
+    <value>Netzwerkschnittstellen</value>
+  </data>
+  <data name="SysInfo.Section.Runtime" xml:space="preserve">
+    <value>Laufzeit</value>
+  </data>
+  <data name="SysInfo.Section.CurrentUser" xml:space="preserve">
+    <value>Aktueller Benutzer</value>
+  </data>
+  <data name="SysInfo.Section.Environment" xml:space="preserve">
+    <value>Umgebungsvariablen</value>
+  </data>
+  <data name="SysInfo.Label.MemoryUsed" xml:space="preserve">
+    <value>Speicher belegt</value>
+  </data>
+  <data name="SysInfo.Label.OsDescription" xml:space="preserve">
+    <value>OS-Beschreibung</value>
+  </data>
+  <data name="SysInfo.Label.Architecture" xml:space="preserve">
+    <value>OS-Architektur</value>
+  </data>
+  <data name="SysInfo.Label.Framework" xml:space="preserve">
+    <value>Framework</value>
+  </data>
+  <data name="SysInfo.Label.MachineName" xml:space="preserve">
+    <value>Computername</value>
+  </data>
+  <data name="SysInfo.Label.ProcessArch" xml:space="preserve">
+    <value>Prozessarchitektur</value>
+  </data>
+  <data name="SysInfo.Label.Process64Bit" xml:space="preserve">
+    <value>64-Bit-Prozess</value>
+  </data>
+  <data name="SysInfo.Label.Model" xml:space="preserve">
+    <value>Modell</value>
+  </data>
+  <data name="SysInfo.Label.LogicalProcessors" xml:space="preserve">
+    <value>Logische Prozessoren</value>
+  </data>
+  <data name="SysInfo.Label.Load" xml:space="preserve">
+    <value>Auslastung</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalTotal" xml:space="preserve">
+    <value>Physischer Speicher (gesamt)</value>
+  </data>
+  <data name="SysInfo.Label.PhysicalAvailable" xml:space="preserve">
+    <value>Verfügbarer Speicher</value>
+  </data>
+  <data name="SysInfo.Label.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="SysInfo.Label.Driver" xml:space="preserve">
+    <value>Treiber</value>
+  </data>
+  <data name="SysInfo.Label.VideoMemory" xml:space="preserve">
+    <value>Grafikspeicher</value>
+  </data>
+  <data name="SysInfo.Label.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="SysInfo.Label.Percent" xml:space="preserve">
+    <value>Ladestand</value>
+  </data>
+  <data name="SysInfo.Label.Remaining" xml:space="preserve">
+    <value>Restzeit</value>
+  </data>
+  <data name="SysInfo.Label.ToFull" xml:space="preserve">
+    <value>Zeit bis voll</value>
+  </data>
+  <data name="SysInfo.Label.Power" xml:space="preserve">
+    <value>Leistung</value>
+  </data>
+  <data name="SysInfo.Label.Health" xml:space="preserve">
+    <value>Zustand</value>
+  </data>
+  <data name="SysInfo.Label.Cycles" xml:space="preserve">
+    <value>Ladezyklen</value>
+  </data>
+  <data name="SysInfo.Label.Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="SysInfo.Label.Address" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="SysInfo.Label.RuntimeId" xml:space="preserve">
+    <value>Laufzeit-ID</value>
+  </data>
+  <data name="SysInfo.Label.ClrVersion" xml:space="preserve">
+    <value>CLR-Version</value>
+  </data>
+  <data name="SysInfo.Label.UserName" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="SysInfo.Label.Domain" xml:space="preserve">
+    <value>Benutzerdomäne</value>
+  </data>
+  <data name="SysInfo.Label.Home" xml:space="preserve">
+    <value>Persönlicher Ordner</value>
+  </data>
+  <data name="SysInfo.Label.Total" xml:space="preserve">
+    <value>Gesamt</value>
+  </data>
+  <data name="SysInfo.Label.Used" xml:space="preserve">
+    <value>Belegt</value>
+  </data>
+  <data name="SysInfo.Label.Free" xml:space="preserve">
+    <value>Frei</value>
+  </data>
+  <data name="SysInfo.Label.VolumeLabel" xml:space="preserve">
+    <value>Bezeichnung</value>
+  </data>
+  <data name="SysInfo.Battery.None" xml:space="preserve">
+    <value>kein Akku</value>
+  </data>
+  <data name="SysInfo.Battery.Charging" xml:space="preserve">
+    <value>wird geladen</value>
+  </data>
+  <data name="SysInfo.Battery.Discharging" xml:space="preserve">
+    <value>entlädt sich</value>
+  </data>
+  <data name="SysInfo.Battery.Full" xml:space="preserve">
+    <value>voll</value>
+  </data>
+  <data name="SysInfo.Battery.NotCharging" xml:space="preserve">
+    <value>lädt nicht</value>
+  </data>
+  <data name="SysInfo.Battery.Unknown" xml:space="preserve">
+    <value>unbekannt</value>
+  </data>
+  <data name="SysInfo.State.NotReported" xml:space="preserve">
+    <value>nicht gemeldet</value>
+  </data>
+  <data name="SysInfo.State.NotAnswering" xml:space="preserve">
+    <value>antwortet nicht</value>
+  </data>
+  <data name="SysInfo.State.Measuring" xml:space="preserve">
+    <value>wird gemessen</value>
+  </data>
+  <data name="SysInfo.State.NoTime" xml:space="preserve">
+    <value>keine Zeit</value>
+  </data>
+  <data name="SysInfo.State.NotReady" xml:space="preserve">
+    <value>nicht bereit</value>
+  </data>
+  <data name="SysInfo.Io.Read" xml:space="preserve">
+    <value>Lesen {0}</value>
+  </data>
+  <data name="SysInfo.Io.Write" xml:space="preserve">
+    <value>Schreiben {0}</value>
+  </data>
+  <data name="SysInfo.Io.Received" xml:space="preserve">
+    <value>Empfangen {0}</value>
+  </data>
+  <data name="SysInfo.Io.Sent" xml:space="preserve">
+    <value>Gesendet {0}</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Systemeinstellungen</value>
   </data>
@@ -4457,6 +4640,24 @@
   <data name="Compress.AddsToExisting" xml:space="preserve">
     <value>Fügt dem vorhandenen Archiv hinzu.</value>
   </data>
+  <data name="Compress.ReplacesExisting" xml:space="preserve">
+    <value>Ersetzt das vorhandene Archiv.</value>
+  </data>
+  <data name="Compress.OneFileOnly" xml:space="preserve">
+    <value>{0} enthält nur eine Datei: markieren Sie eine Datei oder wählen Sie ein anderes Format.</value>
+  </data>
+  <data name="Compress.ReplaceConfirm" xml:space="preserve">
+    <value>{0} ersetzen? (y/n)</value>
+  </data>
+  <data name="Compress.CheckingArchive" xml:space="preserve">
+    <value>Archiv wird geprüft…</value>
+  </data>
+  <data name="DialogHint.ReplaceArchive" xml:space="preserve">
+    <value>Archiv ersetzen</value>
+  </data>
+  <data name="DialogHint.KeepArchive" xml:space="preserve">
+    <value>Archiv behalten</value>
+  </data>
   <data name="Compress.NoPassword" xml:space="preserve">
     <value>{0} unterstützt kein Kennwort.</value>
   </data>
@@ -5102,8 +5303,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>Die markierten Dateien und Ordner oder den unter dem Cursor nach einem Muster umbenennen.</value>
   </data>
-  <data name="CmdDesc.6916d198" xml:space="preserve">
-    <value>Das Archiv unter dem Cursor als Ordner öffnen (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG mit 7-Zip).</value>
+  <data name="CmdDesc.920092ad" xml:space="preserve">
+    <value>Das Archiv unter dem Cursor als Ordner öffnen (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2, GZ; 7z, RAR, CAB, XZ, ISO, IMG, VMDK, WIM, DMG mit 7-Zip).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>Den ausgewählten Ordner öffnen oder dem übergeordneten Eintrag folgen.</value>
