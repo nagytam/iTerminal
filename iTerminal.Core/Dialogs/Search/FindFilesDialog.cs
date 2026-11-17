@@ -411,10 +411,15 @@ public class FindFilesDialog : SplitPaneDialog
             _subfoldersBox.ViewSize = new Size(Math.Min(innerWidth, 30), 1);
 
             // The size and the age share the subfolders' row: the boxes sit to its right when there is room for them.
-            _largerBox.Position = new Position(33, 4);
-            _largerBox.ViewSize = new Size(Math.Clamp(innerWidth - 33 - 2, 0, 22), 1);
-            _olderBox.Position = new Position(Math.Min(innerWidth, 33 + 24), 4);
-            _olderBox.ViewSize = new Size(Math.Clamp(innerWidth - 33 - 24 - 1, 0, 20), 1);
+            // A text box's width includes its label, so each box is as wide as its label, its brackets and the placeholder.
+            var largerX = LargerColumn;
+            var largerWidth = FieldWidth(_largerBox);
+            _largerBox.Position = new Position(largerX, 4);
+            _largerBox.ViewSize = new Size(Math.Clamp(innerWidth - largerX - 2, 0, largerWidth), 1);
+            var olderX = largerX + largerWidth + 2;
+            var olderWidth = FieldWidth(_olderBox);
+            _olderBox.Position = new Position(Math.Min(innerWidth, olderX), 4);
+            _olderBox.ViewSize = new Size(Math.Clamp(innerWidth - olderX - 1, 0, olderWidth), 1);
             foreach (var box in new[] { _largerBox, _olderBox })
             {
                 box.ScrollableModel.ViewSize = box.ViewSize;
@@ -426,6 +431,21 @@ public class FindFilesDialog : SplitPaneDialog
         }
 
         base.OnInitializeLayout();
+    }
+
+    private const int LargerColumn = 33;
+    private const int PlaceholderWidth = 12;
+
+    /// <summary>The width of a size or age box: its label and brackets, and room for the longest placeholder.</summary>
+    private static int FieldWidth(TextBox box) => box.LabelPrefix.Length + 3 + PlaceholderWidth;
+
+    private void ClearRowGap(IBuffer buffer, int x, int row, int from, int to, int innerWidth, ColorScheme colorScheme)
+    {
+        var end = Math.Min(to, innerWidth);
+        if (end > from)
+        {
+            WriteLine(buffer, x + from, row, end - from, string.Empty, colorScheme.Foreground, colorScheme.Background);
+        }
     }
 
     public override void Draw(IBuffer buffer)
@@ -446,9 +466,24 @@ public class FindFilesDialog : SplitPaneDialog
             return;
         }
 
-        // The check box is narrower than the row; the rest of its row is the dialog's to clear.
+        // The check box is narrower than the row, and the size and age boxes share the row to its right. The parent
+        // clears only the gaps between them: a child box drawn over the parent's clear would be erased.
         var checkWidth = (int)_subfoldersBox.ViewSize.Width;
-        WriteLine(buffer, x + checkWidth, y + FieldRows - 1, innerWidth - checkWidth, string.Empty, colorScheme.Foreground, colorScheme.Background);
+        var clearedTo = checkWidth;
+        foreach (var box in new[] { _largerBox, _olderBox }.OrderBy(b => b.Position.X))
+        {
+            var boxStart = (int)box.Position.X - 1;
+            var boxEnd = boxStart + (int)box.ViewSize.Width;
+            if (box.ViewSize.Width <= 0)
+            {
+                continue;
+            }
+
+            ClearRowGap(buffer, x, y + FieldRows - 1, clearedTo, boxStart, innerWidth, colorScheme);
+            clearedTo = Math.Max(clearedTo, boxEnd);
+        }
+
+        ClearRowGap(buffer, x, y + FieldRows - 1, clearedTo, innerWidth, innerWidth, colorScheme);
 
         DrawStatus(buffer, x, y + FieldRows, innerWidth, colorScheme);
         DrawSectionHeader(buffer, x, y + FieldRows + 1, innerWidth, $"Results ({_resultListBox.Count:N0})", _resultListBox.IsFocused, colorScheme);

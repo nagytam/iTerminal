@@ -1694,7 +1694,7 @@
     <value>Più di MB</value>
   </data>
   <data name="Field.BlankAny" xml:space="preserve">
-    <value>vuoto: qualsiasi</value>
+    <value>vuoto: tutti</value>
   </data>
   <data name="Field.OlderDays" xml:space="preserve">
     <value>Più vecchi di giorni</value>

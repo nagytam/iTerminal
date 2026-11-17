@@ -51,6 +51,22 @@ public class SearchPreviewAndDrivesTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task F7ShowsTheSizeAndAgeBoxesWithTheirWholePlaceholder()
+    {
+        // The label is part of a text box's width, so a box too narrow for its placeholder shows "blank: a"
+        // and the size and age boxes can be wiped by the dialog's own row clear.
+        _app = await TerminalApp.StartAsync();
+
+        await _app.PressAsync("F7");
+        await _app.WaitForTextAsync("Find Files");
+        var screen = await _app.WaitForTextAsync("Larger MB: [blank: any");
+
+        Assert.IsTrue(screen.Contains("Older days: [blank: any"), screen.Dump());
+        Assert.IsTrue(screen.Contains("Include subfolders"), screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task F7ClosedWithEscLeavesThePanelsAsTheyWere()
     {
         _app = await TerminalApp.StartAsync();
