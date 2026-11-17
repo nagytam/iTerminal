@@ -65,7 +65,7 @@ public class StockBrowserDialog : SplitPaneDialog
     internal static string FormatPercent(decimal percent) =>
         (percent > 0 ? "+" : string.Empty) + percent.ToString("0.00", CultureInfo.InvariantCulture) + "%";
 
-    private sealed class StockListBox : ListBox<StockRow>
+    internal sealed class StockListBox : ListBox<StockRow>
     {
         public StockListBox(IListBoxModel<StockRow> listModel, IThemeService themeService)
             : base(listModel, themeService)
