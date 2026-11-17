@@ -2,11 +2,11 @@ using iConsole.Localization;
 
 namespace iConsole.Test.Localization;
 
-/// <summary>The key hints of the prompt dialogs (accept, choose, mark, yes or no, cancel) follow the chosen language.</summary>
+/// <summary>The key hints, titles and messages of the prompt dialogs follow the chosen language.</summary>
 [TestClass]
 public class PromptHintsLanguageTest
 {
-    private static readonly string[] Keys = ["Prompt.HintAccept", "Prompt.HintFilterChoose", "Prompt.HintMarkConfirm", "Prompt.HintYes", "Prompt.HintNo", "Prompt.HintCancel"];
+    private static readonly string[] Keys = ["Prompt.HintAccept", "Prompt.HintFilterChoose", "Prompt.HintMarkConfirm", "Prompt.HintYes", "Prompt.HintNo", "Prompt.HintCancel", "Prompt.Title", "Prompt.EmptyValue", "Prompt.FilterLabel", "Prompt.NoMatch", "Prompt.SelectTitle", "Prompt.NothingMatches", "Prompt.MarkAtLeast", "Prompt.ConfirmTitle", "Prompt.YesNo"];
 
     private IDisposable? _language;
 

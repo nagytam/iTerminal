@@ -79,7 +79,7 @@ public sealed class TextPromptDialog<T> : PromptDialog<T>
     private readonly TextBox _box;
 
     public TextPromptDialog(TextPrompt<T> prompt, IBeepService beepService, IDateTimeProviderService dateTimeProviderService, IThemeService themeService)
-        : base("Prompt", themeService)
+        : base(UiText.Get("Prompt.Title", "Prompt"), themeService)
     {
         _prompt = prompt;
         _box = prompt.IsSecret
@@ -116,7 +116,7 @@ public sealed class TextPromptDialog<T> : PromptDialog<T>
             }
             else
             {
-                Message = error ?? "Enter a value.";
+                Message = error ?? UiText.Get("Prompt.EmptyValue", "Enter a value.");
                 StateHasChanged();
             }
             return true;
@@ -228,7 +228,7 @@ public abstract class ChoicePromptDialog<T, TResult> : PromptDialog<TResult>
     {
         base.Draw(buffer);
         WriteRow(buffer, 0, _prompt.Question, Foreground, Background, isBold: true);
-        WriteRow(buffer, 1, "Filter: " + List.Filter, Foreground, Background);
+        WriteRow(buffer, 1, string.Format(UiText.Get("Prompt.FilterLabel", "Filter: {0}"), List.Filter), Foreground, Background);
 
         var top = List.ScrollTop(PageRows);
         for (var row = 0; row < PageRows; row++)
@@ -236,7 +236,7 @@ public abstract class ChoicePromptDialog<T, TResult> : PromptDialog<TResult>
             var index = top + row;
             if (index >= List.VisibleCount)
             {
-                WriteRow(buffer, 2 + row, index == 0 ? "No choices match the filter." : string.Empty, Hint, Background);
+                WriteRow(buffer, 2 + row, index == 0 ? UiText.Get("Prompt.NoMatch", "No choices match the filter.") : string.Empty, Hint, Background);
                 continue;
             }
 
@@ -263,7 +263,7 @@ public abstract class ChoicePromptDialog<T, TResult> : PromptDialog<TResult>
 public sealed class SelectionPromptDialog<T> : ChoicePromptDialog<T, T>
 {
     public SelectionPromptDialog(SelectionPrompt<T> prompt, IThemeService themeService)
-        : base(prompt, "Select", themeService)
+        : base(prompt, UiText.Get("Prompt.SelectTitle", "Select"), themeService)
     {
     }
 
@@ -273,7 +273,7 @@ public sealed class SelectionPromptDialog<T> : ChoicePromptDialog<T, T>
     {
         if (List.VisibleCount == 0)
         {
-            Message = "Nothing matches the filter.";
+            Message = UiText.Get("Prompt.NothingMatches", "Nothing matches the filter.");
             StateHasChanged();
             return;
         }
@@ -288,7 +288,7 @@ public sealed class MultiSelectionPromptDialog<T> : ChoicePromptDialog<T, IReadO
     private readonly int _minimum;
 
     public MultiSelectionPromptDialog(MultiSelectionPrompt<T> prompt, IThemeService themeService)
-        : base(prompt, "Select", themeService)
+        : base(prompt, UiText.Get("Prompt.SelectTitle", "Select"), themeService)
     {
         _minimum = prompt.MinimumSelections;
     }
@@ -315,7 +315,7 @@ public sealed class MultiSelectionPromptDialog<T> : ChoicePromptDialog<T, IReadO
         var marked = List.MarkedItems;
         if (marked.Count < _minimum)
         {
-            Message = $"Mark at least {_minimum}.";
+            Message = string.Format(UiText.Get("Prompt.MarkAtLeast", "Mark at least {0}."), _minimum);
             StateHasChanged();
             return;
         }
@@ -329,7 +329,7 @@ public sealed class ConfirmationPromptDialog : PromptDialog<bool?>
 {
     private readonly ConfirmationPrompt _prompt;
 
-    public ConfirmationPromptDialog(ConfirmationPrompt prompt, IThemeService themeService) : base("Confirm", themeService)
+    public ConfirmationPromptDialog(ConfirmationPrompt prompt, IThemeService themeService) : base(UiText.Get("Prompt.ConfirmTitle", "Confirm"), themeService)
     {
         _prompt = prompt;
     }
@@ -375,7 +375,7 @@ public sealed class ConfirmationPromptDialog : PromptDialog<bool?>
     {
         base.Draw(buffer);
         WriteRow(buffer, 0, _prompt.Question, Foreground, Background, isBold: true);
-        WriteRow(buffer, 2, "[Y] Yes    [N] No", Foreground, Background);
+        WriteRow(buffer, 2, UiText.Get("Prompt.YesNo", "[Y] Yes    [N] No"), Foreground, Background);
         var fallback = _prompt.DefaultValue switch
         {
             true => UiText.Get("Prompt.HintYes", "Enter: yes    Esc: cancel"),

@@ -1991,4 +1991,31 @@
   <data name="Prompt.HintCancel" xml:space="preserve">
     <value>Esc: annulla</value>
   </data>
+  <data name="Prompt.Title" xml:space="preserve">
+    <value>Richiesta</value>
+  </data>
+  <data name="Prompt.EmptyValue" xml:space="preserve">
+    <value>Inserisci un valore.</value>
+  </data>
+  <data name="Prompt.FilterLabel" xml:space="preserve">
+    <value>Filtro: {0}</value>
+  </data>
+  <data name="Prompt.NoMatch" xml:space="preserve">
+    <value>Nessuna scelta corrisponde al filtro.</value>
+  </data>
+  <data name="Prompt.SelectTitle" xml:space="preserve">
+    <value>Seleziona</value>
+  </data>
+  <data name="Prompt.NothingMatches" xml:space="preserve">
+    <value>Nulla corrisponde al filtro.</value>
+  </data>
+  <data name="Prompt.MarkAtLeast" xml:space="preserve">
+    <value>Seleziona almeno {0}.</value>
+  </data>
+  <data name="Prompt.ConfirmTitle" xml:space="preserve">
+    <value>Conferma</value>
+  </data>
+  <data name="Prompt.YesNo" xml:space="preserve">
+    <value>[S] Sì    [N] No</value>
+  </data>
 </root>
