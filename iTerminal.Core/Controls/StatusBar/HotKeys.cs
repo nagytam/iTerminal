@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.StatusBar;
@@ -100,7 +100,9 @@ public class HotKeys : StatusBarItem
         IGitService? gitService = null,
         iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null,
         iConsole.Tasks.TaskManager? taskManager = null,
-        IPromptService? promptService = null)
+        IPromptService? promptService = null,
+        iConsole.Viewers.FileViewerRegistry? fileViewers = null,
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -119,8 +121,8 @@ public class HotKeys : StatusBarItem
             AddCommand(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         }
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog);
-        var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog, fileViewers: fileViewers);
+        var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations, fileEditors);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);
         var deleteDialogCommand = new DeleteDialogCommand(deleteDialog, contentModelService, notificationService);
