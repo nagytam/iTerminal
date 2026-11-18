@@ -147,6 +147,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
         iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
         iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
+        iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null,
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
         iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
@@ -292,7 +293,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             jassDialog: jassDialog,
             userGroupManagerDialog: userGroupManagerDialog,
             scannerDialog: scannerDialog,
-            networkToolsDialog: networkToolsDialog));
+            networkToolsDialog: networkToolsDialog,
+            pluginManagerDialog: pluginManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));
 
