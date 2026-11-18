@@ -10044,6 +10044,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Échec du changement : {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Nettoyer les fusionnées (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Aucune branche locale n'est fusionnée dans {0}, rien à nettoyer.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Supprimer {0} branches locales fusionnées dans {1} ? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Suppression des branches fusionnées…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>{0} branches fusionnées supprimées.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>{0} supprimées ; {1} n'ont pas pu être supprimées : {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Supprimer les branches locales fusionnées dans main (demande d'abord)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Nettoyer les fusionnées</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Supprimer les branches locales fusionnées dans la branche principale (demande d'abord).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} tâche(s) en arrière-plan sont encore en cours. Quitter quand même ?</value>
   </data>

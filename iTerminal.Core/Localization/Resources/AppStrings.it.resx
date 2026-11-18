@@ -10044,6 +10044,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Cambio non riuscito: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Pulisci uniti (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Nessun branch locale è unito in {0}, quindi non c'è nulla da pulire.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Eliminare {0} branch locali uniti in {1}? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Eliminazione dei branch uniti…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>Eliminati {0} branch uniti.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>Eliminati {0}; {1} non eliminabili: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Elimina i branch locali uniti in main (chiede prima)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Pulisci uniti</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Elimina i branch locali uniti nel branch principale (chiede prima).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} attività in background sono ancora in corso. Uscire comunque?</value>
   </data>

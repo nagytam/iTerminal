@@ -1,6 +1,7 @@
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls;
+using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -30,6 +31,7 @@ public class GitSyncDialog : Dialog
     private readonly FormPanel _form;
     private readonly ComboBox<GitPullMode> _comboPull;
     private readonly CheckBox _checkBoxPush;
+    private readonly Button _cleanupButton;
     private readonly SyncList _list;
     private string? _folder;
     private string? _root;
@@ -41,6 +43,9 @@ public class GitSyncDialog : Dialog
     private IReadOnlyList<string> _conflicts = [];
     private string? _mainBranch;
     private IReadOnlySet<string> _mergedRefs = new HashSet<string>(StringComparer.Ordinal);
+
+    /// <summary>The local branches the cleanup asked about and waits on a y/n for; empty when no cleanup is waiting.</summary>
+    private IReadOnlyList<string> _pendingCleanup = [];
 
     public GitSyncDialog(
         IGitService gitService,
@@ -60,10 +65,12 @@ public class GitSyncDialog : Dialog
         _form = new FormPanel(themeService);
         _form.AddField(Say("Sync.FieldPull", "Pull"), _comboPull);
         _checkBoxPush = new CheckBox(themeService) { Label = Say("Sync.FieldPush", "Push after the pull"), IsChecked = true };
+        _cleanupButton = new Button(Say("Sync.Cleanup.Button", "Clean up merged (Alt+C)"), new CleanupMergedCommand(), themeService);
         _list = new SyncList(themeService);
 
         AddControl(_form);
         AddControl(_checkBoxPush);
+        AddControl(_cleanupButton);
         AddControl(_list);
         AddCommand(new SyncCommand());
     }
@@ -129,6 +136,8 @@ public class GitSyncDialog : Dialog
         _form.ViewSize = new Size(inner, 1);
         _checkBoxPush.Position = new Position(2, 5);
         _checkBoxPush.ViewSize = new Size(inner, 1);
+        _cleanupButton.Position = new Position(2, 6);
+        _cleanupButton.ViewSize = new Size(Math.Min(inner, _cleanupButton.Title.Length + 4), 1);
         _list.Position = new Position(1, 8);
         _list.ViewSize = new Size(Math.Max(1, ViewSize.Width - 2), Math.Max(1, ViewSize.Height - 11));
         base.OnInitializeLayout();
@@ -275,6 +284,108 @@ public class GitSyncDialog : Dialog
     }
 
     /// <summary>
+    /// The Clean up button: asks which local branches are merged into the main branch and waits for a y/n. Nothing is deleted
+    /// until the answer is y. Uses the merged list the last reload read, and the run checks it again before deleting.
+    /// </summary>
+    public void BeginCleanup()
+    {
+        if (!SyncTask.IsCompleted)
+        {
+            SetStatus(Say("Sync.Status.Busy", "A sync or branch switch is still running."), isError: false);
+            return;
+        }
+
+        if (_mainBranch is null)
+        {
+            SetStatus(Say("Sync.Status.NoMain", "This repository has no local main or master branch."), isError: true);
+            return;
+        }
+
+        var names = MergedCleanupCandidates(_branches, _mergedRefs, _mainBranch, currentBranch: _repository.Branch);
+        if (names.Count == 0)
+        {
+            SetStatus(Say("Sync.Cleanup.None", "No local branch is merged into {0}, so there is nothing to clean up.", _mainBranch), isError: false);
+            return;
+        }
+
+        _pendingCleanup = names;
+        SetStatus(Say("Sync.Cleanup.Confirm", "Delete {0} local branch(es) merged into {1}? (y/n)", names.Count, _mainBranch), isError: true,
+            detail: string.Join(", ", names));
+    }
+
+    /// <summary>
+    /// The local branches that may be deleted as merged: every local branch whose tip is already in the main branch,
+    /// except the main branch itself and the one checked out.
+    /// </summary>
+    internal static IReadOnlyList<string> MergedCleanupCandidates(IEnumerable<GitBranch> branches, IReadOnlySet<string> mergedRefs, string mainBranch, string currentBranch) =>
+        branches
+            .Where(branch => !branch.IsRemote && !branch.IsCurrent)
+            .Select(branch => branch.Name)
+            .Where(name => name != mainBranch && name != currentBranch && mergedRefs.Contains("refs/heads/" + name))
+            .ToList();
+
+    /// <summary>Deletes the branches the person confirmed, after checking again that each is still merged and not checked out.</summary>
+    private void RunCleanup(IReadOnlyList<string> names, string mainBranch)
+    {
+        SetStatus(Say("Sync.Cleanup.Deleting", "Deleting the merged branches…"), isError: false);
+        SyncTask = Task.Run(async () =>
+        {
+            try
+            {
+                var root = await ResolveRootAsync();
+                if (root is null)
+                {
+                    ReportSyncResult(Say("Sync.Status.NotRepo", "This folder is not in a git repository."), isError: true);
+                    return;
+                }
+
+                await RefreshTask;
+                var status = await _gitService.GetStatusAsync(root);
+                var merged = await _gitService.GetMergedRefsAsync(root, mainBranch);
+
+                var deleted = 0;
+                var failed = new List<string>();
+                var firstError = string.Empty;
+                foreach (var name in names)
+                {
+                    if (name == status.Branch || name == mainBranch || !merged.Contains("refs/heads/" + name))
+                    {
+                        continue;
+                    }
+
+                    // Force: each tip was just checked to be contained in the main branch, so no commit is lost. The safe delete
+                    // would compare against the checked-out branch instead, which is not necessarily main.
+                    var result = await _gitService.DeleteBranchAsync(root, name, force: true);
+                    if (result.Success)
+                    {
+                        deleted++;
+                    }
+                    else
+                    {
+                        failed.Add(name);
+                        firstError = string.IsNullOrEmpty(firstError) ? FirstLine(result.Output) : firstError;
+                    }
+                }
+
+                await LoadAsync(root);
+                if (failed.Count == 0)
+                {
+                    ReportSyncResult(Say("Sync.Cleanup.Done", "Deleted {0} merged branch(es).", deleted), isError: false);
+                }
+                else
+                {
+                    ReportSyncResult(Say("Sync.Cleanup.Failed", "Deleted {0}; {1} could not be deleted: {2}", deleted, failed.Count, firstError), isError: true,
+                        detail: string.Join(", ", failed));
+                }
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                ReportSyncResult(exception.Message, isError: true);
+            }
+        });
+    }
+
+    /// <summary>
     /// The outcome of an Enter sync: the status line in the dialog, and a toast so the result is seen even when the
     /// dialog is closed while the sync runs. The toast carries the status line's text and, on failure, its guidance.
     /// </summary>
@@ -366,7 +477,15 @@ public class GitSyncDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
+        if (_pendingCleanup.Count > 0)
+        {
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("N / Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
+            yield break;
+        }
+
         yield return ("Enter", UiText.Get("Sync.Hint.Sync", "Pull, then push: runs the sync"));
+        yield return ("Alt+C", UiText.Get("Sync.Hint.Cleanup", "Delete the local branches merged into main (asks first)"));
         yield return ("Tab", UiText.Get("Sync.Hint.Tab", "Move between the pull mode, the push option and the branch list"));
         yield return ("Space", UiText.Get("Sync.Hint.Push", "Tick or untick the push after the pull"));
         yield return ("F5", UiText.Get("Sync.Hint.Reload", "Reload the branches and conflicts"));
@@ -378,6 +497,11 @@ public class GitSyncDialog : Dialog
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        if (_pendingCleanup.Count > 0)
+        {
+            return HandleCleanupAnswer(keyEvent);
+        }
+
         if (keyEvent.ConsoleKey == ConsoleKey.F5 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
         {
             _ = RefreshAsync();
@@ -387,6 +511,12 @@ public class GitSyncDialog : Dialog
         if (keyEvent.ConsoleKey == ConsoleKey.F6 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
         {
             _ = SwitchToMainAsync();
+            return true;
+        }
+
+        if (keyEvent.ConsoleKey == ConsoleKey.C && keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
+        {
+            BeginCleanup();
             return true;
         }
 
@@ -415,6 +545,29 @@ public class GitSyncDialog : Dialog
         }
 
         return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>While the cleanup waits for its answer: y deletes, n or Esc keeps the branches, and every other key is held.</summary>
+    private bool HandleCleanupAnswer(KeyEvent keyEvent)
+    {
+        var answer = char.ToLowerInvariant(keyEvent.KeyChar);
+        if (answer != 'y' && answer != 'n' && keyEvent.ConsoleKey != ConsoleKey.Escape)
+        {
+            return true;
+        }
+
+        var names = _pendingCleanup;
+        _pendingCleanup = [];
+        if (answer == 'y')
+        {
+            RunCleanup(names, _mainBranch ?? string.Empty);
+        }
+        else
+        {
+            SetStatus(UiText.Get("Msg.Cancelled", "Cancelled."), isError: false);
+        }
+
+        return true;
     }
 
     protected override void DrawChrome(IBuffer buffer)
@@ -472,6 +625,19 @@ public class GitSyncDialog : Dialog
         public override Task ExecuteAsync(object? args)
         {
             (Control as GitSyncDialog ?? Control?.Parent as GitSyncDialog)?.SyncAsync();
+            return Task.CompletedTask;
+        }
+    }
+
+    /// <summary>The Clean up button: asks about the merged branches. The dialog does the work, so the question stays with it.</summary>
+    private sealed class CleanupMergedCommand : Command
+    {
+        public override string Title => "Clean up merged";
+        public override string Description => "Delete the local branches merged into the main branch (asks first).";
+
+        public override Task ExecuteAsync(object? args)
+        {
+            (Control as GitSyncDialog ?? Control?.Parent as GitSyncDialog)?.BeginCleanup();
             return Task.CompletedTask;
         }
     }
