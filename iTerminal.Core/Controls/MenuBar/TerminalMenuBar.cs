@@ -59,6 +59,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         IFrequentExecutionGuardService frequentExecutionGuardService,
         INetworkDiscoveryService networkDiscoveryService,
         INetworkProfileService networkProfileService,
+        IPasswordManager passwordManager,
+        IPromptService promptService,
         Content content,
         // Tools
         TerminalDialog terminalDialog,
@@ -236,6 +238,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             frequentExecutionGuardService,
             networkDiscoveryService,
             networkProfileService,
+            passwordManager,
+            promptService,
             content,
             themeService,
             helpDialog,

@@ -10050,6 +10050,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Cambio non riuscito: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Pulisci uniti (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Nessun branch locale è unito in {0}, quindi non c'è nulla da pulire.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Eliminare {0} branch locali uniti in {1}? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Eliminazione dei branch uniti…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>Eliminati {0} branch uniti.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>Eliminati {0}; {1} non eliminabili: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Elimina i branch locali uniti in main (chiede prima)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Pulisci uniti</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Elimina i branch locali uniti nel branch principale (chiede prima).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} attività in background sono ancora in corso. Uscire comunque?</value>
   </data>
@@ -10148,7 +10175,7 @@
     <value>Terminale di mercato</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Invio:cerca o mostra la riga  ↑↓:monitor  F5:aggiorna  Esc:chiudi</value>
+    <value>Invio:cerca/mostra  ↑↓:monitor  F5:aggiorna  F6:segui  F8:periodo  Esc:chiudi</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Cerca  ›</value>
@@ -10170,6 +10197,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Cerca il simbolo, o mostra la riga scelta</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Cerca prima un titolo, poi premi F6 per seguirlo.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} aggiunto alla lista di controllo</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>seguito</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Grafico</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Grafico {0}   da {1} a {2}   {3} nel periodo</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>caricamento dello storico…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>nessuno storico dei prezzi per questo titolo</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Cambia il periodo del grafico (1M, 3M, 1A, 5A)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Aggiungi o rimuovi il titolo dalla lista di controllo</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Terminale di mercato</value>
@@ -10205,10 +10259,73 @@
     <value>ricerca…</value>
   </data>
   <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
-    <value>Su {0} non sono elencate condivisioni senza accesso. Salva prima una connessione nel browser di rete (Ctrl+N).</value>
+    <value>Su {0} non sono elencate condivisioni senza accesso. Premi L per accedere.</value>
   </data>
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>salvato</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Esci…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Connesso a {0} come {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>Navigazione anonima su {0}. L accede.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Seleziona prima un host da cui uscire.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Non connesso a {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Uscire da {0} e rimuovere la password salvata per {1}?  y:sì  n:no</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Disconnesso da {0}; la password salvata è stata rimossa.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>Il password safe non può essere aperto, quindi l'accesso non è stato rimosso.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Uscire dall'host sotto il cursore e rimuoverne la password salvata (y conferma).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Accedi…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>connesso come {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Accesso a {0} come {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>Accesso a {0} come {1} non riuscito. Non è stato salvato nulla.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>Impossibile elencare le condivisioni di {0} con l'accesso salvato di {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Connesso a {0} come {1}. L'accesso è salvato nel password safe.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Connesso a {0} come {1}. Il password safe non può essere aperto, quindi l'accesso non è stato salvato.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Seleziona prima un host a cui accedere.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Nome utente per {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>I caratteri di controllo non sono consentiti.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Password per {0} su {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Accedi all'host sotto il cursore con nome utente e password; l'accesso è salvato nel password safe.</value>
   </data>
   <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
     <value>Torna dalle condivisioni di un host all'elenco degli host.</value>
@@ -10222,5 +10339,11 @@
   <data name="CmdDesc.86efee9f" xml:space="preserve">
     <value>Apre il file selezionato nell'editor; un file binario si apre nella sua vista esadecimale.</value>
     <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Accedi a un host SMB</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Esci da un host SMB</value>
   </data>
 </root>

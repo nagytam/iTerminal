@@ -106,6 +106,35 @@ public class SmbFileSystemServiceTest
         Assert.AreEqual(0, shares.Count());
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TryListShares_LoginRefused_ReturnsNullSoAHostWithNoSharesCanBeTold()
+    {
+        var client = new Mock<ISMBClient>();
+        client.Setup(c => c.Connect(It.IsAny<string>(), It.IsAny<SMBTransportType>())).Returns(true);
+        client.Setup(c => c.Login(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(NTStatus.STATUS_LOGON_FAILURE);
+        var service = new SmbFileSystemService(() => client.Object);
+
+        Assert.IsNull(service.TryListShares("host", "user", "wrong-pw"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TryListShares_LoginAccepted_ReturnsTheSharesEvenWhenThereAreNone()
+    {
+        var client = new Mock<ISMBClient>();
+        client.Setup(c => c.Connect(It.IsAny<string>(), It.IsAny<SMBTransportType>())).Returns(true);
+        client.Setup(c => c.Login(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(NTStatus.STATUS_SUCCESS);
+        var listStatus = NTStatus.STATUS_SUCCESS;
+        client.Setup(c => c.ListShares(out listStatus)).Returns(new List<string>());
+        var service = new SmbFileSystemService(() => client.Object);
+
+        var shares = service.TryListShares("host", "user", "pw");
+
+        Assert.IsNotNull(shares);
+        Assert.AreEqual(0, shares.Count);
+    }
+
     // ── Connect ──────────────────────────────────────────────────────────────
 
     [Timeout(60_000)]
@@ -142,6 +171,55 @@ public class SmbFileSystemServiceTest
         var service = new SmbFileSystemService(() => client.Object);
 
         Assert.ThrowsExactly<IOException>(() => service.Connect("host", "Share", "user", "wrong-pw"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Connect_ToAnotherHost_ReconnectsInsteadOfReusingTheOldSession()
+    {
+        // One panel can move from smb://hostA/ to smb://hostB/ without a Disconnect in between; the share
+        // must be tree-connected on hostB, not on the session still open to hostA.
+        var first = CreateConnectedClientMock();
+        var second = CreateConnectedClientMock();
+        var clients = new Queue<ISMBClient>([first.Object, second.Object]);
+        var service = new SmbFileSystemService(() => clients.Dequeue());
+        service.Connect("hostA", "Share", "user", "pw");
+
+        service.Connect("hostB", "Share", "user", "pw");
+
+        second.Verify(c => c.Connect("hostB", It.IsAny<SMBTransportType>()), Times.Once);
+        second.Verify(c => c.TreeConnect("Share", out It.Ref<NTStatus>.IsAny), Times.Once);
+        first.Verify(c => c.TreeConnect(It.IsAny<string>(), out It.Ref<NTStatus>.IsAny), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Connect_AsAnotherUser_LogsInAgain()
+    {
+        // The session belongs to the user that logged in; a saved connection for someone else needs its own login.
+        var first = CreateConnectedClientMock();
+        var second = CreateConnectedClientMock();
+        var clients = new Queue<ISMBClient>([first.Object, second.Object]);
+        var service = new SmbFileSystemService(() => clients.Dequeue());
+        service.Connect("host", "Share", "alice", "pw-a");
+
+        service.Connect("host", "Other", "bob", "pw-b");
+
+        second.Verify(c => c.Login(string.Empty, "bob", "pw-b"), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Connect_SameHostAndUser_ReusesTheSession()
+    {
+        var client = CreateConnectedClientMock();
+        var service = new SmbFileSystemService(() => client.Object);
+        service.Connect("host", "Share", "user", "pw");
+
+        service.Connect("host", "Other", "user", "pw");
+
+        client.Verify(c => c.Connect(It.IsAny<string>(), It.IsAny<SMBTransportType>()), Times.Once);
+        client.Verify(c => c.TreeConnect("Other", out It.Ref<NTStatus>.IsAny), Times.Once);
     }
 
     // ── List ─────────────────────────────────────────────────────────────────

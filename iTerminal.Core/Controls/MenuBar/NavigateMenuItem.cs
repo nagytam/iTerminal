@@ -22,6 +22,8 @@ public class NavigateMenuItem : MenuItem
         IFrequentExecutionGuardService frequentExecutionGuardService,
         INetworkDiscoveryService networkDiscoveryService,
         INetworkProfileService networkProfileService,
+        IPasswordManager passwordManager,
+        IPromptService promptService,
         Content content,
         IThemeService themeService,
         HelpDialog? helpDialog = null,
@@ -43,6 +45,8 @@ public class NavigateMenuItem : MenuItem
             themeService,
             networkDiscoveryService,
             networkProfileService,
+            passwordManager,
+            promptService,
             helpDialog);
 
         AddMenuItem(new MenuItem("Go To Folder\tCtrl+F1",  folderSelectorCommand, [], themeService));

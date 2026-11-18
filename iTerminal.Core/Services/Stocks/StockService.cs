@@ -36,6 +36,9 @@ public interface IStockService
 
     Task<IReadOnlyList<StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default);
 
+    /// <summary>The daily closes of a stock over a range, watched or not. Nothing is kept; empty when the source has none.</summary>
+    Task<IReadOnlyList<StockBar>> HistoryAsync(string symbol, StockHistoryRange range, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// The quote for any symbol the source knows, watched or not. Nothing is kept: the market terminal looks a stock
     /// up without putting it on the list. Null when the source does not know the symbol or cannot be reached.
@@ -252,6 +255,14 @@ public sealed class StockService : IStockService, IDisposable
 
     public Task<IReadOnlyList<StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
         _provider.SearchAsync(query, cancellationToken);
+
+    public Task<IReadOnlyList<StockBar>> HistoryAsync(string symbol, StockHistoryRange range, CancellationToken cancellationToken = default)
+    {
+        symbol = Normalize(symbol);
+        return symbol.Length == 0
+            ? Task.FromResult<IReadOnlyList<StockBar>>([])
+            : _provider.GetHistoryAsync(symbol, range, cancellationToken);
+    }
 
     public async Task<StockQuote?> QuoteAsync(string symbol, CancellationToken cancellationToken = default)
     {

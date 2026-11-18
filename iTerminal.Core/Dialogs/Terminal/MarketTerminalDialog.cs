@@ -14,18 +14,26 @@ using iTerminal.Core.Services.Stocks;
 namespace iTerminal.Core.Dialogs.Terminal;
 
 /// <summary>
-/// The market terminal (Alt+Shift+F6): a full-screen, command-line view of the markets in the style of a trading
+/// The market terminal (Alt+Shift+F7): a full-screen, command-line view of the markets in the style of a trading
 /// terminal. Type a symbol or a company name on the command line and press Enter, and the security screen below the
 /// monitor fills with its price, the day's and the year's range and the last trade. The monitor is the watchlist,
-/// live as the stock browser's is; a ticker tape across the top shows every watched stock at a glance.
+/// live as the stock browser's is; a ticker tape across the top shows every watched stock at a glance. F6 puts the
+/// security on the watchlist, or takes it off, and a security that is watched follows the watchlist's live quote.
 ///
 /// <para>Nothing here waits on the network. A lookup runs on a background task and parks its result; the next idle
 /// pass applies it on the UI thread, and only the newest lookup may land (an older one is dropped).</para>
 /// </summary>
 public class MarketTerminalDialog : SplitPaneDialog
 {
-    /// <summary>Rows below the monitor: the security heading and its three lines of detail.</summary>
-    private const int SecurityBlockHeight = 4;
+    /// <summary>Rows at the bottom: the security heading, its three lines of detail and the status line.</summary>
+    private const int SecurityBlockHeight = 5;
+
+    /// <summary>The chart's plot rows; the block above the security is one heading row and these.</summary>
+    private const int ChartRows = 5;
+    private const int ChartBlockHeight = ChartRows + 1;
+
+    /// <summary>The columns the chart's price labels take on the right.</summary>
+    private const int ChartLabelWidth = 10;
 
     /// <summary>The rows the monitor needs above the security block: the command line, the tape and the monitor heading.</summary>
     private const int MonitorTopRows = 3;
@@ -44,10 +52,17 @@ public class MarketTerminalDialog : SplitPaneDialog
     private volatile string _message = string.Empty;
     private volatile bool _isBusy;
 
+    private IReadOnlyList<StockBar> _history = [];
+    private bool _historyLoaded;
+    private string? _historySymbol;
+    private StockHistoryRange _range = StockHistoryRange.OneYear;
+    private int _historyGeneration;
+    private IReadOnlyList<StockBar>? _pendingHistory;
+
     /// <summary>The result of a lookup, parked until the UI thread applies it. A null quote means the lookup found nothing.</summary>
     private sealed record Lookup(int Generation, StockQuote? Quote, string Message);
 
-    internal static string KeyHints => UiText.Get("Hints.MarketTerminal", "Enter:look up or show the row  ↑↓:monitor  F5:refresh  Esc:close");
+    internal static string KeyHints => UiText.Get("Hints.MarketTerminal", "Enter:look up or show  ↑↓:monitor  F5:refresh  F6:watch  F8:period  Esc:close");
 
     public MarketTerminalDialog(
         IStockService stockService,
@@ -108,8 +123,10 @@ public class MarketTerminalDialog : SplitPaneDialog
             _inputBox.ViewSize = new Size(iw, 1);
             _inputBox.ScrollableModel.ViewSize = _inputBox.ViewSize;
 
+            // Interior rows, from the bottom: the status line, the security's three lines and heading, then the chart
+            // (its heading and plot rows) and the monitor above it.
             _listBox.Position = new Position(1, MonitorTopRows + 1);
-            _listBox.ViewSize = new Size(iw, Math.Max(0, ih - MonitorTopRows - SecurityBlockHeight - 1));
+            _listBox.ViewSize = new Size(iw, Math.Max(0, ih - MonitorTopRows - SecurityBlockHeight - ChartBlockHeight));
         }
 
         base.OnInitializeLayout();
@@ -160,7 +177,7 @@ public class MarketTerminalDialog : SplitPaneDialog
         {
             if (CursorRow() is { Quote: { } quote })
             {
-                _security = quote;
+                ShowSecurity(quote);
                 SetMessage(string.Empty);
             }
             else
@@ -285,17 +302,208 @@ public class MarketTerminalDialog : SplitPaneDialog
 
         if (lookup.Quote is { } quote)
         {
-            _security = quote;
+            ShowSecurity(quote);
             _inputBox.Text = string.Empty;
         }
 
         SetMessage(lookup.Message);
     }
 
+    /// <summary>Puts a security on the screen and asks for its history; a different stock starts with an empty chart.</summary>
+    private void ShowSecurity(StockQuote quote)
+    {
+        _security = quote;
+        RequestHistory();
+    }
+
     public override void OnIdle()
     {
         base.OnIdle();
         ApplyPending();
+        ApplyPendingHistory();
+        FollowWatchedSecurity();
+    }
+
+    #endregion
+
+    #region History
+
+    /// <summary>The history a request parked; the newest request is the only one that may land.</summary>
+    private void ParkHistory(int generation, IReadOnlyList<StockBar> bars)
+    {
+        lock (_landGate)
+        {
+            if (generation == _historyGeneration)
+            {
+                _pendingHistory = bars;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Asks for the security's history at the current period, on a background task. A refresh of the same stock keeps
+    /// the chart on screen until the newer answer lands; a different stock, or another period, starts with an empty one.
+    /// </summary>
+    private void RequestHistory()
+    {
+        if (_security is not { } shown)
+        {
+            return;
+        }
+
+        var symbol = shown.Symbol;
+        if (!string.Equals(symbol, _historySymbol, StringComparison.OrdinalIgnoreCase))
+        {
+            _history = [];
+            _historyLoaded = false;
+            _historySymbol = symbol;
+        }
+
+        int generation;
+        lock (_landGate)
+        {
+            generation = ++_historyGeneration;
+            _pendingHistory = null;
+        }
+
+        var range = _range;
+        _ = Task.Run(async () =>
+        {
+            IReadOnlyList<StockBar> bars = [];
+            try
+            {
+                bars = await _stockService.HistoryAsync(symbol, range, _cancellation.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+            catch (Exception)
+            {
+                // No chart: the screen says the security has no history.
+            }
+
+            ParkHistory(generation, bars);
+        });
+    }
+
+    /// <summary>Applies a parked history on the UI thread.</summary>
+    private void ApplyPendingHistory()
+    {
+        IReadOnlyList<StockBar>? bars;
+        lock (_landGate)
+        {
+            bars = _pendingHistory;
+            _pendingHistory = null;
+        }
+
+        if (bars is null)
+        {
+            return;
+        }
+
+        _history = bars;
+        _historyLoaded = true;
+        StateHasChanged();
+    }
+
+    /// <summary>F8: the next period, one month to five years, and the chart is drawn again for it.</summary>
+    private void CycleRange()
+    {
+        _range = _range == StockHistoryRange.FiveYears ? StockHistoryRange.OneMonth : _range + 1;
+        _historySymbol = null;
+        RequestHistory();
+        StateHasChanged();
+    }
+
+    internal static string RangeLabel(StockHistoryRange range) => range switch
+    {
+        StockHistoryRange.OneMonth => "1M",
+        StockHistoryRange.ThreeMonths => "3M",
+        StockHistoryRange.OneYear => "1Y",
+        StockHistoryRange.FiveYears => "5Y",
+        _ => "1Y",
+    };
+
+    /// <summary>The chart's heading: the period, the first and last close, and how far the price moved over the period.</summary>
+    internal static string FormatChartHeading(StockHistoryRange range, IReadOnlyList<StockBar> bars, int width)
+    {
+        var first = bars[0].Close;
+        var last = bars[^1].Close;
+        var percent = first == 0 ? 0 : (last - first) / first * 100m;
+        return Cut(string.Format(UiText.Get("Market.ChartHeading", "Chart {0}   {1} to {2}   {3} over the period"),
+            RangeLabel(range), StockBrowserDialog.FormatPrice(first), StockBrowserDialog.FormatPrice(last), StockBrowserDialog.FormatPercent(percent)), width);
+    }
+
+    /// <summary>A watched security takes the watchlist's quote whenever the loop refreshes it, so its screen stays live.</summary>
+    private void FollowWatchedSecurity()
+    {
+        if (_security is { } shown && _stockService.GetQuote(shown.Symbol) is { } latest && latest != shown)
+        {
+            _security = latest;
+            StateHasChanged();
+        }
+    }
+
+    #endregion
+
+    #region Watchlist
+
+    private bool IsWatched(string symbol) =>
+        _stockService.Watchlist.Any(stock => string.Equals(stock.Symbol, symbol, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
+    /// F6: puts the security on the watchlist, or takes it off when it is already there. Adding asks the source first,
+    /// so it runs on a background task like a lookup; removing is in memory and answers at once.
+    /// </summary>
+    private void ToggleWatch()
+    {
+        if (_security is not { } shown)
+        {
+            SetMessage(UiText.Get("Market.NoSecurityToWatch", "Look up a stock first, then press F6 to watch it."));
+            return;
+        }
+
+        if (IsWatched(shown.Symbol))
+        {
+            _stockService.Remove(shown.Symbol);
+            SetMessage(string.Format(UiText.Get("Stocks.Removed", "Removed {0}"), shown.Symbol));
+            return;
+        }
+
+        if (_isBusy)
+        {
+            return;
+        }
+
+        _isBusy = true;
+        var symbol = shown.Symbol;
+        SetMessage(string.Format(UiText.Get("Msg.AddingSymbol", "Adding {0}…"), symbol));
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _stockService.AddAsync(symbol, cancellationToken: _cancellation.Token);
+                SetMessage(string.Format(UiText.Get("Market.Added", "Added {0} to the watchlist"), symbol));
+            }
+            catch (OperationCanceledException)
+            {
+                // Closed mid-add.
+            }
+            catch (InvalidOperationException exception)
+            {
+                // The service words these for the user (already listed, no quote).
+                SetMessage(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                SetMessage(string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message));
+            }
+            finally
+            {
+                _isBusy = false;
+            }
+        });
     }
 
     #endregion
@@ -307,6 +515,8 @@ public class MarketTerminalDialog : SplitPaneDialog
         yield return ("Enter", UiText.Get("Market.LookUp", "Look up the symbol, or show the chosen row"));
         yield return ("Up/Down", UiText.Get("DialogHint.ChooseHit", "Choose a hit"));
         yield return ("F5", UiText.Get("DialogHint.RefreshQuotes", "Refresh the quotes"));
+        yield return ("F6", UiText.Get("DialogHint.WatchSecurity", "Add or remove the security from the watchlist"));
+        yield return ("F8", UiText.Get("DialogHint.ChartPeriod", "Change the chart's period (1M, 3M, 1Y, 5Y)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -326,6 +536,13 @@ public class MarketTerminalDialog : SplitPaneDialog
                 return await _listBox.HandleKeyEventAsync(keyEvent);
             case ConsoleKey.F5:
                 RefreshNow();
+                RequestHistory();
+                return true;
+            case ConsoleKey.F6:
+                ToggleWatch();
+                return true;
+            case ConsoleKey.F8:
+                CycleRange();
                 return true;
         }
 
@@ -432,9 +649,16 @@ public class MarketTerminalDialog : SplitPaneDialog
             DrawSectionHeader(buffer, ix, iy + 2, iw, headings.TrimStart(), _listBox.IsFocused, colorScheme);
         }
 
+        if (ih >= MonitorTopRows + SecurityBlockHeight + ChartBlockHeight + 1)
+        {
+            DrawChart(buffer, ix, iy + ih - SecurityBlockHeight - ChartBlockHeight, iw, colorScheme);
+        }
+
         if (ih >= MonitorTopRows + SecurityBlockHeight + 1)
         {
-            var heading = UiText.Get("Market.Security", "Security") + (_security is { } shown ? "  " + shown.Symbol : string.Empty);
+            var heading = UiText.Get("Market.Security", "Security") + (_security is { } shown
+                ? "  " + shown.Symbol + (IsWatched(shown.Symbol) ? "  · " + UiText.Get("Market.Watched", "watched") : string.Empty)
+                : string.Empty);
             DrawSectionHeader(buffer, ix, iy + ih - SecurityBlockHeight, iw, heading, false, colorScheme);
             DrawSecurity(buffer, ix, iy + ih - SecurityBlockHeight + 1, iw, colorScheme);
         }
@@ -446,6 +670,51 @@ public class MarketTerminalDialog : SplitPaneDialog
                 ? colorScheme.Error
                 : colorScheme.Foreground;
             DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, status, foreground, KeyHints, colorScheme);
+        }
+    }
+
+    /// <summary>
+    /// The chart block: a heading, then the plot with the highest and lowest close on its right. The plot is green when
+    /// the period ends above where it began. Every row is written, so a block with less to show is padded, not left stale.
+    /// </summary>
+    private void DrawChart(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
+    {
+        var heading = UiText.Get("Market.Chart", "Chart") + "  " + RangeLabel(_range);
+        var lines = Enumerable.Repeat((Text: string.Empty, Foreground: colorScheme.Foreground), ChartRows).ToArray();
+        if (_security is null)
+        {
+            lines[0] = (" " + UiText.Get("Market.NoSecurity", "Type a symbol or company name and press Enter."), colorScheme.DisabledForeground);
+        }
+        else if (!_historyLoaded)
+        {
+            lines[0] = (" " + UiText.Get("Market.ChartLoading", "loading the history…"), colorScheme.DisabledForeground);
+        }
+        else if (_history.Count == 0)
+        {
+            lines[0] = (" " + UiText.Get("Market.ChartNone", "no price history for this security"), colorScheme.DisabledForeground);
+        }
+        else
+        {
+            heading = FormatChartHeading(_range, _history, w).TrimStart();
+            var plotWidth = Math.Max(1, w - ChartLabelWidth - 2);
+            var plot = LineChart.Render(_history.Select(bar => (double)bar.Close).ToList(), plotWidth, ChartRows);
+            var color = _history[^1].Close >= _history[0].Close ? Color.Green : Color.Red;
+            for (var row = 0; row < ChartRows; row++)
+            {
+                var label = row switch
+                {
+                    0 => StockBrowserDialog.FormatPrice(_history.Max(bar => bar.Close)),
+                    _ when row == ChartRows - 1 => StockBrowserDialog.FormatPrice(_history.Min(bar => bar.Close)),
+                    _ => string.Empty,
+                };
+                lines[row] = (" " + plot[row].PadRight(plotWidth) + " " + label, color);
+            }
+        }
+
+        DrawSectionHeader(buffer, x, y, w, heading, false, colorScheme);
+        for (var row = 0; row < ChartRows; row++)
+        {
+            WriteLine(buffer, x, y + 1 + row, w, lines[row].Text, lines[row].Foreground, colorScheme.Background);
         }
     }
 
@@ -477,6 +746,9 @@ public class MarketTerminalDialog : SplitPaneDialog
     internal TextBox InputBoxForTest => _inputBox;
     internal StockBrowserDialog.StockListBox ListBoxForTest => _listBox;
     internal StockQuote? CursorQuoteForTest => CursorRow()?.Quote;
+    internal IReadOnlyList<StockBar> HistoryForTest => _history;
+    internal bool HistoryLoadedForTest => _historyLoaded;
+    internal StockHistoryRange RangeForTest => _range;
 
     /// <summary>How many monitor rows the list has actually taken up. The rows are filled on a worker, and the list is rebuilt after them.</summary>
     internal int MonitorRowsShownForTest => _listBox.Count;

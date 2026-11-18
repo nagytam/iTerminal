@@ -80,7 +80,7 @@ public class DriveSelectorHotKeyRoutingTest
         var hotKeys = new iTerminal.Core.Controls.StatusBar.HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             contentModelService, folderHistory, driveInfoModel, folderIndexModel, Mock.Of<IBeepService>(), new DateTimeProviderService(),
-            settingsService, frequentGuard.Object, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>());
+            settingsService, frequentGuard.Object, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), EmptyPasswordSafe());
         var statusBar = new iTerminal.Core.Controls.StatusBar.TerminalStatusBar(
             new iConsole.Controls.PopUpWindows.DatePopUpWindow(themeService), hotKeys, themeService);
 
@@ -145,5 +145,13 @@ public class DriveSelectorHotKeyRoutingTest
                 yield return d;
             }
         }
+    }
+
+    /// <summary>The 7-SMB page reads the saved logins from the password safe when the selector opens.</summary>
+    private static IPasswordManager EmptyPasswordSafe()
+    {
+        var passwords = new Mock<IPasswordManager>();
+        passwords.Setup(p => p.List()).Returns(new List<iTerminal.Core.Model.Passwords.PasswordEntry>());
+        return passwords.Object;
     }
 }

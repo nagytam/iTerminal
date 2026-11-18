@@ -28,6 +28,10 @@ public static class SandboxServices
             await Task.Yield();
             yield return new DiscoveredHost(HostAddress, SshAvailable: true, SmbAvailable: true, Shares: ["photos"]);
         }
+
+        // No login reaches a real host from the sandbox: nothing is listed under any login.
+        public Task<IReadOnlyList<string>?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<string>?>(null);
     }
 
     /// <summary>
@@ -714,6 +718,10 @@ public static class SandboxServices
             Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockSearchHit>>(
                 [new Core.Services.Stocks.StockSearchHit("ACME.L", "Acme Holdings plc", "London", "EQUITY"),
                  new Core.Services.Stocks.StockSearchHit("ACME", "Acme Holdings Inc", "NASDAQ", "EQUITY")]);
+
+        public Task<IReadOnlyList<Core.Services.Stocks.StockBar>> GetHistoryAsync(string symbol, Core.Services.Stocks.StockHistoryRange range, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockBar>>(
+                [.. Enumerable.Range(0, 30).Select(day => new Core.Services.Stocks.StockBar(DateTime.Today.AddDays(day - 29), 90m + day))]);
     }
 
     /// <summary>

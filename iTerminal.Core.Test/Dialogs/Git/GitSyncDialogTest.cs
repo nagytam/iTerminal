@@ -207,4 +207,133 @@ public class GitSyncDialogTest
 
         Assert.AreEqual("This folder is not in a git repository.", dialog.Status);
     }
+
+    /// <summary>A repository with main, the checked-out feature, one merged and one unmerged local branch, and a merged remote branch.</summary>
+    private static void SetUpBranchesForCleanup(Mock<IGitService> git)
+    {
+        git.Setup(g => g.GetMainBranchAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync("main");
+        git.Setup(g => g.GetBranchesAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([
+                new GitBranch("main", false, "origin/main"),
+                new GitBranch("feature/done", false, null),
+                new GitBranch("feature/open", false, null),
+                new GitBranch("checked-out", true, null),
+                new GitBranch("origin/feature/done", false, null, IsRemote: true),
+            ]);
+        git.Setup(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>())).ReturnsAsync(GitResult.Ok());
+        git.Setup(g => g.GetMergedRefsAsync(It.IsAny<string>(), "main", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new HashSet<string>(StringComparer.Ordinal)
+            {
+                "refs/heads/main", "refs/heads/feature/done", "refs/heads/checked-out", "refs/remotes/origin/feature/done",
+            });
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void MergedCleanupCandidates_KeepsMainTheCheckedOutBranchAndUnmergedAndRemoteOnes()
+    {
+        IReadOnlyList<GitBranch> branches =
+        [
+            new GitBranch("main", false, null),
+            new GitBranch("feature/done", false, null),
+            new GitBranch("feature/open", false, null),
+            new GitBranch("checked-out", true, null),
+            new GitBranch("origin/feature/done", false, null, IsRemote: true),
+        ];
+        var merged = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "refs/heads/main", "refs/heads/feature/done", "refs/heads/checked-out", "refs/remotes/origin/feature/done",
+        };
+
+        var names = GitSyncDialog.MergedCleanupCandidates(branches, merged, "main", currentBranch: "checked-out");
+
+        CollectionAssert.AreEqual(new[] { "feature/done" }, names.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Cleanup_DeletesNothingUntilTheAnswerIsYes_ThenDeletesTheMergedLocalBranches()
+    {
+        var (dialog, git) = Create();
+        SetUpBranchesForCleanup(git);
+        await OpenAsync(dialog);
+
+        dialog.BeginCleanup();
+
+        Assert.AreEqual("Delete 1 local branch(es) merged into main? (y/n)", dialog.Status);
+        Assert.AreEqual("feature/done", dialog.StatusDetail);
+        git.Verify(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('y', ConsoleKey.Y, false, false, false));
+        await dialog.SyncTask;
+
+        git.Verify(g => g.DeleteBranchAsync("/the/root", "feature/done", true, It.IsAny<CancellationToken>()), Times.Once);
+        git.Verify(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Once);
+        Assert.AreEqual("Deleted 1 merged branch(es).", dialog.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Cleanup_AnsweredNo_KeepsEverything()
+    {
+        var (dialog, git) = Create();
+        SetUpBranchesForCleanup(git);
+        await OpenAsync(dialog);
+
+        dialog.BeginCleanup();
+        await dialog.HandleKeyEventAsync(new KeyEvent('n', ConsoleKey.N, false, false, false));
+
+        git.Verify(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
+        Assert.AreEqual("Cancelled.", dialog.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Cleanup_HotKeyAltC_AsksToo()
+    {
+        var (dialog, git) = Create();
+        SetUpBranchesForCleanup(git);
+        await OpenAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('c', ConsoleKey.C, false, true, false));
+
+        Assert.AreEqual("Delete 1 local branch(es) merged into main? (y/n)", dialog.Status);
+        git.Verify(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Cleanup_WithNothingMerged_SaysSoAndAsksNothing()
+    {
+        var (dialog, git) = Create();
+        SetUpBranchesForCleanup(git);
+        git.Setup(g => g.GetMergedRefsAsync(It.IsAny<string>(), "main", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new HashSet<string>(StringComparer.Ordinal) { "refs/heads/main" });
+        await OpenAsync(dialog);
+
+        dialog.BeginCleanup();
+
+        Assert.AreEqual("No local branch is merged into main, so there is nothing to clean up.", dialog.Status);
+        git.Verify(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Cleanup_AFailedDelete_IsReportedWithTheBranchesItKept()
+    {
+        Mock<INotificationService> notifications = new();
+        var (dialog, git) = Create(notifications: notifications.Object);
+        SetUpBranchesForCleanup(git);
+        git.Setup(g => g.DeleteBranchAsync(It.IsAny<string>(), "feature/done", It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(GitResult.Fail("error: cannot delete branch 'feature/done' checked out elsewhere\nmore"));
+        await OpenAsync(dialog);
+
+        dialog.BeginCleanup();
+        await dialog.HandleKeyEventAsync(new KeyEvent('y', ConsoleKey.Y, false, false, false));
+        await dialog.SyncTask;
+
+        Assert.AreEqual("Deleted 0; 1 could not be deleted: error: cannot delete branch 'feature/done' checked out elsewhere", dialog.Status);
+        Assert.AreEqual("feature/done", dialog.StatusDetail);
+        notifications.Verify(n => n.Notify("Git sync", It.IsAny<string>(), NotificationSeverity.Error), Times.Once);
+    }
 }

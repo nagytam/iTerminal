@@ -33,6 +33,33 @@ public class YahooStockQuoteProviderTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void AHistoryResponseBecomesDatedClosesAndSkipsDaysWithoutOne()
+    {
+        const string json = """
+            {"chart":{"result":[{"meta":{"symbol":"X"},"timestamp":[1792180801,1792267201,1792353601],
+            "indicators":{"quote":[{"close":[10.5,null,11.25]}]}}],"error":null}}
+            """;
+
+        var bars = YahooStockQuoteProvider.ParseHistory(json);
+
+        Assert.AreEqual(2, bars.Count);
+        Assert.AreEqual(10.5m, bars[0].Close);
+        Assert.AreEqual(11.25m, bars[1].Close);
+        Assert.IsTrue(bars[0].Date < bars[1].Date, "the closes stay oldest first");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AHistoryWithNoResultIsEmpty()
+    {
+        const string json = """{"chart":{"result":null,"error":{"code":"Not Found","description":"No data found"}}}""";
+
+        Assert.AreEqual(0, YahooStockQuoteProvider.ParseHistory(json).Count);
+        Assert.AreEqual(0, YahooStockQuoteProvider.ParseHistory(string.Empty).Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void ASymbolTheSourceDoesNotKnowHasNoQuote()
     {
         const string json = """{"chart":{"result":null,"error":{"code":"Not Found","description":"No data found"}}}""";

@@ -22,6 +22,9 @@ public class NetworkDiscoveryService(ISmbFileSystemService smbFileSystemService)
         return ScanAsync(GetCandidateAddresses(), cancellationToken);
     }
 
+    public Task<IReadOnlyList<string>?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default) =>
+        Task.Run(() => smbFileSystemService.TryListShares(host, username, password), cancellationToken);
+
     internal async IAsyncEnumerable<DiscoveredHost> ScanAsync(
         IEnumerable<IPAddress> addresses,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)

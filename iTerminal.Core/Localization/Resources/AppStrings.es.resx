@@ -10050,6 +10050,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Error al cambiar: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Limpiar fusionadas (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Ninguna rama local está fusionada en {0}, así que no hay nada que limpiar.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>¿Eliminar {0} ramas locales fusionadas en {1}? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Eliminando las ramas fusionadas…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>Se eliminaron {0} ramas fusionadas.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>Se eliminaron {0}; {1} no se pudieron eliminar: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Eliminar las ramas locales fusionadas en main (pregunta antes)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Limpiar fusionadas</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Eliminar las ramas locales fusionadas en la rama principal (pregunta antes).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} tarea(s) en segundo plano siguen en curso. Â¿Salir de todos modos?</value>
   </data>
@@ -10148,7 +10175,7 @@
     <value>Terminal de mercado</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Intro:buscar o mostrar la fila  ↑↓:monitor  F5:actualizar  Esc:cerrar</value>
+    <value>Intro:buscar/mostrar  ↑↓:monitor  F5:actualizar  F6:seguir  F8:periodo  Esc:cerrar</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Buscar  ›</value>
@@ -10170,6 +10197,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Buscar el símbolo o mostrar la fila elegida</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Busque primero un valor y pulse F6 para seguirlo.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} añadido a la lista de seguimiento</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>en seguimiento</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Gráfico</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Gráfico {0}   de {1} a {2}   {3} en el periodo</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>cargando el historial…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>sin historial de precios para este valor</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Cambiar el periodo del gráfico (1M, 3M, 1A, 5A)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Añadir o quitar el valor de la lista de seguimiento</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Terminal de mercado</value>
@@ -10205,10 +10259,73 @@
     <value>buscando…</value>
   </data>
   <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
-    <value>No se listan recursos compartidos en {0} sin inicio de sesión. Guarde primero una conexión en el navegador de red (Ctrl+N).</value>
+    <value>No se listan recursos compartidos en {0} sin inicio de sesión. Pulse L para iniciar sesión.</value>
   </data>
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>guardado</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Cerrar sesión…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Sesión iniciada en {0} como {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>Explorando {0} de forma anónima. L inicia sesión.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Primero seleccione un host del que cerrar sesión.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>No hay sesión iniciada en {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>¿Cerrar sesión en {0} y eliminar la contraseña guardada de {1}?  y:sí  n:no</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Sesión cerrada en {0}; la contraseña guardada se ha eliminado.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>No se pudo abrir la caja de contraseñas, así que el inicio de sesión no se eliminó.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Cerrar sesión en el host bajo el cursor y eliminar su contraseña guardada (y confirma).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Iniciar sesión…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>con sesión iniciada como {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Iniciando sesión en {0} como {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>No se pudo iniciar sesión en {0} como {1}. No se guardó nada.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>No se pudieron listar los recursos compartidos de {0} con el inicio de sesión guardado de {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Sesión iniciada en {0} como {1}. El inicio de sesión se guarda en la caja de contraseñas.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Sesión iniciada en {0} como {1}. No se pudo abrir la caja de contraseñas, así que el inicio de sesión no se guardó.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Primero seleccione un host en el que iniciar sesión.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Nombre de usuario para {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>No se permiten caracteres de control.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Contraseña para {0} en {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Iniciar sesión en el host bajo el cursor con un nombre de usuario y una contraseña; el inicio de sesión se guarda en la caja de contraseñas.</value>
   </data>
   <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
     <value>Volver de los recursos compartidos de un host a la lista de hosts.</value>
@@ -10222,5 +10339,11 @@
   <data name="CmdDesc.86efee9f" xml:space="preserve">
     <value>Abre el archivo seleccionado en el editor; un binario se abre en su vista hexadecimal.</value>
     <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Iniciar sesión en un host SMB</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Cerrar sesión en un host SMB</value>
   </data>
 </root>
