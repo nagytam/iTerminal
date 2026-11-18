@@ -2018,4 +2018,25 @@
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[S] Sì    [N] No</value>
   </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Digita una cifra esadecimale</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Vista testo</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Vista esadecimale</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Non è testo: i byte non tornano invariati in {0}, quindi resta la vista esadecimale.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Sposta il cursore</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Inizio o fine della riga</value>
+  </data>
 </root>

@@ -151,6 +151,7 @@ public class ControlInertnessSweepTest
     private static readonly Dictionary<string, Action<Control>> WithContent = new()
     {
         ["Chips"] = c => ((Chips)c).Add("rock"),
+        ["HexEditorControl"] = c => ((HexEditorControl)c).Load(new byte[32]),
         ["Breadcrumb"] = c => ((Breadcrumb)c).Segments = ["Home", "Docs", "Notes"],
         ["CheckList"] = c => ((CheckList)c).SetItems(["alpha", "beta"]),
         ["HexViewer"] = c => ((HexViewer)c).Data = [1, 2, 3, 4, 5, 6, 7, 8],

@@ -10336,6 +10336,10 @@
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>Seleccionar host o recurso SMB</value>
   </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Abre el archivo seleccionado en el editor; un binario se abre en su vista hexadecimal.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
   <data name="CmdTitle.adeeed16" xml:space="preserve">
     <value>Iniciar sesión en un host SMB</value>
   </data>

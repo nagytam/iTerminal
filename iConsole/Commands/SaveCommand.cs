@@ -53,8 +53,8 @@ public class SaveCommand(
 
     /// <summary>
     /// Writes the editor's text to its file, with the line break and the code page the file was read with, and clears the
-    /// changed mark. False when there is nowhere to write (no file, no panel). Shared by F2 and by the question asked when an
-    /// edited file is closed.
+    /// changed mark. In the hex view the bytes are written as they are shown. False when there is nowhere to write (no file,
+    /// no panel). Shared by F2 and by the question asked when an edited file is closed.
     /// </summary>
     internal static async Task<bool> WriteAsync(TextFileEditorDialog dialog, ITextModel textModel, IContentModelService contentModelService)
     {
@@ -65,10 +65,22 @@ public class SaveCommand(
             return false;
         }
 
+        if (dialog.IsHexMode)
+        {
+            byte[] bytes = dialog.HexEditorControl.Data;
+            using var bytesStream = new MemoryStream(bytes, writable: false);
+            await contentModel.WriteFileAsync(url, bytesStream);
+            dialog.NoteSaved(bytes);
+            dialog.TextEditorControl.IsDirty = false;
+            dialog.TextEditorControl.Refresh();
+            return true;
+        }
+
         // The break the file came with, not the system's: saving must not change every line of an LF file on Windows.
         var content = string.Join(textModel.LineEnding, textModel.Lines);
         using var stream = content.ToMemoryStream(textModel.Encoding);
         await contentModel.WriteFileAsync(url, stream);
+        dialog.NoteSaved(null);
         dialog.TextEditorControl.IsDirty = false;
         dialog.TextEditorControl.Refresh();
         return true;

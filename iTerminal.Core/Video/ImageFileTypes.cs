@@ -23,6 +23,13 @@ public static class ImageFileTypes
     /// bitmaps and pixmaps, Targa, OpenEXR, Radiance HDR, DPX, QOI, WBMP, JPEG XL and AVIF. Like the JPEG 2000 files,
     /// ffmpeg detects each one from its content, so the extension only decides whether the viewer takes the file.
     /// </summary>
+    /// <summary>
+    /// High Efficiency Image Format pictures: a HEVC still picture in an ISO base media container. ffmpeg reads the container
+    /// and decodes the primary picture like a video frame, so the extension only decides whether the viewer takes the file.
+    /// </summary>
+    public static readonly IReadOnlySet<string> HeifExtensions =
+        new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".heic", ".heif" };
+
     public static readonly IReadOnlySet<string> FfmpegBitmapExtensions =
         new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -38,6 +45,7 @@ public static class ImageFileTypes
         }
         .Concat(PhotoshopExtensions)
         .Concat(Jpeg2000Extensions)
+        .Concat(HeifExtensions)
         .Concat(FfmpegBitmapExtensions)
         .Concat(RawExtensions)
         .ToHashSet(StringComparer.OrdinalIgnoreCase);

@@ -2018,4 +2018,25 @@
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[O] Oui    [N] Non</value>
   </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Taper un chiffre hexadécimal</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Affichage texte</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Affichage hexadécimal</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Pas du texte : les octets ne se relisent pas à l'identique en {0}, la vue hexadécimale reste.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Déplacer le curseur</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Début ou fin de la ligne</value>
+  </data>
 </root>

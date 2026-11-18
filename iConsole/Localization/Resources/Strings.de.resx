@@ -2018,4 +2018,25 @@
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[J] Ja    [N] Nein</value>
   </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Hex-Ziffer eingeben</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Textansicht</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Hex-Ansicht</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Kein Text: Die Bytes ergeben in {0} nicht unverändert zurück, daher bleibt die Hex-Ansicht.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Cursor bewegen</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Anfang oder Ende der Zeile</value>
+  </data>
 </root>
