@@ -1586,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>A bejelölt ajánlatok kihagyása és bezárás</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>A komponens véglegesen kihagyása: a listában marad, és az Enter nem telepíti</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Keresés, vagy a kiválasztott találat megjelenítése a panelen, ha a lista fókuszban van</value>
   </data>
@@ -2649,25 +2652,22 @@
     <value>Az Enter bezárja.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Nincs kijelölve semmi.</value>
+    <value>Nincs bejelölve semmi, így az Enter telepítés nélkül bezár.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>A befejezés telepíti:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Nincs kijelölve semmi. Lépj vissza, és jelöld ki, mit kell telepíteni.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Telepítés... Esc: elrejtés (folytatódik)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Enter:telepítés  Backspace:vissza  Szóköz:kijelölés  S:ne kérdezd újra  Esc:később</value>
+    <value>Enter:telepítés  Backspace:vissza  Szóköz:jelölés  P:végleg kihagy  S:verzió kihagy</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Enter:bezárás  Backspace:vissza  Esc:bezárás</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Enter:tovább  Backspace:vissza  Szóköz:kijelölés  S:ne kérdezd újra  Esc:később</value>
+    <value>Enter:tovább  Backspace:vissza  Szóköz:jelölés  P:végleg kihagy  S:verzió kihagy</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Enter:tovább  Backspace:vissza  Esc:bezárás</value>
@@ -2683,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Kihagyva   (Szóköz: telepítés)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Ezt telepítem   (P: végleges kihagyás)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Véglegesen kihagyva   (P: újra felajánlás)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Teljesítménymérés</value>

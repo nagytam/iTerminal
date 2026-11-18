@@ -917,6 +917,12 @@ public static class SandboxServices
         {
         }
 
+        public bool IsPermanentlySkipped(string id) => false;
+
+        public void SetPermanentlySkipped(string id, bool skipped)
+        {
+        }
+
         public void InvalidateInstalled(string id)
         {
         }

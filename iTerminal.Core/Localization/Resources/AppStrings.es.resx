@@ -1586,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>Omitir las ofertas marcadas y cerrar</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>Omitir el componente para siempre: sigue en la lista y Intro no lo instala</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Buscar, o mostrar el resultado elegido en el panel cuando la lista tiene el foco</value>
   </data>
@@ -2649,25 +2652,22 @@
     <value>Intro cierra esto.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>No hay nada marcado.</value>
+    <value>No hay nada marcado, así que Intro cierra sin instalar.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>Finalizar instalará:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>No hay nada marcado. Vuelve atrás y marca lo que hay que instalar.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Instalando... Esc: ocultar (sigue en curso)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Intro:instalar  Retroceso:atrás  Espacio:marcar  S:no volver a preguntar  Esc:más tarde</value>
+    <value>Intro:instalar  Retroceso:atrás  Espacio:marcar  P:omitir siempre  S:omitir versión</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Intro:cerrar  Retroceso:atrás  Esc:cerrar</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Intro:siguiente  Retroceso:atrás  Espacio:marcar  S:no volver a preguntar  Esc:más tarde</value>
+    <value>Intro:siguiente  Retroceso:atrás  Espacio:marcar  P:omitir siempre  S:omitir versión</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Intro:siguiente  Retroceso:atrás  Esc:cerrar</value>
@@ -2683,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Excluido   (Espacio: instalarlo)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Instalar este   (P: omitir para siempre)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Omitido para siempre   (P: volver a ofrecer)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Prueba de rendimiento</value>

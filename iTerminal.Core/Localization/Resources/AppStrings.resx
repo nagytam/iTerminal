@@ -1586,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>Skip the ticked offers and close</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>Skip the component for good: it stays listed, and Enter leaves it out</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Search, or show the chosen result in the panel when the list has focus</value>
   </data>
@@ -2649,25 +2652,22 @@
     <value>Enter closes this.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Nothing is ticked.</value>
+    <value>Nothing is ticked, so Enter closes without installing.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>Finish will install:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Nothing is ticked. Go back and tick what to install.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Installing... Esc:hide this (it keeps going)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later</value>
+    <value>Enter:install  Backspace:back  Space:tick  P:skip for good  S:skip version</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Enter:close  Backspace:back  Esc:close</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later</value>
+    <value>Enter:next  Backspace:back  Space:tick  P:skip for good  S:skip version</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Enter:next  Backspace:back  Esc:close</value>
@@ -2683,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Left out   (Space: install it)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Install this one   (P: skip it for good)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Skipped for good   (P: offer it again)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Performance benchmark</value>
