@@ -89,6 +89,10 @@ public sealed class RemoteConnectionService(
                 }
 
                 saved.HasSavedCredential = false;
+                if (saved.Protocol == RemoteProtocol.Ssh)
+                {
+                    SaveSshProfile(saved);
+                }
             }
 
             var connections = Read().Where(c => c.Id != saved.Id).ToList();
@@ -147,6 +151,30 @@ public sealed class RemoteConnectionService(
             Host = saved.DriveHost,
             Username = saved.Username,
             HasSavedCredential = saved.HasSavedCredential,
+        });
+    }
+
+    /// <summary>
+    /// An SSH entry is also a network profile, so the SFTP drive finds its key under the same host and user it
+    /// connects with. A non-default port gets none: the SSH drive has no port to connect on, so the entry is
+    /// left to the shell alone rather than listed for an SFTP connection that cannot be made.
+    /// </summary>
+    private void SaveSshProfile(RemoteConnection saved)
+    {
+        if (saved.EffectivePort != saved.DefaultPort || networkProfiles is null)
+        {
+            return;
+        }
+
+        networkProfiles.Save(new NetworkConnectionProfile
+        {
+            Id = saved.Id,
+            Protocol = NetworkProtocol.Ssh,
+            Host = saved.Host,
+            Username = saved.Username,
+            SshAuthMethod = SshAuthMethod.PrivateKey,
+            PrivateKeyPath = string.IsNullOrEmpty(saved.PrivateKeyPath) ? null : saved.PrivateKeyPath,
+            HasSavedCredential = false,
         });
     }
 
