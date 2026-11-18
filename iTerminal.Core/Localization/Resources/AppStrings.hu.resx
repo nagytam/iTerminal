@@ -10175,7 +10175,7 @@
     <value>Piaci terminál</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Enter:keresés vagy a sor megjelenítése  ↑↓:lista  F5:frissítés  Esc:bezárás</value>
+    <value>Enter:keresés/megjelenítés  ↑↓:lista  F5:frissítés  F6:figyelés  F8:időszak  Esc:bezárás</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Keresés  ›</value>
@@ -10197,6 +10197,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Jel keresése, vagy a kiválasztott sor megjelenítése</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Előbb keressen rá egy részvényre, majd F6 a figyeléshez.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} hozzáadva a figyelőlistához</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>figyelt</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Diagram</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Diagram {0}   {1}-tól {2}-ig   {3} az időszakban</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>előzmények betöltése…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>nincs árfolyam-előzmény ehhez a részvényhez</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>A diagram időszakának módosítása (1M, 3M, 1É, 5É)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Részvény hozzáadása a figyelőlistához vagy eltávolítása onnan</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Piaci terminál</value>

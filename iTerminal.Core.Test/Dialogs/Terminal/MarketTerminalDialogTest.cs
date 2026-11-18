@@ -7,7 +7,7 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Terminal;
 
-/// <summary>Alt+Shift+F6: a command line that looks a stock up, a security screen for the result, and the watchlist as a monitor.</summary>
+/// <summary>Alt+Shift+F7: a command line that looks a stock up, a security screen for the result, and the watchlist as a monitor.</summary>
 [TestClass]
 public class MarketTerminalDialogTest
 {
@@ -26,14 +26,21 @@ public class MarketTerminalDialogTest
     {
         public List<StockSearchHit> Hits { get; } = [];
 
+        /// <summary>The price every quote carries; a test moves it to see a watched security follow the market.</summary>
+        public decimal Price { get; set; } = 110m;
+
         public Task<IReadOnlyDictionary<string, StockQuote>> GetQuotesAsync(IReadOnlyList<string> symbols, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<string, StockQuote>>(symbols
                 .Where(s => s != "NOPE")
-                .ToDictionary(s => s, s => new StockQuote(s, s + " Corp", 110m, 100m, "USD", "NASDAQ", DateTime.Now,
+                .ToDictionary(s => s, s => new StockQuote(s, s + " Corp", Price, 100m, "USD", "NASDAQ", DateTime.Now,
                     DayLow: 95m, DayHigh: 115m, YearLow: 50m, YearHigh: 200m, Volume: 1234567), StringComparer.OrdinalIgnoreCase));
 
         public Task<IReadOnlyList<StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<StockSearchHit>>([.. Hits]);
+
+        /// <summary>A rise from 100 to 110 over the period, the same whatever the stock.</summary>
+        public Task<IReadOnlyList<StockBar>> GetHistoryAsync(string symbol, StockHistoryRange range, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<StockBar>>([new StockBar(new DateTime(2026, 1, 1), 100m), new StockBar(new DateTime(2026, 11, 1), 110m)]);
     }
 
     private static readonly StockQuote Quoted = new("TSLA", "Tesla", 90m, 100m, "USD", "NASDAQ", new DateTime(2026, 11, 16, 21, 0, 0),
@@ -160,6 +167,127 @@ public class MarketTerminalDialogTest
 
         Assert.AreEqual(service.Watchlist[0].Symbol, dialog.SecurityForTest?.Symbol);
         dialog.Close();
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F6PutsTheLookedUpSecurityOnTheWatchlist()
+    {
+        var (dialog, service, _) = Create();
+        await ShowAsync(dialog);
+        await TypeAsync(dialog.InputBoxForTest, "VOD.L");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await WaitUntilAsync(() => PumpedSecuritySymbol(dialog) == "VOD.L", "the typed symbol to be looked up");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F6));
+        await WaitUntilAsync(() => service.Watchlist.Any(stock => stock.Symbol == "VOD.L"), "the security to be added");
+
+        Assert.AreEqual("Added VOD.L to the watchlist", PumpedMessage(dialog));
+        AssertScreenContains(Render(dialog), "watched");
+        dialog.Close();
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F6TakesAWatchedSecurityOffTheWatchlist()
+    {
+        var (dialog, service, _) = Create();
+        await ShowAsync(dialog);
+        await TypeAsync(dialog.InputBoxForTest, "AAPL");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await WaitUntilAsync(() => PumpedSecuritySymbol(dialog) == "AAPL", "the typed symbol to be looked up");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F6));
+
+        Assert.IsFalse(service.Watchlist.Any(stock => stock.Symbol == "AAPL"), "F6 on a watched security must remove it");
+        Assert.AreEqual("Removed AAPL", dialog.MessageForTest);
+        dialog.Close();
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F6WithoutASecuritySaysWhatToDo()
+    {
+        var (dialog, service, _) = Create();
+        await ShowAsync(dialog);
+        var before = service.Watchlist.Count;
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F6));
+
+        StringAssert.Contains(dialog.MessageForTest, "Look up a stock first");
+        Assert.AreEqual(before, service.Watchlist.Count);
+        dialog.Close();
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AWatchedSecurityFollowsTheWatchlistsLiveQuote()
+    {
+        var (dialog, service, provider) = Create();
+        await ShowAsync(dialog);
+        await TypeAsync(dialog.InputBoxForTest, "AAPL");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await WaitUntilAsync(() => PumpedSecuritySymbol(dialog) == "AAPL", "the typed symbol to be looked up");
+        Assert.AreEqual(110m, dialog.SecurityForTest?.Price);
+
+        provider.Price = 125m;
+        await service.RefreshAsync();
+
+        Assert.AreEqual(125m, PumpedSecurityPrice(dialog));
+        dialog.Close();
+    }
+
+    private static decimal? PumpedSecurityPrice(MarketTerminalDialog dialog)
+    {
+        dialog.OnIdle();
+        return dialog.SecurityForTest?.Price;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ALookedUpSecurityShowsItsPriceHistory()
+    {
+        var (dialog, _, _) = Create();
+        await ShowAsync(dialog);
+        await TypeAsync(dialog.InputBoxForTest, "AAPL");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await WaitUntilAsync(() => PumpedSecuritySymbol(dialog) == "AAPL" && PumpedHistoryLoaded(dialog), "the history to load");
+
+        AssertScreenContains(Render(dialog), "Chart 1Y   100.00 to 110.00");
+        dialog.Close();
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F8CyclesThePeriodAndRedrawsTheChart()
+    {
+        var (dialog, _, _) = Create();
+        await ShowAsync(dialog);
+        await TypeAsync(dialog.InputBoxForTest, "AAPL");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await WaitUntilAsync(() => PumpedHistoryLoaded(dialog), "the first history to load");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+        await WaitUntilAsync(() => PumpedHistoryLoaded(dialog) && dialog.RangeForTest == StockHistoryRange.FiveYears, "the five-year history to load");
+
+        AssertScreenContains(Render(dialog), "Chart 5Y");
+        dialog.Close();
+    }
+
+    [TestMethod]
+    public void TheChartHeadingGivesThePeriodTheFirstAndLastCloseAndTheMove()
+    {
+        var heading = MarketTerminalDialog.FormatChartHeading(StockHistoryRange.OneYear,
+            [new StockBar(new DateTime(2026, 1, 1), 100m), new StockBar(new DateTime(2026, 11, 1), 110m)], 120);
+
+        StringAssert.Contains(heading, "Chart 1Y   100.00 to 110.00");
+        StringAssert.Contains(heading, "10.00% over the period");
+    }
+
+    private static bool PumpedHistoryLoaded(MarketTerminalDialog dialog)
+    {
+        dialog.OnIdle();
+        return dialog.HistoryLoadedForTest;
     }
 
     #endregion

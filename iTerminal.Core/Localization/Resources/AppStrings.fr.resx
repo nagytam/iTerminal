@@ -10175,7 +10175,7 @@
     <value>Terminal de marché</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Entrée:chercher ou afficher la ligne  ↑↓:liste  F5:actualiser  Échap:fermer</value>
+    <value>Entrée:chercher/afficher  ↑↓:liste  F5:actualiser  F6:suivre  F8:période  Échap:fermer</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Rechercher  ›</value>
@@ -10197,6 +10197,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Chercher le symbole, ou afficher la ligne choisie</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Recherchez d'abord un titre, puis appuyez sur F6 pour le suivre.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} ajouté à la liste de suivi</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>suivie</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Graphique</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Graphique {0}   de {1} à {2}   {3} sur la période</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>chargement de l'historique…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>pas d'historique de cours pour ce titre</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Changer la période du graphique (1M, 3M, 1A, 5A)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Ajouter ou retirer le titre de la liste de suivi</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Terminal de marché</value>

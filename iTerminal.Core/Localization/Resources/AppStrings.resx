@@ -10380,7 +10380,7 @@
     <value>Market Terminal</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Enter:look up or show the row  ↑↓:monitor  F5:refresh  Esc:close</value>
+    <value>Enter:look up or show  ↑↓:monitor  F5:refresh  F6:watch  F8:period  Esc:close</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Look up  ›</value>
@@ -10402,6 +10402,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Look up the symbol, or show the chosen row</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Look up a stock first, then press F6 to watch it.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>Added {0} to the watchlist</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>watched</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Chart</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Chart {0}   {1} to {2}   {3} over the period</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>loading the history…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>no price history for this security</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Change the chart's period (1M, 3M, 1Y, 5Y)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Add or remove the security from the watchlist</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Market Terminal</value>
