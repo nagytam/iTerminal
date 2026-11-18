@@ -17,6 +17,7 @@ using iTerminal.Core.Dialogs.PackageManager;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Git;
+using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Controls.StatusBar;
 
@@ -61,6 +62,7 @@ public class HotKeys : StatusBarItem
         IThemeService themeService,
         INetworkDiscoveryService networkDiscoveryService,
         INetworkProfileService networkProfileService,
+        IRemoteConnectionService remoteConnectionService,
         IPasswordManager passwordManager,
         SolutionViewerDialog? solutionViewerDialog = null,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
@@ -167,6 +169,7 @@ public class HotKeys : StatusBarItem
             themeService,
             networkDiscoveryService,
             networkProfileService,
+            remoteConnectionService,
             passwordManager,
             promptService,
             helpDialog);

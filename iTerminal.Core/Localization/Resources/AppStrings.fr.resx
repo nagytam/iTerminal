@@ -10342,4 +10342,19 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Se déconnecter d'un hôte SMB</value>
   </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Ouvrir la connexion FTP ou SFTP enregistrée sous le curseur, dans son dossier.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Aucune connexion FTP ou SFTP enregistrée. Ajoutez-en une dans Connexions distantes (Alt+F2).</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Ajouter et modifier les connexions listées ici, dans Connexions distantes.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>Ouvrir une connexion FTP ou SFTP</value>
+  </data>
 </root>
