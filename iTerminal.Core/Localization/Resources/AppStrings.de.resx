@@ -10323,10 +10323,73 @@
     <value>suche…</value>
   </data>
   <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
-    <value>Auf {0} sind ohne Anmeldung keine Freigaben sichtbar. Speichern Sie zuerst eine Verbindung im Netzwerk-Browser (Strg+N).</value>
+    <value>Auf {0} werden ohne Anmeldung keine Freigaben angezeigt. L drücken, um sich anzumelden.</value>
   </data>
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>gespeichert</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Abmelden…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Angemeldet bei {0} als {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>{0} wird anonym durchsucht. L meldet an.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Zuerst einen Host zum Abmelden auswählen.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Nicht angemeldet bei {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Von {0} abmelden und das gespeicherte Passwort für {1} entfernen?  y:ja  n:nein</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Abgemeldet von {0}; das gespeicherte Passwort ist entfernt.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>Der Passwortsafe konnte nicht geöffnet werden, daher wurde die Anmeldung nicht entfernt.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Vom Host unter dem Cursor abmelden und sein gespeichertes Passwort entfernen (y bestätigt).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Anmelden…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>angemeldet als {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Anmeldung bei {0} als {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>Anmeldung bei {0} als {1} fehlgeschlagen. Nichts wurde gespeichert.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>Die Freigaben von {0} konnten mit der gespeicherten Anmeldung von {1} nicht aufgelistet werden.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Angemeldet bei {0} als {1}. Die Anmeldung ist im Passwortsafe gespeichert.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Angemeldet bei {0} als {1}. Der Passwortsafe konnte nicht geöffnet werden, daher wurde die Anmeldung nicht gespeichert.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Zuerst einen Host zur Anmeldung auswählen.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Benutzername für {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>Steuerzeichen sind nicht erlaubt.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Passwort für {0} auf {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Beim Host unter dem Cursor mit Benutzername und Passwort anmelden; die Anmeldung wird im Passwortsafe gespeichert.</value>
   </data>
   <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
     <value>Von den Freigaben eines Hosts zurück zur Hostliste.</value>
@@ -10336,5 +10399,11 @@
   </data>
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>SMB-Host oder Freigabe auswählen</value>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Bei einem SMB-Host anmelden</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Von einem SMB-Host abmelden</value>
   </data>
 </root>

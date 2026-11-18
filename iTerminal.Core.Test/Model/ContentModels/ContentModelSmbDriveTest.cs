@@ -88,6 +88,20 @@ public class ContentModelSmbDriveTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void SetUrl_LoginTypedOnTheSmbPage_ConnectsWithItsPasswordFromThePasswordSafe()
+    {
+        var smbFileSystemService = new Mock<ISmbFileSystemService>();
+        var passwordManager = new Mock<IPasswordManager>();
+        passwordManager.Setup(v => v.GetSecret(SmbLoginKey.Id("host", "user"))).Returns("hunter2");
+        var model = CreateModel(smbFileSystemService, passwordManager: passwordManager.Object);
+
+        model.SetUrl(new Url("smb://user@host/Share/"));
+
+        smbFileSystemService.Verify(s => s.Connect("host", "Share", "user", "hunter2"), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void SetUrl_MatchingProfileWithSavedCredential_ConnectsWithPasswordFromVault()
     {
         var smbFileSystemService = new Mock<ISmbFileSystemService>();

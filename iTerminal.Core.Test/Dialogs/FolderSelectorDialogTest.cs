@@ -33,6 +33,8 @@ public class FolderSelectorDialogTest
             harness.ThemeService,
             harness.NetworkDiscoveryService,
             harness.NetworkProfileService,
+            harness.PasswordManager,
+            harness.PromptService,
             helpDialog)
         {
             ViewSize = new Size(100, 30)

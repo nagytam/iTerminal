@@ -10259,10 +10259,73 @@
     <value>buscando…</value>
   </data>
   <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
-    <value>No se listan recursos compartidos en {0} sin inicio de sesión. Guarde primero una conexión en el navegador de red (Ctrl+N).</value>
+    <value>No se listan recursos compartidos en {0} sin inicio de sesión. Pulse L para iniciar sesión.</value>
   </data>
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>guardado</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Cerrar sesión…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Sesión iniciada en {0} como {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>Explorando {0} de forma anónima. L inicia sesión.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Primero seleccione un host del que cerrar sesión.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>No hay sesión iniciada en {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>¿Cerrar sesión en {0} y eliminar la contraseña guardada de {1}?  y:sí  n:no</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Sesión cerrada en {0}; la contraseña guardada se ha eliminado.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>No se pudo abrir la caja de contraseñas, así que el inicio de sesión no se eliminó.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Cerrar sesión en el host bajo el cursor y eliminar su contraseña guardada (y confirma).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Iniciar sesión…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>con sesión iniciada como {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Iniciando sesión en {0} como {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>No se pudo iniciar sesión en {0} como {1}. No se guardó nada.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>No se pudieron listar los recursos compartidos de {0} con el inicio de sesión guardado de {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Sesión iniciada en {0} como {1}. El inicio de sesión se guarda en la caja de contraseñas.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Sesión iniciada en {0} como {1}. No se pudo abrir la caja de contraseñas, así que el inicio de sesión no se guardó.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Primero seleccione un host en el que iniciar sesión.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Nombre de usuario para {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>No se permiten caracteres de control.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Contraseña para {0} en {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Iniciar sesión en el host bajo el cursor con un nombre de usuario y una contraseña; el inicio de sesión se guarda en la caja de contraseñas.</value>
   </data>
   <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
     <value>Volver de los recursos compartidos de un host a la lista de hosts.</value>
@@ -10272,5 +10335,11 @@
   </data>
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>Seleccionar host o recurso SMB</value>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Iniciar sesión en un host SMB</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Cerrar sesión en un host SMB</value>
   </data>
 </root>

@@ -28,7 +28,7 @@ public class TerminalMenuBarTest
             TestTheme(), Mock.Of<IContentModelService>(), settings, new WeatherService(), new OnlineQuoteService(), taskManager,
             null!, null!, null!, null!, null!,
             null!, null!, null!,
-            null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), null!,
+            null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), null!, null!, null!,
             null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, null!);
 

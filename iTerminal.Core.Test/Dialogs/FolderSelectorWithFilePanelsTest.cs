@@ -103,7 +103,7 @@ public class FolderSelectorWithFilePanelsTest
         var openCommand = new FolderSelectorDialogCommand(
             contentModelService, folderHistory, new DriveInfoModel(), new FolderIndexModel(),
             Mock.Of<IBeepService>(), new DateTimeProviderService(), settingsService, frequentGuard, themeService,
-            Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>());
+            Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), EmptyPasswordSafe(), Mock.Of<iConsole.Services.IPromptService>());
         screen.AddCommand(openCommand);
 
         await screen.OnInitializeAsync();
@@ -313,5 +313,13 @@ public class FolderSelectorWithFilePanelsTest
             new IControl[] { harness.LeftPanel, harness.RightPanel },
             harness.Screen.Controls.AsSnapshot().ToArray(),
             "Only the two panels should be left on the screen.");
+    }
+
+    /// <summary>The 7-SMB page reads the saved logins from the password safe when the dialog opens, so an empty list is answered.</summary>
+    private static IPasswordManager EmptyPasswordSafe()
+    {
+        var passwords = new Mock<IPasswordManager>();
+        passwords.Setup(p => p.List()).Returns(new List<iTerminal.Core.Model.Passwords.PasswordEntry>());
+        return passwords.Object;
     }
 }

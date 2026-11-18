@@ -49,6 +49,8 @@ public class FolderSelectorDialog : Dialog
         IThemeService themeService,
         INetworkDiscoveryService networkDiscoveryService,
         INetworkProfileService networkProfileService,
+        IPasswordManager passwordManager,
+        IPromptService? promptService,
         HelpDialog? helpDialog = null)
         : base(nameof(FolderSelectorDialog), themeService)
     {
@@ -66,7 +68,7 @@ public class FolderSelectorDialog : Dialog
             new FolderSelectorFolderTreeTabPage(contentModelService, folderIndexModel, frequentExecutionGuardService, themeService),
             new FolderSelectorRemoteShellTabPage(contentModelService, beepService, dateTimeProviderService, settingsService, frequentExecutionGuardService, themeService),
             new FolderSelectorPathTabPage(contentModelService, folderHistoryService, beepService, dateTimeProviderService, settingsService, themeService),
-            new FolderSelectorSmbTabPage(networkDiscoveryService, networkProfileService, contentModelService, themeService),
+            new FolderSelectorSmbTabPage(networkDiscoveryService, networkProfileService, contentModelService, passwordManager, promptService, themeService),
         ];
 
         foreach (var tabPage in TabPages)

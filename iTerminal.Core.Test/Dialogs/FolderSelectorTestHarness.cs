@@ -4,6 +4,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Model;
 using iTerminal.Core.Model.Network;
+using iTerminal.Core.Model.Passwords;
 using iTerminal.Core.Services;
 using Moq;
 
@@ -70,6 +71,10 @@ internal sealed class FolderSelectorTestHarness
         var networkProfileService = new Mock<INetworkProfileService>();
         networkProfileService.Setup(s => s.GetAll()).Returns(new List<NetworkConnectionProfile>());
         NetworkProfileServiceMock = networkProfileService;
+
+        PasswordManagerMock = new Mock<IPasswordManager>();
+        PasswordManagerMock.Setup(p => p.List()).Returns(new List<PasswordEntry>());
+        PromptServiceMock = new Mock<IPromptService>();
     }
 
     private static async IAsyncEnumerable<DiscoveredHost> NoHosts()
@@ -82,6 +87,14 @@ internal sealed class FolderSelectorTestHarness
     public Mock<INetworkProfileService> NetworkProfileServiceMock { get; }
     public INetworkDiscoveryService NetworkDiscoveryService => NetworkDiscoveryServiceMock.Object;
     public INetworkProfileService NetworkProfileService => NetworkProfileServiceMock.Object;
+
+    /// <summary>The password safe the 7-SMB page keeps a typed login in. Empty mock: nothing is saved unless a test sets it up.</summary>
+    public Mock<IPasswordManager> PasswordManagerMock { get; }
+    public IPasswordManager PasswordManager => PasswordManagerMock.Object;
+
+    /// <summary>The prompt the 7-SMB page asks for a username and password with.</summary>
+    public Mock<IPromptService> PromptServiceMock { get; }
+    public IPromptService PromptService => PromptServiceMock.Object;
 
     public IThemeService ThemeService { get; }
     public ISettingsService SettingsService { get; }

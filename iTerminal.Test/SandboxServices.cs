@@ -28,6 +28,10 @@ public static class SandboxServices
             await Task.Yield();
             yield return new DiscoveredHost(HostAddress, SshAvailable: true, SmbAvailable: true, Shares: ["photos"]);
         }
+
+        // No login reaches a real host from the sandbox: nothing is listed under any login.
+        public Task<IReadOnlyList<string>?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<string>?>(null);
     }
 
     /// <summary>

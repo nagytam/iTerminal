@@ -33,7 +33,7 @@ public class TerminalStatusBar : iConsole.Controls.StatusBar.StatusBar
             // 29 leading dialog/service dependencies are irrelevant to the null-object fallback.
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
-            NullSettingsService.Instance, null!, themeService, null!, null!);
+            NullSettingsService.Instance, null!, themeService, null!, null!, null!);
         _datePopUpWindow = datePopUpWindow ?? new DatePopUpWindow(themeService);
 
         ViewSize = new Size(0, 1);
