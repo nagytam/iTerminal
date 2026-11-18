@@ -26,3 +26,15 @@ public sealed record StockQuote(
 
 /// <summary>A match for a search: the symbol to watch and the exchange it trades on, since one company is listed on several.</summary>
 public sealed record StockSearchHit(string Symbol, string Name, string Exchange, string Type);
+
+/// <summary>One day's closing price as the source reported it, in the security's currency.</summary>
+public sealed record StockBar(DateTime Date, decimal Close);
+
+/// <summary>How far back a price history goes. Every range is daily closes.</summary>
+public enum StockHistoryRange
+{
+    OneMonth,
+    ThreeMonths,
+    OneYear,
+    FiveYears,
+}

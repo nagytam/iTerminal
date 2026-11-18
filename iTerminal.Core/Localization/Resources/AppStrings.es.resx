@@ -10142,7 +10142,7 @@
     <value>Terminal de mercado</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Intro:buscar o mostrar la fila  ↑↓:monitor  F5:actualizar  Esc:cerrar</value>
+    <value>Intro:buscar/mostrar  ↑↓:monitor  F5:actualizar  F6:seguir  F8:periodo  Esc:cerrar</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Buscar  ›</value>
@@ -10164,6 +10164,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Buscar el símbolo o mostrar la fila elegida</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Busque primero un valor y pulse F6 para seguirlo.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} añadido a la lista de seguimiento</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>en seguimiento</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Gráfico</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Gráfico {0}   de {1} a {2}   {3} en el periodo</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>cargando el historial…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>sin historial de precios para este valor</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Cambiar el periodo del gráfico (1M, 3M, 1A, 5A)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Añadir o quitar el valor de la lista de seguimiento</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Terminal de mercado</value>

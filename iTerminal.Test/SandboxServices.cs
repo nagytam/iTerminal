@@ -714,6 +714,10 @@ public static class SandboxServices
             Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockSearchHit>>(
                 [new Core.Services.Stocks.StockSearchHit("ACME.L", "Acme Holdings plc", "London", "EQUITY"),
                  new Core.Services.Stocks.StockSearchHit("ACME", "Acme Holdings Inc", "NASDAQ", "EQUITY")]);
+
+        public Task<IReadOnlyList<Core.Services.Stocks.StockBar>> GetHistoryAsync(string symbol, Core.Services.Stocks.StockHistoryRange range, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockBar>>(
+                [.. Enumerable.Range(0, 30).Select(day => new Core.Services.Stocks.StockBar(DateTime.Today.AddDays(day - 29), 90m + day))]);
     }
 
     /// <summary>
