@@ -76,6 +76,8 @@ public class SnakeGame : GameBase
 
     public override bool CanUndo => false;
 
+    public override bool InProgress => _state is SnakeState.Moving or SnakeState.Paused;
+
     public override bool IsComputerTurn => false;
 
     public override bool OffersUndo => false;

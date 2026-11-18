@@ -101,6 +101,8 @@ public class TetrisGame : GameBase
 
     public override bool CanUndo => false;
 
+    public override bool InProgress => _state is TetrisState.Falling or TetrisState.Paused;
+
     public override bool IsComputerTurn => false;
 
     public override bool OffersUndo => false;

@@ -6095,6 +6095,24 @@
   <data name="Games.HintNew" xml:space="preserve">
     <value>N:új</value>
   </data>
+  <data name="Games.ConfirmNew" xml:space="preserve">
+    <value>Játék van folyamatban. Új játékot kezd és elveszíti ezt? (y/n)</value>
+  </data>
+  <data name="Games.Position" xml:space="preserve">
+    <value>{0}. játék, összesen: {1}</value>
+  </data>
+  <data name="Games.Thinking" xml:space="preserve">
+    <value>A számítógép gondolkodik…</value>
+  </data>
+  <data name="Games.Mode.VsComputer" xml:space="preserve">
+    <value>a számítógép ellen</value>
+  </data>
+  <data name="Games.Mode.TwoPlayers" xml:space="preserve">
+    <value>két játékos</value>
+  </data>
+  <data name="Games.Jass.ComputerPlays" xml:space="preserve">
+    <value>A(z) {0}. játékos a számítógép, és ő játszik; a kezed vár.</value>
+  </data>
   <data name="Games.HintUndo" xml:space="preserve">
     <value>U:visszavon</value>
   </data>

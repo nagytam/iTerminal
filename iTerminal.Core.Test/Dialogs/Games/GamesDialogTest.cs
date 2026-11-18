@@ -149,7 +149,93 @@ public class GamesDialogTest
 
         await Press(dialog, ConsoleKey.Enter);
         await Press(dialog, ConsoleKey.N, 'n');
+        await Press(dialog, ConsoleKey.Y, 'y');
         Assert.AreEqual(' ', game.CellAt(4));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task StartingAgainAsksBeforeItLosesAGameInProgress()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        TicTacToeGame game = (TicTacToeGame)dialog.Current;
+        await Press(dialog, ConsoleKey.Enter);
+        Assert.AreNotEqual(' ', game.CellAt(4));
+
+        await Press(dialog, ConsoleKey.N, 'n');
+        StringAssert.Contains(Drawn(dialog), "lose this one? (y/n)");
+        Assert.AreNotEqual(' ', game.CellAt(4), "the game is kept until the person says yes");
+
+        await Press(dialog, ConsoleKey.N, 'n');
+        Assert.AreNotEqual(' ', game.CellAt(4), "n keeps the game");
+        Assert.IsFalse(Drawn(dialog).Contains("lose this one?"));
+
+        await Press(dialog, ConsoleKey.N, 'n');
+        await Press(dialog, ConsoleKey.Escape);
+        Assert.AreNotEqual(' ', game.CellAt(4), "Esc keeps the game");
+        Assert.IsTrue(dialog.IsVisible, "Esc only drops the question; it does not close the dialog");
+        Assert.IsFalse(Drawn(dialog).Contains("lose this one?"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnyOtherKeyDropsTheQuestionAndIsHandledAsUsual()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        TicTacToeGame game = (TicTacToeGame)dialog.Current;
+        await Press(dialog, ConsoleKey.Enter);
+        await Press(dialog, ConsoleKey.N, 'n');
+
+        await Press(dialog, ConsoleKey.D2, '2');
+
+        Assert.IsFalse(Drawn(dialog).Contains("lose this one?"));
+        Assert.AreNotEqual(' ', game.CellAt(4), "the game was not started over");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task StartingAgainOnAFreshOrFinishedGameDoesNotAsk()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        TicTacToeGame game = (TicTacToeGame)dialog.Current;
+
+        await Press(dialog, ConsoleKey.N, 'n');
+        Assert.IsFalse(Drawn(dialog).Contains("lose this one?"), "nothing has been played yet");
+        Assert.IsFalse(game.InProgress);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ASnakeThatHasNotStartedIsNotAskedAbout()
+    {
+        GamesDialog dialog = new SnakeDialog(TestTheme(), new VirtualTimeProvider());
+        await ShowAsync(dialog);
+        Assert.IsFalse(dialog.Current.InProgress);
+
+        await Press(dialog, ConsoleKey.Enter);
+        Assert.IsTrue(dialog.Current.InProgress);
+        await Press(dialog, ConsoleKey.N, 'n');
+        StringAssert.Contains(Drawn(dialog), "lose this one? (y/n)");
+        Assert.IsTrue(dialog.Current.InProgress, "the snake is paused while the question is up, not lost");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ANarrowDialogNamesTheGameOutOfHowManyInPlaceOfTheList()
+    {
+        GamesDialog narrow = Create();
+        await ShowAsync(narrow, new Size(60, 30));
+        StringAssert.Contains(Drawn(narrow, 60, 30), "Game 1 of 6");
+
+        await Press(narrow, ConsoleKey.PageDown);
+        StringAssert.Contains(Drawn(narrow, 60, 30), "Game 2 of 6");
+
+        GamesDialog wide = Create();
+        await ShowAsync(wide);
+        Assert.IsFalse(Drawn(wide).Contains("Game 1 of 6"), "the wide layout has the list instead");
     }
 
     [Timeout(60_000)]
@@ -545,5 +631,45 @@ public class GamesDialogTest
         Assert.AreEqual(2, CellsWithBackground(buffer, Color.Magenta), "the computer's head");
         Assert.AreEqual(4, CellsWithBackground(buffer, Color.DarkMagenta), "the computer's two body cells");
         Assert.AreEqual(2, CellsWithBackground(buffer, Color.Red), "the food");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ABoardTallerThanTheDialogScrollsToTheCursorAndMarksTheEdges()
+    {
+        GamesDialog dialog = new GoDialog(TestTheme(), new VirtualTimeProvider());
+        await ShowAsync(dialog, new Size(60, 16));
+
+        // The cursor starts in the middle of the board, so the view is centred on it: more on both sides.
+        string middle = Drawn(dialog, 60, 16);
+        Assert.IsTrue(middle.Contains("↑") && middle.Contains("↓"));
+
+        for (int i = 0; i < 8; i++)
+        {
+            await Press(dialog, ConsoleKey.DownArrow);
+        }
+
+        string bottom = Drawn(dialog, 60, 16);
+        Assert.IsTrue(bottom.Contains("↑"), "the board scrolled down to the cursor");
+        Assert.IsFalse(bottom.Contains("↓"), "the last row is in view");
+
+        for (int i = 0; i < 8; i++)
+        {
+            await Press(dialog, ConsoleKey.UpArrow);
+        }
+
+        string top = Drawn(dialog, 60, 16);
+        Assert.IsFalse(top.Contains("↑"), "the first row is in view");
+        Assert.IsTrue(top.Contains("↓"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheStatusIsNeverCutWithoutAnEllipsis()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog, new Size(40, 30));
+        await Press(dialog, ConsoleKey.Enter);
+        Assert.IsTrue(Drawn(dialog, 40, 30).Contains("to move."), "the status is drawn in full at a narrow width");
     }
 }

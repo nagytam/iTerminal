@@ -136,6 +136,8 @@ public class JassGame : GameBase
 
     public override bool CanUndo => false;
 
+    public override bool InProgress => !IsOver && _trump is not null;
+
     /// <summary>Against the computer only Player 1 is the person; the rest of the table is the computer's.</summary>
     private bool IsComputerSeat(int seat) => VsComputer && seat != 0;
 
