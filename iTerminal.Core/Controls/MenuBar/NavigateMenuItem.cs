@@ -6,6 +6,7 @@ using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Controls.MenuBar;
 
@@ -22,6 +23,7 @@ public class NavigateMenuItem : MenuItem
         IFrequentExecutionGuardService frequentExecutionGuardService,
         INetworkDiscoveryService networkDiscoveryService,
         INetworkProfileService networkProfileService,
+        IRemoteConnectionService remoteConnectionService,
         IPasswordManager passwordManager,
         IPromptService promptService,
         Content content,
@@ -45,6 +47,7 @@ public class NavigateMenuItem : MenuItem
             themeService,
             networkDiscoveryService,
             networkProfileService,
+            remoteConnectionService,
             passwordManager,
             promptService,
             helpDialog);

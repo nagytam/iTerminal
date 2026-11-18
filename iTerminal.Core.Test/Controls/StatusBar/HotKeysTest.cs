@@ -19,7 +19,7 @@ public class HotKeysTest
     private sealed class TestHotKeys() : HotKeys(
         null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
         null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
-        NullSettingsService.Instance, null!, TestTheme(), null!, null!, null!)
+        NullSettingsService.Instance, null!, TestTheme(), null!, null!, null!, null!)
     {
         public void Hold(bool shift = false, bool control = false, bool alt = false)
         {
