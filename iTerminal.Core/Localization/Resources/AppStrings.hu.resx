@@ -10050,6 +10050,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>A váltás sikertelen: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Egyesítettek tisztítása (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Egyetlen helyi ág sincs egyesítve ide: {0}, így nincs mit tisztítani.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Törli a(z) {1} ágba egyesített {0} helyi ágat? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Az egyesített ágak törlése…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>{0} egyesített ág törölve.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>{0} törölve; {1} nem törölhető: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>A main ágba egyesített helyi ágak törlése (előbb kérdez)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Egyesítettek tisztítása</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>A főágba egyesített helyi ágak törlése (előbb kérdez).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} háttérfeladat még fut. Kilépjen mégis?</value>
   </data>

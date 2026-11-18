@@ -10255,6 +10255,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Switch failed: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Clean up merged (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>No local branch is merged into {0}, so there is nothing to clean up.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Delete {0} local branch(es) merged into {1}? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Deleting the merged branches…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>Deleted {0} merged branch(es).</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>Deleted {0}; {1} could not be deleted: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Delete the local branches merged into main (asks first)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Clean up merged</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Delete the local branches merged into the main branch (asks first).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} background task(s) are still running. Quit anyway?</value>
   </data>

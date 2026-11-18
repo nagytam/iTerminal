@@ -10114,6 +10114,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Wechsel fehlgeschlagen: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Gemergte aufräumen (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Keine lokale Branch ist in {0} gemergt, es gibt also nichts aufzuräumen.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>{0} lokale Branches, die in {1} gemergt sind, löschen? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Die gemergten Branches werden gelöscht…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>{0} gemergte Branches gelöscht.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>{0} gelöscht; {1} ließen sich nicht löschen: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Die lokalen Branches löschen, die in main gemergt sind (fragt vorher)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Gemergte aufräumen</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Die lokalen Branches löschen, die in den Hauptbranch gemergt sind (fragt vorher).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} Hintergrundaufgabe(n) laufen noch. Trotzdem beenden?</value>
   </data>

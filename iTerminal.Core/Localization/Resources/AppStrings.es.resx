@@ -10050,6 +10050,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Error al cambiar: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Limpiar fusionadas (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Ninguna rama local está fusionada en {0}, así que no hay nada que limpiar.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>¿Eliminar {0} ramas locales fusionadas en {1}? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Eliminando las ramas fusionadas…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>Se eliminaron {0} ramas fusionadas.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>Se eliminaron {0}; {1} no se pudieron eliminar: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Eliminar las ramas locales fusionadas en main (pregunta antes)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Limpiar fusionadas</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Eliminar las ramas locales fusionadas en la rama principal (pregunta antes).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} tarea(s) en segundo plano siguen en curso. Â¿Salir de todos modos?</value>
   </data>
