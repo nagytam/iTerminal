@@ -10259,10 +10259,73 @@
     <value>ricerca…</value>
   </data>
   <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
-    <value>Su {0} non sono elencate condivisioni senza accesso. Salva prima una connessione nel browser di rete (Ctrl+N).</value>
+    <value>Su {0} non sono elencate condivisioni senza accesso. Premi L per accedere.</value>
   </data>
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>salvato</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Esci…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Connesso a {0} come {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>Navigazione anonima su {0}. L accede.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Seleziona prima un host da cui uscire.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Non connesso a {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Uscire da {0} e rimuovere la password salvata per {1}?  y:sì  n:no</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Disconnesso da {0}; la password salvata è stata rimossa.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>Il password safe non può essere aperto, quindi l'accesso non è stato rimosso.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Uscire dall'host sotto il cursore e rimuoverne la password salvata (y conferma).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Accedi…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>connesso come {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Accesso a {0} come {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>Accesso a {0} come {1} non riuscito. Non è stato salvato nulla.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>Impossibile elencare le condivisioni di {0} con l'accesso salvato di {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Connesso a {0} come {1}. L'accesso è salvato nel password safe.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Connesso a {0} come {1}. Il password safe non può essere aperto, quindi l'accesso non è stato salvato.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Seleziona prima un host a cui accedere.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Nome utente per {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>I caratteri di controllo non sono consentiti.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Password per {0} su {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Accedi all'host sotto il cursore con nome utente e password; l'accesso è salvato nel password safe.</value>
   </data>
   <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
     <value>Torna dalle condivisioni di un host all'elenco degli host.</value>
@@ -10272,5 +10335,11 @@
   </data>
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>Seleziona host o condivisione SMB</value>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Accedi a un host SMB</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Esci da un host SMB</value>
   </data>
 </root>

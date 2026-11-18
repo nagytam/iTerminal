@@ -10259,10 +10259,73 @@
     <value>keresés…</value>
   </data>
   <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
-    <value>A(z) {0} gépen bejelentkezés nélkül nem látszanak megosztások. Előbb mentsen egy kapcsolatot a hálózati böngészőben (Ctrl+N).</value>
+    <value>A(z) {0} gépen bejelentkezés nélkül nincsenek megosztások. Nyomja meg az L-t a bejelentkezéshez.</value>
   </data>
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>mentett</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Kijelentkezés…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Bejelentkezve a(z) {0} gépre mint {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>A(z) {0} névtelenül böngészve. Az L bejelentkeztet.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Előbb válasszon ki egy gépet a kijelentkezéshez.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Nincs bejelentkezve a(z) {0} gépre.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Kijelentkezik a(z) {0} gépről, és törli a(z) {1} mentett jelszavát?  y:igen  n:nem</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Kijelentkezve a(z) {0} gépről; a mentett jelszó törölve.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>A jelszókezelő nem nyitható meg, ezért a bejelentkezés nem lett törölve.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Kijelentkezés a kurzor alatti gépről és mentett jelszavának törlése (y megerősít).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Bejelentkezés…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>bejelentkezve mint {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Bejelentkezés a(z) {0} gépre mint {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>A bejelentkezés a(z) {0} gépre mint {1} nem sikerült. Semmi sem lett mentve.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>A(z) {0} megosztásai nem listázhatók a(z) {1} mentett bejelentkezésével.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Bejelentkezve a(z) {0} gépre mint {1}. A bejelentkezés a jelszókezelőben van mentve.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Bejelentkezve a(z) {0} gépre mint {1}. A jelszókezelő nem nyitható meg, ezért a bejelentkezés nem lett mentve.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Előbb válasszon ki egy gépet a bejelentkezéshez.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Felhasználónév ehhez: {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>Vezérlőkarakterek nem megengedettek.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Jelszó ehhez: {0} ezen: {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Bejelentkezés a kurzor alatti géphez felhasználónévvel és jelszóval; a bejelentkezés a jelszókezelőben van mentve.</value>
   </data>
   <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
     <value>Vissza a gép megosztásaiból a gépek listájához.</value>
@@ -10272,5 +10335,11 @@
   </data>
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>SMB-gép vagy megosztás kiválasztása</value>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Bejelentkezés SMB-gépre</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Kijelentkezés SMB-gépről</value>
   </data>
 </root>

@@ -61,6 +61,7 @@ public class HotKeys : StatusBarItem
         IThemeService themeService,
         INetworkDiscoveryService networkDiscoveryService,
         INetworkProfileService networkProfileService,
+        IPasswordManager passwordManager,
         SolutionViewerDialog? solutionViewerDialog = null,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
@@ -166,6 +167,8 @@ public class HotKeys : StatusBarItem
             themeService,
             networkDiscoveryService,
             networkProfileService,
+            passwordManager,
+            promptService,
             helpDialog);
 
         var helpDialogButton = new Button("F1-Help", helpDialogCommand, themeService)

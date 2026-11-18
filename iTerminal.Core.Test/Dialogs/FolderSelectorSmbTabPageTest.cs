@@ -1,8 +1,12 @@
 using System.Net;
 using iConsole.Data;
+using iConsole.Prompts;
+using iConsole.Services;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model.Network;
+using iTerminal.Core.Model.Passwords;
 using iTerminal.Core.Services;
+using Moq;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -110,6 +114,31 @@ public class FolderSelectorSmbTabPageTest
 
     #endregion
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Shares_LoginListingAddsItsSharesAndOpensThemWithThatLogin()
+    {
+        var login = new FolderSelectorSmbTabPage.LoginShares(HostA.ToString(), "alice", ["Private", "Public"]);
+
+        var rows = SmbBrowserRows.Shares(HostA.ToString(), [Smb(HostA, "Public")], [], [login]);
+
+        CollectionAssert.AreEqual(new[] { "Public", "Private" }, rows.Select(r => r.Share).ToArray());
+        Assert.IsTrue(rows.All(r => r.Username == "alice"), "A share the login lists opens with that login.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Hosts_HostThatOnlyAcceptsTheLoginIsStillListed()
+    {
+        var login = new FolderSelectorSmbTabPage.LoginShares(HostA.ToString(), "alice", []);
+
+        var rows = SmbBrowserRows.Hosts([], [], [login]);
+
+        Assert.AreEqual(1, rows.Count);
+        Assert.AreEqual(HostA.ToString(), rows[0].Host);
+        StringAssert.Contains(rows[0].Label, "logged in as alice");
+    }
+
     #region The page, through the dialog
 
     private sealed record Fixture(
@@ -130,7 +159,7 @@ public class FolderSelectorSmbTabPageTest
             harness.ContentModelService, harness.FolderHistoryService, harness.DriveInfoModel,
             harness.FolderIndexModel, harness.BeepService, harness.DateTimeProviderService,
             harness.SettingsService, harness.FrequentExecutionGuardService, harness.ThemeService,
-            harness.NetworkDiscoveryService, harness.NetworkProfileService)
+            harness.NetworkDiscoveryService, harness.NetworkProfileService, harness.PasswordManager, harness.PromptService)
         {
             ViewSize = new Size(100, 30)
         };
@@ -216,6 +245,206 @@ public class FolderSelectorSmbTabPageTest
 
         CollectionAssert.AreEqual(new[] { "smb://alice@192.0.2.20/Data/" }, fixture.Harness.Navigations);
         Assert.IsFalse(fixture.Dialog.IsVisible);
+    }
+
+    #endregion
+
+    #region Log in
+
+    private static readonly IReadOnlyList<string> PrivateAndPublic = ["Private", "Public"];
+
+    /// <summary>The answers the username and password prompts give, in the order they are asked. A null is a cancel.</summary>
+    private static void AnswerPrompts(Fixture fixture, params string?[] answers)
+    {
+        var sequence = fixture.Harness.PromptServiceMock.SetupSequence(p => p.AskAsync<string>(It.IsAny<TextPrompt<string>>(), It.IsAny<CancellationToken>()));
+        foreach (var answer in answers)
+        {
+            sequence.Returns(Task.FromResult<string?>(answer));
+        }
+    }
+
+    private static void ListsSharesWithLogin(Fixture fixture, string username, string password, IReadOnlyList<string>? shares) =>
+        fixture.Harness.NetworkDiscoveryServiceMock
+            .Setup(s => s.ListSharesWithLoginAsync(HostB.ToString(), username, password, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(shares);
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Login_ListsTheSharesWithTheTypedLoginAndSavesItInThePasswordSafe()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        fixture.Harness.PasswordManagerMock.SetupGet(p => p.IsUnlocked).Returns(true);
+        AnswerPrompts(fixture, "alice", "pw-a");
+        ListsSharesWithLogin(fixture, "alice", "pw-a", PrivateAndPublic);
+
+        await fixture.Page.LoginForTestAsync();
+        fixture.Page.OnIdle();
+
+        Assert.AreEqual(HostB.ToString(), fixture.Page.HostFilterForTest, "The list opens on the host that was logged in to.");
+        CollectionAssert.AreEqual(new[] { "Private", "Public" }, fixture.Page.RowsForTest.Select(r => r.Share).ToArray());
+        Assert.IsTrue(fixture.Page.RowsForTest.All(r => r.Username == "alice"));
+        fixture.Harness.PasswordManagerMock.Verify(p => p.Save(It.Is<PasswordEntry>(e =>
+            e.Id == SmbLoginKey.Id(HostB.ToString(), "alice")
+            && e.Username == "alice"
+            && e.Password == "pw-a"
+            && e.Category == PasswordCategory.Network)), Times.Once);
+        StringAssert.Contains(fixture.Page.StatusForTest, "saved in the password safe");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Login_ThenEnterOnAShareOpensItAsThatLogin()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        fixture.Harness.PasswordManagerMock.SetupGet(p => p.IsUnlocked).Returns(true);
+        AnswerPrompts(fixture, "alice", "pw-a");
+        ListsSharesWithLogin(fixture, "alice", "pw-a", PrivateAndPublic);
+        await fixture.Page.LoginForTestAsync();
+        fixture.Page.OnIdle();
+
+        await EnterAsync(fixture);
+
+        CollectionAssert.AreEqual(new[] { "smb://alice@192.0.2.11/Private/" }, fixture.Harness.Navigations);
+        Assert.IsFalse(fixture.Dialog.IsVisible, "The selector closes once a share is chosen.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Login_Refused_SavesNothingAndSaysSo()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        fixture.Harness.PasswordManagerMock.SetupGet(p => p.IsUnlocked).Returns(true);
+        AnswerPrompts(fixture, "alice", "wrong");
+        ListsSharesWithLogin(fixture, "alice", "wrong", null);
+
+        await fixture.Page.LoginForTestAsync();
+        fixture.Page.OnIdle();
+
+        Assert.IsNull(fixture.Page.HostFilterForTest);
+        Assert.AreEqual(0, fixture.Page.LoginsForTest.Count);
+        fixture.Harness.PasswordManagerMock.Verify(p => p.Save(It.IsAny<PasswordEntry>()), Times.Never);
+        StringAssert.Contains(fixture.Page.StatusForTest, "Nothing was saved");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Login_WhenThePasswordSafeCannotBeOpened_ListsTheSharesButSaysTheLoginWasNotKept()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        fixture.Harness.PasswordManagerMock.SetupGet(p => p.IsUnlocked).Returns(false);
+        fixture.Harness.PasswordManagerMock.Setup(p => p.Unlock()).Returns(false);
+        AnswerPrompts(fixture, "alice", "pw-a");
+        ListsSharesWithLogin(fixture, "alice", "pw-a", PrivateAndPublic);
+
+        await fixture.Page.LoginForTestAsync();
+        fixture.Page.OnIdle();
+
+        Assert.AreEqual(HostB.ToString(), fixture.Page.HostFilterForTest);
+        fixture.Harness.PasswordManagerMock.Verify(p => p.Save(It.IsAny<PasswordEntry>()), Times.Never);
+        StringAssert.Contains(fixture.Page.StatusForTest, "could not be opened");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Login_CancelledAtTheUsernamePrompt_AsksNoPasswordAndListsNothing()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        AnswerPrompts(fixture, (string?)null);
+
+        await fixture.Page.LoginForTestAsync();
+
+        fixture.Harness.PromptServiceMock.Verify(p => p.AskAsync<string>(It.IsAny<TextPrompt<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+        fixture.Harness.NetworkDiscoveryServiceMock.Verify(s => s.ListSharesWithLoginAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task L_OnAHostAsksForTheUsernameOfThatHost()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        AnswerPrompts(fixture, (string?)null);
+
+        await FolderSelectorTestHarness.PressAsync(fixture.Root, new KeyEvent('l', ConsoleKey.L, false, false, false));
+
+        fixture.Harness.PromptServiceMock.Verify(p => p.AskAsync<string>(
+            It.Is<TextPrompt<string>>(prompt => prompt.Question.Contains(HostB.ToString())),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task SignedInLine_NamesTheUserOfTheHostUnderTheCursor()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        Assert.AreEqual("Browsing 192.0.2.11 anonymously. L logs in.", fixture.Page.SignedInForTest);
+        fixture.Harness.PasswordManagerMock.SetupGet(p => p.IsUnlocked).Returns(true);
+        AnswerPrompts(fixture, "alice", "pw-a");
+        ListsSharesWithLogin(fixture, "alice", "pw-a", PrivateAndPublic);
+
+        await fixture.Page.LoginForTestAsync();
+        fixture.Page.OnIdle();
+
+        Assert.AreEqual("Logged in to 192.0.2.11 as alice.", fixture.Page.SignedInForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Logout_AsksFirstThenRemovesTheLoginAndItsSavedPassword()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        fixture.Harness.PasswordManagerMock.SetupGet(p => p.IsUnlocked).Returns(true);
+        AnswerPrompts(fixture, "alice", "pw-a");
+        ListsSharesWithLogin(fixture, "alice", "pw-a", PrivateAndPublic);
+        await fixture.Page.LoginForTestAsync();
+        fixture.Page.OnIdle();
+
+        await FolderSelectorTestHarness.PressAsync(fixture.Root, new KeyEvent('o', ConsoleKey.O, false, false, false));
+        fixture.Page.OnIdle();
+
+        StringAssert.Contains(fixture.Page.StatusForTest, "y:yes");
+        Assert.AreEqual(HostB.ToString(), fixture.Page.PendingLogoutHostForTest);
+        fixture.Harness.PasswordManagerMock.Verify(p => p.Delete(It.IsAny<string>()), Times.Never);
+
+        await FolderSelectorTestHarness.PressAsync(fixture.Root, new KeyEvent('y', ConsoleKey.Y, false, false, false));
+        fixture.Page.OnIdle();
+
+        fixture.Harness.PasswordManagerMock.Verify(p => p.Delete(SmbLoginKey.Id(HostB.ToString(), "alice")), Times.Once);
+        Assert.AreEqual(0, fixture.Page.LoginsForTest.Count);
+        Assert.IsNull(fixture.Page.HostFilterForTest, "A host with no shares left to show goes back to the list of hosts.");
+        StringAssert.Contains(fixture.Page.StatusForTest, "Logged out of");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Logout_AnswerNo_KeepsTheLogin()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+        fixture.Harness.PasswordManagerMock.SetupGet(p => p.IsUnlocked).Returns(true);
+        AnswerPrompts(fixture, "alice", "pw-a");
+        ListsSharesWithLogin(fixture, "alice", "pw-a", PrivateAndPublic);
+        await fixture.Page.LoginForTestAsync();
+        fixture.Page.OnIdle();
+
+        await FolderSelectorTestHarness.PressAsync(fixture.Root, new KeyEvent('o', ConsoleKey.O, false, false, false));
+        await FolderSelectorTestHarness.PressAsync(fixture.Root, new KeyEvent('n', ConsoleKey.N, false, false, false));
+        fixture.Page.OnIdle();
+
+        Assert.IsNull(fixture.Page.PendingLogoutHostForTest);
+        Assert.AreEqual(1, fixture.Page.LoginsForTest.Count);
+        fixture.Harness.PasswordManagerMock.Verify(p => p.Delete(It.IsAny<string>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Logout_OnAHostWithoutALogin_SaysSo()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+
+        await FolderSelectorTestHarness.PressAsync(fixture.Root, new KeyEvent('o', ConsoleKey.O, false, false, false));
+        fixture.Page.OnIdle();
+
+        Assert.IsNull(fixture.Page.PendingLogoutHostForTest);
+        StringAssert.Contains(fixture.Page.StatusForTest, "Not logged in to 192.0.2.11.");
     }
 
     #endregion
