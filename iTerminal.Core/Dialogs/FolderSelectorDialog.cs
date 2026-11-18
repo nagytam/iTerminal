@@ -9,6 +9,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Dialogs;
 
@@ -49,6 +50,7 @@ public class FolderSelectorDialog : Dialog
         IThemeService themeService,
         INetworkDiscoveryService networkDiscoveryService,
         INetworkProfileService networkProfileService,
+        IRemoteConnectionService remoteConnectionService,
         IPasswordManager passwordManager,
         IPromptService? promptService,
         HelpDialog? helpDialog = null)
@@ -69,6 +71,7 @@ public class FolderSelectorDialog : Dialog
             new FolderSelectorRemoteShellTabPage(contentModelService, beepService, dateTimeProviderService, settingsService, frequentExecutionGuardService, themeService),
             new FolderSelectorPathTabPage(contentModelService, folderHistoryService, beepService, dateTimeProviderService, settingsService, themeService),
             new FolderSelectorSmbTabPage(networkDiscoveryService, networkProfileService, contentModelService, passwordManager, promptService, themeService),
+            new FolderSelectorRemoteFilesTabPage(networkProfileService, remoteConnectionService, contentModelService, themeService),
         ];
 
         foreach (var tabPage in TabPages)
@@ -156,7 +159,7 @@ public class FolderSelectorDialog : Dialog
         yield return ("Enter", iConsole.Localization.UiText.Get("FolderSelector.Hint.Enter", "Go to the folder the focused page has under its cursor, and close."));
         yield return ("Esc", iConsole.Localization.UiText.Get("FolderSelector.Hint.Esc", "Dismiss the suggestion list if one is up, otherwise close without navigating."));
         yield return ("Ctrl+Up / Ctrl+Down", iConsole.Localization.UiText.Get("FolderSelector.Hint.PageSwitch", "Move to the previous / next page of the selector."));
-        yield return ("Ctrl+0 … Ctrl+7",iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
+        yield return ("Ctrl+0 … Ctrl+8",iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
         yield return ("Tab / Shift+Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.TabFocusedPage", "Move between the focused page's list and its buttons."));
     }
 }

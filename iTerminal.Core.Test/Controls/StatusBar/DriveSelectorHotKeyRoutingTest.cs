@@ -12,6 +12,7 @@ using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using iTerminal.Core.Test.Dialogs;
 
 namespace iTerminal.Core.Test.Controls.StatusBar;
 
@@ -63,7 +64,7 @@ public class DriveSelectorHotKeyRoutingTest
         var contentModelService = new ContentModelService(
             taskManager, settingsService, fileSystemService,
             Mock.Of<IMemoryDriveService>(), Mock.Of<ISshFileSystemService>(),
-            Mock.Of<ISmbFileSystemService>(), Mock.Of<IIPhoneFileSystemService>(), Mock.Of<INetworkProfileService>(), Mock.Of<IPasswordManager>(),
+            Mock.Of<ISmbFileSystemService>(), Mock.Of<IIPhoneFileSystemService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyNetworkProfiles(), Mock.Of<IPasswordManager>(),
             Mock.Of<IArchiveFileSystemService>(),
             folderHistory, frequentGuard.Object, memoryCacheService, logger);
 
@@ -80,7 +81,7 @@ public class DriveSelectorHotKeyRoutingTest
         var hotKeys = new iTerminal.Core.Controls.StatusBar.HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             contentModelService, folderHistory, driveInfoModel, folderIndexModel, Mock.Of<IBeepService>(), new DateTimeProviderService(),
-            settingsService, frequentGuard.Object, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), EmptyPasswordSafe());
+            settingsService, frequentGuard.Object, themeService, Mock.Of<INetworkDiscoveryService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyNetworkProfiles(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), EmptyPasswordSafe());
         var statusBar = new iTerminal.Core.Controls.StatusBar.TerminalStatusBar(
             new iConsole.Controls.PopUpWindows.DatePopUpWindow(themeService), hotKeys, themeService);
 

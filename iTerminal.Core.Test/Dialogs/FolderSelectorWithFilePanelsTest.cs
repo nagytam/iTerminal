@@ -75,7 +75,7 @@ public class FolderSelectorWithFilePanelsTest
             taskManager, settingsService, fileSystemService,
             Mock.Of<IMemoryDriveService>(), Mock.Of<ISshFileSystemService>(),
             Mock.Of<ISmbFileSystemService>(), Mock.Of<IIPhoneFileSystemService>(),
-            Mock.Of<INetworkProfileService>(), Mock.Of<IPasswordManager>(),
+            iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyNetworkProfiles(), Mock.Of<IPasswordManager>(),
             Mock.Of<IArchiveFileSystemService>(),
             folderHistory, frequentGuard, memoryCacheService, logger,
             dbContextFactory: null,
@@ -103,7 +103,7 @@ public class FolderSelectorWithFilePanelsTest
         var openCommand = new FolderSelectorDialogCommand(
             contentModelService, folderHistory, new DriveInfoModel(), new FolderIndexModel(),
             Mock.Of<IBeepService>(), new DateTimeProviderService(), settingsService, frequentGuard, themeService,
-            Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), EmptyPasswordSafe(), Mock.Of<iConsole.Services.IPromptService>());
+            Mock.Of<INetworkDiscoveryService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyNetworkProfiles(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), EmptyPasswordSafe(), Mock.Of<iConsole.Services.IPromptService>());
         screen.AddCommand(openCommand);
 
         await screen.OnInitializeAsync();

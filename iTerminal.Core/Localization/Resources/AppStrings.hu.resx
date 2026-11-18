@@ -10346,4 +10346,19 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Kijelentkezés SMB-gépről</value>
   </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Az alatta lévő mentett FTP- vagy SFTP-kapcsolat megnyitása, a saját mappájában.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Nincs mentett FTP- vagy SFTP-kapcsolat. Egyet a Távoli kapcsolatok (Alt+F2) ablakban adhat hozzá.</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Az itt felsorolt kapcsolatok hozzáadása és szerkesztése a Távoli kapcsolatok ablakban.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>FTP- vagy SFTP-kapcsolat megnyitása</value>
+  </data>
 </root>

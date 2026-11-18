@@ -10552,4 +10552,19 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Log out of an SMB host</value>
   </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Open the saved FTP or SFTP connection under the cursor, in its folder.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> No FTP or SFTP connections are saved. Add one in Remote connections (Alt+F2).</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Add and edit the connections listed here, in Remote connections.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>Open FTP or SFTP connection</value>
+  </data>
 </root>
