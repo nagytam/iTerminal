@@ -2018,4 +2018,25 @@
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[I] Igen    [N] Nem</value>
   </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Hexadecimális számjegy beírása</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Szövegnézet</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Hex nézet</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Nem szöveg: a bájtok {0} kódlapon nem olvasódnak vissza változatlanul, ezért a hex nézet marad.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Kurzor mozgatása</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>A sor eleje vagy vége</value>
+  </data>
 </root>

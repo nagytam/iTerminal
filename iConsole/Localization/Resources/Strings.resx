@@ -2034,4 +2034,25 @@
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[Y] Yes    [N] No</value>
   </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Type a hex digit</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Text view</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Hex view</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Not text: the bytes do not read back unchanged in {0}, so the hex view stays.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Move the cursor</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Start or end of the row</value>
+  </data>
 </root>

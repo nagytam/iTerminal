@@ -2018,4 +2018,25 @@
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[S] Sí    [N] No</value>
   </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Escriba un dígito hexadecimal</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Vista de texto</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Vista hexadecimal</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>No es texto: los bytes no se leen de vuelta sin cambios en {0}, así que se mantiene la vista hexadecimal.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Mover el cursor</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Inicio o fin de la fila</value>
+  </data>
 </root>

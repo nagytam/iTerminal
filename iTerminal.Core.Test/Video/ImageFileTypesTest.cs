@@ -15,6 +15,8 @@ public class ImageFileTypesTest
     [DataRow("shot.arw")]
     [DataRow("picture.jp2")]
     [DataRow("picture.J2K")]
+    [DataRow("photo.heic")]
+    [DataRow("photo.HEIF")]
     [DataRow("picture.jpf")]
     public void TheNewFormats_OpenInThePictureViewer(string name)
     {

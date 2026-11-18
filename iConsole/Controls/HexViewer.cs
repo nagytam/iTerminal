@@ -130,7 +130,22 @@ public class HexViewer : Control
     /// <summary>Byte offset of the first byte in the cursor row.</summary>
     public int SelectedOffset => (int)ScrollableModel.CursorPosition.Y * BytesPerRow;
 
-    private int RowCount => _data.Length == 0 ? 0 : (_data.Length + BytesPerRow - 1) / BytesPerRow;
+    protected int RowCount => _data.Length == 0 ? 0 : (_data.Length + BytesPerRow - 1) / BytesPerRow;
+
+    /// <summary>The bytes as the control holds them. A subclass that edits the dump changes them in place.</summary>
+    protected byte[] Bytes => _data;
+
+    /// <summary>
+    /// The column where byte <paramref name="index"/> of a row is drawn, as <see cref="FormatRow"/> lays the row out: the
+    /// offset, then the hex pairs with a gap after the first half. The ASCII column for the same byte is 5 columns after
+    /// the last hex pair, plus the index.
+    /// </summary>
+    protected static int HexColumn(int index, int bytesPerRow) =>
+        10 + 3 * index + (index >= bytesPerRow / 2 ? 1 : 0);
+
+    /// <summary>The column where the ASCII rendering of byte <paramref name="index"/> of a row is drawn.</summary>
+    protected static int AsciiColumn(int index, int bytesPerRow) =>
+        HexColumn(bytesPerRow - 1, bytesPerRow) + 5 + index;
 
     public override void OnInitializeLayout()
     {

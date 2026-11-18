@@ -10219,4 +10219,8 @@
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>Choisir un hôte ou une ressource SMB</value>
   </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Ouvre le fichier sélectionné dans l'éditeur ; un fichier binaire s'ouvre en vue hexadécimale.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
 </root>

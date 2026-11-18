@@ -46,7 +46,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         new(StringComparer.OrdinalIgnoreCase) { "svg" };
 
     private static readonly HashSet<string> FontExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "ttf", "otf", "woff" };
+        new(StringComparer.OrdinalIgnoreCase) { "ttf", "otf", "woff", "woff2" };
 
     private static readonly HashSet<string> PhotoshopExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "psd" };
