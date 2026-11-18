@@ -1282,6 +1282,27 @@
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Navigation dans les menus :</value>
   </data>
+  <data name="Help.Started.Heading" xml:space="preserve">
+    <value>Prise en main :</value>
+  </data>
+  <data name="Help.Started.Tab" xml:space="preserve">
+    <value>Tab / Maj+Tab    Déplacer le focus entre les panneaux et les contrôles</value>
+  </data>
+  <data name="Help.Started.Enter" xml:space="preserve">
+    <value>Entrée          Lancer la commande principale de l'élément actif</value>
+  </data>
+  <data name="Help.Started.Esc" xml:space="preserve">
+    <value>Échap           Fermer le dialogue ou le menu au premier plan</value>
+  </data>
+  <data name="Help.Started.F1" xml:space="preserve">
+    <value>F1              Ouvrir cette aide depuis n'importe quel écran</value>
+  </data>
+  <data name="Help.Started.Lists" xml:space="preserve">
+    <value>La première liste ci-dessous correspond à ce qui fonctionne ici et maintenant.</value>
+  </data>
+  <data name="Help.Started.AllLists" xml:space="preserve">
+    <value>La seconde liste donne toutes les commandes, même celles qui ne peuvent pas s'exécuter dans ce contexte.</value>
+  </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
     <value>  F2:Retour{0}  F4:Hex  F5:Ligne  F8:Codage  Esc:fermer</value>
   </data>

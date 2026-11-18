@@ -102,6 +102,29 @@ public class HelpDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task OnInitializeAsync_ExplainsTheTwoListsAfterAGettingStartedSection()
+    {
+        var themeService = CreateThemeService();
+        var dialog = new HelpDialog(themeService);
+        var root = new Control(themeService) { Name = "Root" };
+        dialog.ContextControl = root;
+        dialog.ContextFocus = root;
+
+        await dialog.OnInitializeAsync();
+
+        var textViewer = dialog.Controls.OfType<TextViewerControl>().Single();
+        var lines = Available(textViewer.TextModel.Lines).ToList();
+        var gettingStarted = lines.FindIndex(l => l.Contains("Getting started:", StringComparison.Ordinal));
+        var available = lines.FindIndex(l => l.Contains("Available commands:", StringComparison.Ordinal));
+
+        Assert.IsTrue(gettingStarted >= 0, "The getting-started section is missing.");
+        Assert.IsTrue(gettingStarted < available, "The getting-started section should come before the command list.");
+        StringAssert.Contains(string.Join(Environment.NewLine, lines), "Tab / Shift+Tab");
+        StringAssert.Contains(string.Join(Environment.NewLine, lines), "F1");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task OnInitializeAsync_IncludesMenuNavigationSectionWhenMenuBarPresent()
     {
         var themeService = CreateThemeService();
@@ -194,11 +217,13 @@ public class HelpDialogTest
     [TestMethod]
     public async Task KeysAreListedPlainFirstAndFunctionKeysByNumber()
     {
-        var lines = await HelpLinesAsync(
+        // Only the command list: the getting-started section above it has indented lines of its own.
+        var lines = (await HelpLinesAsync(
             new TestCommand("Eleven", "e", new Key(ConsoleKey.F11, false, true, false)),
             new TestCommand("Nine", "n", new Key(ConsoleKey.F9, false, true, false)),
             new TestCommand("Two", "t", new Key(ConsoleKey.F2, false, false, false)),
-            new TestCommand("Ctrl two", "c", new Key(ConsoleKey.F2, false, false, true)));
+            new TestCommand("Ctrl two", "c", new Key(ConsoleKey.F2, false, false, true))))
+            .SkipWhile(l => !l.StartsWith("Available commands:", StringComparison.Ordinal)).Skip(1).ToList();
 
         var order = lines.Where(l => l.StartsWith("  ", StringComparison.Ordinal) && !l.StartsWith("   ", StringComparison.Ordinal))
             .Select(l => l.Trim().Split(' ')[0]).ToList();

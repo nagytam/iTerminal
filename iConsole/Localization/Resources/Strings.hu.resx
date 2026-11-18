@@ -1282,6 +1282,27 @@
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Navigáció a menükben:</value>
   </data>
+  <data name="Help.Started.Heading" xml:space="preserve">
+    <value>Első lépések:</value>
+  </data>
+  <data name="Help.Started.Tab" xml:space="preserve">
+    <value>Tab / Shift+Tab    Fókusz mozgatása panelek és vezérlők között</value>
+  </data>
+  <data name="Help.Started.Enter" xml:space="preserve">
+    <value>Enter           Az aktív elem fő parancsának futtatása</value>
+  </data>
+  <data name="Help.Started.Esc" xml:space="preserve">
+    <value>Esc             Az előtted lévő párbeszédablak vagy menü bezárása</value>
+  </data>
+  <data name="Help.Started.F1" xml:space="preserve">
+    <value>F1              Ez a súgó megnyitása bármelyik képernyőről</value>
+  </data>
+  <data name="Help.Started.Lists" xml:space="preserve">
+    <value>Az alábbi első lista azt mutatja, ami itt és most működik.</value>
+  </data>
+  <data name="Help.Started.AllLists" xml:space="preserve">
+    <value>A második lista minden parancsot felsorol, akkor is, ha ebben a helyzetben nem futtatható.</value>
+  </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
     <value>  F2:Sortörés{0}  F4:Hex  F5:Sor  F8:Kódlap  Esc:bezárás</value>
   </data>
