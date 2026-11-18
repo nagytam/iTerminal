@@ -509,6 +509,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, FolderIndexJob>();
         services.AddSingleton<IJob, OnlineQuoteJob>();
         services.AddSingleton<IJob, WeatherJob>();
+        services.AddSingleton<iTerminal.Core.Services.InternetConnectivityService>();
+        services.AddSingleton<IJob, iTerminal.Core.Jobs.InternetConnectivityJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.CalendarIdentityJob>();
         services.AddSingleton<DriveInfoModel>();
