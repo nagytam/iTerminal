@@ -1586,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>Salta le offerte selezionate e chiudi</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>Salta il componente per sempre: resta nell'elenco e Invio non lo installa</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Cerca, oppure mostra il risultato scelto nel pannello quando l'elenco ha il focus</value>
   </data>
@@ -2649,25 +2652,22 @@
     <value>Invio chiude questa finestra.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Non c'è nulla di selezionato.</value>
+    <value>Nessuna voce selezionata: Invio chiude senza installare.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>Termina installerà:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Non c'è nulla di selezionato. Torna indietro e seleziona cosa installare.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Installazione... Esc: nascondi (continua)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Invio:installa  Backspace:indietro  Spazio:seleziona  S:non chiedere più  Esc:più tardi</value>
+    <value>Invio:installa  Backspace:indietro  Spazio:seleziona  P:salta sempre  S:salta versione</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Invio:chiudi  Backspace:indietro  Esc:chiudi</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Invio:avanti  Backspace:indietro  Spazio:seleziona  S:non chiedere più  Esc:più tardi</value>
+    <value>Invio:avanti  Backspace:indietro  Spazio:seleziona  P:salta sempre  S:salta versione</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Invio:avanti  Backspace:indietro  Esc:chiudi</value>
@@ -2683,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Escluso   (Spazio: installalo)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Installa questo   (P: salta per sempre)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Saltato per sempre   (P: proponilo di nuovo)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Test delle prestazioni</value>

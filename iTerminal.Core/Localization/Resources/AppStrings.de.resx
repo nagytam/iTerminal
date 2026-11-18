@@ -1586,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>Die angekreuzten Angebote überspringen und schließen</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>Komponente endgültig überspringen: sie bleibt in der Liste, und Enter lässt sie aus</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Suchen, oder das gewählte Ergebnis im Panel zeigen, wenn die Liste den Fokus hat</value>
   </data>
@@ -2649,25 +2652,22 @@
     <value>Enter schließt dies.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Nichts ist ausgewählt.</value>
+    <value>Nichts ist angehakt, daher schließt Enter ohne Installation.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>Abschließen installiert:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Nichts ist ausgewählt. Zurück und auswählen, was installiert werden soll.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Installation läuft... Esc: ausblenden (läuft weiter)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Enter:installieren  Rücktaste:zurück  Leertaste:auswählen  S:nicht mehr fragen  Esc:später</value>
+    <value>Enter:installieren  Rücktaste:zurück  Leertaste:wählen  P:endgültig aus  S:Version aus</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Enter:schließen  Rücktaste:zurück  Esc:schließen</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Enter:weiter  Rücktaste:zurück  Leertaste:auswählen  S:nicht mehr fragen  Esc:später</value>
+    <value>Enter:weiter  Rücktaste:zurück  Leertaste:wählen  P:endgültig aus  S:Version aus</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Enter:weiter  Rücktaste:zurück  Esc:schließen</value>
@@ -2683,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Weggelassen   (Leertaste: installieren)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Diese installieren   (P: endgültig überspringen)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Endgültig übersprungen   (P: wieder anbieten)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Leistungstest</value>

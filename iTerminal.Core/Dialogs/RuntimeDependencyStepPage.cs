@@ -38,9 +38,16 @@ public class RuntimeDependencyStepPage(
             : status.Note is { Length: > 0 } ? $"{Alert.GlyphFor(BadgeKind.Info)} {status.Note}" : string.Empty;
         Color noteColor = status.Problem is not null ? Color.DarkRed : scheme.DisabledForeground;
         bool needsWork = status.State != RuntimeDependencyState.Installed;
+        bool skippedForGood = needsWork && service.IsPermanentlySkipped(id);
         string tick = !needsWork
             ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.NothingToDo", "✓ Nothing to do here.")
-            : isTicked(id) ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.Install", "[x] Install this one   (Space: leave it out)") : iConsole.Localization.UiText.Get("RuntimeDependency.Tick.LeftOut", "[ ] Left out   (Space: install it)");
+            : isTicked(id)
+                ? skippedForGood
+                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.InstallWhileSkipped", "[x] Install this one   (P: skip it for good)")
+                    : iConsole.Localization.UiText.Get("RuntimeDependency.Tick.Install", "[x] Install this one   (Space: leave it out)")
+                : skippedForGood
+                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.SkippedForGood", "[ ] Skipped for good   (P: offer it again)")
+                    : iConsole.Localization.UiText.Get("RuntimeDependency.Tick.LeftOut", "[ ] Left out   (Space: install it)");
         Color tickColor = !needsWork || isTicked(id) ? Color.DarkGreen : scheme.DisabledForeground;
         WriteRow(buffer, 0, $"{status.Name} - {status.Purpose}", scheme.Foreground, width, scheme);
         WriteRow(buffer, 1, StateText(status), needsWork ? Color.DarkYellow : Color.DarkGreen, width, scheme);
@@ -136,7 +143,7 @@ public class RuntimeDependencySummaryPage(
         ColorScheme scheme = ThemeService.CurrentColorScheme;
         List<string> ticked = tickedIds();
         List<(string Text, Color Color)> rows = [];
-        rows.Add((ticked.Count == 0 ? iConsole.Localization.UiText.Get("RuntimeDependency.NothingTicked", "Nothing is ticked.") : iConsole.Localization.UiText.Get("RuntimeDependency.FinishWillInstall", "Finish will install:"), scheme.Foreground));
+        rows.Add((ticked.Count == 0 ? iConsole.Localization.UiText.Get("RuntimeDependency.NothingTicked", "Nothing is ticked, so Enter closes without installing.") : iConsole.Localization.UiText.Get("RuntimeDependency.FinishWillInstall", "Finish will install:"), scheme.Foreground));
         foreach (string id in ticked)
         {
             RuntimeDependencyStatus? status = service.Statuses.FirstOrDefault(s => s.Id == id);
