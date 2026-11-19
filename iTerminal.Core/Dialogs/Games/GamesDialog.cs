@@ -25,6 +25,13 @@ public abstract class GamesDialog : SplitPaneDialog
 {
     private const int MenuWidth = 24;
 
+    /// <summary>Most status lines shown; a longer status ends on an ellipsis.</summary>
+    private const int MaxStatusRows = 3;
+
+    /// <summary>Rows kept for the rules under the board, so a tall board does not leave them none.</summary>
+    private const int RulesRowsKept = 2;
+
+
     /// <summary>The longest stretch of time one idle pass hands to the game, so a stall does not make it jump.</summary>
     private const long MaxTickMilliseconds = 1000;
 
@@ -41,6 +48,7 @@ public abstract class GamesDialog : SplitPaneDialog
     private int _generation;
     private volatile bool _thinking;
     private bool _stuck;
+    private bool _confirmingNewGame;
 
     /// <summary>Each game opens in a dialog of its own: the concrete dialogs pass their one game here. With several games the dialog also shows a game list.</summary>
     protected internal GamesDialog(string dialogName, string title, IGame[] games, IThemeService themeService, ITimeProvider? timeProvider = null)
@@ -77,6 +85,7 @@ public abstract class GamesDialog : SplitPaneDialog
     public override void Close()
     {
         CancelThinking();
+        _confirmingNewGame = false;
         Current.Pause();
         base.Close();
     }
@@ -137,6 +146,24 @@ public abstract class GamesDialog : SplitPaneDialog
     private bool HandleGameKey(KeyEvent keyEvent)
     {
         IGame game = Current;
+        if (_confirmingNewGame)
+        {
+            // Only y starts over. Esc and n keep the game; any other key drops the question and is handled as usual.
+            _confirmingNewGame = false;
+            char answer = char.ToLowerInvariant(keyEvent.KeyChar);
+            if (answer == 'y')
+            {
+                CancelThinking();
+                game.NewGame();
+                return true;
+            }
+
+            if (answer == 'n' || keyEvent.ConsoleKey == ConsoleKey.Escape)
+            {
+                return true;
+            }
+        }
+
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.LeftArrow:
@@ -186,6 +213,14 @@ public abstract class GamesDialog : SplitPaneDialog
         switch (char.ToLowerInvariant(c))
         {
             case 'n':
+                if (game.InProgress)
+                {
+                    // Snake and Tetris keep falling or moving while the question is up, so they stop first.
+                    game.Pause();
+                    _confirmingNewGame = true;
+                    return true;
+                }
+
                 CancelThinking();
                 game.NewGame();
                 return true;
@@ -220,6 +255,7 @@ public abstract class GamesDialog : SplitPaneDialog
         }
 
         CancelThinking();
+        _confirmingNewGame = false;
         Current.Pause();
         _current = index;
     }
@@ -238,6 +274,12 @@ public abstract class GamesDialog : SplitPaneDialog
         if (Current.Tick(delta))
         {
             StateHasChanged();
+        }
+
+        if (_confirmingNewGame && !Current.InProgress)
+        {
+            // The game ended while the question was up: there is nothing left to lose, so the question goes.
+            _confirmingNewGame = false;
         }
 
         Outcome? outcome = Interlocked.Exchange(ref _pending, null);
@@ -358,6 +400,64 @@ public abstract class GamesDialog : SplitPaneDialog
         }
     }
 
+    /// <summary>The column the cursor's cell starts at, within its row; 0 when there is none.</summary>
+    private static int CursorColumn(IReadOnlyList<GameCell[]> rows, int row)
+    {
+        if (row >= rows.Count)
+        {
+            return 0;
+        }
+
+        int column = 0;
+        foreach (GameCell cell in rows[row])
+        {
+            if (cell.Cursor)
+            {
+                return column + cell.Text.Length / 2;
+            }
+
+            column += cell.Text.Length;
+        }
+
+        return 0;
+    }
+
+    /// <summary>Paints the part of one board row that lies in the view: from colOffset, viewWidth columns wide.</summary>
+    private void DrawBoardRow(IBuffer buffer, GameCell[] cells, int left, int y, int colOffset, int viewWidth, ColorScheme colorScheme)
+    {
+        int column = 0;
+        foreach (GameCell cell in cells)
+        {
+            int start = column;
+            int end = column + cell.Text.Length;
+            column = end;
+            int from = Math.Max(start, colOffset);
+            int to = Math.Min(end, colOffset + viewWidth);
+            if (from >= to)
+            {
+                continue;
+            }
+
+            string text = cell.Text.Substring(from - start, to - from);
+            Color foreground = cell.Foreground ?? colorScheme.Foreground;
+            Color background = cell.Background ?? colorScheme.Background;
+            if (cell.Cursor)
+            {
+                foreground = Color.Black;
+                background = Color.Cyan;
+            }
+
+            buffer.Write(ZOrder, new Position(left + from - colOffset, y), new Size(text.Length, 1), new ConxelString(text, foreground, background));
+        }
+    }
+
+    /// <summary>Ends text that goes on past the room it has on an ellipsis, cutting it to fit max columns first.</summary>
+    private static string WithEllipsis(string text, int max)
+    {
+        string kept = text.Length > max - 2 ? text[..Math.Max(0, max - 2)] : text;
+        return kept.TrimEnd() + " …";
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
@@ -398,51 +498,76 @@ public abstract class GamesDialog : SplitPaneDialog
 
         string mode = game.ModeLabel ?? (!game.OffersComputerOpponent
             ? UiText.Get("Games.OnePlayer", "one player")
-            : game.VsComputer ? "against the computer" : "two players");
+            : game.VsComputer ? UiText.Get("Games.Mode.VsComputer", "against the computer") : UiText.Get("Games.Mode.TwoPlayers", "two players"));
         DrawSectionHeader(buffer, x0, iy, width, $"{game.Name} — {mode}", true, colorScheme);
 
-        string status = game.Status + (_thinking ? " The computer is thinking…" : string.Empty);
+        // Without room for the game list, a line says which game this is out of how many, so the others are not hidden.
         int line = 1;
-        foreach (string part in Wrap(status, width - 1).Take(2))
+        if (menuWidth == 0 && HasSeveralGames && ih > 2)
         {
-            if (line < ih - 1)
-            {
-                WriteLine(buffer, x0, iy + line, width, " " + part, game.IsOver ? Color.Yellow : Color.Cyan, colorScheme.Background);
-            }
-
+            WriteLine(buffer, x0, iy + line, width, " " + string.Format(UiText.Get("Games.Position", "Game {0} of {1}"), _current + 1, _games.Length) + "  " + UiText.Get("Games.HintGame", "PgUp/PgDn:game"), colorScheme.DisabledForeground, colorScheme.Background);
             line++;
         }
 
-        int boardTop = 4;
-        IReadOnlyList<GameCell[]> rows = game.Render();
-        int boardWidth = rows.Count == 0 ? 0 : rows.Max(r => r.Sum(c => c.Text.Length));
-        int left = x0 + Math.Max(0, (width - boardWidth) / 2);
-        for (int r = 0; r < rows.Count && boardTop + r < ih - 1; r++)
+        int statusTop = line;
+        string status = _confirmingNewGame
+            ? UiText.Get("Games.ConfirmNew", "A game is on. Start a new one and lose this one? (y/n)")
+            : game.Status + (_thinking ? " " + UiText.Get("Games.Thinking", "The computer is thinking…") : string.Empty);
+        Color statusColor = _confirmingNewGame || game.IsOver ? Color.Yellow : Color.Cyan;
+        List<string> statusLines = [.. Wrap(status, width - 1)];
+        if (statusLines.Count > MaxStatusRows)
         {
-            int x = left;
-            foreach (GameCell cell in rows[r])
+            statusLines = statusLines.Take(MaxStatusRows).ToList();
+            statusLines[^1] = WithEllipsis(statusLines[^1], width - 2);
+        }
+
+        for (int i = 0; i < statusLines.Count; i++)
+        {
+            if (statusTop + i < ih - 1)
             {
-                int room = x0 + width - x;
-                if (room <= 0)
-                {
-                    break;
-                }
-
-                string text = cell.Text.Length > room ? cell.Text[..room] : cell.Text;
-                Color foreground = cell.Foreground ?? colorScheme.Foreground;
-                Color background = cell.Background ?? colorScheme.Background;
-                if (cell.Cursor)
-                {
-                    foreground = Color.Black;
-                    background = Color.Cyan;
-                }
-
-                buffer.Write(ZOrder, new Position(x, iy + boardTop + r), new Size(text.Length, 1), new ConxelString(text, foreground, background));
-                x += text.Length;
+                WriteLine(buffer, x0, iy + statusTop + i, width, " " + statusLines[i], statusColor, colorScheme.Background);
             }
         }
 
-        int rulesTop = boardTop + rows.Count + 1;
+        // The board gets the rows under the status, but leaves the rules a couple of lines; a board taller than that scrolls
+        // so the cursor stays on it, and the edges it is cut at are marked.
+        int boardTop = statusTop + statusLines.Count + 1;
+        int boardRoom = Math.Max(0, ih - 1 - boardTop - RulesRowsKept);
+        IReadOnlyList<GameCell[]> rows = game.Render();
+        int boardWidth = rows.Count == 0 ? 0 : rows.Max(r => r.Sum(c => c.Text.Length));
+        int shownRows = Math.Min(rows.Count, boardRoom);
+        int cursorRow = Math.Max(0, rows.Select((r, i) => (r, i)).FirstOrDefault(p => p.r.Any(c => c.Cursor)).i);
+        int rowOffset = rows.Count <= shownRows ? 0 : Math.Clamp(cursorRow - shownRows / 2, 0, rows.Count - shownRows);
+        int shownWidth = Math.Min(boardWidth, width);
+        int colOffset = boardWidth <= width ? 0 : Math.Clamp(CursorColumn(rows, cursorRow) - width / 2, 0, boardWidth - width);
+        int left = boardWidth <= width ? x0 + (width - boardWidth) / 2 : x0;
+        for (int r = 0; r < shownRows; r++)
+        {
+            DrawBoardRow(buffer, rows[rowOffset + r], left, iy + boardTop + r, colOffset, shownWidth, colorScheme);
+        }
+
+        Color edge = colorScheme.DisabledForeground;
+        if (shownRows > 0 && rowOffset > 0)
+        {
+            WriteLine(buffer, x0 + width - 1, iy + boardTop, 1, "↑", edge, colorScheme.Background);
+        }
+
+        if (shownRows > 0 && rowOffset + shownRows < rows.Count)
+        {
+            WriteLine(buffer, x0 + width - 1, iy + boardTop + shownRows - 1, 1, "↓", edge, colorScheme.Background);
+        }
+
+        if (shownRows > 0 && colOffset > 0)
+        {
+            WriteLine(buffer, x0, iy + boardTop + shownRows / 2, 1, "←", edge, colorScheme.Background);
+        }
+
+        if (shownRows > 0 && colOffset + width < boardWidth)
+        {
+            WriteLine(buffer, x0 + width - 1, iy + boardTop + shownRows / 2, 1, "→", edge, colorScheme.Background);
+        }
+
+        int rulesTop = boardTop + shownRows + 1;
         List<string> ruleLines = [.. Wrap(game.Rules, width - 1)];
         int rulesRoom = Math.Max(0, ih - 1 - rulesTop);
         for (int i = 0; i < ruleLines.Count && i < rulesRoom; i++)
@@ -451,7 +576,7 @@ public abstract class GamesDialog : SplitPaneDialog
             if (i == rulesRoom - 1 && ruleLines.Count > rulesRoom)
             {
                 // More to say than the dialog has rows for: end on an ellipsis rather than a sentence cut in the air.
-                part = (part.Length > width - 4 ? part[..Math.Max(0, width - 4)] : part).TrimEnd() + " …";
+                part = WithEllipsis(part, width - 2);
             }
 
             WriteLine(buffer, x0, iy + rulesTop + i, width, " " + part, colorScheme.DisabledForeground, colorScheme.Background);

@@ -38,6 +38,9 @@ public interface IGame
 
     bool CanUndo { get; }
 
+    /// <summary>True while a game is on and would be lost by starting another: the dialog asks first.</summary>
+    bool InProgress => CanUndo && !IsOver;
+
     /// <summary>True while it is the computer's turn and the game is still on.</summary>
     bool IsComputerTurn { get; }
 
@@ -104,6 +107,7 @@ public abstract class GameBase(Random? random) : IGame
     public abstract string Status { get; }
     public abstract bool IsOver { get; }
     public abstract bool CanUndo { get; }
+    public virtual bool InProgress => CanUndo && !IsOver;
     public abstract bool IsComputerTurn { get; }
     public virtual IEnumerable<(string Key, string Description)> ExtraKeys => [];
     public abstract IReadOnlyList<GameCell[]> Render();

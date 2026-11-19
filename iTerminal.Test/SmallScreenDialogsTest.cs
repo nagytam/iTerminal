@@ -266,7 +266,7 @@ public class SmallScreenDialogsTest
         await narrow.PressAsync("Enter");
 
         await narrow.WaitForTextAsync("against the computer");
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Select a piece") && l.Contains('…')), "the rules, cut at a clear ellipsis");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Select a piece")) && s.Lines.Any(l => l.Contains('…')), "the rules, with an ellipsis where they go on");
     }
 
     [Timeout(120_000)]

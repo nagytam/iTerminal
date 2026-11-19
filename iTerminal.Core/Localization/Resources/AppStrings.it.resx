@@ -6104,6 +6104,24 @@
   <data name="Games.HintNew" xml:space="preserve">
     <value>N:nuovo</value>
   </data>
+  <data name="Games.ConfirmNew" xml:space="preserve">
+    <value>C'è una partita in corso. Iniziarne una nuova e perdere questa? (y/n)</value>
+  </data>
+  <data name="Games.Position" xml:space="preserve">
+    <value>Gioco {0} di {1}</value>
+  </data>
+  <data name="Games.Thinking" xml:space="preserve">
+    <value>Il computer sta pensando…</value>
+  </data>
+  <data name="Games.Mode.VsComputer" xml:space="preserve">
+    <value>contro il computer</value>
+  </data>
+  <data name="Games.Mode.TwoPlayers" xml:space="preserve">
+    <value>due giocatori</value>
+  </data>
+  <data name="Games.Jass.ComputerPlays" xml:space="preserve">
+    <value>Il giocatore {0} è il computer e sta giocando; la tua mano aspetta.</value>
+  </data>
   <data name="Games.HintUndo" xml:space="preserve">
     <value>U:annulla</value>
   </data>
