@@ -18,8 +18,9 @@ public class MoveCommand(
     IConflictPromptService conflictPromptService,
     FileSystemResolver fileSystemResolver,
     IContentModelService contentModelService,
-    IChecksumService? checksumService = null)
-    : TransferCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService, checksumService)
+    IChecksumService? checksumService = null,
+    RenameUndoService? renameUndo = null)
+    : TransferCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService, checksumService, renameUndo)
 {
     protected override string OperationName => UiText.Get("Verb.Move", "Move");
 

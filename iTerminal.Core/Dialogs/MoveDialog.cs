@@ -25,13 +25,14 @@ public class MoveDialog : TransferDialog
         ISshFileSystemService sshFileSystemService,
         IArchiveFileSystemService archiveFileSystemService,
         ISettingsService? settingsService = null,
-        IChecksumService? checksumService = null)
+        IChecksumService? checksumService = null,
+        RenameUndoService? renameUndo = null)
         : base(
             nameof(MoveDialog),
             "Move",
             new MoveCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService,
                 new FileSystemResolver(fileSystemService, memoryDriveService, sshFileSystemService, archiveFileSystemService, contentModelService),
-                contentModelService, checksumService),
+                contentModelService, checksumService, renameUndo),
             'M',
             contentModelService,
             beepService,
