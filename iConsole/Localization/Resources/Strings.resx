@@ -1298,6 +1298,27 @@
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Menu navigation:</value>
   </data>
+  <data name="Help.Started.Heading" xml:space="preserve">
+    <value>Getting started:</value>
+  </data>
+  <data name="Help.Started.Tab" xml:space="preserve">
+    <value>Tab / Shift+Tab    Move focus between panels and controls</value>
+  </data>
+  <data name="Help.Started.Enter" xml:space="preserve">
+    <value>Enter           Run the focused item's main command</value>
+  </data>
+  <data name="Help.Started.Esc" xml:space="preserve">
+    <value>Esc             Close the dialog or menu in front of you</value>
+  </data>
+  <data name="Help.Started.F1" xml:space="preserve">
+    <value>F1              Open this help from any screen</value>
+  </data>
+  <data name="Help.Started.Lists" xml:space="preserve">
+    <value>The first list below works here and now.</value>
+  </data>
+  <data name="Help.Started.AllLists" xml:space="preserve">
+    <value>The second lists every command, even those that cannot run in this context.</value>
+  </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
     <value>  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage  Esc:close</value>
   </data>
