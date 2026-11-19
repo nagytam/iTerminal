@@ -10412,6 +10412,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>{0} wird anonym durchsucht. L meldet an.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} wird verwendet.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Zuerst einen Host zum Abmelden auswählen.</value>
   </data>

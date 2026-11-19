@@ -22,8 +22,8 @@ public class NetworkDiscoveryService(ISmbFileSystemService smbFileSystemService)
         return ScanAsync(GetCandidateAddresses(), cancellationToken);
     }
 
-    public Task<IReadOnlyList<string>?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default) =>
-        Task.Run(() => smbFileSystemService.TryListShares(host, username, password), cancellationToken);
+    public Task<SmbListing?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default) =>
+        Task.Run(() => smbFileSystemService.TryListSharesWithVersion(host, username, password), cancellationToken);
 
     internal async IAsyncEnumerable<DiscoveredHost> ScanAsync(
         IEnumerable<IPAddress> addresses,
@@ -76,20 +76,25 @@ public class NetworkDiscoveryService(ISmbFileSystemService smbFileSystemService)
         }
 
         IReadOnlyList<string> shares = [];
+        var smbVersion = 0;
         if (smbAvailable)
         {
             try
             {
-                shares = [.. smbFileSystemService.ListShares(address.ToString(), string.Empty, string.Empty)];
+                // Null when the anonymous login is refused: many hosts reject it, and the user can still log in from the page.
+                if (smbFileSystemService.TryListSharesWithVersion(address.ToString(), string.Empty, string.Empty) is { } listing)
+                {
+                    shares = listing.Shares;
+                    smbVersion = listing.SmbVersion;
+                }
             }
             catch
             {
-                // Best-effort: many hosts reject anonymous share enumeration — that's fine,
-                // the user can still connect and supply credentials from the browser dialog.
+                // Best-effort: the host is still listed, without shares.
             }
         }
 
-        return new DiscoveredHost(address, sshAvailable, smbAvailable, shares);
+        return new DiscoveredHost(address, sshAvailable, smbAvailable, shares, smbVersion);
     }
 
     internal static async Task<bool> ProbePortAsync(IPAddress address, int port, CancellationToken cancellationToken)
