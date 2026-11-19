@@ -95,6 +95,39 @@ public class CompletionModelTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void CompletionModelUpdateMatchingValuesFallsBackToFuzzyWhenNoPrefixMatches()
+    {
+        var model = new CompletionModel(["application", "banana", "cherry"]);
+
+        model.UpdateMatchingValues("aplcn");
+
+        CollectionAssert.AreEqual(new[] { "application" }, model.MatchingValues.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CompletionModelUpdateMatchingValuesPrefixMatchesSuppressFuzzy()
+    {
+        var model = new CompletionModel(["apple", "a_p_p_le_tree"]);
+
+        model.UpdateMatchingValues("app");
+
+        CollectionAssert.AreEqual(new[] { "apple" }, model.MatchingValues.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CompletionModelUpdateMatchingValuesShortInputDoesNotFuzzy()
+    {
+        var model = new CompletionModel(["banana"]);
+
+        model.UpdateMatchingValues("bn");
+
+        Assert.AreEqual(0, model.MatchingValues.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void CompletionModelUpdateMatchingValuesClear()
     {
         var completions = new[] { "apple", "application" };
