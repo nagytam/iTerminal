@@ -92,4 +92,71 @@ public class TransferOntoItselfTest
         Assert.IsFalse(ContentModelFileTransferTask.IsSameFile(new Url(@"C:\x\a.txt"), new Url(@"C:\x\A.txt")), "a change of case is a rename, not the same name");
         Assert.IsFalse(ContentModelFileTransferTask.IsSameFile(new Url(@"C:\x\a.txt"), new Url(@"C:\x\b.txt")));
     }
+
+    private string MakeTree()
+    {
+        string tree = Path.Combine(_dir, "tree");
+        Directory.CreateDirectory(Path.Combine(tree, "sub"));
+        File.WriteAllText(Path.Combine(tree, "keep.txt"), "kept");
+        return tree;
+    }
+
+    private static Url Folder(string path) => new(path + Path.DirectorySeparatorChar);
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFolderMovedOntoItselfWithOverwrite_IsRefusedAndKeptWithItsFiles()
+    {
+        // Overwrite used to delete the target first, and the target was the folder being moved.
+        string tree = MakeTree();
+        var move = Command((t, p, e, c, r, m) => new MoveCommand(t, p, e, c, r, m));
+
+        var (_, task) = move.CreateTasks(Folder(tree), Folder(tree), ConflictResolvers.Of(true), verifier: null);
+        await task!.RunAsync();
+
+        StringAssert.Contains(task.Error, "into itself");
+        Assert.AreEqual("kept", File.ReadAllText(Path.Combine(tree, "keep.txt")));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFolderMovedIntoItsOwnSubfolder_IsRefusedAndKept()
+    {
+        string tree = MakeTree();
+        var move = Command((t, p, e, c, r, m) => new MoveCommand(t, p, e, c, r, m));
+
+        var (_, task) = move.CreateTasks(Folder(tree), Folder(Path.Combine(tree, "sub", "again")), ConflictResolvers.Of(true), verifier: null);
+        await task!.RunAsync();
+
+        StringAssert.Contains(task.Error, "into itself");
+        Assert.AreEqual("kept", File.ReadAllText(Path.Combine(tree, "keep.txt")));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFolderCopiedIntoItsOwnSubfolder_IsRefusedInsteadOfRunningUntilTheStackIsGone()
+    {
+        string tree = MakeTree();
+        var copy = Command((t, p, e, c, r, m) => new CopyCommand(t, p, e, c, r, m));
+
+        var (_, task) = copy.CreateTasks(Folder(tree), Folder(Path.Combine(tree, "sub", "again")), ConflictResolvers.Of(true), verifier: null);
+        await task!.RunAsync();
+
+        StringAssert.Contains(task.Error, "into itself");
+        Assert.IsFalse(Directory.Exists(Path.Combine(tree, "sub", "again")));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFolderCopiedToASiblingWithTheSamePrefix_StillWorks()
+    {
+        string tree = MakeTree();
+        var copy = Command((t, p, e, c, r, m) => new CopyCommand(t, p, e, c, r, m));
+
+        var (_, task) = copy.CreateTasks(Folder(tree), Folder(tree + "2"), ConflictResolvers.Of(true), verifier: null);
+        await task!.RunAsync();
+
+        Assert.IsNull(task.Error);
+        Assert.AreEqual("kept", File.ReadAllText(Path.Combine(tree + "2", "keep.txt")));
+    }
 }

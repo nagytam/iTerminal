@@ -44,12 +44,23 @@ public abstract class ContentModelFolderTransferTask(
     /// <summary>Native fast path used when source and target are the same drive.</summary>
     protected abstract Task SameFileSystemTransferAsync(IFileSystem fileSystem, Url sourceUrl, Url targetUrl, bool overwrite);
 
+    /// <summary>Paths differ by case only on Linux; on Windows and macOS two spellings of a name are one folder.</summary>
+    private static readonly StringComparison PathComparison =
+        OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
     public override async Task ExecuteAsync()
     {
         try
         {
             Subject = TaskNotificationHelper.TransferSubject(sourceUrl, targetUrl);
             Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFolder", "{0} folder"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.To", "to"), targetUrl.FullName.Shrink(60), UiText.Get("Task.Started", "started"));
+
+            // Before anything is touched. A folder moved onto itself with Overwrite ticked had its target (itself) deleted first, and
+            // one copied into its own subfolder walked a tree that grows as it is written, until the stack ran out.
+            if (ReferenceEquals(source, target) && UrlPath.SameOrInside(sourceUrl, targetUrl, PathComparison))
+            {
+                throw new IOException(UiText.Get("Transfer.FolderIntoItself", "A folder cannot be copied or moved into itself or one of its own subfolders."));
+            }
 
             if (target.IsReadOnly)
             {

@@ -10685,4 +10685,7 @@
   <data name="Transfer.SameFile" xml:space="preserve">
     <value>El origen y el destino son el mismo archivo. Elija otro nombre o carpeta.</value>
   </data>
+  <data name="Transfer.FolderIntoItself" xml:space="preserve">
+    <value>Una carpeta no se puede copiar ni mover dentro de sí misma ni de una de sus subcarpetas.</value>
+  </data>
 </root>
