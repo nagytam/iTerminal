@@ -375,7 +375,7 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
-    public async Task TheRemoteConnectionsHelpOn60Columns_EndsOnAnEllipsisNotMidWord()
+    public async Task TheRemoteConnectionsHelpOn60Columns_WrapsItsEmptyHintAndEllipsizesTheSummary()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
 
@@ -383,7 +383,9 @@ public class SmallScreenDialogsTest
 
         await narrow.WaitForTextAsync("Remote connections");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Nothing saved yet")), "the empty-list help");
-        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Nothing saved yet") && l.Contains("…")), narrow.Screen.Dump());
+        // The empty-list hint is the only guidance, so it wraps and is read to its end; the summary above it is a status, so it may end on an ellipsis.
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("Nothing saved yet") && l.Contains("…")), narrow.Screen.Dump());
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("WebDAV connection.")), narrow.Screen.Dump());
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(" saved  ·") && l.Contains("…")), narrow.Screen.Dump());
     }
 
@@ -457,16 +459,17 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
-    [DataRow("Ctrl+Shift+F1", "No torrents yet")]
-    [DataRow("Ctrl+Shift+F2", "No workspaces yet")]
-    public async Task TheEmptyListHelpOn50Columns_EndsOnAnEllipsis(string chord, string text)
+    [DataRow("Ctrl+Shift+F1", "No torrents yet", "or its URL.")]
+    [DataRow("Ctrl+Shift+F2", "No workspaces yet", "Enter brings one")]
+    public async Task TheEmptyListHelpOn50Columns_IsWrappedNotCutOnAnEllipsis(string chord, string text, string lastWords)
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
 
         await narrow.PressAsync(chord);
 
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(text)), "the empty-list help");
-        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(text) && l.Contains('…')), narrow.Screen.Dump());
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(lastWords)), "the end of the empty-list help");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains(text) && l.Contains('…')), narrow.Screen.Dump());
     }
 
     [Timeout(120_000)]
@@ -527,6 +530,23 @@ public class SmallScreenDialogsTest
         // Each of these used to lose its second half: "Move focus between p" and "PgUp PgDn: scro".
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("panels and controls")), "the Tab line wrapped");
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("scroll it")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Alt+F2", "Remote connections", "WebDAV connection.")]
+    [DataRow("Ctrl+Shift+F1", "BitTorrent", "or its URL.")]
+    [DataRow("Ctrl+Shift+F2", "Workspaces", "Enter brings one")]
+    public async Task AnEmptyListDialogOn45Columns_WrapsItsHintInsteadOfCuttingIt(string chord, string title, string lastWords)
+    {
+        // The hint is the only guidance on an empty list; on a narrow terminal it used to end in an ellipsis after a few words.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitForTextAsync(title);
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(lastWords, StringComparison.Ordinal)), "the end of the hint");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("…", StringComparison.Ordinal) && l.Contains("yet.", StringComparison.Ordinal)), narrow.Screen.Dump());
     }
 
     [Timeout(120_000)]
