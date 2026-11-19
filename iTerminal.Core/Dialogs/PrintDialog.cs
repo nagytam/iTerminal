@@ -500,9 +500,12 @@ public class PrintDialog : Dialog
                 Put(buffer, 0, row, iw, string.Empty, colors.Foreground, colors.Background);
             }
 
-            string file = FilePath is { } path ? Path.GetFileName(path) : UiText.Get("Print.NoFile", "(no file under the cursor — the queue only)");
-            Put(buffer, 1, 0, iw - 2, UiText.Get("Print.File", "File").PadRight(11) + file, colors.Foreground, colors.Background);
-            Put(buffer, 1, 1, iw - 2, UiText.Get("Print.Printer", "Printer").PadRight(11) + PrinterLine(), Color.Cyan, colors.Background);
+            // What to print is what the user has to check before pressing Enter, so a long name keeps both ends (its extension too) and says it was
+            // shortened, and the printer keeps its position and status: only its name gives way.
+            int valueWidth = Math.Max(1, iw - 2 - LabelWidth);
+            string file = FilePath is { } path ? Path.GetFileName(path).Shrink(valueWidth) ?? string.Empty : Clip(UiText.Get("Print.NoFile", "(no file under the cursor — the queue only)"), valueWidth);
+            Put(buffer, 1, 0, iw - 2, UiText.Get("Print.File", "File").PadRight(LabelWidth) + file, colors.Foreground, colors.Background);
+            Put(buffer, 1, 1, iw - 2, UiText.Get("Print.Printer", "Printer").PadRight(LabelWidth) + PrinterLine(valueWidth), Color.Cyan, colors.Background);
             Put(buffer, 1, 2, iw - 2, UiText.Get("Print.Copies", "Copies").PadRight(11) + _copies, colors.Foreground, colors.Background);
 
             int nameWidth = Math.Max(8, iw - 2 - 2 - 31);
@@ -542,17 +545,32 @@ public class PrintDialog : Dialog
         }
     }
 
-    private string PrinterLine()
+    /// <summary>The width of the captions (File, Printer, Copies) before their values.</summary>
+    private const int LabelWidth = 11;
+
+    private string PrinterLine(int width)
     {
         if (CurrentPrinter is not { } printer)
         {
-            return _printersLoaded
+            return Clip(_printersLoaded
                 ? _listFailure ?? UiText.Get("Print.NoPrinters", "No printers are installed.")
-                : UiText.Get("Print.Reading", "Reading the printers…");
+                : UiText.Get("Print.Reading", "Reading the printers…"), width);
         }
 
-        return $"{printer.Name}{(printer.IsDefault ? " " + UiText.Get("Print.Default", "(default)") : string.Empty)}  [{_printerIndex + 1}/{_printers.Count}]  {printer.Status}";
+        // The position and the status stay. The name gives way first; when that would leave it unrecognisable, the "(default)" mark goes too.
+        string tail = $"  [{_printerIndex + 1}/{_printers.Count}]  {printer.Status}";
+        string mark = printer.IsDefault ? " " + UiText.Get("Print.Default", "(default)") : string.Empty;
+        if (printer.Name.Length + mark.Length + tail.Length > width && width - mark.Length - tail.Length < MinimumPrinterName)
+        {
+            mark = string.Empty;
+        }
+
+        int room = width - mark.Length - tail.Length;
+        string name = printer.Name.Length <= room ? printer.Name : printer.Name.Shrink(Math.Max(MinimumPrinterName, room)) ?? string.Empty;
+        return name + mark + tail;
     }
+
+    private const int MinimumPrinterName = 8;
 
     private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)
     {
