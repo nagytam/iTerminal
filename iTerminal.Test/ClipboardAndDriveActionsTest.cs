@@ -236,11 +236,11 @@ public class ClipboardAndDriveActionsTest
 
     [Timeout(120_000)]
     [TestMethod]
-    public async Task CtrlShiftPCopiesTheFocusedEntryPathToTheTextClipboard()
+    public async Task CtrlShiftInsertCopiesTheFocusedEntryPathToTheTextClipboard()
     {
         await _app.SelectEntryAsync("notes.md");
 
-        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+P"));
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+Insert"));
 
         // The in-process clipboard the end-to-end suite runs with; it returns at once.
         await _app.WaitUntilAsync(() => iConsole.Services.TextClipboard.Current.GetTextAsync().GetAwaiter().GetResult() == Path.Combine(_app.LeftRoot, "notes.md"),
