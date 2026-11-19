@@ -54,9 +54,28 @@ public class RenameCommand(IContentModelService contentModelService, RenameUndoS
                 }
                 catch (Exception exception)
                 {
-                    renameDialog.ErrorMessage.Text = exception.Message;
+                    // An existing name with Overwrite unticked is the one failure the dialog can say something useful about: the .NET text
+                    // ("Cannot create a file when that file already exists.") names no file and does not mention the box that would fix it.
+                    renameDialog.ErrorMessage.Text = !overwrite && TargetExists(contentModel, targetUrl)
+                        ? string.Format(
+                            UiText.Get("Msg.RenameTargetExists", "'{0}' already exists. Tick \"{1}\" to replace it."),
+                            targetUrl.Name,
+                            UiText.Get("Label.Overwrite", "Overwrite"))
+                        : exception.Message;
                 }
             }
+        }
+    }
+
+    private static bool TargetExists(iConsole.Interfaces.IContentModel contentModel, Url target)
+    {
+        try
+        {
+            return contentModel.ExistsFile(target) || contentModel.ExistsFolder(target);
+        }
+        catch
+        {
+            return false;
         }
     }
 }
