@@ -10579,4 +10579,172 @@
   <data name="CmdTitle.35808701" xml:space="preserve">
     <value>Open FTP or SFTP connection</value>
   </data>
+  <data name="Dialog.Weather" xml:space="preserve">
+    <value>Weather</value>
+  </data>
+  <data name="Weather.Places" xml:space="preserve">
+    <value>Places</value>
+  </data>
+  <data name="Weather.Found.Heading" xml:space="preserve">
+    <value>Found</value>
+  </data>
+  <data name="Weather.NextHours" xml:space="preserve">
+    <value>Next 24 hours</value>
+  </data>
+  <data name="Weather.NextDays" xml:space="preserve">
+    <value>Next 7 days</value>
+  </data>
+  <data name="Weather.Empty" xml:space="preserve">
+    <value> No saved places — press a to find one.</value>
+  </data>
+  <data name="Weather.NoHits" xml:space="preserve">
+    <value> Nothing found.</value>
+  </data>
+  <data name="Weather.FindPrompt" xml:space="preserve">
+    <value>Find a place by name</value>
+  </data>
+  <data name="Weather.Found" xml:space="preserve">
+    <value>{0} found — ↑↓ choose, Enter saves the chosen one</value>
+  </data>
+  <data name="Weather.NothingFound" xml:space="preserve">
+    <value>No place found for "{0}".</value>
+  </data>
+  <data name="Weather.Saved" xml:space="preserve">
+    <value>Saved {0}</value>
+  </data>
+  <data name="Weather.AlreadySaved" xml:space="preserve">
+    <value>{0} is already saved</value>
+  </data>
+  <data name="Weather.Removed" xml:space="preserve">
+    <value>Removed {0}</value>
+  </data>
+  <data name="Weather.NotSaved" xml:space="preserve">
+    <value>{0} is not saved</value>
+  </data>
+  <data name="Weather.ConfirmRemove" xml:space="preserve">
+    <value>Remove {0}?  y:yes  any other key:no</value>
+  </data>
+  <data name="Weather.HomeSet" xml:space="preserve">
+    <value>{0} is the home place</value>
+  </data>
+  <data name="Weather.Fetching" xml:space="preserve">
+    <value>Fetching the forecast…</value>
+  </data>
+  <data name="Weather.NoForecast" xml:space="preserve">
+    <value>No forecast yet — F5 fetches it.</value>
+  </data>
+  <data name="Weather.Offline" xml:space="preserve">
+    <value>Could not reach the forecast service ({0}). Showing the last forecast kept.</value>
+  </data>
+  <data name="Weather.Updated" xml:space="preserve">
+    <value>Forecast updated</value>
+  </data>
+  <data name="Weather.Updated.At" xml:space="preserve">
+    <value>updated {0:HH:mm}</value>
+  </data>
+  <data name="Weather.Rain.Label" xml:space="preserve">
+    <value>Rain</value>
+  </data>
+  <data name="Weather.Code.Clear" xml:space="preserve">
+    <value>Clear sky</value>
+  </data>
+  <data name="Weather.Code.MainlyClear" xml:space="preserve">
+    <value>Mainly clear</value>
+  </data>
+  <data name="Weather.Code.PartlyCloudy" xml:space="preserve">
+    <value>Partly cloudy</value>
+  </data>
+  <data name="Weather.Code.Overcast" xml:space="preserve">
+    <value>Overcast</value>
+  </data>
+  <data name="Weather.Code.Fog" xml:space="preserve">
+    <value>Fog</value>
+  </data>
+  <data name="Weather.Code.Drizzle" xml:space="preserve">
+    <value>Drizzle</value>
+  </data>
+  <data name="Weather.Code.FreezingDrizzle" xml:space="preserve">
+    <value>Freezing drizzle</value>
+  </data>
+  <data name="Weather.Code.Rain" xml:space="preserve">
+    <value>Rain</value>
+  </data>
+  <data name="Weather.Code.FreezingRain" xml:space="preserve">
+    <value>Freezing rain</value>
+  </data>
+  <data name="Weather.Code.Snow" xml:space="preserve">
+    <value>Snow</value>
+  </data>
+  <data name="Weather.Code.SnowGrains" xml:space="preserve">
+    <value>Snow grains</value>
+  </data>
+  <data name="Weather.Code.RainShowers" xml:space="preserve">
+    <value>Rain showers</value>
+  </data>
+  <data name="Weather.Code.SnowShowers" xml:space="preserve">
+    <value>Snow showers</value>
+  </data>
+  <data name="Weather.Code.Thunderstorm" xml:space="preserve">
+    <value>Thunderstorm</value>
+  </data>
+  <data name="Weather.Code.ThunderstormHail" xml:space="preserve">
+    <value>Thunderstorm with hail</value>
+  </data>
+  <data name="Weather.Code.Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="DialogHint.BackToSearch" xml:space="preserve">
+    <value>Back to the search</value>
+  </data>
+  <data name="DialogHint.FindPlace" xml:space="preserve">
+    <value>Find a place</value>
+  </data>
+  <data name="DialogHint.HomePlace" xml:space="preserve">
+    <value>Set as home</value>
+  </data>
+  <data name="DialogHint.HourlyDaily" xml:space="preserve">
+    <value>Hourly or daily</value>
+  </data>
+  <data name="DialogHint.RefreshForecast" xml:space="preserve">
+    <value>Refresh the forecast</value>
+  </data>
+  <data name="DialogHint.RemovePlace" xml:space="preserve">
+    <value>Remove the place</value>
+  </data>
+  <data name="DialogHint.SavePlace" xml:space="preserve">
+    <value>Save the chosen place</value>
+  </data>
+  <data name="Hints.Weather" xml:space="preserve">
+    <value>a:find  d/Del:remove  h:home  v:hourly/daily  F5:refresh  Esc:close</value>
+  </data>
+  <data name="Hints.WeatherSearch" xml:space="preserve">
+    <value>Enter:search  ↑↓:choose  Esc:back</value>
+  </data>
+  <data name="Hints.WeatherHits" xml:space="preserve">
+    <value>Enter:save  ↑↓:choose  a:find  Esc:back</value>
+  </data>
+  <data name="CmdTitle.a0bba638" xml:space="preserve">
+    <value>Weather</value>
+  </data>
+  <data name="CmdDesc.5efc92aa" xml:space="preserve">
+    <value>Show the weather for the saved places: now, the next 24 hours and the next 7 days.</value>
+  </data>
+  <data name="Weather.Col.Weather" xml:space="preserve">
+    <value>Weather</value>
+  </data>
+  <data name="Weather.Col.Min" xml:space="preserve">
+    <value>Min</value>
+  </data>
+  <data name="Weather.Col.Max" xml:space="preserve">
+    <value>Max</value>
+  </data>
+  <data name="Weather.Col.Rain" xml:space="preserve">
+    <value>Rain</value>
+  </data>
+  <data name="Weather.Col.Chance" xml:space="preserve">
+    <value>Chance</value>
+  </data>
+  <data name="Weather.Updated.Old" xml:space="preserve">
+    <value>old, updated {0:g}</value>
+  </data>
 </root>

@@ -163,7 +163,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
         iTerminal.Core.Jobs.UpdateCheckJob? updateCheckJob = null,
         iConsole.Viewers.FileViewerRegistry? fileViewers = null,
-        iConsole.Viewers.FileEditorRegistry? fileEditors = null
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null,
+        iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null
         )
         : base([], themeService)
     {
@@ -303,7 +304,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             jassDialog: jassDialog,
             userGroupManagerDialog: userGroupManagerDialog,
             scannerDialog: scannerDialog,
-            networkToolsDialog: networkToolsDialog));
+            networkToolsDialog: networkToolsDialog,
+            weatherDialog: weatherDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));
 

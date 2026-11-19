@@ -10373,4 +10373,172 @@
   <data name="CmdTitle.35808701" xml:space="preserve">
     <value>FTP- vagy SFTP-kapcsolat megnyitása</value>
   </data>
+  <data name="Dialog.Weather" xml:space="preserve">
+    <value>Időjárás</value>
+  </data>
+  <data name="Weather.Places" xml:space="preserve">
+    <value>Helyek</value>
+  </data>
+  <data name="Weather.Found.Heading" xml:space="preserve">
+    <value>Találatok</value>
+  </data>
+  <data name="Weather.NextHours" xml:space="preserve">
+    <value>Következő 24 óra</value>
+  </data>
+  <data name="Weather.NextDays" xml:space="preserve">
+    <value>Következő 7 nap</value>
+  </data>
+  <data name="Weather.Empty" xml:space="preserve">
+    <value> Nincs mentett hely — nyomja meg az a billentyűt egy kereséshez.</value>
+  </data>
+  <data name="Weather.NoHits" xml:space="preserve">
+    <value> Nincs találat.</value>
+  </data>
+  <data name="Weather.FindPrompt" xml:space="preserve">
+    <value>Hely keresése név szerint</value>
+  </data>
+  <data name="Weather.Found" xml:space="preserve">
+    <value>{0} találat — ↑↓ választás, Enter menti a kiválasztottat</value>
+  </data>
+  <data name="Weather.NothingFound" xml:space="preserve">
+    <value>Nincs találat erre: „{0}”.</value>
+  </data>
+  <data name="Weather.Saved" xml:space="preserve">
+    <value>{0} elmentve</value>
+  </data>
+  <data name="Weather.AlreadySaved" xml:space="preserve">
+    <value>{0} már mentve van</value>
+  </data>
+  <data name="Weather.Removed" xml:space="preserve">
+    <value>{0} eltávolítva</value>
+  </data>
+  <data name="Weather.NotSaved" xml:space="preserve">
+    <value>{0} nincs mentve</value>
+  </data>
+  <data name="Weather.ConfirmRemove" xml:space="preserve">
+    <value>Eltávolítja: {0}?  y:igen  más billentyű:nem</value>
+  </data>
+  <data name="Weather.HomeSet" xml:space="preserve">
+    <value>{0} az otthoni hely</value>
+  </data>
+  <data name="Weather.Fetching" xml:space="preserve">
+    <value>Előrejelzés letöltése…</value>
+  </data>
+  <data name="Weather.NoForecast" xml:space="preserve">
+    <value>Még nincs előrejelzés — az F5 letölti.</value>
+  </data>
+  <data name="Weather.Offline" xml:space="preserve">
+    <value>Az előrejelzési szolgáltatás nem érhető el ({0}). Az utoljára mentett előrejelzés látszik.</value>
+  </data>
+  <data name="Weather.Updated" xml:space="preserve">
+    <value>Előrejelzés frissítve</value>
+  </data>
+  <data name="Weather.Updated.At" xml:space="preserve">
+    <value>frissítve {0:HH:mm}</value>
+  </data>
+  <data name="Weather.Rain.Label" xml:space="preserve">
+    <value>Eső</value>
+  </data>
+  <data name="Weather.Code.Clear" xml:space="preserve">
+    <value>Derült ég</value>
+  </data>
+  <data name="Weather.Code.MainlyClear" xml:space="preserve">
+    <value>Többnyire derült</value>
+  </data>
+  <data name="Weather.Code.PartlyCloudy" xml:space="preserve">
+    <value>Részben felhős</value>
+  </data>
+  <data name="Weather.Code.Overcast" xml:space="preserve">
+    <value>Borult</value>
+  </data>
+  <data name="Weather.Code.Fog" xml:space="preserve">
+    <value>Köd</value>
+  </data>
+  <data name="Weather.Code.Drizzle" xml:space="preserve">
+    <value>Szitálás</value>
+  </data>
+  <data name="Weather.Code.FreezingDrizzle" xml:space="preserve">
+    <value>Ónos szitálás</value>
+  </data>
+  <data name="Weather.Code.Rain" xml:space="preserve">
+    <value>Eső</value>
+  </data>
+  <data name="Weather.Code.FreezingRain" xml:space="preserve">
+    <value>Ónos eső</value>
+  </data>
+  <data name="Weather.Code.Snow" xml:space="preserve">
+    <value>Hó</value>
+  </data>
+  <data name="Weather.Code.SnowGrains" xml:space="preserve">
+    <value>Hódara</value>
+  </data>
+  <data name="Weather.Code.RainShowers" xml:space="preserve">
+    <value>Záporeső</value>
+  </data>
+  <data name="Weather.Code.SnowShowers" xml:space="preserve">
+    <value>Hózápor</value>
+  </data>
+  <data name="Weather.Code.Thunderstorm" xml:space="preserve">
+    <value>Zivatar</value>
+  </data>
+  <data name="Weather.Code.ThunderstormHail" xml:space="preserve">
+    <value>Zivatar jégesővel</value>
+  </data>
+  <data name="Weather.Code.Unknown" xml:space="preserve">
+    <value>Ismeretlen</value>
+  </data>
+  <data name="DialogHint.BackToSearch" xml:space="preserve">
+    <value>Vissza a kereséshez</value>
+  </data>
+  <data name="DialogHint.FindPlace" xml:space="preserve">
+    <value>Hely keresése</value>
+  </data>
+  <data name="DialogHint.HomePlace" xml:space="preserve">
+    <value>Legyen az otthoni hely</value>
+  </data>
+  <data name="DialogHint.HourlyDaily" xml:space="preserve">
+    <value>Óránként vagy naponként</value>
+  </data>
+  <data name="DialogHint.RefreshForecast" xml:space="preserve">
+    <value>Előrejelzés frissítése</value>
+  </data>
+  <data name="DialogHint.RemovePlace" xml:space="preserve">
+    <value>Hely eltávolítása</value>
+  </data>
+  <data name="DialogHint.SavePlace" xml:space="preserve">
+    <value>A kiválasztott hely mentése</value>
+  </data>
+  <data name="Hints.Weather" xml:space="preserve">
+    <value>a:keres  d/Del:töröl  h:otthon  v:óra/nap  F5:frissít  Esc:bezár</value>
+  </data>
+  <data name="Hints.WeatherSearch" xml:space="preserve">
+    <value>Enter:keres  ↑↓:választ  Esc:vissza</value>
+  </data>
+  <data name="Hints.WeatherHits" xml:space="preserve">
+    <value>Enter:ment  ↑↓:választ  a:keres  Esc:vissza</value>
+  </data>
+  <data name="CmdTitle.a0bba638" xml:space="preserve">
+    <value>Időjárás</value>
+  </data>
+  <data name="CmdDesc.5efc92aa" xml:space="preserve">
+    <value>A mentett helyek időjárása: most, a következő 24 óra és a következő 7 nap.</value>
+  </data>
+  <data name="Weather.Col.Weather" xml:space="preserve">
+    <value>Időjárás</value>
+  </data>
+  <data name="Weather.Col.Min" xml:space="preserve">
+    <value>Min.</value>
+  </data>
+  <data name="Weather.Col.Max" xml:space="preserve">
+    <value>Max.</value>
+  </data>
+  <data name="Weather.Col.Rain" xml:space="preserve">
+    <value>Eső</value>
+  </data>
+  <data name="Weather.Col.Chance" xml:space="preserve">
+    <value>Esély</value>
+  </data>
+  <data name="Weather.Updated.Old" xml:space="preserve">
+    <value>régi, frissítve {0:g}</value>
+  </data>
 </root>
