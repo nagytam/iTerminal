@@ -406,6 +406,24 @@ public class FileOperationsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task CreateFolderWithAnIllegalCharacter_SaysTheNameIsNotValid_InsteadOfFailing()
+    {
+        // "a|b" is not a Windows name; checking it threw out of the key handler.
+        await _app.SelectEntryAsync("readme.txt");
+
+        await _app.PressAsync("Shift+F7");
+        await _app.WaitForTextAsync("Create folder");
+        await _app.TypeAsync("a|b");
+        await _app.PressAsync("Enter");
+
+        await _app.WaitForTextAsync("Not a valid name or path.");
+        Assert.IsFalse(Directory.Exists(Path.Combine(_app.LeftRoot, "a|b")));
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task CtrlZPutsTheRenamedFileBack()
     {
         await _app.SelectEntryAsync("notes.md");

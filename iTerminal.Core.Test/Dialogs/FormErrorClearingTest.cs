@@ -31,6 +31,9 @@ public class FormErrorClearingTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
         Assert.AreEqual("Error: The disk is full.", dialog.ErrorMessage.Text);
 
+        // Typed at the end of the path, as a user types: at the start of the box it made "xfile://...", which is not a path, and the
+        // dialog now says so (it used to throw there) instead of showing nothing.
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.End));
         await dialog.HandleKeyEventAsync(Char('x'));
         Assert.AreEqual(string.Empty, dialog.ErrorMessage.Text);
     }
