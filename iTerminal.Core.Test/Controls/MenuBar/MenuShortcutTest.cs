@@ -143,11 +143,13 @@ public class MenuShortcutTest
                     continue;
                 }
 
+                // The menu lists every key it advertises ("Ctrl+Shift+M / Ctrl+F7"), and so does KeyDisplayText.
                 var advertised = entry.Text[(tab + 1)..];
+                var advertisedKeys = advertised.Split(" / ", StringSplitOptions.RemoveEmptyEntries);
                 var command = entry.Commands.FirstOrDefault();
-                // KeyDisplayText lists every key the command answers to ("Ctrl+Shift+M / Ctrl+F7").
                 var bound = command?.KeyDisplayText.Split(" / ", StringSplitOptions.RemoveEmptyEntries) ?? [];
-                if (!bound.Any(b => Normalize(b) == Normalize(advertised)))
+                var unbound = advertisedKeys.Where(key => !bound.Any(b => Normalize(b) == Normalize(key))).ToList();
+                if (unbound.Count > 0)
                 {
                     var actual = bound.Length == 0 ? "(none)" : string.Join(" / ", bound);
                     mismatches.Add($"{menu.Text} > {entry.Text[..tab]}: menu says {advertised}, command is bound to {actual}");
