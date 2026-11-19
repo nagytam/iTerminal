@@ -640,8 +640,29 @@ public class SmallScreenDialogsTest
 
         await narrow.WaitForTextAsync("Currency Converter");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Amount:")), "the boxes");
-        string row = narrow.Screen.Lines.First(l => l.Contains("Amount:"));
-        Assert.IsTrue(row[row.IndexOf("To:", StringComparison.Ordinal)..].Contains('║'), narrow.Screen.Dump());
+        // Stacked or side by side, every field ends inside the frame.
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("To:")), "the last box");
+        foreach (string caption in new[] { "Amount:", "From:", "To:" })
+        {
+            string row = narrow.Screen.Lines.First(l => l.Contains(caption));
+            Assert.IsTrue(row[row.IndexOf(caption, StringComparison.Ordinal)..].Contains('║'), narrow.Screen.Dump());
+        }
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCurrencyAmountOn45Columns_HasRoomToTypeIn()
+    {
+        // Side by side the box carried its caption and left the amount a column or two: "Amount: [> From: [E]".
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+F5");
+
+        await narrow.WaitForTextAsync("Currency Converter");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Amount:")), "the amount box");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"Amount: \[1 {8,}\]")), narrow.Screen.Dump());
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("From: [EUR")), "the first currency");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("To: [USD")), "the second currency");
     }
 
     [Timeout(120_000)]
