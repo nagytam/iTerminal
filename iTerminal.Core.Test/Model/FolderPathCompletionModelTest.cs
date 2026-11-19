@@ -91,6 +91,37 @@ public class FolderPathCompletionModelTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void UpdateMatchingValues_ListsPathsThatStartWithTheTextFirst()
+    {
+        // The box greys the first match after the cursor; a path that merely contains the text cannot extend it.
+        var (model, _, _) = Create();
+        model.InsertCompletion(@"D:\old\docs");
+        model.InsertCompletion(@"D:\docs");
+
+        model.UpdateMatchingValues(@"D:\doc");
+
+        CollectionAssert.AreEqual(new[] { @"D:\docs" }, model.MatchingValues.ToList());
+
+        model.UpdateMatchingValues("docs");
+
+        CollectionAssert.AreEqual(new[] { @"D:\old\docs", @"D:\docs" }, model.MatchingValues.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void UpdateMatchingValues_PutsAPathThatStartsWithTheTextBeforeOneThatContainsIt()
+    {
+        var (model, _, _) = Create();
+        model.InsertCompletion(@"X:\data\work");
+        model.InsertCompletion(@"work\notes");
+
+        model.UpdateMatchingValues("work");
+
+        CollectionAssert.AreEqual(new[] { @"work\notes", @"X:\data\work" }, model.MatchingValues.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void UpdateMatchingValues_IgnoresCase()
     {
         var (model, _, history) = Create();

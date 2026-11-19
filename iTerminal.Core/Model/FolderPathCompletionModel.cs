@@ -57,7 +57,12 @@ public class FolderPathCompletionModel : ICompletionModel
     public void UpdateMatchingValues(string value)
     {
         MatchingValues.Clear();
-        foreach (var completion in Completions.Where(c => c.Contains(value, StringComparison.InvariantCultureIgnoreCase)))
+        // Paths that start with the text go first (stable sort): the box greys the first match after the cursor, and a path
+        // that merely contains the text cannot extend it.
+        IEnumerable<string> matches = Completions
+            .Where(c => c.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+            .OrderBy(c => c.StartsWith(value, StringComparison.InvariantCultureIgnoreCase) ? 0 : 1);
+        foreach (var completion in matches)
         {
             MatchingValues.Add(completion);
         }
