@@ -61,4 +61,18 @@ public class HotKeyCollisionTest
         Assert.AreNotEqual(new Key(ConsoleKey.P, false, true, false), print.Key, "Alt+P walks the command history");
 
     }
+
+    /// <summary>
+    /// Copy Path is Ctrl+Shift+Insert: Ctrl+Shift+P is the terminal host's command palette, and Ctrl+Shift+Y sends the same
+    /// byte as Ctrl+Y (ToDo list). Ctrl+Insert and Shift+Insert are Copy and Paste, so this chord stays clear of both.
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CopyPathIsCtrlShiftInsert_NotTheHostsPalette()
+    {
+        var copyPath = new CopyPathCommand(Mock.Of<iConsole.Interfaces.IContentModelService>());
+
+        Assert.AreEqual(new Key(ConsoleKey.Insert, true, false, true), copyPath.Key);
+        Assert.AreNotEqual(new Key(ConsoleKey.P, true, false, true), copyPath.Key, "Ctrl+Shift+P is the terminal host's");
+    }
 }

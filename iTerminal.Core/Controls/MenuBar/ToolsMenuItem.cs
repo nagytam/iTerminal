@@ -72,7 +72,9 @@ public class ToolsMenuItem : MenuItem
         AddMenuItem(new MenuItem("Disk Manager\tAlt+F9", new DiskManagerDialogCommand(diskManagerDialog), [], themeService));
         AddMenuItem(new MenuItem("Network Manager\tCtrl+F5",   new NetworkManagerDialogCommand(networkManagerDialog), [], themeService));
         AddMenuItem(new MenuItem("iPhone Browser\tAlt+F11",      new IPhoneBrowserDialogCommand(iPhoneBrowserDialog), [], themeService));
-        AddMenuItem(new MenuItem("Music Player\tCtrl+F7", new iTerminal.Core.Commands.Music.MusicPanelsCommand(contentModelService), [], themeService));
+        // Both chords (Ctrl+Shift+M and Ctrl+F7) come from the command, so the label cannot drift from them.
+        var musicPanelsCommand = new iTerminal.Core.Commands.Music.MusicPanelsCommand(contentModelService);
+        AddMenuItem(new MenuItem($"Music Player\t{musicPanelsCommand.KeyDisplayText}", musicPanelsCommand, [], themeService));
         AddMenuItem(new MenuItem("-", null, [], themeService));
         AddMenuItem(new MenuItem("Theme Manager\tAlt+F6",      new ThemeManagerDialogCommand(themeManagerDialog), [], themeService));
         AddMenuItem(new MenuItem("Settings\tShift+F8",         new SettingsDialogCommand(settingsDialog), [], themeService));
