@@ -96,6 +96,18 @@ public class PersistedValuesCompletionModelTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void UpdateMatchingValues_ListsEntriesThatStartWithTheTextFirst()
+    {
+        // The greyed completion in the box is the first match, and it can only extend what was typed when that match starts with it.
+        var model = new PersistedValuesCompletionModel(Settings("My Docs;Documents;old docs;docs2").Object, Key);
+
+        model.UpdateMatchingValues("doc");
+
+        CollectionAssert.AreEqual(new[] { "Documents", "docs2", "My Docs", "old docs" }, model.MatchingValues.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void UpdateMatchingValues_EmptyText_OffersEverything()
     {
         var model = new PersistedValuesCompletionModel(Settings("alpha;beta").Object, Key);
