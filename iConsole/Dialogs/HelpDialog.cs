@@ -104,6 +104,14 @@ public class HelpDialog : Dialog
             // The help is a long list with no footer, so it says how to leave it and how to read it.
             UiText.Get("Help.CloseHint", "Esc: close this help   ↑↓ PgUp PgDn: scroll it"),
             string.Empty,
+            UiText.Get("Help.Started.Heading", "Getting started:"),
+            "  " + UiText.Get("Help.Started.Tab", "Tab / Shift+Tab    Move focus between panels and controls"),
+            "  " + UiText.Get("Help.Started.Enter", "Enter           Run the focused item's main command"),
+            "  " + UiText.Get("Help.Started.Esc", "Esc             Close the dialog or menu in front of you"),
+            "  " + UiText.Get("Help.Started.F1", "F1              Open this help from any screen"),
+            "  " + UiText.Get("Help.Started.Lists", "The first list below works here and now."),
+            "  " + UiText.Get("Help.Started.AllLists", "The second lists every command, even those that cannot run in this context."),
+            string.Empty,
             focusedControl is not null
                 ? string.Format(UiText.Get("Help.FocusedControl", "Focused control: {0}"), ReadableName(focusedControl.Name))
                 : UiText.Get("Help.FocusedControlNone", "Focused control: n/a"),

@@ -21,7 +21,7 @@ public class EditTextFileDialogCommand(
     : ShowDialogCommand<TextFileEditorDialog>(textFileEditorDialog)
 {
     public override string Title => "Edit";
-    public override string Description => "Open the selected text file in the editor.";
+    public override string Description => "Open the selected file in the editor; a binary opens in its hex view.";
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F4, false, false, false);
@@ -42,6 +42,9 @@ public class EditTextFileDialogCommand(
             {
                 return true;
             }
+
+            // Any other local file opens in the editor's hex view, which is how a binary is edited.
+            return IsHexEditable(url);
         }
         return false;
     }
@@ -69,6 +72,28 @@ public class EditTextFileDialogCommand(
     private static bool IsSupportedFileType(string extension) =>
         SupportedExtensions.Contains(extension.TrimStart('.'));
 
+    /// <summary>
+    /// A local file small enough to hold in the hex view. Judged from its size alone, because this runs on the key path; the
+    /// hex view reads the file when it opens.
+    /// </summary>
+    private static bool IsHexEditable(Url url)
+    {
+        if (url.ContainerType != ContainerType.FileSystem)
+        {
+            return false;
+        }
+
+        try
+        {
+            var info = new FileInfo(url.Path);
+            return info.Exists && info.Length <= TextFileEditorDialog.MaxHexBytes;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            return false;
+        }
+    }
+
     public override async Task ExecuteAsync(object? args)
     {
         var model = contentModelService?.GetFocusedModel();
@@ -87,6 +112,7 @@ public class EditTextFileDialogCommand(
                 fallbackUrl =>
                 {
                     textFileEditorDialog.Url = fallbackUrl;
+                    textFileEditorDialog.OpenAsHex = false;
                     return Control?.ShowDialogAsync(textFileEditorDialog) ?? Task.CompletedTask;
                 }));
         }
@@ -109,5 +135,7 @@ public class EditTextFileDialogCommand(
     protected override void OnBeforeShow(TextFileEditorDialog dialog)
     {
         dialog.Url = contentModelService.FocusedFileUrl;
+        // A file the text editor does not take opens as its bytes.
+        dialog.OpenAsHex = dialog.Url is { } url && !IsSupportedFileType(url.Extension);
     }
 }

@@ -1282,6 +1282,27 @@
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Navigation dans les menus :</value>
   </data>
+  <data name="Help.Started.Heading" xml:space="preserve">
+    <value>Prise en main :</value>
+  </data>
+  <data name="Help.Started.Tab" xml:space="preserve">
+    <value>Tab / Maj+Tab    Déplacer le focus entre les panneaux et les contrôles</value>
+  </data>
+  <data name="Help.Started.Enter" xml:space="preserve">
+    <value>Entrée          Lancer la commande principale de l'élément actif</value>
+  </data>
+  <data name="Help.Started.Esc" xml:space="preserve">
+    <value>Échap           Fermer le dialogue ou le menu au premier plan</value>
+  </data>
+  <data name="Help.Started.F1" xml:space="preserve">
+    <value>F1              Ouvrir cette aide depuis n'importe quel écran</value>
+  </data>
+  <data name="Help.Started.Lists" xml:space="preserve">
+    <value>La première liste ci-dessous correspond à ce qui fonctionne ici et maintenant.</value>
+  </data>
+  <data name="Help.Started.AllLists" xml:space="preserve">
+    <value>La seconde liste donne toutes les commandes, même celles qui ne peuvent pas s'exécuter dans ce contexte.</value>
+  </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
     <value>  F2:Retour{0}  F4:Hex  F5:Ligne  F8:Codage  Esc:fermer</value>
   </data>
@@ -2017,5 +2038,26 @@
   </data>
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[O] Oui    [N] Non</value>
+  </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Taper un chiffre hexadécimal</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Affichage texte</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Affichage hexadécimal</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Pas du texte : les octets ne se relisent pas à l'identique en {0}, la vue hexadécimale reste.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Déplacer le curseur</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Début ou fin de la ligne</value>
   </data>
 </root>

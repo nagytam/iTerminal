@@ -10336,6 +10336,10 @@
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>SMB-gép vagy megosztás kiválasztása</value>
   </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>A kijelölt fájlt megnyitja a szerkesztőben; a bináris fájl a hex nézetében nyílik meg.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
   <data name="CmdTitle.adeeed16" xml:space="preserve">
     <value>Bejelentkezés SMB-gépre</value>
   </data>
@@ -10353,5 +10357,20 @@
   </data>
   <data name="Dep.PowerShellReady" xml:space="preserve">
     <value>A PowerShell {0} kész</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Az alatta lévő mentett FTP- vagy SFTP-kapcsolat megnyitása, a saját mappájában.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Nincs mentett FTP- vagy SFTP-kapcsolat. Egyet a Távoli kapcsolatok (Alt+F2) ablakban adhat hozzá.</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Az itt felsorolt kapcsolatok hozzáadása és szerkesztése a Távoli kapcsolatok ablakban.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>FTP- vagy SFTP-kapcsolat megnyitása</value>
   </data>
 </root>

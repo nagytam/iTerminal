@@ -46,8 +46,8 @@ appear on. `GitLens` shares the same service.
   committing), tags, rebase, cherry-pick, and a multi-line commit body.
 
 ### The folder selector (`iTerminal.Core/Dialogs/FolderSelector*.cs`)
-Ctrl+F1 opens `FolderSelectorDialog`: a vertical `Tab` whose eight pages are the eight ways of naming
-a folder — Favourites, Drives, Recent, Places, Folder Tree, SSH, Path, SMB. Whichever page is up, the
+Ctrl+F1 opens `FolderSelectorDialog`: a vertical `Tab` whose nine pages are the nine ways of naming
+a folder — Favourites, Drives, Recent, Places, Folder Tree, SSH, Path, SMB, FTP/SFTP. Whichever page is up, the
 keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
 
 **SMB (`FolderSelectorSmbTabPage`, Ctrl+7)** is the network neighbourhood for SMB. The list starts with the hosts that answered on port 445 in a scan (`INetworkDiscoveryService`) the saved SMB connections and the hosts with a saved login; Enter on a host lists its shares, Enter on a share goes to `smb://[user@]host/share/` and closes the selector, and Backspace returns to the hosts.
@@ -55,6 +55,8 @@ keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
 - **Browsing is anonymous; a login is typed on the page.** A host that lists no shares anonymously is logged in to with L (the Log in button): a username and then a password are asked for, the host's shares are listed with them, and the login is kept in the password safe under `SmbLoginKey` (`smb-login:host\user`). Each scan lists the shares of every saved login again, and opening a share as that user finds the password there (`ContentModelSmbDrive.Connect`). A refused login saves nothing. A line above the status names who is logged in to the host under the cursor (or that it is browsed anonymously), and O logs out after a y: the logins to that host and their saved passwords are removed, and a panel already connected as that user stays connected. With the password safe locked the saved logins are not listed, and a new login is listed but reported as not kept.
 - **A saved connection still works the same way.** The Network Browser (Ctrl+N) saves a connection with its password; its login replaces the discovered share of the same name, so the address carries the user name.
 - **The scan never runs on the render thread.** It runs on a background task, is stopped after `ScanLimit` (30 s), and parks its hosts under a lock; `OnIdle` applies them to the list. The row rules live in `SmbBrowserRows`, which the tests pin without a screen.
+
+**FTP/SFTP (`FolderSelectorRemoteFilesTabPage`, Ctrl+8)** lists the saved FTP and SFTP connections as folders to go to. The rows are the saved network profiles of those two protocols (`NetworkProtocol.Ftp` and `NetworkProtocol.Ssh`), because those are what the drives log in with: the FTP password, the SFTP key. An FTP profile opens at the folder of the Remote connections entry with the same id, if there is one, and otherwise at the root; an SFTP profile opens at `ssh://user@host:/`. Enter goes to the row under the cursor and closes the selector. Nothing is scanned and nothing is typed on the page: new connections are made in Remote connections (Alt+F2), and an SSH login is kept by the Network Browser (Ctrl+N). A saved SSH entry from Remote connections that has no network profile is a shell entry only, so it is not listed here. The row rules live in `RemoteFilesBrowserRows`.
 
 **Recent** is most-recently-used first: `FolderHistoryService.Add` takes the folder out of the list if it is there, puts it on top, and drops the least recently used past the maximum. The list is saved in that order, so it survives a restart.
 

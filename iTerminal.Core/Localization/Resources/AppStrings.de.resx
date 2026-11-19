@@ -10400,6 +10400,10 @@
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>SMB-Host oder Freigabe auswählen</value>
   </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Öffnet die gewählte Datei im Editor; eine Binärdatei öffnet sich in ihrer Hex-Ansicht.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
   <data name="CmdTitle.adeeed16" xml:space="preserve">
     <value>Bei einem SMB-Host anmelden</value>
   </data>
@@ -10417,5 +10421,20 @@
   </data>
   <data name="Dep.PowerShellReady" xml:space="preserve">
     <value>PowerShell {0} ist bereit</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Die gespeicherte FTP- oder SFTP-Verbindung unter dem Cursor öffnen, in ihrem Ordner.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Keine FTP- oder SFTP-Verbindungen gespeichert. Eine lässt sich unter Remote-Verbindungen (Alt+F2) anlegen.</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Die hier aufgelisteten Verbindungen unter Remote-Verbindungen hinzufügen und bearbeiten.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>FTP- oder SFTP-Verbindung öffnen</value>
   </data>
 </root>

@@ -6,6 +6,7 @@ using iConsole.Services;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Commands;
 
@@ -21,6 +22,7 @@ public class FolderSelectorDialogCommand(
     IThemeService themeService,
     INetworkDiscoveryService networkDiscoveryService,
     INetworkProfileService networkProfileService,
+    IRemoteConnectionService remoteConnectionService,
     IPasswordManager passwordManager,
     IPromptService? promptService,
     HelpDialog? helpDialog = null
@@ -49,6 +51,7 @@ public class FolderSelectorDialogCommand(
                 themeService,
                 networkDiscoveryService,
                 networkProfileService,
+                remoteConnectionService,
                 passwordManager,
                 promptService,
                 helpDialog);

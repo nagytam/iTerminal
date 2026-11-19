@@ -39,7 +39,7 @@ public class FolderSelectorSelectionTest
             harness.ContentModelService, harness.FolderHistoryService, harness.DriveInfoModel,
             harness.FolderIndexModel, harness.BeepService, harness.DateTimeProviderService,
             harness.SettingsService, harness.FrequentExecutionGuardService, harness.ThemeService,
-            harness.NetworkDiscoveryService, harness.NetworkProfileService, harness.PasswordManager, harness.PromptService)
+            harness.NetworkDiscoveryService, harness.NetworkProfileService, harness.RemoteConnectionService, harness.PasswordManager, harness.PromptService)
         {
             ViewSize = new Size(100, 30)
         };

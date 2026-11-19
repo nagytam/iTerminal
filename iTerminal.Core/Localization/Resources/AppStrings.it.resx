@@ -10336,6 +10336,10 @@
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>Seleziona host o condivisione SMB</value>
   </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Apre il file selezionato nell'editor; un file binario si apre nella sua vista esadecimale.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
   <data name="CmdTitle.adeeed16" xml:space="preserve">
     <value>Accedi a un host SMB</value>
   </data>
@@ -10353,5 +10357,20 @@
   </data>
   <data name="Dep.PowerShellReady" xml:space="preserve">
     <value>PowerShell {0} è pronto</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Apri la connessione FTP o SFTP salvata sotto il cursore, nella sua cartella.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Nessuna connessione FTP o SFTP salvata. Aggiungine una in Connessioni remote (Alt+F2).</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Aggiungi e modifica le connessioni elencate qui, in Connessioni remote.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>Apri una connessione FTP o SFTP</value>
   </data>
 </root>

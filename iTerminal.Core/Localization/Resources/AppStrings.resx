@@ -10542,6 +10542,10 @@
   <data name="CmdTitle.8cca504b" xml:space="preserve">
     <value>Select SMB host or share</value>
   </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Open the selected file in the editor; a binary opens in its hex view.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
   <data name="CmdTitle.adeeed16" xml:space="preserve">
     <value>Log in to an SMB host</value>
   </data>
@@ -10559,5 +10563,20 @@
   </data>
   <data name="Dep.PowerShellReady" xml:space="preserve">
     <value>PowerShell {0} is ready</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Open the saved FTP or SFTP connection under the cursor, in its folder.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> No FTP or SFTP connections are saved. Add one in Remote connections (Alt+F2).</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Add and edit the connections listed here, in Remote connections.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>Open FTP or SFTP connection</value>
   </data>
 </root>
