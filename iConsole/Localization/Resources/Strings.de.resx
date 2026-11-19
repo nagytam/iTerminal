@@ -1286,16 +1286,34 @@
     <value>Erste Schritte:</value>
   </data>
   <data name="Help.Started.Tab" xml:space="preserve">
-    <value>Tab / Umschalt+Tab    Fokus zwischen Bereichen und Steuerelementen wechseln</value>
+    <value>Fokus zwischen Bereichen und Steuerelementen wechseln</value>
+  </data>
+  <data name="Help.Started.Tab.Key" xml:space="preserve">
+    <value>Tab / Umschalt+Tab</value>
   </data>
   <data name="Help.Started.Enter" xml:space="preserve">
-    <value>Enter           Den Hauptbefehl des fokussierten Eintrags ausführen</value>
+    <value>Den Hauptbefehl des fokussierten Eintrags ausführen</value>
+  </data>
+  <data name="Help.Started.Enter.Key" xml:space="preserve">
+    <value>Enter</value>
   </data>
   <data name="Help.Started.Esc" xml:space="preserve">
-    <value>Esc             Den Dialog oder das Menü vor Ihnen schließen</value>
+    <value>Den Dialog oder das Menü vor Ihnen schließen</value>
+  </data>
+  <data name="Help.Started.Esc.Key" xml:space="preserve">
+    <value>Esc</value>
   </data>
   <data name="Help.Started.F1" xml:space="preserve">
-    <value>F1              Diese Hilfe von jedem Bildschirm aus öffnen</value>
+    <value>Diese Hilfe von jedem Bildschirm aus öffnen</value>
+  </data>
+  <data name="Help.Started.F1.Key" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="Help.Started.Palette.Key" xml:space="preserve">
+    <value>Shift+F1</value>
+  </data>
+  <data name="Help.Started.Palette" xml:space="preserve">
+    <value>Jeden Befehl per Name in der Befehlspalette suchen</value>
   </data>
   <data name="Help.Started.Lists" xml:space="preserve">
     <value>Die erste Liste unten gilt hier und jetzt.</value>

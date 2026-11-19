@@ -1302,16 +1302,34 @@
     <value>Getting started:</value>
   </data>
   <data name="Help.Started.Tab" xml:space="preserve">
-    <value>Tab / Shift+Tab    Move focus between panels and controls</value>
+    <value>Move focus between panels and controls</value>
+  </data>
+  <data name="Help.Started.Tab.Key" xml:space="preserve">
+    <value>Tab / Shift+Tab</value>
   </data>
   <data name="Help.Started.Enter" xml:space="preserve">
-    <value>Enter           Run the focused item's main command</value>
+    <value>Run the focused item's main command</value>
+  </data>
+  <data name="Help.Started.Enter.Key" xml:space="preserve">
+    <value>Enter</value>
   </data>
   <data name="Help.Started.Esc" xml:space="preserve">
-    <value>Esc             Close the dialog or menu in front of you</value>
+    <value>Close the dialog or menu in front of you</value>
+  </data>
+  <data name="Help.Started.Esc.Key" xml:space="preserve">
+    <value>Esc</value>
   </data>
   <data name="Help.Started.F1" xml:space="preserve">
-    <value>F1              Open this help from any screen</value>
+    <value>Open this help from any screen</value>
+  </data>
+  <data name="Help.Started.F1.Key" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="Help.Started.Palette.Key" xml:space="preserve">
+    <value>Shift+F1</value>
+  </data>
+  <data name="Help.Started.Palette" xml:space="preserve">
+    <value>Find any command by name in the command palette</value>
   </data>
   <data name="Help.Started.Lists" xml:space="preserve">
     <value>The first list below works here and now.</value>

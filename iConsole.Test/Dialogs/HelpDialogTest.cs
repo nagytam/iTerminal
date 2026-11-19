@@ -286,6 +286,24 @@ public class HelpDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void StartedLine_PutsEveryDescriptionInTheSameColumn()
+    {
+        // The getting-started keys are of different lengths; their descriptions must still start in one column.
+        var descriptions = new[] { "Move focus", "Run it", "Find a command" };
+        var lines = new[]
+        {
+            HelpDialog.StartedLine("Tab / Shift+Tab", descriptions[0]),
+            HelpDialog.StartedLine("Enter", descriptions[1]),
+            HelpDialog.StartedLine("Shift+F1", descriptions[2]),
+        };
+
+        var columns = lines.Select((line, i) => line.IndexOf(descriptions[i], StringComparison.Ordinal)).Distinct().ToList();
+        Assert.AreEqual(1, columns.Count, string.Join(Environment.NewLine, lines));
+        Assert.AreEqual("  Enter" + new string(' ', 14) + "Run it", lines[1]);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void WrapToWidth_LeavesALineThatFitsAsItIs()
     {
         CollectionAssert.AreEqual(new[] { "  Esc             Close the dialog" }, HelpDialog.WrapToWidth("  Esc             Close the dialog", 40).ToArray());
