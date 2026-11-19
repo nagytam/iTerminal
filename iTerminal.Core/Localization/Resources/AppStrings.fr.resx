@@ -10694,4 +10694,7 @@
   <data name="Sync.NestedFolders" xml:space="preserve">
     <value>Un dossier ne peut pas être synchronisé avec l'un de ses sous-dossiers.</value>
   </data>
+  <data name="Menu.Undorenameormove" xml:space="preserve">
+    <value>Annuler le renommage ou le déplacement</value>
+  </data>
 </root>

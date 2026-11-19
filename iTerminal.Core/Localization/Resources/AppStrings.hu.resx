@@ -10694,4 +10694,7 @@
   <data name="Sync.NestedFolders" xml:space="preserve">
     <value>Egy mappa nem szinkronizálható a saját almappájával.</value>
   </data>
+  <data name="Menu.Undorenameormove" xml:space="preserve">
+    <value>Átnevezés vagy áthelyezés visszavonása</value>
+  </data>
 </root>
