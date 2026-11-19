@@ -10758,4 +10758,7 @@
   <data name="Sync.NestedFolders" xml:space="preserve">
     <value>Ein Ordner kann nicht mit einem seiner Unterordner synchronisiert werden.</value>
   </data>
+  <data name="Menu.Undorenameormove" xml:space="preserve">
+    <value>Umbenennen oder Verschieben rückgängig</value>
+  </data>
 </root>

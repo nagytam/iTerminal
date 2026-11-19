@@ -1,5 +1,6 @@
 using iConsole.Commands;
 using iConsole.Data;
+using iConsole.Interfaces;
 using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.Services;
@@ -11,14 +12,22 @@ namespace iTerminal.Core.Commands;
 /// moved back only when the old name is free and the new name is still there; otherwise it says why, and keeps
 /// nothing to undo.
 /// </summary>
-public class UndoRenameCommand(RenameUndoService renameUndo, INotificationService? notificationService = null) : Command
+public class UndoRenameCommand(
+    RenameUndoService renameUndo,
+    INotificationService? notificationService = null,
+    IContentModelService? contentModelService = null) : Command
 {
     public override string Title => UiText.Title("Undo rename or move");
     public override string Description => UiText.Describe("Put back the names the last rename, multi-rename or move changed.");
 
     public override Key? Key { get; init; } = new Key(ConsoleKey.Z, false, false, true);
 
-    public override bool CanExecute() => renameUndo.Peek() is not null;
+    /// <summary>
+    /// With a content model service (the Edit menu's entry, which is bound globally) it also needs a file panel in focus, so Ctrl+Z
+    /// typed into a dialog or a text box does not undo a rename. The panel's own copy of the command passes none: it only runs there.
+    /// </summary>
+    public override bool CanExecute() =>
+        renameUndo.Peek() is not null && (contentModelService is null || contentModelService.GetFocusedModel() is not null);
 
     public override async Task ExecuteAsync(object? args)
     {

@@ -10900,4 +10900,7 @@
   <data name="Sync.NestedFolders" xml:space="preserve">
     <value>A folder cannot be synchronised with one of its own subfolders.</value>
   </data>
+  <data name="Menu.Undorenameormove" xml:space="preserve">
+    <value>Undo rename or move</value>
+  </data>
 </root>

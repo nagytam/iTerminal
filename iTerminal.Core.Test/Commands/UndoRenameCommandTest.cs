@@ -181,4 +181,36 @@ public class UndoRenameCommandTest
         Assert.AreEqual(0, undo.TakeAll().Count);
         Assert.IsNull(undo.Peek());
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheMenuEntry_NeedsAFilePanelInFocus_SoCtrlZInADialogDoesNotUndoARename()
+    {
+        var undo = new RenameUndoService();
+        var (model, _) = Setup(targetExists: true, sourceTaken: false);
+        undo.Remember(model.Object, Source, Target);
+        var contentModels = new Mock<IContentModelService>();
+        var command = new UndoRenameCommand(undo, null, contentModels.Object);
+
+        Assert.IsFalse(command.CanExecute(), "no panel in focus: a dialog or a text box has the keyboard");
+
+        contentModels.Setup(s => s.GetFocusedModel()).Returns(model.Object);
+
+        Assert.IsTrue(command.CanExecute());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheEditMenu_OffersUndoRenameOrMove_BoundToCtrlZ()
+    {
+        var edit = new iTerminal.Core.Controls.MenuBar.EditMenuItem(
+            Mock.Of<IContentModelService>(), null!, null!, null!, null!, iTerminal.Core.Test.Helper.UiTestHelper.TestTheme(),
+            renameUndoService: new RenameUndoService());
+
+        var entry = edit.Controls.AsSnapshot().OfType<iConsole.Controls.MenuItem>().Single(m => m.Text.StartsWith("Undo rename or move", StringComparison.Ordinal));
+
+        StringAssert.EndsWith(entry.Text, "Ctrl+Z");
+        var key = ((UndoRenameCommand)entry.Commands.Single()).Key!;
+        Assert.IsTrue(key.Control && key.ConsoleKey == ConsoleKey.Z);
+    }
 }

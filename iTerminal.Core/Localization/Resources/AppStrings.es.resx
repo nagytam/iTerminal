@@ -10694,4 +10694,7 @@
   <data name="Sync.NestedFolders" xml:space="preserve">
     <value>Una carpeta no se puede sincronizar con una de sus subcarpetas.</value>
   </data>
+  <data name="Menu.Undorenameormove" xml:space="preserve">
+    <value>Deshacer cambio de nombre o movimiento</value>
+  </data>
 </root>
