@@ -192,6 +192,9 @@ public class SettingsPanelsTabPage : TabPage
         }
     }
 
+    /// <summary>The rows the page needs with its blank spacer rows: below this height they are dropped.</summary>
+    private const int RoomyHeight = 11;
+
     public override void OnInitializeLayout()
     {
         base.OnInitializeLayout();
@@ -199,30 +202,36 @@ public class SettingsPanelsTabPage : TabPage
         const int ReversedWidth = 14;
         var sortWidth = Math.Max(20, ViewSize.Width - ReversedWidth - 2);
 
-        _orderRule.Position = new Position(0, 0);
-        _orderRule.ViewSize = new Size(ViewSize.Width, 1);
+        // A page is as tall as the dialog allows, which on a short terminal is fewer rows than it has controls: the ones below the page
+        // were painted over the dialog's frame. Short pages lose their blank spacer rows first, and a control that still has no row
+        // gets no height, so it paints nothing.
+        var height = (int)ViewSize.Height;
+        var gap = height < RoomyHeight ? 0 : 1;
 
-        _leftSort.Position = new Position(0, 1);
-        _leftSort.ViewSize = new Size(sortWidth, 1);
-        _leftReversed.Position = new Position(sortWidth + 2, 1);
-        _leftReversed.ViewSize = new Size(ReversedWidth, 1);
-
-        _rightSort.Position = new Position(0, 3);
-        _rightSort.ViewSize = new Size(sortWidth, 1);
-        _rightReversed.Position = new Position(sortWidth + 2, 3);
-        _rightReversed.ViewSize = new Size(ReversedWidth, 1);
-
-        _listingRule.Position = new Position(0, 5);
-        _listingRule.ViewSize = new Size(ViewSize.Width, 1);
-
-        var row = 6;
-        foreach (var checkBox in new[] { _showHidden, _foldersFirst, _naturalOrder })
+        void Place(Control control, long x, int y, long width)
         {
-            checkBox.Position = new Position(0, row++);
-            checkBox.ViewSize = new Size(ViewSize.Width, 1);
+            control.Position = new Position(x, y);
+            control.ViewSize = new Size(width, y < height ? 1 : 0);
         }
 
-        _hintLabel.Position = new Position(0, row + 1);
-        _hintLabel.ViewSize = new Size(ViewSize.Width, 1);
+        Place(_orderRule, 0, 0, ViewSize.Width);
+
+        var leftRow = 1;
+        var rightRow = leftRow + 1 + gap;
+        Place(_leftSort, 0, leftRow, sortWidth);
+        Place(_leftReversed, sortWidth + 2, leftRow, ReversedWidth);
+        Place(_rightSort, 0, rightRow, sortWidth);
+        Place(_rightReversed, sortWidth + 2, rightRow, ReversedWidth);
+
+        var listingRow = rightRow + 1 + gap;
+        Place(_listingRule, 0, listingRow, ViewSize.Width);
+
+        var row = listingRow + 1;
+        foreach (var checkBox in new[] { _showHidden, _foldersFirst, _naturalOrder })
+        {
+            Place(checkBox, 0, row++, ViewSize.Width);
+        }
+
+        Place(_hintLabel, 0, row + gap, ViewSize.Width);
     }
 }

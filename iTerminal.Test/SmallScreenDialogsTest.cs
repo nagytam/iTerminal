@@ -549,6 +549,34 @@ public class SmallScreenDialogsTest
         Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("…", StringComparison.Ordinal) && l.Contains("yet.", StringComparison.Ordinal)), narrow.Screen.Dump());
     }
 
+    [Timeout(180_000)]
+    [TestMethod]
+    [DataRow(45, 16)]
+    [DataRow(60, 16)]
+    [DataRow(60, 14)]
+    public async Task TheSettingsPagesOnAShortTerminal_LeaveTheDialogsBottomFrameWhole(int width, int height)
+    {
+        // A page is as tall as the dialog allows, and controls below it were painted over the frame: blanks on the Global page, and the
+        // order hint ("Shift+F11 changes the focu") on the Panels page.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: width, height: height);
+
+        await narrow.PressAsync("Shift+F8");
+        await narrow.WaitForTextAsync("Ctrl+Up/Down:page");
+
+        for (int page = 1; page <= 8; page++)
+        {
+            string[] lines = narrow.Screen.Lines.ToArray();
+            int hintRow = Array.FindIndex(lines, l => l.Contains("Ctrl+Up/Down:page"));
+            Assert.IsTrue(hintRow >= 0 && hintRow + 1 < lines.Length, $"page {page}: " + narrow.Screen.Dump());
+            int left = lines[hintRow].LastIndexOf('║', lines[hintRow].IndexOf("Ctrl+Up/Down:page", StringComparison.Ordinal));
+            string frame = lines[hintRow + 1];
+            int right = frame.IndexOf('╝', left + 1);
+            Assert.IsTrue(left >= 0 && right > left && frame[left] == '╚' && frame[(left + 1)..right].All(c => c == '═'), $"page {page}: the bottom frame is broken" + Environment.NewLine + narrow.Screen.Dump());
+            await narrow.PressAsync("Ctrl+Down");
+            await Task.Delay(300);
+        }
+    }
+
     [Timeout(120_000)]
     [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
