@@ -10746,4 +10746,7 @@
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
     <value>{0} von {1} Einträgen zurückgesetzt. Die übrigen nicht: der neue Name ist nicht mehr vorhanden oder der alte Name ist wieder belegt.</value>
   </data>
+  <data name="Transfer.SameFile" xml:space="preserve">
+    <value>Quelle und Ziel sind dieselbe Datei. Wählen Sie einen anderen Namen oder Ordner.</value>
+  </data>
 </root>
