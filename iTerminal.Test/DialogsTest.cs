@@ -65,6 +65,7 @@ public class DialogsTest
     [DataRow("Ctrl+Shift+H", "EnvironmentVariablesDialog")]
     [DataRow("Ctrl+Shift+W", "EncyclopediaDialog")]
     [DataRow("Ctrl+Shift+B", "PerformanceBenchmarkDialog")]
+    [DataRow("Ctrl+Shift+Y", "OnlineRadioDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]

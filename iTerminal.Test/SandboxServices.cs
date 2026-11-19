@@ -30,8 +30,8 @@ public static class SandboxServices
         }
 
         // No login reaches a real host from the sandbox: nothing is listed under any login.
-        public Task<IReadOnlyList<string>?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<string>?>(null);
+        public Task<SmbListing?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default) =>
+            Task.FromResult<SmbListing?>(null);
     }
 
     /// <summary>

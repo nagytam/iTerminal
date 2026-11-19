@@ -2,6 +2,7 @@ using System.Diagnostics;
 ﻿using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Jobs;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Data;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services.Cloud;
@@ -142,12 +143,12 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
         {
             if (drive.IsEnabled)
             {
-                drive.Name += " Label: " + Fit(drive.DriveInfo?.VolumeLabel, LabelWidth);
-                drive.Name += " " + Fit(drive.DriveInfo?.DriveType.ToString(), TypeWidth);
+                drive.Name += " " + iConsole.Localization.UiText.Get("DriveList.Label", "Label:") + " " + Fit(drive.DriveInfo?.VolumeLabel, LabelWidth);
+                drive.Name += " " + Fit(DriveTypeText.Of(drive.DriveInfo?.DriveType), TypeWidth);
             }
             else
             {
-                drive.Name += " Label: " + Fit(string.Empty, LabelWidth);
+                drive.Name += " " + iConsole.Localization.UiText.Get("DriveList.Label", "Label:") + " " + Fit(string.Empty, LabelWidth);
                 drive.Name += " " + Fit(string.Empty, TypeWidth);
             }
             if (cancellationToken.IsCancellationRequested)
@@ -167,12 +168,12 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
         catch
         {
             drive.Name = Fit(drive.DriveInfo?.Name, NameWidth);
-            drive.Name += " Label: " + Fit(string.Empty, LabelWidth);
+            drive.Name += " " + iConsole.Localization.UiText.Get("DriveList.Label", "Label:") + " " + Fit(string.Empty, LabelWidth);
             if (cancellationToken.IsCancellationRequested)
             {
                 return;
             }
-            drive.Name += " " + Fit(drive.DriveInfo?.DriveType.ToString(), TypeWidth);
+            drive.Name += " " + Fit(DriveTypeText.Of(drive.DriveInfo?.DriveType), TypeWidth);
         }
 
         var oldDrive = _driveInfoModel.Drives.AsSnapshot().FirstOrDefault(d => 

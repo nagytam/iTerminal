@@ -25,7 +25,7 @@ public class SettingsBackgroundTabPage : TabPage
     private readonly Label _hintLabel;
 
     public SettingsBackgroundTabPage(ISettingsService settingsService, IThemeService themeService)
-        : base("7-Background", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Background", "7-Background"), themeService)
     {
         HotConsoleKey = ConsoleKey.D7;
         _settingsService = settingsService ?? NullSettingsService.Instance;

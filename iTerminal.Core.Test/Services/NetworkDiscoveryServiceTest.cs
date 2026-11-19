@@ -97,8 +97,8 @@ public class NetworkDiscoveryServiceTest
         try
         {
             var smbFileSystemService = new Mock<ISmbFileSystemService>();
-            smbFileSystemService.Setup(s => s.ListShares(IPAddress.Loopback.ToString(), string.Empty, string.Empty))
-                .Returns(["Public"]);
+            smbFileSystemService.Setup(s => s.TryListSharesWithVersion(IPAddress.Loopback.ToString(), string.Empty, string.Empty))
+                .Returns(new SmbListing(["Public"], 2));
             var service = new NetworkDiscoveryService(smbFileSystemService.Object)
             {
                 SshPort = sshPort,
@@ -115,6 +115,7 @@ public class NetworkDiscoveryServiceTest
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0].SmbAvailable);
             CollectionAssert.Contains(results[0].Shares.ToList(), "Public");
+            Assert.AreEqual(2, results[0].SmbVersion);
         }
         finally
         {

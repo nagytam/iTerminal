@@ -32,7 +32,7 @@ public class SettingsDocumentsTabPage : TabPage
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
-        : base("5-Documents ", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Documents", "5-Documents "), themeService)
     {
         HotConsoleKey = ConsoleKey.D5;
         _settingsService = settingsService ?? NullSettingsService.Instance;

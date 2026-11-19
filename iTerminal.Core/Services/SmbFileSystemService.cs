@@ -2,8 +2,10 @@ using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
 using iTerminal.Core.Model.ContentModels;
+using iTerminal.Core.Model.Network;
 using SMBLibrary;
 using SMBLibrary.Client;
+using System.Reflection;
 using FileAttributes = SMBLibrary.FileAttributes;
 
 namespace iTerminal.Core.Services;
@@ -31,7 +33,10 @@ public class SmbFileSystemService : ISmbFileSystemService
     public IEnumerable<string> ListShares(string host, string username, string password) =>
         TryListShares(host, username, password) ?? [];
 
-    public IReadOnlyList<string>? TryListShares(string host, string username, string password)
+    public IReadOnlyList<string>? TryListShares(string host, string username, string password) =>
+        TryListSharesWithVersion(host, username, password)?.Shares;
+
+    public SmbListing? TryListSharesWithVersion(string host, string username, string password)
     {
         var client = _clientFactory();
         try
@@ -45,8 +50,9 @@ public class SmbFileSystemService : ISmbFileSystemService
             {
                 return null;
             }
+            var version = SmbVersionOf(client);
             var shares = client.ListShares(out var listStatus);
-            return listStatus == NTStatus.STATUS_SUCCESS && shares is not null ? [.. shares] : [];
+            return listStatus == NTStatus.STATUS_SUCCESS && shares is not null ? new SmbListing([.. shares], version) : new SmbListing([], version);
         }
         catch
         {
@@ -55,6 +61,35 @@ public class SmbFileSystemService : ISmbFileSystemService
         finally
         {
             try { client.Disconnect(); } catch { }
+        }
+    }
+
+    /// <summary>
+    /// The SMB version a negotiated session speaks: 3 for the 3.x dialects, 2 for the 2.x dialects, and 0 when the
+    /// client does not say. SMBLibrary 1.5.8.1 has no public accessor for the dialect, so it is read from the
+    /// <c>m_dialect</c> field of <see cref="SMB2Client"/>; a read that fails reports 0 rather than a guess.
+    /// Only SMB 2 and 3 are spoken: <see cref="SMB2Client"/> cannot negotiate SMB 1.
+    /// </summary>
+    internal static int SmbVersionOf(ISMBClient client)
+    {
+        if (client is not SMB2Client)
+        {
+            return 0;
+        }
+        try
+        {
+            var dialect = typeof(SMB2Client).GetField("m_dialect", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(client);
+            var code = dialect is null ? 0 : Convert.ToInt32(dialect);
+            return code switch
+            {
+                0 => 0,
+                >= 0x0300 => 3,
+                _ => 2,
+            };
+        }
+        catch
+        {
+            return 0;
         }
     }
 

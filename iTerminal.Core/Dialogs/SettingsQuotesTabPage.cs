@@ -71,7 +71,7 @@ public class SettingsQuotesTabPage : TabPage
     public SettingsQuotesTabPage(
         ISettingsService settingsService,
         IThemeService themeService)
-        : base("3-Indicators ", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Indicators", "3-Indicators "), themeService)
     {
         HotConsoleKey = ConsoleKey.D3;
         _settingsService = settingsService ?? NullSettingsService.Instance;

@@ -42,7 +42,7 @@ public class SettingsPanelsTabPage : TabPage
         ISettingsService settingsService,
         IContentModelService? contentModelService,
         IThemeService themeService)
-        : base("6-Panels ", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Panels", "6-Panels "), themeService)
     {
         HotConsoleKey = ConsoleKey.D6;
         _settingsService = settingsService ?? NullSettingsService.Instance;

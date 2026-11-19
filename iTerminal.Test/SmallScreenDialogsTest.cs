@@ -632,6 +632,85 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheStocksStatusLinesOn45Columns_NeverEndInHalfAFigure()
+    {
+        // "live, updated 19:0" and "last tr" were cut at the frame; a part of the line is now shown whole or not at all.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Alt+F7");
+
+        await narrow.WaitForTextAsync("Stocks");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("prev close")), "the details of the stock under the cursor");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"updated(?! \d{2}:\d{2}:\d{2})")), narrow.Screen.Dump());
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"last tr(?!ade \d{4}-\d{2}-\d{2} \d{2}:\d{2})")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheSystemSettingsCaptionOn45Columns_IsWrappedAndTheListKeepsItsRows()
+    {
+        // "The name this machine goes by on the ne" ended at the frame; the caption wraps, and the list gives up the row it takes.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+F10");
+
+        await narrow.WaitForTextAsync("System Settings");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("network.")), "the end of the caption");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Computer name")), narrow.Screen.Dump());
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Description")), narrow.Screen.Dump());
+    }
+
+    [Timeout(180_000)]
+    [TestMethod]
+    public async Task TheSettingsPagesAndTheCalculatorModes_AreGermanAfterARestartInGerman()
+    {
+        // Their names were fixed English text, in the middle of a German dialog: "1-Global ... 8-Screen saver", "Basic", "Scientific".
+        TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        try
+        {
+            await app.SwitchToGermanAsync();
+            app = await app.RestartAsync();
+
+            await app.PressAsync("Shift+F8");
+            await app.WaitForTextAsync("1-Allgemein");
+            await app.WaitForTextAsync("8-Bildschirmschoner");
+            await app.PressAsync("Esc");
+            await app.WaitForNoDialogAsync();
+
+            await app.PressAsync("Ctrl+A");
+            await app.WaitForTextAsync("Wissenschaftlich");
+            await app.WaitForTextAsync("Standard");
+        }
+        finally
+        {
+            await app.DisposeAsync();
+        }
+    }
+
+    [Timeout(180_000)]
+    [TestMethod]
+    public async Task TheDriveListInGerman_SaysBezeichnungAndNamesTheTypeInGerman()
+    {
+        // "Label:" and the drive type's enum name ("Fixed") were English in the Disk manager's list.
+        TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        try
+        {
+            await app.SwitchToGermanAsync();
+            app = await app.RestartAsync();
+
+            await app.PressAsync("Alt+F9");
+            await app.WaitForTextAsync("Bezeichnung:");
+            await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Bezeichnung:") && l.Contains("Fest")), "the type of a fixed drive, in German");
+            Assert.IsFalse(app.Screen.Lines.Any(l => l.Contains("Label:") || l.Contains(" Fixed ")), app.Screen.Dump());
+        }
+        finally
+        {
+            await app.DisposeAsync();
+        }
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
