@@ -401,8 +401,12 @@ public class TextFileEditorDialog : Dialog
         _changedOnDisk = false;
         // ShowAsync makes every child visible; the hex view is on demand, and a file the text editor does not take opens in it.
         _hexMode = false;
+        // Hidden is not unfocused: a hidden hex editor that held the focus was offered every key first, and its inherited scroll
+        // commands took End (and the arrows and pages) before the text editor saw them. Focus goes where the text is, as in LeaveHexAsync.
+        HexEditorControl.ResetFocus();
         HexEditorControl.IsVisible = false;
         TextEditorControl.IsVisible = true;
+        TextEditorControl.SetFocus();
         if (_binaryFile)
         {
             await EnterHexAsync();
