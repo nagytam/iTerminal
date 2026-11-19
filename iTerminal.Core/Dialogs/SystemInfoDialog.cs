@@ -180,7 +180,20 @@ public class SystemInfoDialog : Dialog
 
     private string StaleText() => Text("SysInfo.Stale", "The last sample failed; the values shown may be out of date.");
 
-    private string Label(string key, string fallback) => Text(key, fallback).PadRight(LabelWidth);
+    /// <summary>
+    /// The width of the label column for the report being built: <see cref="LabelWidth"/>, or the longest label in the chosen language when
+    /// that is more. A fixed 18 fits English; in German "Physischer Speicher (gesamt)" pushed its value out of line with the rows above it.
+    /// </summary>
+    private int _labelWidth = LabelWidth;
+
+    private int _widestLabel;
+
+    private string Label(string key, string fallback)
+    {
+        string text = Text(key, fallback);
+        _widestLabel = Math.Max(_widestLabel, text.Length);
+        return text.PadRight(_labelWidth);
+    }
 
     private string Header(string key, string fallback) => $"══ {Text(key, fallback)} ".PadRight(64, '═');
 
@@ -214,6 +227,16 @@ public class SystemInfoDialog : Dialog
         time is { } span ? $"{(int)span.TotalHours}:{span.Minutes:00} h" : Text("SysInfo.State.NoTime", "no time");
 
     internal string BuildReport(SystemSnapshot s, bool failing)
+    {
+        // Once to find the longest label, once to pad every label to it.
+        _labelWidth = LabelWidth;
+        _widestLabel = 0;
+        BuildReportRows(s, failing);
+        _labelWidth = Math.Max(LabelWidth, _widestLabel);
+        return BuildReportRows(s, failing);
+    }
+
+    private string BuildReportRows(SystemSnapshot s, bool failing)
     {
         var sb = new StringBuilder();
 
