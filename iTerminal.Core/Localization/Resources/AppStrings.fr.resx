@@ -10889,4 +10889,16 @@
   <data name="CmdDesc.332485aa" xml:space="preserve">
     <value>Écouter des stations de radio sur Internet : lire, mettre en pause et arrêter, marquer des favoris et filtrer la liste.</value>
   </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Connexion au cloud non configurée</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Lecteur cloud (sur les serveurs du fournisseur)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>Un lecteur cloud n'a pas de support à éjecter.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>Un lecteur cloud ne peut pas être formaté : il se trouve sur les serveurs du fournisseur.</value>
+  </data>
 </root>

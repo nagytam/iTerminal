@@ -10889,4 +10889,16 @@
   <data name="CmdDesc.332485aa" xml:space="preserve">
     <value>Escuchar emisoras de radio por internet: reproducir, pausar y parar, marcar favoritas y filtrar la lista.</value>
   </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Inicio de sesión en la nube no configurado</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Unidad en la nube (está en los servidores del proveedor)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>Una unidad en la nube no tiene medio que expulsar.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>Una unidad en la nube no se puede formatear: está en los servidores del proveedor.</value>
+  </data>
 </root>

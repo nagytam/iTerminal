@@ -10953,4 +10953,16 @@
   <data name="CmdDesc.332485aa" xml:space="preserve">
     <value>Internetradiosender hören: abspielen, pausieren und stoppen, Favoriten markieren und die Liste filtern.</value>
   </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Cloud-Anmeldung nicht eingerichtet</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Cloud-Laufwerk (liegt auf den Servern des Anbieters)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>Ein Cloud-Laufwerk hat kein Medium zum Auswerfen.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>Ein Cloud-Laufwerk kann nicht formatiert werden: es liegt auf den Servern des Anbieters.</value>
+  </data>
 </root>

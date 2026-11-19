@@ -81,6 +81,25 @@ public class DiskManagerActionsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task FormattingACloudRow_SaysItLivesOnTheProvidersServers()
+    {
+        // A cloud row has no DriveInfo, so it is refused by the cloud wording, not the memory drive's.
+        using Rig rig = await OpenAsync(new Drive
+        {
+            DriveInfo = null,
+            Name = Container.ONEDRIVE + " Cloud sign-in not configured",
+            Url = Container.ONEDRIVE,
+            IsCloudConfigured = false
+        });
+
+        await rig.Dialog.FormatAsync();
+
+        StringAssert.Contains(rig.Dialog.Status, "A cloud drive cannot be formatted");
+        StringAssert.DoesNotMatch(rig.Dialog.Status, new System.Text.RegularExpressions.Regex("memory"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task F_OnASystemThatCannotFormat_SaysSoInsteadOfAskingForADrive()
     {
         using Rig rig = await OpenAsync(RealDrive(), canFormat: false);

@@ -64,7 +64,8 @@ public class FolderIndexJob : Job
         {
             foreach (Data.Drive item in e.NewItems.Cast<Data.Drive>())
             {
-                if (item.IsEnabled)
+                // A cloud row is not a local folder: the index walks file:// URLs only, so it is not queued.
+                if (item.IsEnabled && !item.IsCloud)
                 {
                     Folder child = new(_folderIndexModel, item.Url);
                     _folderIndexModel.Children.Add(child);

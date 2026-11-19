@@ -11095,4 +11095,16 @@
   <data name="CmdDesc.332485aa" xml:space="preserve">
     <value>Listen to internet radio stations: play, pause and stop, mark favourites and filter the list.</value>
   </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Cloud sign-in not configured</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Cloud drive (lives on the provider's servers)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>A cloud drive has no media to eject.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>A cloud drive cannot be formatted: it lives on the provider's servers.</value>
+  </data>
 </root>
