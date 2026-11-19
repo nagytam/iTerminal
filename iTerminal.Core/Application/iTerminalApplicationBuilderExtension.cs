@@ -448,6 +448,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.Games.SnakeDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Games.TetrisDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Games.JassDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.RiskDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
