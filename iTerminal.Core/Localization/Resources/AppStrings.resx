@@ -1901,6 +1901,9 @@
   <data name="Field.EnableQuotes" xml:space="preserve">
     <value>Enable quotes</value>
   </data>
+  <data name="Field.EnableOnline" xml:space="preserve">
+    <value>Enable online status</value>
+  </data>
   <data name="Field.EnableWeather" xml:space="preserve">
     <value>Enable weather</value>
   </data>
@@ -8770,6 +8773,15 @@
   </data>
   <data name="Settings.BgHint" xml:space="preserve">
     <value>Applies the next time iTerminal starts. Delayed starts after {0} s, or sooner when the feature is opened.</value>
+  </data>
+  <data name="Indicator.Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Indicator.Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Indicator.Checking" xml:space="preserve">
+    <value>Checking</value>
   </data>
   <data name="Weather.Unavailable" xml:space="preserve">
     <value>Weather unavailable</value>

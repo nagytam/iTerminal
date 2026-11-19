@@ -18,7 +18,7 @@ namespace iTerminal.Core.Controls.MenuBar.Test;
 [TestClass]
 public class TerminalMenuBarTest
 {
-    private static (TerminalMenuBar Bar, SettingsService Settings, TaskManager TaskManager) Create(int width = 200)
+    private static (TerminalMenuBar Bar, SettingsService Settings, TaskManager TaskManager) Create(int width = 200, InternetConnectivityService? connectivity = null)
     {
         var settings = new SettingsService();
         var taskManager = new TaskManager();
@@ -31,7 +31,7 @@ public class TerminalMenuBarTest
             null!, null!, null!,
             null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), null!, null!, null!,
             null!, null!, null!, null!, null!, null!, null!, null!, null!,
-            null!, null!);
+            null!, null!, connectivityService: connectivity);
 
         var parent = new Control(TestTheme()) { ViewSize = new Size(width, 40) };
         parent.AddControl(bar);
@@ -103,6 +103,41 @@ public class TerminalMenuBarTest
         bar.OnIdle();
 
         Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheOnlineIndicatorIsShownOnAWideScreenAndFollowsTheSwitch()
+    {
+        var connectivity = new InternetConnectivityService();
+        connectivity.Report(false);
+        var (bar, settings, taskManager) = Create(width: 200, connectivity);
+        using var _ = taskManager;
+        await bar.OnInitializeAsync();
+
+        bar.OnInitializeLayout();
+        Assert.IsTrue(bar.IsOnlineIndicatorShownForTest);
+
+        settings.Set(Settings.IsOnlineIndicatorEnabled, bool.FalseString);
+        bar.OnIdle();
+        Assert.IsFalse(bar.IsOnlineIndicatorShownForTest);
+
+        settings.Set(Settings.IsOnlineIndicatorEnabled, bool.TrueString);
+        bar.OnIdle();
+        Assert.IsTrue(bar.IsOnlineIndicatorShownForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheOnlineIndicatorGivesWayOnANarrowScreen()
+    {
+        var (bar, _, taskManager) = Create(width: 40, new InternetConnectivityService());
+        using var _ = taskManager;
+        await bar.OnInitializeAsync();
+
+        bar.OnInitializeLayout();
+
+        Assert.IsFalse(bar.IsOnlineIndicatorShownForTest);
     }
 
     [Timeout(60_000)]

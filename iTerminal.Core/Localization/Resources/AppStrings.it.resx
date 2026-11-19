@@ -1901,6 +1901,9 @@
   <data name="Field.EnableQuotes" xml:space="preserve">
     <value>Abilita le quotazioni</value>
   </data>
+  <data name="Field.EnableOnline" xml:space="preserve">
+    <value>Abilita lo stato online</value>
+  </data>
   <data name="Field.EnableWeather" xml:space="preserve">
     <value>Abilita il meteo</value>
   </data>
@@ -8565,6 +8568,15 @@
   </data>
   <data name="Settings.BgHint" xml:space="preserve">
     <value>Si applica al prossimo avvio di iTerminal. Gli avvii ritardati avvengono dopo {0} s, o prima se la funzione viene aperta.</value>
+  </data>
+  <data name="Indicator.Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Indicator.Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Indicator.Checking" xml:space="preserve">
+    <value>Verifica</value>
   </data>
   <data name="Weather.Unavailable" xml:space="preserve">
     <value>Meteo non disponibile</value>

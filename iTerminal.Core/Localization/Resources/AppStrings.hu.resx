@@ -1901,6 +1901,9 @@
   <data name="Field.EnableQuotes" xml:space="preserve">
     <value>Árfolyamok engedélyezése</value>
   </data>
+  <data name="Field.EnableOnline" xml:space="preserve">
+    <value>Online állapot engedélyezése</value>
+  </data>
   <data name="Field.EnableWeather" xml:space="preserve">
     <value>Időjárás engedélyezése</value>
   </data>
@@ -8565,6 +8568,15 @@
   </data>
   <data name="Settings.BgHint" xml:space="preserve">
     <value>Az iTerminal következő indításakor lép érvénybe. A késleltetett indítás {0} s után történik, vagy korábban, ha megnyitja a funkciót.</value>
+  </data>
+  <data name="Indicator.Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Indicator.Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Indicator.Checking" xml:space="preserve">
+    <value>Ellenőrzés</value>
   </data>
   <data name="Weather.Unavailable" xml:space="preserve">
     <value>Az időjárás nem elérhető</value>
