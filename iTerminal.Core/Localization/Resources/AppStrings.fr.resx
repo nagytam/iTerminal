@@ -10757,4 +10757,7 @@
   <data name="DriveList.Label" xml:space="preserve">
     <value>Nom :</value>
   </data>
+  <data name="Msg.RenameTargetExists" xml:space="preserve">
+    <value>« {0} » existe déjà. Cochez « {1} » pour le remplacer.</value>
+  </data>
 </root>

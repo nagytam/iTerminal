@@ -10757,4 +10757,7 @@
   <data name="DriveList.Label" xml:space="preserve">
     <value>Címke:</value>
   </data>
+  <data name="Msg.RenameTargetExists" xml:space="preserve">
+    <value>A(z) „{0}” már létezik. Jelölje be a(z) „{1}” négyzetet a cseréhez.</value>
+  </data>
 </root>
