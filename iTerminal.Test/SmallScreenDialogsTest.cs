@@ -632,6 +632,21 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheStocksStatusLinesOn45Columns_NeverEndInHalfAFigure()
+    {
+        // "live, updated 19:0" and "last tr" were cut at the frame; a part of the line is now shown whole or not at all.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Alt+F7");
+
+        await narrow.WaitForTextAsync("Stocks");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("prev close")), "the details of the stock under the cursor");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"updated(?! \d{2}:\d{2}:\d{2})")), narrow.Screen.Dump());
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"last tr(?!ade \d{4}-\d{2}-\d{2} \d{2}:\d{2})")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);

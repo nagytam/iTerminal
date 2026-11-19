@@ -298,4 +298,24 @@ public class StockBrowserDialogTest
         Assert.IsTrue(row.Contains("100.00"), row);
         Assert.IsTrue(row.Contains("Apple Inc"), "the name keeps at least 13 characters: " + row);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FitParts_ShowsWholePartsFromTheFirstAndStopsBeforeOneThatDoesNotFit()
+    {
+        string[] parts = ["Stocks — 9 on the list", "live, updated 19:08:00"];
+
+        Assert.AreEqual("Stocks — 9 on the list   live, updated 19:08:00", StockBrowserDialog.FitParts(parts, 60));
+        Assert.AreEqual("Stocks — 9 on the list", StockBrowserDialog.FitParts(parts, 43), "the second part would not fit whole, so it is left out, not cut");
+        Assert.AreEqual("Stocks — 9 on the list", StockBrowserDialog.FitParts(parts, 22));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FitParts_CutsTheFirstPartOnlyWhenItAloneIsWiderThanTheLine()
+    {
+        Assert.AreEqual("Apple Inc…", StockBrowserDialog.FitParts(["Apple Inc. common stock", "prev close 99"], 10));
+        Assert.AreEqual(string.Empty, StockBrowserDialog.FitParts([], 10));
+        Assert.AreEqual(string.Empty, StockBrowserDialog.FitParts(["a"], 0));
+    }
 }
