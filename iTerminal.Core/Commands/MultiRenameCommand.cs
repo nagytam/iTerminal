@@ -28,7 +28,8 @@ public class MultiRenameCommand(
     IErrorPromptService errorPromptService,
     IConflictPromptService conflictPromptService,
     FileSystemResolver fileSystemResolver,
-    IContentModelService contentModelService)
+    IContentModelService contentModelService,
+    RenameUndoService? renameUndo = null)
     : Command
 {
     public override Key? Key { get; init; } =
@@ -46,6 +47,7 @@ public class MultiRenameCommand(
 
         var resolver = new FileConflictResolver(FileConflictMode.Legacy, conflictPromptService);
         var steps = new List<BatchStep>();
+        var renames = new List<(Url Source, Url Target)>();
         foreach (var row in dialog.Plan.Where(row => row.Status == RenameStatus.Ok))
         {
             var sourceUrl = dialog.SourceUrls[row.Index];
@@ -57,6 +59,7 @@ public class MultiRenameCommand(
                 ? new ContentModelMoveFolderTask(fileSystem, fileSystem, sourceUrl, targetUrl, overwrite: false, discoveryTask: null, errorPromptService)
                 : new ContentModelMoveFileTask(fileSystem, fileSystem, sourceUrl, targetUrl, resolver, errorPromptService);
             steps.Add(new BatchStep(row.OldName, task));
+            renames.Add((sourceUrl, targetUrl));
         }
 
         try
@@ -64,6 +67,7 @@ public class MultiRenameCommand(
             var batch = new BatchOperationTask(UiText.Get("Menu.Rename", "Rename"), steps);
             resolver.CancelRun = () => batch.CancellationTokenSource.Cancel();
             PanelRefreshHelper.RefreshWhenFinished(batch, contentModelService, folderUrl);
+            RememberForUndoWhenFinished(batch, dialog.SourceModel, renames);
 
             // The marks described what to rename; left standing they would rename the same rows again.
             TransferCommand.ConsumeMarks(dialog.SourceModel);
@@ -77,5 +81,31 @@ public class MultiRenameCommand(
         {
             dialog.ErrorMessage.Text = exception.Message;
         }
+    }
+
+    /// <summary>
+    /// Once the batch has ended (finished, failed or cancelled), hands the planned pairs to Ctrl+Z as one step. Pairs whose
+    /// step never ran are harmless: the undo moves an entry back only if its new name is there and its old name is free.
+    /// Subscribed before the batch is handed to the task manager, because a short run can end before <c>Add</c> returns.
+    /// </summary>
+    private void RememberForUndoWhenFinished(BatchOperationTask batch, iConsole.Interfaces.IContentModel? model, IReadOnlyList<(Url Source, Url Target)> renames)
+    {
+        if (renameUndo is null || model is null || renames.Count == 0)
+        {
+            return;
+        }
+
+        void OnBatchChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(BackgroundTask.Status) || batch.Status == iConsole.Data.TaskStatus.Started)
+            {
+                return;
+            }
+
+            batch.PropertyChanged -= OnBatchChanged;
+            renameUndo.RememberBatch(model, renames);
+        }
+
+        batch.PropertyChanged += OnBatchChanged;
     }
 }

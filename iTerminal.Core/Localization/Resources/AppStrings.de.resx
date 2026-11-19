@@ -10743,4 +10743,7 @@
   <data name="CmdDesc.3655a48d" xml:space="preserve">
     <value>Spielen Sie Risiko: Erobern Sie Gebiete vom Computer oder von einem Freund, Zug um Zug.</value>
   </data>
+  <data name="Undo.RenameBatchPartial" xml:space="preserve">
+    <value>{0} von {1} Umbenennungen rückgängig gemacht. Die übrigen nicht: der neue Name ist nicht mehr vorhanden oder der alte Name ist wieder belegt.</value>
+  </data>
 </root>

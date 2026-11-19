@@ -10679,4 +10679,7 @@
   <data name="CmdDesc.3655a48d" xml:space="preserve">
     <value>Gioca a Risiko: conquista territori contro il computer o un amico, turno dopo turno.</value>
   </data>
+  <data name="Undo.RenameBatchPartial" xml:space="preserve">
+    <value>Annullate {0} rinomine su {1}. Le altre no: il nuovo nome non esiste più o il vecchio nome è di nuovo occupato.</value>
+  </data>
 </root>

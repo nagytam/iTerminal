@@ -10885,4 +10885,7 @@
   <data name="CmdDesc.3655a48d" xml:space="preserve">
     <value>Play Risk: take territories from the computer or a friend, one turn at a time.</value>
   </data>
+  <data name="Undo.RenameBatchPartial" xml:space="preserve">
+    <value>Put back {0} of {1} renames. The rest were not put back: the new name is gone or the old name is taken again.</value>
+  </data>
 </root>

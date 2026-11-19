@@ -10679,4 +10679,7 @@
   <data name="CmdDesc.3655a48d" xml:space="preserve">
     <value>Játsszon Risk-et: foglaljon el területeket a számítógép vagy egy barát ellen, körönként.</value>
   </data>
+  <data name="Undo.RenameBatchPartial" xml:space="preserve">
+    <value>{0} / {1} átnevezés visszaállítva. A többi nem: az új név már nincs meg, vagy a régi név ismét foglalt.</value>
+  </data>
 </root>
