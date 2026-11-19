@@ -604,6 +604,21 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    [DataRow("Ctrl+Shift+F12", "Disk usage")]
+    [DataRow("Ctrl+Shift+F6", "Duplicate files")]
+    public async Task ThePathAtTheTopOfADialogOn45Columns_KeepsTheFolderItEndsIn(string chord, string title)
+    {
+        // Cut at the frame, the path ended in "\iTermin": the folder the dialog is about was the part that went.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitForTextAsync(title);
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("║ C:") && l.Contains("...") && l.Contains(@"\left")), "the dialog's own path line, shortened in the middle, still ending in the left panel's folder");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
