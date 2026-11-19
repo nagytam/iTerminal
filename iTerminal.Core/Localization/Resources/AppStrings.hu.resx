@@ -10346,6 +10346,18 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Kijelentkezés SMB-gépről</value>
   </data>
+  <data name="Dep.PowerShellPurpose" xml:space="preserve">
+    <value>PowerShell futtatása: Ctrl+O Windowson és távoli PowerShell-munkamenetek (Alt+F2)</value>
+  </data>
+  <data name="Dep.PowerShellExisting" xml:space="preserve">
+    <value>A PowerShell már telepítve van ({0}); úgy használjuk, ahogy van.</value>
+  </data>
+  <data name="Dep.PowerShellAsIs" xml:space="preserve">
+    <value>A PowerShell már telepítve van ({0}); úgy használjuk, ahogy van</value>
+  </data>
+  <data name="Dep.PowerShellReady" xml:space="preserve">
+    <value>A PowerShell {0} kész</value>
+  </data>
   <data name="FolderSelector.Tab8" xml:space="preserve">
     <value>8-FTP/SFTP</value>
   </data>

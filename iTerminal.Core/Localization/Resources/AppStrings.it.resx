@@ -10346,6 +10346,18 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Esci da un host SMB</value>
   </data>
+  <data name="Dep.PowerShellPurpose" xml:space="preserve">
+    <value>Esecuzione di PowerShell: Ctrl+O su Windows e sessioni PowerShell remote (Alt+F2)</value>
+  </data>
+  <data name="Dep.PowerShellExisting" xml:space="preserve">
+    <value>PowerShell è già installato ({0}); viene usato così com'è.</value>
+  </data>
+  <data name="Dep.PowerShellAsIs" xml:space="preserve">
+    <value>PowerShell è già installato ({0}); viene usato così com'è</value>
+  </data>
+  <data name="Dep.PowerShellReady" xml:space="preserve">
+    <value>PowerShell {0} è pronto</value>
+  </data>
   <data name="FolderSelector.Tab8" xml:space="preserve">
     <value>8-FTP/SFTP</value>
   </data>

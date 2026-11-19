@@ -650,6 +650,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IRuntimeDependency, iTerminal.Core.Services.RuntimeDependencies.UnrarRuntimeDependency>();
         services.AddSingleton<IRuntimeDependency, YtDlpRuntimeDependency>();
 
+        // PowerShell 7 for remote PowerShell sessions and Ctrl+O on Windows, downloaded from its GitHub release. A
+        // PowerShell that is installed already is used as it is.
+        services.AddSingleton<IRuntimeDependency>(_ => new PowerShellRuntimeDependency(Path.Combine(runtimesDirectory, "powershell")));
+
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.
         AiOptions ai = new();

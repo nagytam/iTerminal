@@ -10410,6 +10410,18 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Von einem SMB-Host abmelden</value>
   </data>
+  <data name="Dep.PowerShellPurpose" xml:space="preserve">
+    <value>PowerShell ausführen: Ctrl+O unter Windows und entfernte PowerShell-Sitzungen (Alt+F2)</value>
+  </data>
+  <data name="Dep.PowerShellExisting" xml:space="preserve">
+    <value>PowerShell ist bereits installiert ({0}); es wird so verwendet, wie es ist.</value>
+  </data>
+  <data name="Dep.PowerShellAsIs" xml:space="preserve">
+    <value>PowerShell ist bereits installiert ({0}); es wird so verwendet, wie es ist</value>
+  </data>
+  <data name="Dep.PowerShellReady" xml:space="preserve">
+    <value>PowerShell {0} ist bereit</value>
+  </data>
   <data name="FolderSelector.Tab8" xml:space="preserve">
     <value>8-FTP/SFTP</value>
   </data>
