@@ -37,6 +37,28 @@ public class HelpDialog : Dialog
         _textViewerControl.TextModel.Lines = [.. help.Split(Environment.NewLine)];
     }
 
+    /// <summary>
+    /// <paramref name="line"/> broken at word boundaries to fit <paramref name="width"/>; the lines after the first hang two columns
+    /// in from where the text began, so a wrapped item still reads as one. A line that fits comes back as it is.
+    /// </summary>
+    internal static IEnumerable<string> WrapToWidth(string line, int width)
+    {
+        if (width <= 0 || line.Length <= width)
+        {
+            yield return line;
+            yield break;
+        }
+
+        var first = line.WrapWords(width)[0];
+        yield return first;
+
+        var hang = new string(' ', Math.Min(line.Length - line.TrimStart().Length + 2, Math.Max(0, width - 10)));
+        foreach (var part in line[first.Length..].TrimStart().WrapWords(width - hang.Length))
+        {
+            yield return hang + part;
+        }
+    }
+
     private const int MinimumKeyColumn = 18;
     private const int MaximumKeyColumn = 24;
 
@@ -118,6 +140,9 @@ public class HelpDialog : Dialog
             string.Empty,
             UiText.Get("Help.AvailableCommands", "Available commands:"),
         };
+
+        // The lines above are fixed text, written for a wide screen; on a narrow one the frame would cut them mid-word.
+        lines = [.. lines.SelectMany(line => WrapToWidth(line, width))];
 
         if (commands.Count == 0)
         {

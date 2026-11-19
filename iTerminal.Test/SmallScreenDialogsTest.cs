@@ -508,8 +508,25 @@ public class SmallScreenDialogsTest
 
         await narrow.PressAsync("F1");
 
-        await narrow.WaitForTextAsync("Available commands");
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("available in the current")), "the first description wrapped at the frame, not at the old indent");
+        await narrow.WaitForTextAsync("Getting started");
+        // The getting-started text comes first, so the list is a page or two down on 16 rows.
+        await narrow.PressAsync("PageDown");
+        await narrow.PressAsync("PageDown");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("viewport down by one")), "a long description wrapped at the frame, not at the old indent");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheHelpIntroOn45Columns_IsWrappedNotCutAtTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("F1");
+
+        await narrow.WaitForTextAsync("Getting started");
+        // Each of these used to lose its second half: "Move focus between p" and "PgUp PgDn: scro".
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("panels and controls")), "the Tab line wrapped");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("scroll it")), narrow.Screen.Dump());
     }
 
     [Timeout(120_000)]
