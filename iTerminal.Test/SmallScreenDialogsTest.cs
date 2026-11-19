@@ -580,6 +580,30 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheDuplicateFinderOn45Columns_ShowsTheWholeDeleteQuestionIncludingItsYesOrNo()
+    {
+        // The question is one status line with the answer at its end; clipped at the frame, the y/n was the part that went.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(
+            (left, _) =>
+            {
+                File.WriteAllText(Path.Combine(left, "copy-one.txt"), "the same bytes in both files");
+                File.WriteAllText(Path.Combine(left, "copy-two.txt"), "the same bytes in both files");
+            },
+            width: 45,
+            height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+F6");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("could be freed", StringComparison.Ordinal)), "the groups of duplicates");
+
+        await narrow.PressAsync("a");
+        await narrow.PressAsync("Delete");
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("y/n", StringComparison.Ordinal)), "the end of the delete question");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Delete 1 files", StringComparison.Ordinal)), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
