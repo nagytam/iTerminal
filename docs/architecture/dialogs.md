@@ -339,7 +339,8 @@ form Space on the Type field cycles SSH, PowerShell, FTP, WebDAV (HTTP), WebDAV 
   -NoProfile -Command "Enter-PSSession …"` — no `-NoExit`, so leaving the remote session ends the process.
   Transport `WinRm` uses `-ComputerName` (and `-Credential 'user'`, which makes PowerShell ask for the
   password) and is refused off Windows; transport `Ssh` uses `-HostName/-UserName/-KeyFilePath` and needs
-  `pwsh` (7+) on PATH. `TryCreate` returns the reason instead of a launch, and the dialog shows it.
+  `pwsh` (7+) on PATH, or the PowerShell 7 that Tools > Runtime Dependencies downloads (its folder is put on the PATH
+  at start-up). `TryCreate` returns the reason instead of a launch, and the dialog shows it.
 - **Host and user are validated before they reach any command line.** A host must start with a letter or
   digit (a leading dash would be an `ssh` option) and may hold only name characters or an IP address; a
   user name may not hold quotes, spaces or a leading dash. PowerShell values are also single-quoted with

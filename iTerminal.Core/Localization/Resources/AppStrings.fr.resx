@@ -10342,4 +10342,16 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Se déconnecter d'un hôte SMB</value>
   </data>
+  <data name="Dep.PowerShellPurpose" xml:space="preserve">
+    <value>Exécution de PowerShell : Ctrl+O sous Windows et sessions PowerShell distantes (Alt+F2)</value>
+  </data>
+  <data name="Dep.PowerShellExisting" xml:space="preserve">
+    <value>PowerShell est déjà installé ({0}) ; il est utilisé tel quel.</value>
+  </data>
+  <data name="Dep.PowerShellAsIs" xml:space="preserve">
+    <value>PowerShell est déjà installé ({0}) ; il est utilisé tel quel</value>
+  </data>
+  <data name="Dep.PowerShellReady" xml:space="preserve">
+    <value>PowerShell {0} est prêt</value>
+  </data>
 </root>

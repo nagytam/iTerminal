@@ -10548,4 +10548,16 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Log out of an SMB host</value>
   </data>
+  <data name="Dep.PowerShellPurpose" xml:space="preserve">
+    <value>Running PowerShell: Ctrl+O on Windows and remote PowerShell sessions (Alt+F2)</value>
+  </data>
+  <data name="Dep.PowerShellExisting" xml:space="preserve">
+    <value>PowerShell is already installed ({0}); it is used as it is.</value>
+  </data>
+  <data name="Dep.PowerShellAsIs" xml:space="preserve">
+    <value>PowerShell is already installed ({0}); it is used as it is</value>
+  </data>
+  <data name="Dep.PowerShellReady" xml:space="preserve">
+    <value>PowerShell {0} is ready</value>
+  </data>
 </root>

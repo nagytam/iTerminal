@@ -10342,4 +10342,16 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Cerrar sesión en un host SMB</value>
   </data>
+  <data name="Dep.PowerShellPurpose" xml:space="preserve">
+    <value>Ejecutar PowerShell: Ctrl+O en Windows y sesiones remotas de PowerShell (Alt+F2)</value>
+  </data>
+  <data name="Dep.PowerShellExisting" xml:space="preserve">
+    <value>PowerShell ya está instalado ({0}); se usa tal como está.</value>
+  </data>
+  <data name="Dep.PowerShellAsIs" xml:space="preserve">
+    <value>PowerShell ya está instalado ({0}); se usa tal como está</value>
+  </data>
+  <data name="Dep.PowerShellReady" xml:space="preserve">
+    <value>PowerShell {0} está listo</value>
+  </data>
 </root>
