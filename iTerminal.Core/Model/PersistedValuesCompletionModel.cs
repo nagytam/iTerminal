@@ -53,7 +53,11 @@ public class PersistedValuesCompletionModel : ICompletionModel
     public void UpdateMatchingValues(string value)
     {
         MatchingValues.Clear();
-        var matchingValues = Completions.Where(c => c.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        // Entries that start with the text go first (the sort is stable, so each group keeps its order): the box greys the
+        // first match after the cursor, and only a prefix match can extend what was typed.
+        var matchingValues = Completions
+            .Where(c => c.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+            .OrderBy(c => c.StartsWith(value, StringComparison.InvariantCultureIgnoreCase) ? 0 : 1);
         foreach (var matchingValue in matchingValues)
         {
             MatchingValues.Add(matchingValue);
