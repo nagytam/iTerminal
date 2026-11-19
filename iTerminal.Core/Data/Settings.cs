@@ -74,4 +74,10 @@ public static class Settings
 
     /// <summary>Minutes without a key press or a click before the screen saver starts. Five by default, between 1 and 240.</summary>
     public const string ScreenSaverIdleMinutes = nameof(ScreenSaverIdleMinutes);
+
+    /// <summary>
+    /// The viewer and editor plug-ins the user loaded in the plug-in manager, as a JSON array of file names. They load again at start-up.
+    /// A plug-in that fails to load stays in the list until the user unloads it.
+    /// </summary>
+    public const string LoadedPlugins = nameof(LoadedPlugins);
 }

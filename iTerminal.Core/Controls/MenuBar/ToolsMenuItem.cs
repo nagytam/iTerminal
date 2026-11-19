@@ -62,7 +62,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
         iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
-        iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null)
+        iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
+        iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -128,6 +129,7 @@ public class ToolsMenuItem : MenuItem
         if (remoteConnectionManagerDialog is not null) groups["net"].Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
         if (workspaceManagerDialog is not null) groups["sys"].Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));
         if (languageDialog is not null) groups["sys"].Add(new LanguageDialogCommand(languageDialog));
+        if (pluginManagerDialog is not null) groups["sys"].Add(new PluginManagerDialogCommand(pluginManagerDialog));
         if (passwordManagerDialog is not null) groups["office"].Add(new PasswordManagerDialogCommand(passwordManagerDialog));
         if (systemSettingsDialog is not null) groups["sys"].Add(new SystemSettingsDialogCommand(systemSettingsDialog));
         if (runtimeDependencyDialog is not null) groups["sys"].Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));

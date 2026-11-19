@@ -10458,6 +10458,39 @@
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 stores, 1 is fastest, 5 is smallest</value>
   </data>
+  <data name="Plugins.Title" xml:space="preserve">
+    <value>Plugin manager</value>
+  </data>
+  <data name="Plugins.Empty" xml:space="preserve">
+    <value>No plug-ins in {0}. Copy a plug-in .dll there, then press R.</value>
+  </data>
+  <data name="Plugins.Folder" xml:space="preserve">
+    <value>Folder: {0}</value>
+  </data>
+  <data name="Plugins.Status.Loaded" xml:space="preserve">
+    <value>loaded, {0} viewer(s), {1} editor(s)</value>
+  </data>
+  <data name="Plugins.Status.Unloaded" xml:space="preserve">
+    <value>not loaded</value>
+  </data>
+  <data name="Plugins.Status.Loading" xml:space="preserve">
+    <value>loading…</value>
+  </data>
+  <data name="Plugins.Status.Unloading" xml:space="preserve">
+    <value>unloading…</value>
+  </data>
+  <data name="Plugins.Status.Failed" xml:space="preserve">
+    <value>failed</value>
+  </data>
+  <data name="Plugins.Error.NoHandlers" xml:space="preserve">
+    <value>{0} holds no viewer or editor plug-in.</value>
+  </data>
+  <data name="Plugins.Hint.Rescan" xml:space="preserve">
+    <value>Rescan the plug-in folder</value>
+  </data>
+  <data name="Plugins.Notify.Failed" xml:space="preserve">
+    <value>{0} plug-in(s) could not be loaded. The plug-in manager in the Tools menu says why.</value>
+  </data>
   <data name="FolderSelector.Tab7" xml:space="preserve">
     <value>7-SMB</value>
   </data>
@@ -10590,5 +10623,11 @@
   </data>
   <data name="CmdTitle.35808701" xml:space="preserve">
     <value>Open FTP or SFTP connection</value>
+  </data>
+  <data name="CmdTitle.f8cd7419" xml:space="preserve">
+    <value>Plugin manager…</value>
+  </data>
+  <data name="CmdDesc.0fce9508" xml:space="preserve">
+    <value>Load or unload the viewer and editor plug-ins in the plug-in folder.</value>
   </data>
 </root>

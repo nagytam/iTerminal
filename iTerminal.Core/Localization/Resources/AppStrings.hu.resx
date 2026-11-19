@@ -10252,6 +10252,45 @@
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 tárol, 1 a leggyorsabb, 5 a legkisebb</value>
   </data>
+  <data name="Plugins.Title" xml:space="preserve">
+    <value>Bővítménykezelő</value>
+  </data>
+  <data name="Plugins.Empty" xml:space="preserve">
+    <value>Nincs bővítmény a(z) {0} mappában. Másoljon oda egy bővítmény .dll fájlt, majd nyomja meg az R billentyűt.</value>
+  </data>
+  <data name="Plugins.Folder" xml:space="preserve">
+    <value>Mappa: {0}</value>
+  </data>
+  <data name="Plugins.Status.Loaded" xml:space="preserve">
+    <value>betöltve, {0} megjelenítő, {1} szerkesztő</value>
+  </data>
+  <data name="Plugins.Status.Unloaded" xml:space="preserve">
+    <value>nincs betöltve</value>
+  </data>
+  <data name="Plugins.Status.Loading" xml:space="preserve">
+    <value>betöltés…</value>
+  </data>
+  <data name="Plugins.Status.Unloading" xml:space="preserve">
+    <value>eltávolítás…</value>
+  </data>
+  <data name="Plugins.Status.Failed" xml:space="preserve">
+    <value>hiba</value>
+  </data>
+  <data name="Plugins.Error.NoHandlers" xml:space="preserve">
+    <value>A(z) {0} nem tartalmaz megjelenítő vagy szerkesztő bővítményt.</value>
+  </data>
+  <data name="Plugins.Hint.Rescan" xml:space="preserve">
+    <value>Bővítménymappa újraolvasása</value>
+  </data>
+  <data name="Plugins.Notify.Failed" xml:space="preserve">
+    <value>{0} bővítmény nem tölthető be. A bővítménykezelő az Eszközök menüben megmutatja az okot.</value>
+  </data>
+  <data name="CmdTitle.f8cd7419" xml:space="preserve">
+    <value>Bővítménykezelő…</value>
+  </data>
+  <data name="CmdDesc.0fce9508" xml:space="preserve">
+    <value>Megjelenítő és szerkesztő bővítmények betöltése vagy eltávolítása a bővítménymappából.</value>
+  </data>
   <data name="FolderSelector.Tab7" xml:space="preserve">
     <value>7-SMB</value>
   </data>

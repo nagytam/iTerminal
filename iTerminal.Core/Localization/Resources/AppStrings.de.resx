@@ -10316,6 +10316,45 @@
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 speichert, 1 ist am schnellsten, 5 ist am kleinsten</value>
   </data>
+  <data name="Plugins.Title" xml:space="preserve">
+    <value>Plug-in-Verwaltung</value>
+  </data>
+  <data name="Plugins.Empty" xml:space="preserve">
+    <value>Keine Plug-ins in {0}. Kopieren Sie eine Plug-in-.dll-Datei dorthin und drücken Sie R.</value>
+  </data>
+  <data name="Plugins.Folder" xml:space="preserve">
+    <value>Ordner: {0}</value>
+  </data>
+  <data name="Plugins.Status.Loaded" xml:space="preserve">
+    <value>geladen, {0} Anzeige(n), {1} Editor(en)</value>
+  </data>
+  <data name="Plugins.Status.Unloaded" xml:space="preserve">
+    <value>nicht geladen</value>
+  </data>
+  <data name="Plugins.Status.Loading" xml:space="preserve">
+    <value>wird geladen…</value>
+  </data>
+  <data name="Plugins.Status.Unloading" xml:space="preserve">
+    <value>wird entladen…</value>
+  </data>
+  <data name="Plugins.Status.Failed" xml:space="preserve">
+    <value>fehlgeschlagen</value>
+  </data>
+  <data name="Plugins.Error.NoHandlers" xml:space="preserve">
+    <value>{0} enthält kein Anzeige- oder Editor-Plug-in.</value>
+  </data>
+  <data name="Plugins.Hint.Rescan" xml:space="preserve">
+    <value>Plug-in-Ordner neu einlesen</value>
+  </data>
+  <data name="Plugins.Notify.Failed" xml:space="preserve">
+    <value>{0} Plug-in(s) konnten nicht geladen werden. Die Plug-in-Verwaltung im Menü Werkzeuge nennt den Grund.</value>
+  </data>
+  <data name="CmdTitle.f8cd7419" xml:space="preserve">
+    <value>Plug-in-Verwaltung…</value>
+  </data>
+  <data name="CmdDesc.0fce9508" xml:space="preserve">
+    <value>Viewer- und Editor-Plug-ins im Plug-in-Ordner laden oder entladen.</value>
+  </data>
   <data name="FolderSelector.Tab7" xml:space="preserve">
     <value>7-SMB</value>
   </data>
