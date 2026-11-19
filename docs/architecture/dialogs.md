@@ -238,6 +238,16 @@ Tools > Contacts: name, email, phone, company and notes for the people the perso
 - **The highlight follows the contact by id**, so it survives a re-sort or a filter; a contact saved under a filter that would hide it clears the filter.
 - Also reachable from the `ui` AI tool as `contacts`.
 
+### Online radio (`OnlineRadioDialog`, Ctrl+Shift+Y, `Model/Radio/`, `Dialogs/Radio/`)
+Tools > Online radio: a list of internet radio stations, played through the shared `IMusicPlayerService`. Enter plays the highlighted station, Space pauses or resumes it when it is the one on air (otherwise starts it), S stops. F marks or unmarks a favourite; favourites are listed first, and V shows the favourites alone. N or Insert adds a station, E or F2 changes it (name, genre, stream address), D or Delete removes it after a y/n. `/` filters by name, genre or address, as the contact manager does. The status line under the list shows what is on air with its elapsed time, or the player's error.
+
+- **A station plays as the only track of the queue.** `ReplacePlaylist` replaces the music queue, so the music panels' queue is lost when a station starts. A live stream has no end, so "next" would only switch stations; keeping the queue would have meant either a second player or a surprising jump.
+- **A stream address is a track path.** `AudioDecoderFactory.IsStreamUrl` tells an http(s) address from a file. Such an address is decoded by `FfmpegAudioDecoder(path, isStream: true)`, which skips the duration probe (a live stream would wait out ffprobe's timeout), cannot seek, and reconnects when the server drops the connection. ffmpeg is therefore required for radio; without it the status line says so, and nothing is probed in the dialog itself.
+- **Storage is the `RadioStations` setting**, one JSON list read by `RadioStationStore` (the same approach as the contacts), so no schema change. A station is never listed twice: a stream address already in the list is refused on add and on change.
+- **The list order is favourites first, then by name**, and the highlight follows the station by id, so marking a favourite keeps the cursor on it when the row moves.
+- The footer's playback line is repainted from `OnIdle` by comparing a signature of the track, state, elapsed second and status message; the dialog does not subscribe to the player, whose events come from the pump thread.
+- Also reachable from the `ui` AI tool as `radio`.
+
 ### The calendar (`CalendarDialog`, Ctrl+D, `Model/Calendar/`, `Jobs/CalendarIdentityJob.cs`)
 - A month grid with the selected day's meetings under it. N or Enter types a meeting as "HH:mm [minutes] title"; E or F2 changes the highlighted one; D or Delete removes it after a y/n question.
 - **Every meeting has an identity** (`Meeting.Uid`, a GUID). `MeetingStore.Add` gives it and returns the stored copy; `Replace` keeps it through an edit, so a changed meeting stays the same event; `Remove` matches on it alone, so a meeting that was never stored removes nothing. The dialog moves its cursor by the stored copy.

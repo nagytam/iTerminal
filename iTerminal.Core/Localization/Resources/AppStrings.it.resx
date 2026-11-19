@@ -10697,4 +10697,133 @@
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Annulla rinomina o spostamento</value>
   </data>
+  <data name="Radio.Title" xml:space="preserve">
+    <value>Radio online</value>
+  </data>
+  <data name="Radio.ColName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Radio.ColGenre" xml:space="preserve">
+    <value>Genere</value>
+  </data>
+  <data name="Radio.Count" xml:space="preserve">
+    <value>{0} stazioni</value>
+  </data>
+  <data name="Radio.CountFiltered" xml:space="preserve">
+    <value>{0} di {1} stazioni</value>
+  </data>
+  <data name="Radio.Favourites" xml:space="preserve">
+    <value>Preferiti</value>
+  </data>
+  <data name="Radio.NoMatch" xml:space="preserve">
+    <value>Nessuna stazione corrisponde a &quot;{0}&quot;.</value>
+  </data>
+  <data name="Radio.NoFavourites" xml:space="preserve">
+    <value>Nessuna stazione preferita. Premi F su una stazione per segnarla.</value>
+  </data>
+  <data name="Radio.Empty" xml:space="preserve">
+    <value>Ancora nessuna stazione. Premi N per aggiungerne una.</value>
+  </data>
+  <data name="Radio.GenreLine" xml:space="preserve">
+    <value>Genere: {0}</value>
+  </data>
+  <data name="Radio.FieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Radio.FieldGenre" xml:space="preserve">
+    <value>Genere</value>
+  </data>
+  <data name="Radio.FieldUrl" xml:space="preserve">
+    <value>Flusso</value>
+  </data>
+  <data name="Radio.FormNew" xml:space="preserve">
+    <value>Nuova stazione: un nome e un indirizzo di flusso http:// o https://</value>
+  </data>
+  <data name="Radio.FormChange" xml:space="preserve">
+    <value>Modifica stazione: un nome e un indirizzo di flusso http:// o https://</value>
+  </data>
+  <data name="Radio.Duplicate" xml:space="preserve">
+    <value>Questo indirizzo di flusso è già nell'elenco</value>
+  </data>
+  <data name="Radio.FilterInput" xml:space="preserve">
+    <value>Filtro: {0}_</value>
+  </data>
+  <data name="Radio.FilterHint" xml:space="preserve">
+    <value>Filtro: {0}  (Esc mostra tutte le stazioni)</value>
+  </data>
+  <data name="Radio.NotPlaying" xml:space="preserve">
+    <value>Non in riproduzione</value>
+  </data>
+  <data name="Radio.OnAir" xml:space="preserve">
+    <value>In onda</value>
+  </data>
+  <data name="Radio.Paused" xml:space="preserve">
+    <value>In pausa</value>
+  </data>
+  <data name="Radio.FooterForm" xml:space="preserve">
+    <value>Invio campo successivo  Tab/Maiusc+Tab sposta  Esc annulla</value>
+  </data>
+  <data name="Radio.FooterFilter" xml:space="preserve">
+    <value>Digita per filtrare  Invio mantieni  Esc cancella</value>
+  </data>
+  <data name="Radio.FooterBrowse" xml:space="preserve">
+    <value>Invio riproduci  Spazio pausa  S stop  F preferita  N nuova  D elimina  / cerca  Esc chiudi</value>
+  </data>
+  <data name="Radio.NeedsName" xml:space="preserve">
+    <value>Una stazione ha bisogno di un nome</value>
+  </data>
+  <data name="Radio.NeedsUrl" xml:space="preserve">
+    <value>L'indirizzo del flusso deve iniziare con http:// o https://</value>
+  </data>
+  <data name="Radio.FavouriteAdded" xml:space="preserve">
+    <value>{0} è una preferita</value>
+  </data>
+  <data name="Radio.FavouriteRemoved" xml:space="preserve">
+    <value>{0} non è più una preferita</value>
+  </data>
+  <data name="DialogHint.DeleteStation" xml:space="preserve">
+    <value>Elimina la stazione</value>
+  </data>
+  <data name="DialogHint.KeepStation" xml:space="preserve">
+    <value>Mantieni la stazione</value>
+  </data>
+  <data name="DialogHint.PlayStation" xml:space="preserve">
+    <value>Riproduci la stazione</value>
+  </data>
+  <data name="DialogHint.PauseStation" xml:space="preserve">
+    <value>Pausa o riprendi la stazione</value>
+  </data>
+  <data name="DialogHint.StopStation" xml:space="preserve">
+    <value>Ferma la riproduzione</value>
+  </data>
+  <data name="DialogHint.ToggleFavourite" xml:space="preserve">
+    <value>Segna o togli la stazione dalle preferite</value>
+  </data>
+  <data name="DialogHint.FavouritesOnly" xml:space="preserve">
+    <value>Mostra solo le preferite</value>
+  </data>
+  <data name="DialogHint.MoveOverStations" xml:space="preserve">
+    <value>Scorri le stazioni</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastStation" xml:space="preserve">
+    <value>Vai alla prima o all'ultima stazione</value>
+  </data>
+  <data name="DialogHint.AddStation" xml:space="preserve">
+    <value>Aggiungi una stazione</value>
+  </data>
+  <data name="DialogHint.ChangeStation" xml:space="preserve">
+    <value>Modifica la stazione</value>
+  </data>
+  <data name="DialogHint.DeleteStationAsks" xml:space="preserve">
+    <value>Elimina la stazione (chiede conferma)</value>
+  </data>
+  <data name="DialogHint.FilterStations" xml:space="preserve">
+    <value>Filtra le stazioni</value>
+  </data>
+  <data name="CmdTitle.836a989d" xml:space="preserve">
+    <value>Radio online</value>
+  </data>
+  <data name="CmdDesc.332485aa" xml:space="preserve">
+    <value>Ascolta le stazioni radio su internet: riproduci, metti in pausa e ferma, segna i preferiti e filtra l'elenco.</value>
+  </data>
 </root>

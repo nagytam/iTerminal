@@ -21,6 +21,7 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
     private static bool? _isAvailable;
 
     private readonly string _path;
+    private readonly bool _isStream;
     private readonly object _processLock = new();
 
     private Process? _process;
@@ -33,19 +34,32 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
 
     public TimeSpan Duration { get; }
 
-    public bool CanSeek => true;
+    /// <summary>A live stream has no length and cannot be repositioned; a file has both.</summary>
+    public bool CanSeek => !_isStream;
 
     public TimeSpan Position => Format.BytesToTime(_startOffsetBytes + _bytesRead);
 
     public FfmpegAudioDecoder(string path)
+        : this(path, isStream: false)
+    {
+    }
+
+    /// <summary>
+    /// Opens <paramref name="path"/>, a file or — with <paramref name="isStream"/> — an HTTP(S) internet radio
+    /// stream. A stream is not probed: ffprobe would wait out its timeout on a source that never ends, and
+    /// the station has no duration to report. ffmpeg reconnects when the server drops the connection, which
+    /// radio servers do routinely.
+    /// </summary>
+    public FfmpegAudioDecoder(string path, bool isStream)
     {
         _path = path ?? throw new ArgumentNullException(nameof(path));
+        _isStream = isStream;
         if (!IsAvailable())
         {
             throw new InvalidOperationException("ffmpeg is not installed or not on PATH.");
         }
 
-        Duration = ProbeDuration(path);
+        Duration = isStream ? TimeSpan.Zero : ProbeDuration(path);
         Start(TimeSpan.Zero);
     }
 
@@ -100,7 +114,7 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
 
     public bool TrySeek(TimeSpan position)
     {
-        if (_disposed)
+        if (_disposed || _isStream)
         {
             return false;
         }
@@ -142,6 +156,14 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
             {
                 startInfo.ArgumentList.Add("-ss");
                 startInfo.ArgumentList.Add(offset.TotalSeconds.ToString("0.###", CultureInfo.InvariantCulture));
+            }
+            if (_isStream)
+            {
+                // Reconnect after a dropped connection, with at most five seconds between attempts.
+                foreach (var argument in new[] { "-reconnect", "1", "-reconnect_streamed", "1", "-reconnect_delay_max", "5" })
+                {
+                    startInfo.ArgumentList.Add(argument);
+                }
             }
             startInfo.ArgumentList.Add("-i");
             startInfo.ArgumentList.Add(_path);

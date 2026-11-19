@@ -47,6 +47,7 @@ public class ToolsMenuItem : MenuItem
         LanguageDialog? languageDialog = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
+        iTerminal.Core.Dialogs.Radio.OnlineRadioDialog? onlineRadioDialog = null,
         iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.YouTube.YouTubeDialog? youTubeDialog = null,
@@ -118,6 +119,7 @@ public class ToolsMenuItem : MenuItem
         if (weatherDialog is not null) groups["office"].Add(new WeatherDialogCommand(weatherDialog));
         if (torrentManagerDialog is not null) groups["net"].Add(new TorrentManagerDialogCommand(torrentManagerDialog));
         if (contactManagerDialog is not null) groups["office"].Add(new ContactManagerDialogCommand(contactManagerDialog));
+        if (onlineRadioDialog is not null) groups["net"].Add(new OnlineRadioDialogCommand(onlineRadioDialog));
         if (environmentVariablesDialog is not null) groups["files"].Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));
         if (encyclopediaDialog is not null) groups["office"].Add(new EncyclopediaDialogCommand(encyclopediaDialog));
         if (performanceBenchmarkDialog is not null) groups["sys"].Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
