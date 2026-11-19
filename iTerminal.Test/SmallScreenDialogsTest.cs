@@ -619,6 +619,19 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheBluetoothListOn45Columns_ShowsEachDevicesWholeState()
+    {
+        // The state ends the row, and was the part cut: "pair", "near".
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+J");
+
+        await narrow.WaitForTextAsync("Bluetooth devices");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("paired")) && s.Lines.Any(l => l.Contains("nearby")), "the states, whole");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
