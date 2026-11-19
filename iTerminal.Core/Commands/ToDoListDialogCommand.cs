@@ -5,7 +5,7 @@ namespace iTerminal.Core.Commands;
 
 public class ToDoListDialogCommand(ToDoListDialog toDoListDialog) : ShowDialogCommand<ToDoListDialog>(toDoListDialog)
 {
-    public override string Title => "Task List";
+    public override string Title => "To-do list";
     public override string Description => "Open the task list: subjects, due dates and priorities, with done tasks kept below.";
 
     // Ctrl+Y. Key constructor order is (consoleKey, shift, alt, control).

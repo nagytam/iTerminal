@@ -7,6 +7,7 @@ namespace iTerminal.Core.Commands;
 
 public class TerminalExecuteCommand(TerminalModel terminalModel) : Command
 {
+    public override string Title => "Run in terminal";
     public IContentModelService? ContentModelService { get; internal set; }
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Enter, false, false, false);

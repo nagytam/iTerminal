@@ -1286,16 +1286,34 @@
     <value>Primeros pasos:</value>
   </data>
   <data name="Help.Started.Tab" xml:space="preserve">
-    <value>Tab / Mayús+Tab    Mover el foco entre paneles y controles</value>
+    <value>Mover el foco entre paneles y controles</value>
+  </data>
+  <data name="Help.Started.Tab.Key" xml:space="preserve">
+    <value>Tab / Mayús+Tab</value>
   </data>
   <data name="Help.Started.Enter" xml:space="preserve">
-    <value>Intro           Ejecutar el comando principal del elemento enfocado</value>
+    <value>Ejecutar el comando principal del elemento enfocado</value>
+  </data>
+  <data name="Help.Started.Enter.Key" xml:space="preserve">
+    <value>Intro</value>
   </data>
   <data name="Help.Started.Esc" xml:space="preserve">
-    <value>Esc             Cerrar el diálogo o menú que está delante</value>
+    <value>Cerrar el diálogo o menú que está delante</value>
+  </data>
+  <data name="Help.Started.Esc.Key" xml:space="preserve">
+    <value>Esc</value>
   </data>
   <data name="Help.Started.F1" xml:space="preserve">
-    <value>F1              Abrir esta ayuda desde cualquier pantalla</value>
+    <value>Abrir esta ayuda desde cualquier pantalla</value>
+  </data>
+  <data name="Help.Started.F1.Key" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="Help.Started.Palette.Key" xml:space="preserve">
+    <value>Shift+F1</value>
+  </data>
+  <data name="Help.Started.Palette" xml:space="preserve">
+    <value>Buscar cualquier comando por su nombre en la paleta de comandos</value>
   </data>
   <data name="Help.Started.Lists" xml:space="preserve">
     <value>La primera lista de abajo muestra lo que funciona aquí y ahora.</value>
