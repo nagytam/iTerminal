@@ -10348,6 +10348,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>Explorando {0} de forma anónima. L inicia sesión.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} en uso.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Primero seleccione un host del que cerrar sesión.</value>
   </data>

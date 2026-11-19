@@ -10348,6 +10348,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>Navigation anonyme sur {0}. L connecte.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} utilisé.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Sélectionnez d'abord un hôte dont vous déconnecter.</value>
   </data>

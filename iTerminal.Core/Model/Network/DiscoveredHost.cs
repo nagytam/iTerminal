@@ -6,4 +6,5 @@ public record DiscoveredHost(
     IPAddress IPAddress,
     bool SshAvailable,
     bool SmbAvailable,
-    IReadOnlyList<string> Shares);
+    IReadOnlyList<string> Shares,
+    int SmbVersion = 0);

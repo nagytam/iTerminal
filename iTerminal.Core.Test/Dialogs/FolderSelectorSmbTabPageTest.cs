@@ -263,10 +263,10 @@ public class FolderSelectorSmbTabPageTest
         }
     }
 
-    private static void ListsSharesWithLogin(Fixture fixture, string username, string password, IReadOnlyList<string>? shares) =>
+    private static void ListsSharesWithLogin(Fixture fixture, string username, string password, IReadOnlyList<string>? shares, int smbVersion = 3) =>
         fixture.Harness.NetworkDiscoveryServiceMock
             .Setup(s => s.ListSharesWithLoginAsync(HostB.ToString(), username, password, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(shares);
+            .ReturnsAsync(shares is null ? null : new SmbListing(shares, smbVersion));
 
     [Timeout(60_000)]
     [TestMethod]
@@ -373,6 +373,24 @@ public class FolderSelectorSmbTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task SignedInLine_ShowsTheSmbVersionTheHostWasListedWith()
+    {
+        var fixture = await OpenAsync([new DiscoveredHost(HostB, false, true, [], 2)], []);
+
+        Assert.AreEqual("Browsing 192.0.2.11 anonymously. L logs in.  SMB 2 in use.", fixture.Page.SignedInForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task SignedInLine_HasNoVersionHintForAHostWhoseVersionIsNotKnown()
+    {
+        var fixture = await OpenAsync([Smb(HostB)], []);
+
+        Assert.AreEqual("Browsing 192.0.2.11 anonymously. L logs in.", fixture.Page.SignedInForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task SignedInLine_NamesTheUserOfTheHostUnderTheCursor()
     {
         var fixture = await OpenAsync([Smb(HostB)], []);
@@ -384,7 +402,7 @@ public class FolderSelectorSmbTabPageTest
         await fixture.Page.LoginForTestAsync();
         fixture.Page.OnIdle();
 
-        Assert.AreEqual("Logged in to 192.0.2.11 as alice.", fixture.Page.SignedInForTest);
+        Assert.AreEqual("Logged in to 192.0.2.11 as alice.  SMB 3 in use.", fixture.Page.SignedInForTest);
     }
 
     [Timeout(60_000)]
