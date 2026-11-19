@@ -50,6 +50,14 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                 _targetUrl = new Url(UrlPath.Child(_targetUrl.FullUrl, FocusedEntry.NameOf(sourceUrl), isFolder: false));
             }
 
+            // A file sent onto itself (same folder, same name) is not a conflict to ask about: overwriting a file with
+            // itself either fails or does nothing. Said plainly, before the prompt. Exact names only, so a move that only
+            // changes the case of a name (a rename on a case-insensitive drive) still goes through.
+            if (ReferenceEquals(source, target) && IsSameFile(sourceUrl, _targetUrl))
+            {
+                throw new IOException(UiText.Get("Transfer.SameFile", "The source and the target are the same file. Choose another name or folder."));
+            }
+
             Subject = TaskNotificationHelper.TransferSubject(sourceUrl, _targetUrl);
             Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFile", "{0} file"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.To", "to"), _targetUrl.FullName.Shrink(60), UiText.Get("Task.Started", "started"));
 
@@ -151,6 +159,13 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
             Description = string.Format(UiText.Get("Task.VerbFileFailed", "{0} file failed: {1}"), Verb, failure);
             Error = failure;
         }
+    }
+
+    /// <summary>True when both URLs name the same path exactly (either separator, trailing separator ignored).</summary>
+    internal static bool IsSameFile(Url first, Url second)
+    {
+        static string Norm(string? url) => UrlPath.TrimFolder(url).Replace('\\', '/');
+        return string.Equals(Norm(first.FullUrl), Norm(second.FullUrl), StringComparison.Ordinal);
     }
 
     private void TryDeletePartialTarget()

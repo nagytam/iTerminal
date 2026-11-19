@@ -10682,4 +10682,7 @@
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
     <value>Ripristinate {0} voci su {1}. Le altre no: il nuovo nome non esiste più o il vecchio nome è di nuovo occupato.</value>
   </data>
+  <data name="Transfer.SameFile" xml:space="preserve">
+    <value>L'origine e la destinazione sono lo stesso file. Scegli un altro nome o un'altra cartella.</value>
+  </data>
 </root>

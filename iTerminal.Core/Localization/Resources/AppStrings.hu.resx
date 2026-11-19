@@ -10682,4 +10682,7 @@
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
     <value>{0} / {1} elem visszaállítva. A többi nem: az új név már nincs meg, vagy a régi név ismét foglalt.</value>
   </data>
+  <data name="Transfer.SameFile" xml:space="preserve">
+    <value>A forrás és a cél ugyanaz a fájl. Válasszon másik nevet vagy mappát.</value>
+  </data>
 </root>
