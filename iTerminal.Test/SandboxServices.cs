@@ -877,6 +877,39 @@ public static class SandboxServices
             Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
     }
 
+    /// <summary>
+    /// The weather forecast and place search: one place, Budapest, with a fixed day, so the dialog's views are the same in every run. The header's 'updated' time is the moment of the fetch, as in the real app, so it differs from run to run.
+    /// The forecast starts at 10:00 on 18 November 2026 and rains at 15:00.
+    /// </summary>
+    public sealed class WeatherForecasts : Core.Services.Weather.IForecastProvider
+    {
+        private static readonly Core.Services.Weather.PlaceHit Budapest = new("Budapest", "Budapest", "Hungary", 47.4979, 19.0402, "Europe/Budapest");
+
+        public Task<Core.Services.Weather.Forecast> FetchAsync(Core.Services.Weather.SavedPlace place, CancellationToken cancellationToken = default)
+        {
+            var start = new DateTime(2026, 11, 18, 10, 0, 0);
+            var hours = Enumerable.Range(0, 24).Select(hour => new Core.Services.Weather.HourlyPoint(
+                start.AddHours(hour),
+                8 + 4 * Math.Sin(hour / 4.0),
+                hour == 15 ? 1.2 : 0,
+                hour == 15 ? 70 : 10,
+                hour == 15 ? 61 : 3)).ToList();
+            var days = Enumerable.Range(0, 7).Select(day => new Core.Services.Weather.DailyPoint(
+                new DateOnly(2026, 11, 18).AddDays(day),
+                2 + day,
+                10 + day,
+                day == 1 ? 4.5 : 0,
+                day == 1 ? 80 : 5,
+                day == 1 ? 63 : 2)).ToList();
+            var current = new Core.Services.Weather.CurrentConditions(start, 9.5, 2, true);
+            return Task.FromResult(new Core.Services.Weather.Forecast(current, hours, days, DateTimeOffset.UtcNow));
+        }
+
+        public Task<IReadOnlyList<Core.Services.Weather.PlaceHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Core.Services.Weather.PlaceHit>>(
+                Budapest.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ? [Budapest] : []);
+    }
+
     public sealed class CurrencyRates : Core.Services.Currency.ICurrencyRateProvider
     {
         public string Name => "Sandbox";

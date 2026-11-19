@@ -407,6 +407,11 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyRateProvider, iTerminal.Core.Services.Currency.EcbCurrencyRateProvider>();
         services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyService, iTerminal.Core.Services.Currency.CurrencyService>();
         services.AddTransient<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>();
+        // Tools > Weather: the forecast and place names are Open-Meteo's (no key). Places, the home place and the last forecast
+        // of each are kept in the settings; a test replaces the provider so no run reaches the network.
+        services.AddSingleton<iTerminal.Core.Services.Weather.IForecastProvider, iTerminal.Core.Services.Weather.OpenMeteoForecastProvider>();
+        services.AddSingleton<iTerminal.Core.Services.Weather.IForecastService, iTerminal.Core.Services.Weather.ForecastService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Weather.WeatherDialog>();
         // Ctrl+Shift+W: the encyclopedia. Wikipedia and Wiktionary are read through the MediaWiki API; a test replaces the
         // provider so no run reaches the network.
         services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaProvider, iTerminal.Core.Services.Encyclopedia.WikiEncyclopediaProvider>();

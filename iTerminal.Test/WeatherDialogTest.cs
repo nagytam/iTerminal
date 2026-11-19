@@ -1,0 +1,58 @@
+using iConsole.Test.Core.Automation;
+
+namespace iTerminal.Test;
+
+/// <summary>Tools > Weather, used the way a person uses it: find a place, save it, read its forecast, switch views, close.</summary>
+[TestClass]
+public class WeatherDialogTest
+{
+    private TerminalApp _app = null!;
+
+    [TestInitialize]
+    public async Task StartAsync() => _app = await TerminalApp.StartAsync();
+
+    [TestCleanup]
+    public async Task StopAsync() => await _app.DisposeAsync();
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task ToolsWeatherFindsASavedPlaceAndShowsItsForecast()
+    {
+        await _app.Driver.ClickAsync("Tools");
+        await _app.WaitUntilAsync(
+            () => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar,
+            "the Tools menu to take the keyboard");
+        // The entry is in the drop-down, below the menu bar row; the bar's own weather indicator is on row 0 and does not count.
+        for (int attempt = 0; attempt < 100 && !_app.Screen.Lines.Skip(1).Any(line => line.Contains("Weather", StringComparison.Ordinal)); attempt++)
+        {
+            ConsoleSnapshot previous = _app.Screen;
+            await _app.PressAsync("Down");
+            await _app.Driver.WaitUntilAsync(screen => !screen.HasSameContent(previous), "the Tools menu to redraw after moving selection", TimeSpan.FromSeconds(2));
+        }
+
+        await _app.PressAsync("Enter");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Weather.WeatherDialog, "the weather dialog to open from Tools");
+
+        // No place is saved yet, so the dialog opens on the search.
+        await _app.WaitForTextAsync("Find a place by name");
+        await _app.TypeAsync("Budapest");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Budapest, Budapest, Hungary");
+
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Saved Budapest");
+
+        // The place is saved, so its forecast is fetched: the conditions and the next 24 hours.
+        await _app.WaitForTextAsync("9.5°C");
+        await _app.WaitForTextAsync("Partly cloudy");
+        await _app.WaitForTextAsync("Next 24 hours");
+
+        await _app.PressAsync("v");
+        await _app.WaitForTextAsync("Next 7 days");
+        await _app.WaitForTextAsync("Chance");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+}

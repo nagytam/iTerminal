@@ -63,6 +63,7 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
         iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
         iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
+        iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
         iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null)
         : base("Tools", null, [], themeService)
     {
@@ -113,6 +114,7 @@ public class ToolsMenuItem : MenuItem
         if (mapDialog is not null) groups["office"].Add(new MapDialogCommand(mapDialog));
         if (translatorDialog is not null) groups["office"].Add(new TranslatorDialogCommand(translatorDialog));
         if (currencyConverterDialog is not null) groups["office"].Add(new CurrencyConverterDialogCommand(currencyConverterDialog));
+        if (weatherDialog is not null) groups["office"].Add(new WeatherDialogCommand(weatherDialog));
         if (torrentManagerDialog is not null) groups["net"].Add(new TorrentManagerDialogCommand(torrentManagerDialog));
         if (contactManagerDialog is not null) groups["office"].Add(new ContactManagerDialogCommand(contactManagerDialog));
         if (environmentVariablesDialog is not null) groups["files"].Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));

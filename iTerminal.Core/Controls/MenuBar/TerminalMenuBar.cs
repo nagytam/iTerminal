@@ -168,6 +168,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Jobs.UpdateCheckJob? updateCheckJob = null,
         iConsole.Viewers.FileViewerRegistry? fileViewers = null,
         iConsole.Viewers.FileEditorRegistry? fileEditors = null,
+        iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
         InternetConnectivityService? connectivityService = null
         )
         : base([], themeService)
@@ -309,6 +310,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             userGroupManagerDialog: userGroupManagerDialog,
             scannerDialog: scannerDialog,
             networkToolsDialog: networkToolsDialog,
+            weatherDialog: weatherDialog,
             pluginManagerDialog: pluginManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));

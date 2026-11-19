@@ -10442,4 +10442,172 @@
   <data name="CmdTitle.35808701" xml:space="preserve">
     <value>Ouvrir une connexion FTP ou SFTP</value>
   </data>
+  <data name="Dialog.Weather" xml:space="preserve">
+    <value>Météo</value>
+  </data>
+  <data name="Weather.Places" xml:space="preserve">
+    <value>Lieux</value>
+  </data>
+  <data name="Weather.Found.Heading" xml:space="preserve">
+    <value>Trouvés</value>
+  </data>
+  <data name="Weather.NextHours" xml:space="preserve">
+    <value>Les 24 prochaines heures</value>
+  </data>
+  <data name="Weather.NextDays" xml:space="preserve">
+    <value>Les 7 prochains jours</value>
+  </data>
+  <data name="Weather.Empty" xml:space="preserve">
+    <value> Aucun lieu enregistré — appuyez sur a pour en chercher un.</value>
+  </data>
+  <data name="Weather.NoHits" xml:space="preserve">
+    <value> Rien trouvé.</value>
+  </data>
+  <data name="Weather.FindPrompt" xml:space="preserve">
+    <value>Chercher un lieu par son nom</value>
+  </data>
+  <data name="Weather.Found" xml:space="preserve">
+    <value>{0} trouvé(s) — ↑↓ pour choisir, Entrée enregistre le choix</value>
+  </data>
+  <data name="Weather.NothingFound" xml:space="preserve">
+    <value>Aucun lieu trouvé pour « {0} ».</value>
+  </data>
+  <data name="Weather.Saved" xml:space="preserve">
+    <value>{0} enregistré</value>
+  </data>
+  <data name="Weather.AlreadySaved" xml:space="preserve">
+    <value>{0} est déjà enregistré</value>
+  </data>
+  <data name="Weather.Removed" xml:space="preserve">
+    <value>{0} supprimé</value>
+  </data>
+  <data name="Weather.NotSaved" xml:space="preserve">
+    <value>{0} n'est pas enregistré</value>
+  </data>
+  <data name="Weather.ConfirmRemove" xml:space="preserve">
+    <value>Supprimer {0} ?  y:oui  autre touche:non</value>
+  </data>
+  <data name="Weather.HomeSet" xml:space="preserve">
+    <value>{0} est le lieu principal</value>
+  </data>
+  <data name="Weather.Fetching" xml:space="preserve">
+    <value>Prévisions en cours de chargement…</value>
+  </data>
+  <data name="Weather.NoForecast" xml:space="preserve">
+    <value>Pas encore de prévisions — F5 les charge.</value>
+  </data>
+  <data name="Weather.Offline" xml:space="preserve">
+    <value>Le service de prévisions est injoignable ({0}). Affichage de la dernière prévision conservée.</value>
+  </data>
+  <data name="Weather.Updated" xml:space="preserve">
+    <value>Prévisions mises à jour</value>
+  </data>
+  <data name="Weather.Updated.At" xml:space="preserve">
+    <value>mise à jour {0:HH:mm}</value>
+  </data>
+  <data name="Weather.Rain.Label" xml:space="preserve">
+    <value>Pluie</value>
+  </data>
+  <data name="Weather.Code.Clear" xml:space="preserve">
+    <value>Ciel dégagé</value>
+  </data>
+  <data name="Weather.Code.MainlyClear" xml:space="preserve">
+    <value>Plutôt dégagé</value>
+  </data>
+  <data name="Weather.Code.PartlyCloudy" xml:space="preserve">
+    <value>Partiellement nuageux</value>
+  </data>
+  <data name="Weather.Code.Overcast" xml:space="preserve">
+    <value>Couvert</value>
+  </data>
+  <data name="Weather.Code.Fog" xml:space="preserve">
+    <value>Brouillard</value>
+  </data>
+  <data name="Weather.Code.Drizzle" xml:space="preserve">
+    <value>Bruine</value>
+  </data>
+  <data name="Weather.Code.FreezingDrizzle" xml:space="preserve">
+    <value>Bruine verglaçante</value>
+  </data>
+  <data name="Weather.Code.Rain" xml:space="preserve">
+    <value>Pluie</value>
+  </data>
+  <data name="Weather.Code.FreezingRain" xml:space="preserve">
+    <value>Pluie verglaçante</value>
+  </data>
+  <data name="Weather.Code.Snow" xml:space="preserve">
+    <value>Neige</value>
+  </data>
+  <data name="Weather.Code.SnowGrains" xml:space="preserve">
+    <value>Grains de neige</value>
+  </data>
+  <data name="Weather.Code.RainShowers" xml:space="preserve">
+    <value>Averses de pluie</value>
+  </data>
+  <data name="Weather.Code.SnowShowers" xml:space="preserve">
+    <value>Averses de neige</value>
+  </data>
+  <data name="Weather.Code.Thunderstorm" xml:space="preserve">
+    <value>Orage</value>
+  </data>
+  <data name="Weather.Code.ThunderstormHail" xml:space="preserve">
+    <value>Orage avec grêle</value>
+  </data>
+  <data name="Weather.Code.Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="DialogHint.BackToSearch" xml:space="preserve">
+    <value>Retour à la recherche</value>
+  </data>
+  <data name="DialogHint.FindPlace" xml:space="preserve">
+    <value>Chercher un lieu</value>
+  </data>
+  <data name="DialogHint.HomePlace" xml:space="preserve">
+    <value>Définir comme lieu principal</value>
+  </data>
+  <data name="DialogHint.HourlyDaily" xml:space="preserve">
+    <value>Par heure ou par jour</value>
+  </data>
+  <data name="DialogHint.RefreshForecast" xml:space="preserve">
+    <value>Actualiser les prévisions</value>
+  </data>
+  <data name="DialogHint.RemovePlace" xml:space="preserve">
+    <value>Supprimer le lieu</value>
+  </data>
+  <data name="DialogHint.SavePlace" xml:space="preserve">
+    <value>Enregistrer le lieu choisi</value>
+  </data>
+  <data name="Hints.Weather" xml:space="preserve">
+    <value>a:chercher  d/Suppr:supprimer  h:principal  v:horaire/quotidien  F5:actualiser  Esc:fermer</value>
+  </data>
+  <data name="Hints.WeatherSearch" xml:space="preserve">
+    <value>Entrée:chercher  ↑↓:choisir  Esc:retour</value>
+  </data>
+  <data name="Hints.WeatherHits" xml:space="preserve">
+    <value>Entrée:enregistrer  ↑↓:choisir  a:chercher  Esc:retour</value>
+  </data>
+  <data name="CmdTitle.a0bba638" xml:space="preserve">
+    <value>Météo</value>
+  </data>
+  <data name="CmdDesc.5efc92aa" xml:space="preserve">
+    <value>Affiche la météo des lieux enregistrés : maintenant, les 24 prochaines heures et les 7 prochains jours.</value>
+  </data>
+  <data name="Weather.Col.Weather" xml:space="preserve">
+    <value>Météo</value>
+  </data>
+  <data name="Weather.Col.Min" xml:space="preserve">
+    <value>Min.</value>
+  </data>
+  <data name="Weather.Col.Max" xml:space="preserve">
+    <value>Max.</value>
+  </data>
+  <data name="Weather.Col.Rain" xml:space="preserve">
+    <value>Pluie</value>
+  </data>
+  <data name="Weather.Col.Chance" xml:space="preserve">
+    <value>Prob.</value>
+  </data>
+  <data name="Weather.Updated.Old" xml:space="preserve">
+    <value>ancienne, mise à jour {0:g}</value>
+  </data>
 </root>

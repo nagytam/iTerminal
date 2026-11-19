@@ -191,6 +191,10 @@ public sealed class TerminalApp : IAsyncDisposable
                     .RemoveAll<Core.Services.Translation.ITranslationProvider>(services);
                 services.AddSingleton<Core.Services.Translation.ITranslationProvider, SandboxServices.Translation>();
                 services.AddSingleton<Core.Services.Currency.ICurrencyRateProvider, SandboxServices.CurrencyRates>();
+                // Tools > Weather: the forecast and the place search are answered from a fixed table, so no run reaches Open-Meteo.
+                Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
+                    .RemoveAll<Core.Services.Weather.IForecastProvider>(services);
+                services.AddSingleton<Core.Services.Weather.IForecastProvider, SandboxServices.WeatherForecasts>();
                 services.AddSingleton<Core.Services.Encyclopedia.IEncyclopediaProvider, SandboxServices.Encyclopedia>();
                 // The network tools would ping, resolve and query whois for the typed target: a fixed answer stands in, so no run reaches the network.
                 services.AddSingleton<Core.Services.NetworkTools.INetworkToolService, SandboxServices.NetworkToolRunner>();
