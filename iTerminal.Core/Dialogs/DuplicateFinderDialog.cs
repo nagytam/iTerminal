@@ -232,14 +232,14 @@ public class DuplicateFinderDialog : Dialog
 
         if (!_scan.IsComplete)
         {
-            lines.Add(new(Say("DupFinder.Looking", "Looking for duplicates in {0}", _scan.Path), colorScheme.Foreground));
+            lines.Add(new(Say("DupFinder.Looking", "Looking for duplicates in {0}", DiskUsageDialog.FitPath(_scan.Path, width - 26)), colorScheme.Foreground));
             lines.Add(new(_scan.Phase switch
             {
                 DuplicateScanPhase.Listing => Say("DupFinder.Listing", "Listing files: {0:N0} so far", _scan.FilesScanned),
                 DuplicateScanPhase.Sampling => Say("DupFinder.Sampling", "Comparing the start of files that are the same size…"),
                 _ => Say("DupFinder.Hashing", "Reading files that still look alike: {0} of {1}", _scan.BytesHashed.ToFileSize(), _scan.BytesToHash.ToFileSize()),
             }, Color.Yellow));
-            lines.Add(new(_scan.Current, Color.Cyan));
+            lines.Add(new(DiskUsageDialog.FitPath(_scan.Current, width), Color.Cyan));
             lines.Add(default);
             lines.Add(new(Say("DupFinder.EscStops", "Esc stops and closes."), colorScheme.Foreground));
             Status();
@@ -253,7 +253,7 @@ public class DuplicateFinderDialog : Dialog
             return;
         }
 
-        lines.Add(new(_scan.Path, Color.Cyan));
+        lines.Add(new(DiskUsageDialog.FitPath(_scan.Path, width), Color.Cyan));
         if (_groups.Count == 0)
         {
             lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Duplicates.None", "No duplicate files among the {0:N0} files looked at."), _scan.FilesScanned), colorScheme.Foreground));

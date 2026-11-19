@@ -10548,6 +10548,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>Browsing {0} anonymously. L logs in.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} in use.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Select a host to log out of first.</value>
   </data>
@@ -10902,6 +10905,66 @@
   </data>
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Undo rename or move</value>
+  </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Global </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Network</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Indicators </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Music </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Documents </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Panels </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Background</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Screen saver</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Basic</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Scientific</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programming</value>
+  </data>
+  <data name="DriveType.Fixed" xml:space="preserve">
+    <value>Fixed</value>
+  </data>
+  <data name="DriveType.Removable" xml:space="preserve">
+    <value>Removable</value>
+  </data>
+  <data name="DriveType.CDRom" xml:space="preserve">
+    <value>CDRom</value>
+  </data>
+  <data name="DriveType.Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="DriveType.Ram" xml:space="preserve">
+    <value>Ram</value>
+  </data>
+  <data name="DriveType.NoRootDirectory" xml:space="preserve">
+    <value>NoRootDirectory</value>
+  </data>
+  <data name="DriveType.Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="DriveList.Label" xml:space="preserve">
+    <value>Label:</value>
+  </data>
+  <data name="Msg.RenameTargetExists" xml:space="preserve">
+    <value>'{0}' already exists. Tick "{1}" to replace it.</value>
   </data>
   <data name="Radio.Title" xml:space="preserve">
     <value>Online radio</value>

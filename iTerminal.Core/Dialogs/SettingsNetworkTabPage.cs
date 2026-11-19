@@ -21,7 +21,7 @@ public class SettingsNetworkTabPage : TabPage
 
     public SettingsNetworkTabPage(
         IThemeService themeService)
-        : base("2-Network", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Network", "2-Network"), themeService)
     {
         HotConsoleKey = ConsoleKey.D2;
 

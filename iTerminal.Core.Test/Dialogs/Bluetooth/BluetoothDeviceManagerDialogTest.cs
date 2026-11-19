@@ -357,4 +357,15 @@ public class BluetoothDeviceManagerDialogTest
             }
         }
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FormatRow_WithAShortAddress_KeepsTheLastThreeBytesAndTheWholeState()
+    {
+        var row = BluetoothDeviceManagerDialog.FormatRow(new BluetoothDevice("00:11:22:33:44:55", "Sandbox Headphones", false, false), "connected", nameWidth: 12, shortAddress: true);
+
+        Assert.AreEqual("Sand...ones  33:44:55  connected", row);
+        Assert.IsTrue(row.EndsWith("connected", StringComparison.Ordinal));
+        Assert.IsFalse(row.Contains("00:11", StringComparison.Ordinal), row);
+    }
 }
