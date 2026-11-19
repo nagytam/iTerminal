@@ -27,7 +27,8 @@ public abstract class TransferCommand(
     IConflictPromptService conflictPromptService,
     FileSystemResolver fileSystemResolver,
     IContentModelService contentModelService,
-    IChecksumService? checksumService = null)
+    IChecksumService? checksumService = null,
+    RenameUndoService? renameUndo = null)
     : Command
 {
     public override Key? Key { get; init; } =
@@ -96,6 +97,7 @@ public abstract class TransferCommand(
                         contentModelService,
                         RemovesSource ? dialog.SourceUrl : null,
                         dialog.TargetUrl);
+                    RememberMovesForUndoWhenFinished(task, dialog.SourceModel, [(dialog.SourceUrl, dialog.TargetUrl)]);
 
                     // The discovery task (if any) is added first so it starts walking the tree
                     // immediately; both are independently visible in the task manager, but only
@@ -137,6 +139,7 @@ public abstract class TransferCommand(
         var targetFolder = dialog.TargetUrl;
         var resolver = new FileConflictResolver(dialog.ConflictMode, conflictPromptService);
         var steps = new List<BatchStep>();
+        var moves = new List<(Url Source, Url Target)>();
         foreach (var sourceUrl in dialog.SourceUrls)
         {
             var targetUrl = dialog.TargetUrlFor(sourceUrl);
@@ -144,6 +147,7 @@ public abstract class TransferCommand(
             if (task is not null)
             {
                 steps.Add(new BatchStep(FocusedEntry.NameOf(sourceUrl), task, discoveryTask));
+                moves.Add((sourceUrl, targetUrl));
             }
         }
 
@@ -170,6 +174,7 @@ public abstract class TransferCommand(
             contentModelService,
             RemovesSource ? dialog.SourceUrls[0] : null,
             dialog.TargetUrlFor(dialog.SourceUrls[0]));
+        RememberMovesForUndoWhenFinished(batch, dialog.SourceModel, moves);
 
         ConsumeMarks(dialog.SourceModel);
 
@@ -239,6 +244,50 @@ public abstract class TransferCommand(
         PanelRefreshHelper.RefreshWhenFinished(batch, contentModelService, RemovesSource ? sources[0] : null, targets[0]);
         await taskManager.Add(batch);
         await host.ShowPopUpWindowAsync(progressWindowFactory.Create(batch));
+    }
+
+    /// <summary>
+    /// For a move made from the dialog, hands Ctrl+Z the moves once the task has ended, as one step (<see cref="RenameUndoService"/>).
+    /// Only local moves are remembered, and only those whose target did not exist before: a move that replaced something
+    /// cannot be undone, and one that ended up under another name (the Rename conflict choice) would not be found at the
+    /// remembered target. The undo still checks every pair again before it moves anything. Subscribed before the task is
+    /// queued, because a short move can end before <c>Add</c> returns.
+    /// </summary>
+    internal void RememberMovesForUndoWhenFinished(BackgroundTask task, IContentModel? model, IReadOnlyList<(Url Source, Url Target)> moves)
+    {
+        if (!RemovesSource || renameUndo is null || model is null)
+        {
+            return;
+        }
+
+        List<(Url Source, Url Target)> candidates = [];
+        foreach (var (source, target) in moves)
+        {
+            if (source.ContainerType == ContainerType.FileSystem
+                && target.ContainerType == ContainerType.FileSystem
+                && !model.ExistsFile(target) && !model.ExistsFolder(target))
+            {
+                candidates.Add((source, target));
+            }
+        }
+
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        void OnTaskChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(BackgroundTask.Status) || task.Status == iConsole.Data.TaskStatus.Started)
+            {
+                return;
+            }
+
+            task.PropertyChanged -= OnTaskChanged;
+            renameUndo.RememberBatch(model, candidates);
+        }
+
+        task.PropertyChanged += OnTaskChanged;
     }
 
     internal static void ConsumeMarks(IContentModel? model)
