@@ -260,4 +260,32 @@ public class FolderSynchronizerTest
         Assert.IsTrue(File.Exists(PathOf("R", "a.txt")));
         Assert.IsFalse(comparison.Differences.Any(d => d.Path.StartsWith("loop/loop", StringComparison.Ordinal)), "the loop is not compared into itself");
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFolderSynchronisedWithItsOwnSubfolder_IsRefusedInsteadOfCopyingIntoItselfForEver()
+    {
+        Write("L", "inner/file.txt", "inside", Noon);
+        var nested = new Url(Path.Combine(_root, "L", "inner") + Path.DirectorySeparatorChar);
+        var result = await FolderComparer.CompareAsync(Folder("L"), _fileSystem, nested, _fileSystem, new CompareOptions(CompareMode.SizeAndDate, IncludeSubfolders: true), null, CancellationToken.None);
+        var plan = FolderSynchronizer.Plan(result, new SyncOptions(SyncDirection.LeftToRight));
+
+        var task = new FolderSyncTask(plan, Folder("L"), _fileSystem, nested, _fileSystem);
+        await task.RunAsync();
+
+        StringAssert.Contains(task.Error, "subfolders");
+        Assert.AreEqual(0, task.Copied);
+        Assert.IsFalse(Directory.Exists(PathOf("L", "inner/inner")), "nothing was copied into the source");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AreNested_IsTrueOnlyWhenOneFolderIsStrictlyInsideTheOther()
+    {
+        Assert.IsTrue(FolderSyncTask.AreNested(Folder("L"), new Url(Path.Combine(_root, "L", "inner") + Path.DirectorySeparatorChar)));
+        Assert.IsTrue(FolderSyncTask.AreNested(new Url(Path.Combine(_root, "L", "inner") + Path.DirectorySeparatorChar), Folder("L")));
+        Assert.IsFalse(FolderSyncTask.AreNested(Folder("L"), Folder("L")), "the same folder compares equal and is harmless");
+        Assert.IsFalse(FolderSyncTask.AreNested(Folder("L"), Folder("R")));
+        Assert.IsFalse(FolderSyncTask.AreNested(Folder("L"), new Url(Path.Combine(_root, "L2") + Path.DirectorySeparatorChar)), "a sibling sharing a name prefix is not inside");
+    }
 }
