@@ -7,14 +7,14 @@ using iTerminal.Core.Services;
 namespace iTerminal.Core.Commands;
 
 /// <summary>
-/// Ctrl+Z on a file panel: puts back the names the last rename, or the last Multi-rename run, changed. An entry is
+/// Ctrl+Z on a file panel: puts back the names the last rename, Multi-rename run or move changed. An entry is
 /// moved back only when the old name is free and the new name is still there; otherwise it says why, and keeps
 /// nothing to undo.
 /// </summary>
 public class UndoRenameCommand(RenameUndoService renameUndo, INotificationService? notificationService = null) : Command
 {
-    public override string Title => UiText.Title("Undo rename");
-    public override string Description => UiText.Describe("Put back the name the last rename changed.");
+    public override string Title => UiText.Title("Undo rename or move");
+    public override string Description => UiText.Describe("Put back the names the last rename, multi-rename or move changed.");
 
     public override Key? Key { get; init; } = new Key(ConsoleKey.Z, false, false, true);
 
@@ -57,7 +57,7 @@ public class UndoRenameCommand(RenameUndoService renameUndo, INotificationServic
         {
             Say(
                 string.Format(
-                    UiText.Get("Undo.RenameBatchPartial", "Put back {0} of {1} renames. The rest were not put back: the new name is gone or the old name is taken again."),
+                    UiText.Get("Undo.RenameBatchPartial", "Put back {0} of {1} entries. The rest were not put back: the new name is gone or the old name is taken again."),
                     putBack,
                     renames.Count),
                 NotificationSeverity.Warning);
@@ -70,13 +70,13 @@ public class UndoRenameCommand(RenameUndoService renameUndo, INotificationServic
         {
             if (!Exists(rename.Model, rename.Target))
             {
-                Say(UiText.Get("Undo.RenameGone", "The renamed entry is no longer there, so there is nothing to put back."), NotificationSeverity.Warning);
+                Say(UiText.Get("Undo.RenameGone", "The entry is no longer there, so there is nothing to put back."), NotificationSeverity.Warning);
                 return;
             }
 
             if (Exists(rename.Model, rename.Source))
             {
-                Say(UiText.Get("Undo.RenameNameTaken", "The old name is taken now, so the rename was not undone."), NotificationSeverity.Warning);
+                Say(UiText.Get("Undo.RenameNameTaken", "The old name is taken now, so it was not put back."), NotificationSeverity.Warning);
                 return;
             }
 
@@ -102,5 +102,5 @@ public class UndoRenameCommand(RenameUndoService renameUndo, INotificationServic
         model.ExistsFile(url) || model.ExistsFolder(url);
 
     private void Say(string message, NotificationSeverity severity) =>
-        notificationService?.Notify(UiText.Get("Undo.RenameTitle", "Undo rename"), message, severity);
+        notificationService?.Notify(UiText.Get("Undo.RenameTitle", "Undo rename or move"), message, severity);
 }

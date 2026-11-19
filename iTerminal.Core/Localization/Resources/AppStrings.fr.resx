@@ -10116,20 +10116,20 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} tâche(s) en arrière-plan sont encore en cours. Quitter quand même ?</value>
   </data>
-  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
-    <value>Annuler le renommage</value>
+  <data name="CmdTitle.97bca610" xml:space="preserve">
+    <value>Annuler le renommage ou le déplacement</value>
   </data>
-  <data name="CmdDesc.e5781ae9" xml:space="preserve">
-    <value>Remettre le nom modifié par le dernier renommage.</value>
+  <data name="CmdDesc.b4114ce8" xml:space="preserve">
+    <value>Remettre les noms modifiés par le dernier renommage, renommage multiple ou déplacement.</value>
   </data>
   <data name="Undo.RenameTitle" xml:space="preserve">
-    <value>Annuler le renommage</value>
+    <value>Annuler le renommage ou le déplacement</value>
   </data>
   <data name="Undo.RenameGone" xml:space="preserve">
-    <value>L'élément renommé n'est plus là, il n'y a donc rien à remettre en place.</value>
+    <value>L'élément n'est plus là, il n'y a donc rien à remettre en place.</value>
   </data>
   <data name="Undo.RenameNameTaken" xml:space="preserve">
-    <value>L'ancien nom est maintenant pris, le renommage n'a donc pas été annulé.</value>
+    <value>L'ancien nom est maintenant pris, l'élément n'a donc pas été remis en place.</value>
   </data>
   <data name="CmdTitle.19b314a4" xml:space="preserve">
     <value>Agrandir le panneau actif</value>
@@ -10680,6 +10680,6 @@
     <value>Jouez à Risk : conquérez des territoires contre l'ordinateur ou un ami, tour après tour.</value>
   </data>
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
-    <value>{0} renommages sur {1} annulés. Les autres ne l'ont pas été : le nouveau nom n'existe plus ou l'ancien nom est de nouveau pris.</value>
+    <value>{0} éléments sur {1} remis en place. Les autres ne l'ont pas été : le nouveau nom n'existe plus ou l'ancien nom est de nouveau pris.</value>
   </data>
 </root>

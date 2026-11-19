@@ -10116,20 +10116,20 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} tarea(s) en segundo plano siguen en curso. Â¿Salir de todos modos?</value>
   </data>
-  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
-    <value>Deshacer cambio de nombre</value>
+  <data name="CmdTitle.97bca610" xml:space="preserve">
+    <value>Deshacer cambio de nombre o movimiento</value>
   </data>
-  <data name="CmdDesc.e5781ae9" xml:space="preserve">
-    <value>Restaurar el nombre que cambió el último cambio de nombre.</value>
+  <data name="CmdDesc.b4114ce8" xml:space="preserve">
+    <value>Restaurar los nombres que cambió el último cambio de nombre, cambio de nombre múltiple o movimiento.</value>
   </data>
   <data name="Undo.RenameTitle" xml:space="preserve">
-    <value>Deshacer cambio de nombre</value>
+    <value>Deshacer cambio de nombre o movimiento</value>
   </data>
   <data name="Undo.RenameGone" xml:space="preserve">
-    <value>El elemento renombrado ya no está, así que no hay nada que restaurar.</value>
+    <value>El elemento ya no está, así que no hay nada que restaurar.</value>
   </data>
   <data name="Undo.RenameNameTaken" xml:space="preserve">
-    <value>El nombre anterior ya está ocupado, así que el cambio de nombre no se deshizo.</value>
+    <value>El nombre anterior ya está ocupado, así que no se restauró.</value>
   </data>
   <data name="CmdTitle.19b314a4" xml:space="preserve">
     <value>Ampliar el panel activo</value>
@@ -10680,6 +10680,6 @@
     <value>Juega a Risk: conquista territorios contra el ordenador o un amigo, turno a turno.</value>
   </data>
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
-    <value>Se deshicieron {0} de {1} cambios de nombre. El resto no: el nuevo nombre ya no existe o el nombre anterior está ocupado otra vez.</value>
+    <value>Se restauraron {0} de {1} elementos. El resto no: el nuevo nombre ya no existe o el nombre anterior está ocupado otra vez.</value>
   </data>
 </root>
