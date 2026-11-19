@@ -1901,6 +1901,9 @@
   <data name="Field.EnableQuotes" xml:space="preserve">
     <value>Activar las cotizaciones</value>
   </data>
+  <data name="Field.EnableOnline" xml:space="preserve">
+    <value>Activar el estado en línea</value>
+  </data>
   <data name="Field.EnableWeather" xml:space="preserve">
     <value>Activar el tiempo</value>
   </data>
@@ -8566,6 +8569,15 @@
   <data name="Settings.BgHint" xml:space="preserve">
     <value>Se aplica la próxima vez que se inicie iTerminal. Los inicios diferidos ocurren tras {0} s, o antes si se abre la función.</value>
   </data>
+  <data name="Indicator.Online" xml:space="preserve">
+    <value>En línea</value>
+  </data>
+  <data name="Indicator.Offline" xml:space="preserve">
+    <value>Sin conexión</value>
+  </data>
+  <data name="Indicator.Checking" xml:space="preserve">
+    <value>Comprobando</value>
+  </data>
   <data name="Weather.Unavailable" xml:space="preserve">
     <value>Tiempo no disponible</value>
   </data>
@@ -10239,6 +10251,45 @@
   </data>
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 almacena, 1 es el más rápido, 5 el más pequeño</value>
+  </data>
+  <data name="Plugins.Title" xml:space="preserve">
+    <value>Administrador de complementos</value>
+  </data>
+  <data name="Plugins.Empty" xml:space="preserve">
+    <value>No hay complementos en {0}. Copie allí una .dll de complemento y pulse R.</value>
+  </data>
+  <data name="Plugins.Folder" xml:space="preserve">
+    <value>Carpeta: {0}</value>
+  </data>
+  <data name="Plugins.Status.Loaded" xml:space="preserve">
+    <value>cargado, {0} visor(es), {1} editor(es)</value>
+  </data>
+  <data name="Plugins.Status.Unloaded" xml:space="preserve">
+    <value>no cargado</value>
+  </data>
+  <data name="Plugins.Status.Loading" xml:space="preserve">
+    <value>cargando…</value>
+  </data>
+  <data name="Plugins.Status.Unloading" xml:space="preserve">
+    <value>descargando…</value>
+  </data>
+  <data name="Plugins.Status.Failed" xml:space="preserve">
+    <value>error</value>
+  </data>
+  <data name="Plugins.Error.NoHandlers" xml:space="preserve">
+    <value>{0} no contiene ningún complemento de visor ni de editor.</value>
+  </data>
+  <data name="Plugins.Hint.Rescan" xml:space="preserve">
+    <value>Volver a leer la carpeta de complementos</value>
+  </data>
+  <data name="Plugins.Notify.Failed" xml:space="preserve">
+    <value>No se pudieron cargar {0} complemento(s). El administrador de complementos del menú Herramientas indica el motivo.</value>
+  </data>
+  <data name="CmdTitle.f8cd7419" xml:space="preserve">
+    <value>Administrador de complementos…</value>
+  </data>
+  <data name="CmdDesc.0fce9508" xml:space="preserve">
+    <value>Cargar o descargar los complementos de visor y editor de la carpeta de complementos.</value>
   </data>
   <data name="FolderSelector.Tab7" xml:space="preserve">
     <value>7-SMB</value>

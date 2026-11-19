@@ -7,6 +7,7 @@ public static class Settings
     /// <summary>Prefix of the start mode of each configurable background service: <c>BackgroundStart.&lt;service&gt;</c>, one of <c>Immediately</c>, <c>Delayed</c>, <c>OnDemand</c>.</summary>
     public const string BackgroundStartPrefix = "BackgroundStart.";
     public const string IsWeatherIndicatorEnabled = nameof(IsWeatherIndicatorEnabled);
+    public const string IsOnlineIndicatorEnabled = nameof(IsOnlineIndicatorEnabled);
     public const string NetworkConnectionProfiles = nameof(NetworkConnectionProfiles);
 
     /// <summary>The saved SSH and PowerShell remoting connections of the remote connection manager, as JSON.</summary>
@@ -73,4 +74,10 @@ public static class Settings
 
     /// <summary>Minutes without a key press or a click before the screen saver starts. Five by default, between 1 and 240.</summary>
     public const string ScreenSaverIdleMinutes = nameof(ScreenSaverIdleMinutes);
+
+    /// <summary>
+    /// The viewer and editor plug-ins the user loaded in the plug-in manager, as a JSON array of file names. They load again at start-up.
+    /// A plug-in that fails to load stays in the list until the user unloads it.
+    /// </summary>
+    public const string LoadedPlugins = nameof(LoadedPlugins);
 }

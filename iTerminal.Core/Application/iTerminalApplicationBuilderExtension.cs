@@ -147,6 +147,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddScoped<ICacheService, CacheService>();
         services.AddHostedService<DatabaseInitializationHostedService>();
         services.AddHostedService<iTerminal.Core.Commands.DialogRefreshHostedService>();
+        services.AddHostedService<iTerminal.Core.Services.Plugins.PluginStartupHostedService>();
         services.AddTransient<TerminalMenuBar>();
         services.AddSingleton<Content>();
         services.AddSingleton<iTerminal.Core.Services.RenameUndoService>();
@@ -217,6 +218,11 @@ public static class iTerminalApplicationBuilderExtension
         // (or in another extension) is all a plug-in needs.
         services.AddSingleton<iConsole.Viewers.FileViewerRegistry>();
         services.AddSingleton<iConsole.Viewers.FileEditorRegistry>();
+        // The plug-ins in this folder are loaded and unloaded by the plug-in manager (Tools > Plugin manager), and the ones the
+        // user loaded are loaded again at start-up by PluginStartupHostedService.
+        services.AddSingleton(new iTerminal.Core.Services.Plugins.PluginLocation(Path.Combine(databaseDirectory, "plugins")));
+        services.AddSingleton<iTerminal.Core.Services.Plugins.IPluginManagerService, iTerminal.Core.Services.Plugins.PluginManagerService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Plugins.PluginManagerDialog>();
         services.AddSingleton<iTerminal.Core.Services.Dotnet.IDotnetSolutionService, iTerminal.Core.Services.Dotnet.DotnetSolutionService>();
         services.AddTransient<iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog>();
         services.AddSingleton<iTerminal.Core.Services.PackageManager.IPackageManagerService>(_ =>
@@ -514,6 +520,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, FolderIndexJob>();
         services.AddSingleton<IJob, OnlineQuoteJob>();
         services.AddSingleton<IJob, WeatherJob>();
+        services.AddSingleton<iTerminal.Core.Services.InternetConnectivityService>();
+        services.AddSingleton<IJob, iTerminal.Core.Jobs.InternetConnectivityJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.CalendarIdentityJob>();
         services.AddSingleton<DriveInfoModel>();

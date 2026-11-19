@@ -21,6 +21,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     private const int WeatherIndicatorWidth = 20;
     private const int QuoteBtcIndicatorWidth = 18;
     private const int QuoteEthIndicatorWidth = 17;
+    private const int OnlineIndicatorWidth = 10;
 
     private ISettingsService _settingsService { get; set; }
     private iConsole.Controls.StatusBar.StatusBar _statusBarTopRight { get; set; }
@@ -28,8 +29,10 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     private WeatherIndicator _weather { get; set; }
     private QuoteIndicator _quoteETH { get; set; }
     private QuoteIndicator _quoteBTC { get; set; }
+    private OnlineIndicator _online { get; set; }
 
     private bool _isWeatherIndicatorEnabled = true;
+    private bool _isOnlineIndicatorEnabled = true;
     private readonly ILocalizer? _localizer;
     private volatile bool _languageChanged;
     private bool _isQuotesIndicatorEnabled = true;
@@ -153,6 +156,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
         iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
         iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
+        iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null,
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
         iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
@@ -164,7 +168,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Jobs.UpdateCheckJob? updateCheckJob = null,
         iConsole.Viewers.FileViewerRegistry? fileViewers = null,
         iConsole.Viewers.FileEditorRegistry? fileEditors = null,
-        iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null
+        iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
+        InternetConnectivityService? connectivityService = null
         )
         : base([], themeService)
     {
@@ -305,7 +310,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             userGroupManagerDialog: userGroupManagerDialog,
             scannerDialog: scannerDialog,
             networkToolsDialog: networkToolsDialog,
-            weatherDialog: weatherDialog));
+            weatherDialog: weatherDialog,
+            pluginManagerDialog: pluginManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));
 
@@ -332,6 +338,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
 
         _quoteETH = new QuoteIndicator("Ethereum", onlineQuoteService, themeService);
         AddControl(_quoteETH);
+
+        _online = new OnlineIndicator(connectivityService ?? new InternetConnectivityService(), themeService);
+        AddControl(_online);
     }
 
     public override Task OnInitializeAsync()
@@ -356,6 +365,13 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         if (isWeatherIndicatorEnabled is not null && isWeatherIndicatorEnabled.Value != _isWeatherIndicatorEnabled)
         {
             _isWeatherIndicatorEnabled = isWeatherIndicatorEnabled.Value;
+            changed = true;
+        }
+
+        bool? isOnlineIndicatorEnabled = _settingsService.GetAsBool(Settings.IsOnlineIndicatorEnabled, true);
+        if (isOnlineIndicatorEnabled is not null && isOnlineIndicatorEnabled.Value != _isOnlineIndicatorEnabled)
+        {
+            _isOnlineIndicatorEnabled = isOnlineIndicatorEnabled.Value;
             changed = true;
         }
 
@@ -401,6 +417,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
 
     internal bool IsQuoteIndicatorShownForTest => _quoteBTC.IsVisible && _quoteETH.IsVisible;
     internal bool IsWeatherIndicatorShownForTest => _weather.IsVisible;
+    internal bool IsOnlineIndicatorShownForTest => _online.IsVisible;
 
     public override void OnInitializeLayout()
     {
@@ -426,6 +443,16 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             indicator.Position = new Position(Math.Max(rightCursor, 0), 0);
             indicator.ViewSize = new Size(width, 1);
             remainingForOptionalIndicators -= width;
+        }
+
+        // Next to the clock, so the connection state reads with the time.
+        if (_isOnlineIndicatorEnabled && remainingForOptionalIndicators >= OnlineIndicatorWidth)
+        {
+            PlaceIndicator(_online, OnlineIndicatorWidth);
+        }
+        else
+        {
+            _online.IsVisible = false;
         }
 
         if (remainingForOptionalIndicators >= TaskIndicatorWidth)

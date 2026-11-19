@@ -24,14 +24,14 @@ namespace iTerminal.Test;
 /// <item>empty music and documents folders, so the indexers have nothing to walk.</item>
 /// </list>
 ///
-/// Three jobs are left out: the weather and quote pollers (they go to the internet) and the folder
+/// Four jobs are left out: the weather and quote pollers and the connectivity check (they go to the internet) and the folder
 /// indexer (it walks every drive on the machine). The network scan, the package manager and the quote
 /// provider are <see cref="SandboxServices"/> fakes, so their dialogs can be driven without touching
 /// the network or WinGet. Everything else runs as it does in production.
 /// </summary>
 public sealed class TerminalApp : IAsyncDisposable
 {
-    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob), typeof(UpdateCheckJob), typeof(OllamaServerJob)];
+    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(InternetConnectivityJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob), typeof(UpdateCheckJob), typeof(OllamaServerJob)];
 
     private readonly string _root;
     private bool _ownsSandbox = true;
