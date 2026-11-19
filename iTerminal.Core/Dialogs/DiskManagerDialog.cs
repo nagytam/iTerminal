@@ -210,7 +210,9 @@ public class DiskManagerDialog : Dialog
         if (info is null)
         {
             lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", root)));
-            lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", UiText.Get("DiskMgr.MemoryDrive", "Memory drive (lives in this program and is saved to its database)"))));
+            lines.Add(new InfoLines.Line(drive.IsCloud
+                ? Detail("DiskMgr.Type", "Type", UiText.Get("DiskMgr.CloudDrive", "Cloud drive (lives on the provider's servers)"))
+                : Detail("DiskMgr.Type", "Type", UiText.Get("DiskMgr.MemoryDrive", "Memory drive (lives in this program and is saved to its database)"))));
             return lines;
         }
 
@@ -325,7 +327,9 @@ public class DiskManagerDialog : Dialog
 
         if (SelectedDrive.DriveInfo is null)
         {
-            SetStatus(Say("Disk.Status.EjectMemory", "A memory drive is part of this program: there is nothing to eject."), isError: true);
+            SetStatus(SelectedDrive.IsCloud
+                ? Say("Disk.Status.EjectCloud", "A cloud drive has no media to eject.")
+                : Say("Disk.Status.EjectMemory", "A memory drive is part of this program: there is nothing to eject."), isError: true);
             return Task.CompletedTask;
         }
 
@@ -374,7 +378,9 @@ public class DiskManagerDialog : Dialog
 
         if (SelectedDrive.DriveInfo is null)
         {
-            SetStatus(Say("Disk.Status.FormatMemory", "A memory drive cannot be formatted: it lives in this program's database."), isError: true);
+            SetStatus(SelectedDrive.IsCloud
+                ? Say("Disk.Status.FormatCloud", "A cloud drive cannot be formatted: it lives on the provider's servers.")
+                : Say("Disk.Status.FormatMemory", "A memory drive cannot be formatted: it lives in this program's database."), isError: true);
             return;
         }
 
@@ -438,8 +444,9 @@ public class DiskManagerDialog : Dialog
         StateHasChanged();
     }
 
+    /// <summary>The drive's root, as the actions and the details name it. A cloud row takes it from its URL: its name carries the "not configured" suffix.</summary>
     private static string RootOf(Drive drive) =>
-        drive.DriveInfo?.Name ?? drive.Name.Trim();
+        drive.IsCloud ? drive.Url.FullUrl : drive.DriveInfo?.Name ?? drive.Name.Trim();
 
     private static string FormatSize(long bytes)
     {

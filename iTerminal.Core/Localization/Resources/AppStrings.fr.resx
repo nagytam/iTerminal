@@ -10697,4 +10697,16 @@
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Annuler le renommage ou le déplacement</value>
   </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Connexion au cloud non configurée</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Lecteur cloud (sur les serveurs du fournisseur)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>Un lecteur cloud n'a pas de support à éjecter.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>Un lecteur cloud ne peut pas être formaté : il se trouve sur les serveurs du fournisseur.</value>
+  </data>
 </root>

@@ -10761,4 +10761,16 @@
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Umbenennen oder Verschieben rückgängig</value>
   </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Cloud-Anmeldung nicht eingerichtet</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Cloud-Laufwerk (liegt auf den Servern des Anbieters)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>Ein Cloud-Laufwerk hat kein Medium zum Auswerfen.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>Ein Cloud-Laufwerk kann nicht formatiert werden: es liegt auf den Servern des Anbieters.</value>
+  </data>
 </root>

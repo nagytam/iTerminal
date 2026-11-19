@@ -54,6 +54,39 @@ public class FolderSelectorDrivesTabPageTest
         };
     }
 
+    /// <summary>A OneDrive row as the job lists it: no <see cref="DriveInfo"/>, enabled only when its registration is set.</summary>
+    private static Drive CloudRow(bool isConfigured) => new()
+    {
+        DriveInfo = null,
+        Name = Container.ONEDRIVE,
+        Url = Container.ONEDRIVE,
+        IsCloudConfigured = isConfigured
+    };
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Enter_OnAConfiguredCloudRow_GoesToItsRoot()
+    {
+        var (page, harness) = await CreatePageAsync(CloudRow(isConfigured: true));
+        page.SetFocus();
+
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.Enter));
+
+        CollectionAssert.AreEqual(new[] { Container.ONEDRIVE }, harness.Navigations);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Enter_OnAnUnconfiguredCloudRow_NavigatesNowhere()
+    {
+        var (page, harness) = await CreatePageAsync(CloudRow(isConfigured: false));
+        page.SetFocus();
+
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.Enter));
+
+        Assert.AreEqual(0, harness.Navigations.Count);
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public async Task SelectedDrive_FollowsTheCursorNotAPreviousEnter()

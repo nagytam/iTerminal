@@ -4,12 +4,20 @@ using iConsole.Helper;
 using iConsole.Jobs;
 using iTerminal.Core.Data;
 using iTerminal.Core.Model;
+using iTerminal.Core.Services.Cloud;
+using Microsoft.Extensions.Options;
 
 namespace iTerminal.Core.Jobs;
 
-public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
+public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> cloudOptions) : Job
 {
     private DriveInfoModel _driveInfoModel { get; set; } = driveInfoModel;
+    private IOptions<CloudOptions> _cloudOptions { get; set; } = cloudOptions;
+
+    /// <summary>Without the cloud configuration the cloud rows are still listed, as not set up.</summary>
+    public DriveInfoJob(DriveInfoModel driveInfoModel) : this(driveInfoModel, Options.Create(new CloudOptions()))
+    {
+    }
 
     protected override Task RunAsync(CancellationToken cancellationToken)
     {
@@ -30,6 +38,10 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
                     _driveInfoModel.Drives.Add(memDrive);
                 }
                 #endregion
+                var cloud = _cloudOptions.Value;
+                AddCloudDrive(Container.ONEDRIVE, ContainerType.OneDrive, cloud.OneDrive.ClientId is { Length: > 0 });
+                AddCloudDrive(Container.GOOGLE_DRIVE, ContainerType.GoogleDrive,
+                    cloud.GoogleDrive.ClientId is { Length: > 0 } && cloud.GoogleDrive.ClientSecret is { Length: > 0 });
                 var driveInfos = DriveInfo.GetDrives().ToList();
                 if (OperatingSystem.IsLinux())
                 {
@@ -92,6 +104,31 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
     private const int NameWidth = 20;
     private const int LabelWidth = 16;
     private const int TypeWidth = 10;
+
+    /// <summary>
+    /// Lists one cloud row, once per run. A row is found by its URL type, not its name, because the name
+    /// carries the "not configured" suffix. Enabled only when its app registration is set; otherwise the
+    /// name says why it cannot be opened.
+    /// </summary>
+    private void AddCloudDrive(string scheme, ContainerType containerType, bool isConfigured)
+    {
+        if (_driveInfoModel.Drives.Any(d => d.IsCloud && d.Url.ContainerType == containerType))
+        {
+            return;
+        }
+        var name = Fit(scheme, NameWidth);
+        if (!isConfigured)
+        {
+            name += " " + iConsole.Localization.UiText.Get("Drive.CloudNotConfigured", "Cloud sign-in not configured");
+        }
+        _driveInfoModel.Drives.Add(new Drive
+        {
+            DriveInfo = null,
+            Name = name,
+            Url = scheme,
+            IsCloudConfigured = isConfigured
+        });
+    }
 
     private static string Fit(string? text, int width)
     {

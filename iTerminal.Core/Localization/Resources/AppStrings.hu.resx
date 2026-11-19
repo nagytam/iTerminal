@@ -10697,4 +10697,16 @@
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Átnevezés vagy áthelyezés visszavonása</value>
   </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>A felhőbejelentkezés nincs beállítva</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Felhőmeghajtó (a szolgáltató szerverein van)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>A felhőmeghajtóban nincs kiadható adathordozó.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>A felhőmeghajtó nem formázható: a szolgáltató szerverein van.</value>
+  </data>
 </root>
