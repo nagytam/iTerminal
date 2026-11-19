@@ -205,6 +205,9 @@ public class DiskUsageDialog : Dialog
         return rows.ToList();
     }
 
+    /// <summary>A path shortened in the middle to fit, so the drive and the folder it ends in both show; the end is the part that says which folder this is.</summary>
+    internal static string FitPath(string? path, int width) => path.Shrink(Math.Max(10, width)) ?? string.Empty;
+
     private static string Percent(long part, long whole) =>
         whole <= 0 ? "  0%" : $"{Math.Min(100d, 100d * part / whole),3:0}%";
 
@@ -228,9 +231,9 @@ public class DiskUsageDialog : Dialog
 
         if (!_scan.IsComplete)
         {
-            lines.Add(new(string.Format(UiText.Get("DiskUsage.Measuring", "Measuring {0}"), _scan.Path), colorScheme.Foreground));
+            lines.Add(new(string.Format(UiText.Get("DiskUsage.Measuring", "Measuring {0}"), FitPath(_scan.Path, width - 10)), colorScheme.Foreground));
             lines.Add(new(string.Format(UiText.Get("DiskUsage.SoFar", "{0} files, {1} so far"), _scan.FilesScanned.ToString("N0"), _scan.BytesScanned.ToFileSize()), Color.Yellow));
-            lines.Add(new(_scan.CurrentFolder, Color.Cyan));
+            lines.Add(new(FitPath(_scan.CurrentFolder, width), Color.Cyan));
             lines.Add(default);
             lines.Add(new(iConsole.Localization.UiText.Get("Disk.EscStops", "Esc stops and closes."), colorScheme.Foreground));
             _lines.Lines = lines;
@@ -240,16 +243,14 @@ public class DiskUsageDialog : Dialog
 
         if (_current is null)
         {
-            lines.Add(new(_scan.WasCancelled ? iConsole.Localization.UiText.Get("Disk.Cancelled", "Cancelled.") : string.Format(iConsole.Localization.UiText.Get("Disk.CouldNotMeasure", "Could not measure {0}."), _scan.Path), Color.Yellow));
+            lines.Add(new(_scan.WasCancelled ? iConsole.Localization.UiText.Get("Disk.Cancelled", "Cancelled.") : string.Format(iConsole.Localization.UiText.Get("Disk.CouldNotMeasure", "Could not measure {0}."), FitPath(_scan.Path, width - 20)), Color.Yellow));
             _lines.Lines = lines;
             StateHasChanged();
             return;
         }
 
         var root = _scan.Root!;
-        lines.Add(new(
-            $"{_current.Path}",
-            Color.Cyan));
+        lines.Add(new(FitPath(_current.Path, width), Color.Cyan));
         lines.Add(new(
             $"{_current.Size.ToFileSize()} in {_current.FileCount:N0} files, {_current.FolderCount:N0} folders"
             + (_current.Inaccessible ? "  (some of it could not be read)" : string.Empty)
