@@ -21,8 +21,9 @@ namespace iTerminal.Core.Dialogs;
 /// profile, the key of an SFTP one). An FTP entry from the Remote connections dialog opens at the folder it
 /// was saved with. Enter goes to the connection under the cursor and closes the selector.
 ///
-/// Nothing is typed here and nothing is scanned: a new connection is made in the Remote connections dialog
-/// (Alt+F2), and an SSH login is kept by the Network Browser (Ctrl+N).
+/// The SSH entries of the Remote connections dialog are listed too, as SFTP. Nothing is typed here and nothing is
+/// scanned: a new connection is made in the Remote connections dialog (Alt+F2), and an SSH login is kept by the
+/// Network Browser (Ctrl+N).
 /// </summary>
 public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
 {
@@ -120,8 +121,31 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
     /// <summary>Rebuilds the list from the saved connections. Both reads are from the settings cache, not I/O.</summary>
     private void Reload()
     {
-        var rows = RemoteFilesBrowserRows.Build(_networkProfileService.GetAll(), _remoteConnectionService.GetAll());
-        _items.ReplaceAll(rows);
+        var connections = _remoteConnectionService.GetAll();
+        var profiles = _networkProfileService.GetAll();
+
+        // An SSH entry saved before it was listed here has no profile yet. Saving it again writes the profile, so it
+        // is done once, here; an entry that cannot be saved is left out rather than failing the page.
+        var missing = connections
+            .Where(c => c.Protocol == RemoteProtocol.Ssh && c.EffectivePort == c.DefaultPort && profiles.All(p => p.Id != c.Id))
+            .ToList();
+        if (missing.Count > 0)
+        {
+            foreach (var connection in missing)
+            {
+                try
+                {
+                    _remoteConnectionService.Save(connection);
+                }
+                catch (InvalidOperationException)
+                {
+                    // Not a sound entry any more; it stays a shell entry only.
+                }
+            }
+            profiles = _networkProfileService.GetAll();
+        }
+
+        _items.ReplaceAll(RemoteFilesBrowserRows.Build(profiles, connections));
     }
 
     /// <summary>The URL of the row under the cursor, or null when the list is empty.</summary>

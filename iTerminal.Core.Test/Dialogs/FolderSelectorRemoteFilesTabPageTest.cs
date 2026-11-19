@@ -2,6 +2,7 @@ using iConsole.Data;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model.Network;
 using iTerminal.Core.Model.Remote;
+using Moq;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -178,6 +179,28 @@ public class FolderSelectorRemoteFilesTabPageTest
 
         CollectionAssert.AreEqual(new[] { new Url(Container.FTP + "ann@ftp.example.com/pub/files").FullUrl }, harness.Navigations);
         Assert.IsFalse(dialog.IsVisible);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Page_SavesAnSshEntryThatHasNoProfileYet_Once()
+    {
+        // An SSH entry saved before the page listed it: opening the page writes its profile.
+        var harness = new FolderSelectorTestHarness();
+        var entry = new RemoteConnection { Id = "old", Name = "web", Protocol = RemoteProtocol.Ssh, Host = "files.example.com", Username = "tamas" };
+        var profiles = new List<NetworkConnectionProfile>();
+        harness.RemoteConnectionServiceMock.Setup(s => s.GetAll()).Returns([entry]);
+        harness.NetworkProfileServiceMock.Setup(s => s.GetAll()).Returns(() => profiles);
+        // The real service writes the profile when the entry is saved; the mock does the same, so a second load sees it.
+        harness.RemoteConnectionServiceMock
+            .Setup(s => s.Save(It.IsAny<RemoteConnection>()))
+            .Callback<RemoteConnection>(c => profiles.Add(new NetworkConnectionProfile { Id = c.Id, Protocol = NetworkProtocol.Ssh, Host = c.Host, Username = c.Username }));
+        var root = new FolderSelectorTestHarness.TestRoot(harness.ThemeService);
+        var dialog = CreateDialog(harness);
+
+        await root.ShowDialogAsync(dialog);
+
+        harness.RemoteConnectionServiceMock.Verify(s => s.Save(It.Is<RemoteConnection>(c => c.Id == "old")), Moq.Times.Once);
     }
 
     [Timeout(60_000)]
