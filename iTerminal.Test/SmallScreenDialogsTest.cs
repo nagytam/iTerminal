@@ -537,6 +537,7 @@ public class SmallScreenDialogsTest
     [DataRow("Alt+F2", "Remote connections", "WebDAV connection.")]
     [DataRow("Ctrl+Shift+F1", "BitTorrent", "or its URL.")]
     [DataRow("Ctrl+Shift+F2", "Workspaces", "Enter brings one")]
+    [DataRow("Ctrl+X", "Passwords", "they are saved.")]
     public async Task AnEmptyListDialogOn45Columns_WrapsItsHintInsteadOfCuttingIt(string chord, string title, string lastWords)
     {
         // The hint is the only guidance on an empty list; on a narrow terminal it used to end in an ellipsis after a few words.
