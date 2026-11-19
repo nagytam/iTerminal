@@ -10691,4 +10691,7 @@
   <data name="Transfer.FolderReplaceAncestor" xml:space="preserve">
     <value>Un dossier ne peut pas remplacer lui-même ni un dossier qui le contient.</value>
   </data>
+  <data name="Sync.NestedFolders" xml:space="preserve">
+    <value>Un dossier ne peut pas être synchronisé avec l'un de ses sous-dossiers.</value>
+  </data>
 </root>

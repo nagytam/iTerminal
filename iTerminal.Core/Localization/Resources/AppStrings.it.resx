@@ -10691,4 +10691,7 @@
   <data name="Transfer.FolderReplaceAncestor" xml:space="preserve">
     <value>Una cartella non può sostituire sé stessa né una cartella che la contiene.</value>
   </data>
+  <data name="Sync.NestedFolders" xml:space="preserve">
+    <value>Una cartella non può essere sincronizzata con una delle sue sottocartelle.</value>
+  </data>
 </root>

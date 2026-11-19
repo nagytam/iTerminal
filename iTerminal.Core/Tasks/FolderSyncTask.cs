@@ -39,6 +39,17 @@ public sealed class FolderSyncTask(
     public override async Task ExecuteAsync()
     {
         Subject = "folder synchronisation";
+
+        // One folder inside the other: copying a folder creates its target first, inside the source, and then lists the source,
+        // which now holds the target - so the copy would run into itself for ever.
+        if (ReferenceEquals(left, right) && AreNested(leftFolder, rightFolder))
+        {
+            var message = UiText.Get("Sync.NestedFolders", "A folder cannot be synchronised with one of its own subfolders.");
+            Description = message;
+            Error = message;
+            return;
+        }
+
         var actions = plan.Actions;
         var done = 0;
         Description = string.Join(Environment.NewLine, UiText.Get("Task.Synchronise", "Synchronise"), leftFolder.FullUrl.Shrink(60), rightFolder.FullUrl.Shrink(60));
@@ -89,6 +100,15 @@ public sealed class FolderSyncTask(
         {
             Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.SyncCancelled", "Synchronise cancelled after {0} of {1} step(s)"), done, actions.Count), Summarise());
         }
+    }
+
+    /// <summary>True when one folder lies strictly inside the other (the same folder on both sides compares equal and is harmless).</summary>
+    internal static bool AreNested(Url first, Url second)
+    {
+        var comparison = OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        static string Norm(Url url) => UrlPath.TrimFolder(url.FullUrl).Replace('\\', '/');
+        var (a, b) = (Norm(first), Norm(second));
+        return !string.Equals(a, b, comparison) && (b.StartsWith(a + "/", comparison) || a.StartsWith(b + "/", comparison));
     }
 
     private string Summarise() =>
