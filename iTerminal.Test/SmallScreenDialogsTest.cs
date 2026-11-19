@@ -660,6 +660,33 @@ public class SmallScreenDialogsTest
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Description")), narrow.Screen.Dump());
     }
 
+    [Timeout(180_000)]
+    [TestMethod]
+    public async Task TheSettingsPagesAndTheCalculatorModes_AreGermanAfterARestartInGerman()
+    {
+        // Their names were fixed English text, in the middle of a German dialog: "1-Global ... 8-Screen saver", "Basic", "Scientific".
+        TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        try
+        {
+            await app.SwitchToGermanAsync();
+            app = await app.RestartAsync();
+
+            await app.PressAsync("Shift+F8");
+            await app.WaitForTextAsync("1-Allgemein");
+            await app.WaitForTextAsync("8-Bildschirmschoner");
+            await app.PressAsync("Esc");
+            await app.WaitForNoDialogAsync();
+
+            await app.PressAsync("Ctrl+A");
+            await app.WaitForTextAsync("Wissenschaftlich");
+            await app.WaitForTextAsync("Standard");
+        }
+        finally
+        {
+            await app.DisposeAsync();
+        }
+    }
+
     [Timeout(120_000)]
     [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
