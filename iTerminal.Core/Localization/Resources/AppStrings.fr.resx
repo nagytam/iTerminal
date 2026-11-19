@@ -10348,6 +10348,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>Navigation anonyme sur {0}. L connecte.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} utilisé.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Sélectionnez d'abord un hôte dont vous déconnecter.</value>
   </data>
@@ -10696,5 +10699,206 @@
   </data>
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Annuler le renommage ou le déplacement</value>
+  </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Général </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Réseau</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Indicateurs </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Musique </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Documents </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Panneaux </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Arrière-plan</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Écran de veille</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Scientifique</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programmeur</value>
+  </data>
+  <data name="DriveType.Fixed" xml:space="preserve">
+    <value>Fixe</value>
+  </data>
+  <data name="DriveType.Removable" xml:space="preserve">
+    <value>Amovible</value>
+  </data>
+  <data name="DriveType.CDRom" xml:space="preserve">
+    <value>CD-ROM</value>
+  </data>
+  <data name="DriveType.Network" xml:space="preserve">
+    <value>Réseau</value>
+  </data>
+  <data name="DriveType.Ram" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="DriveType.NoRootDirectory" xml:space="preserve">
+    <value>Sans racine</value>
+  </data>
+  <data name="DriveType.Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="DriveList.Label" xml:space="preserve">
+    <value>Nom :</value>
+  </data>
+  <data name="Msg.RenameTargetExists" xml:space="preserve">
+    <value>« {0} » existe déjà. Cochez « {1} » pour le remplacer.</value>
+  </data>
+  <data name="Radio.Title" xml:space="preserve">
+    <value>Radio en ligne</value>
+  </data>
+  <data name="Radio.ColName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Radio.ColGenre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Radio.Count" xml:space="preserve">
+    <value>{0} stations</value>
+  </data>
+  <data name="Radio.CountFiltered" xml:space="preserve">
+    <value>{0} sur {1} stations</value>
+  </data>
+  <data name="Radio.Favourites" xml:space="preserve">
+    <value>Favoris</value>
+  </data>
+  <data name="Radio.NoMatch" xml:space="preserve">
+    <value>Aucune station ne correspond à « {0} ».</value>
+  </data>
+  <data name="Radio.NoFavourites" xml:space="preserve">
+    <value>Aucune station favorite. Appuyez sur F sur une station pour la marquer.</value>
+  </data>
+  <data name="Radio.Empty" xml:space="preserve">
+    <value>Aucune station pour l'instant. Appuyez sur N pour en ajouter une.</value>
+  </data>
+  <data name="Radio.GenreLine" xml:space="preserve">
+    <value>Genre : {0}</value>
+  </data>
+  <data name="Radio.FieldName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Radio.FieldGenre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Radio.FieldUrl" xml:space="preserve">
+    <value>Flux</value>
+  </data>
+  <data name="Radio.FormNew" xml:space="preserve">
+    <value>Nouvelle station : un nom et une adresse de flux http:// ou https://</value>
+  </data>
+  <data name="Radio.FormChange" xml:space="preserve">
+    <value>Modifier la station : un nom et une adresse de flux http:// ou https://</value>
+  </data>
+  <data name="Radio.Duplicate" xml:space="preserve">
+    <value>Cette adresse de flux est déjà dans la liste</value>
+  </data>
+  <data name="Radio.FilterInput" xml:space="preserve">
+    <value>Filtre : {0}_</value>
+  </data>
+  <data name="Radio.FilterHint" xml:space="preserve">
+    <value>Filtre : {0}  (Échap affiche toutes les stations)</value>
+  </data>
+  <data name="Radio.NotPlaying" xml:space="preserve">
+    <value>Lecture arrêtée</value>
+  </data>
+  <data name="Radio.OnAir" xml:space="preserve">
+    <value>En direct</value>
+  </data>
+  <data name="Radio.Paused" xml:space="preserve">
+    <value>En pause</value>
+  </data>
+  <data name="Radio.FooterForm" xml:space="preserve">
+    <value>Entrée champ suivant  Tab/Maj+Tab déplacer  Échap annuler</value>
+  </data>
+  <data name="Radio.FooterFilter" xml:space="preserve">
+    <value>Taper pour filtrer  Entrée garder  Échap effacer</value>
+  </data>
+  <data name="Radio.FooterBrowse" xml:space="preserve">
+    <value>Entrée lire  Espace pause  S arrêter  F favori  N nouvelle  D supprimer  / chercher  Échap fermer</value>
+  </data>
+  <data name="Radio.NeedsName" xml:space="preserve">
+    <value>Une station a besoin d'un nom</value>
+  </data>
+  <data name="Radio.NeedsUrl" xml:space="preserve">
+    <value>L'adresse du flux doit commencer par http:// ou https://</value>
+  </data>
+  <data name="Radio.FavouriteAdded" xml:space="preserve">
+    <value>{0} est un favori</value>
+  </data>
+  <data name="Radio.FavouriteRemoved" xml:space="preserve">
+    <value>{0} n'est plus un favori</value>
+  </data>
+  <data name="DialogHint.DeleteStation" xml:space="preserve">
+    <value>Supprimer la station</value>
+  </data>
+  <data name="DialogHint.KeepStation" xml:space="preserve">
+    <value>Garder la station</value>
+  </data>
+  <data name="DialogHint.PlayStation" xml:space="preserve">
+    <value>Lire la station</value>
+  </data>
+  <data name="DialogHint.PauseStation" xml:space="preserve">
+    <value>Mettre en pause ou reprendre la station</value>
+  </data>
+  <data name="DialogHint.StopStation" xml:space="preserve">
+    <value>Arrêter la lecture</value>
+  </data>
+  <data name="DialogHint.ToggleFavourite" xml:space="preserve">
+    <value>Marquer ou démarquer la station comme favori</value>
+  </data>
+  <data name="DialogHint.FavouritesOnly" xml:space="preserve">
+    <value>Afficher seulement les favoris</value>
+  </data>
+  <data name="DialogHint.MoveOverStations" xml:space="preserve">
+    <value>Parcourir les stations</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastStation" xml:space="preserve">
+    <value>Aller à la première ou à la dernière station</value>
+  </data>
+  <data name="DialogHint.AddStation" xml:space="preserve">
+    <value>Ajouter une station</value>
+  </data>
+  <data name="DialogHint.ChangeStation" xml:space="preserve">
+    <value>Modifier la station</value>
+  </data>
+  <data name="DialogHint.DeleteStationAsks" xml:space="preserve">
+    <value>Supprimer la station (demande confirmation)</value>
+  </data>
+  <data name="DialogHint.FilterStations" xml:space="preserve">
+    <value>Filtrer les stations</value>
+  </data>
+  <data name="CmdTitle.836a989d" xml:space="preserve">
+    <value>Radio en ligne</value>
+  </data>
+  <data name="CmdDesc.332485aa" xml:space="preserve">
+    <value>Écouter des stations de radio sur Internet : lire, mettre en pause et arrêter, marquer des favoris et filtrer la liste.</value>
+  </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Connexion au cloud non configurée</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Lecteur cloud (sur les serveurs du fournisseur)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>Un lecteur cloud n'a pas de support à éjecter.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>Un lecteur cloud ne peut pas être formaté : il se trouve sur les serveurs du fournisseur.</value>
   </data>
 </root>

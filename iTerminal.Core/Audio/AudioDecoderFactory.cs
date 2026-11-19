@@ -49,6 +49,15 @@ public static class AudioDecoderFactory
     public static readonly IReadOnlySet<string> AllExtensions =
         new HashSet<string>(NativeExtensions.Concat(FfmpegExtensions), StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// True when <paramref name="path"/> is an internet radio stream address (http or https) rather than a file. The player
+    /// queues such an address as a track like any other; only the decoder tells the two apart.
+    /// </summary>
+    public static bool IsStreamUrl(string? path) =>
+        !string.IsNullOrEmpty(path)
+        && Uri.TryCreate(path, UriKind.Absolute, out var uri)
+        && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+
     /// <summary>True when the extension names an audio format, whether or not ffmpeg is present.</summary>
     public static bool IsAudioFile(string path) =>
         !string.IsNullOrEmpty(path) && AllExtensions.Contains(Path.GetExtension(path));
@@ -62,6 +71,11 @@ public static class AudioDecoderFactory
         if (string.IsNullOrEmpty(path))
         {
             return false;
+        }
+
+        if (IsStreamUrl(path))
+        {
+            return FfmpegAudioDecoder.IsAvailable();
         }
 
         var extension = Path.GetExtension(path);
@@ -81,6 +95,17 @@ public static class AudioDecoderFactory
     public static IAudioDecoder Create(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
+
+        if (IsStreamUrl(path))
+        {
+            // An internet radio station: the "path" is its stream address, and only ffmpeg reads those.
+            if (!FfmpegAudioDecoder.IsAvailable())
+            {
+                throw new NotSupportedException("Internet radio needs ffmpeg on PATH.");
+            }
+
+            return new FfmpegAudioDecoder(path, isStream: true);
+        }
 
         if (!File.Exists(path))
         {

@@ -10348,6 +10348,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>A(z) {0} névtelenül böngészve. Az L bejelentkeztet.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} használatban.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Előbb válasszon ki egy gépet a kijelentkezéshez.</value>
   </data>
@@ -10696,5 +10699,206 @@
   </data>
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Átnevezés vagy áthelyezés visszavonása</value>
+  </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Általános </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Hálózat</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Jelzők </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Zene </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Dokumentumok </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Panelek </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Háttér</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Képernyővédő</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Alap</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Tudományos</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programozó</value>
+  </data>
+  <data name="DriveType.Fixed" xml:space="preserve">
+    <value>Fix</value>
+  </data>
+  <data name="DriveType.Removable" xml:space="preserve">
+    <value>Cserélhető</value>
+  </data>
+  <data name="DriveType.CDRom" xml:space="preserve">
+    <value>CD-ROM</value>
+  </data>
+  <data name="DriveType.Network" xml:space="preserve">
+    <value>Hálózati</value>
+  </data>
+  <data name="DriveType.Ram" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="DriveType.NoRootDirectory" xml:space="preserve">
+    <value>Nincs gyökér</value>
+  </data>
+  <data name="DriveType.Unknown" xml:space="preserve">
+    <value>Ismeretlen</value>
+  </data>
+  <data name="DriveList.Label" xml:space="preserve">
+    <value>Címke:</value>
+  </data>
+  <data name="Msg.RenameTargetExists" xml:space="preserve">
+    <value>A(z) „{0}” már létezik. Jelölje be a(z) „{1}” négyzetet a cseréhez.</value>
+  </data>
+  <data name="Radio.Title" xml:space="preserve">
+    <value>Internetes rádió</value>
+  </data>
+  <data name="Radio.ColName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Radio.ColGenre" xml:space="preserve">
+    <value>Műfaj</value>
+  </data>
+  <data name="Radio.Count" xml:space="preserve">
+    <value>{0} állomás</value>
+  </data>
+  <data name="Radio.CountFiltered" xml:space="preserve">
+    <value>{0} / {1} állomás</value>
+  </data>
+  <data name="Radio.Favourites" xml:space="preserve">
+    <value>Kedvencek</value>
+  </data>
+  <data name="Radio.NoMatch" xml:space="preserve">
+    <value>Nincs ilyen állomás: „{0}”.</value>
+  </data>
+  <data name="Radio.NoFavourites" xml:space="preserve">
+    <value>Nincs kedvenc állomás. Jelöléséhez nyomja meg az F billentyűt.</value>
+  </data>
+  <data name="Radio.Empty" xml:space="preserve">
+    <value>Még nincs állomás. Nyomja meg az N billentyűt egy hozzáadásához.</value>
+  </data>
+  <data name="Radio.GenreLine" xml:space="preserve">
+    <value>Műfaj: {0}</value>
+  </data>
+  <data name="Radio.FieldName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Radio.FieldGenre" xml:space="preserve">
+    <value>Műfaj</value>
+  </data>
+  <data name="Radio.FieldUrl" xml:space="preserve">
+    <value>Adatfolyam</value>
+  </data>
+  <data name="Radio.FormNew" xml:space="preserve">
+    <value>Új állomás: név és http:// vagy https:// adatfolyam-cím</value>
+  </data>
+  <data name="Radio.FormChange" xml:space="preserve">
+    <value>Állomás módosítása: név és http:// vagy https:// adatfolyam-cím</value>
+  </data>
+  <data name="Radio.Duplicate" xml:space="preserve">
+    <value>Ez az adatfolyam-cím már szerepel a listában</value>
+  </data>
+  <data name="Radio.FilterInput" xml:space="preserve">
+    <value>Szűrő: {0}_</value>
+  </data>
+  <data name="Radio.FilterHint" xml:space="preserve">
+    <value>Szűrő: {0}  (Esc: minden állomás)</value>
+  </data>
+  <data name="Radio.NotPlaying" xml:space="preserve">
+    <value>Nincs lejátszás</value>
+  </data>
+  <data name="Radio.OnAir" xml:space="preserve">
+    <value>Adás</value>
+  </data>
+  <data name="Radio.Paused" xml:space="preserve">
+    <value>Szüneteltetve</value>
+  </data>
+  <data name="Radio.FooterForm" xml:space="preserve">
+    <value>Enter következő mező  Tab/Shift+Tab mozgás  Esc elvetés</value>
+  </data>
+  <data name="Radio.FooterFilter" xml:space="preserve">
+    <value>Gépelés a szűréshez  Enter megtart  Esc töröl</value>
+  </data>
+  <data name="Radio.FooterBrowse" xml:space="preserve">
+    <value>Enter lejátszás  Szóköz szünet  S megállít  F kedvenc  N új  D törlés  / keresés  Esc bezár</value>
+  </data>
+  <data name="Radio.NeedsName" xml:space="preserve">
+    <value>Az állomásnak nevet kell adni</value>
+  </data>
+  <data name="Radio.NeedsUrl" xml:space="preserve">
+    <value>Az adatfolyam-címnek http:// vagy https:// kezdetűnek kell lennie</value>
+  </data>
+  <data name="Radio.FavouriteAdded" xml:space="preserve">
+    <value>{0} kedvenc lett</value>
+  </data>
+  <data name="Radio.FavouriteRemoved" xml:space="preserve">
+    <value>{0} már nem kedvenc</value>
+  </data>
+  <data name="DialogHint.DeleteStation" xml:space="preserve">
+    <value>Állomás törlése</value>
+  </data>
+  <data name="DialogHint.KeepStation" xml:space="preserve">
+    <value>Állomás megtartása</value>
+  </data>
+  <data name="DialogHint.PlayStation" xml:space="preserve">
+    <value>Állomás lejátszása</value>
+  </data>
+  <data name="DialogHint.PauseStation" xml:space="preserve">
+    <value>Állomás szüneteltetése vagy folytatása</value>
+  </data>
+  <data name="DialogHint.StopStation" xml:space="preserve">
+    <value>Lejátszás leállítása</value>
+  </data>
+  <data name="DialogHint.ToggleFavourite" xml:space="preserve">
+    <value>Állomás kedvenccé tétele vagy eltávolítása</value>
+  </data>
+  <data name="DialogHint.FavouritesOnly" xml:space="preserve">
+    <value>Csak a kedvencek megjelenítése</value>
+  </data>
+  <data name="DialogHint.MoveOverStations" xml:space="preserve">
+    <value>Mozgás az állomások között</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastStation" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó állomásra</value>
+  </data>
+  <data name="DialogHint.AddStation" xml:space="preserve">
+    <value>Állomás hozzáadása</value>
+  </data>
+  <data name="DialogHint.ChangeStation" xml:space="preserve">
+    <value>Állomás módosítása</value>
+  </data>
+  <data name="DialogHint.DeleteStationAsks" xml:space="preserve">
+    <value>Állomás törlése (előbb megkérdez)</value>
+  </data>
+  <data name="DialogHint.FilterStations" xml:space="preserve">
+    <value>Állomások szűrése</value>
+  </data>
+  <data name="CmdTitle.836a989d" xml:space="preserve">
+    <value>Internetes rádió</value>
+  </data>
+  <data name="CmdDesc.332485aa" xml:space="preserve">
+    <value>Internetes rádióállomások hallgatása: lejátszás, szüneteltetés és leállítás, kedvencek jelölése és a lista szűrése.</value>
+  </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>A felhőbejelentkezés nincs beállítva</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Felhőmeghajtó (a szolgáltató szerverein van)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>A felhőmeghajtóban nincs kiadható adathordozó.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>A felhőmeghajtó nem formázható: a szolgáltató szerverein van.</value>
   </data>
 </root>

@@ -170,7 +170,23 @@ public class SystemSettingsDialog : Dialog
 
     // ── Drawing ─────────────────────────────────────────────────────────────
 
-    private int ContentRows => Math.Max(1, (int)_lines.ViewSize.Height - HeaderRows - FooterRows);
+    /// <summary>
+    /// The rows above the list as drawn: the section strip, the administrator banner and the section caption, each wrapped to the width,
+    /// so a long banner takes two rows and the list gives up two. <see cref="HeaderRows"/> is the count when every line fits one row.
+    /// </summary>
+    private int _headerRows = HeaderRows;
+
+    private int ContentRows => Math.Max(1, (int)_lines.ViewSize.Height - _headerRows - FooterRows);
+
+    /// <summary>A line of the header wrapped to the dialog's width, so a long one is read to its end: cut at the edge, the banner lost "restarts iTerminal as administrator".</summary>
+    private void AddHeaderWrapped(List<InfoLines.Line> lines, string text, Color? color)
+    {
+        var parts = text.WrapWords(Math.Max(10, (int)_lines.ViewSize.Width));
+        foreach (var part in parts.Count == 0 ? [string.Empty] : parts)
+        {
+            lines.Add(new(part, color));
+        }
+    }
 
     private void Render()
     {
@@ -178,28 +194,37 @@ public class SystemSettingsDialog : Dialog
         var lines = new List<InfoLines.Line>
         {
             new(string.Join("  ", SectionNames.Select((name, i) => i == (int)_section ? $"[{name}]" : $" {name} ")), Color.Yellow),
-            _service.IsElevated
-                ? new(UiText.Get("SysSettings.IsAdmin", "Running as administrator."), null)
-                : new(UiText.Get("SysSettings.NotAdmin", "Not administrator: machine-wide changes are refused. Ctrl+Shift+A restarts iTerminal as administrator."), Color.DarkYellow),
         };
+        if (_service.IsElevated)
+        {
+            AddHeaderWrapped(lines, UiText.Get("SysSettings.IsAdmin", "Running as administrator."), null);
+        }
+        else
+        {
+            AddHeaderWrapped(lines, UiText.Get("SysSettings.NotAdmin", "Not administrator: machine-wide changes are refused. Ctrl+Shift+A restarts iTerminal as administrator."), Color.DarkYellow);
+        }
 
         var body = new List<InfoLines.Line>();
         switch (_section)
         {
             case SettingsSection.Computer:
-                lines.Add(new(iConsole.Localization.UiText.Get("SysSettings.ComputerNameNote", "The name this machine goes by on the network."), scheme.DisabledForeground));
+                AddHeaderWrapped(lines, iConsole.Localization.UiText.Get("SysSettings.ComputerNameNote", "The name this machine goes by on the network."), scheme.DisabledForeground);
+                _headerRows = lines.Count;
                 BuildComputer(body, scheme);
                 break;
             case SettingsSection.Environment:
-                lines.Add(new(
+                AddHeaderWrapped(
+                    lines,
                     _service.SupportsEnvironment(_scope)
                         ? string.Format(UiText.Get("SysSettings.Scope", "Scope: {0}  -  {1} variables"), (_scope == EnvironmentScope.User ? UiText.Get("SysSettings.ScopeUser", "User") : UiText.Get("SysSettings.ScopeMachine", "Machine (all users)")), (_variablesLoaded ? _variables.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) : UiText.Get("SysSettings.Reading", "reading")))
                         : UiText.Get("SysSet.EnvUnsupported", "Environment variables cannot be changed on this system."),
-                    scheme.DisabledForeground));
+                    scheme.DisabledForeground);
+                _headerRows = lines.Count;
                 BuildEnvironment(body, scheme);
                 break;
             default:
-                lines.Add(new($"Current: {_currentZone}", scheme.DisabledForeground));
+                AddHeaderWrapped(lines, $"Current: {_currentZone}", scheme.DisabledForeground);
+                _headerRows = lines.Count;
                 BuildTimeZones(body);
                 break;
         }
@@ -380,7 +405,7 @@ public class SystemSettingsDialog : Dialog
                     return true;
                 }
 
-                if (row >= HeaderRows && row < HeaderRows + ContentRows && ItemAt((int)row - HeaderRows) is { } index)
+                if (row >= _headerRows && row < _headerRows + ContentRows && ItemAt((int)row - _headerRows) is { } index)
                 {
                     _cursors[(int)_section] = index;
                     Render();

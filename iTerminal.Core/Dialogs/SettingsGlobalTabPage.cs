@@ -29,7 +29,7 @@ public class SettingsGlobalTabPage : TabPage
     public SettingsGlobalTabPage(
         IThemeService themeService,
         ISettingsService? settingsService = null)
-        : base("1-Global ", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Global", "1-Global "), themeService)
     {
         HotConsoleKey = ConsoleKey.D1;
         _settingsService = settingsService ?? NullSettingsService.Instance;

@@ -108,6 +108,43 @@ public class SmbFileSystemServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void TryListSharesWithVersion_LoginAccepted_ReturnsTheSharesAndAVersionThatIsNotKnownForAMock()
+    {
+        var client = new Mock<ISMBClient>();
+        client.Setup(c => c.Connect(It.IsAny<string>(), It.IsAny<SMBTransportType>())).Returns(true);
+        client.Setup(c => c.Login(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(NTStatus.STATUS_SUCCESS);
+        var listStatus = NTStatus.STATUS_SUCCESS;
+        client.Setup(c => c.ListShares(out listStatus)).Returns(["Public"]);
+        var service = new SmbFileSystemService(() => client.Object);
+
+        var listing = service.TryListSharesWithVersion("host", "user", "pw");
+
+        Assert.IsNotNull(listing);
+        CollectionAssert.AreEqual(new List<string> { "Public" }, listing.Shares.ToList());
+        Assert.AreEqual(0, listing.SmbVersion, "A client that is not SMB 2 does not report a dialect.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TryListSharesWithVersion_LoginRefused_ReturnsNull()
+    {
+        var client = new Mock<ISMBClient>();
+        client.Setup(c => c.Connect(It.IsAny<string>(), It.IsAny<SMBTransportType>())).Returns(true);
+        client.Setup(c => c.Login(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(NTStatus.STATUS_LOGON_FAILURE);
+        var service = new SmbFileSystemService(() => client.Object);
+
+        Assert.IsNull(service.TryListSharesWithVersion("host", "user", "wrong-pw"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void SmbVersionOf_SessionThatNegotiatedNoDialect_IsUnknown()
+    {
+        Assert.AreEqual(0, SmbFileSystemService.SmbVersionOf(new SMB2Client()));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void TryListShares_LoginRefused_ReturnsNullSoAHostWithNoSharesCanBeTold()
     {
         var client = new Mock<ISMBClient>();

@@ -115,6 +115,21 @@ public class FolderIndexJobTest
         }
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ACloudRowAddedToTheDriveList_IsNotIndexedAsALocalFolder()
+    {
+        // The index walks file:// folders only. A cloud row that reached it would be a child of the index model.
+        FolderIndexModel folderIndexModel = new();
+        DriveInfoModel driveInfoModel = new();
+        string databasePath = Path.Combine(Path.GetTempPath(), $"iTerminal.FolderIndex.{Guid.NewGuid():N}.sqlite");
+        _ = new FolderIndexJob(folderIndexModel, driveInfoModel, new TestDbContextFactory(databasePath), TestBackgroundStart.Configured(BackgroundStartMode.OnDemand));
+
+        driveInfoModel.Drives.Add(new Drive { Name = iConsole.Data.Container.ONEDRIVE, Url = iConsole.Data.Container.ONEDRIVE, IsCloudConfigured = true });
+
+        Assert.AreEqual(0, folderIndexModel.Children.Count);
+    }
+
     private static FolderIndexJob CreateJob(IDbContextFactory<iTerminalDbContext> dbContextFactory)
     {
         FolderIndexModel folderIndexModel = new();

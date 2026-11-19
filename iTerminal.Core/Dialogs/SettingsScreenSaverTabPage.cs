@@ -26,7 +26,7 @@ public class SettingsScreenSaverTabPage : TabPage
     private readonly Label _hintLabel;
 
     public SettingsScreenSaverTabPage(ISettingsService settingsService, IThemeService themeService)
-        : base("8-Screen saver", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.ScreenSaver", "8-Screen saver"), themeService)
     {
         HotConsoleKey = ConsoleKey.D8;
         _settingsService = settingsService ?? NullSettingsService.Instance;

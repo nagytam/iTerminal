@@ -35,10 +35,10 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     internal sealed record SmbEntry(string Host, string? Share, string? Username, string Label);
 
     /// <summary>The shares a host lists for one login: a login kept in the password safe, listed at each scan, or one typed on this page.</summary>
-    internal sealed record LoginShares(string Host, string Username, IReadOnlyList<string> Shares);
+    internal sealed record LoginShares(string Host, string Username, IReadOnlyList<string> Shares, int SmbVersion = 0);
 
     /// <summary>A login listing that has finished on a background task. <see cref="OnIdle"/> applies it on the UI thread.</summary>
-    private sealed record LoginOutcome(int Generation, string Host, string Username, string Password, IReadOnlyList<string>? Shares, bool Typed);
+    private sealed record LoginOutcome(int Generation, string Host, string Username, string Password, IReadOnlyList<string>? Shares, bool Typed, int SmbVersion = 0);
 
     /// <summary>The scan is a sweep of the local /24s; it is stopped after this even if it has not finished.</summary>
     internal static readonly TimeSpan ScanLimit = TimeSpan.FromSeconds(30);
@@ -242,10 +242,28 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
             : LoginsFor(host) is { Count: > 0 } logins
                 ? string.Format(UiText.Get("FolderSelector.Smb.SignedIn", "Logged in to {0} as {1}."), host, UsersOf(logins))
                 : string.Format(UiText.Get("FolderSelector.Smb.Anonymous", "Browsing {0} anonymously. L logs in."), host);
+        if (host is not null && SmbVersionOf(host) is > 0 and var version)
+        {
+            text += "  " + string.Format(UiText.Get("FolderSelector.Smb.Version", "SMB {0} in use."), version);
+        }
         if (_signedInLabel.Text != text)
         {
             _signedInLabel.Text = text;
             StateHasChanged();
+        }
+    }
+
+    /// <summary>The SMB version the host was listed with: a login's when there is one, else the anonymous listing's. 0 when neither listed it.</summary>
+    private int SmbVersionOf(string host)
+    {
+        var fromLogin = LoginsFor(host).Select(l => l.SmbVersion).FirstOrDefault(v => v > 0);
+        if (fromLogin > 0)
+        {
+            return fromLogin;
+        }
+        lock (_foundLock)
+        {
+            return _found.FirstOrDefault(h => h.SmbAvailable && string.Equals(h.IPAddress.ToString(), host, StringComparison.OrdinalIgnoreCase))?.SmbVersion ?? 0;
         }
     }
 
@@ -277,10 +295,10 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         {
             _ = Task.Run(async () =>
             {
-                IReadOnlyList<string>? shares = null;
+                SmbListing? listing = null;
                 try
                 {
-                    shares = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password, cts.Token);
+                    listing = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password, cts.Token);
                 }
                 catch (OperationCanceledException)
                 {
@@ -290,7 +308,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
                 {
                     // Left as no listing: the status line says the saved login did not list the host.
                 }
-                _outcomes.Enqueue(new LoginOutcome(generation, host, username, string.Empty, shares, Typed: false));
+                _outcomes.Enqueue(new LoginOutcome(generation, host, username, string.Empty, listing?.Shares, Typed: false, listing?.SmbVersion ?? 0));
                 _dirty = true;
             }, cts.Token);
         }
@@ -364,7 +382,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
 
         _logins.RemoveAll(login => string.Equals(login.Host, outcome.Host, StringComparison.OrdinalIgnoreCase)
             && string.Equals(login.Username, outcome.Username, StringComparison.OrdinalIgnoreCase));
-        _logins.Add(new LoginShares(outcome.Host, outcome.Username, outcome.Shares));
+        _logins.Add(new LoginShares(outcome.Host, outcome.Username, outcome.Shares, outcome.SmbVersion));
         if (!outcome.Typed)
         {
             return;
@@ -567,16 +585,16 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         _status = string.Format(UiText.Get("FolderSelector.Smb.LoggingIn", "Logging in to {0} as {1}…"), host, username);
         _dirty = true;
 
-        IReadOnlyList<string>? shares = null;
+        SmbListing? listing = null;
         try
         {
-            shares = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password);
+            listing = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password);
         }
         catch (Exception)
         {
             // Reported as a failed login below.
         }
-        _outcomes.Enqueue(new LoginOutcome(generation, host, username, password, shares, Typed: true));
+        _outcomes.Enqueue(new LoginOutcome(generation, host, username, password, listing?.Shares, Typed: true, listing?.SmbVersion ?? 0));
         _dirty = true;
     }
 
