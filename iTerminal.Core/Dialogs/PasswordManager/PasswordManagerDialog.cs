@@ -575,8 +575,22 @@ public class PasswordManagerDialog : Dialog
         if (_list.Count == 0)
         {
             // After the rows: they blank every row they do not fill, and used to paint this message away.
-            Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;"), colorScheme.DisabledForeground, colorScheme.Background);
-            Put(buffer, 1, 3, iw - 2, iConsole.Localization.UiText.Get("Passwords.NothingSaved2", "network and mail passwords appear here as they are saved."), colorScheme.DisabledForeground, colorScheme.Background);
+            // Two lines of one message, each wrapped on its own: on a wide dialog they stay two lines, and on a narrow terminal neither is cut off.
+            var emptyRow = 2;
+            foreach (var text in new[]
+            {
+                iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;"),
+                iConsole.Localization.UiText.Get("Passwords.NothingSaved2", "network and mail passwords appear here as they are saved."),
+            })
+            {
+                foreach (var part in text.WrapWords(iw - 2))
+                {
+                    if (emptyRow - 2 < ListRows)
+                    {
+                        Put(buffer, 1, emptyRow++, iw - 2, part, colorScheme.DisabledForeground, colorScheme.Background);
+                    }
+                }
+            }
         }
 
         var selected = Selected;
