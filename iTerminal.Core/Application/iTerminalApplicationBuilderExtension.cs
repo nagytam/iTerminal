@@ -515,6 +515,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, FolderIndexJob>();
         services.AddSingleton<IJob, OnlineQuoteJob>();
         services.AddSingleton<IJob, WeatherJob>();
+        services.AddSingleton<iTerminal.Core.Services.InternetConnectivityService>();
+        services.AddSingleton<IJob, iTerminal.Core.Jobs.InternetConnectivityJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.CalendarIdentityJob>();
         services.AddSingleton<DriveInfoModel>();
@@ -655,6 +657,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IRuntimeDependency, iTerminal.Core.Services.RuntimeDependencies.RarRuntimeDependency>();
         services.AddSingleton<IRuntimeDependency, iTerminal.Core.Services.RuntimeDependencies.UnrarRuntimeDependency>();
         services.AddSingleton<IRuntimeDependency, YtDlpRuntimeDependency>();
+
+        // PowerShell 7 for remote PowerShell sessions and Ctrl+O on Windows, downloaded from its GitHub release. A
+        // PowerShell that is installed already is used as it is.
+        services.AddSingleton<IRuntimeDependency>(_ => new PowerShellRuntimeDependency(Path.Combine(runtimesDirectory, "powershell")));
 
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.

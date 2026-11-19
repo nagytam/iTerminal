@@ -170,7 +170,7 @@ public class OllamaRuntimeDependencyTest
         }
 
         string destination = Path.Combine(root, "out");
-        OllamaRuntimeDependency.Extract(package, destination);
+        ReleaseArchive.Extract(package, destination);
 
         Assert.AreEqual("program", File.ReadAllText(Path.Combine(destination, "ollama.exe")));
         Assert.AreEqual("library", File.ReadAllText(Path.Combine(destination, "lib", "ollama", "cuda.dll")));
@@ -192,7 +192,7 @@ public class OllamaRuntimeDependencyTest
             ("../escaped.txt", TarEntryType.RegularFile, Encoding.UTF8.GetBytes("outside"), null)));
 
         string destination = Path.Combine(root, "out");
-        OllamaRuntimeDependency.Extract(package, destination);
+        ReleaseArchive.Extract(package, destination);
 
         Assert.AreEqual("program", File.ReadAllText(Path.Combine(destination, "bin", "ollama")));
         Assert.IsFalse(File.Exists(Path.Combine(root, "escaped.txt")));

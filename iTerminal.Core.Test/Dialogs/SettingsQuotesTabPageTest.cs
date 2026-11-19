@@ -19,6 +19,7 @@ public class SettingsQuotesTabPageTest
 
         Assert.IsTrue(page.IsQuotesIndicatorEnabled);
         Assert.IsTrue(page.IsWeatherIndicatorEnabled);
+        Assert.IsTrue(page.IsOnlineIndicatorEnabled);
     }
 
     [Timeout(60_000)]
@@ -28,12 +29,14 @@ public class SettingsQuotesTabPageTest
         var settings = new SettingsService();
         settings.Set(Settings.IsQuotesIndicatorEnabled, bool.FalseString);
         settings.Set(Settings.IsWeatherIndicatorEnabled, bool.FalseString);
+        settings.Set(Settings.IsOnlineIndicatorEnabled, bool.FalseString);
         var page = new SettingsQuotesTabPage(settings, TestTheme());
 
         await page.OnInitializeAsync();
 
         Assert.IsFalse(page.IsQuotesIndicatorEnabled);
         Assert.IsFalse(page.IsWeatherIndicatorEnabled);
+        Assert.IsFalse(page.IsOnlineIndicatorEnabled);
     }
 
     [Timeout(60_000)]
@@ -50,6 +53,18 @@ public class SettingsQuotesTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ChangingTheOnlineChoiceIsStoredAtOnce()
+    {
+        var settings = new SettingsService();
+        var page = new SettingsQuotesTabPage(settings, TestTheme());
+
+        page.IsOnlineIndicatorEnabled = false;
+
+        Assert.AreEqual(bool.FalseString, settings.Get(Settings.IsOnlineIndicatorEnabled));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void TheCheckBoxesAreStackedOneRowEach()
     {
         var page = new SettingsQuotesTabPage(new SettingsService(), TestTheme()) { ViewSize = new Size(40, 5) };
@@ -57,6 +72,6 @@ public class SettingsQuotesTabPageTest
         page.OnInitializeLayout();
 
         var rows = page.Controls.AsSnapshot().Select(c => (int)c.Position.Y).ToList();
-        CollectionAssert.AreEqual(new[] { 0, 1 }, rows);
+        CollectionAssert.AreEqual(new[] { 0, 1, 2 }, rows);
     }
 }

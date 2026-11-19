@@ -1901,6 +1901,9 @@
   <data name="Field.EnableQuotes" xml:space="preserve">
     <value>Activar las cotizaciones</value>
   </data>
+  <data name="Field.EnableOnline" xml:space="preserve">
+    <value>Activar el estado en línea</value>
+  </data>
   <data name="Field.EnableWeather" xml:space="preserve">
     <value>Activar el tiempo</value>
   </data>
@@ -8566,6 +8569,15 @@
   <data name="Settings.BgHint" xml:space="preserve">
     <value>Se aplica la próxima vez que se inicie iTerminal. Los inicios diferidos ocurren tras {0} s, o antes si se abre la función.</value>
   </data>
+  <data name="Indicator.Online" xml:space="preserve">
+    <value>En línea</value>
+  </data>
+  <data name="Indicator.Offline" xml:space="preserve">
+    <value>Sin conexión</value>
+  </data>
+  <data name="Indicator.Checking" xml:space="preserve">
+    <value>Comprobando</value>
+  </data>
   <data name="Weather.Unavailable" xml:space="preserve">
     <value>Tiempo no disponible</value>
   </data>
@@ -10384,6 +10396,18 @@
   </data>
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Cerrar sesión en un host SMB</value>
+  </data>
+  <data name="Dep.PowerShellPurpose" xml:space="preserve">
+    <value>Ejecutar PowerShell: Ctrl+O en Windows y sesiones remotas de PowerShell (Alt+F2)</value>
+  </data>
+  <data name="Dep.PowerShellExisting" xml:space="preserve">
+    <value>PowerShell ya está instalado ({0}); se usa tal como está.</value>
+  </data>
+  <data name="Dep.PowerShellAsIs" xml:space="preserve">
+    <value>PowerShell ya está instalado ({0}); se usa tal como está</value>
+  </data>
+  <data name="Dep.PowerShellReady" xml:space="preserve">
+    <value>PowerShell {0} está listo</value>
   </data>
   <data name="FolderSelector.Tab8" xml:space="preserve">
     <value>8-FTP/SFTP</value>

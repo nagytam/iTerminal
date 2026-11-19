@@ -1,3 +1,4 @@
+using iTerminal.Core.Model.Network;
 using iTerminal.Core.Model.Remote;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Remote;
@@ -104,11 +105,64 @@ public class RemoteConnectionServiceTest
 
         var changed = service.Get(entry.Id)!;
         changed.Protocol = RemoteProtocol.Ssh;
+        changed.Port = null; // SSH on its default port: the FTP port does not carry over.
         service.Save(changed, "ignored");
 
-        Assert.AreEqual(0, profiles.GetAll().Count);
+        // The FTP login is gone; what is left is the SSH profile the entry now needs for SFTP.
+        var profile = profiles.Get(entry.Id);
+        Assert.IsNotNull(profile);
+        Assert.AreEqual(NetworkProtocol.Ssh, profile.Protocol);
+        Assert.AreEqual(1, profiles.GetAll().Count);
         Assert.IsFalse(service.Get(entry.Id)!.HasSavedCredential);
         passwords.Verify(p => p.DeleteSecret(entry.Id), Moq.Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void SavingAnSshEntryWritesItsSshProfile()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var service = new RemoteConnectionService(settings, profiles, null);
+
+        var entry = new RemoteConnection { Name = "web", Protocol = RemoteProtocol.Ssh, Host = "files.example.com", Username = "tamas", PrivateKeyPath = "/keys/id" };
+        service.Save(entry);
+
+        var profile = profiles.Get(entry.Id);
+        Assert.IsNotNull(profile);
+        Assert.AreEqual(NetworkProtocol.Ssh, profile.Protocol);
+        Assert.AreEqual("files.example.com", profile.Host);
+        Assert.AreEqual("tamas", profile.Username);
+        Assert.AreEqual("/keys/id", profile.PrivateKeyPath);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void SshEntryOnANonDefaultPortGetsNoProfile()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var service = new RemoteConnectionService(settings, profiles, null);
+
+        var entry = new RemoteConnection { Name = "web", Protocol = RemoteProtocol.Ssh, Host = "files.example.com", Port = 2222, Username = "tamas" };
+        service.Save(entry);
+
+        Assert.IsNull(profiles.Get(entry.Id), "The SSH drive cannot connect on a port, so the entry is not an SFTP connection.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void DeletingAnSshEntryRemovesItsProfile()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var service = new RemoteConnectionService(settings, profiles, null);
+        var entry = new RemoteConnection { Name = "web", Protocol = RemoteProtocol.Ssh, Host = "files.example.com", Username = "tamas" };
+        service.Save(entry);
+
+        service.Delete(entry.Id);
+
+        Assert.IsNull(profiles.Get(entry.Id));
     }
 
     [Timeout(60_000)]

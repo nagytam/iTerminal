@@ -12,6 +12,7 @@ public class SettingsQuotesTabPage : TabPage
     private ISettingsService _settingsService { get; set; }
     private CheckBox _checkBoxEnableQuotes { get; set; }
     private CheckBox _checkBoxEnableWeather { get; set; }
+    private CheckBox _checkBoxEnableOnline { get; set; }
 
     private bool _isQuotesIndicatorEnabled = true;
     public bool IsQuotesIndicatorEnabled 
@@ -49,6 +50,24 @@ public class SettingsQuotesTabPage : TabPage
         }
     }
 
+    private bool _isOnlineIndicatorEnabled = true;
+    public bool IsOnlineIndicatorEnabled
+    {
+        get
+        {
+            return _isOnlineIndicatorEnabled;
+        }
+        set
+        {
+            if (_isOnlineIndicatorEnabled != value)
+            {
+                _isOnlineIndicatorEnabled = value;
+                _checkBoxEnableOnline.IsChecked = _isOnlineIndicatorEnabled;
+                _settingsService.Set(Settings.IsOnlineIndicatorEnabled, IsOnlineIndicatorEnabled.ToString());
+            }
+        }
+    }
+
     public SettingsQuotesTabPage(
         ISettingsService settingsService,
         IThemeService themeService)
@@ -72,6 +91,14 @@ public class SettingsQuotesTabPage : TabPage
         };
         _checkBoxEnableWeather.CheckedChanged += OnCheckBoxEnableWeatherCheckedChanged;
         AddControl(_checkBoxEnableWeather);
+
+        _checkBoxEnableOnline = new CheckBox(themeService)
+        {
+            Label = UiText.Get("Field.EnableOnline", "Enable online status"),
+            IsChecked = _isOnlineIndicatorEnabled
+        };
+        _checkBoxEnableOnline.CheckedChanged += OnCheckBoxEnableOnlineCheckedChanged;
+        AddControl(_checkBoxEnableOnline);
     }
 
     private void OnCheckBoxEnableQuotesCheckedChanged(object? sender, EventArgs e)
@@ -82,6 +109,11 @@ public class SettingsQuotesTabPage : TabPage
     private void OnCheckBoxEnableWeatherCheckedChanged(object? sender, EventArgs e)
     {
         IsWeatherIndicatorEnabled = _checkBoxEnableWeather.IsChecked;
+    }
+
+    private void OnCheckBoxEnableOnlineCheckedChanged(object? sender, EventArgs e)
+    {
+        IsOnlineIndicatorEnabled = _checkBoxEnableOnline.IsChecked;
     }
 
     public override Task OnInitializeAsync()
@@ -97,6 +129,12 @@ public class SettingsQuotesTabPage : TabPage
         {
             IsWeatherIndicatorEnabled = isWeatherIndicatorEnabled.Value;
         }
+
+        var isOnlineIndicatorEnabled = _settingsService.GetAsBool(Settings.IsOnlineIndicatorEnabled);
+        if (isOnlineIndicatorEnabled is not null)
+        {
+            IsOnlineIndicatorEnabled = isOnlineIndicatorEnabled.Value;
+        }
         return base.OnInitializeAsync();
     }
 
@@ -109,6 +147,9 @@ public class SettingsQuotesTabPage : TabPage
 
         _checkBoxEnableWeather.Position = new iConsole.Data.Position(0, 1);
         _checkBoxEnableWeather.ViewSize = new iConsole.Data.Size(ViewSize.Width, 1);
+
+        _checkBoxEnableOnline.Position = new iConsole.Data.Position(0, 2);
+        _checkBoxEnableOnline.ViewSize = new iConsole.Data.Size(ViewSize.Width, 1);
     }
 }
 
