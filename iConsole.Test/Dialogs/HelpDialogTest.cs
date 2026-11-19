@@ -283,4 +283,36 @@ public class HelpDialogTest
         Assert.AreEqual("Focused panel", HelpDialog.ReadableName("Focused panel"));
         Assert.AreEqual("Grid", HelpDialog.ReadableName("Grid"));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void WrapToWidth_LeavesALineThatFitsAsItIs()
+    {
+        CollectionAssert.AreEqual(new[] { "  Esc             Close the dialog" }, HelpDialog.WrapToWidth("  Esc             Close the dialog", 40).ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void WrapToWidth_BreaksALongLineAtWordsAndHangsTheRest()
+    {
+        const string line = "  Tab / Shift+Tab    Move focus between panels and controls";
+
+        var wrapped = HelpDialog.WrapToWidth(line, 30).ToArray();
+
+        Assert.IsTrue(wrapped.Length > 1);
+        Assert.IsTrue(wrapped.All(l => l.Length <= 30), string.Join("|", wrapped));
+        Assert.AreEqual("  Tab / Shift+Tab", wrapped[0].TrimEnd().Substring(0, 17), "the key column keeps its spacing on the first line");
+        Assert.IsTrue(wrapped.Skip(1).All(l => l.StartsWith("    ", StringComparison.Ordinal)), "the rest hangs under the text");
+        Assert.AreEqual(
+            string.Join(" ", line.Split(' ', StringSplitOptions.RemoveEmptyEntries)),
+            string.Join(" ", wrapped.SelectMany(l => l.Split(' ', StringSplitOptions.RemoveEmptyEntries))),
+            "no word is lost or cut");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void WrapToWidth_OnAZeroWidth_ReturnsTheLine()
+    {
+        CollectionAssert.AreEqual(new[] { "anything" }, HelpDialog.WrapToWidth("anything", 0).ToArray());
+    }
 }
