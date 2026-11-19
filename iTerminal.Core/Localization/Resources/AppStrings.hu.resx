@@ -647,6 +647,12 @@
   <data name="SysInfo.Io.Sent" xml:space="preserve">
     <value>Küldve {0}</value>
   </data>
+  <data name="SysInfo.Collecting" xml:space="preserve">
+    <value>Rendszerinformációk gyűjtése…</value>
+  </data>
+  <data name="SysInfo.Stale" xml:space="preserve">
+    <value>Az utolsó mérés sikertelen volt; a megjelenített értékek elavultak lehetnek.</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Rendszerbeállítások</value>
   </data>
@@ -1580,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>A bejelölt ajánlatok kihagyása és bezárás</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>A komponens véglegesen kihagyása: a listában marad, és az Enter nem telepíti</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Keresés, vagy a kiválasztott találat megjelenítése a panelen, ha a lista fókuszban van</value>
   </data>
@@ -1897,9 +1906,6 @@
   </data>
   <data name="Field.Key" xml:space="preserve">
     <value>Kulcs</value>
-  </data>
-  <data name="Field.MemoryThisProcess" xml:space="preserve">
-    <value>Memória (ez a folyamat)</value>
   </data>
   <data name="Field.Engine" xml:space="preserve">
     <value>Motor</value>
@@ -2646,25 +2652,22 @@
     <value>Az Enter bezárja.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Nincs kijelölve semmi.</value>
+    <value>Nincs bejelölve semmi, így az Enter telepítés nélkül bezár.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>A befejezés telepíti:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Nincs kijelölve semmi. Lépj vissza, és jelöld ki, mit kell telepíteni.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Telepítés... Esc: elrejtés (folytatódik)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Enter:telepítés  Backspace:vissza  Szóköz:kijelölés  S:ne kérdezd újra  Esc:később</value>
+    <value>Enter:telepítés  Backspace:vissza  Szóköz:jelölés  P:végleg kihagy  S:verzió kihagy</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Enter:bezárás  Backspace:vissza  Esc:bezárás</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Enter:tovább  Backspace:vissza  Szóköz:kijelölés  S:ne kérdezd újra  Esc:később</value>
+    <value>Enter:tovább  Backspace:vissza  Szóköz:jelölés  P:végleg kihagy  S:verzió kihagy</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Enter:tovább  Backspace:vissza  Esc:bezárás</value>
@@ -2680,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Kihagyva   (Szóköz: telepítés)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Ezt telepítem   (P: végleges kihagyás)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Véglegesen kihagyva   (P: újra felajánlás)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Teljesítménymérés</value>
@@ -10041,6 +10050,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>A váltás sikertelen: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Egyesítettek tisztítása (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Egyetlen helyi ág sincs egyesítve ide: {0}, így nincs mit tisztítani.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Törli a(z) {1} ágba egyesített {0} helyi ágat? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Az egyesített ágak törlése…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>{0} egyesített ág törölve.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>{0} törölve; {1} nem törölhető: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>A main ágba egyesített helyi ágak törlése (előbb kérdez)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Egyesítettek tisztítása</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>A főágba egyesített helyi ágak törlése (előbb kérdez).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} háttérfeladat még fut. Kilépjen mégis?</value>
   </data>
@@ -10139,7 +10175,7 @@
     <value>Piaci terminál</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Enter:keresés vagy a sor megjelenítése  ↑↓:lista  F5:frissítés  Esc:bezárás</value>
+    <value>Enter:keresés/megjelenítés  ↑↓:lista  F5:frissítés  F6:figyelés  F8:időszak  Esc:bezárás</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Keresés  ›</value>
@@ -10161,6 +10197,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Jel keresése, vagy a kiválasztott sor megjelenítése</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Előbb keressen rá egy részvényre, majd F6 a figyeléshez.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} hozzáadva a figyelőlistához</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>figyelt</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Diagram</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Diagram {0}   {1}-tól {2}-ig   {3} az időszakban</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>előzmények betöltése…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>nincs árfolyam-előzmény ehhez a részvényhez</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>A diagram időszakának módosítása (1M, 3M, 1É, 5É)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Részvény hozzáadása a figyelőlistához vagy eltávolítása onnan</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Piaci terminál</value>
@@ -10215,5 +10278,126 @@
   </data>
   <data name="CmdDesc.0fce9508" xml:space="preserve">
     <value>Megjelenítő és szerkesztő bővítmények betöltése vagy eltávolítása a bővítménymappából.</value>
+  </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>A kurzor alatti gép megnyitása, vagy a kurzor alatti megosztásra ugrás.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> SMB-gépek keresése a helyi hálózaton…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>SMB-gépek ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Megosztások itt: {0} ({1}) — Backspace: gépek</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>keresés…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>A(z) {0} gépen bejelentkezés nélkül nincsenek megosztások. Nyomja meg az L-t a bejelentkezéshez.</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>mentett</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Kijelentkezés…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Bejelentkezve a(z) {0} gépre mint {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>A(z) {0} névtelenül böngészve. Az L bejelentkeztet.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Előbb válasszon ki egy gépet a kijelentkezéshez.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Nincs bejelentkezve a(z) {0} gépre.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Kijelentkezik a(z) {0} gépről, és törli a(z) {1} mentett jelszavát?  y:igen  n:nem</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Kijelentkezve a(z) {0} gépről; a mentett jelszó törölve.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>A jelszókezelő nem nyitható meg, ezért a bejelentkezés nem lett törölve.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Kijelentkezés a kurzor alatti gépről és mentett jelszavának törlése (y megerősít).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Bejelentkezés…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>bejelentkezve mint {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Bejelentkezés a(z) {0} gépre mint {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>A bejelentkezés a(z) {0} gépre mint {1} nem sikerült. Semmi sem lett mentve.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>A(z) {0} megosztásai nem listázhatók a(z) {1} mentett bejelentkezésével.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Bejelentkezve a(z) {0} gépre mint {1}. A bejelentkezés a jelszókezelőben van mentve.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Bejelentkezve a(z) {0} gépre mint {1}. A jelszókezelő nem nyitható meg, ezért a bejelentkezés nem lett mentve.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Előbb válasszon ki egy gépet a bejelentkezéshez.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Felhasználónév ehhez: {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>Vezérlőkarakterek nem megengedettek.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Jelszó ehhez: {0} ezen: {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Bejelentkezés a kurzor alatti géphez felhasználónévvel és jelszóval; a bejelentkezés a jelszókezelőben van mentve.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Vissza a gép megosztásaiból a gépek listájához.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>SMB-gépek keresése újra a hálózaton.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>SMB-gép vagy megosztás kiválasztása</value>
+  </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>A kijelölt fájlt megnyitja a szerkesztőben; a bináris fájl a hex nézetében nyílik meg.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Bejelentkezés SMB-gépre</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Kijelentkezés SMB-gépről</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Az alatta lévő mentett FTP- vagy SFTP-kapcsolat megnyitása, a saját mappájában.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Nincs mentett FTP- vagy SFTP-kapcsolat. Egyet a Távoli kapcsolatok (Alt+F2) ablakban adhat hozzá.</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Az itt felsorolt kapcsolatok hozzáadása és szerkesztése a Távoli kapcsolatok ablakban.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>FTP- vagy SFTP-kapcsolat megnyitása</value>
   </data>
 </root>

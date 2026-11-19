@@ -12,6 +12,7 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
     public const string LatestSettingPrefix = "RuntimeDependencies.Latest.";
     public const string SkippedSettingPrefix = "RuntimeDependencies.Skipped.";
     public const string AnnouncedSettingPrefix = "RuntimeDependencies.Announced.";
+    public const string PermanentSettingPrefix = "RuntimeDependencies.Permanent.";
 
     internal const int MaxLogLines = 50;
 
@@ -206,6 +207,14 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
         _settings.Write();
     }
 
+    public bool IsPermanentlySkipped(string id) => _settings.Get(PermanentSettingPrefix + id) == "true";
+
+    public void SetPermanentlySkipped(string id, bool skipped)
+    {
+        _settings.Set(PermanentSettingPrefix + id, skipped ? "true" : "false");
+        _settings.Write();
+    }
+
     public void InvalidateInstalled(string id)
     {
         _dependencies.FirstOrDefault(d => d.Id == id)?.Invalidate();
@@ -215,10 +224,14 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
     /// <summary>Whether a dependency is among those asked for; no list at all means every one.</summary>
     private static bool Wanted(IReadOnlyCollection<string>? ids, string id) => ids is null || ids.Contains(id);
 
+    /// <summary>
+    /// Whether the start-up offer opens for this dependency. A skip for good keeps it offered at every start, listed but not
+    /// ticked; a skip of one version hides it until a newer version appears.
+    /// </summary>
     private bool IsOffered(RuntimeDependencyStatus status) =>
         status.State != RuntimeDependencyState.Installed
         && status.TargetVersion is not null
-        && _settings.Get(SkippedSettingPrefix + status.Id) != status.TargetVersion;
+        && (IsPermanentlySkipped(status.Id) || _settings.Get(SkippedSettingPrefix + status.Id) != status.TargetVersion);
 
     private void Rebuild()
     {

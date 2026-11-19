@@ -3,7 +3,11 @@ using iConsole.Display;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Model;
+using iTerminal.Core.Model.Network;
+using iTerminal.Core.Model.Remote;
+using iTerminal.Core.Model.Passwords;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Remote;
 using Moq;
 
 namespace iTerminal.Core.Test.Dialogs;
@@ -59,7 +63,64 @@ internal sealed class FolderSelectorTestHarness
         var frequentExecutionGuardService = new Mock<IFrequentExecutionGuardService>();
         frequentExecutionGuardService.Setup(g => g.Execute(It.IsAny<Action>())).Callback<Action>(a => a());
         FrequentExecutionGuardService = frequentExecutionGuardService.Object;
+
+        // The network services answer with nothing unless a test gives them something: the scan finds no
+        // hosts and there are no saved connections.
+        var networkDiscoveryService = new Mock<INetworkDiscoveryService>();
+        networkDiscoveryService.Setup(s => s.ScanAsync(It.IsAny<CancellationToken>())).Returns(NoHosts());
+        NetworkDiscoveryServiceMock = networkDiscoveryService;
+
+        var networkProfileService = new Mock<INetworkProfileService>();
+        networkProfileService.Setup(s => s.GetAll()).Returns(new List<NetworkConnectionProfile>());
+        NetworkProfileServiceMock = networkProfileService;
+
+        // The 8-FTP/SFTP page lists the saved connections; none are saved unless a test says so.
+        var remoteConnectionService = new Mock<IRemoteConnectionService>();
+        remoteConnectionService.Setup(s => s.GetAll()).Returns(new List<RemoteConnection>());
+        RemoteConnectionServiceMock = remoteConnectionService;
+
+        PasswordManagerMock = new Mock<IPasswordManager>();
+        PasswordManagerMock.Setup(p => p.List()).Returns(new List<PasswordEntry>());
+        PromptServiceMock = new Mock<IPromptService>();
     }
+
+    private static async IAsyncEnumerable<DiscoveredHost> NoHosts()
+    {
+        await Task.CompletedTask;
+        yield break;
+    }
+
+    public Mock<INetworkDiscoveryService> NetworkDiscoveryServiceMock { get; }
+    public Mock<INetworkProfileService> NetworkProfileServiceMock { get; }
+    public INetworkDiscoveryService NetworkDiscoveryService => NetworkDiscoveryServiceMock.Object;
+    public INetworkProfileService NetworkProfileService => NetworkProfileServiceMock.Object;
+    public Mock<IRemoteConnectionService> RemoteConnectionServiceMock { get; }
+
+    /// <summary>A network profile service with nothing saved. A bare mock answers <c>GetAll</c> with null, which the 8-FTP/SFTP page cannot list.</summary>
+    public static INetworkProfileService EmptyNetworkProfiles()
+    {
+        var mock = new Mock<INetworkProfileService>();
+        mock.Setup(s => s.GetAll()).Returns(new List<NetworkConnectionProfile>());
+        return mock.Object;
+    }
+
+    /// <summary>A remote connection service with nothing saved, for a test that builds a dialog but never reads the list.</summary>
+    public static IRemoteConnectionService EmptyRemoteConnections()
+    {
+        var mock = new Mock<IRemoteConnectionService>();
+        mock.Setup(s => s.GetAll()).Returns(new List<RemoteConnection>());
+        return mock.Object;
+    }
+
+    public IRemoteConnectionService RemoteConnectionService => RemoteConnectionServiceMock.Object;
+
+    /// <summary>The password safe the 7-SMB page keeps a typed login in. Empty mock: nothing is saved unless a test sets it up.</summary>
+    public Mock<IPasswordManager> PasswordManagerMock { get; }
+    public IPasswordManager PasswordManager => PasswordManagerMock.Object;
+
+    /// <summary>The prompt the 7-SMB page asks for a username and password with.</summary>
+    public Mock<IPromptService> PromptServiceMock { get; }
+    public IPromptService PromptService => PromptServiceMock.Object;
 
     public IThemeService ThemeService { get; }
     public ISettingsService SettingsService { get; }

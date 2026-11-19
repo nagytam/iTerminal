@@ -32,10 +32,13 @@ public class ContentModelSmbDrive(
             && string.Equals(p.Host, url.Host, StringComparison.OrdinalIgnoreCase)
             && string.Equals(p.ShareName, url.Share, StringComparison.OrdinalIgnoreCase)
             && string.Equals(p.Username, url.Username, StringComparison.OrdinalIgnoreCase));
-        var password = profile is not null && profile.HasSavedCredential
-            ? passwordManager.GetSecret(profile.Id) ?? string.Empty
-            : string.Empty;
-        smbFileSystemService.Connect(url.Host, url.Share, url.Username, password);
+        var password = profile is not null && profile.HasSavedCredential ? passwordManager.GetSecret(profile.Id) : null;
+        // A login typed on the 7-SMB page is kept in the password safe under its host and user, not as a profile.
+        if (password is null && !string.IsNullOrEmpty(url.Username))
+        {
+            password = passwordManager.GetSecret(SmbLoginKey.Id(url.Host, url.Username));
+        }
+        smbFileSystemService.Connect(url.Host, url.Share, url.Username, password ?? string.Empty);
     }
 
     protected override string FormatConnectionError(Url url, Exception exception) =>

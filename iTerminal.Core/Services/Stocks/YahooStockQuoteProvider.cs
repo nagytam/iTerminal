@@ -99,6 +99,73 @@ public sealed class YahooStockQuoteProvider : IStockQuoteProvider
         return ParseSearch(await response.Content.ReadAsStringAsync(cancellationToken));
     }
 
+    public async Task<IReadOnlyList<StockBar>> GetHistoryAsync(string symbol, StockHistoryRange range, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var url = $"{Host}/v8/finance/chart/{Uri.EscapeDataString(symbol)}?range={YahooRange(range)}&interval=1d";
+            using var response = await _client.GetAsync(url, cancellationToken);
+            if (!response.IsSuccessStatusCode)
+            {
+                return [];
+            }
+
+            return ParseHistory(await response.Content.ReadAsStringAsync(cancellationToken));
+        }
+        catch (Exception exception) when (!cancellationToken.IsCancellationRequested
+            && exception is HttpRequestException or TaskCanceledException or JsonException)
+        {
+            return [];
+        }
+    }
+
+    private static string YahooRange(StockHistoryRange range) => range switch
+    {
+        StockHistoryRange.OneMonth => "1mo",
+        StockHistoryRange.ThreeMonths => "3mo",
+        StockHistoryRange.OneYear => "1y",
+        StockHistoryRange.FiveYears => "5y",
+        _ => "1y",
+    };
+
+    /// <summary>Reads the closes of a chart response, oldest first. A day with no close (a holiday the source lists) is left out.</summary>
+    internal static IReadOnlyList<StockBar> ParseHistory(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return [];
+        }
+
+        using var document = JsonDocument.Parse(json);
+        if (!document.RootElement.TryGetProperty("chart", out var chart)
+            || !chart.TryGetProperty("result", out var results)
+            || results.ValueKind != JsonValueKind.Array
+            || results.GetArrayLength() == 0
+            || !results[0].TryGetProperty("timestamp", out var times)
+            || times.ValueKind != JsonValueKind.Array
+            || !results[0].TryGetProperty("indicators", out var indicators)
+            || !indicators.TryGetProperty("quote", out var quotes)
+            || quotes.ValueKind != JsonValueKind.Array
+            || quotes.GetArrayLength() == 0
+            || !quotes[0].TryGetProperty("close", out var closes)
+            || closes.ValueKind != JsonValueKind.Array)
+        {
+            return [];
+        }
+
+        List<StockBar> bars = [];
+        var count = Math.Min(times.GetArrayLength(), closes.GetArrayLength());
+        for (var index = 0; index < count; index++)
+        {
+            if (times[index].TryGetInt64(out var seconds) && closes[index].ValueKind == JsonValueKind.Number && closes[index].TryGetDecimal(out var close))
+            {
+                bars.Add(new StockBar(DateTimeOffset.FromUnixTimeSeconds(seconds).LocalDateTime, close));
+            }
+        }
+
+        return bars;
+    }
+
     /// <summary>Reads the first result of a chart response; null when the source has no data for the symbol.</summary>
     internal static StockQuote? ParseChart(string symbol, string json)
     {

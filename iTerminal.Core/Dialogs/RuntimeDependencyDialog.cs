@@ -133,6 +133,12 @@ public class RuntimeDependencyDialog : Dialog
 
         _unticked.Clear();
         List<RuntimeDependencyStatus> actionable = Actionable();
+        // A dependency skipped for good is listed as usual, but it starts unticked so that Enter leaves it out.
+        foreach (RuntimeDependencyStatus status in actionable.Where(status => _service.IsPermanentlySkipped(status.Id)))
+        {
+            _unticked.Add(status.Id);
+        }
+
         // Always a wizard unless an install is running: an overview first, then one page for every
         // component that needs work, and a last page that sums up what Finish does. Up-to-date components
         // get no page at all.
@@ -157,16 +163,14 @@ public class RuntimeDependencyDialog : Dialog
 
         if (actionable.Count > 0)
         {
-            _wizard.AddStep(new WizardStep("Install", new RuntimeDependencySummaryPage(_service, TickedIds, ThemeService), ValidateSomethingTicked));
+            // Nothing ticked is allowed: Enter then closes without installing, which is the default for skipped dependencies.
+            _wizard.AddStep(new WizardStep("Install", new RuntimeDependencySummaryPage(_service, TickedIds, ThemeService)));
         }
 
         _wizard.Finished += (_, _) => FinishWizard();
         AddControl(_wizard);
         PlaceWizard();
     }
-
-    private Task<string?> ValidateSomethingTicked() =>
-        Task.FromResult<string?>(TickedIds().Count == 0 ? iConsole.Localization.UiText.Get("RuntimeDependency.NothingTickedGoBack", "Nothing is ticked. Go back and tick what to install.") : null);
 
     private void FinishWizard()
     {
@@ -207,6 +211,7 @@ public class RuntimeDependencyDialog : Dialog
         yield return ("Right", UiText.Get("DialogHint.BrowseNextStep", "Browse to the next step"));
         yield return ("Left/Backspace", UiText.Get("DialogHint.BackPreviousStep", "Back to the previous step"));
         yield return ("Space", UiText.Get("DialogHint.TickComponent", "Tick or untick the component on this step"));
+        yield return ("P", UiText.Get("DialogHint.SkipForGood", "Skip the component for good: it stays listed, and Enter leaves it out"));
         yield return ("S", UiText.Get("DialogHint.SkipOffersClose", "Skip the ticked offers and close"));
     }
 
@@ -241,6 +246,25 @@ public class RuntimeDependencyDialog : Dialog
                         && !_unticked.Remove(page.Id))
                     {
                         _unticked.Add(page.Id);
+                    }
+
+                    StateHasChanged();
+                    return true;
+                case ConsoleKey.P:
+                    // Skipped for good is kept between runs; offering it again ticks it again.
+                    if (wizard.CurrentStep?.Content is RuntimeDependencyStepPage skipPage
+                        && Actionable().Any(status => status.Id == skipPage.Id))
+                    {
+                        bool skip = !_service.IsPermanentlySkipped(skipPage.Id);
+                        _service.SetPermanentlySkipped(skipPage.Id, skip);
+                        if (skip)
+                        {
+                            _unticked.Add(skipPage.Id);
+                        }
+                        else
+                        {
+                            _unticked.Remove(skipPage.Id);
+                        }
                     }
 
                     StateHasChanged();
@@ -333,11 +357,11 @@ public class RuntimeDependencyDialog : Dialog
         ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Installing", "Installing... Esc:hide this (it keeps going)")
         : IsWizardActive
             ? IsOnLastStep
-                ? HasWork
-                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallWithTick", "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later")
+                ? HasWork && TickedIds().Count > 0
+                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallWithTick", "Enter:install  Backspace:back  Space:tick  P:skip for good  S:skip version")
                     : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallOnly", "Enter:close  Backspace:back  Esc:close")
                 : HasWork
-                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextWithTick", "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later")
+                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextWithTick", "Enter:next  Backspace:back  Space:tick  P:skip for good  S:skip version")
                     : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextOnly", "Enter:next  Backspace:back  Esc:close")
             : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Close", "Enter or Esc:close");
 

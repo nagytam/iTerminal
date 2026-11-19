@@ -1,4 +1,4 @@
-using iConsole.Data;
+﻿using iConsole.Data;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.RuntimeDependencies;
 using Moq;
@@ -40,11 +40,11 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(first, "Playwright - Chromium for the quote indicator");
         AssertScreenContains(first, "Not installed. Install 1.63.0.");
         AssertScreenContains(first, "[x] Install this one");
-        AssertScreenContains(first, "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later");
+        AssertScreenContains(first, "Enter:next  Backspace:back  Space:tick  P:skip for good  S:skip version");
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         AssertScreenContains(Render(dialog), "Step 2 of 2: Install");
-        AssertScreenContains(Render(dialog), "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later");
+        AssertScreenContains(Render(dialog), "Enter:install  Backspace:back  Space:tick  P:skip for good  S:skip version");
         Assert.IsTrue(dialog.ShouldOpenAtStartup);
     }
 
@@ -230,7 +230,7 @@ public class RuntimeDependencyDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task WithEverythingLeftOutTheSummaryRefusesToFinish()
+    public async Task WithEverythingLeftOutEnterClosesWithoutInstalling()
     {
         var service = NewTwoMissing();
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
@@ -240,11 +240,95 @@ public class RuntimeDependencyDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        AssertScreenContains(Render(dialog), "Nothing is ticked, so Enter closes without installing.");
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
-        AssertScreenContains(Render(dialog), "Nothing is ticked. Go back and tick what to install.");
         service.Verify(s => s.StartInstall(), Times.Never);
         service.Verify(s => s.StartInstall(It.IsAny<IReadOnlyCollection<string>?>()), Times.Never);
+        Assert.IsFalse(dialog.IsWizardActive);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ASkippedForGoodComponentIsListedButEnterLeavesItOut()
+    {
+        var service = NewTwoMissing();
+        service.Setup(s => s.IsPermanentlySkipped("ollama")).Returns(true);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        // Playwright is ticked as usual; Ollama is still on its page, unticked and marked as skipped for good.
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        var ollama = Render(dialog);
+        AssertScreenContains(ollama, "Step 2 of 3: Ollama");
+        AssertScreenContains(ollama, "[ ] Skipped for good   (P: offer it again)");
+        Assert.IsFalse(dialog.IsTicked("ollama"));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(It.Is<IReadOnlyCollection<string>?>(ids => ids != null && ids.Count == 1 && ids.Contains("playwright"))), Times.Once);
+        service.Verify(s => s.StartInstall(), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EnterOnASkippedForGoodOnlyDialogInstallsNothing()
+    {
+        var service = NewService(RuntimeDependencyState.Missing);
+        service.Setup(s => s.IsPermanentlySkipped("playwright")).Returns(true);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(It.IsAny<IReadOnlyCollection<string>?>()), Times.Never);
+        service.Verify(s => s.StartInstall(), Times.Never);
+        Assert.IsFalse(dialog.IsWizardActive);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task PSkipsForGoodAndOffersAgain_AndTheChoiceIsSaved()
+    {
+        var service = NewService(RuntimeDependencyState.Missing);
+        // The service keeps the choice, so the page and the tick read back what P saved.
+        bool skipped = false;
+        service.Setup(s => s.IsPermanentlySkipped("playwright")).Returns(() => skipped);
+        service.Setup(s => s.SetPermanentlySkipped("playwright", It.IsAny<bool>())).Callback<string, bool>((_, value) => skipped = value);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+        Assert.IsTrue(dialog.IsTicked("playwright"));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.P, 'P'));
+        service.Verify(s => s.SetPermanentlySkipped("playwright", true), Times.Once);
+        Assert.IsFalse(dialog.IsTicked("playwright"));
+        AssertScreenContains(Render(dialog), "[ ] Skipped for good   (P: offer it again)");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.P, 'P'));
+        service.Verify(s => s.SetPermanentlySkipped("playwright", false), Times.Once);
+        Assert.IsTrue(dialog.IsTicked("playwright"));
+        AssertScreenContains(Render(dialog), "[x] Install this one   (Space: leave it out)");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ASkippedForGoodComponentTickedOnceIsInstalledOnce()
+    {
+        var service = NewService(RuntimeDependencyState.Missing);
+        service.Setup(s => s.IsPermanentlySkipped("playwright")).Returns(true);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+        Assert.IsFalse(dialog.IsTicked("playwright"));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+        AssertScreenContains(Render(dialog), "[x] Install this one   (P: skip it for good)");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(), Times.Once);
+        service.Verify(s => s.SetPermanentlySkipped(It.IsAny<string>(), It.IsAny<bool>()), Times.Never);
     }
 
     [Timeout(60_000)]

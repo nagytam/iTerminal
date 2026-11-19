@@ -1,4 +1,5 @@
 ﻿using iConsole.Commands;
+using iConsole.Controls;
 using iConsole.Controls.Editors;
 using iConsole.Controls.StatusBar;
 using iConsole.Controls.Viewers;
@@ -21,7 +22,9 @@ public class TextFileEditorDialog : Dialog
         get => base.Title
             + (TextEditorControl.IsDirty ? " (*)" : string.Empty)
             + (_changedOnDisk ? " (" + UiText.Get("Viewer.ChangedOnDisk", "changed on disk") + ")" : string.Empty)
-            + " [" + TextEditorControl.LineEndingName(TextEditorControl.TextModel.LineEnding) + "]";
+            + (_hexMode
+                ? " [" + UiText.Get("Editor.HexTitle", "hex") + "]"
+                : " [" + TextEditorControl.LineEndingName(TextEditorControl.TextModel.LineEnding) + "]");
         set => base.Title = value;
     }
     public Url? Url { get; set; } = null;
@@ -29,6 +32,39 @@ public class TextFileEditorDialog : Dialog
     private IFileToTextConverterService _fileToTextConverterService { get; set; }
     public TextEditorControl TextEditorControl { get; set; }
     private EditorStatusBar _statusBar { get; set; }
+
+    /// <summary>The largest file the hex view opens: the whole file is held in memory while it is edited.</summary>
+    public const long MaxHexBytes = 64L * 1024 * 1024;
+
+    /// <summary>The hex view of the file's bytes. Hidden until F4 (or <see cref="OpenAsHex"/>) shows it.</summary>
+    public HexEditorControl HexEditorControl { get; }
+
+    private bool _hexMode;
+
+    /// <summary>The hex view was edited since the text was last made from it, so leaving it reads the text from the bytes.</summary>
+    private bool _hexChanged;
+
+    /// <summary>The text model no longer matches the file on disk, so it is read again when the editor leaves the hex view.</summary>
+    private bool _textStale;
+
+    /// <summary>
+    /// The file was opened as bytes because the text editor does not take it. Leaving the hex view is allowed only when the
+    /// bytes read back as the same text, so a binary is never saved as the text of its decoding.
+    /// </summary>
+    private bool _binaryFile;
+
+    /// <summary>The file's bytes as last known, or null when they must be read again.</summary>
+    private byte[]? _fileBytes;
+
+    /// <summary>True while the editor shows the file's bytes instead of its text (F4 toggles).</summary>
+    public bool IsHexMode => _hexMode;
+
+    /// <summary>Set before the dialog is shown for a file the text editor does not take: the editor opens in the hex view.</summary>
+    public bool OpenAsHex
+    {
+        get => _binaryFile;
+        set => _binaryFile = value;
+    }
 
     public TextFileEditorDialog(
         IContentModelService contentModelService,
@@ -44,6 +80,12 @@ public class TextFileEditorDialog : Dialog
         _fileToTextConverterService = fileToTextConverterService;
 
         TextEditorControl = new TextEditorControl(themeService);
+        HexEditorControl = new HexEditorControl(themeService)
+        {
+            IsVisible = false,
+            ReadOnlyCheck = () => TextEditorControl.IsReadOnly,
+        };
+        HexEditorControl.Edited += OnHexEdited;
         _statusBar = new EditorStatusBar(
             TextEditorControl,
             TextEditorControl,
@@ -62,6 +104,7 @@ public class TextFileEditorDialog : Dialog
         // read-only toggle (the editor's text is never focusable, so the footer always takes F6 first). Wrapped, Up and Down walk the rows.
         AddCommand(new ViewerWrapLinesCommand(TextEditorControl, new iConsole.Data.Key(ConsoleKey.F2, true, false, false)));
         AddControl(TextEditorControl);
+        AddControl(HexEditorControl);
         AddControl(_statusBar);
     }
 
@@ -84,6 +127,12 @@ public class TextFileEditorDialog : Dialog
         return saved;
     }
 
+    /// <summary>
+    /// Records what a save wrote: the bytes of a hex save, which the next toggle to the hex view uses as they are; a text save
+    /// leaves the bytes to be read again when they are needed.
+    /// </summary>
+    internal void NoteSaved(byte[]? hexBytes) => _fileBytes = hexBytes;
+
     // ---- Changes on disk ----
 
     /// <summary>How often the file's size and write time are looked at while the editor is open.</summary>
@@ -92,8 +141,11 @@ public class TextFileEditorDialog : Dialog
     /// <summary>A file's size and write time: what changes when another program saves it.</summary>
     public readonly record struct DiskStamp(DateTime Modified, long Length);
 
-    /// <summary>The text a check read from disk, waiting for the UI thread to put it in the editor.</summary>
-    private sealed record PendingDiskText(DiskStamp Stamp, string[] Lines, string LineEnding, Encoding Encoding);
+    /// <summary>
+    /// What a check read from disk, waiting for the UI thread to put it in the editor: the text, or the bytes when the hex view
+    /// is shown or the file is a binary.
+    /// </summary>
+    private sealed record PendingDiskText(DiskStamp Stamp, string[]? Lines, string LineEnding, Encoding? Encoding, byte[]? Bytes);
 
     private IFileSystem? _fileSystem;
 
@@ -164,6 +216,20 @@ public class TextFileEditorDialog : Dialog
             return;
         }
 
+        // A binary is read as bytes, never through the text converter, which would give its decoding, not the file.
+        if (_hexMode || _binaryFile)
+        {
+            try
+            {
+                _pending = new PendingDiskText(current, null, string.Empty, null, await ReadFileBytesAsync());
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+            }
+
+            return;
+        }
+
         var text = new TextModel();
         try
         {
@@ -174,7 +240,7 @@ public class TextFileEditorDialog : Dialog
             return;
         }
 
-        _pending = new PendingDiskText(current, text.Lines.AsSnapshot().ToArray(), text.LineEnding, text.Encoding);
+        _pending = new PendingDiskText(current, text.Lines.AsSnapshot().ToArray(), text.LineEnding, text.Encoding, null);
     }
 
     /// <summary>
@@ -189,6 +255,13 @@ public class TextFileEditorDialog : Dialog
             return;
         }
 
+        // The view changed while the file was read, so what was read is the wrong kind: the next check reads it again.
+        if ((_hexMode || _binaryFile) != (pending.Bytes is not null))
+        {
+            _pending = null;
+            return;
+        }
+
         _pending = null;
         _seenStamp = pending.Stamp;
         if (TextEditorControl.IsDirty)
@@ -198,7 +271,31 @@ public class TextFileEditorDialog : Dialog
             return;
         }
 
-        TextEditorControl.ReplaceAllText(pending.Lines, pending.LineEnding, pending.Encoding);
+        if (pending.Bytes is { } bytes)
+        {
+            // The text is made from the bytes again when the editor leaves the hex view. A binary has no text to show here, so
+            // the title says the file changed instead.
+            _fileBytes = bytes;
+            _textStale = true;
+            if (_hexMode)
+            {
+                HexEditorControl.Load(bytes);
+                _hexChanged = false;
+            }
+            else
+            {
+                _changedOnDisk = true;
+                StateHasChanged();
+                return;
+            }
+        }
+        else
+        {
+            TextEditorControl.ReplaceAllText(pending.Lines!, pending.LineEnding, pending.Encoding!);
+            _fileBytes = null;
+            _textStale = false;
+        }
+
         _changedOnDisk = false;
         StateHasChanged();
     }
@@ -292,10 +389,39 @@ public class TextFileEditorDialog : Dialog
         }
     }
 
+    public override async Task ShowAsync()
+    {
+        await base.ShowAsync();
+        // The dialog is reused for every file, so what the last file left behind is cleared here. OpenAsHex is set by the
+        // command just before this and is kept.
+        _hexChanged = false;
+        _textStale = false;
+        _fileBytes = null;
+        _pending = null;
+        _changedOnDisk = false;
+        // ShowAsync makes every child visible; the hex view is on demand, and a file the text editor does not take opens in it.
+        _hexMode = false;
+        HexEditorControl.IsVisible = false;
+        TextEditorControl.IsVisible = true;
+        if (_binaryFile)
+        {
+            await EnterHexAsync();
+        }
+    }
+
     public override async Task OnInitializeAsync()
     {
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         _fileSystem = fileSystem;
+        if (_binaryFile)
+        {
+            // A binary is shown as bytes: its text is never read, and no backup is kept of it.
+            _textStale = true;
+            _seenStamp = StampOf(Url);
+            await base.OnInitializeAsync();
+            return;
+        }
+
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, TextEditorControl.TextModel);
         _seenStamp = StampOf(Url);
         TextEditorControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
@@ -304,16 +430,160 @@ public class TextFileEditorDialog : Dialog
         await base.OnInitializeAsync();
     }
 
+    // ---- The hex view ----
+
+    /// <summary>F4: shows the file's bytes, or the text again. Leaving the hex view can be refused; the title says why.</summary>
+    public async Task ToggleHexModeAsync()
+    {
+        if (_hexMode)
+        {
+            await LeaveHexAsync();
+        }
+        else
+        {
+            await EnterHexAsync();
+        }
+    }
+
+    /// <summary>
+    /// Shows the file as bytes. Unsaved text is shown as the bytes it would be saved as; otherwise the bytes are the file's, so
+    /// the hex view never shows a re-encoding of the text.
+    /// </summary>
+    private async Task EnterHexAsync()
+    {
+        byte[] bytes = TextEditorControl.IsDirty
+            ? TextBytes()
+            : (_fileBytes ??= await ReadFileBytesAsync());
+
+        HexEditorControl.Load(bytes);
+        _hexChanged = false;
+        _hexMode = true;
+        TextEditorControl.ResetFocus();
+        TextEditorControl.IsVisible = false;
+        HexEditorControl.IsVisible = true;
+        HexEditorControl.SetFocus();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Leaves the hex view for the text. Bytes that were edited, or that a binary is shown from, are read as text only when they
+    /// read back unchanged in the file's code page; otherwise the editor stays in the hex view. Text that was not edited is
+    /// read again when the file changed on disk while the hex view was shown.
+    /// </summary>
+    private async Task<bool> LeaveHexAsync()
+    {
+        if (_hexChanged || _binaryFile)
+        {
+            var encoding = TextEditorControl.TextModel.Encoding;
+            if (!TryDecodeExactly(HexEditorControl.Data, encoding, TextEditorControl.TextModel.LineEnding, out string[] lines, out string lineEnding))
+            {
+                Title = string.Format(UiText.Get("Editor.NotText", "Not text: the bytes do not read back unchanged in {0}, so the hex view stays."), encoding.WebName);
+                StateHasChanged();
+                return false;
+            }
+
+            bool wasDirty = TextEditorControl.IsDirty;
+            TextEditorControl.ReplaceAllText(lines, lineEnding, encoding);
+            TextEditorControl.IsDirty = wasDirty;
+            _hexChanged = false;
+            _textStale = false;
+        }
+        else if (_textStale && _fileSystem is not null && Url is not null)
+        {
+            var text = new TextModel();
+            await _fileToTextConverterService.ReadFileAsync(Url, _fileSystem, text);
+            bool wasDirty = TextEditorControl.IsDirty;
+            TextEditorControl.ReplaceAllText(text.Lines.AsSnapshot().ToArray(), text.LineEnding, text.Encoding);
+            TextEditorControl.IsDirty = wasDirty;
+            _textStale = false;
+        }
+
+        _hexMode = false;
+        HexEditorControl.ResetFocus();
+        HexEditorControl.IsVisible = false;
+        TextEditorControl.IsVisible = true;
+        TextEditorControl.SetFocus();
+        StateHasChanged();
+        return true;
+    }
+
+    /// <summary>A hex edit makes the file changed. The text is read again from these bytes when the hex view is left.</summary>
+    private void OnHexEdited()
+    {
+        TextEditorControl.IsDirty = true;
+        _hexChanged = true;
+        StateHasChanged();
+    }
+
+    /// <summary>The text as it is saved: what the editor shows, written with its line break and code page.</summary>
+    private byte[] TextBytes()
+    {
+        var model = TextEditorControl.TextModel;
+        using var stream = string.Join(model.LineEnding, model.Lines).ToMemoryStream(model.Encoding);
+        return stream.ToArray();
+    }
+
+    /// <summary>The file's bytes, read from the file system the editor was opened on.</summary>
+    private async Task<byte[]> ReadFileBytesAsync()
+    {
+        var fileSystem = _fileSystem ?? _contentModelService.GetLastContentModel() as IFileSystem;
+        if (Url is null || fileSystem is null)
+        {
+            return [];
+        }
+
+        var file = await fileSystem.ReadFileAsync(Url);
+        return file?.Content ?? [];
+    }
+
+    /// <summary>
+    /// Decodes <paramref name="bytes"/> as text, and only when encoding that text again gives back the same bytes: a byte order
+    /// mark is kept or dropped as the file had it, and the line break is the one the file uses (the editor's when it has none).
+    /// Mixed breaks, and bytes that are not valid in the code page, do not read back, so they are refused.
+    /// </summary>
+    internal static bool TryDecodeExactly(byte[] bytes, Encoding encoding, string defaultLineEnding, out string[] lines, out string lineEnding)
+    {
+        byte[] preamble = encoding.GetPreamble();
+        bool hasByteOrderMark = preamble.Length > 0 && bytes.AsSpan().StartsWith(preamble);
+        string text = encoding.GetString(bytes, hasByteOrderMark ? preamble.Length : 0, bytes.Length - (hasByteOrderMark ? preamble.Length : 0));
+
+        lineEnding = text.Contains("\r\n") ? "\r\n"
+            : text.Contains('\n') ? "\n"
+            : text.Contains('\r') ? "\r"
+            : defaultLineEnding;
+        lines = text.ReplaceLineEndings("\n").Split('\n');
+
+        byte[] body = encoding.GetBytes(string.Join(lineEnding, lines));
+        byte[] expected = hasByteOrderMark ? [.. preamble, .. body] : body;
+        return expected.AsSpan().SequenceEqual(bytes);
+    }
+
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Ctrl+S", UiText.Get("Viewer.HintSave", "Save the file"));
+        if (_hexMode)
+        {
+            yield return ("F4", UiText.Get("Editor.HintTextView", "Text view"));
+            yield break;
+        }
+
         yield return ("Tab", UiText.Get("Viewer.HintIndent", "Indent"));
         yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));
         yield return ("Ctrl+F8", UiText.Get("Viewer.HintConvertEncoding", "Save in the next encoding (Shift: previous)"));
+        yield return ("F4", UiText.Get("Editor.HintHexView", "Hex view"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // F4 switches between the text and the hex view. The hex view takes the hex digits itself, through its focus.
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && keyEvent.ConsoleKey == ConsoleKey.F4
+            && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
+        {
+            await ToggleHexModeAsync();
+            return true;
+        }
+
         if (keyEvent.KeyPressType == KeyPressType.Down
             && keyEvent.ConsoleKey == ConsoleKey.F8
             && !keyEvent.Control && !keyEvent.Alt)
@@ -335,6 +605,7 @@ public class TextFileEditorDialog : Dialog
         if (keyEvent.KeyPressType == KeyPressType.Down
             && keyEvent.ConsoleKey == ConsoleKey.Tab
             && !keyEvent.Control && !keyEvent.Alt
+            && !_hexMode
             && TextEditorControl.IsEnabled)
         {
             return await TextEditorControl.HandleKeyEventAsync(keyEvent);
@@ -363,7 +634,7 @@ public class TextFileEditorDialog : Dialog
     /// </summary>
     public void SwitchEncoding(bool backwards = false)
     {
-        if (!FileToTextConverterService.IsEncodingRelevant(Url))
+        if (_hexMode || !FileToTextConverterService.IsEncodingRelevant(Url))
         {
             return;
         }
@@ -381,7 +652,7 @@ public class TextFileEditorDialog : Dialog
     /// </summary>
     public void ConvertEncoding(bool backwards = false)
     {
-        if (TextEditorControl.IsReadOnly)
+        if (TextEditorControl.IsReadOnly || _hexMode)
         {
             return;
         }
@@ -404,7 +675,8 @@ public class TextFileEditorDialog : Dialog
     private void MaybeBackup()
     {
         var store = _backups;
-        if (store is null || !TextEditorControl.IsDirty || TextEditorControl.IsReadOnly)
+        // The text is backed up only when it is what the file would be saved as: not while bytes are shown or edited, or a binary.
+        if (store is null || !TextEditorControl.IsDirty || TextEditorControl.IsReadOnly || _hexMode || _hexChanged || _binaryFile)
         {
             return;
         }
@@ -501,6 +773,8 @@ public class TextFileEditorDialog : Dialog
         var editorWidth = Math.Max(0L, ViewSize.Width - 2);
         var editorHeight = Math.Max(0L, ViewSize.Height - 3);
         TextEditorControl.ViewSize = new(editorWidth, editorHeight);
+        HexEditorControl.Position = new(1, 1);
+        HexEditorControl.ViewSize = new(editorWidth, editorHeight);
 
         var statusY = Math.Max(0L, ViewSize.Height - 2);
         var statusWidth = Math.Max(0L, ViewSize.Width - 2);

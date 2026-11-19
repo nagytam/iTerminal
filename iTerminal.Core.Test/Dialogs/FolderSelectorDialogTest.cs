@@ -31,6 +31,11 @@ public class FolderSelectorDialogTest
             harness.SettingsService,
             harness.FrequentExecutionGuardService,
             harness.ThemeService,
+            harness.NetworkDiscoveryService,
+            harness.NetworkProfileService,
+            harness.RemoteConnectionService,
+            harness.PasswordManager,
+            harness.PromptService,
             helpDialog)
         {
             ViewSize = new Size(100, 30)
@@ -46,7 +51,7 @@ public class FolderSelectorDialogTest
         var dialog = CreateDialog(harness);
 
         CollectionAssert.AreEqual(
-            new[] { "0-Favourites", "1-Drives", "2-Recent", "3-Places", "4-Folder Tree", "5-SSH", "6-Path" },
+            new[] { "0-Favourites", "1-Drives", "2-Recent", "3-Places", "4-Folder Tree", "5-SSH", "6-Path", "7-SMB", "8-FTP/SFTP" },
             dialog.TabPages.Select(p => p.Name).ToArray());
     }
 
@@ -63,7 +68,7 @@ public class FolderSelectorDialogTest
             new ConsoleKey?[]
             {
                 ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3,
-                ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6
+                ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.D8
             },
             hotKeys);
         Assert.AreEqual(hotKeys.Count, hotKeys.Distinct().Count(), "Two pages sharing a hot key makes one unreachable.");

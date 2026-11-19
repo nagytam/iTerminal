@@ -18,9 +18,10 @@ public class Batch77LanguageTest
         "RuntimeDependency.NotInstalled", "RuntimeDependency.UpdateTo", "RuntimeDependency.UpToDate", "RuntimeDependency.Intro",
         "RuntimeDependency.DataFolderNote", "RuntimeDependency.NothingToSetUp", "RuntimeDependency.AllUpToDate", "RuntimeDependency.NeedWork",
         "RuntimeDependency.EnterCloses", "RuntimeDependency.NothingTicked", "RuntimeDependency.FinishWillInstall",
-        "RuntimeDependency.NothingTickedGoBack", "RuntimeDependency.Footer.Installing", "RuntimeDependency.Footer.InstallWithTick",
+        "RuntimeDependency.Footer.Installing", "RuntimeDependency.Footer.InstallWithTick",
         "RuntimeDependency.Footer.InstallOnly", "RuntimeDependency.Footer.NextWithTick", "RuntimeDependency.Footer.NextOnly",
         "RuntimeDependency.Footer.Close", "RuntimeDependency.Tick.NothingToDo", "RuntimeDependency.Tick.Install", "RuntimeDependency.Tick.LeftOut",
+        "RuntimeDependency.Tick.SkippedForGood", "RuntimeDependency.Tick.InstallWhileSkipped", "DialogHint.SkipForGood",
         "Hint.MoveDivider",
     ];
 

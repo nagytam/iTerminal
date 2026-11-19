@@ -1282,6 +1282,27 @@
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Menünavigation:</value>
   </data>
+  <data name="Help.Started.Heading" xml:space="preserve">
+    <value>Erste Schritte:</value>
+  </data>
+  <data name="Help.Started.Tab" xml:space="preserve">
+    <value>Tab / Umschalt+Tab    Fokus zwischen Bereichen und Steuerelementen wechseln</value>
+  </data>
+  <data name="Help.Started.Enter" xml:space="preserve">
+    <value>Enter           Den Hauptbefehl des fokussierten Eintrags ausführen</value>
+  </data>
+  <data name="Help.Started.Esc" xml:space="preserve">
+    <value>Esc             Den Dialog oder das Menü vor Ihnen schließen</value>
+  </data>
+  <data name="Help.Started.F1" xml:space="preserve">
+    <value>F1              Diese Hilfe von jedem Bildschirm aus öffnen</value>
+  </data>
+  <data name="Help.Started.Lists" xml:space="preserve">
+    <value>Die erste Liste unten gilt hier und jetzt.</value>
+  </data>
+  <data name="Help.Started.AllLists" xml:space="preserve">
+    <value>Die zweite Liste nennt jeden Befehl, auch die, die in diesem Zusammenhang nicht laufen können.</value>
+  </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
     <value>  F2:Umbruch{0}  F4:Hex  F5:Zeile  F8:Codepage  Esc:schließen</value>
   </data>
@@ -2017,5 +2038,26 @@
   </data>
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[J] Ja    [N] Nein</value>
+  </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Hex-Ziffer eingeben</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Textansicht</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Hex-Ansicht</value>
+  </data>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Kein Text: Die Bytes ergeben in {0} nicht unverändert zurück, daher bleibt die Hex-Ansicht.</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Cursor bewegen</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Anfang oder Ende der Zeile</value>
   </data>
 </root>

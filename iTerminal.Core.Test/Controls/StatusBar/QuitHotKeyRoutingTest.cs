@@ -11,6 +11,7 @@ using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using iTerminal.Core.Test.Dialogs;
 
 namespace iTerminal.Core.Test.Controls.StatusBar;
 
@@ -77,7 +78,7 @@ public class QuitHotKeyRoutingTest
         // ── Real status bar / hot keys, wired exactly like TerminalStatusBar's fallback ──
         var hotKeys = new iTerminal.Core.Controls.StatusBar.HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
-            contentModelService, folderHistory, null!, null!, null!, null!, settingsService, null!, themeService);
+            contentModelService, folderHistory, null!, null!, null!, null!, settingsService, null!, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), null!);
         var statusBar = new iTerminal.Core.Controls.StatusBar.TerminalStatusBar(
             new iConsole.Controls.PopUpWindows.DatePopUpWindow(themeService), hotKeys, themeService);
 

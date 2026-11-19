@@ -11,4 +11,8 @@ public interface IStockQuoteProvider
 
     /// <summary>Finds listed stocks by symbol or company name, across every exchange the source covers.</summary>
     Task<IReadOnlyList<StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default);
+
+    /// <summary>The daily closing prices over <paramref name="range"/>, oldest first. Empty when the source has none or cannot be reached.</summary>
+    Task<IReadOnlyList<StockBar>> GetHistoryAsync(string symbol, StockHistoryRange range, CancellationToken cancellationToken = default) =>
+        Task.FromResult<IReadOnlyList<StockBar>>([]);
 }

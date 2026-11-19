@@ -66,6 +66,9 @@ public class StackPanel : Control
 
         /// <summary>The child's own size across the axis, taken when it was added or its alignment was set.</summary>
         public int NaturalCross { get; set; }
+
+        /// <summary>The child's own size along the axis, taken when it was added. A fill child keeps it when the panel wraps.</summary>
+        public int NaturalMain { get; set; }
     }
 
     private readonly List<Item> _items = [];
@@ -73,6 +76,7 @@ public class StackPanel : Control
     private int _gap;
     private StackAlignment _crossAlignment = StackAlignment.Stretch;
     private StackJustify _justify = StackJustify.Start;
+    private bool _wrap;
 
     public StackPanel(IThemeService themeService) : base(themeService)
     {
@@ -140,14 +144,37 @@ public class StackPanel : Control
         }
     }
 
+    /// <summary>
+    /// When true, a child that would overflow the current line starts a new one: a row wraps into more rows, a column into more
+    /// columns. Each line is as thick as its thickest child, and <see cref="CrossAlignment"/> and <see cref="SetAlignment"/> place
+    /// the children within it. A fixed or percent child is sized as it would be in an unwrapped panel (a percent of the whole
+    /// panel), and a fill child keeps the size it had when it was added, since a line has no shared room to divide. Lines past the
+    /// far edge of the panel are clipped. Off by default.
+    /// </summary>
+    public bool Wrap
+    {
+        get => _wrap;
+        set
+        {
+            if (_wrap != value)
+            {
+                _wrap = value;
+                LayoutChildren();
+                StateHasChanged();
+            }
+        }
+    }
+
     public IReadOnlyList<IControl> Items => [.. _items.Select(item => item.Control)];
 
     private int CrossOf(IControl control) => (int)(_orientation == Orientation.Horizontal ? control.ViewSize.Height : control.ViewSize.Width);
 
+    private int MainOf(IControl control) => (int)(_orientation == Orientation.Horizontal ? control.ViewSize.Width : control.ViewSize.Height);
+
     /// <summary>Appends <paramref name="control"/>, sized by <paramref name="rule"/> (<see cref="SizeRule.Fill(double)"/> when omitted).</summary>
     public void Add(IControl control, SizeRule? rule = null, StackAlignment? alignment = null)
     {
-        _items.Add(new Item(control, rule ?? SizeRule.Fill()) { Alignment = alignment, NaturalCross = CrossOf(control) });
+        _items.Add(new Item(control, rule ?? SizeRule.Fill()) { Alignment = alignment, NaturalCross = CrossOf(control), NaturalMain = MainOf(control) });
         AddControl(control);
         LayoutChildren();
         StateHasChanged();
@@ -261,6 +288,12 @@ public class StackPanel : Control
         int length = (int)(row ? ViewSize.Width : ViewSize.Height);
         int cross = (int)(row ? ViewSize.Height : ViewSize.Width);
         List<Item> shown = _items.Where(item => item.Control.IsVisible).ToList();
+        if (_wrap)
+        {
+            LayoutWrapped(row, length, shown);
+            return;
+        }
+
         int[] sizes = SizeSolver.Solve(length, shown.Select(item => item.Rule).ToList(), _gap);
         int free = length - sizes.Sum() - (Math.Max(0, shown.Count - 1) * _gap);
         (int offset, int[] gaps) = Distribute(_justify, free, shown.Count, _gap);
@@ -280,6 +313,82 @@ public class StackPanel : Control
             item.Control.ViewSize = row ? new Size(sizes[i], size) : new Size(size, sizes[i]);
             offset += sizes[i];
         }
+    }
+
+    /// <summary>Breaks the shown children into lines along the axis, then places each line one thickness after the last.</summary>
+    private void LayoutWrapped(bool row, int length, List<Item> shown)
+    {
+        List<List<Item>> lines = [];
+        List<List<int>> lineSizes = [];
+        List<Item> line = [];
+        List<int> sizes = [];
+        int used = 0;
+        foreach (Item item in shown)
+        {
+            int size = WrappedSize(item, length);
+            int needed = line.Count == 0 ? size : _gap + size;
+            if (line.Count > 0 && used + needed > length)
+            {
+                lines.Add(line);
+                lineSizes.Add(sizes);
+                line = [];
+                sizes = [];
+                used = 0;
+                needed = size;
+            }
+
+            line.Add(item);
+            sizes.Add(size);
+            used += needed;
+        }
+
+        if (line.Count > 0)
+        {
+            lines.Add(line);
+            lineSizes.Add(sizes);
+        }
+
+        int lineStart = 0;
+        for (int l = 0; l < lines.Count; l++)
+        {
+            List<Item> items = lines[l];
+            List<int> itemSizes = lineSizes[l];
+            int thickness = items.Max(item => item.NaturalCross);
+            int free = length - itemSizes.Sum() - (Math.Max(0, items.Count - 1) * _gap);
+            (int offset, int[] gaps) = Distribute(_justify, free, items.Count, _gap);
+            for (int i = 0; i < items.Count; i++)
+            {
+                Item item = items[i];
+                offset += gaps[i];
+                StackAlignment alignment = item.Alignment ?? _crossAlignment;
+                int size = alignment == StackAlignment.Stretch ? thickness : Math.Min(item.NaturalCross, thickness);
+                int across = alignment switch
+                {
+                    StackAlignment.Center => (thickness - size) / 2,
+                    StackAlignment.End => thickness - size,
+                    _ => 0,
+                };
+                int along = lineStart + across;
+                item.Control.Position = row ? new Position(offset, along) : new Position(along, offset);
+                item.Control.ViewSize = row ? new Size(itemSizes[i], size) : new Size(size, itemSizes[i]);
+                offset += itemSizes[i];
+            }
+
+            lineStart += thickness + _gap;
+        }
+    }
+
+    /// <summary>A child's size along the axis when the panel wraps: its fixed or percent size, or its natural size for a fill child.</summary>
+    private static int WrappedSize(Item item, int length)
+    {
+        SizeRule rule = item.Rule;
+        int size = rule.Kind switch
+        {
+            SizeRuleKind.Fixed => (int)Math.Min(rule.Value, length),
+            SizeRuleKind.Percent => (int)Math.Floor(length * Math.Min(rule.Value, 100) / 100),
+            _ => item.NaturalMain,
+        };
+        return Math.Min(length, Math.Clamp(size, rule.Min, Math.Max(rule.Min, rule.Max)));
     }
 
     public override void Draw(IBuffer buffer)

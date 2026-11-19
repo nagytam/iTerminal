@@ -647,6 +647,12 @@
   <data name="SysInfo.Io.Sent" xml:space="preserve">
     <value>Envoyé {0}</value>
   </data>
+  <data name="SysInfo.Collecting" xml:space="preserve">
+    <value>Collecte des informations système…</value>
+  </data>
+  <data name="SysInfo.Stale" xml:space="preserve">
+    <value>La dernière mesure a échoué ; les valeurs affichées peuvent être périmées.</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Paramètres système</value>
   </data>
@@ -1580,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>Ignorer les offres cochées et fermer</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>Ignorer le composant définitivement : il reste listé, et Entrée ne l'installe pas</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Rechercher, ou afficher le résultat choisi dans le panneau quand la liste a le focus</value>
   </data>
@@ -1897,9 +1906,6 @@
   </data>
   <data name="Field.Key" xml:space="preserve">
     <value>Clé</value>
-  </data>
-  <data name="Field.MemoryThisProcess" xml:space="preserve">
-    <value>Mémoire (ce processus)</value>
   </data>
   <data name="Field.Engine" xml:space="preserve">
     <value>Moteur</value>
@@ -2646,25 +2652,22 @@
     <value>Entrée ferme cette fenêtre.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Rien n'est coché.</value>
+    <value>Rien n'est coché : Entrée ferme sans rien installer.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>Terminer installera :</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Rien n'est coché. Revenez en arrière et cochez ce qu'il faut installer.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Installation... Échap : masquer (continue)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Entrée:installer  Retour arrière:retour  Espace:cocher  S:ne plus demander  Échap:plus tard</value>
+    <value>Entrée:installer  Retour:précédent  Espace:cocher  P:ignorer  S:ignorer version</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Entrée:fermer  Retour arrière:retour  Échap:fermer</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Entrée:suivant  Retour arrière:retour  Espace:cocher  S:ne plus demander  Échap:plus tard</value>
+    <value>Entrée:suivant  Retour:précédent  Espace:cocher  P:ignorer  S:ignorer version</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Entrée:suivant  Retour arrière:retour  Échap:fermer</value>
@@ -2680,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Exclu   (Espace : l'installer)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Installer celui-ci   (P : ignorer définitivement)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Ignoré définitivement   (P : proposer à nouveau)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Test de performance</value>
@@ -10041,6 +10050,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Échec du changement : {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Nettoyer les fusionnées (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Aucune branche locale n'est fusionnée dans {0}, rien à nettoyer.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Supprimer {0} branches locales fusionnées dans {1} ? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Suppression des branches fusionnées…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>{0} branches fusionnées supprimées.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>{0} supprimées ; {1} n'ont pas pu être supprimées : {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Supprimer les branches locales fusionnées dans main (demande d'abord)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Nettoyer les fusionnées</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Supprimer les branches locales fusionnées dans la branche principale (demande d'abord).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} tâche(s) en arrière-plan sont encore en cours. Quitter quand même ?</value>
   </data>
@@ -10139,7 +10175,7 @@
     <value>Terminal de marché</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Entrée:chercher ou afficher la ligne  ↑↓:liste  F5:actualiser  Échap:fermer</value>
+    <value>Entrée:chercher/afficher  ↑↓:liste  F5:actualiser  F6:suivre  F8:période  Échap:fermer</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Rechercher  ›</value>
@@ -10161,6 +10197,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Chercher le symbole, ou afficher la ligne choisie</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Recherchez d'abord un titre, puis appuyez sur F6 pour le suivre.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} ajouté à la liste de suivi</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>suivie</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Graphique</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Graphique {0}   de {1} à {2}   {3} sur la période</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>chargement de l'historique…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>pas d'historique de cours pour ce titre</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Changer la période du graphique (1M, 3M, 1A, 5A)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Ajouter ou retirer le titre de la liste de suivi</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Terminal de marché</value>
@@ -10215,5 +10278,126 @@
   </data>
   <data name="CmdDesc.0fce9508" xml:space="preserve">
     <value>Charger ou décharger les plug-ins de visionneuse et d'éditeur du dossier des plug-ins.</value>
+  </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>Ouvrir l'hôte sous le curseur, ou aller à la ressource partagée sous le curseur.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> Recherche d'hôtes SMB sur le réseau local…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>Hôtes SMB ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Ressources partagées sur {0} ({1}) — Retour arrière : hôtes</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>recherche…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>Aucun partage n'est listé sur {0} sans connexion. Appuyez sur L pour vous connecter.</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>enregistré</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Se déconnecter…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Connecté à {0} en tant que {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>Navigation anonyme sur {0}. L connecte.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Sélectionnez d'abord un hôte dont vous déconnecter.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Non connecté à {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Se déconnecter de {0} et supprimer le mot de passe enregistré pour {1} ?  y:oui  n:non</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Déconnecté de {0} ; le mot de passe enregistré est supprimé.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>Le coffre de mots de passe n'a pas pu être ouvert, la connexion n'a donc pas été supprimée.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Se déconnecter de l'hôte sous le curseur et supprimer son mot de passe enregistré (y confirme).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Se connecter…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>connecté en tant que {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Connexion à {0} en tant que {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>Échec de la connexion à {0} en tant que {1}. Rien n'a été enregistré.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>Impossible de lister les partages de {0} avec l'identifiant enregistré de {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Connecté à {0} en tant que {1}. La connexion est enregistrée dans le coffre de mots de passe.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Connecté à {0} en tant que {1}. Le coffre de mots de passe n'a pas pu être ouvert, la connexion n'a donc pas été enregistrée.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Sélectionnez d'abord un hôte auquel vous connecter.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Nom d'utilisateur pour {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>Les caractères de contrôle ne sont pas autorisés.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Mot de passe pour {0} sur {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Se connecter à l'hôte sous le curseur avec un nom d'utilisateur et un mot de passe ; la connexion est enregistrée dans le coffre de mots de passe.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Revenir des ressources partagées d'un hôte à la liste des hôtes.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>Rechercher de nouveau les hôtes SMB sur le réseau.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>Choisir un hôte ou une ressource SMB</value>
+  </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Ouvre le fichier sélectionné dans l'éditeur ; un fichier binaire s'ouvre en vue hexadécimale.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Se connecter à un hôte SMB</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Se déconnecter d'un hôte SMB</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Ouvrir la connexion FTP ou SFTP enregistrée sous le curseur, dans son dossier.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Aucune connexion FTP ou SFTP enregistrée. Ajoutez-en une dans Connexions distantes (Alt+F2).</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Ajouter et modifier les connexions listées ici, dans Connexions distantes.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>Ouvrir une connexion FTP ou SFTP</value>
   </data>
 </root>

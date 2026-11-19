@@ -647,6 +647,12 @@
   <data name="SysInfo.Io.Sent" xml:space="preserve">
     <value>Gesendet {0}</value>
   </data>
+  <data name="SysInfo.Collecting" xml:space="preserve">
+    <value>Systeminformationen werden gesammelt…</value>
+  </data>
+  <data name="SysInfo.Stale" xml:space="preserve">
+    <value>Die letzte Messung ist fehlgeschlagen; die angezeigten Werte sind möglicherweise veraltet.</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Systemeinstellungen</value>
   </data>
@@ -1580,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>Die angekreuzten Angebote überspringen und schließen</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>Komponente endgültig überspringen: sie bleibt in der Liste, und Enter lässt sie aus</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Suchen, oder das gewählte Ergebnis im Panel zeigen, wenn die Liste den Fokus hat</value>
   </data>
@@ -1897,9 +1906,6 @@
   </data>
   <data name="Field.Key" xml:space="preserve">
     <value>Schlüssel</value>
-  </data>
-  <data name="Field.MemoryThisProcess" xml:space="preserve">
-    <value>Speicher (dieser Prozess)</value>
   </data>
   <data name="Field.Engine" xml:space="preserve">
     <value>Dienst</value>
@@ -2646,25 +2652,22 @@
     <value>Enter schließt dies.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Nichts ist ausgewählt.</value>
+    <value>Nichts ist angehakt, daher schließt Enter ohne Installation.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>Abschließen installiert:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Nichts ist ausgewählt. Zurück und auswählen, was installiert werden soll.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Installation läuft... Esc: ausblenden (läuft weiter)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Enter:installieren  Rücktaste:zurück  Leertaste:auswählen  S:nicht mehr fragen  Esc:später</value>
+    <value>Enter:installieren  Rücktaste:zurück  Leertaste:wählen  P:endgültig aus  S:Version aus</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Enter:schließen  Rücktaste:zurück  Esc:schließen</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Enter:weiter  Rücktaste:zurück  Leertaste:auswählen  S:nicht mehr fragen  Esc:später</value>
+    <value>Enter:weiter  Rücktaste:zurück  Leertaste:wählen  P:endgültig aus  S:Version aus</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Enter:weiter  Rücktaste:zurück  Esc:schließen</value>
@@ -2680,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Weggelassen   (Leertaste: installieren)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Diese installieren   (P: endgültig überspringen)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Endgültig übersprungen   (P: wieder anbieten)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Leistungstest</value>
@@ -10105,6 +10114,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Wechsel fehlgeschlagen: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Gemergte aufräumen (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>Keine lokale Branch ist in {0} gemergt, es gibt also nichts aufzuräumen.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>{0} lokale Branches, die in {1} gemergt sind, löschen? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Die gemergten Branches werden gelöscht…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>{0} gemergte Branches gelöscht.</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>{0} gelöscht; {1} ließen sich nicht löschen: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Die lokalen Branches löschen, die in main gemergt sind (fragt vorher)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Gemergte aufräumen</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Die lokalen Branches löschen, die in den Hauptbranch gemergt sind (fragt vorher).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} Hintergrundaufgabe(n) laufen noch. Trotzdem beenden?</value>
   </data>
@@ -10203,7 +10239,7 @@
     <value>Marktterminal</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Enter:suchen oder Zeile zeigen  ↑↓:Liste  F5:aktualisieren  Esc:schließen</value>
+    <value>Enter:suchen/zeigen  ↑↓:Liste  F5:aktualisieren  F6:beobachten  F8:Zeitraum  Esc:schließen</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Suchen  ›</value>
@@ -10225,6 +10261,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Symbol suchen oder gewählte Zeile zeigen</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Zuerst eine Aktie suchen, dann F6 zum Beobachten drücken.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>{0} zur Beobachtungsliste hinzugefügt</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>beobachtet</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Diagramm</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Diagramm {0}   {1} bis {2}   {3} im Zeitraum</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>Verlauf wird geladen…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>kein Kursverlauf für dieses Wertpapier</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Zeitraum des Diagramms ändern (1M, 3M, 1J, 5J)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Wertpapier zur Liste hinzufügen oder davon entfernen</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Marktterminal</value>
@@ -10279,5 +10342,126 @@
   </data>
   <data name="CmdDesc.0fce9508" xml:space="preserve">
     <value>Viewer- und Editor-Plug-ins im Plug-in-Ordner laden oder entladen.</value>
+  </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>Den Host unter dem Cursor öffnen oder zur Freigabe unter dem Cursor gehen.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> Suche nach SMB-Hosts im lokalen Netzwerk…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>SMB-Hosts ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Freigaben auf {0} ({1}) — Rücktaste: Hosts</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>suche…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>Auf {0} werden ohne Anmeldung keine Freigaben angezeigt. L drücken, um sich anzumelden.</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>gespeichert</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Abmelden…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Angemeldet bei {0} als {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>{0} wird anonym durchsucht. L meldet an.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Zuerst einen Host zum Abmelden auswählen.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Nicht angemeldet bei {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Von {0} abmelden und das gespeicherte Passwort für {1} entfernen?  y:ja  n:nein</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Abgemeldet von {0}; das gespeicherte Passwort ist entfernt.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>Der Passwortsafe konnte nicht geöffnet werden, daher wurde die Anmeldung nicht entfernt.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Vom Host unter dem Cursor abmelden und sein gespeichertes Passwort entfernen (y bestätigt).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Anmelden…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>angemeldet als {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Anmeldung bei {0} als {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>Anmeldung bei {0} als {1} fehlgeschlagen. Nichts wurde gespeichert.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>Die Freigaben von {0} konnten mit der gespeicherten Anmeldung von {1} nicht aufgelistet werden.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Angemeldet bei {0} als {1}. Die Anmeldung ist im Passwortsafe gespeichert.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Angemeldet bei {0} als {1}. Der Passwortsafe konnte nicht geöffnet werden, daher wurde die Anmeldung nicht gespeichert.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Zuerst einen Host zur Anmeldung auswählen.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Benutzername für {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>Steuerzeichen sind nicht erlaubt.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Passwort für {0} auf {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Beim Host unter dem Cursor mit Benutzername und Passwort anmelden; die Anmeldung wird im Passwortsafe gespeichert.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Von den Freigaben eines Hosts zurück zur Hostliste.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>SMB-Hosts im Netzwerk erneut suchen.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>SMB-Host oder Freigabe auswählen</value>
+  </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Öffnet die gewählte Datei im Editor; eine Binärdatei öffnet sich in ihrer Hex-Ansicht.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Bei einem SMB-Host anmelden</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Von einem SMB-Host abmelden</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Die gespeicherte FTP- oder SFTP-Verbindung unter dem Cursor öffnen, in ihrem Ordner.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> Keine FTP- oder SFTP-Verbindungen gespeichert. Eine lässt sich unter Remote-Verbindungen (Alt+F2) anlegen.</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Die hier aufgelisteten Verbindungen unter Remote-Verbindungen hinzufügen und bearbeiten.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>FTP- oder SFTP-Verbindung öffnen</value>
   </data>
 </root>

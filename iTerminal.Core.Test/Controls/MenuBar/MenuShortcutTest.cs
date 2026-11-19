@@ -10,6 +10,7 @@ using iTerminal.Core.Model;
 using iTerminal.Core.Services;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
+using iTerminal.Core.Test.Dialogs;
 
 namespace iTerminal.Core.Test.Controls.MenuBar;
 
@@ -51,7 +52,7 @@ public class MenuShortcutTest
             new CompareFoldersDialog(contentModelService, new FileSystemResolver(null!, null!, null!, null!, contentModelService), theme));
         yield return new NavigateMenuItem(
             contentModelService, null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(),
-            new SettingsService(), guard.Object, null!, theme,
+            new SettingsService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), null!, null!, null!, theme,
             shellCommand: new iTerminal.Core.Commands.InteractiveShellCommand(contentModelService, Mock.Of<iTerminal.Core.Services.Shell.IInteractiveShellService>()),
             sortDialog: new SortDialog(new SettingsService(), theme));
         yield return new ToolsMenuItem(null!, null!, null!, null!, contentModelService, null!, null!, null!, null!, null!, theme);

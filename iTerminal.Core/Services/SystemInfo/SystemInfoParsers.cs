@@ -37,13 +37,15 @@ public static class SystemInfoParsers
             }
 
             string[] fields = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (fields.Length < 5)
+            if (fields.Length < 6)
             {
                 return null;
             }
 
-            ulong[] values = new ulong[fields.Length - 1];
-            for (int i = 1; i < fields.Length; i++)
+            // user, nice, system, idle, iowait, irq, softirq, steal. Guest time is already counted in user and nice,
+            // so guest and guest_nice are left out of the total.
+            ulong[] values = new ulong[Math.Min(fields.Length - 1, 8)];
+            for (int i = 1; i <= values.Length; i++)
             {
                 if (!ulong.TryParse(fields[i], NumberStyles.None, CultureInfo.InvariantCulture, out values[i - 1]))
                 {

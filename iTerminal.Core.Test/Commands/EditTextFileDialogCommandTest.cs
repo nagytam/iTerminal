@@ -223,50 +223,63 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(command.CanExecute(), fileName);
     }
 
-    [Timeout(60_000)]
-    [TestMethod]
-    public void CanExecute_WhenFocusedFileIsPng_ReturnsFalse()
+    /// <summary>A binary file on disk, to be edited in the hex view; the caller deletes it.</summary>
+    private static Url WriteBinary(string extension, byte[] bytes)
+    {
+        string path = Path.Combine(Path.GetTempPath(), "F4Hex-" + Guid.NewGuid().ToString("N") + extension);
+        File.WriteAllBytes(path, bytes);
+        return new Url("file://" + path.Replace('\\', '/'));
+    }
+
+    private static bool CanEditInCommand(Url fileUrl)
     {
         var themeService = CreateThemeService();
         var dialog = CreateDialog(themeService);
-
-        var fileUrl = new Url("file:///tmp/image.png");
         var entry = new Mock<IEntry>();
         entry.Setup(e => e.Url).Returns(fileUrl);
-
         var contentModel = new Mock<IContentModel>(MockBehavior.Loose);
         contentModel.Setup(m => m.GetFocusedEntry()).Returns(entry.Object);
         contentModel.Setup(m => m.ExistsFile(fileUrl)).Returns(true);
-
         var contentModelService = new Mock<IContentModelService>();
         contentModelService.Setup(s => s.GetFocusedModel()).Returns(contentModel.Object);
-
-        var command = new EditTextFileDialogCommand(dialog, contentModelService.Object);
-
-        Assert.IsFalse(command.CanExecute());
+        return new EditTextFileDialogCommand(dialog, contentModelService.Object).CanExecute();
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void CanExecute_WhenFocusedFileIsMp3_ReturnsFalse()
+    public void CanExecute_WhenFocusedFileIsPngOnDisk_OpensItInTheHexView()
     {
-        var themeService = CreateThemeService();
-        var dialog = CreateDialog(themeService);
+        Url fileUrl = WriteBinary(".png", [0x89, 0x50, 0x4E, 0x47]);
+        try
+        {
+            Assert.IsTrue(CanEditInCommand(fileUrl));
+        }
+        finally
+        {
+            File.Delete(fileUrl.Path);
+        }
+    }
 
-        var fileUrl = new Url("file:///tmp/track.mp3");
-        var entry = new Mock<IEntry>();
-        entry.Setup(e => e.Url).Returns(fileUrl);
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CanExecute_WhenFocusedFileIsMp3OnDisk_OpensItInTheHexView()
+    {
+        Url fileUrl = WriteBinary(".mp3", [0x49, 0x44, 0x33]);
+        try
+        {
+            Assert.IsTrue(CanEditInCommand(fileUrl));
+        }
+        finally
+        {
+            File.Delete(fileUrl.Path);
+        }
+    }
 
-        var contentModel = new Mock<IContentModel>(MockBehavior.Loose);
-        contentModel.Setup(m => m.GetFocusedEntry()).Returns(entry.Object);
-        contentModel.Setup(m => m.ExistsFile(fileUrl)).Returns(true);
-
-        var contentModelService = new Mock<IContentModelService>();
-        contentModelService.Setup(s => s.GetFocusedModel()).Returns(contentModel.Object);
-
-        var command = new EditTextFileDialogCommand(dialog, contentModelService.Object);
-
-        Assert.IsFalse(command.CanExecute());
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CanExecute_WhenFocusedBinaryIsNotOnDisk_ReturnsFalse()
+    {
+        Assert.IsFalse(CanEditInCommand(new Url("file:///tmp/does-not-exist-" + Guid.NewGuid().ToString("N") + ".png")));
     }
 
     [Timeout(60_000)]

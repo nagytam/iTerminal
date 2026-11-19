@@ -24,6 +24,9 @@ public sealed class ProbeUnit<T>(Func<T> probe)
 {
     private Task<T>? _abandoned;
 
+    /// <summary>True while a call that was abandoned has not returned yet. A unit that is busy must not be thrown away.</summary>
+    public bool IsBusy => _abandoned is { } call && !call.IsCompleted;
+
     public async Task<Probed<T>> RunAsync(ISampleClock clock, TimeSpan budget, CancellationToken cancellationToken)
     {
         if (_abandoned is { } previous)
@@ -45,7 +48,14 @@ public sealed class ProbeUnit<T>(Func<T> probe)
             return call.IsCompletedSuccessfully ? Probed<T>.Ok(call.Result) : Probed<T>.NotReported;
         }
 
+        // The call is still running, so it is kept as outstanding even when the wait ended because the loop is stopping:
+        // a later run must not start a second call while this one is still hung.
         _abandoned = call;
+        if (cancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(cancellationToken);
+        }
+
         return Probed<T>.NotAnswering;
     }
 }
@@ -69,7 +79,12 @@ public sealed class IdentityUnit<T>(ProbeUnit<T> unit)
         _pending ??= unit.RunAsync(clock, budget, cancellationToken);
         if (_pending.IsCompleted)
         {
-            _value = _pending.IsCompletedSuccessfully ? _pending.Result : Probed<T>.NotReported;
+            // A run that was cancelled (the loop stopped) says nothing about the machine: it is asked again.
+            if (!_pending.IsCanceled)
+            {
+                _value = _pending.IsCompletedSuccessfully ? _pending.Result : Probed<T>.NotReported;
+            }
+
             _pending = null;
         }
 

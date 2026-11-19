@@ -194,6 +194,28 @@ public class RuntimeDependencyServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task ASkipForGoodKeepsTheOfferAtEveryStartAndIsRemembered()
+    {
+        var settings = new SettingsService();
+        var dependency = new FakeRuntimeDependency("1.63.0") { Installed = "1.63.0", Published = ["1.63.1"] };
+        var service = NewService(settings, dependency);
+        await service.CheckAsync(CancellationToken.None);
+
+        service.SkipOffers();
+        service.SetPermanentlySkipped("fake", true);
+
+        Assert.IsTrue(service.IsPermanentlySkipped("fake"));
+        Assert.IsTrue(service.ShouldOfferAtStartup, "A skip for good is still offered: the dialog lists it at every start.");
+        Assert.IsTrue(NewService(settings, dependency).IsPermanentlySkipped("fake"), "The skip for good is remembered by the next start.");
+
+        service.SetPermanentlySkipped("fake", false);
+
+        Assert.IsFalse(service.IsPermanentlySkipped("fake"));
+        Assert.IsFalse(service.ShouldOfferAtStartup, "Offering it again goes back to the one-version skip.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void AVersionSeenByAnEarlierRunIsOfferedWithoutTheNetwork()
     {
         var settings = new SettingsService();

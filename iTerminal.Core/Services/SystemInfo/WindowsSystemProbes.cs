@@ -112,18 +112,27 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
                 return null;
             }
 
-            double total = 0;
+            // Each process has one instance per engine, and an engine type (3D, copy, video decode...) can run on several.
+            // The figure is the busiest engine type: the sum over processes for each type, then the largest of those, not
+            // the sum over every engine. Across several adapters this is the busiest of all of them, one figure for the
+            // machine; Task Manager shows adapters separately.
+            var byEngineType = new Dictionary<string, double>(StringComparer.Ordinal);
             for (int i = 0; i < count; i++)
             {
                 int offset = i * PdhItemSize;
                 uint status = (uint)Marshal.ReadInt32(buffer, offset + IntPtr.Size);
-                if (status is 0 or 1)
+                if (status is not (0 or 1))
                 {
-                    total += BitConverter.Int64BitsToDouble(Marshal.ReadInt64(buffer, offset + 16));
+                    continue;
                 }
+
+                string instance = Marshal.PtrToStringUni(Marshal.ReadIntPtr(buffer, offset)) ?? string.Empty;
+                string key = EngineType(instance);
+                byEngineType[key] = byEngineType.GetValueOrDefault(key) + BitConverter.Int64BitsToDouble(Marshal.ReadInt64(buffer, offset + 16));
             }
 
-            return Math.Min(100, total);
+            // No engine answered with valid data: that is not a load of zero, so it is reported as not reported.
+            return byEngineType.Count == 0 ? null : Math.Min(100, byEngineType.Values.Max());
         }
         finally
         {
@@ -144,7 +153,27 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
         return SystemInfoParsers.MapPowerStatus(status.ACLineStatus, status.BatteryLifePercent, status.BatteryFlag, (int)status.BatteryLifeTime);
     }
 
+    /// <summary>The physical drives are scanned once every <see cref="DiskScanEvery"/> passes, not on each one: opening up to 32 handles a second is noise, and drives change rarely.</summary>
     public override IReadOnlyList<string> DiskNames()
+    {
+        lock (_diskNameLock)
+        {
+            if (_diskNames is null || ++_diskNameReads >= DiskScanEvery)
+            {
+                _diskNameReads = 0;
+                _diskNames = ScanDiskNames();
+            }
+
+            return _diskNames;
+        }
+    }
+
+    private readonly object _diskNameLock = new();
+    private IReadOnlyList<string>? _diskNames;
+    private int _diskNameReads;
+    private const int DiskScanEvery = 30;
+
+    private static IReadOnlyList<string> ScanDiskNames()
     {
         var result = new List<string>();
         for (int number = 0; number < 32; number++)
@@ -203,6 +232,21 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
     private static extern SafeFileHandle CreateFileW(string fileName, uint desiredAccess, uint shareMode, IntPtr securityAttributes, uint creationDisposition, uint flagsAndAttributes, IntPtr templateFile);
 
     private static ulong ToUlong(FILETIME time) => ((ulong)time.dwHighDateTime << 32) | time.dwLowDateTime;
+
+    /// <summary>
+    /// The adapter and engine type of a GPU Engine instance name, such as
+    /// <c>pid_1234_luid_0x0_0x1234_phys_0_eng_0_engtype_3D</c>. The process is left out, so each engine type is summed
+    /// over the processes that use it.
+    /// </summary>
+    private static string EngineType(string instance)
+    {
+        int luid = instance.IndexOf("luid_", StringComparison.Ordinal);
+        int engine = instance.IndexOf("_eng_", StringComparison.Ordinal);
+        string adapter = luid >= 0 && engine > luid ? instance[luid..engine] : string.Empty;
+        int type = instance.IndexOf("engtype_", StringComparison.Ordinal);
+        string engineType = type >= 0 ? instance[(type + "engtype_".Length)..] : string.Empty;
+        return adapter + "|" + engineType;
+    }
 
     [DllImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]

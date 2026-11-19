@@ -14,6 +14,9 @@ public interface ISystemSampler : IDisposable
     /// <summary>The latest report, or null until the first pass has finished.</summary>
     SystemSnapshot? Current { get; }
 
+    /// <summary>True when the most recent pass failed, so <see cref="Current"/> may be out of date.</summary>
+    bool PassFailing { get; }
+
     /// <summary>Starts the sampling loop while the returned handle is held. Dispose the handle to let go of it.</summary>
     IDisposable Watch();
 }
@@ -33,6 +36,7 @@ public sealed class SystemSampler : ISystemSampler
     private readonly TimeSpan _identityBudget;
     private readonly object _lock = new();
     private SystemSnapshot? _current;
+    private bool _passFailing;
     private int _watchers;
     private CancellationTokenSource? _loopCancellation;
     private bool _disposed;
@@ -75,11 +79,17 @@ public sealed class SystemSampler : ISystemSampler
     private readonly Dictionary<string, Timed<DiskCounters>> _previousDisk = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Timed<NetworkCounters>> _previousNetwork = new(StringComparer.Ordinal);
 
+    // One pass at a time, whichever loop runs it: a loop that was stopped may still be finishing its pass when a new loop
+    // starts, and the passes share the rate state.
+    private readonly SemaphoreSlim _passGate = new(1, 1);
+    private readonly ILogger _logger;
+
     public SystemSampler(
         ISystemProbeFactory probeFactory,
         ITerminalFocusService focus,
         ISampleClock clock,
         ITimeProvider time,
+        ILogger logger,
         TimeSpan? interval = null,
         TimeSpan? liveBudget = null,
         TimeSpan? identityBudget = null)
@@ -88,6 +98,7 @@ public sealed class SystemSampler : ISystemSampler
         _focus = focus;
         _clock = clock;
         _time = time;
+        _logger = logger;
         _interval = interval ?? DefaultInterval;
         _liveBudget = liveBudget ?? DefaultLiveBudget;
         _identityBudget = identityBudget ?? DefaultIdentityBudget;
@@ -121,6 +132,17 @@ public sealed class SystemSampler : ISystemSampler
             lock (_lock)
             {
                 return _current;
+            }
+        }
+    }
+
+    public bool PassFailing
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return _passFailing;
             }
         }
     }
@@ -185,12 +207,27 @@ public sealed class SystemSampler : ISystemSampler
                 await _focus.WaitForFocusAsync(cancellationToken);
                 restart |= unfocused;
 
-                SystemSnapshot snapshot = await PassAsync(restart, cancellationToken);
-                restart = false;
-                lock (_lock)
+                SystemSnapshot? snapshot = await RunPassAsync(restart, cancellationToken);
+
+                // A stopped loop finishes its pass but does not publish it.
+                if (snapshot is not null && !cancellationToken.IsCancellationRequested)
                 {
-                    _current = snapshot;
+                    lock (_lock)
+                    {
+                        _current = snapshot;
+                    }
                 }
+
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    lock (_lock)
+                    {
+                        _passFailing = snapshot is null;
+                    }
+                }
+
+                // A pass that failed leaves the rate state unknown, so the next pass measures again.
+                restart = snapshot is null;
 
                 await _clock.Delay(_interval, cancellationToken);
             }
@@ -201,8 +238,34 @@ public sealed class SystemSampler : ISystemSampler
         }
         catch (Exception exception)
         {
-            // Nothing awaits the loop, so an unexpected exception would otherwise be lost.
-            Log.Error(exception, "The system information sampler stopped.");
+            // Nothing awaits the loop, so an exception from the focus service or the clock would otherwise be lost.
+            _logger.Error(exception, "The system information sampler stopped.");
+        }
+    }
+
+    /// <summary>
+    /// One pass, under the pass gate. An unexpected exception is logged and the pass is given up, so one bad pass does
+    /// not end the loop while handles are still held.
+    /// </summary>
+    private async Task<SystemSnapshot?> RunPassAsync(bool restart, CancellationToken cancellationToken)
+    {
+        await _passGate.WaitAsync(cancellationToken);
+        try
+        {
+            return await PassAsync(restart, cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.Error(exception, "The system information sampler could not complete a pass.");
+            return null;
+        }
+        finally
+        {
+            _passGate.Release();
         }
     }
 
@@ -273,6 +336,15 @@ public sealed class SystemSampler : ISystemSampler
             _networkNameList = networkNamesResult.Value!;
         }
 
+        // A device that is no longer listed is forgotten, so a device that later takes its name starts from nothing.
+        // A unit whose call is still outstanding is kept until that call returns, so a hung call is not repeated.
+        PruneUnits(_drives, _driveNameList, StringComparer.OrdinalIgnoreCase);
+        PruneUnits(_batteries, _batteryNameList, StringComparer.Ordinal);
+        PruneUnits(_disks, _diskNameList, StringComparer.Ordinal);
+        Prune(_previousDisk, _diskNameList, StringComparer.Ordinal);
+        PruneUnits(_networks, _networkNameList, StringComparer.Ordinal);
+        Prune(_previousNetwork, _networkNameList, StringComparer.Ordinal);
+
         return new SystemSnapshot(
             operatingSystem,
             architecture,
@@ -299,6 +371,24 @@ public sealed class SystemSampler : ISystemSampler
             diskTasks.Select(item => new NamedProbe<DiskRate>(item.name, DiskValue(item.name, item.Item2.Result))).ToList(),
             networkNamesResult,
             networkTasks.Select(item => new NamedProbe<NetworkRate>(item.name, NetworkValue(item.name, item.Item2.Result))).ToList());
+    }
+
+    private static void Prune<TValue>(Dictionary<string, TValue> entries, IReadOnlyList<string> names, IEqualityComparer<string> comparer)
+    {
+        var listed = new HashSet<string>(names, comparer);
+        foreach (string key in entries.Keys.Where(key => !listed.Contains(key)).ToList())
+        {
+            entries.Remove(key);
+        }
+    }
+
+    private static void PruneUnits<TValue>(Dictionary<string, ProbeUnit<TValue>> units, IReadOnlyList<string> names, IEqualityComparer<string> comparer)
+    {
+        var listed = new HashSet<string>(names, comparer);
+        foreach (string key in units.Where(entry => !listed.Contains(entry.Key) && !entry.Value.IsBusy).Select(entry => entry.Key).ToList())
+        {
+            units.Remove(key);
+        }
     }
 
     private Task<Probed<T>> Start<T>(ProbeUnit<T> unit, CancellationToken cancellationToken, List<Task> pending)
@@ -360,6 +450,8 @@ public sealed class SystemSampler : ISystemSampler
     {
         if (read.State != ProbeState.Ok)
         {
+            // The next answer is a rate over a gap, so it is measured again rather than averaged over the gap.
+            _previousCpu = null;
             return Retag<Timed<CpuTicks>, double>(read.State);
         }
 
@@ -385,6 +477,7 @@ public sealed class SystemSampler : ISystemSampler
     {
         if (read.State != ProbeState.Ok)
         {
+            _previousDisk.Remove(name);
             return Retag<Timed<DiskCounters>, DiskRate>(read.State);
         }
 
@@ -405,6 +498,7 @@ public sealed class SystemSampler : ISystemSampler
     {
         if (read.State != ProbeState.Ok)
         {
+            _previousNetwork.Remove(name);
             return Retag<Timed<NetworkCounters>, NetworkRate>(read.State);
         }
 

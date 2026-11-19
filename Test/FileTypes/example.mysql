@@ -1,0 +1,29 @@
+# A small MySQL script: a readings table, a stored procedure and a greeting.
+CREATE TABLE `readings` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `sensor` VARCHAR(40) NOT NULL,
+  `value` DECIMAL(9, 2) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO readings (sensor, value)
+VALUES ('alpha', 1.50), ('beta', 32.50), ('gamma', -0.40)
+ON DUPLICATE KEY UPDATE value = VALUES(value);
+
+DELIMITER $$
+CREATE PROCEDURE report_mean()
+BEGIN
+  DECLARE total DECIMAL(9, 2) DEFAULT 0;
+  -- a line comment inside the body
+  SELECT AVG(value) INTO total FROM readings WHERE value > 0;
+  IF total > 5 THEN
+    SELECT CONCAT('Mean is large: ', total) AS message;
+  ELSE
+    SELECT 'Hello from iTerminal\'s small mean' AS message;
+  END IF;
+END$$
+DELIMITER ;
+
+/* A block comment
+   over two lines. */
+CALL report_mean();

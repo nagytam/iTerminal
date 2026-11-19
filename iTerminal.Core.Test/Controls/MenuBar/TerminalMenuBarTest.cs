@@ -10,6 +10,7 @@ using iTerminal.Core.Model;
 using iTerminal.Core.Services;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
+using iTerminal.Core.Test.Dialogs;
 
 namespace iTerminal.Core.Controls.MenuBar.Test;
 
@@ -28,7 +29,7 @@ public class TerminalMenuBarTest
             TestTheme(), Mock.Of<IContentModelService>(), settings, new WeatherService(), new OnlineQuoteService(), taskManager,
             null!, null!, null!, null!, null!,
             null!, null!, null!,
-            null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), guard.Object, null!,
+            null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), null!, null!, null!,
             null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, null!);
 

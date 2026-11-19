@@ -75,7 +75,7 @@ public class FolderSelectorWithFilePanelsTest
             taskManager, settingsService, fileSystemService,
             Mock.Of<IMemoryDriveService>(), Mock.Of<ISshFileSystemService>(),
             Mock.Of<ISmbFileSystemService>(), Mock.Of<IIPhoneFileSystemService>(),
-            Mock.Of<INetworkProfileService>(), Mock.Of<IPasswordManager>(),
+            iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyNetworkProfiles(), Mock.Of<IPasswordManager>(),
             Mock.Of<IArchiveFileSystemService>(),
             folderHistory, frequentGuard, memoryCacheService, logger,
             dbContextFactory: null,
@@ -102,7 +102,8 @@ public class FolderSelectorWithFilePanelsTest
         // only after the focused panel has declined the chord, which is true either way.
         var openCommand = new FolderSelectorDialogCommand(
             contentModelService, folderHistory, new DriveInfoModel(), new FolderIndexModel(),
-            Mock.Of<IBeepService>(), new DateTimeProviderService(), settingsService, frequentGuard, themeService);
+            Mock.Of<IBeepService>(), new DateTimeProviderService(), settingsService, frequentGuard, themeService,
+            Mock.Of<INetworkDiscoveryService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyNetworkProfiles(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), EmptyPasswordSafe(), Mock.Of<iConsole.Services.IPromptService>());
         screen.AddCommand(openCommand);
 
         await screen.OnInitializeAsync();
@@ -312,5 +313,13 @@ public class FolderSelectorWithFilePanelsTest
             new IControl[] { harness.LeftPanel, harness.RightPanel },
             harness.Screen.Controls.AsSnapshot().ToArray(),
             "Only the two panels should be left on the screen.");
+    }
+
+    /// <summary>The 7-SMB page reads the saved logins from the password safe when the dialog opens, so an empty list is answered.</summary>
+    private static IPasswordManager EmptyPasswordSafe()
+    {
+        var passwords = new Mock<IPasswordManager>();
+        passwords.Setup(p => p.List()).Returns(new List<iTerminal.Core.Model.Passwords.PasswordEntry>());
+        return passwords.Object;
     }
 }

@@ -647,6 +647,12 @@
   <data name="SysInfo.Io.Sent" xml:space="preserve">
     <value>Sent {0}</value>
   </data>
+  <data name="SysInfo.Collecting" xml:space="preserve">
+    <value>Collecting system information…</value>
+  </data>
+  <data name="SysInfo.Stale" xml:space="preserve">
+    <value>The last sample failed; the values shown may be out of date.</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>System Settings</value>
   </data>
@@ -1580,6 +1586,9 @@
   <data name="DialogHint.SkipOffersClose" xml:space="preserve">
     <value>Skip the ticked offers and close</value>
   </data>
+  <data name="DialogHint.SkipForGood" xml:space="preserve">
+    <value>Skip the component for good: it stays listed, and Enter leaves it out</value>
+  </data>
   <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
     <value>Search, or show the chosen result in the panel when the list has focus</value>
   </data>
@@ -1897,9 +1906,6 @@
   </data>
   <data name="Field.Key" xml:space="preserve">
     <value>Key</value>
-  </data>
-  <data name="Field.MemoryThisProcess" xml:space="preserve">
-    <value>Memory (this process)</value>
   </data>
   <data name="Field.Engine" xml:space="preserve">
     <value>Engine</value>
@@ -2646,25 +2652,22 @@
     <value>Enter closes this.</value>
   </data>
   <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
-    <value>Nothing is ticked.</value>
+    <value>Nothing is ticked, so Enter closes without installing.</value>
   </data>
   <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
     <value>Finish will install:</value>
-  </data>
-  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
-    <value>Nothing is ticked. Go back and tick what to install.</value>
   </data>
   <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
     <value>Installing... Esc:hide this (it keeps going)</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
-    <value>Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later</value>
+    <value>Enter:install  Backspace:back  Space:tick  P:skip for good  S:skip version</value>
   </data>
   <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
     <value>Enter:close  Backspace:back  Esc:close</value>
   </data>
   <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
-    <value>Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later</value>
+    <value>Enter:next  Backspace:back  Space:tick  P:skip for good  S:skip version</value>
   </data>
   <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
     <value>Enter:next  Backspace:back  Esc:close</value>
@@ -2680,6 +2683,12 @@
   </data>
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Left out   (Space: install it)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.InstallWhileSkipped" xml:space="preserve">
+    <value>[x] Install this one   (P: skip it for good)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.SkippedForGood" xml:space="preserve">
+    <value>[ ] Skipped for good   (P: offer it again)</value>
   </data>
   <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
     <value>Performance benchmark</value>
@@ -10246,6 +10255,33 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Switch failed: {0}</value>
   </data>
+  <data name="Sync.Cleanup.Button" xml:space="preserve">
+    <value>Clean up merged (Alt+C)</value>
+  </data>
+  <data name="Sync.Cleanup.None" xml:space="preserve">
+    <value>No local branch is merged into {0}, so there is nothing to clean up.</value>
+  </data>
+  <data name="Sync.Cleanup.Confirm" xml:space="preserve">
+    <value>Delete {0} local branch(es) merged into {1}? (y/n)</value>
+  </data>
+  <data name="Sync.Cleanup.Deleting" xml:space="preserve">
+    <value>Deleting the merged branches…</value>
+  </data>
+  <data name="Sync.Cleanup.Done" xml:space="preserve">
+    <value>Deleted {0} merged branch(es).</value>
+  </data>
+  <data name="Sync.Cleanup.Failed" xml:space="preserve">
+    <value>Deleted {0}; {1} could not be deleted: {2}</value>
+  </data>
+  <data name="Sync.Hint.Cleanup" xml:space="preserve">
+    <value>Delete the local branches merged into main (asks first)</value>
+  </data>
+  <data name="CmdTitle.c63736b2" xml:space="preserve">
+    <value>Clean up merged</value>
+  </data>
+  <data name="CmdDesc.583d4195" xml:space="preserve">
+    <value>Delete the local branches merged into the main branch (asks first).</value>
+  </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} background task(s) are still running. Quit anyway?</value>
   </data>
@@ -10344,7 +10380,7 @@
     <value>Market Terminal</value>
   </data>
   <data name="Hints.MarketTerminal" xml:space="preserve">
-    <value>Enter:look up or show the row  ↑↓:monitor  F5:refresh  Esc:close</value>
+    <value>Enter:look up or show  ↑↓:monitor  F5:refresh  F6:watch  F8:period  Esc:close</value>
   </data>
   <data name="Market.Prompt" xml:space="preserve">
     <value>Look up  ›</value>
@@ -10366,6 +10402,33 @@
   </data>
   <data name="Market.LookUp" xml:space="preserve">
     <value>Look up the symbol, or show the chosen row</value>
+  </data>
+  <data name="Market.NoSecurityToWatch" xml:space="preserve">
+    <value>Look up a stock first, then press F6 to watch it.</value>
+  </data>
+  <data name="Market.Added" xml:space="preserve">
+    <value>Added {0} to the watchlist</value>
+  </data>
+  <data name="Market.Watched" xml:space="preserve">
+    <value>watched</value>
+  </data>
+  <data name="Market.Chart" xml:space="preserve">
+    <value>Chart</value>
+  </data>
+  <data name="Market.ChartHeading" xml:space="preserve">
+    <value>Chart {0}   {1} to {2}   {3} over the period</value>
+  </data>
+  <data name="Market.ChartLoading" xml:space="preserve">
+    <value>loading the history…</value>
+  </data>
+  <data name="Market.ChartNone" xml:space="preserve">
+    <value>no price history for this security</value>
+  </data>
+  <data name="DialogHint.ChartPeriod" xml:space="preserve">
+    <value>Change the chart's period (1M, 3M, 1Y, 5Y)</value>
+  </data>
+  <data name="DialogHint.WatchSecurity" xml:space="preserve">
+    <value>Add or remove the security from the watchlist</value>
   </data>
   <data name="CmdTitle.231d197e" xml:space="preserve">
     <value>Market Terminal</value>
@@ -10415,5 +10478,132 @@
   </data>
   <data name="Plugins.Notify.Failed" xml:space="preserve">
     <value>{0} plug-in(s) could not be loaded. The plug-in manager in the Tools menu says why.</value>
+  </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>Open the host under the cursor, or go to the share under the cursor.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> Looking for SMB hosts on the local network…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>SMB hosts ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Shares on {0} ({1}) — Backspace: hosts</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>scanning…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>No shares are listed on {0} without a login. Press L to log in.</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>saved</value>
+  </data>
+  <data name="FolderSelector.Smb.Logout" xml:space="preserve">
+    <value>Log out…</value>
+  </data>
+  <data name="FolderSelector.Smb.SignedIn" xml:space="preserve">
+    <value>Logged in to {0} as {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
+    <value>Browsing {0} anonymously. L logs in.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
+    <value>Select a host to log out of first.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutNotHere" xml:space="preserve">
+    <value>Not logged in to {0}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutConfirm" xml:space="preserve">
+    <value>Log out of {0} and remove the saved password for {1}?  y:yes  n:no</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedOut" xml:space="preserve">
+    <value>Logged out of {0}; the saved password is removed.</value>
+  </data>
+  <data name="FolderSelector.Smb.LogoutUnsafe" xml:space="preserve">
+    <value>The password safe could not be opened, so the login was not removed.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogout" xml:space="preserve">
+    <value>Log out of the host under the cursor and remove its saved password (y confirms).</value>
+  </data>
+  <data name="FolderSelector.Smb.Login" xml:space="preserve">
+    <value>Log in…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInAs" xml:space="preserve">
+    <value>logged in as {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggingIn" xml:space="preserve">
+    <value>Logging in to {0} as {1}…</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginFailed" xml:space="preserve">
+    <value>Could not log in to {0} as {1}. Nothing was saved.</value>
+  </data>
+  <data name="FolderSelector.Smb.SavedLoginFailed" xml:space="preserve">
+    <value>Could not list the shares of {0} with the saved login of {1}.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedIn" xml:space="preserve">
+    <value>Logged in to {0} as {1}. The login is saved in the password safe.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoggedInUnsaved" xml:space="preserve">
+    <value>Logged in to {0} as {1}. The password safe could not be opened, so the login was not saved.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginSelectHost" xml:space="preserve">
+    <value>Select a host to log in to first.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginUser" xml:space="preserve">
+    <value>Username for {0}</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginInvalid" xml:space="preserve">
+    <value>Control characters are not allowed.</value>
+  </data>
+  <data name="FolderSelector.Smb.LoginPassword" xml:space="preserve">
+    <value>Password for {0} on {1}</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbLogin" xml:space="preserve">
+    <value>Log in to the host under the cursor with a username and password; the login is saved in the password safe.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Back from a host's shares to the list of hosts.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>Search the network for SMB hosts again.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>Select SMB host or share</value>
+  </data>
+  <data name="CmdDesc.86efee9f" xml:space="preserve">
+    <value>Open the selected file in the editor; a binary opens in its hex view.</value>
+    <comment>Open the selected file in the editor; a binary opens in its hex view.</comment>
+  </data>
+  <data name="CmdTitle.adeeed16" xml:space="preserve">
+    <value>Log in to an SMB host</value>
+  </data>
+  <data name="CmdTitle.9f017f15" xml:space="preserve">
+    <value>Log out of an SMB host</value>
+  </data>
+  <data name="FolderSelector.Tab8" xml:space="preserve">
+    <value>8-FTP/SFTP</value>
+  </data>
+  <data name="FolderSelector.Select.Remote" xml:space="preserve">
+    <value>Open the saved FTP or SFTP connection under the cursor, in its folder.</value>
+  </data>
+  <data name="FolderSelector.Remote.Empty" xml:space="preserve">
+    <value> No FTP or SFTP connections are saved. Add one in Remote connections (Alt+F2).</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
+    <value>Add and edit the connections listed here, in Remote connections.</value>
+  </data>
+  <data name="CmdTitle.35808701" xml:space="preserve">
+    <value>Open FTP or SFTP connection</value>
+  </data>
+  <data name="CmdTitle.f8cd7419" xml:space="preserve">
+    <value>Plugin manager…</value>
+  </data>
+  <data name="CmdDesc.0fce9508" xml:space="preserve">
+    <value>Load or unload the viewer and editor plug-ins in the plug-in folder.</value>
   </data>
 </root>

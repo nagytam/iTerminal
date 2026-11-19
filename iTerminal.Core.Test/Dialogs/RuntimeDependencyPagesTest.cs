@@ -96,7 +96,7 @@ public class RuntimeDependencyPagesTest
             ViewSize = new Size(100, 8),
         };
 
-        AssertScreenContains(Render(page, new Size(100, 8)), "Nothing is ticked.");
+        AssertScreenContains(Render(page, new Size(100, 8)), "Nothing is ticked, so Enter closes without installing.");
     }
 
     [Timeout(60_000)]

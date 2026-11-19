@@ -6,6 +6,7 @@ using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Controls.MenuBar;
 
@@ -20,6 +21,11 @@ public class NavigateMenuItem : MenuItem
         IDateTimeProviderService dateTimeProviderService,
         ISettingsService settingsService,
         IFrequentExecutionGuardService frequentExecutionGuardService,
+        INetworkDiscoveryService networkDiscoveryService,
+        INetworkProfileService networkProfileService,
+        IRemoteConnectionService remoteConnectionService,
+        IPasswordManager passwordManager,
+        IPromptService promptService,
         Content content,
         IThemeService themeService,
         HelpDialog? helpDialog = null,
@@ -39,6 +45,11 @@ public class NavigateMenuItem : MenuItem
             settingsService,
             frequentExecutionGuardService,
             themeService,
+            networkDiscoveryService,
+            networkProfileService,
+            remoteConnectionService,
+            passwordManager,
+            promptService,
             helpDialog);
 
         AddMenuItem(new MenuItem("Go To Folder\tCtrl+F1",  folderSelectorCommand, [], themeService));

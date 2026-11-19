@@ -17,6 +17,7 @@ using iTerminal.Core.Dialogs.PackageManager;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Git;
+using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Controls.StatusBar;
 
@@ -59,6 +60,10 @@ public class HotKeys : StatusBarItem
         ISettingsService settingsService,
         IFrequentExecutionGuardService frequentExecutionGuardService,
         IThemeService themeService,
+        INetworkDiscoveryService networkDiscoveryService,
+        INetworkProfileService networkProfileService,
+        IRemoteConnectionService remoteConnectionService,
+        IPasswordManager passwordManager,
         SolutionViewerDialog? solutionViewerDialog = null,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
@@ -162,6 +167,11 @@ public class HotKeys : StatusBarItem
             settingsService,
             frequentExecutionGuardService,
             themeService,
+            networkDiscoveryService,
+            networkProfileService,
+            remoteConnectionService,
+            passwordManager,
+            promptService,
             helpDialog);
 
         var helpDialogButton = new Button("F1-Help", helpDialogCommand, themeService)

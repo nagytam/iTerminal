@@ -11,6 +11,7 @@ using iTerminal.Core.Model.Git;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Git;
 using Moq;
+using iTerminal.Core.Test.Dialogs;
 
 namespace iTerminal.Core.Test.Controls.StatusBar;
 
@@ -55,7 +56,7 @@ public class RealHotKeysRoutingTest
         var hotKeys = new HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, iPhoneDialog, null!, null!, null!, null!, null!, null!,
-            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService, gitService: gitService, gitSyncDialog: gitSyncDialog);
+            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), null!, gitService: gitService, gitSyncDialog: gitSyncDialog);
 
         var statusBar = new iConsole.Controls.StatusBar.StatusBar(themeService) { ViewSize = new Size(120, 1) };
         statusBar.AddControl(hotKeys);

@@ -13,6 +13,8 @@ public class SmbFileSystemService : ISmbFileSystemService
     private readonly Func<ISMBClient> _clientFactory;
     private ISMBClient? _client;
     private ISMBFileStore? _fileStore;
+    private string? _host;
+    private string? _username;
 
     public bool IsReadOnly => false;
     public bool IsConnected => _client?.IsConnected ?? false;
@@ -26,26 +28,29 @@ public class SmbFileSystemService : ISmbFileSystemService
         _clientFactory = clientFactory;
     }
 
-    public IEnumerable<string> ListShares(string host, string username, string password)
+    public IEnumerable<string> ListShares(string host, string username, string password) =>
+        TryListShares(host, username, password) ?? [];
+
+    public IReadOnlyList<string>? TryListShares(string host, string username, string password)
     {
         var client = _clientFactory();
         try
         {
             if (!client.Connect(host, SMBTransportType.DirectTCPTransport))
             {
-                return [];
+                return null;
             }
             var loginStatus = client.Login(string.Empty, username ?? string.Empty, password ?? string.Empty);
             if (loginStatus != NTStatus.STATUS_SUCCESS)
             {
-                return [];
+                return null;
             }
             var shares = client.ListShares(out var listStatus);
-            return listStatus == NTStatus.STATUS_SUCCESS && shares is not null ? shares : [];
+            return listStatus == NTStatus.STATUS_SUCCESS && shares is not null ? [.. shares] : [];
         }
         catch
         {
-            return [];
+            return null;
         }
         finally
         {
@@ -55,19 +60,29 @@ public class SmbFileSystemService : ISmbFileSystemService
 
     public void Connect(string host, string share, string username, string password)
     {
-        if (_client is null || !_client.IsConnected)
+        username ??= string.Empty;
+        // A panel keeps one service for its whole life, so the session can belong to another host or
+        // another user than the one asked for now. Only the same host and login may reuse it.
+        if (_client is null || !_client.IsConnected
+            || !string.Equals(_host, host, StringComparison.OrdinalIgnoreCase)
+            || _username != username)
         {
+            Disconnect();
             _client = _clientFactory();
             if (!_client.Connect(host, SMBTransportType.DirectTCPTransport))
             {
                 throw new IOException($"Could not connect to {host}");
             }
-            var loginStatus = _client.Login(string.Empty, username ?? string.Empty, password ?? string.Empty);
+            var loginStatus = _client.Login(string.Empty, username, password ?? string.Empty);
             if (loginStatus != NTStatus.STATUS_SUCCESS)
             {
                 throw new IOException($"SMB login to {host} failed: {loginStatus}");
             }
+            _host = host;
+            _username = username;
         }
+        // The tree connection to the previous share is closed rather than left open on the session.
+        try { _fileStore?.Disconnect(); } catch { }
         _fileStore = _client.TreeConnect(share, out var treeStatus);
         if (treeStatus != NTStatus.STATUS_SUCCESS || _fileStore is null)
         {
@@ -82,6 +97,8 @@ public class SmbFileSystemService : ISmbFileSystemService
         try { _client?.Disconnect(); } catch { }
         _fileStore = null;
         _client = null;
+        _host = null;
+        _username = null;
     }
 
     public IEnumerable<IEntry> List(Url url)

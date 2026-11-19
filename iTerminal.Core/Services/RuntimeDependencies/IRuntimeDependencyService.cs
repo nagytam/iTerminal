@@ -38,6 +38,12 @@ public interface IRuntimeDependencyService
     /// <summary>Skips the offers of the dependencies named only; the others are offered again at the next start.</summary>
     void SkipOffers(IReadOnlyCollection<string>? ids);
 
+    /// <summary>Whether the person has skipped this dependency for good: it stays listed, but Enter leaves it out.</summary>
+    bool IsPermanentlySkipped(string id);
+
+    /// <summary>Skips a dependency for good, or offers it again. It is listed at every start while it is skipped.</summary>
+    void SetPermanentlySkipped(string id, bool skipped);
+
     /// <summary>Marks a dependency's installed version incomplete, as a failed feature finds it to be.</summary>
     void InvalidateInstalled(string id);
 }

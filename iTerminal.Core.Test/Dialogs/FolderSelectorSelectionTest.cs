@@ -38,7 +38,8 @@ public class FolderSelectorSelectionTest
         var dialog = new FolderSelectorDialog(
             harness.ContentModelService, harness.FolderHistoryService, harness.DriveInfoModel,
             harness.FolderIndexModel, harness.BeepService, harness.DateTimeProviderService,
-            harness.SettingsService, harness.FrequentExecutionGuardService, harness.ThemeService)
+            harness.SettingsService, harness.FrequentExecutionGuardService, harness.ThemeService,
+            harness.NetworkDiscoveryService, harness.NetworkProfileService, harness.RemoteConnectionService, harness.PasswordManager, harness.PromptService)
         {
             ViewSize = new Size(100, 30)
         };

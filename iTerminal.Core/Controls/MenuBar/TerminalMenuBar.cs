@@ -10,6 +10,7 @@ using iTerminal.Core.Data;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Controls.MenuBar;
 
@@ -57,6 +58,11 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IFrequentExecutionGuardService frequentExecutionGuardService,
+        INetworkDiscoveryService networkDiscoveryService,
+        INetworkProfileService networkProfileService,
+        IRemoteConnectionService remoteConnectionService,
+        IPasswordManager passwordManager,
+        IPromptService promptService,
         Content content,
         // Tools
         TerminalDialog terminalDialog,
@@ -233,6 +239,11 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             dateTimeProviderService,
             settingsService,
             frequentExecutionGuardService,
+            networkDiscoveryService,
+            networkProfileService,
+            remoteConnectionService,
+            passwordManager,
+            promptService,
             content,
             themeService,
             helpDialog,
