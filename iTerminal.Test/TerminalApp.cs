@@ -138,7 +138,8 @@ public sealed class TerminalApp : IAsyncDisposable
         var restarted = await LaunchAsync(_root, firstRun: false, Driver.Options.Width, Driver.Options.Height);
         try
         {
-            await restarted.Driver.WaitUntilAsync(screen => screen.Contains(" entr"), "the panels to be drawn");
+            // " entr" is "entries" in English, " Eintr" the start of "Einträge" in German: the relaunch may be in either language.
+            await restarted.Driver.WaitUntilAsync(screen => screen.Contains(" entr") || screen.Contains(" Eintr"), "the panels to be drawn");
         }
         catch
         {

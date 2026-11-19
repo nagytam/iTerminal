@@ -10700,4 +10700,37 @@
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Átnevezés vagy áthelyezés visszavonása</value>
   </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Általános </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Hálózat</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Jelzők </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Zene </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Dokumentumok </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Panelek </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Háttér</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Képernyővédő</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Alap</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Tudományos</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programozó</value>
+  </data>
 </root>

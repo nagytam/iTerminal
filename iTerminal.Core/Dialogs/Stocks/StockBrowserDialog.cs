@@ -54,6 +54,37 @@ public class StockBrowserDialog : SplitPaneDialog
         return Cut(text, width);
     }
 
+    /// <summary>
+    /// The parts joined by three spaces, as many as fit <paramref name="width"/>, from the first: a part is shown whole or not at all, so a line
+    /// never ends in half a figure ("updated 19:0", "last tr"). The first part alone is cut, with an ellipsis, only when it is wider than the line.
+    /// </summary>
+    internal static string FitParts(IReadOnlyList<string> parts, int width)
+    {
+        if (parts.Count == 0 || width <= 0)
+        {
+            return string.Empty;
+        }
+
+        var text = parts[0];
+        if (text.Length > width)
+        {
+            return width <= 1 ? text[..width] : text[..(width - 1)] + "…";
+        }
+
+        for (var i = 1; i < parts.Count; i++)
+        {
+            var next = text + "   " + parts[i];
+            if (next.Length > width)
+            {
+                break;
+            }
+
+            text = next;
+        }
+
+        return text;
+    }
+
     private static string Cut(string text, int width) => text.Length <= width ? text : text[..Math.Max(0, width)];
 
     internal static string FormatPrice(decimal price) =>
@@ -617,7 +648,12 @@ public class StockBrowserDialog : SplitPaneDialog
         var updated = _stockService.LastUpdated;
         var text = _adding
             ? UiText.Get("Stocks.HeaderAdd", "Stocks — add a stock")
-            : string.Format(UiText.Get("Stocks.HeaderCount", "Stocks — {0} on the list"), _rowItems.Count) + (updated is { } time ? "   " + string.Format(UiText.Get("Stocks.Live", "live, updated {0}"), time.ToString("HH:mm:ss")) : "   " + UiText.Get("Stocks.Waiting", "waiting for the first quotes…"));
+            : FitParts(
+                [
+                    string.Format(UiText.Get("Stocks.HeaderCount", "Stocks — {0} on the list"), _rowItems.Count),
+                    updated is { } time ? string.Format(UiText.Get("Stocks.Live", "live, updated {0}"), time.ToString("HH:mm:ss")) : UiText.Get("Stocks.Waiting", "waiting for the first quotes…"),
+                ],
+                w);
         WriteLine(buffer, x, y, w, text, Color.Cyan, colorScheme.Background);
     }
 
@@ -650,7 +686,7 @@ public class StockBrowserDialog : SplitPaneDialog
                 parts.Add(string.Format(UiText.Get("Stocks.LastTrade", "last trade {0}"), last.ToString("yyyy-MM-dd HH:mm")));
             }
 
-            text = " " + string.Join("   ", parts);
+            text = " " + FitParts(parts, w - 1);
         }
 
         WriteLine(buffer, x, y, w, text, colorScheme.DisabledForeground, colorScheme.Background);
@@ -663,9 +699,13 @@ public class StockBrowserDialog : SplitPaneDialog
         var up = quotes.Count(q => q!.Change > 0);
         var down = quotes.Count(q => q!.Change < 0);
         // While adding, the input box has taken the footer, so the status lives on this line.
-        var text = _adding
-            ? " " + _message
-            : " " + string.Format(UiText.Get("Stocks.Summary", "{0} up   {1} down   {2} unchanged"), up, down, quotes.Count - up - down) + (_rowItems.Count > quotes.Count ? "   " + string.Format(UiText.Get("Stocks.NotQuoted", "{0} not quoted"), _rowItems.Count - quotes.Count) : string.Empty);
+        var summary = new List<string> { string.Format(UiText.Get("Stocks.Summary", "{0} up   {1} down   {2} unchanged"), up, down, quotes.Count - up - down) };
+        if (_rowItems.Count > quotes.Count)
+        {
+            summary.Add(string.Format(UiText.Get("Stocks.NotQuoted", "{0} not quoted"), _rowItems.Count - quotes.Count));
+        }
+
+        var text = _adding ? " " + _message : " " + FitParts(summary, w - 1);
         WriteLine(buffer, x, y, w, text, colorScheme.Foreground, colorScheme.Background);
     }
 

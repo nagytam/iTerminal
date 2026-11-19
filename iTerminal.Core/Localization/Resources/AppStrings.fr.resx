@@ -10700,4 +10700,37 @@
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Annuler le renommage ou le déplacement</value>
   </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Général </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Réseau</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Indicateurs </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Musique </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Documents </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Panneaux </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Arrière-plan</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Écran de veille</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Scientifique</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programmeur</value>
+  </data>
 </root>

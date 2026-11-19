@@ -10764,4 +10764,37 @@
   <data name="Menu.Undorenameormove" xml:space="preserve">
     <value>Umbenennen oder Verschieben rückgängig</value>
   </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Allgemein </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Netzwerk</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Anzeigen </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Musik </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Dokumente </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Panels </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Hintergrund</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Bildschirmschoner</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Wissenschaftlich</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programmierer</value>
+  </data>
 </root>

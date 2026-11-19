@@ -30,7 +30,7 @@ public class SettingsMusicTabPage : TabPage
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
         IMusicPlayerService? musicPlayerService = null)
-        : base("4-Music ", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Music", "4-Music "), themeService)
     {
         _musicPlayerService = musicPlayerService;
         HotConsoleKey = ConsoleKey.D4;
