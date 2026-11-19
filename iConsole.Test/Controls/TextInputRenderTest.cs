@@ -246,6 +246,23 @@ public class TextInputRenderTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TextBox_Completion_IsShownWhenTheTypedCaseDiffers()
+    {
+        // The list matches without regard to case, so the greyed rest must as well, or "hu" lists Hungary and shows nothing after the cursor.
+        var textBox = CreateTextBox("Country").WithAutoCompletion(["Germany", "Hungary"]);
+        await textBox.OnInitializeAsync();
+        textBox.SetFocus();
+
+        await TypeAsync(textBox, "hu");
+        await textBox.AutoCompletion!.CompletionModel.UpdateTask!;
+        var screen = ScreenBuffer.Render(textBox, 20, 1);
+
+        Assert.AreEqual("Country: [hungary ]", screen.Lines[0]);
+        screen.AssertColors("ngary", Color.Gray, WellBackground);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task TextBox_LongValueWithACompletion_KeepsTheClosingBracket()
     {
         var textBox = CreateTextBox("Country", width: 16).WithAutoCompletion(["abcdefghijklmnop"]);
