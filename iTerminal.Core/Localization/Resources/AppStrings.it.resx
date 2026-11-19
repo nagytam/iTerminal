@@ -10116,20 +10116,20 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} attività in background sono ancora in corso. Uscire comunque?</value>
   </data>
-  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
-    <value>Annulla rinomina</value>
+  <data name="CmdTitle.97bca610" xml:space="preserve">
+    <value>Annulla rinomina o spostamento</value>
   </data>
-  <data name="CmdDesc.e5781ae9" xml:space="preserve">
-    <value>Ripristina il nome modificato dall'ultima rinomina.</value>
+  <data name="CmdDesc.b4114ce8" xml:space="preserve">
+    <value>Ripristina i nomi modificati dall'ultima rinomina, rinomina multipla o spostamento.</value>
   </data>
   <data name="Undo.RenameTitle" xml:space="preserve">
-    <value>Annulla rinomina</value>
+    <value>Annulla rinomina o spostamento</value>
   </data>
   <data name="Undo.RenameGone" xml:space="preserve">
-    <value>La voce rinominata non c'è più, quindi non c'è nulla da ripristinare.</value>
+    <value>La voce non c'è più, quindi non c'è nulla da ripristinare.</value>
   </data>
   <data name="Undo.RenameNameTaken" xml:space="preserve">
-    <value>Il vecchio nome è ora occupato, quindi la rinomina non è stata annullata.</value>
+    <value>Il vecchio nome è ora occupato, quindi non è stato ripristinato.</value>
   </data>
   <data name="CmdTitle.19b314a4" xml:space="preserve">
     <value>Ingrandisci il pannello attivo</value>
@@ -10680,6 +10680,6 @@
     <value>Gioca a Risiko: conquista territori contro il computer o un amico, turno dopo turno.</value>
   </data>
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
-    <value>Annullate {0} rinomine su {1}. Le altre no: il nuovo nome non esiste più o il vecchio nome è di nuovo occupato.</value>
+    <value>Ripristinate {0} voci su {1}. Le altre no: il nuovo nome non esiste più o il vecchio nome è di nuovo occupato.</value>
   </data>
 </root>

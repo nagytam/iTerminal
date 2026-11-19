@@ -10321,20 +10321,20 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} background task(s) are still running. Quit anyway?</value>
   </data>
-  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
-    <value>Undo rename</value>
+  <data name="CmdTitle.97bca610" xml:space="preserve">
+    <value>Undo rename or move</value>
   </data>
-  <data name="CmdDesc.e5781ae9" xml:space="preserve">
-    <value>Put back the name the last rename changed.</value>
+  <data name="CmdDesc.b4114ce8" xml:space="preserve">
+    <value>Put back the names the last rename, multi-rename or move changed.</value>
   </data>
   <data name="Undo.RenameTitle" xml:space="preserve">
-    <value>Undo rename</value>
+    <value>Undo rename or move</value>
   </data>
   <data name="Undo.RenameGone" xml:space="preserve">
-    <value>The renamed entry is no longer there, so there is nothing to put back.</value>
+    <value>The entry is no longer there, so there is nothing to put back.</value>
   </data>
   <data name="Undo.RenameNameTaken" xml:space="preserve">
-    <value>The old name is taken now, so the rename was not undone.</value>
+    <value>The old name is taken now, so it was not put back.</value>
   </data>
   <data name="CmdTitle.19b314a4" xml:space="preserve">
     <value>Zoom the focused panel</value>
@@ -10886,6 +10886,6 @@
     <value>Play Risk: take territories from the computer or a friend, one turn at a time.</value>
   </data>
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
-    <value>Put back {0} of {1} renames. The rest were not put back: the new name is gone or the old name is taken again.</value>
+    <value>Put back {0} of {1} entries. The rest were not put back: the new name is gone or the old name is taken again.</value>
   </data>
 </root>

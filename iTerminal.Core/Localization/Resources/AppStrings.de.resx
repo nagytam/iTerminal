@@ -10180,20 +10180,20 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} Hintergrundaufgabe(n) laufen noch. Trotzdem beenden?</value>
   </data>
-  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
-    <value>Umbenennen rückgängig</value>
+  <data name="CmdTitle.97bca610" xml:space="preserve">
+    <value>Umbenennen oder Verschieben rückgängig</value>
   </data>
-  <data name="CmdDesc.e5781ae9" xml:space="preserve">
-    <value>Den Namen wiederherstellen, den das letzte Umbenennen geändert hat.</value>
+  <data name="CmdDesc.b4114ce8" xml:space="preserve">
+    <value>Die Namen wiederherstellen, die das letzte Umbenennen, Mehrfach-Umbenennen oder Verschieben geändert hat.</value>
   </data>
   <data name="Undo.RenameTitle" xml:space="preserve">
-    <value>Umbenennen rückgängig</value>
+    <value>Umbenennen oder Verschieben rückgängig</value>
   </data>
   <data name="Undo.RenameGone" xml:space="preserve">
-    <value>Der umbenannte Eintrag ist nicht mehr vorhanden, daher gibt es nichts zurückzusetzen.</value>
+    <value>Der Eintrag ist nicht mehr vorhanden, daher gibt es nichts zurückzusetzen.</value>
   </data>
   <data name="Undo.RenameNameTaken" xml:space="preserve">
-    <value>Der alte Name ist inzwischen vergeben, daher wurde das Umbenennen nicht rückgängig gemacht.</value>
+    <value>Der alte Name ist inzwischen vergeben, daher wurde er nicht wiederhergestellt.</value>
   </data>
   <data name="CmdTitle.19b314a4" xml:space="preserve">
     <value>Aktives Panel vergrößern</value>
@@ -10744,6 +10744,6 @@
     <value>Spielen Sie Risiko: Erobern Sie Gebiete vom Computer oder von einem Freund, Zug um Zug.</value>
   </data>
   <data name="Undo.RenameBatchPartial" xml:space="preserve">
-    <value>{0} von {1} Umbenennungen rückgängig gemacht. Die übrigen nicht: der neue Name ist nicht mehr vorhanden oder der alte Name ist wieder belegt.</value>
+    <value>{0} von {1} Einträgen zurückgesetzt. Die übrigen nicht: der neue Name ist nicht mehr vorhanden oder der alte Name ist wieder belegt.</value>
   </data>
 </root>
