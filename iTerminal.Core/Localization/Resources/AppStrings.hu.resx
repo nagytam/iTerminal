@@ -10688,4 +10688,7 @@
   <data name="Transfer.FolderIntoItself" xml:space="preserve">
     <value>Egy mappa nem másolható és nem helyezhető át önmagába vagy valamelyik almappájába.</value>
   </data>
+  <data name="Transfer.FolderReplaceAncestor" xml:space="preserve">
+    <value>Egy mappa nem cserélheti le önmagát, sem azt a mappát, amelyben van.</value>
+  </data>
 </root>
