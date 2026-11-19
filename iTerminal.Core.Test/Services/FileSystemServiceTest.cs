@@ -318,4 +318,76 @@ public class FileSystemServiceTest
         }
         catch (NotImplementedException) { }
     }
+
+    private string CreateTree(out string a)
+    {
+        var root = CreateTempFolder();
+        a = Path.Combine(root, "a");
+        Directory.CreateDirectory(Path.Combine(a, "b"));
+        Directory.CreateDirectory(Path.Combine(a, "c"));
+        File.WriteAllText(Path.Combine(a, "b", "keep.txt"), "kept");
+        File.WriteAllText(Path.Combine(a, "c", "other.txt"), "other");
+        return root;
+    }
+
+    private static Url FolderUrl(string path) => new(path + Path.DirectorySeparatorChar);
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MoveAsync_OfAFolderOntoItsParentWithOverwrite_IsRefusedAndDeletesNothing()
+    {
+        // Overwrite deletes the target first; the target was the parent, so everything in it went, the source and its siblings too.
+        var root = CreateTree(out var a);
+        try
+        {
+            await Assert.ThrowsExactlyAsync<IOException>(() => new FileSystemService().MoveAsync(FolderUrl(Path.Combine(a, "b")), FolderUrl(a), overwrite: true));
+
+            Assert.AreEqual("kept", File.ReadAllText(Path.Combine(a, "b", "keep.txt")));
+            Assert.AreEqual("other", File.ReadAllText(Path.Combine(a, "c", "other.txt")));
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MoveAsync_OfAFolderOntoItselfWithOverwrite_IsRefusedAndDeletesNothing()
+    {
+        var root = CreateTree(out var a);
+        try
+        {
+            await Assert.ThrowsExactlyAsync<IOException>(() => new FileSystemService().MoveAsync(FolderUrl(a), FolderUrl(a), overwrite: true));
+
+            Assert.AreEqual("kept", File.ReadAllText(Path.Combine(a, "b", "keep.txt")));
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MoveAsync_OfAFolderOntoASiblingWithTheSamePrefix_StillReplacesIt()
+    {
+        var root = CreateTree(out var a);
+        var sibling = a + "2";
+        Directory.CreateDirectory(sibling);
+        File.WriteAllText(Path.Combine(sibling, "old.txt"), "old");
+        try
+        {
+            await new FileSystemService().MoveAsync(FolderUrl(a), FolderUrl(sibling), overwrite: true);
+
+            Assert.IsFalse(Directory.Exists(a));
+            Assert.AreEqual("kept", File.ReadAllText(Path.Combine(sibling, "b", "keep.txt")));
+            Assert.IsFalse(File.Exists(Path.Combine(sibling, "old.txt")));
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsSameOrInside_ComparesWholePathSegments()
+    {
+        Assert.IsTrue(FileSystemService.IsSameOrInside(Path.Combine("x", "a"), Path.Combine("x", "a", "b")));
+        Assert.IsTrue(FileSystemService.IsSameOrInside(Path.Combine("x", "a"), Path.Combine("x", "a") + Path.DirectorySeparatorChar));
+        Assert.IsFalse(FileSystemService.IsSameOrInside(Path.Combine("x", "a"), Path.Combine("x", "a2")));
+        Assert.IsFalse(FileSystemService.IsSameOrInside(Path.Combine("x", "a", "b"), Path.Combine("x", "a")));
+    }
 }

@@ -10752,4 +10752,7 @@
   <data name="Transfer.FolderIntoItself" xml:space="preserve">
     <value>Ein Ordner kann nicht in sich selbst oder in einen seiner Unterordner kopiert oder verschoben werden.</value>
   </data>
+  <data name="Transfer.FolderReplaceAncestor" xml:space="preserve">
+    <value>Ein Ordner kann sich selbst oder einen Ordner, in dem er liegt, nicht ersetzen.</value>
+  </data>
 </root>

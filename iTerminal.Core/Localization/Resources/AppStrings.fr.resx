@@ -10688,4 +10688,7 @@
   <data name="Transfer.FolderIntoItself" xml:space="preserve">
     <value>Un dossier ne peut pas être copié ou déplacé dans lui-même ni dans l'un de ses sous-dossiers.</value>
   </data>
+  <data name="Transfer.FolderReplaceAncestor" xml:space="preserve">
+    <value>Un dossier ne peut pas remplacer lui-même ni un dossier qui le contient.</value>
+  </data>
 </root>
