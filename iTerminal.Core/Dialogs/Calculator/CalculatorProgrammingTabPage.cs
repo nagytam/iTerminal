@@ -8,7 +8,7 @@ public sealed class CalculatorProgrammingTabPage : CalculatorGridTabPage
     protected override int Columns => 5;
 
     public CalculatorProgrammingTabPage(CalculatorEngine engine, Action onChanged, IThemeService themeService)
-        : base("Programming", engine, onChanged, themeService)
+        : base(iConsole.Localization.UiText.Get("Calculator.TabProgramming", "Programming"), engine, onChanged, themeService)
     {
         AddActionButton(() => BaseLabel("BIN"), () => Engine.SetNumeralBase(NumeralBase.Binary));
         AddActionButton(() => BaseLabel("OCT"), () => Engine.SetNumeralBase(NumeralBase.Octal));

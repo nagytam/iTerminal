@@ -8,7 +8,7 @@ public sealed class CalculatorScientificTabPage : CalculatorGridTabPage
     protected override int Columns => 5;
 
     public CalculatorScientificTabPage(CalculatorEngine engine, Action onChanged, IThemeService themeService)
-        : base("Scientific", engine, onChanged, themeService)
+        : base(iConsole.Localization.UiText.Get("Calculator.TabScientific", "Scientific"), engine, onChanged, themeService)
     {
         AddActionButton("MC", Engine.MemoryClear);
         AddActionButton("MR", Engine.MemoryRecall);
