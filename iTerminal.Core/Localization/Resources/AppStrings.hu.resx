@@ -10685,4 +10685,7 @@
   <data name="Transfer.SameFile" xml:space="preserve">
     <value>A forrás és a cél ugyanaz a fájl. Válasszon másik nevet vagy mappát.</value>
   </data>
+  <data name="Transfer.FolderIntoItself" xml:space="preserve">
+    <value>Egy mappa nem másolható és nem helyezhető át önmagába vagy valamelyik almappájába.</value>
+  </data>
 </root>
