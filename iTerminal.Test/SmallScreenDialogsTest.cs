@@ -687,6 +687,28 @@ public class SmallScreenDialogsTest
         }
     }
 
+    [Timeout(180_000)]
+    [TestMethod]
+    public async Task TheDriveListInGerman_SaysBezeichnungAndNamesTheTypeInGerman()
+    {
+        // "Label:" and the drive type's enum name ("Fixed") were English in the Disk manager's list.
+        TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        try
+        {
+            await app.SwitchToGermanAsync();
+            app = await app.RestartAsync();
+
+            await app.PressAsync("Alt+F9");
+            await app.WaitForTextAsync("Bezeichnung:");
+            await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Bezeichnung:") && l.Contains("Fest")), "the type of a fixed drive, in German");
+            Assert.IsFalse(app.Screen.Lines.Any(l => l.Contains("Label:") || l.Contains(" Fixed ")), app.Screen.Dump());
+        }
+        finally
+        {
+            await app.DisposeAsync();
+        }
+    }
+
     [Timeout(120_000)]
     [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()

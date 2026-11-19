@@ -10794,4 +10794,28 @@
   <data name="Calculator.TabProgramming" xml:space="preserve">
     <value>Programmierer</value>
   </data>
+  <data name="DriveType.Fixed" xml:space="preserve">
+    <value>Fest</value>
+  </data>
+  <data name="DriveType.Removable" xml:space="preserve">
+    <value>Wechsel</value>
+  </data>
+  <data name="DriveType.CDRom" xml:space="preserve">
+    <value>CD-ROM</value>
+  </data>
+  <data name="DriveType.Network" xml:space="preserve">
+    <value>Netzwerk</value>
+  </data>
+  <data name="DriveType.Ram" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="DriveType.NoRootDirectory" xml:space="preserve">
+    <value>Kein Root</value>
+  </data>
+  <data name="DriveType.Unknown" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="DriveList.Label" xml:space="preserve">
+    <value>Bezeichnung:</value>
+  </data>
 </root>
