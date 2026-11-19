@@ -647,6 +647,21 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheSystemSettingsCaptionOn45Columns_IsWrappedAndTheListKeepsItsRows()
+    {
+        // "The name this machine goes by on the ne" ended at the frame; the caption wraps, and the list gives up the row it takes.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+F10");
+
+        await narrow.WaitForTextAsync("System Settings");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("network.")), "the end of the caption");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Computer name")), narrow.Screen.Dump());
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Description")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
