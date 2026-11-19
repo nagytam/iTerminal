@@ -10733,4 +10733,28 @@
   <data name="Calculator.TabProgramming" xml:space="preserve">
     <value>Programozó</value>
   </data>
+  <data name="DriveType.Fixed" xml:space="preserve">
+    <value>Fix</value>
+  </data>
+  <data name="DriveType.Removable" xml:space="preserve">
+    <value>Cserélhető</value>
+  </data>
+  <data name="DriveType.CDRom" xml:space="preserve">
+    <value>CD-ROM</value>
+  </data>
+  <data name="DriveType.Network" xml:space="preserve">
+    <value>Hálózati</value>
+  </data>
+  <data name="DriveType.Ram" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="DriveType.NoRootDirectory" xml:space="preserve">
+    <value>Nincs gyökér</value>
+  </data>
+  <data name="DriveType.Unknown" xml:space="preserve">
+    <value>Ismeretlen</value>
+  </data>
+  <data name="DriveList.Label" xml:space="preserve">
+    <value>Címke:</value>
+  </data>
 </root>

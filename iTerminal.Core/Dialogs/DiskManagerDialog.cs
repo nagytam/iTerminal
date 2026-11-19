@@ -10,6 +10,7 @@ using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
 using iConsole.Tasks;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Data;
 using iTerminal.Core.Model;
@@ -219,14 +220,14 @@ public class DiskManagerDialog : Dialog
             if (!info.IsReady)
             {
                 lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", root)));
-                lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", info.DriveType.ToString())));
+                lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", DriveTypeText.Of(info.DriveType))));
                 lines.Add(new InfoLines.Line(Detail("DiskMgr.State", "State", UiText.Get("DiskMgr.NotReady", "Not ready (no media, or locked)"))));
                 return lines;
             }
 
             var label = string.IsNullOrEmpty(info.VolumeLabel) ? UiText.Get("DiskMgr.NoLabel", "(no label)") : info.VolumeLabel;
             lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", $"{root}   {label}")));
-            lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", $"{info.DriveType}   {info.DriveFormat}")));
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", $"{DriveTypeText.Of(info.DriveType)}   {info.DriveFormat}")));
             lines.Add(new InfoLines.Line(Detail("DiskMgr.Space", "Space", string.Format(UiText.Get("DiskMgr.FreeOf", "{0} free of {1}"), FormatSize(info.AvailableFreeSpace), FormatSize(info.TotalSize)))));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
