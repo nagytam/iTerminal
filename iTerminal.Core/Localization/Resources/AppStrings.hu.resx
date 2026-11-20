@@ -7042,6 +7042,9 @@
   <data name="FolderSelector.Drives.Reading" xml:space="preserve">
     <value> Meghajtók beolvasása…</value>
   </data>
+  <data name="FolderSelector.Favourites.ConfirmRemove" xml:space="preserve">
+    <value>Eltávolítja a(z) {0} elemet a kedvencek közül?  y:igen  n:nem</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Legutóbbi</value>
   </data>
@@ -10432,6 +10435,9 @@
   </data>
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Kijelentkezés SMB-gépről</value>
+  </data>
+  <data name="CmdTitle.550033f7" xml:space="preserve">
+    <value>Kedvenc törlése</value>
   </data>
   <data name="Dep.PowerShellPurpose" xml:space="preserve">
     <value>PowerShell futtatása: Ctrl+O Windowson és távoli PowerShell-munkamenetek (Alt+F2)</value>
