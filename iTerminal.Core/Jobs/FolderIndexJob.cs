@@ -73,7 +73,6 @@ public class FolderIndexJob : Job
                     Folder child = new(_folderIndexModel, item.Url);
                     _folderIndexModel.Children.Add(child);
                     _queue.Enqueue(child);
-                    _folderIndexModel.IsWalking = true;
                 }
             }
         }
@@ -113,7 +112,9 @@ public class FolderIndexJob : Job
             {
             }
 
-            // Cleared here, before the idle delay below, so the tree stops saying it is growing as soon as the queue drains.
+            // The walker is the only writer after start, so the flag cannot race the drive handler. It is set here, before
+            // the idle delay below, so the tree stops saying it is growing as soon as the queue drains (and a drive added
+            // during the delay shows within one throttle step).
             _folderIndexModel.IsWalking = !_queue.IsEmpty;
 
             if (!cancellationToken.IsCancellationRequested && _queue.IsEmpty)
