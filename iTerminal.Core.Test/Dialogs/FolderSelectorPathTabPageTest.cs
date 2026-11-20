@@ -246,7 +246,31 @@ public class FolderSelectorPathTabPageTest
     [TestMethod]
     public async Task TheSchemesHint_WrapsSoEveryScheme_IsReadableOnANarrowPage()
     {
-        // The hint runs to several hundred characters; on a page this narrow a single line showed only its first few schemes.
+        // The hint is longer than one line; on a page this narrow a single line showed only its first few schemes.
+        var page = await CreateSchemesPageAsync(new Size(30, 24));
+
+        Render(page);
+        var screen = Render(page);
+
+        AssertScreenContains(screen, FolderUrlValidationModel.SupportedSchemes.Last());
+        AssertScreenDoesNotContain(screen, "...");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSchemesHint_OnAShortPage_EndsInAMarkerAndLeavesTheGoButtonAlone()
+    {
+        var page = await CreateSchemesPageAsync(new Size(30, 8));
+
+        Render(page);
+        var screen = Render(page);
+
+        AssertScreenContains(screen, "...");
+        AssertScreenContains(screen, "Go");
+    }
+
+    private static async Task<FolderSelectorPathTabPage> CreateSchemesPageAsync(Size size)
+    {
         var harness = new FolderSelectorTestHarness();
         var page = new FolderSelectorPathTabPage(
             harness.ContentModelService,
@@ -256,18 +280,11 @@ public class FolderSelectorPathTabPageTest
             harness.SettingsService,
             harness.ThemeService)
         {
-            ViewSize = new Size(50, 24)
+            ViewSize = size
         };
         await page.OnInitializeAsync();
         page.OnIdle();
         page.OnInitializeLayout();
-
-        Render(page);
-        var screen = Render(page);
-
-        foreach (var scheme in FolderUrlValidationModel.SupportedSchemes)
-        {
-            AssertScreenContains(screen, scheme);
-        }
+        return page;
     }
 }
