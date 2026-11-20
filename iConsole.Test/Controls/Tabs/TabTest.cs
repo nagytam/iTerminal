@@ -441,6 +441,25 @@ public class TabTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task DrawHorizontalStripFollowsTheThemeColours()
+    {
+        var colorScheme = new ColorScheme { Foreground = Color.Gray, Background = Color.Black };
+        var mockThemeService = CreateMockThemeService(colorScheme);
+        var screen = new ScreenBuffer(30, 13);
+        var tab = new Tab(mockThemeService.Object) { ViewSize = screen.Size };
+        tab.AddTabPage(new TabPage("Page1", mockThemeService.Object));
+        tab.AddTabPage(new TabPage("Page2", mockThemeService.Object));
+        await tab.OnInitializeAsync();
+
+        tab.Draw(screen);
+
+        screen.AssertColors(0, 0, 30, Color.Gray, Color.Black);
+        screen.AssertColors(0, 2, 30, Color.Gray, Color.Black);
+        Assert.AreEqual(Color.Black, screen.BackgroundAt(2, 1), "The tab name keeps the scheme background.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task DrawVerticalRendersTabStrip()
     {
         var mockThemeService = CreateMockThemeService();
