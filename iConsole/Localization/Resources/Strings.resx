@@ -1003,6 +1003,9 @@
   <data name="Exe.Button.Disassemble" xml:space="preserve">
     <value>Disassemble</value>
   </data>
+  <data name="Exe.Key.Disassemble" xml:space="preserve">
+    <value>Show the disassembly, or the analysis again</value>
+  </data>
   <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
     <value>The file is larger than {0:N0} MB and is not disassembled</value>
   </data>

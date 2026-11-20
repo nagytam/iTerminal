@@ -218,6 +218,12 @@ public class ExecutableAnalysisDialog : Dialog
         _listing.IsVisible = _listingShown;
     }
 
+    /// <summary>The key this dialog adds, for the help screen.</summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("F5", UiText.Get("Exe.Key.Disassemble", "Show the disassembly, or the analysis again"));
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down
@@ -481,6 +487,8 @@ public class ExecutableAnalysisDialog : Dialog
 
     private sealed class ToggleListingCommand(ExecutableAnalysisDialog owner) : Command
     {
+        public override string Title => "Disassemble";
+
         public override Task ExecuteAsync(object? arg)
         {
             owner.ToggleListing();
