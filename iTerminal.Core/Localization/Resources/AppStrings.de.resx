@@ -11271,4 +11271,10 @@
   <data name="FileTransfer.Expired" xml:space="preserve">
     <value>Die Freigabe ist abgelaufen. Schließen Sie den Dialog und öffnen Sie Dateiübertragung erneut für eine neue Adresse.</value>
   </data>
+  <data name="CmdTitle.79976f99" xml:space="preserve">
+    <value>Disassemblieren</value>
+  </data>
+  <data name="CmdDesc.1300052a" xml:space="preserve">
+    <value>Das Disassembly der Datei anstelle des Rasters anzeigen und zurück.</value>
+  </data>
 </root>

@@ -11207,4 +11207,10 @@
   <data name="FileTransfer.Expired" xml:space="preserve">
     <value>El uso compartido ha caducado. Cierre el diálogo y abra Transferencia de archivos de nuevo para obtener una dirección nueva.</value>
   </data>
+  <data name="CmdTitle.79976f99" xml:space="preserve">
+    <value>Desensamblar</value>
+  </data>
+  <data name="CmdDesc.1300052a" xml:space="preserve">
+    <value>Mostrar el desensamblado del archivo en lugar de la cuadrícula, y viceversa.</value>
+  </data>
 </root>

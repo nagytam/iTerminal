@@ -81,7 +81,7 @@ public class FileTransferDialogTest
         dialog.OnIdle();
 
         Assert.AreEqual(Url, dialog.UrlText);
-        Assert.AreEqual(QrTextRenderer.Render(modules).Count, dialog.CodeView.ViewSize.Height, "the code has one line per two module rows");
+        Assert.AreEqual(QrTextRenderer.Render(modules, dialog.CodeView.LastQuietZone).Count, dialog.CodeView.ViewSize.Height, "the code has one line per two module rows");
     }
 
     [TestMethod]
@@ -114,7 +114,7 @@ public class FileTransferDialogTest
     {
         string text = "The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files.";
 
-        IReadOnlyList<string> lines = FileTransferDialog.WrapWords(text, 24);
+        IReadOnlyList<string> lines = FileTransferLayout.WrapText(text, 24, 99, breakAnywhere: false);
 
         Assert.IsTrue(lines.All(line => line.Length <= 24), "no line is wider than the dialog");
         CollectionAssert.AreEqual(text.Split(' '), string.Join(' ', lines).Split(' '), "no word is lost");
@@ -123,7 +123,7 @@ public class FileTransferDialogTest
     [TestMethod]
     public void WrapWords_CutsAWordLongerThanALine()
     {
-        IReadOnlyList<string> lines = FileTransferDialog.WrapWords("abcdefghij", 4);
+        IReadOnlyList<string> lines = FileTransferLayout.WrapText("abcdefghij", 4, 99, breakAnywhere: false);
 
         CollectionAssert.AreEqual(new[] { "abcd", "efgh", "ij" }, lines.ToArray());
     }

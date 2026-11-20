@@ -11207,4 +11207,10 @@
   <data name="FileTransfer.Expired" xml:space="preserve">
     <value>A megosztás lejárt. Zárja be a párbeszédablakot, és nyissa meg újra a Fájlátvitelt új címért.</value>
   </data>
+  <data name="CmdTitle.79976f99" xml:space="preserve">
+    <value>Visszafejtés</value>
+  </data>
+  <data name="CmdDesc.1300052a" xml:space="preserve">
+    <value>A fájl visszafejtett kódjának megjelenítése a rács helyett, és vissza.</value>
+  </data>
 </root>
