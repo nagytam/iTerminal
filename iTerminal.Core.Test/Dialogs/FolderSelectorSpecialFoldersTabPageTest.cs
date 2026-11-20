@@ -155,4 +155,23 @@ public class FolderSelectorSpecialFoldersTabPageTest
         Assert.IsTrue(hints.Any(h => h.Key == "Enter"));
         Assert.IsTrue(hints.Any(h => h.Key == "Esc"));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void PlaceLabel_ShowsTheFolderNameBeforeThePath()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "Downloads");
+
+        Assert.AreEqual("Downloads  " + path, FolderSelectorSpecialFoldersTabPage.PlaceLabel(path));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void PlaceLabel_LeavesARootAndAnAppDriveAsTheyAre()
+    {
+        var root = Path.GetPathRoot(Path.GetTempPath())!;
+
+        Assert.AreEqual(root, FolderSelectorSpecialFoldersTabPage.PlaceLabel(root));
+        Assert.AreEqual(Container.MUSIC_CATALOG, FolderSelectorSpecialFoldersTabPage.PlaceLabel(Container.MUSIC_CATALOG));
+    }
 }
