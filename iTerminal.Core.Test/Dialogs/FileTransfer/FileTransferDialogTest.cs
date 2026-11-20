@@ -11,7 +11,7 @@ namespace iTerminal.Core.Test.Dialogs.FileTransfer;
 [TestClass]
 public class FileTransferDialogTest
 {
-    private const string Url = "https://192.168.1.20:8080/TestToken123/";
+    private const string Url = "http://192.168.1.20:8080/TestToken123/";
 
     private static FileTransferDialog Create(Mock<IFileShareService> service) =>
         new(service.Object, TestTheme());

@@ -71,6 +71,11 @@ public class FileShareRequestHandlerTest
     [TestMethod]
     public async Task Listing_OfAFolder_ShowsDotfilesAndEscapesNames()
     {
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows does not allow this character in a file name.");
+        }
+
         File.WriteAllText(Path.Combine(_shared, "a<b>.txt"), "x");
 
         Response response = await Send("GET", $"/{Token}/shared/");
@@ -85,6 +90,11 @@ public class FileShareRequestHandlerTest
     [TestMethod]
     public async Task Listing_LinksEncodeEachSegment()
     {
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows does not allow this character in a file name.");
+        }
+
         File.WriteAllText(Path.Combine(_shared, "a\"b.txt"), "x");
 
         Response response = await Send("GET", $"/{Token}/shared/");

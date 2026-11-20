@@ -11181,7 +11181,7 @@
     <value>Seleccionado: {0}</value>
   </data>
   <data name="FileTransfer.CertificateWarning" xml:space="preserve">
-    <value>El teléfono muestra una advertencia de certificado: acéptela para descargar. Cualquiera con esta dirección puede leer los archivos seleccionados mientras este diálogo esté abierto.</value>
+    <value>La conexión no está cifrada. Cualquiera en esta red con esta dirección puede leer los archivos seleccionados mientras este diálogo esté abierto.</value>
   </data>
   <data name="FileTransfer.Stop" xml:space="preserve">
     <value>Detener el uso compartido y cerrar</value>
