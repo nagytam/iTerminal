@@ -47,4 +47,21 @@ public class FileTransferTest
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();
     }
+
+    /// <summary>Ctrl+Shift+X opens the dialog over a selected file. With nothing to share the command is disabled, so the key does nothing.</summary>
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlShiftXOpensTheDialogOverASelectedFile()
+    {
+        await _app.SelectEntryAsync("notes.md");
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+X"), "Ctrl+Shift+X is handled");
+        await _app.WaitUntilAsync(
+            () => _app.Driver.FocusedModal is Core.Dialogs.FileTransfer.FileTransferDialog,
+            "the file transfer dialog to open from its hot key");
+        await _app.WaitForTextAsync(SandboxServices.FileShareStub.Address);
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+    }
 }
