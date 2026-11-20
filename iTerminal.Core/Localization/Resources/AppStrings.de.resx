@@ -7100,6 +7100,9 @@
   <data name="FolderSelector.Tab1" xml:space="preserve">
     <value>1-Laufwerke</value>
   </data>
+  <data name="FolderSelector.Drives.Empty" xml:space="preserve">
+    <value> Keine Laufwerke gefunden.</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Zuletzt</value>
   </data>

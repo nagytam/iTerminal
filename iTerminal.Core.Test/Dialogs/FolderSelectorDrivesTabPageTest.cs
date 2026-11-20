@@ -1,6 +1,8 @@
 using iConsole.Data;
+using iConsole.Test.Core;
 using iTerminal.Core.Data;
 using iTerminal.Core.Dialogs;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -208,5 +210,18 @@ public class FolderSelectorDrivesTabPageTest
 
         Assert.IsTrue(hints.Any(h => h.Key == "Enter"));
         Assert.IsTrue(hints.Any(h => h.Key == "Esc"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WithNoDrives_SaysSoInsteadOfDrawingAnEmptyList()
+    {
+        var (page, _) = await CreatePageAsync();
+        page.OnInitializeLayout();
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "No drives found.");
     }
 }

@@ -61,7 +61,10 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
             TransformItem = TransformItem,
             IsItemEnabled = IsEnabledItem
         };
-        _listBox = new ListBox<Drive>(listModel, themeService);
+        _listBox = new ListBox<Drive>(listModel, themeService)
+        {
+            EmptyText = iConsole.Localization.UiText.Get("FolderSelector.Drives.Empty", " No drives found."),
+        };
         _scrollBar = new ScrollBar(themeService)
         {
             ScrollableModel = _listBox.ScrollableModel
