@@ -42,6 +42,7 @@ public class FolderSelectorHistoryTabPage : FolderSelectorTabPage
         _listBox = new ListBox<string>(listModel, themeService)
         {
             EmptyText = UiText.Get("Empty.History", UiText.Get("Empty.History", " No folders visited yet.")),
+            EnableTypeAhead = true,
         };
         _scrollBar = new ScrollBar(themeService)
         {

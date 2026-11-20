@@ -236,7 +236,11 @@ public class FolderSelectorWithFilePanelsTest
         autoCompletion.CompletionModel.InsertCompletion("zz-two");
 
         await PressAsync(harness.Screen, new KeyEvent('z', ConsoleKey.Z, false, false, false));
-        await WaitForAsync(() => autoCompletion.IsPopupOpen);
+        await WaitForAsync(() =>
+        {
+            harness.Screen.OnIdle(); // the match update parks its visibility for the UI thread's idle pass
+            return autoCompletion.IsPopupOpen;
+        });
 
         Assert.IsTrue(autoCompletion.IsPopupOpen, "Typing should have shown the suggestions.");
         var box = page.TextBoxPath;
@@ -257,7 +261,11 @@ public class FolderSelectorWithFilePanelsTest
         var autoCompletion = page.TextBoxPath.AutoCompletion!;
         autoCompletion.CompletionModel.InsertCompletion("zz-one");
         await PressAsync(harness.Screen, new KeyEvent('z', ConsoleKey.Z, false, false, false));
-        await WaitForAsync(() => autoCompletion.IsPopupOpen);
+        await WaitForAsync(() =>
+        {
+            harness.Screen.OnIdle(); // the match update parks its visibility for the UI thread's idle pass
+            return autoCompletion.IsPopupOpen;
+        });
         Assert.IsTrue(autoCompletion.IsPopupOpen);
 
         var handled = await PressAsync(harness.Screen, Key(ConsoleKey.Escape));
@@ -302,7 +310,11 @@ public class FolderSelectorWithFilePanelsTest
         var autoCompletion = page.TextBoxPath.AutoCompletion!;
         autoCompletion.CompletionModel.InsertCompletion("zz-one");
         await PressAsync(harness.Screen, new KeyEvent('z', ConsoleKey.Z, false, false, false));
-        await WaitForAsync(() => autoCompletion.IsPopupOpen);
+        await WaitForAsync(() =>
+        {
+            harness.Screen.OnIdle(); // the match update parks its visibility for the UI thread's idle pass
+            return autoCompletion.IsPopupOpen;
+        });
 
         await PressAsync(harness.Screen, Key(ConsoleKey.Escape));
         await PressAsync(harness.Screen, Key(ConsoleKey.Escape));

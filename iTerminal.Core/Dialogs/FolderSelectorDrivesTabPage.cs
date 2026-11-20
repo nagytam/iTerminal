@@ -66,6 +66,7 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
         _listBox = new ListBox<Drive>(listModel, themeService)
         {
             EmptyText = _readingDrivesText,
+            EnableTypeAhead = true,
         };
         _scrollBar = new ScrollBar(themeService)
         {

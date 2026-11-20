@@ -68,7 +68,10 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
         {
             TransformItem = TransformItem
         };
-        _listBox = new ListBox<string>(listModel, themeService);
+        _listBox = new ListBox<string>(listModel, themeService)
+        {
+            EnableTypeAhead = true,
+        };
         _scrollBar = new ScrollBar(themeService)
         {
             ScrollableModel = _listBox.ScrollableModel
