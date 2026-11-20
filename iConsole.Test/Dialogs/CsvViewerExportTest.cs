@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using iConsole.Csv;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
@@ -35,6 +37,9 @@ public class CsvViewerExportTest
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(fileSystem.Object);
         Mock<IPromptService> prompts = new();
+        // CSV is the first choice, so the existing export tests keep writing CSV.
+        prompts.Setup(p => p.SelectAsync(It.IsAny<SelectionPrompt<TableExportChoice>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new TableExportChoice(TableExportFormat.Csv));
         var dialog = new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(), new ThemeService(), prompts.Object) { Url = document };
         return new Fixture { Dialog = dialog, FileSystem = fileSystem, Prompts = prompts };
@@ -221,5 +226,91 @@ public class CsvViewerExportTest
 
         Assert.IsTrue(handled);
         fixture.Prompts.Verify(p => p.AskAsync(It.IsAny<TextPrompt<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    /// <summary>Answers the format prompt with <paramref name="format"/>, or cancels it when it is null.</summary>
+    private static void AnswerFormat(Fixture fixture, TableExportFormat? format) =>
+        fixture.Prompts.Setup(p => p.SelectAsync(It.IsAny<SelectionPrompt<TableExportChoice>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(format is null ? null : new TableExportChoice(format.Value));
+
+    [TestMethod]
+    public async Task TheFormatIsAskedBeforeTheName()
+    {
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
+        var order = new List<string>();
+        fixture.Prompts.Setup(p => p.SelectAsync(It.IsAny<SelectionPrompt<TableExportChoice>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new TableExportChoice(TableExportFormat.Csv)).Callback(() => order.Add("format"));
+        fixture.Prompts.Setup(p => p.AskAsync(It.IsAny<TextPrompt<string>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((string?)null).Callback(() => order.Add("name"));
+        await fixture.Dialog.OnInitializeAsync();
+
+        await fixture.Dialog.ExportAsync();
+
+        CollectionAssert.AreEqual(new[] { "format", "name" }, order);
+    }
+
+    [TestMethod]
+    public async Task ACancelledFormatPromptWritesNothingAndAsksForNoName()
+    {
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
+        AnswerFormat(fixture, null);
+        await fixture.Dialog.OnInitializeAsync();
+
+        await fixture.Dialog.ExportAsync();
+
+        fixture.Prompts.Verify(p => p.AskAsync(It.IsAny<TextPrompt<string>>(), It.IsAny<CancellationToken>()), Times.Never);
+        fixture.FileSystem.Verify(f => f.WriteFileAsync(It.IsAny<Url>(), It.IsAny<MemoryStream>()), Times.Never);
+        Assert.AreEqual("Nothing was written", fixture.Dialog.Status);
+    }
+
+    [TestMethod]
+    public async Task JsonWritesTheMarkedRowsUnderTheJsonExtension()
+    {
+        Fixture fixture = CreateFixture(Sales, "name,amount\nA,1\nB,2\nC,3\n");
+        AnswerFormat(fixture, TableExportFormat.Json);
+        AnswerName(fixture, "out");
+        Holder written = CaptureWrites(fixture);
+        await fixture.Dialog.OnInitializeAsync();
+        // Marks A and C, as in the CSV test above.
+        fixture.Dialog.Grid.SetFocus();
+        await fixture.Dialog.Grid.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.Spacebar, false, false, false));
+        await fixture.Dialog.Grid.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.DownArrow, false, false, false));
+        await fixture.Dialog.Grid.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.Spacebar, false, false, false));
+
+        await fixture.Dialog.ExportAsync();
+
+        Assert.AreEqual("out.json", written.Target?.Name);
+        Assert.AreEqual("Exported 2 row(s) to out.json", fixture.Dialog.Status);
+        using JsonDocument document = JsonDocument.Parse(written.Text ?? string.Empty);
+        Assert.AreEqual(2, document.RootElement.GetArrayLength());
+        Assert.AreEqual("A", document.RootElement[0].GetProperty("name").GetString());
+        Assert.AreEqual("C", document.RootElement[1].GetProperty("name").GetString());
+    }
+
+    [TestMethod]
+    public async Task TheDefaultNameCarriesTheChosenFormatsExtension()
+    {
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
+        AnswerFormat(fixture, TableExportFormat.Xml);
+        await fixture.Dialog.OnInitializeAsync();
+
+        await fixture.Dialog.ExportAsync();
+
+        fixture.Prompts.Verify(p => p.AskAsync(
+            It.Is<TextPrompt<string>>(prompt => prompt.DefaultValue == "sales-export.xml"),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task ACsvNameWithNoExtensionGetsCsv()
+    {
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
+        AnswerName(fixture, "report");
+        Holder written = CaptureWrites(fixture);
+        await fixture.Dialog.OnInitializeAsync();
+
+        await fixture.Dialog.ExportAsync();
+
+        Assert.AreEqual("report.csv", written.Target?.Name);
     }
 }

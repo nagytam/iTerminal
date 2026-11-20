@@ -480,12 +480,12 @@ public class CsvViewerDialog : Dialog
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
         yield return ("F4", UiText.Get("Viewer.HintToggleText", "Show the file's text, or the grid again"));
         yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));
-        yield return ("F2", UiText.Get("Csv.Hint.Export", "Export the marked rows, or the rows on screen, to a CSV file"));
+        yield return ("F2", UiText.Get("Csv.Hint.Export", "Export the marked rows, or the rows on screen, to a CSV, JSON or XML file"));
     }
 
     /// <summary>
-    /// F2: asks for a file name, then writes the marked rows (in grid order), or every row on screen when none is marked, as CSV.
-    /// The file goes in the folder of the file being viewed. An existing file is replaced only after a yes; a no or a cancelled
+    /// F2: asks for a format (CSV is the default) and a file name, then writes the marked rows (in grid order), or every row on screen
+    /// when none is marked, in that format. The name gets the format's extension when it lacks it. The file goes in the folder of the file being viewed. An existing file is replaced only after a yes; a no or a cancelled
     /// prompt writes nothing. The text is built and written on a background task.
     /// </summary>
     public async Task ExportAsync()
@@ -530,7 +530,18 @@ public class CsvViewerDialog : Dialog
             return;
         }
 
-        string defaultName = Path.GetFileNameWithoutExtension(Url.Name) + "-export.csv";
+        IEnumerable<TableExportChoice> choices = Enum.GetValues<TableExportFormat>().Select(format => new TableExportChoice(format));
+        TableExportChoice? chosen = await _promptService.SelectAsync(
+            new SelectionPrompt<TableExportChoice>(UiText.Get("Csv.Export.Format", "Export as"), choices) { Label = choice => choice.Format.ToString() });
+        if (chosen is null)
+        {
+            _statusLabel.Text = UiText.Get("Csv.Export.Cancelled", "Nothing was written");
+            StateHasChanged();
+            return;
+        }
+
+        TableExportFormat format = chosen.Format;
+        string defaultName = Path.GetFileNameWithoutExtension(Url.Name) + "-export" + TableExport.Extension(format);
         string? answer = await _promptService.AskAsync(
             new TextPrompt<string>(UiText.Get("Csv.Export.Ask", "Save the rows as")) { DefaultValue = defaultName }.Validate(ValidFileName));
         if (answer is null)
@@ -540,7 +551,7 @@ public class CsvViewerDialog : Dialog
             return;
         }
 
-        string name = answer.Trim();
+        string name = TableExport.WithExtension(answer.Trim(), format);
         if (ValidFileName(name) is { } problem)
         {
             _statusLabel.Text = problem;
@@ -568,7 +579,7 @@ public class CsvViewerDialog : Dialog
             : _grid.Rows;
         try
         {
-            string text = await Task.Run(() => CsvExport.Build(headers, rows));
+            string text = await Task.Run(() => TableExport.Build(format, headers, rows));
             byte[] bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
             await fileSystem.WriteFileAsync(target, new MemoryStream(bytes));
             string status = string.Format(UiText.Get("Csv.Export.Done", "Exported {0:N0} row(s) to {1}"), rows.Count, name);

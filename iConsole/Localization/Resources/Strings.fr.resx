@@ -2199,7 +2199,10 @@
     <value>Marquer la ligne et descendre d'une ligne</value>
   </data>
   <data name="Csv.Hint.Export" xml:space="preserve">
-    <value>Exporter les lignes marquées, ou celles affichées, dans un fichier CSV</value>
+    <value>Exporter les lignes marquées, ou celles affichées, dans un fichier CSV, JSON ou XML</value>
+  </data>
+  <data name="Csv.Export.Format" xml:space="preserve">
+    <value>Exporter au format</value>
   </data>
   <data name="Csv.Export.Ask" xml:space="preserve">
     <value>Enregistrer les lignes sous</value>

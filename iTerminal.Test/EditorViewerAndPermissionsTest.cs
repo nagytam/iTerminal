@@ -157,6 +157,12 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync("alma");
 
         Assert.IsTrue(await _app.PressAsync("F2"));
+        // The choice type is internal, so the dialog is recognised by its generic definition.
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal?.GetType() is { IsGenericType: true } modal
+            && modal.GetGenericTypeDefinition() == typeof(iConsole.Prompts.SelectionPromptDialog<>), "the export format prompt");
+
+        // Enter takes the first choice, CSV, which is selected by default.
+        Assert.IsTrue(await _app.PressAsync("Enter"));
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Prompts.TextPromptDialog<string>, "the file name prompt");
 
         // Enter takes the suggested name, hu-export.csv, which the prompt starts with.

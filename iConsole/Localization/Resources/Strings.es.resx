@@ -2199,7 +2199,10 @@
     <value>Marcar la fila y bajar</value>
   </data>
   <data name="Csv.Hint.Export" xml:space="preserve">
-    <value>Exportar las filas marcadas, o las visibles, a un archivo CSV</value>
+    <value>Exportar las filas marcadas, o las visibles, a un archivo CSV, JSON o XML</value>
+  </data>
+  <data name="Csv.Export.Format" xml:space="preserve">
+    <value>Exportar como</value>
   </data>
   <data name="Csv.Export.Ask" xml:space="preserve">
     <value>Guardar las filas como</value>
