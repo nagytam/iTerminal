@@ -109,7 +109,7 @@ keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
   first time it matters.
 - **The Path page is what makes every drive kind reachable.** It hands the typed text straight to
   `Url` and lets `ContentModelService.AddContentModel` decide what it is, so a scheme added to the
-  app works there the day it is added, without touching the page. Tab completes, from the paths typed
+  app works there the day it is added, without touching the page. Tab completes, live from the folders on disk (`DirectoryCompletionModel`, local paths only; see file-operations.md) and from the paths typed
   there before *and* the folders the panels have visited (`FolderPathCompletionModel` — the history
   is read live rather than copied into the settings key, which would both duplicate it on disk and
   freeze it). `FolderUrlValidationModel` accepts a known scheme on sight — a remote URL cannot be

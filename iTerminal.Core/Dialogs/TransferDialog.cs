@@ -1,3 +1,5 @@
+using iTerminal.Core.Model;
+using iConsole.Extensions;
 using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -97,7 +99,8 @@ public abstract class TransferDialog : FormDialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
-        ISettingsService? settingsService = null)
+        ISettingsService? settingsService = null,
+        IDirectoryLister? directoryLister = null)
         : base(name, themeService)
     {
         _settingsService = settingsService;
@@ -117,6 +120,7 @@ public abstract class TransferDialog : FormDialog
             MaxLength = Url.MaxLength,
             IsReadOnly = false
         };
+        TextBoxTarget.WithDirectoryCompletion(directoryLister);
         TextBoxTarget.PropertyChanged += (_, _) => UpdateTargetPreview();
         var validator = (TextBoxTarget.ValidationModel as FolderOrNewFilesValidationModel);
         ErrorMessage = new ErrorMessage(validator!, themeService);

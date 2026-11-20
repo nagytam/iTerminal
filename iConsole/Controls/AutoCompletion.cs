@@ -109,7 +109,23 @@ public class AutoCompletion : Window, ITransientOverlayHost
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
-        UpdateMatches(_textModel.Lines.FirstOrDefault() ?? string.Empty, CurrentGeneration, onUiThread: true);
+        var value = _textModel.Lines.FirstOrDefault() ?? string.Empty;
+        if (CompletionModel is IBlockingCompletionModel)
+        {
+            // A model that may do I/O must not run on the initialising thread. The update goes through the same
+            // background path a keystroke takes, and parks its visibility for OnIdle. It is not the model's UpdateTask:
+            // Tab completes only for a keystroke's update, and an opening box has none.
+            //
+            // It works out the matches and keeps the list down: it answers the text the box was opened with, not a
+            // keystroke, and a dialog that opens on a folder would otherwise put its subfolders over its own buttons
+            // before anything was typed. (An argument, not SuppressNextVisibilityUpdate: that counter is consumed by
+            // whichever update reaches it first, and would be left set if this one lost to a Hide.)
+            var generation = CurrentGeneration;
+            _ = Task.Run(() => UpdateMatches(value, generation, keepListDown: true));
+            return;
+        }
+
+        UpdateMatches(value, CurrentGeneration, onUiThread: true);
     }
 
     public override void Draw(IBuffer buffer)
@@ -228,7 +244,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
         }
     }
 
-    private void UpdateMatches(string value, int generation, bool onUiThread = false)
+    private void UpdateMatches(string value, int generation, bool onUiThread = false, bool keepListDown = false)
     {
         CompletionModel.UpdateMatchingValues(value);
 
@@ -251,7 +267,8 @@ public class AutoCompletion : Window, ITransientOverlayHost
             }
 
             var visible = CompletionModel.MatchingValues.Any()
-                && Interlocked.Exchange(ref _suppressVisibilityUpdates, 0) == 0;
+                && Interlocked.Exchange(ref _suppressVisibilityUpdates, 0) == 0
+                && !keepListDown;
 
             if (onUiThread)
             {

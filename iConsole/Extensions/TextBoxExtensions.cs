@@ -32,7 +32,11 @@ public static class TextBoxExtensions
         textBox.AddControl(autoCompletion);
         textBox.AutoCompletion = autoCompletion;
         autoCompletion.Owner = textBox;
-        autoCompletion.CompletionModel.UpdateMatchingValues(textBox.TextModel.Lines.FirstOrDefault() ?? string.Empty);
+        // A model that may do I/O is first updated by AutoCompletion.OnInitializeAsync, on a background task, not here.
+        if (completionModel is not IBlockingCompletionModel)
+        {
+            autoCompletion.CompletionModel.UpdateMatchingValues(textBox.TextModel.Lines.FirstOrDefault() ?? string.Empty);
+        }
         return textBox;
     }
 }

@@ -211,6 +211,9 @@ public sealed class TerminalApp : IAsyncDisposable
                 // The terminal's progress sequence never reaches the developer's own terminal during a run.
                 services.AddSingleton<iConsole.Services.ITerminalProgressService, SandboxServices.TerminalProgress>();
 
+                // Path completion lists only the sandbox's own folders, never the machine's.
+                services.AddSingleton<IDirectoryLister>(new SandboxServices.DirectoryLister(root));
+
                 // Nothing reaches outside the machine: no network scan, no WinGet, no quote server.
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();

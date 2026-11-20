@@ -1,3 +1,6 @@
+using iTerminal.Core.Services;
+using iTerminal.Core.Model;
+using iTerminal.Core.Controls;
 using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -36,7 +39,8 @@ public class DiskImageDialog : FormDialog
         IContentModelService contentModelService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IDirectoryLister? directoryLister = null)
         : base(nameof(DiskImageDialog), themeService)
     {
         _driveActions = driveActions;
@@ -47,7 +51,7 @@ public class DiskImageDialog : FormDialog
         var unmountCommand = new ImageCommand(mount: false);
         AddCommand(mountCommand);
 
-        _textBoxPath = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Image", "Image") };
+        _textBoxPath = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Image", "Image") }.WithDirectoryCompletion(directoryLister, DirectoryCompletionMode.FilesAndFolders, [".iso", ".vhd", ".vhdx"]);
         _labelHint = new Label(UiText.Get("DiskImage.Hint", "An .iso, .vhd or .vhdx file."), themeService);
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
         _mountButton = new Button(iConsole.Localization.UiText.Get("Button.Mount", "Mount"), mountCommand, themeService);

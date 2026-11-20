@@ -339,6 +339,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<ThemeManagerDialog>();
         services.AddTransient<SettingsDialog>();
         services.AddSingleton<FolderHistoryService>();
+        services.AddSingleton<IDirectoryLister, DirectoryLister>();
         services.AddSingleton<IContentModelService, ContentModelService>();
 
         // The tool-backed drives (docker://, git://), the F7 search behind search:// and the

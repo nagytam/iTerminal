@@ -17,6 +17,34 @@ namespace iTerminal.Test;
 /// </summary>
 public static class SandboxServices
 {
+    /// <summary>
+    /// Path completion over the sandbox only: a folder under the sandbox root is listed from disk, any other lists as
+    /// empty, so typing <c>C:\</c> or <c>/</c> in a path box never reads the machine's own folders.
+    /// </summary>
+    public sealed class DirectoryLister(string root) : IDirectoryLister
+    {
+        private readonly Core.Services.DirectoryLister _real = new();
+        private readonly string _root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(root));
+
+        public IReadOnlyList<DirectoryChild> List(string folder, int max)
+        {
+            string full;
+            try
+            {
+                full = Path.GetFullPath(folder);
+            }
+            catch (Exception)
+            {
+                return [];
+            }
+
+            string trimmed = Path.TrimEndingDirectorySeparator(full);
+            bool inside = string.Equals(trimmed, _root, StringComparison.OrdinalIgnoreCase)
+                || trimmed.StartsWith(_root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+            return inside ? _real.List(full, max) : [];
+        }
+    }
+
     /// <summary>The host the fake network scan finds.</summary>
     public static readonly IPAddress HostAddress = IPAddress.Parse("192.0.2.17");
 

@@ -1,3 +1,6 @@
+using iTerminal.Core.Services;
+using iTerminal.Core.Model;
+using iTerminal.Core.Controls;
 using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
@@ -75,7 +78,8 @@ public class FindFilesDialog : SplitPaneDialog
         IContentModelService contentModelService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IDirectoryLister? directoryLister = null)
         : base(nameof(FindFilesDialog), themeService)
     {
         _searchService = searchService;
@@ -84,7 +88,7 @@ public class FindFilesDialog : SplitPaneDialog
 
         _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Find", "Find"), MaxLength = 512, Placeholder = UiText.Get("Field.NameOrPattern", "name or pattern, e.g. *.log") };
         _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Containing", "Containing"), MaxLength = 512, Placeholder = UiText.Get("Field.TextInsideFiles", "text inside the files (optional)") };
-        _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.In", "In"), MaxLength = 1024, Placeholder = UiText.Get("Field.FolderToSearch", "folder to search") };
+        _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.In", "In"), MaxLength = 1024, Placeholder = UiText.Get("Field.FolderToSearch", "folder to search") }.WithDirectoryCompletion(directoryLister);
         _largerBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.LargerMb", "Larger MB"), MaxLength = 12, Placeholder = UiText.Get("Field.BlankAny", "blank: any") };
         _olderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.OlderDays", "Older days"), MaxLength = 6, Placeholder = UiText.Get("Field.BlankAny", "blank: any") };
         _subfoldersBox = new CheckBox(themeService) { Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"), IsChecked = true, HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.OlderDays", "Older days"), 'I') };

@@ -1,3 +1,4 @@
+using iConsole.Model;
 using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -54,10 +55,15 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         ISettingsService settingsService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IDirectoryLister? directoryLister = null)
         : base(iConsole.Localization.UiText.Get("FolderSelector.Tab6", "6-Path"), ConsoleKey.D6, themeService)
     {
-        var completionModel = new FolderPathCompletionModel(settingsService, folderHistoryService);
+        // The paths typed or visited before stay as they were; the folders on disk come first when there is a lister.
+        var historyModel = new FolderPathCompletionModel(settingsService, folderHistoryService);
+        ICompletionModel completionModel = directoryLister is null
+            ? historyModel
+            : new DirectoryCompletionModel(directoryLister, DirectoryCompletionMode.FoldersOnly, historyModel);
         TextBoxPath = new TextBox(beepService, dateTimeProviderService, themeService)
         {
             Label = UiText.Get("Field.PathOrUrl", "Path or URL: "),

@@ -12,7 +12,20 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
 
     public override bool CanExecute()
     {
-        return base.CanExecute();
+        if (!base.CanExecute())
+        {
+            return false;
+        }
+
+        // A box whose model lists folders sits in dialogs where Tab is also how focus moves on (Copy, Compress...): it
+        // completes only while the list is up, or while the update for the last keystroke is still on its way. With
+        // the list down — nothing typed yet, or Esc pressed — Tab is left for the dialog.
+        if (completionModel is IBlockingCompletionModel)
+        {
+            return Control is AutoCompletion { IsPopupOpen: true } || completionModel.UpdateTask is { IsCompleted: false };
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -20,6 +33,9 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
     /// filter that takes a millisecond or two; the bound only keeps a stuck update from holding the key.
     /// </summary>
     internal static readonly TimeSpan PendingUpdateWait = TimeSpan.FromMilliseconds(150);
+
+    /// <summary>The same wait for an <see cref="IBlockingCompletionModel"/>, whose update lists a folder (bounded at 750 ms by the model).</summary>
+    internal static readonly TimeSpan BlockingUpdateWait = TimeSpan.FromMilliseconds(1000);
 
     public override async Task ExecuteAsync(object? arg)
     {
@@ -29,7 +45,9 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
         // UpdateTask; let it land first.
         if (completionModel.UpdateTask is { IsCompleted: false } pending)
         {
-            await Task.WhenAny(pending, Task.Delay(PendingUpdateWait));
+            // A model that does I/O may take longer than an in-memory filter; Tab waits (asynchronously) for it, or the
+            // matches it completes from would still belong to the folder before.
+            await Task.WhenAny(pending, Task.Delay(completionModel is IBlockingCompletionModel ? BlockingUpdateWait : PendingUpdateWait));
         }
 
         if (completionModel.MatchingValues.Any())
