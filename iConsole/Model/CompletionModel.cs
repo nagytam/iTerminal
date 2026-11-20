@@ -29,8 +29,8 @@ public class CompletionModel : ICompletionModel
 
     public void UpdateMatchingValues(string value)
     {
-        MatchingValues.Clear();
-
+        // Build the whole result first and swap it in with one ReplaceAll, so a reader never sees the list empty
+        // between the clear and the adds, and listeners get one change notification instead of one per value.
         IEnumerable<string> matchingValues;
         if (string.IsNullOrEmpty(value))
         {
@@ -53,9 +53,6 @@ public class CompletionModel : ICompletionModel
             }
         }
 
-        foreach (var matchingValue in matchingValues)
-        {
-            MatchingValues.Add(matchingValue);
-        }
+        MatchingValues.ReplaceAll(matchingValues.ToList());
     }
 }
