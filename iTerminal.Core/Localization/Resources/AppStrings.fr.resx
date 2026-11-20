@@ -6436,6 +6436,9 @@
   <data name="CmdTitle.21a25681" xml:space="preserve">
     <value>Liste courte</value>
   </data>
+  <data name="CmdTitle.79976f99" xml:space="preserve">
+    <value>Désassembler</value>
+  </data>
   <data name="CmdTitle.668b8045" xml:space="preserve">
     <value>Calculatrice</value>
   </data>

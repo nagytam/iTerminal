@@ -6641,6 +6641,9 @@
   <data name="CmdTitle.21a25681" xml:space="preserve">
     <value>Brief listing</value>
   </data>
+  <data name="CmdTitle.79976f99" xml:space="preserve">
+    <value>Disassemble</value>
+  </data>
   <data name="CmdTitle.668b8045" xml:space="preserve">
     <value>Calculator</value>
   </data>

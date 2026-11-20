@@ -1003,6 +1003,9 @@
   <data name="Exe.Button.Disassemble" xml:space="preserve">
     <value>Visszafejtés</value>
   </data>
+  <data name="Exe.Key.Disassemble" xml:space="preserve">
+    <value>A visszafejtés, illetve újra az elemzés megjelenítése</value>
+  </data>
   <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
     <value>A fájl nagyobb, mint {0:N0} MB, ezért nincs visszafejtve</value>
   </data>
