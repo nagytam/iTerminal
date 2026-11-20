@@ -76,4 +76,23 @@ public class ShowDialogCommandLanguageTest
         Assert.IsFalse(command.Refresh());
         Assert.AreSame(built, command.Current);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WhenTheHostStops_TheServicesAreReleased_ButOnlyIfTheyAreStillTheOnesItRegistered()
+    {
+        IServiceProvider first = new ServiceCollection().BuildServiceProvider();
+        IServiceProvider second = new ServiceCollection().BuildServiceProvider();
+        DialogRefreshHostedService service = new(first);
+
+        await service.StartAsync(CancellationToken.None);
+        Assert.AreSame(first, DialogRefresh.Services);
+        await service.StopAsync(CancellationToken.None);
+        Assert.IsNull(DialogRefresh.Services, "a stopped application must not stay reachable from a static");
+
+        await service.StartAsync(CancellationToken.None);
+        DialogRefresh.Services = second;
+        await service.StopAsync(CancellationToken.None);
+        Assert.AreSame(second, DialogRefresh.Services, "a newer application's services are not ours to release");
+    }
 }

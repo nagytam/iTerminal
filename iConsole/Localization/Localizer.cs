@@ -4,7 +4,7 @@ using System.Resources;
 namespace iConsole.Localization;
 
 /// <summary>The <see cref="ILocalizer"/> over <c>.resx</c> resources. See the interface for the rules.</summary>
-public sealed class Localizer : ILocalizer
+public sealed class Localizer : ILocalizer, IDisposable
 {
     /// <summary>The code of the neutral language.</summary>
     public const string NeutralCode = "en";
@@ -39,6 +39,15 @@ public sealed class Localizer : ILocalizer
         {
             _culture = CultureInfo.GetCultureInfo(language.Code);
         }
+    }
+
+    /// <summary>
+    /// Lets go of <see cref="UiText.Current"/> when the container that owns this localizer is disposed: the static would otherwise keep the
+    /// store, the settings and every handler on <see cref="LanguageChanged"/> (the whole screen) alive after the application is gone.
+    /// </summary>
+    public void Dispose()
+    {
+        UiText.Release(this);
     }
 
     public CultureInfo Culture => _culture;

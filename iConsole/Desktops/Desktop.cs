@@ -86,6 +86,13 @@ public class Desktop : IHostedService, IDesktop
             screen.Close();
         }
 
+        // The tree is going away: whatever holds a timer or a task of its own (the clock, the weather and quote repaint) must let it go, or it keeps
+        // running, and keeps the whole application reachable, after the host has stopped.
+        foreach (var screen in Screens.AsSnapshot())
+        {
+            DisposeControls(screen);
+        }
+
         try
         {
             Task.WaitAll([.. _jobTasks], cancellationToken);
@@ -106,6 +113,29 @@ public class Desktop : IHostedService, IDesktop
         _timerResolution = null;
 
         return Task.CompletedTask;
+    }
+
+    private static void DisposeControls(IControl control)
+    {
+        foreach (var child in control.Controls.AsArray())
+        {
+            DisposeControls(child);
+        }
+
+        // The indicators in the menu bar repaint themselves every 100 ms until told to stop.
+        (control as Controls.Control)?.StopAutoRefresh();
+
+        if (control is IDisposable disposable)
+        {
+            try
+            {
+                disposable.Dispose();
+            }
+            catch
+            {
+                // Shutting down: one control that cannot let go must not keep the others from it.
+            }
+        }
     }
 
     public async Task RunAsync()

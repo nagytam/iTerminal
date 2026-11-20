@@ -189,4 +189,27 @@ public class LocalizerTest
 
         CollectionAssert.AreEqual(new[] { "English", "Deutsch", "Français", "Español", "Italiano", "Magyar" }, names);
     }
+
+    [TestMethod]
+    public void DisposingTheLocalizer_LetsGoOfTheStaticCurrent_ButOnlyIfItIsStillTheCurrentOne()
+    {
+        ILocalizer? before = UiText.Current;
+        try
+        {
+            Localizer first = Create();
+            Localizer second = Create();
+
+            UiText.Current = first;
+            first.Dispose();
+            Assert.IsNull(UiText.Current, "a disposed localizer must not stay reachable from the static");
+
+            UiText.Current = second;
+            first.Dispose();
+            Assert.AreSame(second, UiText.Current, "a newer application's localizer is not ours to release");
+        }
+        finally
+        {
+            UiText.Current = before;
+        }
+    }
 }

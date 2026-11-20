@@ -40,7 +40,11 @@ public class WeatherDialogTest
         await _app.WaitForTextAsync("Budapest, Budapest, Hungary");
 
         await _app.PressAsync("Enter");
-        await _app.WaitForTextAsync("Saved Budapest");
+        // "Saved Budapest" is the status line only until the forecast lands and the dialog says "Forecast updated" in its place; the sandbox
+        // answers at once, so on a slow runner the poll can miss the first. Either line shows the place was saved.
+        await _app.WaitUntilAsync(
+            screen => screen.Contains("Saved Budapest") || screen.Contains("Forecast updated"),
+            "the save to be reported on the status line");
 
         // The place is saved, so its forecast is fetched: the conditions and the next 24 hours.
         await _app.WaitForTextAsync("9.5°C");
