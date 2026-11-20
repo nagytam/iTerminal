@@ -119,4 +119,45 @@ public class DriveTest
         var drive = new Drive { Name = "SomeDrive", DriveInfo = null };
         Assert.IsFalse(drive.IsEnabled);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsCloudConfigured_DefaultsToFalse()
+    {
+        Assert.IsFalse(new Drive().IsCloudConfigured);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsCloud_IsReadFromTheUrl_NotTheName()
+    {
+        // The row's name carries the "not configured" suffix, so the URL is the only reliable identity.
+        var oneDrive = new Drive { Name = "onedrive:// Cloud sign-in not configured", Url = Container.ONEDRIVE };
+        var googleDrive = new Drive { Name = "gdrive://", Url = Container.GOOGLE_DRIVE };
+
+        Assert.IsTrue(oneDrive.IsCloud);
+        Assert.IsTrue(googleDrive.IsCloud);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsCloud_IsFalse_ForALocalRow_AndForARowWithNoUrl()
+    {
+        var local = new Drive { Name = "local", Url = new Url(Path.GetTempPath()) };
+        var noUrl = new Drive { Name = Container.ONEDRIVE };
+
+        Assert.IsFalse(local.IsCloud);
+        Assert.IsFalse(noUrl.IsCloud, "A row built without a URL must not be taken for a cloud drive.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsEnabled_CloudRow_OnlyWhenItsRegistrationIsConfigured()
+    {
+        var notConfigured = new Drive { Name = Container.ONEDRIVE, Url = Container.ONEDRIVE, IsCloudConfigured = false };
+        var configured = new Drive { Name = Container.ONEDRIVE, Url = Container.ONEDRIVE, IsCloudConfigured = true };
+
+        Assert.IsFalse(notConfigured.IsEnabled);
+        Assert.IsTrue(configured.IsEnabled);
+    }
 }

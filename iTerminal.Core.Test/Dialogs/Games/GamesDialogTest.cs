@@ -484,6 +484,7 @@ public class GamesDialogTest
             new SnakeDialog(TestTheme(), new VirtualTimeProvider()),
             new TetrisDialog(TestTheme(), new VirtualTimeProvider()),
             new JassDialog(TestTheme(), new VirtualTimeProvider()),
+            new RiskDialog(TestTheme(), new VirtualTimeProvider()),
         ];
 
         foreach (GamesDialog dialog in dialogs)

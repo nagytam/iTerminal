@@ -37,6 +37,28 @@ public class HelpDialog : Dialog
         _textViewerControl.TextModel.Lines = [.. help.Split(Environment.NewLine)];
     }
 
+    /// <summary>
+    /// <paramref name="line"/> broken at word boundaries to fit <paramref name="width"/>; the lines after the first hang two columns
+    /// in from where the text began, so a wrapped item still reads as one. A line that fits comes back as it is.
+    /// </summary>
+    internal static IEnumerable<string> WrapToWidth(string line, int width)
+    {
+        if (width <= 0 || line.Length <= width)
+        {
+            yield return line;
+            yield break;
+        }
+
+        var first = line.WrapWords(width)[0];
+        yield return first;
+
+        var hang = new string(' ', Math.Min(line.Length - line.TrimStart().Length + 2, Math.Max(0, width - 10)));
+        foreach (var part in line[first.Length..].TrimStart().WrapWords(width - hang.Length))
+        {
+            yield return hang + part;
+        }
+    }
+
     private const int MinimumKeyColumn = 18;
     private const int MaximumKeyColumn = 24;
 
@@ -92,6 +114,12 @@ public class HelpDialog : Dialog
         return UiText.Get("Control.Name." + name, words);
     }
 
+    /// <summary>One "Getting started" line: the key in a column of its own, so every description starts in the same place.</summary>
+    internal static string StartedLine(string key, string description)
+    {
+        return "  " + key.PadRight(MinimumKeyColumn) + " " + description;
+    }
+
     private static string GetAvailableCommandsHelp(IControl rootControl, IControl? focusedControl, int width)
     {
         var commands = GetAvailableCommands(rootControl)
@@ -105,10 +133,11 @@ public class HelpDialog : Dialog
             UiText.Get("Help.CloseHint", "Esc: close this help   ↑↓ PgUp PgDn: scroll it"),
             string.Empty,
             UiText.Get("Help.Started.Heading", "Getting started:"),
-            "  " + UiText.Get("Help.Started.Tab", "Tab / Shift+Tab    Move focus between panels and controls"),
-            "  " + UiText.Get("Help.Started.Enter", "Enter           Run the focused item's main command"),
-            "  " + UiText.Get("Help.Started.Esc", "Esc             Close the dialog or menu in front of you"),
-            "  " + UiText.Get("Help.Started.F1", "F1              Open this help from any screen"),
+            StartedLine(UiText.Get("Help.Started.Tab.Key", "Tab / Shift+Tab"), UiText.Get("Help.Started.Tab", "Move focus between panels and controls")),
+            StartedLine(UiText.Get("Help.Started.Enter.Key", "Enter"), UiText.Get("Help.Started.Enter", "Run the focused item's main command")),
+            StartedLine(UiText.Get("Help.Started.Esc.Key", "Esc"), UiText.Get("Help.Started.Esc", "Close the dialog or menu in front of you")),
+            StartedLine(UiText.Get("Help.Started.F1.Key", "F1"), UiText.Get("Help.Started.F1", "Open this help from any screen")),
+            StartedLine(UiText.Get("Help.Started.Palette.Key", "Shift+F1"), UiText.Get("Help.Started.Palette", "Find any command by name in the command palette")),
             "  " + UiText.Get("Help.Started.Lists", "The first list below works here and now."),
             "  " + UiText.Get("Help.Started.AllLists", "The second lists every command, even those that cannot run in this context."),
             string.Empty,
@@ -118,6 +147,9 @@ public class HelpDialog : Dialog
             string.Empty,
             UiText.Get("Help.AvailableCommands", "Available commands:"),
         };
+
+        // The lines above are fixed text, written for a wide screen; on a narrow one the frame would cut them mid-word.
+        lines = [.. lines.SelectMany(line => WrapToWidth(line, width))];
 
         if (commands.Count == 0)
         {

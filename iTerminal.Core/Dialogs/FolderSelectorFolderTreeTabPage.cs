@@ -40,7 +40,9 @@ public class FolderSelectorFolderTreeTabPage : FolderSelectorTabPage
 
         var observableValue = new ObservableValue<IHierarchicalItemModel>(
             folderIndexModel,
-            (m) => string.Format(UiText.Get("FolderTree.Count", "Number of folders: {0}"), m.Count.ToString("N0")));
+            (m) => m is FolderIndexModel { IsWalking: true }
+                ? string.Format(UiText.Get("FolderTree.Indexing", "Indexing... {0} folders so far"), m.Count.ToString("N0"))
+                : string.Format(UiText.Get("FolderTree.Count", "Number of folders: {0}"), m.Count.ToString("N0")));
         _dynamicLabel = new DynamicLabel<IHierarchicalItemModel>(observableValue, themeService);
 
         _selectFolderCommand = new SelectTreeFolderCommand(contentModelService, folderIndexModel);

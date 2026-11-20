@@ -9,7 +9,7 @@ public interface INetworkDiscoveryService
     /// absent from the results, nothing throws for them.</summary>
     IAsyncEnumerable<DiscoveredHost> ScanAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>The shares <paramref name="host"/> lists for <paramref name="username"/>; null when the login is refused or
+    /// <summary>The shares <paramref name="host"/> lists for <paramref name="username"/>, with the SMB version used; null when the login is refused or
     /// the host cannot be reached. The SMB call is blocking, so it runs off the caller's thread.</summary>
-    Task<IReadOnlyList<string>?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default);
+    Task<SmbListing?> ListSharesWithLoginAsync(string host, string username, string password, CancellationToken cancellationToken = default);
 }

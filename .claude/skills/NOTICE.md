@@ -1,6 +1,6 @@
 # Third-party .NET skills
 
-Everything in this directory except `compare-console`, `fix-main` and `incremental-improvement` is
+Everything in this directory except `fix-main` and `incremental-improvement` is
 vendored from [dotnet/skills](https://github.com/dotnet/skills) at commit
 `96c3d68dad2855e3ab5178aa1a262789d86a1466` (main, 2026-11-06).
 

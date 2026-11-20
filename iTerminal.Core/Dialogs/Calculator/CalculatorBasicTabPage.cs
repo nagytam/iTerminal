@@ -8,7 +8,7 @@ public sealed class CalculatorBasicTabPage : CalculatorGridTabPage
     protected override int Columns => 4;
 
     public CalculatorBasicTabPage(CalculatorEngine engine, Action onChanged, IThemeService themeService)
-        : base("Basic", engine, onChanged, themeService)
+        : base(iConsole.Localization.UiText.Get("Calculator.TabBasic", "Basic"), engine, onChanged, themeService)
     {
         AddActionButton("MC", Engine.MemoryClear);
         AddActionButton("MR", Engine.MemoryRecall);

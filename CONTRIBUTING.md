@@ -16,7 +16,7 @@ By contributing you agree that your work is released under the project's [MIT Li
 | Add a file reader to the F3 viewer | `iConsole/Services/`, `iTerminal.Core` | Readers take bytes rather than a path, so they are small and easy to unit-test. |
 | Add a drive (URL scheme) | `iTerminal.Core` | See "A new URL scheme" in [CLAUDE.md](CLAUDE.md) for the full checklist. |
 | Improve terminal support | `iConsole.Inputs.Windows`, `iConsole.Inputs.Posix` | Try WezTerm, Kitty, tmux, Windows Terminal and SSH sessions. |
-| Docs and tests | `docs/`, `*.Test` | Always useful. |
+| Docs and tests | `Documentation/`, `*.Test` | Always useful. |
 
 Not sure where to start? Look for issues labelled `good first issue` or `help wanted`. For a big
 change (a new subsystem, a change to the UI framework), open an issue first so we can agree on the
@@ -49,7 +49,7 @@ iConsole  <-  iTerminal.Core  <-  iTerminal
   `iConsoleApplicationBuilderExtension` / `iTerminalApplicationBuilderExtension` classes, not in `Program.cs`.
 - `iConsole.Inputs.Windows`, `iConsole.Inputs.Posix`: platform input plug-ins.
 
-Read the relevant write-up in [docs/architecture/](docs/architecture/) before changing a subsystem.
+Read the relevant write-up in [Documentation/architecture/](Documentation/architecture/) before changing a subsystem.
 [CLAUDE.md](CLAUDE.md) has the list of rules that are easy to break. The important ones:
 
 - **Key handlers and `Draw` must return within about 200 ms.** Never run processes, HTTP or other
@@ -68,7 +68,7 @@ Read the relevant write-up in [docs/architecture/](docs/architecture/) before ch
 1. **Branch from `main`.** One branch and one pull request per improvement. Keep the change focused.
 2. **Write the code** following the style below.
 3. **Add or update tests** next to the code you changed (test folders mirror source folders).
-4. **Update the docs** under `docs/architecture/` when behaviour, keys or settings change, and the
+4. **Update the docs** under `Documentation/architecture/` when behaviour, keys or settings change, and the
    README feature list when a user-visible feature is added.
 5. **Run the checks** (below) and fix what fails.
 6. **Open a pull request** against `main` and fill in the template. Explain what changed and why,
@@ -91,7 +91,7 @@ The root `.editorconfig` and `.github/copilot-instructions.md` are the source of
 ### Tests
 
 MSTest with Moq. Assert on what a control drew using `ScreenBuffer`, and draw twice to catch stale
-text. Details are in [docs/architecture/testing.md](docs/architecture/testing.md).
+text. Details are in [Documentation/architecture/testing.md](Documentation/architecture/testing.md).
 
 ```bash
 # Everything except the slow end-to-end suite

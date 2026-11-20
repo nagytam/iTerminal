@@ -70,4 +70,24 @@ public class UrlSpecialCharactersTest
         Assert.AreEqual("/share/My Documents/", url.Path);
         Assert.AreEqual(PathType.Folder, url.PathType);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ANameTheFileSystemCannotRepresent_IsAUrlThatDoesNotExist_NotAnException()
+    {
+        // "a|b" is not a Windows file name: reading its last write time threw from the validation of a name being typed in Create folder.
+        string folder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        try
+        {
+            var url = new Url(folder + Path.DirectorySeparatorChar).Combine("a|b");
+
+            Assert.IsFalse(url.Exists);
+            Assert.IsFalse(File.Exists(url.FullName));
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
 }

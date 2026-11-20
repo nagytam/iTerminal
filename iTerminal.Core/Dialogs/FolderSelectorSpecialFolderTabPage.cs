@@ -176,10 +176,25 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
     {
         var transformedItem = new ListItem<string>(item)
         {
-            Value = item.Shrink((int)_listBox.ViewSize.Width - 2)!,
+            Value = PlaceLabel(item).Shrink((int)_listBox.ViewSize.Width - 2)!,
             IsEnabled = true
         };
         return transformedItem;
+    }
+
+    /// <summary>
+    /// The row's text: the folder's own name first, so Documents and Downloads are told apart without reading the
+    /// whole path, then the path. A root, and an app drive's URL (memdrive://, music://), has no folder name and
+    /// is shown as it is. The row's item stays the path, so selecting it is unchanged.
+    /// </summary>
+    internal static string PlaceLabel(string place)
+    {
+        if (place.Contains("://", StringComparison.Ordinal) || System.IO.Path.GetPathRoot(place) == place)
+        {
+            return place;
+        }
+        var name = System.IO.Path.GetFileName(place.TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar));
+        return string.IsNullOrEmpty(name) ? place : $"{name}  {place}";
     }
 
     public override void OnInitializeLayout()

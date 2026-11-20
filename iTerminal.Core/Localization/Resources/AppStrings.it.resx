@@ -4178,6 +4178,12 @@
   <data name="DialogHint.VoiceInput" xml:space="preserve">
     <value>Dettare la domanda (avvio e arresto)</value>
   </data>
+  <data name="Voice.MicButton" xml:space="preserve">
+    <value>Mic</value>
+  </data>
+  <data name="Voice.StopButton" xml:space="preserve">
+    <value>Ferma</value>
+  </data>
   <data name="Voice.Title" xml:space="preserve">
     <value>Input vocale</value>
   </data>
@@ -6799,7 +6805,7 @@
   <data name="CmdTitle.28c83220" xml:space="preserve">
     <value>Impostazioni di sistema</value>
   </data>
-  <data name="CmdTitle.4e510b97" xml:space="preserve">
+  <data name="CmdTitle.73f58c5e" xml:space="preserve">
     <value>Elenco attività</value>
   </data>
   <data name="CmdTitle.45b9ef99" xml:space="preserve">
@@ -6964,7 +6970,7 @@
   <data name="CmdTitle.20eac5aa" xml:space="preserve">
     <value>Spazio</value>
   </data>
-  <data name="CmdTitle.fd40ab96" xml:space="preserve">
+  <data name="CmdTitle.f0b4acbf" xml:space="preserve">
     <value>Esegui nel terminale</value>
   </data>
   <data name="CmdTitle.3d03a1de" xml:space="preserve">
@@ -7029,6 +7035,15 @@
   </data>
   <data name="FolderSelector.Tab1" xml:space="preserve">
     <value>1-Unità</value>
+  </data>
+  <data name="FolderSelector.Drives.Empty" xml:space="preserve">
+    <value> Nessuna unità trovata.</value>
+  </data>
+  <data name="FolderSelector.Drives.Reading" xml:space="preserve">
+    <value> Lettura delle unità…</value>
+  </data>
+  <data name="FolderSelector.Favourites.ConfirmRemove" xml:space="preserve">
+    <value>Rimuovere {0} dai preferiti?  y:sì  n:no</value>
   </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Recenti</value>
@@ -8550,6 +8565,9 @@
   </data>
   <data name="FolderTree.Count" xml:space="preserve">
     <value>Numero di cartelle: {0}</value>
+  </data>
+  <data name="FolderTree.Indexing" xml:space="preserve">
+    <value>Indicizzazione in corso... {0} cartelle finora</value>
   </data>
   <data name="FolderPath.TabCompletes" xml:space="preserve">
     <value>Tab completa. Schemi: </value>
@@ -10110,20 +10128,20 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} attività in background sono ancora in corso. Uscire comunque?</value>
   </data>
-  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
-    <value>Annulla rinomina</value>
+  <data name="CmdTitle.97bca610" xml:space="preserve">
+    <value>Annulla rinomina o spostamento</value>
   </data>
-  <data name="CmdDesc.e5781ae9" xml:space="preserve">
-    <value>Ripristina il nome modificato dall'ultima rinomina.</value>
+  <data name="CmdDesc.b4114ce8" xml:space="preserve">
+    <value>Ripristina i nomi modificati dall'ultima rinomina, rinomina multipla o spostamento.</value>
   </data>
   <data name="Undo.RenameTitle" xml:space="preserve">
-    <value>Annulla rinomina</value>
+    <value>Annulla rinomina o spostamento</value>
   </data>
   <data name="Undo.RenameGone" xml:space="preserve">
-    <value>La voce rinominata non c'è più, quindi non c'è nulla da ripristinare.</value>
+    <value>La voce non c'è più, quindi non c'è nulla da ripristinare.</value>
   </data>
   <data name="Undo.RenameNameTaken" xml:space="preserve">
-    <value>Il vecchio nome è ora occupato, quindi la rinomina non è stata annullata.</value>
+    <value>Il vecchio nome è ora occupato, quindi non è stato ripristinato.</value>
   </data>
   <data name="CmdTitle.19b314a4" xml:space="preserve">
     <value>Ingrandisci il pannello attivo</value>
@@ -10342,6 +10360,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>Navigazione anonima su {0}. L accede.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} in uso.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Seleziona prima un host da cui uscire.</value>
   </data>
@@ -10414,6 +10435,9 @@
   </data>
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Esci da un host SMB</value>
+  </data>
+  <data name="CmdTitle.550033f7" xml:space="preserve">
+    <value>Elimina un preferito</value>
   </data>
   <data name="Dep.PowerShellPurpose" xml:space="preserve">
     <value>Esecuzione di PowerShell: Ctrl+O su Windows e sessioni PowerShell remote (Alt+F2)</value>
@@ -10609,5 +10633,287 @@
   </data>
   <data name="Weather.Updated.Old" xml:space="preserve">
     <value>vecchia, aggiornata {0:g}</value>
+  </data>
+  <data name="Games.Risk.SideBlue" xml:space="preserve">
+    <value>Blu</value>
+  </data>
+  <data name="Games.Risk.SideRed" xml:space="preserve">
+    <value>Rosso</value>
+  </data>
+  <data name="Games.Risk.Draw" xml:space="preserve">
+    <value>Pareggio: è stato raggiunto il limite di turni.</value>
+  </data>
+  <data name="Games.Risk.Wins" xml:space="preserve">
+    <value>{0} vince!</value>
+  </data>
+  <data name="Games.Risk.ToMove" xml:space="preserve">
+    <value>Tocca a {0}.</value>
+  </data>
+  <data name="Games.Risk.PlaceHint" xml:space="preserve">
+    <value>{0}: piazza {1} armate sui tuoi territori.</value>
+  </data>
+  <data name="Games.Risk.AttackHint" xml:space="preserve">
+    <value>{0}: attacca da un territorio con almeno 2 armate, o E per terminare l'attacco.</value>
+  </data>
+  <data name="Games.Risk.FortifyHint" xml:space="preserve">
+    <value>{0}: sposta un'armata in un territorio adiacente tuo, o E per terminare il turno.</value>
+  </data>
+  <data name="Games.Risk.PlaceOwn" xml:space="preserve">
+    <value>Piazza le armate sul tuo territorio.</value>
+  </data>
+  <data name="Games.Risk.AttackFromTwo" xml:space="preserve">
+    <value>Attacca da un territorio con almeno 2 armate.</value>
+  </data>
+  <data name="Games.Risk.MoveFromTwo" xml:space="preserve">
+    <value>Sposta da un territorio con almeno 2 armate.</value>
+  </data>
+  <data name="Games.Risk.SelectFirst" xml:space="preserve">
+    <value>Scegli uno dei tuoi territori da cui attaccare.</value>
+  </data>
+  <data name="Games.Risk.NotAdjacent" xml:space="preserve">
+    <value>Quel territorio non è adiacente a quello da cui attacchi.</value>
+  </data>
+  <data name="Games.Risk.PlaceFirst" xml:space="preserve">
+    <value>Piazza prima le {0} armate rimanenti.</value>
+  </data>
+  <data name="Games.Risk.MoveToOwn" xml:space="preserve">
+    <value>Sposta su uno dei tuoi territori.</value>
+  </data>
+  <data name="Games.Risk.Battle" xml:space="preserve">
+    <value>{0} ha tirato {1} e {2} {3}: {0} perde {4}, {2} perde {5}.</value>
+  </data>
+  <data name="Games.Risk.Conquers" xml:space="preserve">
+    <value>{0} conquista il territorio.</value>
+  </data>
+  <data name="Games.Risk.Select" xml:space="preserve">
+    <value>seleziona</value>
+  </data>
+  <data name="Games.Risk.Hint" xml:space="preserve">
+    <value>Seleziona, attacca, muovi o piazza</value>
+  </data>
+  <data name="CmdTitle.0711a8d6" xml:space="preserve">
+    <value>Risiko</value>
+  </data>
+  <data name="CmdDesc.3655a48d" xml:space="preserve">
+    <value>Gioca a Risiko: conquista territori contro il computer o un amico, turno dopo turno.</value>
+  </data>
+  <data name="Undo.RenameBatchPartial" xml:space="preserve">
+    <value>Ripristinate {0} voci su {1}. Le altre no: il nuovo nome non esiste più o il vecchio nome è di nuovo occupato.</value>
+  </data>
+  <data name="Transfer.SameFile" xml:space="preserve">
+    <value>L'origine e la destinazione sono lo stesso file. Scegli un altro nome o un'altra cartella.</value>
+  </data>
+  <data name="Transfer.FolderIntoItself" xml:space="preserve">
+    <value>Una cartella non può essere copiata o spostata in sé stessa né in una delle sue sottocartelle.</value>
+  </data>
+  <data name="Transfer.FolderReplaceAncestor" xml:space="preserve">
+    <value>Una cartella non può sostituire sé stessa né una cartella che la contiene.</value>
+  </data>
+  <data name="Sync.NestedFolders" xml:space="preserve">
+    <value>Una cartella non può essere sincronizzata con una delle sue sottocartelle.</value>
+  </data>
+  <data name="Menu.Undorenameormove" xml:space="preserve">
+    <value>Annulla rinomina o spostamento</value>
+  </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Generale </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Rete</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Indicatori </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Musica </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Documenti </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Pannelli </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Sfondo</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Salvaschermo</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Base</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Scientifica</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programmatore</value>
+  </data>
+  <data name="DriveType.Fixed" xml:space="preserve">
+    <value>Fisso</value>
+  </data>
+  <data name="DriveType.Removable" xml:space="preserve">
+    <value>Rimovibile</value>
+  </data>
+  <data name="DriveType.CDRom" xml:space="preserve">
+    <value>CD-ROM</value>
+  </data>
+  <data name="DriveType.Network" xml:space="preserve">
+    <value>Rete</value>
+  </data>
+  <data name="DriveType.Ram" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="DriveType.NoRootDirectory" xml:space="preserve">
+    <value>Senza root</value>
+  </data>
+  <data name="DriveType.Unknown" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
+  <data name="DriveList.Label" xml:space="preserve">
+    <value>Etichetta:</value>
+  </data>
+  <data name="Msg.RenameTargetExists" xml:space="preserve">
+    <value>«{0}» esiste già. Seleziona «{1}» per sostituirlo.</value>
+  </data>
+  <data name="Radio.Title" xml:space="preserve">
+    <value>Radio online</value>
+  </data>
+  <data name="Radio.ColName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Radio.ColGenre" xml:space="preserve">
+    <value>Genere</value>
+  </data>
+  <data name="Radio.Count" xml:space="preserve">
+    <value>{0} stazioni</value>
+  </data>
+  <data name="Radio.CountFiltered" xml:space="preserve">
+    <value>{0} di {1} stazioni</value>
+  </data>
+  <data name="Radio.Favourites" xml:space="preserve">
+    <value>Preferiti</value>
+  </data>
+  <data name="Radio.NoMatch" xml:space="preserve">
+    <value>Nessuna stazione corrisponde a &quot;{0}&quot;.</value>
+  </data>
+  <data name="Radio.NoFavourites" xml:space="preserve">
+    <value>Nessuna stazione preferita. Premi F su una stazione per segnarla.</value>
+  </data>
+  <data name="Radio.Empty" xml:space="preserve">
+    <value>Ancora nessuna stazione. Premi N per aggiungerne una.</value>
+  </data>
+  <data name="Radio.GenreLine" xml:space="preserve">
+    <value>Genere: {0}</value>
+  </data>
+  <data name="Radio.FieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Radio.FieldGenre" xml:space="preserve">
+    <value>Genere</value>
+  </data>
+  <data name="Radio.FieldUrl" xml:space="preserve">
+    <value>Flusso</value>
+  </data>
+  <data name="Radio.FormNew" xml:space="preserve">
+    <value>Nuova stazione: un nome e un indirizzo di flusso http:// o https://</value>
+  </data>
+  <data name="Radio.FormChange" xml:space="preserve">
+    <value>Modifica stazione: un nome e un indirizzo di flusso http:// o https://</value>
+  </data>
+  <data name="Radio.Duplicate" xml:space="preserve">
+    <value>Questo indirizzo di flusso è già nell'elenco</value>
+  </data>
+  <data name="Radio.FilterInput" xml:space="preserve">
+    <value>Filtro: {0}_</value>
+  </data>
+  <data name="Radio.FilterHint" xml:space="preserve">
+    <value>Filtro: {0}  (Esc mostra tutte le stazioni)</value>
+  </data>
+  <data name="Radio.NotPlaying" xml:space="preserve">
+    <value>Non in riproduzione</value>
+  </data>
+  <data name="Radio.OnAir" xml:space="preserve">
+    <value>In onda</value>
+  </data>
+  <data name="Radio.Paused" xml:space="preserve">
+    <value>In pausa</value>
+  </data>
+  <data name="Radio.FooterForm" xml:space="preserve">
+    <value>Invio campo successivo  Tab/Maiusc+Tab sposta  Esc annulla</value>
+  </data>
+  <data name="Radio.FooterFilter" xml:space="preserve">
+    <value>Digita per filtrare  Invio mantieni  Esc cancella</value>
+  </data>
+  <data name="Radio.FooterBrowse" xml:space="preserve">
+    <value>Invio riproduci  Spazio pausa  S stop  F preferita  N nuova  D elimina  / cerca  Esc chiudi</value>
+  </data>
+  <data name="Radio.NeedsName" xml:space="preserve">
+    <value>Una stazione ha bisogno di un nome</value>
+  </data>
+  <data name="Radio.NeedsUrl" xml:space="preserve">
+    <value>L'indirizzo del flusso deve iniziare con http:// o https://</value>
+  </data>
+  <data name="Radio.FavouriteAdded" xml:space="preserve">
+    <value>{0} è una preferita</value>
+  </data>
+  <data name="Radio.FavouriteRemoved" xml:space="preserve">
+    <value>{0} non è più una preferita</value>
+  </data>
+  <data name="DialogHint.DeleteStation" xml:space="preserve">
+    <value>Elimina la stazione</value>
+  </data>
+  <data name="DialogHint.KeepStation" xml:space="preserve">
+    <value>Mantieni la stazione</value>
+  </data>
+  <data name="DialogHint.PlayStation" xml:space="preserve">
+    <value>Riproduci la stazione</value>
+  </data>
+  <data name="DialogHint.PauseStation" xml:space="preserve">
+    <value>Pausa o riprendi la stazione</value>
+  </data>
+  <data name="DialogHint.StopStation" xml:space="preserve">
+    <value>Ferma la riproduzione</value>
+  </data>
+  <data name="DialogHint.ToggleFavourite" xml:space="preserve">
+    <value>Segna o togli la stazione dalle preferite</value>
+  </data>
+  <data name="DialogHint.FavouritesOnly" xml:space="preserve">
+    <value>Mostra solo le preferite</value>
+  </data>
+  <data name="DialogHint.MoveOverStations" xml:space="preserve">
+    <value>Scorri le stazioni</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastStation" xml:space="preserve">
+    <value>Vai alla prima o all'ultima stazione</value>
+  </data>
+  <data name="DialogHint.AddStation" xml:space="preserve">
+    <value>Aggiungi una stazione</value>
+  </data>
+  <data name="DialogHint.ChangeStation" xml:space="preserve">
+    <value>Modifica la stazione</value>
+  </data>
+  <data name="DialogHint.DeleteStationAsks" xml:space="preserve">
+    <value>Elimina la stazione (chiede conferma)</value>
+  </data>
+  <data name="DialogHint.FilterStations" xml:space="preserve">
+    <value>Filtra le stazioni</value>
+  </data>
+  <data name="CmdTitle.836a989d" xml:space="preserve">
+    <value>Radio online</value>
+  </data>
+  <data name="CmdDesc.332485aa" xml:space="preserve">
+    <value>Ascolta le stazioni radio su internet: riproduci, metti in pausa e ferma, segna i preferiti e filtra l'elenco.</value>
+  </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>Accesso al cloud non configurato</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Unità cloud (si trova sui server del fornitore)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>Un'unità cloud non ha supporti da espellere.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>Un'unità cloud non può essere formattata: si trova sui server del fornitore.</value>
   </data>
 </root>

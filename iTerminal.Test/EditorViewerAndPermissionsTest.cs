@@ -359,6 +359,23 @@ public class EditorViewerAndPermissionsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task EndAndHomeInTheEditorMoveWithinTheLine()
+    {
+        // A hidden hex editor used to keep the focus, and took these keys before the text editor saw them.
+        await OpenInEditorAsync("lf.txt", "alpha");
+
+        await _app.PressAsync("End");
+        await _app.TypeAsync("x");
+        await _app.PressAsync("Home");
+        await _app.TypeAsync("y");
+        await _app.PressAsync("Ctrl+S");
+
+        await _app.WaitUntilAsync(() => File.ReadAllText(LfFile).Contains("y", StringComparison.Ordinal), "the file to be written");
+        Assert.AreEqual("yalphax\nbeta\n", File.ReadAllText(LfFile));
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task F5InTheEditorGoesToALine()
     {
         await OpenInEditorAsync("long.txt", "row 000");

@@ -170,6 +170,14 @@ public class FileSystemService : IFileSystemService, IFreeSpaceFileSystem
                 }
             case PathType.Folder:
                 {
+                    // Replacing the target means deleting it first. When the target is the folder being moved, or a folder it is
+                    // inside, that deletes the source too, and with a parent everything else in it: a move of a onto a with
+                    // Overwrite ticked removed the whole of a.
+                    if (IsSameOrInside(targetUrl.FullName, sourceUrl.FullName))
+                    {
+                        throw new IOException(iConsole.Localization.UiText.Get("Transfer.FolderReplaceAncestor", "A folder cannot replace itself or a folder it is inside."));
+                    }
+
                     if (Directory.Exists(targetUrl.FullName))
                     {
                         if (!overwrite)
@@ -187,6 +195,15 @@ public class FileSystemService : IFileSystemService, IFreeSpaceFileSystem
                 }
         }
         return Task.CompletedTask;
+    }
+
+    /// <summary>True when <paramref name="inner"/> is <paramref name="outer"/> or lies inside it (case-insensitive on Windows and macOS, exact elsewhere).</summary>
+    internal static bool IsSameOrInside(string outer, string inner)
+    {
+        string outerPath = Path.TrimEndingDirectorySeparator(Path.GetFullPath(outer));
+        string innerPath = Path.TrimEndingDirectorySeparator(Path.GetFullPath(inner));
+        var comparison = OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        return string.Equals(outerPath, innerPath, comparison) || innerPath.StartsWith(outerPath + Path.DirectorySeparatorChar, comparison);
     }
 
     public Task CopyAsync(Url sourceUrl, Url targetUrl, bool overwrite)

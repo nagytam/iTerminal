@@ -1,6 +1,8 @@
 using iConsole.Data;
+using iConsole.Test.Core;
 using iTerminal.Core.Data;
 using iTerminal.Core.Dialogs;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -52,6 +54,39 @@ public class FolderSelectorDrivesTabPageTest
             Name = path,
             Url = new Url(path)
         };
+    }
+
+    /// <summary>A OneDrive row as the job lists it: no <see cref="DriveInfo"/>, enabled only when its registration is set.</summary>
+    private static Drive CloudRow(bool isConfigured) => new()
+    {
+        DriveInfo = null,
+        Name = Container.ONEDRIVE,
+        Url = Container.ONEDRIVE,
+        IsCloudConfigured = isConfigured
+    };
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Enter_OnAConfiguredCloudRow_GoesToItsRoot()
+    {
+        var (page, harness) = await CreatePageAsync(CloudRow(isConfigured: true));
+        page.SetFocus();
+
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.Enter));
+
+        CollectionAssert.AreEqual(new[] { Container.ONEDRIVE }, harness.Navigations);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Enter_OnAnUnconfiguredCloudRow_NavigatesNowhere()
+    {
+        var (page, harness) = await CreatePageAsync(CloudRow(isConfigured: false));
+        page.SetFocus();
+
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.Enter));
+
+        Assert.AreEqual(0, harness.Navigations.Count);
     }
 
     [Timeout(60_000)]
@@ -175,5 +210,34 @@ public class FolderSelectorDrivesTabPageTest
 
         Assert.IsTrue(hints.Any(h => h.Key == "Enter"));
         Assert.IsTrue(hints.Any(h => h.Key == "Esc"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WithNoDrivesAfterTheFirstRead_SaysSoInsteadOfDrawingAnEmptyList()
+    {
+        var (page, harness) = await CreatePageAsync();
+        harness.DriveInfoModel.IsLoaded = true;
+        page.OnIdle();
+        page.OnInitializeLayout();
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "No drives found.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task BeforeTheFirstRead_SaysTheDrivesAreBeingReadNotThatThereAreNone()
+    {
+        var (page, _) = await CreatePageAsync();
+        page.OnInitializeLayout();
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "Reading the drives");
+        AssertScreenDoesNotContain(again, "No drives found.");
     }
 }

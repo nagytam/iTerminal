@@ -386,4 +386,26 @@ public class DiskUsageDialogTest
         Assert.IsNull(f.Dialog.Current);
         f.Dialog.Close();
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FitPath_KeepsTheStartAndTheEndOfAPathThatDoesNotFit()
+    {
+        const string path = @"C:\Users\someone\AppData\Local\Temp\iTerminal.E2E.12345678\left";
+
+        string fitted = DiskUsageDialog.FitPath(path, 30);
+
+        Assert.IsTrue(fitted.Length <= 30 && fitted.Length >= 28, "it fits, and uses the room: " + fitted);
+        Assert.IsTrue(fitted.StartsWith(@"C:\Users", StringComparison.Ordinal), fitted);
+        Assert.IsTrue(fitted.EndsWith(@"678\left", StringComparison.Ordinal), "the folder the path ends in is what says where it is: " + fitted);
+        Assert.IsTrue(fitted.Contains("...", StringComparison.Ordinal), fitted);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FitPath_LeavesAPathThatFitsAsItIs()
+    {
+        Assert.AreEqual(@"C:\Temp\a", DiskUsageDialog.FitPath(@"C:\Temp\a", 40));
+        Assert.AreEqual(string.Empty, DiskUsageDialog.FitPath(null, 40));
+    }
 }

@@ -980,19 +980,29 @@ public partial class Url
             return cachedFileInfo;
         }
 
-        FileInfo fileInfo = new(path);
-        bool exists = fileInfo.Exists;
-        cachedFileInfo = new CachedFileInfo(
-            fileInfo.Name,
-            fileInfo.Extension,
-            fileInfo.FullName,
-            fileInfo.LastWriteTime,
-            exists,
-            exists ? fileInfo.Length : 0,
-            // The attributes were read with the rest, so an ordinary entry costs nothing more:
-            // only a reparse point is opened to read where it leads.
-            GetLinkTargetQuietly(fileInfo, path),
-            (int)fileInfo.Attributes != -1 && (fileInfo.Attributes & FileAttributes.Hidden) != 0);
+        try
+        {
+            FileInfo fileInfo = new(path);
+            bool exists = fileInfo.Exists;
+            cachedFileInfo = new CachedFileInfo(
+                fileInfo.Name,
+                fileInfo.Extension,
+                fileInfo.FullName,
+                fileInfo.LastWriteTime,
+                exists,
+                exists ? fileInfo.Length : 0,
+                // The attributes were read with the rest, so an ordinary entry costs nothing more:
+                // only a reparse point is opened to read where it leads.
+                GetLinkTargetQuietly(fileInfo, path),
+                (int)fileInfo.Attributes != -1 && (fileInfo.Attributes & FileAttributes.Hidden) != 0);
+        }
+        catch (Exception exception) when (exception is IOException or NotSupportedException)
+        {
+            // A name the file system cannot represent ("a|b" on Windows) throws on the first property read, and it reaches here from the
+            // validation of a name being typed: such a name is simply not an existing file, and the dialog says it is not a valid name.
+            string name = path.Split('/', '\\')[^1];
+            cachedFileInfo = new CachedFileInfo(name, string.Empty, path, DateTime.MinValue, false, 0);
+        }
 
         FileInfoCache.Set(path, cachedFileInfo, CacheLifetime);
         return cachedFileInfo;

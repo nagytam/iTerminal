@@ -170,6 +170,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
         services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
+        services.AddSingleton<iTerminal.Core.Model.Radio.RadioStationStore>();
+        services.AddTransient<iTerminal.Core.Dialogs.Radio.OnlineRadioDialog>();
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISessionEnvironment, iTerminal.Core.Services.SystemSettings.SessionEnvironment>();
         services.AddTransient<iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog>();
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
@@ -448,6 +450,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.Games.SnakeDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Games.TetrisDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Games.JassDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.RiskDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();

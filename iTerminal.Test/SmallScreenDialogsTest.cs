@@ -375,7 +375,7 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
-    public async Task TheRemoteConnectionsHelpOn60Columns_EndsOnAnEllipsisNotMidWord()
+    public async Task TheRemoteConnectionsHelpOn60Columns_WrapsItsEmptyHintAndEllipsizesTheSummary()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
 
@@ -383,7 +383,9 @@ public class SmallScreenDialogsTest
 
         await narrow.WaitForTextAsync("Remote connections");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Nothing saved yet")), "the empty-list help");
-        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Nothing saved yet") && l.Contains("…")), narrow.Screen.Dump());
+        // The empty-list hint is the only guidance, so it wraps and is read to its end; the summary above it is a status, so it may end on an ellipsis.
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("Nothing saved yet") && l.Contains("…")), narrow.Screen.Dump());
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("WebDAV connection.")), narrow.Screen.Dump());
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(" saved  ·") && l.Contains("…")), narrow.Screen.Dump());
     }
 
@@ -457,16 +459,17 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
-    [DataRow("Ctrl+Shift+F1", "No torrents yet")]
-    [DataRow("Ctrl+Shift+F2", "No workspaces yet")]
-    public async Task TheEmptyListHelpOn50Columns_EndsOnAnEllipsis(string chord, string text)
+    [DataRow("Ctrl+Shift+F1", "No torrents yet", "or its URL.")]
+    [DataRow("Ctrl+Shift+F2", "No workspaces yet", "Enter brings one")]
+    public async Task TheEmptyListHelpOn50Columns_IsWrappedNotCutOnAnEllipsis(string chord, string text, string lastWords)
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
 
         await narrow.PressAsync(chord);
 
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(text)), "the empty-list help");
-        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(text) && l.Contains('…')), narrow.Screen.Dump());
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(lastWords)), "the end of the empty-list help");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains(text) && l.Contains('…')), narrow.Screen.Dump());
     }
 
     [Timeout(120_000)]
@@ -508,8 +511,202 @@ public class SmallScreenDialogsTest
 
         await narrow.PressAsync("F1");
 
-        await narrow.WaitForTextAsync("Available commands");
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("available in the current")), "the first description wrapped at the frame, not at the old indent");
+        await narrow.WaitForTextAsync("Getting started");
+        // The getting-started text comes first, so the list is a page or two down on 16 rows.
+        await narrow.PressAsync("PageDown");
+        await narrow.PressAsync("PageDown");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("viewport down by one")), "a long description wrapped at the frame, not at the old indent");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheHelpIntroOn45Columns_IsWrappedNotCutAtTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("F1");
+
+        await narrow.WaitForTextAsync("Getting started");
+        // Each of these used to lose its second half: "Move focus between p" and "PgUp PgDn: scro".
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("panels and controls")), "the Tab line wrapped");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("scroll it")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Alt+F2", "Remote connections", "WebDAV connection.")]
+    [DataRow("Ctrl+Shift+F1", "BitTorrent", "or its URL.")]
+    [DataRow("Ctrl+Shift+F2", "Workspaces", "Enter brings one")]
+    [DataRow("Ctrl+X", "Passwords", "they are saved.")]
+    public async Task AnEmptyListDialogOn45Columns_WrapsItsHintInsteadOfCuttingIt(string chord, string title, string lastWords)
+    {
+        // The hint is the only guidance on an empty list; on a narrow terminal it used to end in an ellipsis after a few words.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitForTextAsync(title);
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(lastWords, StringComparison.Ordinal)), "the end of the hint");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("…", StringComparison.Ordinal) && l.Contains("yet.", StringComparison.Ordinal)), narrow.Screen.Dump());
+    }
+
+    [Timeout(180_000)]
+    [TestMethod]
+    [DataRow(45, 16)]
+    [DataRow(60, 16)]
+    [DataRow(60, 14)]
+    public async Task TheSettingsPagesOnAShortTerminal_LeaveTheDialogsBottomFrameWhole(int width, int height)
+    {
+        // A page is as tall as the dialog allows, and controls below it were painted over the frame: blanks on the Global page, and the
+        // order hint ("Shift+F11 changes the focu") on the Panels page.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: width, height: height);
+
+        await narrow.PressAsync("Shift+F8");
+        await narrow.WaitForTextAsync("Ctrl+Up/Down:page");
+
+        for (int page = 1; page <= 8; page++)
+        {
+            string[] lines = narrow.Screen.Lines.ToArray();
+            int hintRow = Array.FindIndex(lines, l => l.Contains("Ctrl+Up/Down:page"));
+            Assert.IsTrue(hintRow >= 0 && hintRow + 1 < lines.Length, $"page {page}: " + narrow.Screen.Dump());
+            int left = lines[hintRow].LastIndexOf('║', lines[hintRow].IndexOf("Ctrl+Up/Down:page", StringComparison.Ordinal));
+            string frame = lines[hintRow + 1];
+            int right = frame.IndexOf('╝', left + 1);
+            Assert.IsTrue(left >= 0 && right > left && frame[left] == '╚' && frame[(left + 1)..right].All(c => c == '═'), $"page {page}: the bottom frame is broken" + Environment.NewLine + narrow.Screen.Dump());
+            await narrow.PressAsync("Ctrl+Down");
+            await Task.Delay(300);
+        }
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDuplicateFinderOn45Columns_ShowsTheWholeDeleteQuestionIncludingItsYesOrNo()
+    {
+        // The question is one status line with the answer at its end; clipped at the frame, the y/n was the part that went.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(
+            (left, _) =>
+            {
+                File.WriteAllText(Path.Combine(left, "copy-one.txt"), "the same bytes in both files");
+                File.WriteAllText(Path.Combine(left, "copy-two.txt"), "the same bytes in both files");
+            },
+            width: 45,
+            height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+F6");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("could be freed", StringComparison.Ordinal)), "the groups of duplicates");
+
+        await narrow.PressAsync("a");
+        await narrow.PressAsync("Delete");
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("y/n", StringComparison.Ordinal)), "the end of the delete question");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Delete 1 files", StringComparison.Ordinal)), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+Shift+F12", "Disk usage")]
+    [DataRow("Ctrl+Shift+F6", "Duplicate files")]
+    public async Task ThePathAtTheTopOfADialogOn45Columns_KeepsTheFolderItEndsIn(string chord, string title)
+    {
+        // Cut at the frame, the path ended in "\iTermin": the folder the dialog is about was the part that went.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitForTextAsync(title);
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("║ C:") && l.Contains("...") && l.Contains(@"\left")), "the dialog's own path line, shortened in the middle, still ending in the left panel's folder");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheBluetoothListOn45Columns_ShowsEachDevicesWholeState()
+    {
+        // The state ends the row, and was the part cut: "pair", "near".
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+J");
+
+        await narrow.WaitForTextAsync("Bluetooth devices");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("paired")) && s.Lines.Any(l => l.Contains("nearby")), "the states, whole");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheStocksStatusLinesOn45Columns_NeverEndInHalfAFigure()
+    {
+        // "live, updated 19:0" and "last tr" were cut at the frame; a part of the line is now shown whole or not at all.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Alt+F7");
+
+        await narrow.WaitForTextAsync("Stocks");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("prev close")), "the details of the stock under the cursor");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"updated(?! \d{2}:\d{2}:\d{2})")), narrow.Screen.Dump());
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"last tr(?!ade \d{4}-\d{2}-\d{2} \d{2}:\d{2})")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheSystemSettingsCaptionOn45Columns_IsWrappedAndTheListKeepsItsRows()
+    {
+        // "The name this machine goes by on the ne" ended at the frame; the caption wraps, and the list gives up the row it takes.
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+F10");
+
+        await narrow.WaitForTextAsync("System Settings");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("network.")), "the end of the caption");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Computer name")), narrow.Screen.Dump());
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Description")), narrow.Screen.Dump());
+    }
+
+    [Timeout(180_000)]
+    [TestMethod]
+    public async Task TheSettingsPagesAndTheCalculatorModes_AreGermanAfterARestartInGerman()
+    {
+        // Their names were fixed English text, in the middle of a German dialog: "1-Global ... 8-Screen saver", "Basic", "Scientific".
+        TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        try
+        {
+            await app.SwitchToGermanAsync();
+            app = await app.RestartAsync();
+
+            await app.PressAsync("Shift+F8");
+            await app.WaitForTextAsync("1-Allgemein");
+            await app.WaitForTextAsync("8-Bildschirmschoner");
+            await app.PressAsync("Esc");
+            await app.WaitForNoDialogAsync();
+
+            await app.PressAsync("Ctrl+A");
+            await app.WaitForTextAsync("Wissenschaftlich");
+            await app.WaitForTextAsync("Standard");
+        }
+        finally
+        {
+            await app.DisposeAsync();
+        }
+    }
+
+    [Timeout(180_000)]
+    [TestMethod]
+    public async Task TheDriveListInGerman_SaysBezeichnungAndNamesTheTypeInGerman()
+    {
+        // "Label:" and the drive type's enum name ("Fixed") were English in the Disk manager's list.
+        TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        try
+        {
+            await app.SwitchToGermanAsync();
+            app = await app.RestartAsync();
+
+            await app.PressAsync("Alt+F9");
+            await app.WaitForTextAsync("Bezeichnung:");
+            await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Bezeichnung:") && l.Contains("Fest")), "the type of a fixed drive, in German");
+            Assert.IsFalse(app.Screen.Lines.Any(l => l.Contains("Label:") || l.Contains(" Fixed ")), app.Screen.Dump());
+        }
+        finally
+        {
+            await app.DisposeAsync();
+        }
     }
 
     [Timeout(120_000)]
@@ -603,8 +800,29 @@ public class SmallScreenDialogsTest
 
         await narrow.WaitForTextAsync("Currency Converter");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Amount:")), "the boxes");
-        string row = narrow.Screen.Lines.First(l => l.Contains("Amount:"));
-        Assert.IsTrue(row[row.IndexOf("To:", StringComparison.Ordinal)..].Contains('║'), narrow.Screen.Dump());
+        // Stacked or side by side, every field ends inside the frame.
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("To:")), "the last box");
+        foreach (string caption in new[] { "Amount:", "From:", "To:" })
+        {
+            string row = narrow.Screen.Lines.First(l => l.Contains(caption));
+            Assert.IsTrue(row[row.IndexOf(caption, StringComparison.Ordinal)..].Contains('║'), narrow.Screen.Dump());
+        }
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCurrencyAmountOn45Columns_HasRoomToTypeIn()
+    {
+        // Side by side the box carried its caption and left the amount a column or two: "Amount: [> From: [E]".
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+Shift+F5");
+
+        await narrow.WaitForTextAsync("Currency Converter");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Amount:")), "the amount box");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, @"Amount: \[1 {8,}\]")), narrow.Screen.Dump());
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("From: [EUR")), "the first currency");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("To: [USD")), "the second currency");
     }
 
     [Timeout(120_000)]

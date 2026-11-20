@@ -146,7 +146,17 @@ public class DuplicateFinderDialog : Dialog
         }
     }
 
-    private int VisibleRows => Math.Max(1, (int)_lines.ViewSize.Height - 4);
+    /// <summary>The most rows the status line may take: the answer to a question ("... y/n") is at its end, so it wraps rather than being cut.</summary>
+    private const int MaxStatusRows = 3;
+
+    /// <summary>The status as it is drawn: wrapped to the dialog's width, so the end of a long one (the y/n of the delete question) is not cut off.</summary>
+    private List<string> StatusLines()
+    {
+        var wrapped = _status.WrapWords(Math.Max(20, (int)_lines.ViewSize.Width));
+        return wrapped.Count == 0 ? [string.Empty] : wrapped.Take(MaxStatusRows).ToList();
+    }
+
+    private int VisibleRows => Math.Max(1, (int)_lines.ViewSize.Height - HeaderLines - StatusLines().Count);
 
     /// <summary>Lays the groups out as rows: a heading, then its files; remembers which rows are files, which is what the cursor walks.</summary>
     private void BuildRows()
@@ -198,12 +208,17 @@ public class DuplicateFinderDialog : Dialog
 
         void Status()
         {
-            while (lines.Count < height - 1)
+            var status = StatusLines();
+            while (lines.Count < height - status.Count)
             {
                 lines.Add(default);
             }
 
-            lines.Add(new(_status, _statusIsError ? colorScheme.Error : colorScheme.Foreground));
+            foreach (var part in status)
+            {
+                lines.Add(new(part, _statusIsError ? colorScheme.Error : colorScheme.Foreground));
+            }
+
             _lines.Lines = lines;
             StateHasChanged();
         }
@@ -217,14 +232,14 @@ public class DuplicateFinderDialog : Dialog
 
         if (!_scan.IsComplete)
         {
-            lines.Add(new(Say("DupFinder.Looking", "Looking for duplicates in {0}", _scan.Path), colorScheme.Foreground));
+            lines.Add(new(Say("DupFinder.Looking", "Looking for duplicates in {0}", DiskUsageDialog.FitPath(_scan.Path, width - 26)), colorScheme.Foreground));
             lines.Add(new(_scan.Phase switch
             {
                 DuplicateScanPhase.Listing => Say("DupFinder.Listing", "Listing files: {0:N0} so far", _scan.FilesScanned),
                 DuplicateScanPhase.Sampling => Say("DupFinder.Sampling", "Comparing the start of files that are the same size…"),
                 _ => Say("DupFinder.Hashing", "Reading files that still look alike: {0} of {1}", _scan.BytesHashed.ToFileSize(), _scan.BytesToHash.ToFileSize()),
             }, Color.Yellow));
-            lines.Add(new(_scan.Current, Color.Cyan));
+            lines.Add(new(DiskUsageDialog.FitPath(_scan.Current, width), Color.Cyan));
             lines.Add(default);
             lines.Add(new(Say("DupFinder.EscStops", "Esc stops and closes."), colorScheme.Foreground));
             Status();
@@ -238,7 +253,7 @@ public class DuplicateFinderDialog : Dialog
             return;
         }
 
-        lines.Add(new(_scan.Path, Color.Cyan));
+        lines.Add(new(DiskUsageDialog.FitPath(_scan.Path, width), Color.Cyan));
         if (_groups.Count == 0)
         {
             lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Duplicates.None", "No duplicate files among the {0:N0} files looked at."), _scan.FilesScanned), colorScheme.Foreground));

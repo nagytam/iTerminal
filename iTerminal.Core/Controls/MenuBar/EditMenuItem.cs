@@ -25,7 +25,9 @@ public class EditMenuItem : MenuItem
         FileLabelsDialog? fileLabelsDialog = null,
         LabelFilterDialog? labelFilterDialog = null,
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
-        MultiRenameDialog? multiRenameDialog = null)
+        MultiRenameDialog? multiRenameDialog = null,
+        iTerminal.Core.Services.RenameUndoService? renameUndoService = null,
+        INotificationService? notificationService = null)
         : base("Edit", null, [], themeService)
     {
         HotKeyChar = 'E';
@@ -50,8 +52,13 @@ public class EditMenuItem : MenuItem
             // No chord: see MultiRenameDialogCommand. The menu is the way in.
             AddMenuItem(new MenuItem("Multi-rename",    new MultiRenameDialogCommand(multiRenameDialog, contentModelService), [], themeService));
         }
+        if (renameUndoService is not null)
+        {
+            // The panel has its own copy bound to Ctrl+Z; this one is how to find it, and how to run it with the mouse.
+            AddMenuItem(new MenuItem("Undo rename or move\tCtrl+Z", new UndoRenameCommand(renameUndoService, notificationService, contentModelService), [], themeService));
+        }
         AddMenuItem(new MenuItem("-", null, [], themeService));
-        AddMenuItem(new MenuItem("Delete\tF8",      new DeleteDialogCommand(deleteDialog, contentModelService), [], themeService));
+        AddMenuItem(new MenuItem("Delete\tF8",     new DeleteDialogCommand(deleteDialog, contentModelService), [], themeService));
 
         // Marking: what F5, Shift+F6 and F8 act on when more than one row should go. Here as much
         // for the keyboards without a numeric keypad as for finding the keys at all.

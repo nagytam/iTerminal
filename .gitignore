@@ -478,9 +478,10 @@ $RECYCLE.BIN/
 profile.*.json
 .vault_pass
 .idea
-# Claude Code: personal and local files stay out; the project's skills are shared.
+# Claude Code: personal and local files stay out; the project's skills and agents are shared.
 .claude/*
 !.claude/skills/
+!.claude/agents/
 
 *.class
 *.~lock.*
