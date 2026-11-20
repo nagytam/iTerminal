@@ -2115,7 +2115,7 @@
     <value>Intercambiar las filas y las columnas</value>
   </data>
   <data name="Hdf.Status.LongFormCut" xml:space="preserve">
-    <value>; la forma larga se corta a sus primeras {0:N0} celdas</value>
+    <value>; solo se conservan las primeras {0:N0} celdas coincidentes</value>
   </data>
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Consultar cada celda, con una columna por eje (axis0, axis1, ...)</value>

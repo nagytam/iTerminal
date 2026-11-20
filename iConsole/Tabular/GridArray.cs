@@ -152,7 +152,8 @@ public sealed class GridArrayView
         if (rowsAvailable == 0 || columnsAvailable == 0)
         {
             // Nothing to read, but the columns are still named: a file with headers and no rows keeps its headers.
-            return new GridTable(Headers(0, byField, fields, withRowNumbers), [], false, false);
+            int named = (int)Math.Min(columnsAvailable, Math.Max(0, maxColumns));
+            return new GridTable(Headers(named, byField, fields, withRowNumbers), [], false, columnsAvailable > named);
         }
 
         int columns = (int)Math.Min(columnsAvailable, Math.Max(1, maxColumns));
@@ -194,51 +195,110 @@ public sealed class GridArrayView
         return new GridTable(Headers(columns, byField, fields, withRowNumbers), table, rowsTruncated, columnsTruncated);
     }
 
+    /// <summary>The number of cells one block of a streamed query reads: the largest block the query holds at a time.</summary>
+    public const long DefaultChunkCells = 100_000;
+
     /// <summary>
-    /// Every cell of the array as one row: an index column for each axis, then the value. A query over this table selects on the
-    /// axes by name (<c>axis0</c>, <c>axis1</c>, ...), so it can pick any N-dimensional selection a two-axis window cannot show.
-    /// Reads the largest rectangle that fits <paramref name="maxCells"/> cells, which is a prefix of the array in row-major order;
-    /// <see cref="GridTable.RowsTruncated"/> says when that is less than the whole.
+    /// Runs a query over every cell of the array, as the long form: one row per cell, with an index column for each axis and a
+    /// <c>value</c> column. The array is read in blocks of at most <paramref name="chunkCells"/> cells; each block is filtered as it
+    /// arrives, and only the matching rows are kept, so the whole array is searched without holding it. Order and limit then run over
+    /// the matches, so they are correct across blocks. At most <paramref name="maxMatches"/> matches are kept; the result says when
+    /// that cut them short, and its <see cref="GridQueryResult.Matched"/> counts the matches kept.
     /// </summary>
-    public async Task<GridTable> LongFormAsync(long maxCells, CancellationToken cancellationToken)
+    public async Task<GridQueryResult> QueryLongFormAsync(string text, long chunkCells, int maxMatches, CancellationToken cancellationToken)
     {
+        IReadOnlyList<string> headers = LongFormHeaders;
+        GridQueryPlan plan = GridQuery.Parse(text, headers);
+        GridQueryPlan filter = new(plan.From, null, plan.Where, null, false, null);
+        var matched = new List<string[]>();
+        bool truncated = false;
         if (Shape.Any(length => length == 0))
         {
-            return new GridTable(LongFormHeaders, [], false, false);
+            return new GridQueryResult(headers, [], 0);
         }
 
-        long[] count = Rectangle(Shape, Math.Max(1, maxCells));
-        long total = Shape.Aggregate(1L, (product, length) => product * length);
-        long read = count.Aggregate(1L, (product, length) => product * length);
-        var start = new long[Rank];
-        IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, count, cancellationToken);
-        var table = new List<string[]>((int)read);
-        var coordinate = new long[Rank];
-        for (long at = 0; at < read; at++)
+        // The trailing axes that fit in one block are read whole; the leading ones are walked one index at a time.
+        int split = Rank;
+        long inner = 1;
+        while (split > 0 && inner * Shape[split - 1] <= Math.Max(1, chunkCells))
+        {
+            split--;
+            inner *= Shape[split];
+        }
+
+        var index = new long[split];
+        bool more = true;
+        while (more && !truncated)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var start = new long[Rank];
+            var count = new long[Rank];
+            for (int axis = 0; axis < Rank; axis++)
+            {
+                start[axis] = axis < split ? index[axis] : 0;
+                count[axis] = axis < split ? 1 : Shape[axis];
+            }
+
+            IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, count, cancellationToken);
+            foreach (string[] row in GridQuery.Execute(headers, LongRows(start, count, cells), filter).Rows)
+            {
+                if (matched.Count >= maxMatches)
+                {
+                    truncated = true;
+                    break;
+                }
+
+                matched.Add(row);
+            }
+
+            more = Advance(index, split);
+        }
+
+        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit));
+        return shaped with { Matched = matched.Count, Truncated = truncated };
+    }
+
+    /// <summary>The cells of a block as long-form rows: the coordinate of each cell on every axis, then the cell.</summary>
+    private List<string[]> LongRows(long[] start, long[] count, IReadOnlyList<string> cells)
+    {
+        var rows = new List<string[]>();
+        var local = new long[Rank];
+        long total = count.Aggregate(1L, (product, length) => product * length);
+        for (long at = 0; at < total; at++)
         {
             var line = new string[Rank + 1];
             for (int axis = 0; axis < Rank; axis++)
             {
-                line[axis] = coordinate[axis].ToString(System.Globalization.CultureInfo.InvariantCulture);
+                line[axis] = (start[axis] + local[axis]).ToString(System.Globalization.CultureInfo.InvariantCulture);
             }
 
             line[Rank] = at < cells.Count ? cells[(int)at] : string.Empty;
-            table.Add(line);
-            for (int axis = Rank - 1; axis >= 0; axis--)
-            {
-                if (++coordinate[axis] < count[axis])
-                {
-                    break;
-                }
-
-                coordinate[axis] = 0;
-            }
+            rows.Add(line);
+            Advance(local, count, Rank);
         }
 
-        return new GridTable(LongFormHeaders, table, read < total, false);
+        return rows;
     }
 
-    /// <summary>The headers of <see cref="LongFormAsync"/>: <c>axis0</c> ... one per axis, then <c>value</c>.</summary>
+    /// <summary>Steps an index to the next position over the first <paramref name="axes"/> axes, last axis fastest; false when it has wrapped round.</summary>
+    private bool Advance(long[] index, int axes) => Advance(index, Shape, axes);
+
+    private static bool Advance(long[] index, IReadOnlyList<long> bounds, int axes)
+    {
+        for (int axis = axes - 1; axis >= 0; axis--)
+        {
+            if (++index[axis] < bounds[axis])
+            {
+                return true;
+            }
+
+            index[axis] = 0;
+        }
+
+        return false;
+    }
+
+    /// <summary>The headers of the long form: <c>axis0</c> ... one per axis, then <c>value</c>.</summary>
     public IReadOnlyList<string> LongFormHeaders =>
         [.. Enumerable.Range(0, Rank).Select(axis => "axis" + axis.ToString(System.Globalization.CultureInfo.InvariantCulture)), "value"];
 

@@ -482,10 +482,12 @@ lands in the query line and runs only when the user presses Enter, like any quer
   so a dataset of any rank is one view: `+ -` step the fixed axes, `[ ]` choose the active one, and `T` swaps the rows and the
   columns. CSV and Parquet rows are a two-axis `InMemoryGridArray`. The query runs over the table the view materialises
   (`GridQueryRun.RunOverAsync`), so every in-memory viewer reads its data through the same backend. SQLite is a relation, not an
-  array: the SQL does the relational work (filter, order, limit), and each result is wrapped as a two-axis array in memory and shown
-  through the same view. `FROM cells` in the HDF5 query line runs the query over the long form of the whole array
-  (`GridArrayView.LongFormAsync`): one row per cell, with an `axis0` ... `axisN` column for each axis and `value`, read to the
-  cell cap (`MaxCells`, with the rows cut to a rectangle at the start of the array). The status line says when that cap cut it.
+  array. A SQLite `SELECT` or `WITH` is a `SqlQueryArray`: the column names and the row count come from two queries, and each block
+  the view asks for is the statement with `LIMIT` and `OFFSET`, so the viewer reads only the window it shows (`PRAGMA` and other
+  non-row statements keep the direct path, because they cannot be wrapped as a subquery). `FROM cells` in the HDF5 query line runs
+  the query over every cell of the array (`GridArrayView.QueryLongFormAsync`): the array is read in blocks of at most
+  `DefaultChunkCells` cells, each block is filtered as it arrives, and only the matches are kept (at most `MaxMatches`; the status
+  line says when that cap cut them). Order and limit then run over the matches, so they hold across blocks.
 - **One parser, three uses.** `GridQuery.Parse` turns the text into a `GridQueryPlan` (table, columns, a `GridCondition` of OR-joined
   AND groups, order, limit). `GridQuery.Execute` runs a plan over rows in memory; `GridQuery.Run` is the two together. `GridQuery.ToSql`
   renders the same plan as one SQLite statement. A plan is inspectable, so the AI draft and the SQLite viewer use the same checks.

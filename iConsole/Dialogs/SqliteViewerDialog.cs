@@ -158,7 +158,31 @@ public class SqliteViewerDialog : Dialog
         _pendingGeneration = ++_generation;
         string path = Url.Path;
         // The reader opens the file, so the whole call runs on a worker thread, never on the key or render path.
-        _query = Task.Run(async () => await _reader.QueryAsync(path, sql, MaxRows, token));
+        _query = Task.Run(async () => await QueryWindowAsync(path, sql, token));
+    }
+
+    /// <summary>
+    /// Runs a statement and returns the window the grid shows. A <c>SELECT</c> or <c>WITH</c> is read through the array backend, one
+    /// block at a time; any other statement (such as <c>PRAGMA</c>) cannot be wrapped as a subquery and keeps the direct path.
+    /// </summary>
+    private async Task<SqlTable> QueryWindowAsync(string path, string sql, CancellationToken token)
+    {
+        if (!IsRowStatement(sql))
+        {
+            return await _reader.QueryAsync(path, sql, MaxRows, token);
+        }
+
+        var array = new SqlQueryArray(_reader, path, sql);
+        await array.InitializeAsync(token);
+        GridTable window = await GridArrayView.Open(array).MaterializeAsync(MaxRows, int.MaxValue, int.MaxValue, token, withRowNumbers: false);
+        return new SqlTable(window.Headers, window.Rows, window.RowsTruncated);
+    }
+
+    /// <summary>Whether the statement starts with <c>SELECT</c> or <c>WITH</c>: the statements that return rows and can be wrapped.</summary>
+    private static bool IsRowStatement(string sql)
+    {
+        string word = sql.TrimStart().Split([' ', '\t', '\r', '\n', '('], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
+        return string.Equals(word, "SELECT", StringComparison.OrdinalIgnoreCase) || string.Equals(word, "WITH", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>Puts a finished query on screen. A stale or cancelled query is dropped without a word; a failed one keeps the rows on screen.</summary>
@@ -199,11 +223,7 @@ public class SqliteViewerDialog : Dialog
                 SqlTable table = query.Result;
                 _table = table;
                 _textDirty = true;
-                // The result is a two-axis array in memory, shown through the same array view as the other grid viewers.
-                GridTable window = GridArrayView.Open(new InMemoryGridArray(table.Rows, table.Headers))
-                    .MaterializeAsync(int.MaxValue, int.MaxValue, int.MaxValue, CancellationToken.None, withRowNumbers: false)
-                    .GetAwaiter().GetResult();
-                _grid.SetData(window.Headers, window.Rows);
+                _grid.SetData(table.Headers, table.Rows);
                 _statusLabel.Text = StatusFor(table);
             }
 

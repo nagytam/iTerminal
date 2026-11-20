@@ -203,24 +203,41 @@ public class GridArrayViewTest
     }
 
     [TestMethod]
-    public async Task TheLongFormHasOneRowPerCellWithAnIndexPerAxis()
+    public async Task TheLongFormQueryNamesEveryAxisAndTheValue()
     {
-        GridTable table = await GridArrayView.Open(new CoordinateArray([2, 3])).LongFormAsync(100, CancellationToken.None);
+        GridArrayView view = GridArrayView.Open(new CoordinateArray([2, 3]));
 
-        CollectionAssert.AreEqual(new[] { "axis0", "axis1", "value" }, table.Headers.ToArray());
-        Assert.AreEqual(6, table.Rows.Count);
-        CollectionAssert.AreEqual(new[] { "1", "2", "1.2" }, table.Rows[5], "the cell at (1, 2) carries its own coordinates");
-        Assert.IsFalse(table.RowsTruncated);
+        GridQueryResult result = await view.QueryLongFormAsync("SELECT axis0, axis1, value WHERE axis0 = 1 ORDER BY value DESC", 100, 1000, CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "axis0", "axis1", "value" }, result.Headers.ToArray());
+        Assert.AreEqual(3, result.Matched);
+        CollectionAssert.AreEqual(new[] { "1", "2", "1.2" }, result.Rows[0]);
+        Assert.IsFalse(result.Truncated);
     }
 
     [TestMethod]
-    public async Task TheLongFormStopsAtTheCellCapAsAPrefixOfTheArray()
+    public async Task TheWholeArrayIsSearchedWhateverTheBlockSize()
     {
-        GridTable table = await GridArrayView.Open(new CoordinateArray([4, 3, 2])).LongFormAsync(6, CancellationToken.None);
+        var array = new CoordinateArray([4, 3, 2]);
+        const string query = "WHERE axis2 = 1 ORDER BY value LIMIT 5";
 
-        Assert.AreEqual(6, table.Rows.Count, "a rectangle of at most six cells");
-        CollectionAssert.AreEqual(new[] { "0", "0", "0", "0.0.0" }, table.Rows[0], "the first cell");
-        CollectionAssert.AreEqual(new[] { "0", "2", "1", "0.2.1" }, table.Rows[5], "the last cell of the rectangle, in row-major order");
-        Assert.IsTrue(table.RowsTruncated);
+        GridQueryResult oneCellAtATime = await GridArrayView.Open(array).QueryLongFormAsync(query, 1, 1000, CancellationToken.None);
+        GridQueryResult aFewCells = await GridArrayView.Open(array).QueryLongFormAsync(query, 5, 1000, CancellationToken.None);
+        GridQueryResult wholeArray = await GridArrayView.Open(array).QueryLongFormAsync(query, 100_000, 1000, CancellationToken.None);
+
+        CollectionAssert.AreEqual(wholeArray.Rows.Select(r => string.Join('|', r)).ToArray(), oneCellAtATime.Rows.Select(r => string.Join('|', r)).ToArray());
+        CollectionAssert.AreEqual(wholeArray.Rows.Select(r => string.Join('|', r)).ToArray(), aFewCells.Rows.Select(r => string.Join('|', r)).ToArray());
+        Assert.AreEqual(12, wholeArray.Matched, "every cell with axis2 = 1 is a match: 4 x 3");
+        Assert.AreEqual(5, wholeArray.Rows.Count, "the limit applies across the blocks");
+    }
+
+    [TestMethod]
+    public async Task TheMatchCapSaysSoAndKeepsOnlyTheFirstMatches()
+    {
+        GridQueryResult result = await GridArrayView.Open(new CoordinateArray([4, 3, 2])).QueryLongFormAsync("WHERE axis0 >= 2", 5, 4, CancellationToken.None);
+
+        Assert.AreEqual(4, result.Matched);
+        Assert.AreEqual(4, result.Rows.Count);
+        Assert.IsTrue(result.Truncated);
     }
 }

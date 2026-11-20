@@ -64,17 +64,13 @@ public sealed class GridQueryRun
     }
 
     /// <summary>
-    /// Runs <paramref name="text"/> over the long form of an array: one row per cell, an index column per axis, read to the cell cap.
-    /// The result says when the cap cut it short.
+    /// Runs <paramref name="text"/> over every cell of an array, streamed in blocks (see <see cref="GridArrayView.QueryLongFormAsync"/>).
+    /// The result says when the match cap cut it short.
     /// </summary>
-    public void StartLongForm(GridArrayView view, long maxCells, string text)
+    public void StartLongForm(GridArrayView view, string text, int maxMatches)
     {
         _pendingGeneration = ++_generation;
-        _task = System.Threading.Tasks.Task.Run(async () =>
-        {
-            GridTable table = await view.LongFormAsync(maxCells, CancellationToken.None);
-            return GridQuery.Run(table.Headers, table.Rows, text) with { Truncated = table.RowsTruncated };
-        });
+        _task = System.Threading.Tasks.Task.Run(() => view.QueryLongFormAsync(text, GridArrayView.DefaultChunkCells, maxMatches, CancellationToken.None));
     }
 
     /// <summary>Drops the query in progress.</summary>

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Helper;
@@ -21,10 +22,33 @@ public class SqliteViewerDialogTest
 
         public List<string> Queries { get; } = [];
 
-        public Task<SqlTable> QueryAsync(string path, string sql, int maxRows, CancellationToken cancellationToken)
+        /// <summary>
+        /// A statement that is a window of a SELECT (the viewer reads results in blocks) is answered from the table <see cref="Run"/> gives for
+        /// the statement: its column names, its row count, and the rows its LIMIT and OFFSET name.
+        /// </summary>
+        public async Task<SqlTable> QueryAsync(string path, string sql, int maxRows, CancellationToken cancellationToken)
         {
             Queries.Add(sql);
-            return Run(sql, cancellationToken);
+            SqlTable full = await Run(sql, cancellationToken);
+            if (sql.Contains("COUNT(*)", StringComparison.Ordinal))
+            {
+                return new SqlTable(["COUNT(*)"], [[full.Rows.Count.ToString(System.Globalization.CultureInfo.InvariantCulture)]], false);
+            }
+
+            if (sql.EndsWith("LIMIT 0", StringComparison.Ordinal))
+            {
+                return new SqlTable(full.Headers, [], false);
+            }
+
+            System.Text.RegularExpressions.Match window = Regex.Match(sql, @"LIMIT (\d+) OFFSET (\d+)$");
+            if (window.Success)
+            {
+                int limit = int.Parse(window.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+                int offset = int.Parse(window.Groups[2].Value, System.Globalization.CultureInfo.InvariantCulture);
+                return new SqlTable(full.Headers, [.. full.Rows.Skip(offset).Take(limit)], false);
+            }
+
+            return full;
         }
     }
 
@@ -73,7 +97,7 @@ public class SqliteViewerDialogTest
         await dialog.OnInitializeAsync();
         await LandAsync(dialog);
 
-        Assert.AreEqual(SqliteViewerDialog.DefaultQuery, reader.Queries.Single());
+        Assert.IsTrue(reader.Queries.Any(query => query.Contains(SqliteViewerDialog.DefaultQuery, StringComparison.Ordinal)), "the default query is read through the array");
         Assert.AreEqual("0 row(s), 1 column(s)", dialog.Status);
     }
 
@@ -102,14 +126,16 @@ public class SqliteViewerDialogTest
     {
         var reader = new FakeReader
         {
-            Run = (_, _) => Task.FromResult(new SqlTable(["id"], [["1"]], true)),
+            Run = (_, _) => Task.FromResult(new SqlTable(["id"], [.. Enumerable.Range(0, 10_001).Select(i => new[] { i.ToString(System.Globalization.CultureInfo.InvariantCulture) })], false)),
         };
         SqliteViewerDialog dialog = CreateDialog(reader);
 
         await dialog.OnInitializeAsync();
         await LandAsync(dialog);
 
-        Assert.AreEqual("1 row(s), 1 column(s); only the first 10,000 rows are shown", dialog.Status);
+        // The count the reader gives decides the cut: 10,001 rows, of which 10,000 are shown.
+        Assert.AreEqual(10_000, dialog.Grid.RowCount);
+        StringAssert.Contains(dialog.Status, "only the first 10,000 rows are shown");
     }
 
     [TestMethod]
@@ -222,7 +248,7 @@ public class SqliteViewerDialogTest
         await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
         await LandAsync(dialog);
 
-        Assert.IsTrue(reader.Queries.Contains(dialog.QueryText), "Enter runs the draft through the read-only reader");
+        Assert.IsTrue(reader.Queries.Any(query => query.Contains(dialog.QueryText, StringComparison.Ordinal)), "Enter runs the draft through the read-only reader");
     }
 
     [TestMethod]

@@ -2115,7 +2115,7 @@
     <value>Échanger les lignes et les colonnes</value>
   </data>
   <data name="Hdf.Status.LongFormCut" xml:space="preserve">
-    <value>; la forme longue est limitée aux {0:N0} premières cellules</value>
+    <value>; seules les {0:N0} premières cellules correspondantes sont conservées</value>
   </data>
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Interroger chaque cellule, avec une colonne par axe (axis0, axis1, ...)</value>

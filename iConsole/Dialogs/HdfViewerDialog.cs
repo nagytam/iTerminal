@@ -34,6 +34,9 @@ public class HdfViewerDialog : Dialog
     public const int MaxColumns = 100;
     public const int MaxCells = 100_000;
 
+    /// <summary>The most matching cells a FROM cells query keeps; the whole array is searched, but a larger result says so.</summary>
+    public const int MaxMatches = 100_000;
+
     private const string CloseActionView = " [X]";
 
     private readonly IHdfFileReader _reader;
@@ -302,7 +305,7 @@ public class HdfViewerDialog : Dialog
         if (_view is not null && AsksForLongForm(text))
         {
             // FROM cells: the query runs over every cell of the array, one row each, with a column per axis.
-            _queryRun.StartLongForm(_view, MaxCells, text);
+            _queryRun.StartLongForm(_view, text, MaxMatches);
             return;
         }
 
@@ -418,7 +421,7 @@ public class HdfViewerDialog : Dialog
 
         if (_longFormCut)
         {
-            status += string.Format(UiText.Get("Hdf.Status.LongFormCut", "; the long form is cut to its first {0:N0} cells"), MaxCells);
+            status += string.Format(UiText.Get("Hdf.Status.LongFormCut", "; only the first {0:N0} matching cells are kept"), MaxMatches);
         }
 
         _statusLabel.Text = status;

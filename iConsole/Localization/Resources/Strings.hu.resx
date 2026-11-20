@@ -2115,7 +2115,7 @@
     <value>A sorok és oszlopok felcserélése</value>
   </data>
   <data name="Hdf.Status.LongFormCut" xml:space="preserve">
-    <value>; a hosszú forma az első {0:N0} cellára van vágva</value>
+    <value>; csak az első {0:N0} egyező cella marad meg</value>
   </data>
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Minden cella lekérdezése, tengelyenként egy oszloppal (axis0, axis1, ...)</value>

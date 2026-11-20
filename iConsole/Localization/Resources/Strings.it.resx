@@ -2115,7 +2115,7 @@
     <value>Scambia le righe e le colonne</value>
   </data>
   <data name="Hdf.Status.LongFormCut" xml:space="preserve">
-    <value>; la forma lunga è troncata alle prime {0:N0} celle</value>
+    <value>; si conservano solo le prime {0:N0} celle corrispondenti</value>
   </data>
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Interroga ogni cella, con una colonna per asse (axis0, axis1, ...)</value>
