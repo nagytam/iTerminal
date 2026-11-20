@@ -13,6 +13,9 @@ internal sealed class FileShareRequestHandler
 {
     private const int MaxConcurrentReads = 4;
 
+    /// <summary>The longest a single chunk may take to be read or sent before the connection is closed.</summary>
+    internal static readonly TimeSpan IdleLimit = TimeSpan.FromSeconds(30);
+
     private readonly IReadOnlyList<string> _roots;
     private readonly byte[] _token;
 
@@ -185,7 +188,7 @@ internal sealed class FileShareRequestHandler
             if (method == "GET")
             {
                 await using FileStream source = new(file, FileMode.Open, FileAccess.Read, FileShare.Read, 81920, useAsync: true);
-                await source.CopyToAsync(output, cancellationToken);
+                await CopyWithIdleLimitAsync(source, output, cancellationToken);
             }
 
             return 200;
@@ -193,6 +196,27 @@ internal sealed class FileShareRequestHandler
         finally
         {
             ReadSlots.Release();
+        }
+    }
+
+    /// <summary>
+    /// Copies chunk by chunk, each one with its own deadline, so a client that stops reading is cut off after the
+    /// limit and frees its connection and read slot, rather than holding them until the share stops.
+    /// </summary>
+    private static async Task CopyWithIdleLimitAsync(Stream source, Stream output, CancellationToken cancellationToken)
+    {
+        byte[] buffer = new byte[81920];
+        while (true)
+        {
+            using CancellationTokenSource step = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            step.CancelAfter(IdleLimit);
+            int read = await source.ReadAsync(buffer.AsMemory(), step.Token);
+            if (read == 0)
+            {
+                return;
+            }
+
+            await output.WriteAsync(buffer.AsMemory(0, read), step.Token);
         }
     }
 

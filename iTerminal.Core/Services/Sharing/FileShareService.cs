@@ -39,6 +39,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     private readonly SemaphoreSlim _gate = new(1, 1);
     private volatile FileShareState _state = FileShareState.Stopped;
     private int _requests;
+    private Task _lastStop = Task.CompletedTask;
 
     private TcpListener? _listener;
     private CancellationTokenSource? _cancellation;
@@ -50,6 +51,8 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     public async Task<FileShareStartResult> StartAsync(IReadOnlyList<string> selectedPaths, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(selectedPaths);
+        // A stop that was asked for before this start (the dialog closed, then reopened) finishes first.
+        await _lastStop.WaitAsync(cancellationToken).ConfigureAwait(false);
         await _gate.WaitAsync(cancellationToken);
         try
         {
@@ -85,20 +88,31 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
                 return FileShareStartResult.Failed("FileTransfer.BindFailed");
             }
 
-            int port = ((IPEndPoint)listener.LocalEndpoint).Port;
-            string token = FileShareToken.Create();
-            X509Certificate2 certificate = TlsCertificateFactory.CreateSelfSigned(address, DateTimeOffset.UtcNow, CertificateValidity);
-            string url = $"https://{address}:{port}/{token}/";
-            bool[,] qr = QrEncoder.Encode(Encoding.UTF8.GetBytes(url));
+            X509Certificate2? certificate = null;
+            try
+            {
+                int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+                string token = FileShareToken.Create();
+                certificate = TlsCertificateFactory.CreateSelfSigned(address, DateTimeOffset.UtcNow, CertificateValidity);
+                string url = $"https://{address}:{port}/{token}/";
+                bool[,] qr = QrEncoder.Encode(Encoding.UTF8.GetBytes(url));
 
-            CancellationTokenSource cancellation = new();
-            FileShareRequestHandler handler = new(selectedPaths, token);
-            _listener = listener;
-            _certificate = certificate;
-            _cancellation = cancellation;
-            _acceptLoop = Task.Run(() => AcceptLoopAsync(listener, certificate, handler, cancellation.Token));
-            SetState(FileShareStatus.Running, url, qr, null);
-            return new FileShareStartResult(true, url, null);
+                CancellationTokenSource cancellation = new();
+                FileShareRequestHandler handler = new(selectedPaths, token);
+                _listener = listener;
+                _certificate = certificate;
+                _cancellation = cancellation;
+                _acceptLoop = Task.Run(() => AcceptLoopAsync(listener, certificate, handler, cancellation.Token));
+                SetState(FileShareStatus.Running, url, qr, null);
+                return new FileShareStartResult(true, url, null);
+            }
+            catch (Exception)
+            {
+                listener.Stop();
+                certificate?.Dispose();
+                SetState(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
+                return FileShareStartResult.Failed("FileTransfer.BindFailed");
+            }
         }
         finally
         {
@@ -106,7 +120,14 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         }
     }
 
-    public async Task StopAsync()
+    public Task StopAsync()
+    {
+        Task stop = StopSessionAsync();
+        _lastStop = stop;
+        return stop;
+    }
+
+    private async Task StopSessionAsync()
     {
         TcpListener? listener;
         CancellationTokenSource? cancellation;
@@ -154,9 +175,12 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         _listener = null;
         _acceptLoop = null;
         _certificate = null;
+        X509Certificate2? certificate = _certificate;
+        _certificate = null;
         cancellation?.Cancel();
         listener?.Stop();
         cancellation?.Dispose();
+        certificate?.Dispose();
     }
 
     private static TcpListener? BindFirstFreePort()
@@ -188,9 +212,15 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
             {
                 client = await listener.AcceptTcpClientAsync(cancellationToken);
             }
-            catch (Exception)
+            catch (Exception) when (cancellationToken.IsCancellationRequested)
             {
                 break;
+            }
+            catch (Exception)
+            {
+                // A connection reset while accepting is not a reason to stop answering the others.
+                await Task.Delay(100, CancellationToken.None);
+                continue;
             }
 
             if (!connections.Wait(0))
