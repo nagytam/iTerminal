@@ -30,6 +30,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
     private CancellationTokenSource? _updateCts;
     private int _suppressVisibilityUpdates;
     private int _generation;
+    private bool? _pendingVisibility;
 
     /// <summary>The control the suggestion popup is anchored beneath (the owning text box).</summary>
     public IControl? Owner { get; set; }
@@ -108,7 +109,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
-        UpdateMatches(_textModel.Lines.FirstOrDefault() ?? string.Empty, CurrentGeneration);
+        UpdateMatches(_textModel.Lines.FirstOrDefault() ?? string.Empty, CurrentGeneration, onUiThread: true);
     }
 
     public override void Draw(IBuffer buffer)
@@ -161,6 +162,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
         lock (_updateGate)
         {
             Interlocked.Increment(ref _generation);
+            _pendingVisibility = null;
             base.Hide();
 
             // Unconditionally, not only when IsOpen: the popup attaches itself to the root, so a show
@@ -205,7 +207,28 @@ public class AutoCompletion : Window, ITransientOverlayHost
         }, token);
     }
 
-    private void UpdateMatches(string value, int generation)
+    /// <summary>
+    /// Called on the UI thread (the control tree is only touched there): applies the visibility a
+    /// background match update decided on.
+    /// </summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+
+        bool? visible;
+        lock (_updateGate)
+        {
+            visible = _pendingVisibility;
+            _pendingVisibility = null;
+        }
+
+        if (visible is not null)
+        {
+            ApplyVisibility(visible.Value);
+        }
+    }
+
+    private void UpdateMatches(string value, int generation, bool onUiThread = false)
     {
         CompletionModel.UpdateMatchingValues(value);
 
@@ -229,7 +252,17 @@ public class AutoCompletion : Window, ITransientOverlayHost
 
             var visible = CompletionModel.MatchingValues.Any()
                 && Interlocked.Exchange(ref _suppressVisibilityUpdates, 0) == 0;
-            ApplyVisibility(visible);
+
+            if (onUiThread)
+            {
+                _pendingVisibility = null;
+                ApplyVisibility(visible);
+            }
+            else
+            {
+                // A worker must not touch the control tree: hand the result to OnIdle.
+                _pendingVisibility = visible;
+            }
         }
     }
 
