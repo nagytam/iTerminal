@@ -846,9 +846,21 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// The terminal's OSC 9;4 progress: nothing is written, so a run never changes the tab or the taskbar of the developer's
+    /// own terminal.
+    /// </summary>
+    public sealed class TerminalProgress : iConsole.Services.ITerminalProgressService
+    {
+        public void Update(iConsole.Services.TerminalProgressState state, long percentage)
+        {
+        }
+    }
+
+    /// <summary>
     /// The Bluetooth stack of the machine a run is on is never asked: no test scans, pairs, connects or forgets a
     /// device of the person's own. Two made-up devices are listed, so the dialog has rows to act on.
     /// </summary>
+
     public sealed class Bluetooth : Core.Services.Bluetooth.IBluetoothService
     {
         public bool IsSupported => true;

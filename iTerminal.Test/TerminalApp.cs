@@ -185,6 +185,8 @@ public sealed class TerminalApp : IAsyncDisposable
 
                 // The production logger writes iTerminal.log into the working directory.
                 services.AddSingleton<Serilog.ILogger>(Serilog.Core.Logger.None);
+                // The terminal's progress sequence never reaches the developer's own terminal during a run.
+                services.AddSingleton<iConsole.Services.ITerminalProgressService, SandboxServices.TerminalProgress>();
 
                 // Nothing reaches outside the machine: no network scan, no WinGet, no quote server.
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();

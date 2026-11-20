@@ -96,6 +96,8 @@ public static class iConsoleApplicationBuilderExtension
         // The terminal's own title and desktop notifications (OSC 2, OSC 9 / 777, the bell).
         services.AddSingleton<ITerminalTitleService>(provider => new TerminalTitleService(ownership: provider.GetRequiredService<ConsoleOwnership>()));
         services.AddSingleton<ITerminalNotificationService>(provider => new TerminalNotificationService(ownership: provider.GetRequiredService<ConsoleOwnership>()));
+        // The terminal's own progress indicator (OSC 9;4, Windows Terminal), which the taskbar progress also drives.
+        services.AddSingleton<ITerminalProgressService>(provider => new TerminalProgressService(ownership: provider.GetRequiredService<ConsoleOwnership>()));
         // The language the interface is shown in; the app adds its own resources and a store for the choice.
         services.AddSingleton<iConsole.Localization.ILocalizer>(provider =>
         {

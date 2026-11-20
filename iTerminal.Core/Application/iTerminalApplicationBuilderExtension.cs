@@ -586,11 +586,13 @@ public static class iTerminalApplicationBuilderExtension
         services.AddHostedService<iTerminal.Core.Services.Clipboard.TextClipboardHostedService>();
         // Stalls of the main loop (a key handler or render pass past its 200 ms budget) go to the log.
         services.AddHostedService<iTerminal.Core.Services.Diagnostics.MainLoopWatchDogLoggingHostedService>();
-        // The taskbar's progress indicator: Windows drives the taskbar button, everywhere else it is a no-op. A job keeps it in
-        // step with the background tasks.
-        services.AddSingleton<iTerminal.Core.Services.Taskbar.ITaskbarProgress>(_ => OperatingSystem.IsWindows()
-            ? new iTerminal.Core.Services.Taskbar.WindowsTaskbarProgress()
-            : iTerminal.Core.Services.Taskbar.NullTaskbarProgress.Instance);
+        // The taskbar's progress indicator: Windows drives the taskbar button, everywhere else it is a no-op; Windows Terminal also
+        // shows it in its tab through OSC 9;4. A job keeps it in step with the background tasks.
+        services.AddSingleton<iTerminal.Core.Services.Taskbar.ITaskbarProgress>(provider => new iTerminal.Core.Services.Taskbar.CompositeTaskbarProgress(
+            OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.Taskbar.WindowsTaskbarProgress()
+                : iTerminal.Core.Services.Taskbar.NullTaskbarProgress.Instance,
+            new iTerminal.Core.Services.Taskbar.TerminalTaskbarProgress(provider.GetRequiredService<iConsole.Services.ITerminalProgressService>())));
         services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Taskbar.TaskbarProgressJob>();
         // The terminal's title follows the folder of the focused panel and is put back when the application stops.
         services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Terminal.TerminalTitleJob>();
