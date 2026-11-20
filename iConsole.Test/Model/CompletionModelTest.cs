@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using iConsole.Model;
 
 namespace iConsole.Test.Model;
@@ -158,5 +159,35 @@ public class CompletionModelTest
         var model = new CompletionModel(completions);
 
         Assert.IsInstanceOfType(model, typeof(ICompletionModel));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CompletionModelUpdateMatchingValuesRaisesOneChangePerUpdate()
+    {
+        var completions = Enumerable.Range(0, 1000).Select(i => $"item{i:D4}").ToArray();
+        var model = new CompletionModel(completions);
+        model.UpdateMatchingValues("item00");
+
+        var changes = new List<NotifyCollectionChangedEventArgs>();
+        model.MatchingValues.CollectionChanged += (_, e) => changes.Add(e);
+
+        model.UpdateMatchingValues("item01");
+
+        Assert.AreEqual(1, changes.Count, "one update must raise one notification, not one per value");
+        Assert.AreEqual(NotifyCollectionChangedAction.Reset, changes[0].Action);
+        Assert.AreEqual(100, model.MatchingValues.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CompletionModelUpdateMatchingValuesReplacesPreviousResult()
+    {
+        var model = new CompletionModel(new[] { "apple", "banana" });
+        model.UpdateMatchingValues("apple");
+        model.UpdateMatchingValues("banana");
+
+        Assert.AreEqual(1, model.MatchingValues.Count);
+        Assert.AreEqual("banana", model.MatchingValues[0]);
     }
 }
