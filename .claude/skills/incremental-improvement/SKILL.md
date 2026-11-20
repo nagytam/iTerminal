@@ -27,26 +27,33 @@ only the artifact and the checklist: it should not inherit the author's reasonin
 - Planning and testing gates: a `general-purpose` agent, given the artifact and the gate checklist.
 - Implementation gate: the `code-review` skill at `medium` (or `high` if the change touches key handling, threads
   or persistence). Do not pass `--fix`; the author applies the fixes so the review stays independent.
-- Integration gate: the user. Merging is outward-facing and hard to reverse, so it is never self-approved.
+- Integration gate: the user. Merging is outward-facing and hard to reverse, so it is never self-approved. This is
+  the one gate that always waits for the user, whatever the design decisions were.
 
 If a reviewer cannot be run (no subagent, no network for `gh`), say so and stop at that gate. Do not pass it.
 
-### Questions raised by a review
+### Decisions and questions: when a gate stops
 
-A reviewer may answer a gate with a question, or with a proposed answer to an open point. The gate never stops on
-a question alone. Sort each question into one of two kinds:
+Gates pass or fail on their checklists, automatically. The user is asked only about **critical design decisions**.
+A decision is critical when it changes something the user has to live with or cannot easily undo:
 
-- **Clear uncertainty about the feature.** The request, the plan or the expected behaviour leaves open what the
-  user wants: which behaviour is correct, which of two readings applies, or what a key, panel or file should do.
-  Only the user can settle this. Stop the gate and ask the user, with the question and the options the reviewer
-  proposed. Do not guess.
-- **Anything else.** Implementation detail, style, architecture, test shape, or a point the reviewer can answer
-  from `CLAUDE.md`, the `Documentation/architecture/*.md` files or the code. Take the reviewer's proposed answer into account:
-  apply it, or write down why it does not apply. Record the question, the proposed answer and the decision in the
-  working record under the gate. The gate then continues without stopping.
+- the behaviour of an existing key, hot key, panel, dialog or file operation, or a new one that takes a key;
+- a persisted setting, a new stored format or a change to the database model;
+- a public API of `iConsole` or `iTerminal.Core`, or a new URL scheme;
+- a choice between materially different designs, where the reviewer's proposed answers lead to different products;
+- anything destructive or outward-facing: deleting user data, pushing to `main`, merging, publishing.
 
-The author makes the call in the second kind and the reviewer checks it at the next gate run. A proposed answer
-that is rejected needs a reason in the working record; an unreasoned rejection is a `FAIL`.
+A reviewer may answer a gate with a question, or with a proposed answer to an open point. Sort each one:
+
+- **Critical design decision, or a clear uncertainty about the feature** (which behaviour is correct, which of two
+  readings applies, what a key, panel or file should do). Stop the gate and ask the user, with the question and the
+  options the reviewer proposed. Do not guess.
+- **Anything else.** Implementation detail, style, architecture, test shape, or a point the reviewer can answer from
+  `CLAUDE.md`, the `Documentation/architecture/*.md` files or the code. Decide it, preferring the reviewer's proposed
+  answer. Record the question, the answer and the reason in the working record under the gate. The gate continues
+  without stopping, and the choice is listed in the final message so the user can redirect it.
+
+A proposed answer that is rejected needs a reason in the working record; an unreasoned rejection is a `FAIL`.
 
 ## Phase 1: Plan
 
@@ -67,8 +74,8 @@ that is rejected needs a reason in the working record; an unreasoned rejection i
 - The governing architecture doc was read, and the plan follows its rules.
 - The tests can fail for the reason the change is needed, not only for a symptom.
 - Every choice that was made alone is stated, so the user can redirect it.
-- Every open question is either answered from the sources above, or stopped on as a clear feature uncertainty
-  (see *Questions raised by a review*).
+- Every open question is either answered from the sources above, or stopped on as a critical design decision or a
+  clear feature uncertainty (see *Decisions and questions: when a gate stops*).
 
 On `FAIL`, revise the plan and review it again. Do not start the implementation on a failed plan.
 
@@ -94,15 +101,15 @@ explained. The reviewer also checks:
 - No new service acts on the real machine without a sandbox replacement.
 - New user-visible strings are in all six `.resx` files, if the change adds any.
 
-Review questions follow *Questions raised by a review*: a feature uncertainty stops the gate for the user; any
-other question is answered from the code and docs, or by the reviewer's proposed answer, and recorded.
+Review questions follow *Decisions and questions: when a gate stops*: a critical design decision stops the gate for
+the user; any other question is decided from the code and docs, or by the reviewer's proposed answer, and recorded.
 
 On `FAIL`, fix the findings in the working tree, then run the gate again. Commit once it passes.
 
 Then, **before any test run starts**, push the branch with `git push -u github <branch>` and open a **draft** pull
 request with `gh pr create --draft --base main`. The body holds the working record so far (plan, implementation
-gate) and an unticked test plan. Bind it with the `ccd_pr` tools. The draft makes the work visible and lets CI start
-on the pushed commit while the local runs go. Fixes made in phase 3 are committed and pushed to the same branch.
+gate) and an unticked test plan. Record the PR URL in the working record. The draft makes the work visible and lets CI
+start on the pushed commit while the local runs go. Fixes made in phase 3 are committed and pushed to the same branch.
 
 ## Phase 3: Test
 
@@ -122,8 +129,8 @@ Starts only once the draft pull request exists. **Output.** Test results, pasted
 - Each failure that remains is shown to exist on `main` too, or is fixed.
 - The test run did not touch the real machine (`DataDirectory` points at a temp folder; launchers are sandboxed).
 
-Review questions follow *Questions raised by a review*: a feature uncertainty stops the gate for the user; any
-other question is answered from the code and docs, or by the reviewer's proposed answer, and recorded.
+Review questions follow *Decisions and questions: when a gate stops*: a critical design decision stops the gate for
+the user; any other question is decided from the code and docs, or by the reviewer's proposed answer, and recorded.
 
 On `FAIL`, return to phase 2 for the fix, then re-run the tests from step 1.
 
@@ -143,7 +150,8 @@ On changes requested, return to the phase they concern and run its gate again, t
 
 - A gate that cannot be run is a stop, not a pass.
 - Two failed gates for the same phase: stop and report to the user with both sets of findings.
-- A review that raises a clear uncertainty about the feature: stop that gate and ask the user. Other review
-  questions are answered and recorded, and do not stop the workflow.
-- A plan that needs a decision only the user can make: stop at phase 1 and ask.
+- A review that raises a critical design decision or a clear uncertainty about the feature: stop that gate and ask
+  the user. Other review questions are decided and recorded, and do not stop the workflow.
+- A plan that contains a critical design decision: stop at phase 1 and ask. Any other choice goes into the plan's
+  list of choices made without asking.
 - Never skip a gate because the change looks small. A one-line fix still goes through all four gates.
