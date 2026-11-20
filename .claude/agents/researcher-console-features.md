@@ -1,5 +1,5 @@
 ---
-name: researcher-console-libraries
+name: researcher-console-features
 description: Researches console and terminal UI libraries online, checks their features against iConsole with a source search, and creates or updates Documentation/research/console-libraries-overview.md. Use when the user asks to compare iConsole with other console libraries, add a survey of libraries, or refresh the missing-features list.
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 model: haiku

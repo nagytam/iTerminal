@@ -115,7 +115,7 @@ Detailed conventions, including the end-to-end suite and `ConsoleAppDriver` auto
 
 Each improvement goes through `/incremental-improvement` (`.claude/skills/incremental-improvement/SKILL.md`): one branch cut from `main`, one PR, four phases (plan, implement, test, integrate into main). Each phase ends in a review gate that must pass before the next phase starts. Merging into `main` waits for the user's approval.
 
-One more project skill: `/fix-main` (`.claude/skills/fix-main/SKILL.md`) repairs a failing "Build and test" or "Release builds" pipeline on `main` through a branch and PR. The `researcher-console-libraries` agent (`.claude/agents/researcher-console-libraries.md`) adds a survey of other console UI libraries to `Documentation/architecture/ui-framework/tui-library-comparison.md`.
+One more project skill: `/fix-main` (`.claude/skills/fix-main/SKILL.md`) repairs a failing "Build and test" or "Release builds" pipeline on `main` through a branch and PR. Three research agents in `.claude/agents/` each add a survey to a document in `Documentation/research/`: `researcher-console-features` (other console UI libraries, `console-libraries-overview.md`), `researcher-security-features` (security features and tools, `security-features-overview.md`) and `researcher-ai-features` (AI features and protocols, `ai-features-overview.md`).
 
 `.claude/skills` also vendors the C#-relevant subset of the .NET team's [skills](https://github.com/dotnet/skills): C# language, MSBuild, NuGet, testing, diagnostics and .NET 11. `csharp-expert` is the routing entry point, and `.claude/skills/NOTICE.md` records the source commit, license and local changes.
 
