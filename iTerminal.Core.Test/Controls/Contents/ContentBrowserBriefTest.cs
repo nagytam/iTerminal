@@ -64,7 +64,7 @@ public class ContentBrowserBriefTest
     {
         var contentModelService = new Mock<IContentModelService>().Object;
         var taskManager = new Mock<TaskManager>(MockBehavior.Loose).Object;
-        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, contentModelService).Object;
+        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, contentModelService, null).Object;
 
         return new ContentBrowser("Panel", contentModelService, terminalModel, taskManager, UiTestHelper.TestTheme())
         {

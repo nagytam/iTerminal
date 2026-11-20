@@ -34,6 +34,12 @@ public class ExecuteCommand(
 
     public override Task ExecuteAsync(object? arg)
     {
+        // A command already running (typed, or another program) owns the command line and the session: this one waits.
+        if (terminalModel.IsRunning || terminalModel.ShellSessions is { IsBusy: true })
+        {
+            return Task.CompletedTask;
+        }
+
         var entry = contentModel.FilteredEntries[(int)contentModel.CursorPosition.Y];
 
         terminalModel.Command.Command = ProgramFile.CommandFor(entry.Name);

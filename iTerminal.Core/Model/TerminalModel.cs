@@ -1,20 +1,30 @@
 ﻿using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Tasks;
+using iTerminal.Core.Services.Shell;
 using iTerminal.Core.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace iTerminal.Core.Model;
 
+/// <param name="shellSessions">
+/// The long-lived shell the commands run in, or null for the one-shot path (every local command then runs as it
+/// always has). Registered as a singleton, so the command log and Enter on a program share it.
+/// </param>
 public class TerminalModel(
     TaskManager taskManager,
-    IContentModelService contentModelService
-    ) 
+    IContentModelService contentModelService,
+    ILocalShellSessionService? shellSessions = null
+    )
     : ITerminalModel, INotifyPropertyChanged
 {
     private ITerminalCommand _command = new TerminalCommand();
     private readonly TaskManager _taskManager = taskManager;
+
+    /// <summary>The shell session the command log runs in, or null when there is none.</summary>
+    public ILocalShellSessionService? ShellSessions { get; } = shellSessions;
 
     public ITerminalCommand Command 
     { 
@@ -66,11 +76,14 @@ public class TerminalModel(
         command.Output = null;
         command.Error = null;
 
+        // "shell" is the app's own line, like "cd": it changes the session, so it is not sent to the shell.
+        var shellArgument = ShellLineArgument(command.Command);
         var contentModel = contentModelService.GetLastContentModel();
         var executeCommandTask = new ExecuteCommandTask()
         {
-            ContentModel = contentModel,
-            TerminalModel = this
+            ContentModel = shellArgument is null ? contentModel : null,
+            TerminalModel = this,
+            Builtin = shellArgument is null ? null : () => RunShellLineAsync(command, shellArgument),
         };
 
         command.CommandTask = executeCommandTask.Completion;
@@ -241,6 +254,85 @@ public class TerminalModel(
 
         AddCommandHistory(record);
         return true;
+    }
+
+    /// <summary>
+    /// The argument of a <c>shell</c> line: "" for a bare <c>shell</c> (which lists the shells), the name after it
+    /// otherwise, or null when the line is not a shell line. A line joined to something with a shell operator is not
+    /// one, so it is sent to the shell as typed.
+    /// </summary>
+    internal static string? ShellLineArgument(string? commandText)
+    {
+        var text = (commandText ?? string.Empty).Trim();
+        if (text == "shell")
+        {
+            return string.Empty;
+        }
+
+        if (!(text.StartsWith("shell ", StringComparison.Ordinal) || text.StartsWith("shell	", StringComparison.Ordinal))
+            || text.IndexOfAny(ShellOperators) >= 0)
+        {
+            return null;
+        }
+
+        return text[5..].Trim();
+    }
+
+    /// <summary>
+    /// Runs a <c>shell</c> line on the background task (finding the shells touches the PATH, and switching ends a
+    /// process): lists the shells, or switches to the named one. Refused while a command runs in the session.
+    /// </summary>
+    internal Task RunShellLineAsync(ITerminalCommand command, string argument)
+    {
+        command.StartTime = DateTime.Now;
+        var sessions = ShellSessions;
+        var available = sessions is { IsAvailable: true } ? sessions.Available() : [];
+        var names = string.Join(", ", available.Select(ShellKinds.Name));
+
+        if (sessions is null || available.Count == 0)
+        {
+            command.Error = UiText.Get("Terminal.ShellNone", "No shell session is available here: sh or bash must be on the PATH. Commands run one at a time, as before.");
+            command.ExitCode = 1;
+        }
+        else if (argument.Length == 0)
+        {
+            command.Output = string.Format(UiText.Get("Terminal.ShellList", "Shells: {0}. Current: {1}."), names, ShellKinds.Name(sessions.Selected));
+        }
+        else if (!ShellKinds.TryParse(argument, out var kind) || !available.Contains(kind))
+        {
+            command.Error = string.Format(UiText.Get("Terminal.ShellUnknown", "shell: {0} is not available here. Available: {1}."), argument, names);
+            command.ExitCode = 1;
+        }
+        else if (sessions.IsBusy || !sessions.Switch(kind))
+        {
+            command.Error = UiText.Get("Terminal.ShellBusy", "A command is running: the shell can be changed when it finishes.");
+            command.ExitCode = 1;
+        }
+        else
+        {
+            command.Output = string.Format(UiText.Get("Terminal.ShellSwitched", "Shell is now {0}. The previous session's variables and folder are gone."), ShellKinds.Name(kind));
+        }
+
+        command.ExitTime = DateTime.Now;
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// After a session command, moves the focused panel to the folder the session ended in. Only while the panel
+    /// still shows the folder the command started from: a panel the user has moved on is left where it is (the
+    /// stale-result rule, as for listings), and the next command then changes the session to the panel's folder.
+    /// </summary>
+    internal void FollowPanel(IContentModel model, Url startUrl, string folder)
+    {
+        if (!ReferenceEquals(contentModelService.GetLastContentModel(), model)
+            || model.Url is null
+            || startUrl is null
+            || (string)model.Url != (string)startUrl)
+        {
+            return;
+        }
+
+        _ = contentModelService.SetUrlAsync(model.Name, new Url(Path.TrimEndingDirectorySeparator(folder) + Path.DirectorySeparatorChar));
     }
     #endregion
 

@@ -717,6 +717,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<TerminalWindow>();
         services.AddTransient<TerminalPanel>();
         services.AddSingleton<TerminalModel>();
+        // The command log's shell session (sh or bash, one process at a time). Disposed with the host.
+        services.AddSingleton<Services.Shell.ILocalShellSessionService, Services.Shell.LocalShellSessionService>();
         services.AddTransient<TerminalDialog>();
         services.AddSingleton<Serilog.ILogger>(provider =>
             new Logger.Logger(provider.GetRequiredService<ISettingsService>(), databaseDirectory));

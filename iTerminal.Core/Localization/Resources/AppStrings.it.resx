@@ -11072,4 +11072,25 @@
   <data name="KeyMap.Notify.Problems" xml:space="preserve">
     <value>{0} associazione/i di tasti in keymap.json non utilizzata/e: {1}. Il registro indica il motivo.</value>
   </data>
+  <data name="Terminal.ShellNone" xml:space="preserve">
+    <value>Qui non è disponibile una sessione di shell: sh o bash deve essere nel PATH. I comandi vengono eseguiti uno alla volta, come prima.</value>
+  </data>
+  <data name="Terminal.ShellList" xml:space="preserve">
+    <value>Shell: {0}. Attuale: {1}.</value>
+  </data>
+  <data name="Terminal.ShellUnknown" xml:space="preserve">
+    <value>shell: {0} non è disponibile qui. Disponibili: {1}.</value>
+  </data>
+  <data name="Terminal.ShellBusy" xml:space="preserve">
+    <value>È in esecuzione un comando: la shell si può cambiare al termine.</value>
+  </data>
+  <data name="Terminal.ShellSwitched" xml:space="preserve">
+    <value>La shell ora è {0}. Variabili e cartella della sessione precedente sono andate perse.</value>
+  </data>
+  <data name="Terminal.ShellInterrupted" xml:space="preserve">
+    <value>Interrotto con Esc: la sessione della shell è terminata, quindi variabili e cartella sono andate perse.</value>
+  </data>
+  <data name="Terminal.ShellEnded" xml:space="preserve">
+    <value>La shell è terminata (exit, o un errore che l'ha fermata). Il comando successivo avvia una nuova sessione.</value>
+  </data>
 </root>

@@ -600,6 +600,40 @@ public static class SandboxServices
     /// stand still and really take the terminal back — writes a prompt onto the virtual screen as a
     /// shell would, and "exits" when the test says so.
     /// </summary>
+    /// <summary>
+    /// The command log's shell session. It answers "sandbox: &lt;command&gt;" in the folder it is given, so no test
+    /// starts sh or bash. Both kinds are offered, and a switch is remembered.
+    /// </summary>
+    public sealed class LocalShellSessions : Core.Services.Shell.ILocalShellSessionService
+    {
+        private Core.Services.Shell.ShellKind _selected = Core.Services.Shell.ShellKind.Sh;
+
+        public IReadOnlyList<Core.Services.Shell.ShellKind> Available() => Core.Services.Shell.ShellKinds.All;
+
+        public bool IsAvailable => true;
+
+        public Core.Services.Shell.ShellKind Selected => _selected;
+
+        public bool IsBusy => false;
+
+        public bool Switch(Core.Services.Shell.ShellKind kind)
+        {
+            _selected = kind;
+            return true;
+        }
+
+        public Task<Core.Services.Shell.ShellCommandResult> RunAsync(string folder, string command, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Shell.ShellCommandResult("sandbox: " + command, string.Empty, 0, folder, Core.Services.Shell.ShellRunState.Completed));
+
+        public void Interrupt()
+        {
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
     public sealed class Shell(iConsole.Services.ConsoleOwnership consoleOwnership, iConsole.Drivers.IConsoleDriver consoleDriver)
         : Core.Services.Shell.IInteractiveShellService
     {

@@ -55,7 +55,7 @@ public class ListingModeCommandsTest
         };
         model.SetUrl(new Url(Path.GetTempPath()));
         var taskManager = new Mock<TaskManager>(MockBehavior.Loose).Object;
-        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, service.Object).Object;
+        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, service.Object, null).Object;
         var browser = new ContentBrowser("Panel", service.Object, terminalModel, taskManager, UiTestHelper.TestTheme())
         {
             Position = new Position(0, 0),

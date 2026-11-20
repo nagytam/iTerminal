@@ -458,14 +458,7 @@ public class ContentModelFileSystem(
 
     public override Task RunTerminalCommandAsync(ITerminalModel terminalModel)
     {
-        terminalModel.Command.EnvironmentVariables = string.Empty;
-        var environmentVariables = Environment.GetEnvironmentVariables();
-        var keys = environmentVariables.Keys.Cast<string>();
-        foreach (var key in keys)
-        {
-            terminalModel.Command.EnvironmentVariables +=
-                key + "=" + environmentVariables[key] + Environment.NewLine;
-        }
+        terminalModel.Command.EnvironmentVariables = iTerminal.Core.Services.Shell.CommandEnvironment.Describe();
 
         Process process = new();
         process.StartInfo.WorkingDirectory = terminalModel.Command.WorkingDirectoryUrl.Path;

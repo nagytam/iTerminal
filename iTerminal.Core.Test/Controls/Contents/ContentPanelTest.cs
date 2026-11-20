@@ -17,7 +17,7 @@ public class ContentPanelTest
         terminalModel: new Mock<iTerminal.Core.Model.TerminalModel>(
             MockBehavior.Loose,
             Mock.Of<TaskManager>(),
-            Mock.Of<IContentModelService>()).Object,
+            Mock.Of<IContentModelService>(), null).Object,
         taskManager: Mock.Of<TaskManager>(),
         themeService: themeService)
     {

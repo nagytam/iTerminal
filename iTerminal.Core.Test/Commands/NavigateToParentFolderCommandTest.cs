@@ -150,7 +150,7 @@ public class NavigateToParentFolderCommandTest
             var terminalModel = new Mock<iTerminal.Core.Model.TerminalModel>(
                 MockBehavior.Loose,
                 Mock.Of<iConsole.Tasks.TaskManager>(),
-                Mock.Of<IContentModelService>()).Object;
+                Mock.Of<IContentModelService>(), null).Object;
 
             var browser = new ContentBrowser(
                 name:                 "LeftPanel",
