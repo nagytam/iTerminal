@@ -2162,6 +2162,12 @@
   <data name="Grid.Hint.Ask" xml:space="preserve">
     <value>MI megkérdezése: írjon ?-et és egy kérdést, majd az Enter javasol egy lekérdezést</value>
   </data>
+  <data name="Grid.Hint.Syntax" xml:space="preserve">
+    <value>Operátorok: = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY; összekötés AND / OR-ral; majd ORDER BY oszlop [DESC] és LIMIT n</value>
+  </data>
+  <data name="Grid.Hint.Complete" xml:space="preserve">
+    <value>Az éppen írt szó kiegészítése: oszlopnév vagy kulcsszó</value>
+  </data>
   <data name="Grid.Status.Matched" xml:space="preserve">
     <value>; a megjelenített {1:N0} sorból {0:N0} egyezik</value>
   </data>

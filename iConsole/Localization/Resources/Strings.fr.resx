@@ -2162,6 +2162,12 @@
   <data name="Grid.Hint.Ask" xml:space="preserve">
     <value>Interroger l'IA : tapez ? et une question, puis Entrée propose la requête</value>
   </data>
+  <data name="Grid.Hint.Syntax" xml:space="preserve">
+    <value>Opérateurs : = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY ; reliés par AND / OR ; puis ORDER BY colonne [DESC] et LIMIT n</value>
+  </data>
+  <data name="Grid.Hint.Complete" xml:space="preserve">
+    <value>Compléter le mot en cours : un nom de colonne ou un mot-clé</value>
+  </data>
   <data name="Grid.Status.Matched" xml:space="preserve">
     <value>; {0:N0} des {1:N0} lignes affichées correspondent</value>
   </data>

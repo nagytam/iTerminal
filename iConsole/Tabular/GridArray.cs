@@ -306,18 +306,27 @@ public sealed class GridArrayView
             long count = Math.Min(perBlock, rows - first);
             long[] start = Rank == 1 ? [first] : [first, 0];
             long[] blockCount = Rank == 1 ? [count] : [count, width];
-            IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, blockCount, cancellationToken);
-            var lines = new List<string[]>((int)count);
-            for (long row = 0; row < count; row++)
+            // Rows already in memory are filtered where they are: copying every cell into a block first would double the memory and the time.
+            List<string[]> lines;
+            if (_source is InMemoryGridArray inMemory && Rank == 2)
             {
-                var line = new string[width];
-                for (int column = 0; column < width; column++)
+                lines = inMemory.RowsFrom((int)first, (int)count);
+            }
+            else
+            {
+                IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, blockCount, cancellationToken);
+                lines = new List<string[]>((int)count);
+                for (long row = 0; row < count; row++)
                 {
-                    long at = row * width + column;
-                    line[column] = at < cells.Count ? cells[(int)at] : string.Empty;
-                }
+                    var line = new string[width];
+                    for (int column = 0; column < width; column++)
+                    {
+                        long at = row * width + column;
+                        line[column] = at < cells.Count ? cells[(int)at] : string.Empty;
+                    }
 
-                lines.Add(line);
+                    lines.Add(line);
+                }
             }
 
             foreach (string[] line in GridQuery.Execute(headers, lines, filter).Rows)
@@ -507,11 +516,24 @@ public sealed class InMemoryGridArray(IReadOnlyList<string[]> rows, IReadOnlyLis
 
     public IReadOnlyList<string> Fields { get; } = [];
 
+    /// <summary>A run of the held rows, as they are: the rows are shared, not copied. A short row reads as empty past its end.</summary>
+    internal List<string[]> RowsFrom(int first, int count)
+    {
+        var slice = new List<string[]>(count);
+        for (int row = first; row < first + count && row < rows.Count; row++)
+        {
+            slice.Add(rows[row]);
+        }
+
+        return slice;
+    }
+
     public Task<IReadOnlyList<string>> ReadBlockAsync(long[] start, long[] count, CancellationToken cancellationToken)
     {
         var cells = new List<string>();
         for (long row = start[0]; row < start[0] + count[0]; row++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             string[] line = rows[(int)row];
             for (long column = start[1]; column < start[1] + count[1]; column++)
             {

@@ -2162,6 +2162,12 @@
   <data name="Grid.Hint.Ask" xml:space="preserve">
     <value>KI fragen: ? und eine Frage eingeben, dann schlägt Enter eine Abfrage vor</value>
   </data>
+  <data name="Grid.Hint.Syntax" xml:space="preserve">
+    <value>Operatoren: = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY; verbinden mit AND / OR; dann ORDER BY Spalte [DESC] und LIMIT n</value>
+  </data>
+  <data name="Grid.Hint.Complete" xml:space="preserve">
+    <value>Das Wort unter dem Cursor vervollständigen: ein Spaltenname oder ein Schlüsselwort</value>
+  </data>
   <data name="Grid.Status.Matched" xml:space="preserve">
     <value>; {0:N0} von den {1:N0} angezeigten Zeilen passen</value>
   </data>

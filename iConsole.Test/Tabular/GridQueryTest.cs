@@ -163,4 +163,31 @@ public class GridQueryTest
         Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Parse("FROM cube AT amount = 1", Headers));
         Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Parse("FROM cube AT axis1 = two", Headers));
     }
+
+    [TestMethod]
+    public void ACancelledQueryStopsInsteadOfFinishingThePass()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        Assert.ThrowsExactly<OperationCanceledException>(() => GridQuery.Run(Headers, Rows, "SELECT * WHERE amount > 1", cancellation.Token));
+    }
+
+    [TestMethod]
+    public async Task AnInMemoryQueryGivesTheRowsWithoutCopyingThem()
+    {
+        GridQueryResult result = await GridQueryRun.RunOverAsync(new InMemoryGridArray(Rows, Headers), "SELECT * WHERE city = 'Pécs'");
+
+        Assert.AreEqual(2, result.Rows.Count);
+        Assert.AreSame(Rows[0], result.Rows[0], "the matching rows are the held ones, not copies");
+    }
+
+    [TestMethod]
+    public async Task ACancelledInMemoryQueryIsCancelled()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        await Assert.ThrowsExactlyAsync<TaskCanceledException>(() => GridQueryRun.RunOverAsync(new InMemoryGridArray(Rows, Headers), "SELECT *", cancellation.Token));
+    }
 }

@@ -35,8 +35,8 @@ public static class GridQuery
 {
     /// <summary>Runs <paramref name="text"/> over rows in memory. An empty query selects every column and row.</summary>
     /// <exception cref="GridQueryException">The query is not valid, or names a column the table does not have.</exception>
-    public static GridQueryResult Run(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows, string text) =>
-        Execute(headers, rows, Parse(text, headers));
+    public static GridQueryResult Run(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows, string text, CancellationToken cancellationToken = default) =>
+        Execute(headers, rows, Parse(text, headers), cancellationToken);
 
     /// <summary>Parses <paramref name="text"/> against the column names of the table.</summary>
     /// <exception cref="GridQueryException">The query is not valid, or names a column the table does not have.</exception>
@@ -59,9 +59,15 @@ public static class GridQuery
     }
 
     /// <summary>Runs a parsed plan over rows in memory.</summary>
-    public static GridQueryResult Execute(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows, GridQueryPlan plan)
+    public static GridQueryResult Execute(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows, GridQueryPlan plan, CancellationToken cancellationToken = default)
     {
-        Func<string[], bool> filter = plan.Where is { } where ? Compile(where, headers) : _ => true;
+        Func<string[], bool> compiled = plan.Where is { } where ? Compile(where, headers) : _ => true;
+        // A cancelled query stops at the next row rather than finishing a pass over a large table nobody is waiting for.
+        Func<string[], bool> filter = row =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return compiled(row);
+        };
         List<string[]> matched = [.. rows.Where(filter)];
         int total = matched.Count;
         if (plan.OrderBy is { } orderName)

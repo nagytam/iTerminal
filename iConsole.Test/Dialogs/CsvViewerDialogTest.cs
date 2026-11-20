@@ -233,7 +233,15 @@ public class CsvViewerDialogTest
         Task<GridQueryResult> query = dialog.QueryTask!;
 
         await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.F8, false, false, false));
-        await query;
+        // The switch cancels the query that was running, so it may end cancelled or, if it was already done, with its rows.
+        try
+        {
+            await query;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
         CsvDocument reread = await dialog.SwitchTask!;
         dialog.OnIdle();
 
