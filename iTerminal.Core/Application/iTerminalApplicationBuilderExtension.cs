@@ -378,6 +378,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinService, iTerminal.Core.Services.Recycle.RecycleBinService>();
 
         // Ctrl+Shift+Q: the evidence notebook as a drive. One instance holds the open notebook folder for the run.
+        services.AddSingleton<iTerminal.Core.Services.Timestamps.ITimestampAuthority, iTerminal.Core.Services.Timestamps.Rfc3161TimestampAuthority>();
         services.AddSingleton<iTerminal.Core.Services.Evidence.IEvidenceNotebookService, iTerminal.Core.Services.Evidence.EvidenceNotebookService>();
         // Alt+F7: the full-screen stock browser. Quotes come from Yahoo Finance; a test replaces the
         // provider so no run reaches the network.

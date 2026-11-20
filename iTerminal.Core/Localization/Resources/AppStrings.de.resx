@@ -10986,6 +10986,24 @@
   <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
     <value>Beweissammlung (keine geöffnet)</value>
   </data>
+  <data name="Evidence.Drive.NoTimestamp" xml:space="preserve">
+    <value>nicht mit RFC 3161 zeitgestempelt</value>
+  </data>
+  <data name="Evidence.Drive.Timestamp" xml:space="preserve">
+    <value>RFC 3161 {0} UTC durch {1}</value>
+  </data>
+  <data name="Evidence.Add.Untimestamped" xml:space="preserve">
+    <value>; {0} ohne RFC-3161-Zeitstempel</value>
+  </data>
+  <data name="Evidence.Add.NoTimestampNote" xml:space="preserve">
+    <value>Es wurde kein RFC-3161-Zeitstempel erhalten; der Eintrag bleibt erhalten, und Überprüfen meldet ihn.</value>
+  </data>
+  <data name="Evidence.Service.NoTimestamp" xml:space="preserve">
+    <value>Für diesen Eintrag wurde kein RFC-3161-Zeitstempel erhalten.</value>
+  </data>
+  <data name="Evidence.Service.BadTimestamp" xml:space="preserve">
+    <value>Der RFC-3161-Zeitstempel passt nicht zum Inhalt, oder seine Signatur ist ungültig.</value>
+  </data>
   <data name="Evidence.Drive.Origin" xml:space="preserve">
     <value>{0} von {1} · {2} · {3}</value>
   </data>

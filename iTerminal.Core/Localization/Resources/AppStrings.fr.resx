@@ -10922,6 +10922,24 @@
   <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
     <value>Carnet de preuves (aucun ouvert)</value>
   </data>
+  <data name="Evidence.Drive.NoTimestamp" xml:space="preserve">
+    <value>non horodaté</value>
+  </data>
+  <data name="Evidence.Drive.Timestamp" xml:space="preserve">
+    <value>RFC 3161 {0} UTC par {1}</value>
+  </data>
+  <data name="Evidence.Add.Untimestamped" xml:space="preserve">
+    <value>; {0} sans horodatage RFC 3161</value>
+  </data>
+  <data name="Evidence.Add.NoTimestampNote" xml:space="preserve">
+    <value>Aucun horodatage RFC 3161 n'a été obtenu ; l'entrée est conservée, et la vérification le signale.</value>
+  </data>
+  <data name="Evidence.Service.NoTimestamp" xml:space="preserve">
+    <value>Aucun horodatage RFC 3161 n'a été obtenu pour cette entrée.</value>
+  </data>
+  <data name="Evidence.Service.BadTimestamp" xml:space="preserve">
+    <value>L'horodatage RFC 3161 ne correspond pas au contenu, ou sa signature n'est pas valide.</value>
+  </data>
   <data name="Evidence.Drive.Origin" xml:space="preserve">
     <value>{0} depuis {1} · {2} · {3}</value>
   </data>

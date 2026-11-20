@@ -303,6 +303,7 @@ public class AddEvidenceCommand(
         {
             int added = 0;
             int folders = 0;
+            int untimestamped = 0;
             string? failure = null;
             try
             {
@@ -319,8 +320,12 @@ public class AddEvidenceCommand(
                         // The same resolution a copy uses: a panel model cannot stream its own files.
                         var sourceFileSystem = fileSystemResolver.Resolve(url, source, "Add evidence");
                         var (size, modifiedUtc) = SourceFacts(source, url);
-                        await notebook.AddFileAsync(sourceFileSystem, url, size, modifiedUtc);
+                        var record = await notebook.AddFileAsync(sourceFileSystem, url, size, modifiedUtc);
                         added++;
+                        if (record.Timestamp is null)
+                        {
+                            untimestamped++;
+                        }
                     }
                     catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or NotSupportedException or FileNotFoundException or InvalidOperationException)
                     {
@@ -340,6 +345,11 @@ public class AddEvidenceCommand(
                 message += string.Format(UiText.Get("Evidence.Add.Folders", "; {0} folder(s) skipped: a folder is not evidence on its own"), folders);
             }
 
+            if (untimestamped > 0)
+            {
+                message += string.Format(UiText.Get("Evidence.Add.Untimestamped", "; {0} without an RFC 3161 time stamp"), untimestamped);
+            }
+
             RefreshNotebookPanels();
             if (failure is not null)
             {
@@ -347,7 +357,7 @@ public class AddEvidenceCommand(
             }
             else
             {
-                Notify(message, null, folders > 0 ? NotificationSeverity.Warning : NotificationSeverity.Success);
+                Notify(message, null, folders > 0 || untimestamped > 0 ? NotificationSeverity.Warning : NotificationSeverity.Success);
             }
         });
     }
@@ -412,9 +422,16 @@ public class AddEvidenceCommand(
     {
         try
         {
-            await notebook.AddTextAsync(kind, text);
+            var record = await notebook.AddTextAsync(kind, text);
             RefreshNotebookPanels();
-            Notify(doneTitle, null, NotificationSeverity.Success);
+            if (record.Timestamp is null)
+            {
+                Notify(doneTitle, UiText.Get("Evidence.Add.NoTimestampNote", "No RFC 3161 time stamp was obtained; the entry is kept, and Verify reports it."), NotificationSeverity.Warning);
+            }
+            else
+            {
+                Notify(doneTitle, null, NotificationSeverity.Success);
+            }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
@@ -473,9 +490,16 @@ public class AddEvidenceCommand(
 
             try
             {
-                await notebook.AddVoiceAsync(pcm, Pcm.SampleRate);
+                var record = await notebook.AddVoiceAsync(pcm, Pcm.SampleRate);
                 RefreshNotebookPanels();
-                Notify(UiText.Get("Evidence.Voice.Added", "Voice recording added"), null, NotificationSeverity.Success);
+                if (record.Timestamp is null)
+                {
+                    Notify(UiText.Get("Evidence.Voice.Added", "Voice recording added"), UiText.Get("Evidence.Add.NoTimestampNote", "No RFC 3161 time stamp was obtained; the entry is kept, and Verify reports it."), NotificationSeverity.Warning);
+                }
+                else
+                {
+                    Notify(UiText.Get("Evidence.Voice.Added", "Voice recording added"), null, NotificationSeverity.Success);
+                }
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
             {

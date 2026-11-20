@@ -5,6 +5,8 @@ using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Localization;
 using iTerminal.Core.Model.ContentModels;
+using iTerminal.Core.Services.Timestamps;
+using Serilog;
 
 namespace iTerminal.Core.Services.Evidence;
 
@@ -20,6 +22,9 @@ namespace iTerminal.Core.Services.Evidence;
 ///
 /// <para><b>A file is read once.</b> <see cref="AddFileAsync"/> hashes the bytes as they are written
 /// into the notebook, so the digest recorded is the digest of what was stored, not of a second read.</para>
+///
+/// <para><b>Each entry is time-stamped over its digest</b> (RFC 3161) as it is added. When the authority does
+/// not answer the entry is still kept, without a time stamp, and <see cref="VerifyAsync"/> reports it.</para>
 ///
 /// <para><b>Sequence numbers are reserved before the copy starts</b>, so two adds in flight never share a
 /// name. A failed copy leaves a gap in the numbering, which is correct: an entry was attempted there.</para>
@@ -45,6 +50,16 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
     private EvidenceNotebookIndex? _index;
     private string? _folder;
     private int _nextSequence = 1;
+    private readonly ITimestampAuthority? _timestamps;
+    private readonly ILogger? _logger;
+
+    /// <param name="timestamps">The authority that time-stamps each entry; null adds entries without a time stamp.</param>
+    /// <param name="logger">Where a failed time stamp is noted.</param>
+    public EvidenceNotebookService(ITimestampAuthority? timestamps = null, ILogger? logger = null)
+    {
+        _timestamps = timestamps;
+        _logger = logger;
+    }
 
     /// <inheritdoc />
     public string? FolderPath
@@ -126,6 +141,7 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
 
         string digest;
         long size;
+        Rfc3161Timestamp? timestamp;
         try
         {
             await using var file = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None, 1 << 16, useAsync: true);
@@ -134,6 +150,7 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
             await hashing.FlushAsync(cancellationToken);
             digest = hashing.TakeDigest();
             size = hashing.BytesWritten;
+            timestamp = await StampAsync(Convert.FromHexString(digest), cancellationToken);
         }
         catch
         {
@@ -141,7 +158,7 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
             throw;
         }
 
-        var record = new EvidenceRecord(sequence, fileName, EvidenceKind.File, title, size, digest, origin);
+        var record = new EvidenceRecord(sequence, fileName, EvidenceKind.File, title, size, digest, origin, null, timestamp);
         Commit(folder, record);
         return record;
     }
@@ -212,6 +229,14 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
             if (!string.Equals(digest, entry.Sha256, StringComparison.Ordinal))
             {
                 problems.Add(new EvidenceProblem(entry.FileName, UiText.Get("Evidence.Service.HashChanged", "The content no longer matches its recorded SHA-256.")));
+            }
+            else if (entry.Timestamp is null)
+            {
+                problems.Add(new EvidenceProblem(entry.FileName, UiText.Get("Evidence.Service.NoTimestamp", "No RFC 3161 time stamp was obtained for this entry.")));
+            }
+            else if (!Rfc3161.IsValidFor(entry.Timestamp, Convert.FromHexString(digest)))
+            {
+                problems.Add(new EvidenceProblem(entry.FileName, UiText.Get("Evidence.Service.BadTimestamp", "The RFC 3161 time stamp does not match the content, or its signature does not check out.")));
             }
         }
 
@@ -299,9 +324,12 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
         var (folder, sequence) = Reserve();
         var fileName = ContentName(sequence, baseName);
         var path = Path.Combine(folder, ItemsFolderName, fileName);
+        var digest = SHA256.HashData(bytes);
+        Rfc3161Timestamp? timestamp;
         try
         {
             await File.WriteAllBytesAsync(path, bytes, cancellationToken);
+            timestamp = await StampAsync(digest, cancellationToken);
         }
         catch
         {
@@ -309,9 +337,31 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
             throw;
         }
 
-        var record = new EvidenceRecord(sequence, fileName, kind, title, bytes.Length, Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant(), origin, duration);
+        var record = new EvidenceRecord(sequence, fileName, kind, title, bytes.Length, Convert.ToHexString(digest).ToLowerInvariant(), origin, duration, timestamp);
         Commit(folder, record);
         return record;
+    }
+
+    /// <summary>
+    /// The entry's time stamp, or null when there is no authority or it did not answer. Only the authority's
+    /// refusal or failure is absorbed here; a cancelled add still cancels, and removes its content.
+    /// </summary>
+    private async Task<Rfc3161Timestamp?> StampAsync(byte[] sha256, CancellationToken cancellationToken)
+    {
+        if (_timestamps is null)
+        {
+            return null;
+        }
+
+        try
+        {
+            return await _timestamps.TimestampAsync(sha256, cancellationToken);
+        }
+        catch (TimestampException exception)
+        {
+            _logger?.Warning(exception, "An evidence entry was kept without an RFC 3161 time stamp");
+            return null;
+        }
     }
 
     private void Commit(string folder, EvidenceRecord record)

@@ -11128,6 +11128,24 @@
   <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
     <value>Evidence notebook (none open)</value>
   </data>
+  <data name="Evidence.Drive.NoTimestamp" xml:space="preserve">
+    <value>not time-stamped</value>
+  </data>
+  <data name="Evidence.Drive.Timestamp" xml:space="preserve">
+    <value>RFC 3161 {0} UTC by {1}</value>
+  </data>
+  <data name="Evidence.Add.Untimestamped" xml:space="preserve">
+    <value>; {0} without an RFC 3161 time stamp</value>
+  </data>
+  <data name="Evidence.Add.NoTimestampNote" xml:space="preserve">
+    <value>No RFC 3161 time stamp was obtained; the entry is kept, and Verify reports it.</value>
+  </data>
+  <data name="Evidence.Service.NoTimestamp" xml:space="preserve">
+    <value>No RFC 3161 time stamp was obtained for this entry.</value>
+  </data>
+  <data name="Evidence.Service.BadTimestamp" xml:space="preserve">
+    <value>The RFC 3161 time stamp does not match the content, or its signature does not check out.</value>
+  </data>
   <data name="Evidence.Drive.Origin" xml:space="preserve">
     <value>{0} from {1} · {2} · {3}</value>
   </data>

@@ -10922,6 +10922,24 @@
   <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
     <value>Taccuino delle prove (nessuno aperto)</value>
   </data>
+  <data name="Evidence.Drive.NoTimestamp" xml:space="preserve">
+    <value>senza marca temporale</value>
+  </data>
+  <data name="Evidence.Drive.Timestamp" xml:space="preserve">
+    <value>RFC 3161 {0} UTC da {1}</value>
+  </data>
+  <data name="Evidence.Add.Untimestamped" xml:space="preserve">
+    <value>; {0} senza marca temporale RFC 3161</value>
+  </data>
+  <data name="Evidence.Add.NoTimestampNote" xml:space="preserve">
+    <value>Non è stata ottenuta una marca temporale RFC 3161; la voce viene conservata e la verifica la segnala.</value>
+  </data>
+  <data name="Evidence.Service.NoTimestamp" xml:space="preserve">
+    <value>Non è stata ottenuta una marca temporale RFC 3161 per questa voce.</value>
+  </data>
+  <data name="Evidence.Service.BadTimestamp" xml:space="preserve">
+    <value>La marca temporale RFC 3161 non corrisponde al contenuto, oppure la sua firma non è valida.</value>
+  </data>
   <data name="Evidence.Drive.Origin" xml:space="preserve">
     <value>{0} da {1} · {2} · {3}</value>
   </data>

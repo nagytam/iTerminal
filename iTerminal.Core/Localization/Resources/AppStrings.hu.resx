@@ -10922,6 +10922,24 @@
   <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
     <value>Bizonyítéknapló (nincs megnyitva)</value>
   </data>
+  <data name="Evidence.Drive.NoTimestamp" xml:space="preserve">
+    <value>nincs RFC 3161 időbélyeg</value>
+  </data>
+  <data name="Evidence.Drive.Timestamp" xml:space="preserve">
+    <value>RFC 3161 {0} UTC, forrás: {1}</value>
+  </data>
+  <data name="Evidence.Add.Untimestamped" xml:space="preserve">
+    <value>; {0} RFC 3161 időbélyeg nélkül</value>
+  </data>
+  <data name="Evidence.Add.NoTimestampNote" xml:space="preserve">
+    <value>Nem sikerült RFC 3161 időbélyeget kérni; a tétel megmaradt, az ellenőrzés jelzi.</value>
+  </data>
+  <data name="Evidence.Service.NoTimestamp" xml:space="preserve">
+    <value>Ehhez a tételhez nem sikerült RFC 3161 időbélyeget kapni.</value>
+  </data>
+  <data name="Evidence.Service.BadTimestamp" xml:space="preserve">
+    <value>Az RFC 3161 időbélyeg nem egyezik a tartalommal, vagy az aláírása nem érvényes.</value>
+  </data>
   <data name="Evidence.Drive.Origin" xml:space="preserve">
     <value>{0} innen: {1} · {2} · {3}</value>
   </data>

@@ -3,6 +3,7 @@ using System.Text;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iTerminal.Core.Services.Evidence;
+using iTerminal.Core.Test.Services.Timestamps;
 using iTerminal.Core.Test.Helper;
 using Moq;
 
@@ -181,7 +182,8 @@ public class EvidenceNotebookServiceTest
     [TestMethod]
     public async Task VerifyReportsAChangedAndAMissingEntry()
     {
-        IEvidenceNotebookService notebook = new EvidenceNotebookService();
+        // Stamped, so that the baseline verifies clean and only the two changes are reported.
+        IEvidenceNotebookService notebook = new EvidenceNotebookService(new FakeTsa());
         await notebook.OpenAsync(_notebookFolder);
         var note = await notebook.AddTextAsync(EvidenceKind.Note, "abc");
         var voice = await notebook.AddVoiceAsync(new byte[3200], 16000);

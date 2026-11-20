@@ -728,6 +728,16 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// The time-stamp authority with no network: no token is ever obtained, so entries are kept without one and the
+    /// panel and Verify say so. Token handling itself is covered by the unit tests, which answer from memory.
+    /// </summary>
+    public sealed class TimestampAuthority : Core.Services.Timestamps.ITimestampAuthority
+    {
+        public Task<Core.Services.Timestamps.Rfc3161Timestamp?> TimestampAsync(byte[] sha256, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Core.Services.Timestamps.Rfc3161Timestamp?>(null);
+    }
+
+    /// <summary>
     /// The stock quote source with no network: every symbol trades at 100.00 after closing at 99.00 on the
     /// "Sandbox" exchange, except <see cref="Unknown"/> ones, and a search finds two fixed hits.
     /// </summary>
