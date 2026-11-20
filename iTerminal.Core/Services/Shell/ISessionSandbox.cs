@@ -22,4 +22,11 @@ public interface ISessionSandbox
 
     /// <summary>The launch command that starts <paramref name="shell"/> confined to <paramref name="folder"/>.</summary>
     SessionLaunch Wrap(SessionLaunch shell, string folder);
+
+    /// <summary>
+    /// Starts <paramref name="shell"/> itself, for a sandbox that creates the process rather than rewriting its
+    /// command (<see cref="ProcessContainerSandbox"/>). Null means the session starts the process from
+    /// <see cref="Wrap"/>. A sandbox that returns a process must not also rely on <see cref="Wrap"/>.
+    /// </summary>
+    IShellProcess? Start(SessionLaunch shell, string folder) => null;
 }
