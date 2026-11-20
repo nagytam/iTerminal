@@ -158,21 +158,21 @@ public class FolderSelectorSpecialFoldersTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void PlaceLabel_ShowsTheFolderNameBeforeThePath()
+    public void Label_ShowsTheFolderNameBeforeThePath()
     {
         var path = Path.Combine(Path.GetTempPath(), "Downloads");
 
-        Assert.AreEqual("Downloads  " + path, FolderSelectorSpecialFoldersTabPage.PlaceLabel(path));
+        Assert.AreEqual("Downloads  " + path, FolderSelectorPlaceText.Label(path));
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void PlaceLabel_LeavesARootAndAnAppDriveAsTheyAre()
+    public void Label_LeavesARootAndAnAppDriveAsTheyAre()
     {
         var root = Path.GetPathRoot(Path.GetTempPath())!;
 
-        Assert.AreEqual(root, FolderSelectorSpecialFoldersTabPage.PlaceLabel(root));
-        Assert.AreEqual(Container.MUSIC_CATALOG, FolderSelectorSpecialFoldersTabPage.PlaceLabel(Container.MUSIC_CATALOG));
+        Assert.AreEqual(root, FolderSelectorPlaceText.Label(root));
+        Assert.AreEqual(Container.MUSIC_CATALOG, FolderSelectorPlaceText.Label(Container.MUSIC_CATALOG));
     }
 
     [Timeout(60_000)]
@@ -181,21 +181,48 @@ public class FolderSelectorSpecialFoldersTabPageTest
     {
         // Type-ahead matches the row's label, which leads with the folder name, so a letter finds a place by its name.
         var (page, _) = await CreatePageAsync();
-        var letter = FolderSelectorSpecialFoldersTabPage.PlaceLabel(page.Places[0])[0];
+        var letter = FolderSelectorPlaceText.Label(page.Places[0])[0];
         page.SetFocus();
 
         await page.HandleKeyEventAsync(new KeyEvent(letter, (ConsoleKey)char.ToUpperInvariant(letter), false, false, false));
 
         var cursor = (int)page.ScrollableModel.CursorPosition.Y;
-        StringAssert.StartsWith(FolderSelectorSpecialFoldersTabPage.PlaceLabel(page.Places[cursor]), letter.ToString(), StringComparison.OrdinalIgnoreCase);
+        StringAssert.StartsWith(FolderSelectorPlaceText.Label(page.Places[cursor]), letter.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void PlaceLabel_OfAFolderWithATrailingSeparator_StillLeadsWithTheName()
+    public void Label_OfAFolderWithATrailingSeparator_StillLeadsWithTheName()
     {
         var place = Path.Combine(Path.GetTempPath(), "Downloads") + Path.DirectorySeparatorChar;
 
-        StringAssert.StartsWith(FolderSelectorSpecialFoldersTabPage.PlaceLabel(place), "Downloads  ");
+        StringAssert.StartsWith(FolderSelectorPlaceText.Label(place), "Downloads  ");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Label_OfAFileUrl_NamesTheLocalPathItPoints_To()
+    {
+        Assert.AreEqual("Projects  /tmp/Projects", FolderSelectorPlaceText.Label("file:///tmp/Projects"));
+        Assert.AreEqual("My Docs  /tmp/My Docs", FolderSelectorPlaceText.Label("file:///tmp/My%20Docs"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Label_OfAWindowsFileUrl_UsesTheWindowsPath()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows drive and UNC paths only exist on Windows.");
+        }
+        Assert.AreEqual(@"Projects  C:\Users\Projects", FolderSelectorPlaceText.Label("file:///C:/Users/Projects"));
+        Assert.AreEqual(@"alpha  \\fileserver\projects\alpha", FolderSelectorPlaceText.Label("file://fileserver/projects/alpha"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Label_OfAMalformedFileUrl_IsShownAsItIs()
+    {
+        Assert.AreEqual("file://%zz", FolderSelectorPlaceText.Label("file://%zz"));
     }
 }
