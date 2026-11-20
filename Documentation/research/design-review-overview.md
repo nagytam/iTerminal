@@ -7,6 +7,7 @@ UI/UX review of the iConsole controls and the iTerminal dialogs and panels, kept
 | R1 | iConsole list and text-input controls |
 | R2 | Recent UI changes: key map, grid queries, evidence notebook, tab progress, folder selector |
 | R3 | Feedback controls, dialog shell, and the Git, remote, palette and file panel screens |
+| R4 | File-operation dialogs: copy and move, delete, rename, multi-rename, conflict prompt, secure wipe |
 
 ## R1: iConsole list and text-input controls
 
@@ -444,3 +445,118 @@ Checked against the source at `74a41e86` plus the working tree, not from memory.
 - **R1 finding 8 (type-ahead): partly fixed.** `EnableTypeAhead = true` on the Drives, Recent and Places pages ([FolderSelectorDrivesTabPage.cs:69](../../iTerminal.Core/Dialogs/FolderSelectorDrivesTabPage.cs), `FolderSelectorHistoryTabPage.cs:45`, `FolderSelectorSpecialFolderTabPage.cs:73`); Favourites and the Git and package lists are still off.
 - **R1 findings 1, 2, 3, 4, 5, 6, 9, 10: open.** `TextBox.cs:770` to `:773` and `:796` still use `Green`, `Yellow` and `Gray`; `ListBox.cs:249` still copies the list per draw; `CompletionModel.cs:32` still clears before adding (the new `DirectoryCompletionModel` does `ReplaceAll`); `TextBox` and `PopupListView` have no `TextWidth` use; no bracketed paste sequence (`2004`) exists in the input projects; `SearchBox` has no `ITransientOverlayHost`; `ListBox.cs:210` still acts on a right click; `PopupListView.cs:156` still allocates per row.
 
+
+## R4: File-operation dialogs (copy and move, delete, rename, multi-rename, conflict prompt, secure wipe)
+
+Scope: the fourth review pass, cited elsewhere as "R4 finding N". The first three passes covered controls, the dialog shell, the Git client, the remote manager, the palette and the file panel's marks; none covered the dialogs a user opens most often to change files. This pass takes them as one area because they share `FormDialog`, the Enter-runs-the-command rule and the progress window: `TransferDialog` (Copy, Move), `DeleteDialog`, `RenameDialog`, `MultiRenameDialog`, `ConflictPromptDialog` with `FileConflictResolver`, and `SecureWipeDialog`. Finding numbers start at 1 in this pass, as in R2 and R3.
+
+### Review 2026-11-20: file-operation dialogs
+
+Branch `docs/research-security-survey-3`, commit `3ba7401f`. The working tree holds only the three uncommitted research-document edits (survey 3); no source file differs from the commit. Read: `CLAUDE.md`, `key-patterns.md` (destructive keys and the Delete dialog), `file-operations.md` (wipe and the transfer sections, by grep and the wipe section in full), the three research overviews as they are on disk (the survey 3 text and the items on hot keys, quick dialogs, forms and sanitisation), R3 in full, and the source of `FormDialog`, `TransferDialog`, `CopyDialog`, `MoveDialog`, `DeleteDialog`, `DeleteCommand`, `TransferCommand` (`ExecuteAsync`, `ConsumeMarks`), `RenameDialog`, `CreateEntryDialog`, `MultiRenameDialog`, `MultiRenameCommand`, `MultiRenamePlanner` (header and statuses), `ConflictPromptDialog`, `ConflictPromptService`, `FileConflictResolver`, `SecureWipeDialog`, `Dialog` (focus, Esc, idle), `PopUpWindow.CenterInParent`, `HotKeys.VisibleIn`, `Control.HandleHotKeyEventAsync`, `Button` (destructive colour) and the German, French, Spanish, Italian and Hungarian strings that the findings quote. Not done: no app launch, no tests run, no render dump, no key trace, no timing. Everything that rests on reading alone is marked **unverified**.
+
+#### Summary
+
+- The destructive paths are mostly well guarded: Delete starts on the Recycle Bin or Trash where one exists, copy checks free space, wipe asks twice, rename can be undone. The problems are in what the screens say while they guard.
+- The secure wipe footer is one fixed line for all four phases, so it names keys that do nothing (or do the opposite) in three of them; the armed screen does not say how much will be destroyed, and a second Enter that arrives at once passes (findings 1 and 2).
+- Multi-rename cannot be reviewed by keyboard: the preview list cannot take focus, so a keyboard user sees the first ten or so rows and cannot scroll to the rows that are blocked or duplicated (finding 3).
+- The copy and move "Overwrite" box takes its hot key from the word "Target", so the key is wrong in English and invisible in four translations; it also means "overwrite everything without asking", which the label does not say (finding 5). The conflict prompt gives no sizes or dates for the choices "Keep newer" and "Keep larger" (finding 4).
+- Delete looks the same whether the files go to the bin or are gone for good, and the German warning that says so is cut off (findings 6 and 7).
+
+#### Findings
+
+1. **The secure wipe footer is one fixed line for all four phases** - Severity: **Medium**. Kind: usability (feedback and visibility of status), localization.
+   - Where: [iTerminal.Core/Dialogs/SecureWipeDialog.cs:396](../../iTerminal.Core/Dialogs/SecureWipeDialog.cs) (`Wipe.Footer`, " Enter:wipe  1/3/7 or ↑↓:passes  Esc:close ", drawn in every phase by `DrawChrome`) against `:293` to `:310` (`GetKeyHints` is written per phase) and `:312` to `:364` (what the keys do in each phase).
+   - Problem: in the armed phase `1`, `3` and `7` do not choose a method, they withdraw the arming (`:324` to `:329`). While it runs, "Enter:wipe" does nothing and "Esc:close" actually stops the wipe (`:383` to `:388`, which the body text does say). When it is finished, Enter closes. The footer is the line users read last and trust most; here it is wrong for a destroy-data dialog, and the phase-aware text exists only in the F1 help. Heuristic: Feedback and visibility, Consistency (the Git client keeps status and key hints together).
+   - Improvement: pick the footer by `Phase` (new keys `Wipe.FooterArmed`, `Wipe.FooterRunning`, `Wipe.FooterFinished` in all six `.resx` files), for example "Enter: wipe for good   any other key: go back" when armed and "Esc: stop (files already wiped stay wiped)" while running. Add a `ScreenBuffer` assertion per phase to `SecureWipeDialogTest`.
+   - Effort: S.
+
+2. **The armed wipe screen does not say how much will be destroyed, and a second Enter that follows at once passes** - Severity: **Medium**. Kind: usability (error prevention).
+   - Where: [SecureWipeDialog.cs:224](../../iTerminal.Core/Dialogs/SecureWipeDialog.cs) to `:232` (the first line is the names, shrunk to one row), `:249` to `:255` (armed text), `:116` to `:134` (`Arm` and `Confirm`, no time or key-repeat check), `:318` to `:322`. The class comment says the first Enter "says what is about to be destroyed".
+   - Problem: with a marked folder or twelve files the armed screen shows "Wipe 12 items: a, b, c, d…" cut at the width; it does not count the files inside folders or give the size, though `FilePropertiesService.FormatSize` is already used while it runs. A held Enter key, a pasted newline pair or a double press arms and confirms within milliseconds, so the "ask twice" rule can be met without reading. Heuristic: Error prevention.
+   - Improvement: when the dialog opens, count the files and bytes on a background task (the wipe service already walks the tree for progress) and show "N files, M folders, X in total" on the armed screen; ignore an Enter that arrives less than about half a second after arming, and say "Press Enter again" only then. Test with a fake clock.
+   - Effort: M. **Unverified**: that the service's walk can be reused for a count before the run was not traced.
+
+3. **The multi-rename preview cannot be scrolled from the keyboard, and the reason a row is skipped is at the far end of the row** - Severity: **Medium**. Kind: usability (keyboard, error prevention), accessibility.
+   - Where: [iTerminal.Core/Dialogs/MultiRenameDialog.cs:90](../../iTerminal.Core/Dialogs/MultiRenameDialog.cs) (`_previewList.CanFocus = false`, so that Enter reaches the Rename command), `:31` (`PreviewLimit` = 500, no "more" row), `:212` to `:217` (`"{old} -> {new}  status"`, plain text, one colour), `:255` (list height = dialog height minus 9, so 11 rows on an 80x24 terminal), `:209` (the count line "{0} to rename, {1} not renamed").
+   - Problem: the preview is the safety net for the batch, but only the first rows can be read with the keyboard. A blocked, duplicate or "already exists" row at position 40 is counted in the line above but cannot be found. With long names the status words ("blocked by another entry") fall past the right edge, and rows that will not be renamed look like rows that will. Heuristic: Keyboard, Error prevention, Accessibility (a status carried only by trailing text).
+   - Improvement: let the dialog forward Up, Down, PageUp, PageDown and Ctrl+Home/End to the list model while a text box has the focus (a single-line box does not use them), as the folder selector forwards keys to its list; start a not-renamed row with a glyph (`!`) and colour it with `ColorScheme.Error`; end the list with a row "… and N more rows" when the cap cuts it; add a key to jump to the next problem row. A `ListBox<string>` with a `RowColor` callback is enough; no new control.
+   - Effort: M.
+
+4. **The conflict prompt names the file but not what differs, and the first key lands on the "Apply to all" tick box** - Severity: **Medium**. Kind: usability.
+   - Where: [iTerminal.Core/Services/FileConflictResolver.cs:53](../../iTerminal.Core/Services/FileConflictResolver.cs) (message: "{0} is already in the target folder."), [iConsole/Dialogs/ConflictPromptDialog.cs:43](../../iConsole/Dialogs/ConflictPromptDialog.cs) (the tick box is added before the six buttons) with the rule in `Dialog.OnInitializeLayout` (first focusable control gets the focus, [Dialog.cs:47](../../iConsole/Dialogs/Dialog.cs)), `:115` to `:127` (`Draw` splits the message and builds a `ConxelString` per frame, fixed `White` on `DarkRed`).
+   - Problem: the choices include Keep newer and Keep larger, but the prompt shows neither side's date or size, so the user must cancel and look. Opening on the tick box means that Enter, the key every other dialog uses to confirm, does not choose Overwrite, Skip or anything else (what Enter does on a `CheckBox` was not traced; if it toggles, the tick changes silently). Heuristic: Efficiency, Error prevention, Consistency with the other prompts.
+   - Improvement: make the message two lines, "Source: 12.3 MB, 2026-11-14 10:02" and "Target: 11.8 MB, 2026-11-19 08:40", from the two entries the resolver already has (`sourceUrl`, `targetUrl`); add the tick box last or give the safest button (Skip) the first focus; draw the message from a cached `ConxelString` array and use the theme's error colours.
+   - Effort: S to M. **Unverified**: the Enter behaviour on the tick box; a `ConsoleAppDriver` test (open a conflict, press Enter, read the outcome) would settle it.
+
+5. **The "Overwrite" box in Copy and Move takes its hot key from the wrong word and means more than it says** - Severity: **Medium**. Kind: usability (error prevention), consistency, localization.
+   - Where: [iTerminal.Core/Dialogs/TransferDialog.cs:131](../../iTerminal.Core/Dialogs/TransferDialog.cs) to `:135` (`HotKeys.VisibleIn(UiText.Get("Label.Target", ...), 'O')`: the caption passed is "Target", not "Overwrite"), `:83` (`ConflictMode`: ticked is `OverwriteAll`, unticked is `Ask`), [iConsole/Localization/HotKeys.cs:15](../../iConsole/Localization/HotKeys.cs) to `:35`, [Control.cs:911](../../iConsole/Controls/Control.cs) (hot keys fire on Ctrl+letter).
+   - Problem: `VisibleIn("Target", 'O')` finds no `O` and returns the first letter of "Target", so the box answers Ctrl+T, not Ctrl+O. The underline lands on the last `t` of "Overwrite" in English. In German ("Ziel" gives `Z`), Spanish and Italian ("Destino", "Destinazione" give `D`) and Hungarian ("Cél" gives `C`) the letter is not in "Überschreiben", "Sobrescribir", "Sovrascrivi" or "Felülírás", so a hot key works that nothing on screen shows. Separately, the word "Overwrite" reads as a setting for the one file; ticking it silently replaces every existing target of a batch and skips the prompt of finding 4. Heuristic: Consistency, Error prevention, Discoverability.
+   - Improvement: pass the box's own caption (`Label.Overwrite`) to `VisibleIn`; rename the label to "Overwrite existing files without asking" (all six `.resx` files); add a test that every translated caption of the dialog draws its hot key (the same shape as the existing `CreateButtonHotKey` test, if one exists). The fixed letters in `RenameDialog.cs:97` (`'N'`), `MultiRenameDialog.cs:69` to `:83` (`'P'`, `'F'`, `'E'`) and `CreateEntryDialog.cs:59` have the same flaw: "Muster", "Suchen", "Modèle" and "Rechercher" contain no `P` or `F`. Console survey item 147 (an `&` marker in a caption) would remove the whole class; until then use `VisibleIn` everywhere.
+   - Effort: S.
+
+6. **A permanent delete looks the same as a delete to the bin, and it can take a whole folder tree in one Enter** - Severity: **Medium**. Kind: usability (error prevention).
+   - Where: [iTerminal.Core/Dialogs/DeleteDialog.cs:108](../../iTerminal.Core/Dialogs/DeleteDialog.cs) (button "Delete", always `IsDestructive`, so always red), `:132` to `:133` and `:141` to `:142` (Recursive is ticked for any folder), `:212` to `:217` (the bin box is the only place that says which kind of delete it is), `:148` to `:157` (title "Delete folder" or "Delete N items" in both cases), [DeleteCommand.cs:20](../../iTerminal.Core/Commands/DeleteCommand.cs) (Enter anywhere runs it). `key-patterns.md` says destructive actions ask first and that Delete defaults to the bin only where one exists; this is met, but the asking dialog does not say what it is asking.
+   - Problem: with the bin box unticked by hand on Windows, or on SSH, SMB, FTP and the memory drive, the dialog, title and button are the same as for a recoverable delete. A folder is deleted with everything in it after one Enter, and no count or size is shown until the progress window. The red button also marks a recoverable delete as dangerous, so the colour stops carrying information. Heuristic: Error prevention and recovery.
+   - Improvement: when the bin is not used, change the title ("Delete for good"), the button caption ("Delete for good") and draw one line in `ColorScheme.Error` ("This cannot be undone"); keep the red button only in that state. For a folder, show "N items, X in total" once the existing `FolderDeleteDiscoveryTask` has counted (it already walks the tree), on the `_errorLabel` row or a new row.
+   - Effort: S for the wording and colour, M for the count.
+
+7. **The German "not available here" line is cut at the point that says the delete is permanent** - Severity: **Low**. Kind: localization, resilience to size.
+   - Where: [DeleteDialog.cs:200](../../iTerminal.Core/Dialogs/DeleteDialog.cs) (`NoRecycleBinLabel`), `:169` (dialog 80 wide, so the box is 74 cells), [AppStrings.de.resx](../../iTerminal.Core/Localization/Resources/AppStrings.de.resx) key `Field.MoveToRecycleBinNotHere`. The German text is 77 characters; with the two-cell check mark it needs 79. The other languages are 67 to 69 characters. On a terminal narrower than 80 columns `CenterInParent` shrinks the dialog and every language is cut.
+   - Problem: the half of the sentence that is lost is "wird endgültig gelöscht", the warning. Heuristic: Resilience to size and content, Localization.
+   - Improvement: shorten the text ("hier nicht verfügbar — endgültig") or move the explanation to its own `Label` row under the box, wrapped by `InfoLines.Wrap`. Add a test that every translation of the line fits in 74 cells.
+   - Effort: S.
+
+8. **The wipe dialog builds its whole text on every idle pass, from all the paths** - Severity: **Medium**. Kind: performance.
+   - Where: [SecureWipeDialog.cs:218](../../iTerminal.Core/Dialogs/SecureWipeDialog.cs) to `:222` (`OnIdle` calls `UpdateLines`), `:229` to `:232` (`Paths.Select(...)` over every path, `string.Join` of every name, then `Shrink` to one row), `:290`. The comment in [Dialog.cs:98](../../iConsole/Dialogs/Dialog.cs) to `:108` says an idle pass can come hundreds of times a second. The same join is done by `TransferDialog.DescribeSources` ([TransferDialog.cs:293](../../iTerminal.Core/Dialogs/TransferDialog.cs)) on each layout, which includes every resize step, and the result is also stored whole in the read-only name box of `DeleteDialog` (`:128` to `:130`).
+   - Problem: with 20 000 marked rows the string is built and thrown away on every idle pass, in all phases including the idle Choosing screen; the repaint itself is skipped when the lines are equal ([InfoLines.cs:57](../../iTerminal.Core/Controls/InfoLines.cs)), but the allocation is not. It costs frame time exactly when the user has selected the most. Heuristic: Performance, Resilience to content.
+   - Improvement: build the "Wipe …" line once in `Load` (and the byte total once), call `UpdateLines` from `OnIdle` only while `Phase` is `Running`, and make `DescribeSources` stop after the first dozen names with "… and N more".
+   - Effort: S. **Unverified**: no timing; `RecordingStopwatchFactory` over 20 000 paths would confirm.
+
+9. **Several wipe texts are English strings in code** - Severity: **Low**. Kind: localization.
+   - Where: [SecureWipeDialog.cs:165](../../iTerminal.Core/Dialogs/SecureWipeDialog.cs) (`"file"`/`"files"` joined with `FormatSize` and used in all three notifications), `:230` to `:232` ("Wipe  " and "items:"), `:277` to `:283` ("Stopped: …", "Done: …", "Failed: …"), `:280` (`Color.Green` for success). Every other line of the dialog goes through `UiText.Get`.
+   - Problem: in a German or Hungarian session the result screen and the toast bodies switch to English, and the success colour ignores the scheme. Heuristic: Consistency, Localization.
+   - Improvement: add keys `Wipe.Title`, `Wipe.Names`, `Wipe.Stopped`, `Wipe.Done`, `Wipe.FailedItem`, `Wipe.FilesCount` to all six `.resx` files; take the success colour from the scheme (R3 finding 15 proposes `Success`).
+   - Effort: S.
+
+10. **The marks are cleared before a delete or rename has run, so a cancelled or failed batch cannot be repeated** - Severity: **Low**. Kind: usability (error recovery).
+    - Where: [DeleteCommand.cs:110](../../iTerminal.Core/Commands/DeleteCommand.cs) (batch: `ConsumeMarks` before `taskManager.Add`), `:79` (single: after the progress window opens), [MultiRenameCommand.cs:73](../../iTerminal.Core/Commands/MultiRenameCommand.cs), [TransferCommand.cs:123](../../iTerminal.Core/Commands/TransferCommand.cs) and `:179`; [TransferCommand.cs:293](../../iTerminal.Core/Commands/TransferCommand.cs) to `:300` (`ClearMarks`, `Update`). The reason in the comments is right (stale marks would repeat the batch).
+    - Problem: with R3 finding 1 (Esc on the progress window cancels at once) a user who stops a 200-file delete halfway has lost the selection and must mark the rest again from memory. Heuristic: Error recovery.
+    - Improvement: clear the marks of the entries that finished, not all of them: `BatchOperationTask` knows each step's status; on a cancelled or failed run re-mark the steps that did not complete (`SetMark`) from the `RefreshWhenFinished` callback. Only for the cancelled and failed cases.
+    - Effort: M. **Unverified**: that `BatchOperationTask` exposes the per-step status to the callback was not read.
+
+11. **The rename dialog's key hints replace the form's, and the box accepts a path without saying so** - Severity: **Low**. Kind: consistency, discoverability.
+    - Where: [iTerminal.Core/Dialogs/RenameDialog.cs:178](../../iTerminal.Core/Dialogs/RenameDialog.cs) to `:183` (hints Enter, Tab, Esc only; `FormDialog.GetKeyHints` also lists Shift+Tab), `:44` to `:62` (`ResolveTarget`: text with a separator is the full target, so a rename can move the entry), `:94` (label "Name"). Copy and Move label their box "To" and show the resolved target under it ([TransferDialog.cs:256](../../iTerminal.Core/Dialogs/TransferDialog.cs)).
+    - Problem: typing `sub/x` into a box called "Name" moves the file; nothing in the dialog says that, and the Overwrite box has no hint either. Heuristic: Discoverability, Consistency.
+    - Improvement: call `base.GetKeyHints()` first and add the Overwrite line; show the same resolved-target line as the transfer dialog when the text contains a separator. The three selection details (name without extension) are good and stay.
+    - Effort: S.
+
+#### What works well
+
+- `TransferSpaceGuard` checks free space before a copy and prompts, and `TransferDialog` shows the resolved destination live under the box (`UpdateTargetPreview`), so a bare name typed into "To" is never a surprise.
+- `DeleteDialog` starts on the Recycle Bin (Trash on Linux) only where one exists, disables the box elsewhere and says why (`ApplyRecycleBinAvailability`), and scrolls the read-only path to its end so the name being deleted stays visible.
+- `RenameDialog` selects the name without its extension (`NameSelection`), so typing keeps `.docx`; the batch rename is undoable with Ctrl+Z (`RenameUndoService`).
+- `MultiRenamePlanner` works on names only, so the preview can recompute on every key without touching a disk; `MultiRenameCommand.CanExecute` is false when no row would be renamed, and non-`Ok` rows are never submitted.
+- `FormDialog` clears an error when the user starts typing again, and `CenterInParent` clamps a dialog to the screen, so 80x24 shows every dialog here whole.
+- The wipe dialog says plainly what an overwrite cannot reach (SSD remapping, snapshots, copy-on-write), asks twice, and states that Esc keeps what was already wiped.
+- The conflict resolver serialises prompts, keeps "apply to all" for the run, and Esc means Cancel of the whole run, as the dialog's comment says.
+
+#### Research cross-reference
+
+- **Console survey item 147 (hot-key marker in a caption):** confirmed and given a cost by finding 5. Five dialogs here pass fixed letters, and one passes the wrong caption; an `&` marker in the caption would make the key and its underline come from one string and survive translation.
+- **Console survey item 94 (quick modal dialogs):** the conflict prompt and the wipe's four-phase machine are two more hand-built confirmations (see R3 cross-reference for the Git client's); the phase-specific footer of finding 1 would come free from a shared "prompt with phases" helper.
+- **Tui comparison item 72 (form bound to a model):** `DeleteDialog`, `RenameDialog` and `TransferDialog` each repeat the same Url, label and button wiring on top of `FormDialog`; no change needed before the research item is built.
+- **Security survey item 23 (sanitisation category and record for a wipe):** needs a layout decision first. The Choosing screen already uses 11 of its 13 rows (`SecureWipeDialog.cs:236` to `:248`), and finding 2 wants one more line on the armed screen; a category line and a "record saved" line would need a taller dialog or a second page. The research text about what the dialog states matches the source.
+- **AI survey item 16 (shared approval shape):** these dialogs hold the preview a human sees before a delete, move or wipe; if the AI approval dialog and these dialogs are to say the same thing ("N items, X in total, permanent"), findings 2 and 6 should be built first so the summary exists as data. Not checked in `AiActionApprovalService`.
+- **Console survey item 1 (wide characters):** `TransferDialog`, `DeleteDialog` and `MultiRenameDialog` still count characters in `ScrollableSize`, `Shrink` and `PadRight`; covered by R1 finding 4, not repeated here.
+
+#### Suggested order
+
+1. Quick wins (S): finding 5 (caption for the hot key, label wording), finding 1 (footer per phase), finding 7 (German line), finding 9 (wipe strings), finding 11 (rename hints), finding 8 (build the line once).
+2. Medium, high leverage: finding 6 (permanent delete wording), finding 3 (preview keyboard and status), finding 4 (conflict details and focus), finding 2 (armed counts and double-Enter guard).
+3. Low: finding 10 (re-mark after a cancelled batch), after R3 finding 1 (Esc on the progress window) is decided, because they interact.
+
+Nothing here is High: no finding shows data loss or a measured miss of the 200 ms budget. Findings 2, 4 and 8 could reach that on a real system and should be confirmed first with a `ConsoleAppDriver` test (finding 4), a fake clock (finding 2) and `RecordingStopwatchFactory` (finding 8).
+
+#### Status of earlier findings
+
+Checked against the source at `3ba7401f`. Commits since the R3 pass (`df3d2ad1` to `3ba7401f`) changed only agent definitions, `CLAUDE.md` and this document (`git diff --stat df3d2ad1 HEAD`), so no source file moved. Spot-checked: R3 finding 1 (`ProgressWindow` `CancelOrCloseCommand` on Esc), R3 finding 2 (`INotificationService.History` still has no reader outside the service and tests), R3 finding 3 (`GitClientDialog.cs:1061` still switches on `'P'`): all **open**. The remaining R1 to R3 findings were not re-read in this pass and keep the status given in R3.
