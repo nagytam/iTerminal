@@ -4497,7 +4497,7 @@
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:retour  Del/c:effacer  Space:appuyer sur la touche  Ctrl+←/→:mode  Esc:fermer</value>
   </data>
   <data name="Hints.SolutionViewer" xml:space="preserve">
-    <value>b:compiler c:nettoyer t:tester r:exécuter x:annuler v:SDK Space:cocher a:tout T:tests PgUp/PgDn/Home/End:sortie Esc:fermer</value>
+    <value>b:compiler c:nettoyer t:tester r:exécuter x:annuler v:SDK s:SBOM f:XML/JSON Space:cocher a:tout T:tests PgUp/PgDn/Home/End:sortie Esc:fermer</value>
   </data>
   <data name="Hints.MusicViewer" xml:space="preserve">
     <value> Space:lecture/pause Enter:depuis le début s:stop ←/→:avancer Shift+←/→:avancer plus +/-:volume e:balises Esc:fermer</value>
@@ -11104,5 +11104,32 @@
   </data>
   <data name="Terminal.ShellEnded" xml:space="preserve">
     <value>Le shell s'est arrêté (exit, ou une erreur qui l'a stoppé). La commande suivante démarre une nouvelle session.</value>
+  </data>
+  <data name="DialogHint.GenerateSbom" xml:space="preserve">
+    <value>Écrire une SBOM CycloneDX de la solution</value>
+  </data>
+  <data name="DialogHint.SbomFormat" xml:space="preserve">
+    <value>Basculer la SBOM entre XML et JSON</value>
+  </data>
+  <data name="Solution.SbomWriting" xml:space="preserve">
+    <value>Écriture de la SBOM...</value>
+  </data>
+  <data name="Solution.SbomWritten" xml:space="preserve">
+    <value>SBOM de {0} paquets écrite dans {1}.</value>
+  </data>
+  <data name="Solution.SbomNoAssets" xml:space="preserve">
+    <value>Aucun project.assets.json trouvé : compilez ou restaurez d'abord la solution.</value>
+  </data>
+  <data name="Solution.SbomMissingSome" xml:space="preserve">
+    <value>{0} projets n'avaient pas de fichier d'assets et sont omis.</value>
+  </data>
+  <data name="Solution.SbomBusy" xml:space="preserve">
+    <value>dotnet {0} est encore en cours ; écrivez la SBOM après sa fin.</value>
+  </data>
+  <data name="Solution.SbomFailed" xml:space="preserve">
+    <value>Échec de la SBOM : {0}</value>
+  </data>
+  <data name="Solution.SbomFormat" xml:space="preserve">
+    <value>Format de la SBOM : {0}.</value>
   </data>
 </root>

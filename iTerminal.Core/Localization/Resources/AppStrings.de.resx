@@ -4497,7 +4497,7 @@
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:zurück  Del/c:löschen  Space:Taste drücken  Ctrl+←/→:Modus  Esc:schließen</value>
   </data>
   <data name="Hints.SolutionViewer" xml:space="preserve">
-    <value>b:erstellen c:bereinigen t:testen r:ausführen x:abbrechen v:SDK Space:markieren a:alle T:Tests PgUp/PgDn/Home/End:Ausgabe Esc:schließen</value>
+    <value>b:erstellen c:bereinigen t:testen r:ausführen x:abbrechen v:SDK s:SBOM f:XML/JSON Space:markieren a:alle T:Tests PgUp/PgDn/Home/End:Ausgabe Esc:schließen</value>
   </data>
   <data name="Hints.MusicViewer" xml:space="preserve">
     <value> Space:Wiedergabe/Pause Enter:von vorn s:Stopp ←/→:spulen Shift+←/→:weiter spulen +/-:Lautstärke e:Tags Esc:schließen</value>
@@ -11168,5 +11168,32 @@
   </data>
   <data name="Terminal.ShellEnded" xml:space="preserve">
     <value>Die Shell wurde beendet (exit oder ein Fehler, der sie gestoppt hat). Der nächste Befehl startet eine neue Sitzung.</value>
+  </data>
+  <data name="DialogHint.GenerateSbom" xml:space="preserve">
+    <value>Eine CycloneDX-SBOM der Projektmappe schreiben</value>
+  </data>
+  <data name="DialogHint.SbomFormat" xml:space="preserve">
+    <value>SBOM zwischen XML und JSON umschalten</value>
+  </data>
+  <data name="Solution.SbomWriting" xml:space="preserve">
+    <value>Die SBOM wird geschrieben...</value>
+  </data>
+  <data name="Solution.SbomWritten" xml:space="preserve">
+    <value>SBOM mit {0} Paketen nach {1} geschrieben.</value>
+  </data>
+  <data name="Solution.SbomNoAssets" xml:space="preserve">
+    <value>Keine project.assets.json gefunden: Projektmappe zuerst erstellen oder wiederherstellen.</value>
+  </data>
+  <data name="Solution.SbomMissingSome" xml:space="preserve">
+    <value>{0} Projekte hatten keine Assets-Datei und fehlen daher.</value>
+  </data>
+  <data name="Solution.SbomBusy" xml:space="preserve">
+    <value>dotnet {0} läuft noch; die SBOM wird nach Abschluss geschrieben.</value>
+  </data>
+  <data name="Solution.SbomFailed" xml:space="preserve">
+    <value>SBOM fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Solution.SbomFormat" xml:space="preserve">
+    <value>SBOM-Format: {0}.</value>
   </data>
 </root>

@@ -4497,7 +4497,7 @@
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:back  Del/c:clear  Space:press button  Ctrl+←/→:mode  Esc:close</value>
   </data>
   <data name="Hints.SolutionViewer" xml:space="preserve">
-    <value>b:build c:clean t:test r:run x:cancel v:SDK Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close</value>
+    <value>b:build c:clean t:test r:run x:cancel v:SDK s:SBOM f:XML/JSON Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close</value>
   </data>
   <data name="Hints.MusicViewer" xml:space="preserve">
     <value> Space:play/pause Enter:from start s:stop ←/→:seek Shift+←/→:seek further +/-:volume e:tags Esc:close</value>
@@ -11310,5 +11310,32 @@
   </data>
   <data name="Terminal.ShellEnded" xml:space="preserve">
     <value>The shell ended (exit, or an error that stopped it). The next command starts a new session.</value>
+  </data>
+  <data name="DialogHint.GenerateSbom" xml:space="preserve">
+    <value>Write a CycloneDX SBOM of the solution</value>
+  </data>
+  <data name="DialogHint.SbomFormat" xml:space="preserve">
+    <value>Switch the SBOM between XML and JSON</value>
+  </data>
+  <data name="Solution.SbomWriting" xml:space="preserve">
+    <value>Writing the SBOM...</value>
+  </data>
+  <data name="Solution.SbomWritten" xml:space="preserve">
+    <value>Wrote an SBOM of {0} packages to {1}.</value>
+  </data>
+  <data name="Solution.SbomNoAssets" xml:space="preserve">
+    <value>No project.assets.json found: build or restore the solution first.</value>
+  </data>
+  <data name="Solution.SbomMissingSome" xml:space="preserve">
+    <value>{0} projects had no assets file and are left out.</value>
+  </data>
+  <data name="Solution.SbomBusy" xml:space="preserve">
+    <value>dotnet {0} is still running; the SBOM can be written when it finishes.</value>
+  </data>
+  <data name="Solution.SbomFailed" xml:space="preserve">
+    <value>SBOM failed: {0}</value>
+  </data>
+  <data name="Solution.SbomFormat" xml:space="preserve">
+    <value>SBOM format: {0}.</value>
   </data>
 </root>

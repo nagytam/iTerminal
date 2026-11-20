@@ -30,6 +30,19 @@ public class SolutionViewerDialogTest
         public SolutionInfo ParseSolution(string solutionPath) =>
             ParseFailure is not null ? throw ParseFailure : Solution;
 
+        public List<SbomFormat> SbomRequests { get; } = [];
+        public SbomResult Sbom { get; set; } = new("/src/Demo.cdx.xml", 3, 0);
+
+        public SbomResult GenerateSbom(SolutionInfo solution, SbomFormat format)
+        {
+            lock (SbomRequests)
+            {
+                SbomRequests.Add(format);
+            }
+
+            return Sbom;
+        }
+
         public async Task<int> RunAsync(string workingDirectory, string dotnetPath, IReadOnlyList<string> arguments, Action<string> onOutputLine, CancellationToken cancellationToken = default)
         {
             lock (Runs)
@@ -127,6 +140,57 @@ public class SolutionViewerDialogTest
         });
 
         AssertScreenContains(Render(dialog), "No projects found in solution.");
+    }
+
+    private static async Task WaitForStatusAsync(SolutionViewerDialog dialog, string text)
+    {
+        // The SBOM is written on a background task and reports into the status line when it lands.
+        for (var i = 0; i < 500 && !dialog.StatusForTest.Contains(text, StringComparison.Ordinal); i++)
+        {
+            await Task.Delay(10);
+        }
+
+        StringAssert.Contains(dialog.StatusForTest, text);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task SWritesTheSbomAsXmlByDefault()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects() };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('s'));
+        await WaitForStatusAsync(dialog, "Wrote an SBOM of 3 packages to /src/Demo.cdx.xml.");
+
+        CollectionAssert.AreEqual(new[] { SbomFormat.Xml }, service.SbomRequests.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task FSwitchesTheSbomToJsonForTheNextWrite()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects() };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('f'));
+        StringAssert.Contains(dialog.StatusForTest, "SBOM format: JSON.");
+
+        await dialog.HandleKeyEventAsync(Char('s'));
+        await WaitForStatusAsync(dialog, "Wrote an SBOM");
+
+        CollectionAssert.AreEqual(new[] { SbomFormat.Json }, service.SbomRequests.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ASolutionWithoutAssetsSaysToBuildFirst()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects(), Sbom = new SbomResult(string.Empty, 0, 2) };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('s'));
+        await WaitForStatusAsync(dialog, "build or restore the solution first.");
     }
 
     [Timeout(60_000)]

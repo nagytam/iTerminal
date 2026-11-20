@@ -435,6 +435,11 @@ on the project under the cursor, or on the whole solution for build, clean and t
   SDK's version, and each command's first output line names it. `v` cycles through the installed SDKs; the next command
   uses the chosen one, and a running command keeps the SDK it started with. Each command runs the SDK's own `dotnet`
   host. A `global.json` in the solution folder can still pin a different SDK; the host applies it as usual.
+- **SBOM.** `s` writes a CycloneDX 1.6 software bill of materials of the whole solution beside the `.slnx`, as
+  `<Name>.cdx.xml` (the default) or `<Name>.cdx.json`; `f` switches the format. The packages come from each project's
+  `obj/project.assets.json` (`GenerateSbom`), so the projects must have been built or restored: a solution without
+  such files writes nothing and says so. The file is replaced on each write. No process runs, and the write is
+  off the UI thread.
 - **Finishing a run.** A run ends when the `dotnet` process exits. Its output is then read for a short grace period
   (2 seconds), not until the pipe closes: MSBuild can leave a build node running that holds the pipe open, which used to
   leave the dialog busy after a command had finished.
