@@ -87,6 +87,26 @@ public class FolderSelectorSpecialFoldersTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TypingALetter_JumpsToThePlaceStartingWithIt()
+    {
+        var (page, harness) = await CreatePageAsync();
+        page.SetFocus();
+        var memoryRow = page.Places.ToList().IndexOf(Container.MEMORY_DRIVE);
+        Assert.IsTrue(memoryRow > 0);
+
+        // Typed quickly, the letters build one prefix ("mem") instead of each starting a new search.
+        var handled = false;
+        handled |= await page.HandleKeyEventAsync(new KeyEvent('m', ConsoleKey.M, false, false, false));
+        handled |= await page.HandleKeyEventAsync(new KeyEvent('e', ConsoleKey.E, false, false, false));
+        handled |= await page.HandleKeyEventAsync(new KeyEvent('m', ConsoleKey.M, false, false, false));
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.Enter));
+
+        Assert.IsTrue(handled);
+        CollectionAssert.AreEqual(new[] { Container.MEMORY_DRIVE }, harness.Navigations);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Enter_OnAVirtualDrive_KeepsItsScheme()
     {
         var (page, harness) = await CreatePageAsync();

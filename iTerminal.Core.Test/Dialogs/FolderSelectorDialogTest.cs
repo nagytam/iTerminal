@@ -182,7 +182,11 @@ public class FolderSelectorDialogTest
         // is: matching is a substring test, and the temp path only has a 'C' on Windows.
         autoCompletion.CompletionModel.InsertCompletion(Path.Combine(Path.GetTempPath(), "Completion"));
         await FolderSelectorTestHarness.PressAsync(root, new KeyEvent('C', ConsoleKey.C, false, false, false));
-        await WaitForAsync(() => autoCompletion.IsPopupOpen);
+        await WaitForAsync(() =>
+        {
+            root.OnIdle(); // the match update parks its visibility for the UI thread's idle pass
+            return autoCompletion.IsPopupOpen;
+        });
         Assert.IsTrue(autoCompletion.IsPopupOpen, "The suggestion list should be up before the key under test.");
         return autoCompletion;
     }
@@ -232,7 +236,11 @@ public class FolderSelectorDialogTest
         autoCompletion.CompletionModel.InsertCompletion("zz-two");
         var typeZ = new KeyEvent('z', ConsoleKey.Z, false, false, false);
         await FolderSelectorTestHarness.PressAsync(root, typeZ);
-        await WaitForAsync(() => autoCompletion.IsPopupOpen);
+        await WaitForAsync(() =>
+        {
+            root.OnIdle(); // the match update parks its visibility for the UI thread's idle pass
+            return autoCompletion.IsPopupOpen;
+        });
         Assert.IsTrue(autoCompletion.IsPopupOpen);
 
         await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.Escape));
@@ -240,7 +248,11 @@ public class FolderSelectorDialogTest
         Assert.AreEqual("z", page.Path, "Esc must not edit the text.");
 
         await FolderSelectorTestHarness.PressAsync(root, typeZ);
-        await WaitForAsync(() => autoCompletion.IsPopupOpen);
+        await WaitForAsync(() =>
+        {
+            root.OnIdle(); // the match update parks its visibility for the UI thread's idle pass
+            return autoCompletion.IsPopupOpen;
+        });
 
         Assert.IsTrue(autoCompletion.IsPopupOpen, "The next keystroke should bring the suggestions back.");
         Assert.IsTrue(dialog.IsVisible);
