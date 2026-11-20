@@ -35,7 +35,7 @@ public class ComputerOpponentTest
         for (int seed = 0; seed < 2; seed++)
         {
             Random random = new(seed);
-            ChessGame game = new(new Random(seed)) { VsComputer = true };
+            ChessGame game = new(new Random(seed)) { VsComputer = true, SearchMilliseconds = 50 };
             PlayOut(game, () =>
             {
                 IReadOnlyList<ChessMove> moves = game.LegalMoves;
@@ -74,7 +74,7 @@ public class ComputerOpponentTest
         for (int seed = 0; seed < 2; seed++)
         {
             Random random = new(seed);
-            NineMensMorrisGame game = new(new Random(seed)) { VsComputer = true };
+            NineMensMorrisGame game = new(new Random(seed)) { VsComputer = true, SearchMilliseconds = 50 };
             PlayOut(game, () =>
             {
                 List<MorrisMove> moves = MorrisState.Moves(game.State);

@@ -856,6 +856,9 @@ public class NineMensMorrisGame : GameBase
         return board;
     }
 
+    /// <summary>How long the computer may search for a move, in milliseconds. Tests lower it.</summary>
+    public int SearchMilliseconds { get; set; } = 2000;
+
     public override Func<CancellationToken, Action?>? PlanComputerMove()
     {
         if (!IsComputerTurn)
@@ -866,9 +869,10 @@ public class NineMensMorrisGame : GameBase
         MorrisState snapshot = _state;
         int version = Version;
         int seed = Random.Next();
+        int budget = SearchMilliseconds;
         return token =>
         {
-            MorrisMove? move = new MorrisSearch(new Random(seed), token, 10, 2000).Best(snapshot);
+            MorrisMove? move = new MorrisSearch(new Random(seed), token, 10, budget).Best(snapshot);
             return move is null ? null : () =>
             {
                 if (version != Version)
