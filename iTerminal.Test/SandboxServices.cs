@@ -860,7 +860,6 @@ public static class SandboxServices
                 full));
     }
 
-    /// <summary>The network tools with fixed answers: the same lines a run prints, but nothing is pinged, resolved or queried.</summary>
     /// <summary>
     /// The file transfer share, answered without a socket: a start shows one fixed address and its code, and nothing
     /// is served, so no run listens on the LAN.
@@ -893,6 +892,7 @@ public static class SandboxServices
         }
     }
 
+    /// <summary>The network tools with fixed answers: the same lines a run prints, but nothing is pinged, resolved or queried.</summary>
     public sealed class NetworkToolRunner : Core.Services.NetworkTools.INetworkToolService
     {
         public Task RunAsync(Core.Services.NetworkTools.NetworkToolKind kind, string target, Action<string> writeLine, CancellationToken cancellationToken = default)
