@@ -8557,6 +8557,9 @@
   <data name="FolderTree.Count" xml:space="preserve">
     <value>Numero di cartelle: {0}</value>
   </data>
+  <data name="FolderTree.Indexing" xml:space="preserve">
+    <value>Indicizzazione in corso... {0} cartelle finora</value>
+  </data>
   <data name="FolderPath.TabCompletes" xml:space="preserve">
     <value>Tab completa. Schemi: </value>
   </data>

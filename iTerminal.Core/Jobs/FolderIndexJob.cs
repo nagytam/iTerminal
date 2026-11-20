@@ -41,6 +41,9 @@ public class FolderIndexJob : Job
                 _folderIndexModel.Children.Add(child);
             }
         }
+
+        // Set before the walk is requested, so the tree says it is still growing from the first frame.
+        _folderIndexModel.IsWalking = !_queue.IsEmpty;
     }
 
     private void LoadCacheEntries()
@@ -70,6 +73,7 @@ public class FolderIndexJob : Job
                     Folder child = new(_folderIndexModel, item.Url);
                     _folderIndexModel.Children.Add(child);
                     _queue.Enqueue(child);
+                    _folderIndexModel.IsWalking = true;
                 }
             }
         }
@@ -108,6 +112,9 @@ public class FolderIndexJob : Job
             catch
             {
             }
+
+            // Cleared here, before the idle delay below, so the tree stops saying it is growing as soon as the queue drains.
+            _folderIndexModel.IsWalking = !_queue.IsEmpty;
 
             if (!cancellationToken.IsCancellationRequested && _queue.IsEmpty)
             {

@@ -8621,6 +8621,9 @@
   <data name="FolderTree.Count" xml:space="preserve">
     <value>Anzahl der Ordner: {0}</value>
   </data>
+  <data name="FolderTree.Indexing" xml:space="preserve">
+    <value>Indexierung läuft ... {0} Ordner bisher</value>
+  </data>
   <data name="FolderPath.TabCompletes" xml:space="preserve">
     <value>Tab vervollständigt. Schemata: </value>
   </data>
