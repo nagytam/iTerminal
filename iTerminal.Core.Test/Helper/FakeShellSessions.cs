@@ -24,6 +24,24 @@ public sealed class FakeShellSessions : ILocalShellSessionService
 
     public int InterruptCount { get; private set; }
 
+    /// <summary>The sandbox names offered. Defaults to none and bubblewrap; a switch is remembered.</summary>
+    public List<string> Sandboxes { get; set; } = ["none", "bubblewrap"];
+
+    public string SelectedSandbox { get; private set; } = "none";
+
+    public IReadOnlyList<string> AvailableSandboxes() => Sandboxes;
+
+    public bool SwitchSandbox(string name)
+    {
+        if (IsBusy || !Sandboxes.Contains(name))
+        {
+            return false;
+        }
+
+        SelectedSandbox = name;
+        return true;
+    }
+
     public IReadOnlyList<(string Folder, string Command)> Calls
     {
         get

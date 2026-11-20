@@ -10,12 +10,14 @@ namespace iTerminal.Core.Services.Shell;
 /// the panel has moved since the last command; after a command the panel is told the session's folder, and the
 /// caller moves the panel only while it still shows the folder the command started from.</para>
 /// </summary>
-public sealed class LocalShellSessionService(ISettingsService settings) : ILocalShellSessionService
+public sealed class LocalShellSessionService(ISettingsService settings, IEnumerable<ISessionSandbox> sandboxes) : ILocalShellSessionService
 {
     private readonly Lock _gate = new();
     private readonly Lazy<IReadOnlyList<ShellKind>> _available = new(FindAvailable);
+    private readonly IReadOnlyList<ISessionSandbox> _sandboxes = sandboxes.ToList();
     private LocalShellSession? _session;
     private ShellKind? _selected;
+    private ISessionSandbox? _sandbox;
     private string? _panelFolder;
     private int _busy;
 
@@ -34,6 +36,44 @@ public sealed class LocalShellSessionService(ISettingsService settings) : ILocal
                 return _selected ??= Initial(settings.Get(ShellKinds.SettingKey), _available.Value);
             }
         }
+    }
+
+    public IReadOnlyList<string> AvailableSandboxes() =>
+        _sandboxes.Where(sandbox => sandbox.IsAvailable).Select(sandbox => sandbox.Name).ToList();
+
+    public string SelectedSandbox
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return CurrentSandbox().Name;
+            }
+        }
+    }
+
+    public bool SwitchSandbox(string name)
+    {
+        if (IsBusy || !AvailableSandboxes().Contains(name, StringComparer.Ordinal))
+        {
+            return false;
+        }
+
+        lock (_gate)
+        {
+            if (CurrentSandbox().Name == name)
+            {
+                return true;
+            }
+
+            _session?.Dispose();
+            _session = null;
+            _panelFolder = null;
+            _sandbox = _sandboxes.First(sandbox => sandbox.Name == name);
+            settings.Set(SessionSandboxes.SettingKey, name);
+        }
+
+        return true;
     }
 
     public bool Switch(ShellKind kind)
@@ -136,7 +176,7 @@ public sealed class LocalShellSessionService(ISettingsService settings) : ILocal
             _session?.Dispose();
             var kind = _selected ??= Initial(settings.Get(ShellKinds.SettingKey), _available.Value);
             var program = ShellLaunch.FindOnPath(ShellKinds.Name(kind)) ?? ShellKinds.Name(kind);
-            _session = LocalShellSession.Start(kind, program, folder);
+            _session = LocalShellSession.Start(kind, program, folder, CurrentSandbox());
             _panelFolder = null;
             return _session;
         }
@@ -153,6 +193,19 @@ public sealed class LocalShellSessionService(ISettingsService settings) : ILocal
                 _panelFolder = null;
             }
         }
+    }
+
+    /// <summary>The sandbox sessions start through. Read once from the setting; a saved name that is not available falls back to <c>none</c>.</summary>
+    private ISessionSandbox CurrentSandbox()
+    {
+        _sandbox ??= InitialSandbox(settings.Get(SessionSandboxes.SettingKey));
+        return _sandbox;
+    }
+
+    private ISessionSandbox InitialSandbox(string? setting)
+    {
+        var sandbox = _sandboxes.FirstOrDefault(candidate => candidate.IsAvailable && candidate.Name == setting);
+        return sandbox ?? _sandboxes.First(candidate => candidate.Name == SessionSandboxes.NoneName);
     }
 
     private static bool SameFolder(string a, string b) =>

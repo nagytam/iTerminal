@@ -11151,6 +11151,18 @@
   <data name="Terminal.ShellSwitched" xml:space="preserve">
     <value>Shell ist jetzt {0}. Die Variablen und der Ordner der bisherigen Sitzung sind weg.</value>
   </data>
+  <data name="Terminal.SandboxList" xml:space="preserve">
+    <value>Sandboxes: {0}. Aktuell: {1}.</value>
+  </data>
+  <data name="Terminal.SandboxUnknown" xml:space="preserve">
+    <value>sandbox: {0} ist hier nicht verfügbar. Verfügbar: {1}.</value>
+  </data>
+  <data name="Terminal.SandboxBusy" xml:space="preserve">
+    <value>Ein Befehl läuft: die Sandbox kann erst danach gewechselt werden.</value>
+  </data>
+  <data name="Terminal.SandboxSwitched" xml:space="preserve">
+    <value>Sandbox ist jetzt {0}. Die Variablen und der Ordner der Sitzung sind weg.</value>
+  </data>
   <data name="Terminal.ShellInterrupted" xml:space="preserve">
     <value>Mit Esc unterbrochen: die Shell-Sitzung wurde beendet, ihre Variablen und ihr Ordner sind weg.</value>
   </data>

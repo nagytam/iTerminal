@@ -40,7 +40,7 @@ public class LocalShellSessionTest
             Assert.Inconclusive($"{ShellKinds.Name(kind)} is not installed here.");
         }
 
-        return LocalShellSession.Start(kind, program, _folder);
+        return LocalShellSession.Start(kind, program, _folder, new NoSandbox());
     }
 
     private static async Task<ShellCommandResult> RunWithin(LocalShellSession session, string command, int seconds = 15) =>

@@ -139,4 +139,69 @@ public class TerminalModelShellTest
 
         contentModelService.Verify(s => s.SetUrlAsync(It.IsAny<string>(), It.IsAny<Url>()), Times.Never);
     }
+
+    [TestMethod]
+    public void SandboxLineArgument_IsEmptyForABareSandbox_TheNameForASandboxLine_AndNullForAnythingElse()
+    {
+        Assert.AreEqual(string.Empty, TerminalModel.SandboxLineArgument("sandbox"));
+        Assert.AreEqual("bubblewrap", TerminalModel.SandboxLineArgument("sandbox bubblewrap"));
+        Assert.IsNull(TerminalModel.SandboxLineArgument("sandbox none; ls"));
+        Assert.IsNull(TerminalModel.SandboxLineArgument("sandboxed"));
+        Assert.IsNull(TerminalModel.SandboxLineArgument("shell sandbox"));
+    }
+
+    [TestMethod]
+    public void RunSandboxLine_BareSandbox_ListsTheAvailableSandboxesAndMarksTheCurrentOne()
+    {
+        var sessions = new FakeShellSessions();
+        var terminal = NewTerminal(sessions: sessions);
+        var command = new TerminalCommand { Command = "sandbox" };
+
+        terminal.RunSandboxLineAsync(command, string.Empty).Wait();
+
+        Assert.IsNull(command.Error);
+        StringAssert.Contains(command.Output, "none, bubblewrap");
+        StringAssert.Contains(command.Output, "Current: none");
+    }
+
+    [TestMethod]
+    public void RunSandboxLine_NamedSandbox_SwitchesTheSession()
+    {
+        var sessions = new FakeShellSessions();
+        var terminal = NewTerminal(sessions: sessions);
+        var command = new TerminalCommand { Command = "sandbox bubblewrap" };
+
+        terminal.RunSandboxLineAsync(command, "bubblewrap").Wait();
+
+        Assert.AreEqual("bubblewrap", sessions.SelectedSandbox);
+        StringAssert.Contains(command.Output, "Sandbox is now bubblewrap");
+        Assert.AreEqual(0, command.ExitCode);
+    }
+
+    [TestMethod]
+    public void RunSandboxLine_AnUnavailableName_IsRefusedWithTheAvailableOnes()
+    {
+        var sessions = new FakeShellSessions { Sandboxes = ["none"] };
+        var terminal = NewTerminal(sessions: sessions);
+        var command = new TerminalCommand { Command = "sandbox bubblewrap" };
+
+        terminal.RunSandboxLineAsync(command, "bubblewrap").Wait();
+
+        StringAssert.Contains(command.Error, "sandbox: bubblewrap is not available here. Available: none");
+        Assert.AreEqual(1, command.ExitCode);
+        Assert.AreEqual("none", sessions.SelectedSandbox);
+    }
+
+    [TestMethod]
+    public void RunSandboxLine_WhileACommandRuns_IsRefused()
+    {
+        var sessions = new FakeShellSessions { IsBusy = true };
+        var terminal = NewTerminal(sessions: sessions);
+        var command = new TerminalCommand { Command = "sandbox bubblewrap" };
+
+        terminal.RunSandboxLineAsync(command, "bubblewrap").Wait();
+
+        StringAssert.Contains(command.Error, "A command is running");
+        Assert.AreEqual("none", sessions.SelectedSandbox);
+    }
 }
