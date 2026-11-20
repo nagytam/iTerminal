@@ -197,4 +197,20 @@ public class FolderHistoryServiceTest
 
         CollectionAssert.AreEqual(new[] { "file:///a", "file:///b" }, reloaded.History.AsSnapshot().ToList());
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AFolderWithASemicolonInItsName_ComesBackAsOneEntry()
+    {
+        var values = new Dictionary<string, string>();
+        var settings = new Mock<ISettingsService>();
+        settings.Setup(s => s.Get(It.IsAny<string>())).Returns((string key) => values.GetValueOrDefault(key));
+        settings.Setup(s => s.Set(It.IsAny<string>(), It.IsAny<string>())).Callback((string key, string value) => values[key] = value);
+
+        new FolderHistoryService(settings.Object).Add(new Url(@"/tmp/a;b"));
+        var reloaded = new FolderHistoryService(settings.Object);
+
+        Assert.AreEqual(1, reloaded.History.Count);
+        Assert.AreEqual(new Url(@"/tmp/a;b").FullUrl, reloaded.History[0]);
+    }
 }

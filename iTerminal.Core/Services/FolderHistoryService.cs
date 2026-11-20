@@ -36,7 +36,7 @@ public class FolderHistoryService
         var history = _settingsService.Get(SettingsService.FOLDER_HISTORY);
         if (history is not null)
         {
-            foreach (var folder in history.Split(";"))
+            foreach (var folder in FolderListCodec.Split(history).Where(folder => folder.Length > 0))
             {
                 History.Add(folder);
             }
@@ -45,7 +45,6 @@ public class FolderHistoryService
 
     private void UpdateSettings()
     {
-        var history = History.AsSnapshot().Aggregate((a, b) => a + ";" + b);
-        _settingsService.Set(SettingsService.FOLDER_HISTORY, history);
+        _settingsService.Set(SettingsService.FOLDER_HISTORY, FolderListCodec.Join(History.AsSnapshot()));
     }
 }
