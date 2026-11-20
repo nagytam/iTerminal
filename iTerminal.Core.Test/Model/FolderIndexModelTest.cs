@@ -17,4 +17,20 @@ public class FolderIndexModelTest
         Assert.IsTrue(root.IsOpened);
         Assert.IsTrue(root.IsFocused);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsWalking_RaisesPropertyChangedOnlyWhenItChanges()
+    {
+        var root = new FolderIndexModel();
+        var raised = new List<string?>();
+        root.PropertyChanged += (_, e) => raised.Add(e.PropertyName);
+
+        root.IsWalking = true;
+        root.IsWalking = true;
+        root.IsWalking = false;
+
+        CollectionAssert.AreEqual(new[] { nameof(FolderIndexModel.IsWalking), nameof(FolderIndexModel.IsWalking) }, raised);
+        Assert.IsFalse(root.IsWalking);
+    }
 }

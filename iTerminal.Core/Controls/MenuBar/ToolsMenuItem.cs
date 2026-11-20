@@ -47,6 +47,7 @@ public class ToolsMenuItem : MenuItem
         LanguageDialog? languageDialog = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
+        iTerminal.Core.Dialogs.Radio.OnlineRadioDialog? onlineRadioDialog = null,
         iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.YouTube.YouTubeDialog? youTubeDialog = null,
@@ -57,6 +58,7 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Games.NineMensMorrisDialog? nineMensMorrisDialog = null,
         iTerminal.Core.Dialogs.Games.SnakeDialog? snakeDialog = null,
         iTerminal.Core.Dialogs.Games.TetrisDialog? tetrisDialog = null,
+        iTerminal.Core.Dialogs.Games.RiskDialog? riskDialog = null,
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
@@ -117,6 +119,7 @@ public class ToolsMenuItem : MenuItem
         if (weatherDialog is not null) groups["office"].Add(new WeatherDialogCommand(weatherDialog));
         if (torrentManagerDialog is not null) groups["net"].Add(new TorrentManagerDialogCommand(torrentManagerDialog));
         if (contactManagerDialog is not null) groups["office"].Add(new ContactManagerDialogCommand(contactManagerDialog));
+        if (onlineRadioDialog is not null) groups["net"].Add(new OnlineRadioDialogCommand(onlineRadioDialog));
         if (environmentVariablesDialog is not null) groups["files"].Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));
         if (encyclopediaDialog is not null) groups["office"].Add(new EncyclopediaDialogCommand(encyclopediaDialog));
         if (performanceBenchmarkDialog is not null) groups["sys"].Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
@@ -126,6 +129,7 @@ public class ToolsMenuItem : MenuItem
         if (nineMensMorrisDialog is not null) groups["games"].Add(new NineMensMorrisDialogCommand(nineMensMorrisDialog));
         if (snakeDialog is not null) groups["games"].Add(new SnakeDialogCommand(snakeDialog));
         if (tetrisDialog is not null) groups["games"].Add(new TetrisDialogCommand(tetrisDialog));
+        if (riskDialog is not null) groups["games"].Add(new RiskDialogCommand(riskDialog));
         if (jassDialog is not null) groups["games"].Add(new JassDialogCommand(jassDialog));
         if (bluetoothDeviceManagerDialog is not null) groups["sys"].Add(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
         if (remoteConnectionManagerDialog is not null) groups["net"].Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));

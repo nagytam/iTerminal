@@ -384,6 +384,46 @@ public class FileOperationsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task F6OntoAnExistingName_SaysWhichNameIsTakenAndWhichBoxReplacesIt()
+    {
+        // The dialog used to show .NET's "Cannot create a file when that file already exists.", which names no file and not the box that fixes it.
+        await _app.SelectEntryAsync("readme.txt");
+
+        await _app.PressAsync("F6");
+        await _app.WaitForTextAsync("readme.txt");
+        await _app.PressAsync("End");
+        foreach (var _ in "readme.txt")
+        {
+            await _app.PressAsync("Backspace");
+        }
+        await _app.TypeAsync("notes.md");
+        await _app.PressAsync("Enter");
+
+        await _app.WaitForTextAsync("'notes.md' already exists. Tick \"Overwrite\" to replace it.");
+        Assert.AreEqual("Hello from the left panel." + Environment.NewLine + "Second line.", File.ReadAllText(Path.Combine(_app.LeftRoot, "readme.txt")));
+        Assert.AreEqual("# Notes", File.ReadAllText(Path.Combine(_app.LeftRoot, "notes.md")));
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CreateFolderWithAnIllegalCharacter_SaysTheNameIsNotValid_InsteadOfFailing()
+    {
+        // "a|b" is not a Windows name; checking it threw out of the key handler.
+        await _app.SelectEntryAsync("readme.txt");
+
+        await _app.PressAsync("Shift+F7");
+        await _app.WaitForTextAsync("Create folder");
+        await _app.TypeAsync("a|b");
+        await _app.PressAsync("Enter");
+
+        await _app.WaitForTextAsync("Not a valid name or path.");
+        Assert.IsFalse(Directory.Exists(Path.Combine(_app.LeftRoot, "a|b")));
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task CtrlZPutsTheRenamedFileBack()
     {
         await _app.SelectEntryAsync("notes.md");

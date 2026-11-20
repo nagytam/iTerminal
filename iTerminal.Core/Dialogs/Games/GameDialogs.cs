@@ -30,3 +30,7 @@ public class TetrisDialog(IThemeService themeService, ITimeProvider timeProvider
 /// <summary>Swiss Jass Schieber for four players at one keyboard.</summary>
 public class JassDialog(IThemeService themeService, ITimeProvider timeProvider)
     : GamesDialog(nameof(JassDialog), "Swiss Jass", [new JassGame()], themeService, timeProvider);
+
+/// <summary>Risk, in a dialog of its own. The position is kept while the app runs, so closing the dialog does not end the game.</summary>
+public class RiskDialog(IThemeService themeService, ITimeProvider timeProvider)
+    : GamesDialog(nameof(RiskDialog), "Risk", [new RiskGame()], themeService, timeProvider);

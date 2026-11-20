@@ -620,7 +620,12 @@ public class TorrentManagerDialog : Dialog
             + UiText.Get("Torrent.Col.Up", "Up").PadLeft(10) + " " + UiText.Get("Torrent.Col.Peer", "Peer").PadLeft(4), colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Torrents.Empty", "No torrents yet. A adds a magnet link, a .torrent file or its URL."), colorScheme.DisabledForeground, colorScheme.Background);
+            // The only guidance on an empty list: wrapped over the free rows, so a narrow terminal does not cut it off.
+            int emptyRow = 2;
+            foreach (string part in iConsole.Localization.UiText.Get("Torrents.Empty", "No torrents yet. A adds a magnet link, a .torrent file or its URL.").WrapWords(iw - 2).Take(ListRows))
+            {
+                Put(buffer, 1, emptyRow++, iw - 2, part, colorScheme.DisabledForeground, colorScheme.Background);
+            }
         }
 
         int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;

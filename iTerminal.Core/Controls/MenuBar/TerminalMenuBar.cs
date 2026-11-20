@@ -132,6 +132,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         ILocalizer? localizer = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
+        iTerminal.Core.Dialogs.Radio.OnlineRadioDialog? onlineRadioDialog = null,
         iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.YouTube.YouTubeDialog? youTubeDialog = null,
@@ -142,10 +143,12 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Games.NineMensMorrisDialog? nineMensMorrisDialog = null,
         iTerminal.Core.Dialogs.Games.SnakeDialog? snakeDialog = null,
         iTerminal.Core.Dialogs.Games.TetrisDialog? tetrisDialog = null,
+        iTerminal.Core.Dialogs.Games.RiskDialog? riskDialog = null,
         PrintDialog? printDialog = null,
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         MultiRenameDialog? multiRenameDialog = null,
+        iTerminal.Core.Services.RenameUndoService? renameUndoService = null,
         HashManifestDialog? hashManifestDialog = null,
         iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
@@ -233,7 +236,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             fileLabelsDialog,
             labelFilterDialog,
             clipboardOperations,
-            multiRenameDialog: multiRenameDialog));
+            multiRenameDialog: multiRenameDialog,
+            renameUndoService: renameUndoService,
+            notificationService: notificationService));
 
         AddMenuItem(new NavigateMenuItem(
             contentModelService,
@@ -294,6 +299,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             languageDialog,
             torrentManagerDialog,
             contactManagerDialog,
+            onlineRadioDialog,
             environmentVariablesDialog,
             encyclopediaDialog,
             youTubeDialog,
@@ -304,6 +310,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             nineMensMorrisDialog,
             snakeDialog,
             tetrisDialog,
+            riskDialog: riskDialog,
             bluetoothDeviceManagerDialog: bluetoothDeviceManagerDialog,
             virtualMachineManagerDialog: virtualMachineManagerDialog,
             jassDialog: jassDialog,

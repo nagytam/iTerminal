@@ -723,7 +723,12 @@ public class RemoteConnectionManagerDialog : Dialog
         Put(buffer, 1, 1, iw - 2, iConsole.Localization.UiText.Get("Remote.ListHeader", "  Type  Name                          Destination"), colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, Ellipsize(iConsole.Localization.UiText.Get("Remote.Empty", "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection."), iw - 2), colorScheme.DisabledForeground, colorScheme.Background);
+            // The only guidance on an empty list: wrapped over the free rows, so a narrow terminal does not cut it off.
+            var emptyRow = 2;
+            foreach (var part in iConsole.Localization.UiText.Get("Remote.Empty", "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection.").WrapWords(iw - 2).Take(ListRows))
+            {
+                Put(buffer, 1, emptyRow++, iw - 2, part, colorScheme.DisabledForeground, colorScheme.Background);
+            }
         }
 
         var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;

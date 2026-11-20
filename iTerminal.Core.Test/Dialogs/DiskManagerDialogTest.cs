@@ -81,4 +81,59 @@ public class DiskManagerDialogTest
         }, "the failed read to be said on the pane");
         AssertScreenDoesNotContain(Render(dialog), "Reading...");
     }
+
+    /// <summary>A cloud row as the job lists it: no DriveInfo, its name carries the "not configured" suffix.</summary>
+    private static Drive CloudRow() => new()
+    {
+        DriveInfo = null,
+        Name = Container.ONEDRIVE + " " + iConsole.Localization.UiText.Get("Drive.CloudNotConfigured", "Cloud sign-in not configured"),
+        Url = Container.ONEDRIVE,
+        IsCloudConfigured = false
+    };
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ACloudRow_ShowsCloudDetails_NotTheMemoryDriveOnes()
+    {
+        using var taskManager = new TaskManager();
+        var model = new DriveInfoModel { IsLoaded = true };
+        model.Drives.Add(CloudRow());
+        var dialog = new DiskManagerDialog(taskManager, model, TestTheme());
+        await ShowAsync(dialog);
+
+        await WaitUntilAsync(() =>
+        {
+            dialog.OnIdle();
+            return Render(dialog).Contains("Cloud drive");
+        }, "the cloud details to be shown");
+        AssertScreenDoesNotContain(Render(dialog), "saved to its database");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ACloudRow_EjectSaysItHasNoMediaToEject()
+    {
+        using var taskManager = new TaskManager();
+        var model = new DriveInfoModel { IsLoaded = true };
+        model.Drives.Add(CloudRow());
+        var dialog = new DiskManagerDialog(taskManager, model, TestTheme(), Moq.Mock.Of<iTerminal.Core.Services.Drives.IDriveActionsService>());
+        await ShowAsync(dialog);
+        dialog.OnIdle();
+
+        await dialog.EjectAsync();
+        dialog.OnIdle();
+
+        StringAssert.Contains(dialog.Status, "A cloud drive has no media to eject.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ACloudRow_TakesItsRootFromTheUrl_NotFromItsSuffixedName()
+    {
+        // The name reads "onedrive:// Cloud sign-in not configured"; the root the actions and details use must be the URL.
+        var root = typeof(DiskManagerDialog).GetMethod("RootOf", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        Assert.IsNotNull(root);
+
+        Assert.AreEqual(Container.ONEDRIVE, root.Invoke(null, [CloudRow()]));
+    }
 }

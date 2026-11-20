@@ -137,6 +137,14 @@ public class CurrencyConverterDialog : SplitPaneDialog
     private static int IndexOf(CurrencyChoice[] choices, string code) =>
         Array.FindIndex(choices, choice => string.Equals(choice.Code, code, StringComparison.OrdinalIgnoreCase));
 
+    /// <summary>Narrower than this, the three fields do not fit side by side with room to type (the dialog is the screen's 80%, so a terminal under about 75 columns).</summary>
+    private const int StackBelowWidth = 60;
+
+    /// <summary>Stacked, the fields, the result, the rate and the status line need this many inner rows.</summary>
+    private const int StackedMinimumHeight = 8;
+
+    private bool _stacked;
+
     public override void OnInitializeLayout()
     {
         if (Parent is not null)
@@ -146,7 +154,20 @@ public class CurrencyConverterDialog : SplitPaneDialog
 
         int iw = (int)ViewSize.Width - 2;
         int ih = (int)ViewSize.Height - 2;
-        if (iw > 0 && ih > 0)
+        // Each box carries its caption inside its width ("Amount: [" is nine columns before the first digit), so three side by side leave
+        // the amount a column or two on a narrow dialog: it is stacked, one field to a row, when there is the height for it.
+        _stacked = iw < StackBelowWidth && ih >= StackedMinimumHeight;
+        if (iw > 0 && ih > 0 && _stacked)
+        {
+            _amount.Position = new Position(1, 1);
+            _amount.ViewSize = new Size(iw - 2, 1);
+            _amount.ScrollableModel.ViewSize = _amount.ViewSize;
+            _from.Position = new Position(1, 2);
+            _from.ViewSize = new Size(iw - 2, 1);
+            _to.Position = new Position(1, 3);
+            _to.ViewSize = new Size(iw - 2, 1);
+        }
+        else if (iw > 0 && ih > 0)
         {
             // Three boxes and the gaps between them must end inside the frame: 10 columns each ran out of it on a narrow dialog.
             int boxWidth = Math.Max(6, Math.Min((iw - 2) / 3, (iw - 4) / 3 + 1));
@@ -369,10 +390,12 @@ public class CurrencyConverterDialog : SplitPaneDialog
 
         string result = ResultLine();
         bool failed = result.Length == 0 || result.Contains("not a number", StringComparison.Ordinal) || result.StartsWith("No ", StringComparison.Ordinal);
-        WriteLine(buffer, ix, iy + 2, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
-        WriteLine(buffer, ix, iy + 3, iw, " " + result, failed ? colorScheme.Error : colorScheme.SelectedFocusedForeground, colorScheme.Background);
-        WriteLine(buffer, ix, iy + 4, iw, Ellipsize(" " + RateLine(), iw), colorScheme.Foreground, colorScheme.Background);
-        for (int row = 5; row < ih - 1; row++)
+        // Stacked, the fields take two more rows, and the result and the rate move down by as many.
+        int shift = _stacked ? 2 : 0;
+        WriteLine(buffer, ix, iy + 2 + shift, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
+        WriteLine(buffer, ix, iy + 3 + shift, iw, " " + result, failed ? colorScheme.Error : colorScheme.SelectedFocusedForeground, colorScheme.Background);
+        WriteLine(buffer, ix, iy + 4 + shift, iw, Ellipsize(" " + RateLine(), iw), colorScheme.Foreground, colorScheme.Background);
+        for (int row = 5 + shift; row < ih - 1; row++)
         {
             WriteLine(buffer, ix, iy + row, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
         }

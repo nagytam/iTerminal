@@ -29,7 +29,7 @@ public class SettingsGlobalTabPage : TabPage
     public SettingsGlobalTabPage(
         IThemeService themeService,
         ISettingsService? settingsService = null)
-        : base("1-Global ", themeService)
+        : base(iConsole.Localization.UiText.Get("SettingsTab.Global", "1-Global "), themeService)
     {
         HotConsoleKey = ConsoleKey.D1;
         _settingsService = settingsService ?? NullSettingsService.Instance;
@@ -104,9 +104,12 @@ public class SettingsGlobalTabPage : TabPage
 
         for (var i = 0; i < _labels.Count; i++)
         {
+            // A label with no text still paints its whole row, so the spare ones below the last line get no height: on a short terminal
+            // those rows are under the page, where the blanks were drawn over the dialog's bottom frame. (Not IsVisible: ShowAsync makes
+            // every child visible again after the layout.)
             _labels[i].Text = i < rows.Count ? rows[i] : string.Empty;
             _labels[i].Position = new Position(0, i);
-            _labels[i].ViewSize = new Size(ViewSize.Width, 1);
+            _labels[i].ViewSize = new Size(ViewSize.Width, i < rows.Count ? 1 : 0);
         }
 
         // Under the text, with a blank row between.

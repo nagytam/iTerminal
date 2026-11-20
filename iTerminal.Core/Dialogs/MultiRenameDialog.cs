@@ -52,12 +52,13 @@ public class MultiRenameDialog : FormDialog
         FileSystemResolver fileSystemResolver,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        iTerminal.Core.Services.RenameUndoService? renameUndo = null)
         : base(nameof(MultiRenameDialog), themeService)
     {
         Title = UiText.Get("Dialog.MultiRename", "Multi-rename");
 
-        _renameCommand = new MultiRenameCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService);
+        _renameCommand = new MultiRenameCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService, renameUndo);
         AddCommand(_renameCommand);
 
         _patternBox = new TextBox(beepService, dateTimeProviderService, themeService)

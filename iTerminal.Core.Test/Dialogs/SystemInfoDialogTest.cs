@@ -229,4 +229,26 @@ public class SystemInfoDialogTest
             }
         }
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("en", 18)]
+    [DataRow("de", 28)]
+    public async Task EveryValueStartsInTheSameColumn_WhateverTheLanguagesLongestLabelIs(string language, int minimumColumn)
+    {
+        // The label column was a fixed 18: German "Physischer Speicher (gesamt)" pushed its value out of line with the rows above it.
+        var sampler = new FakeSampler { Current = Sample() };
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, Localizer(language));
+        await ShowAsync(dialog);
+        dialog.OnIdle();
+
+        var columns = dialog.LinesForTest
+            .Where(line => line.StartsWith("  ", StringComparison.Ordinal) && !line.StartsWith("   ", StringComparison.Ordinal) && line.Contains(": ", StringComparison.Ordinal))
+            .Select(line => line.IndexOf(": ", StringComparison.Ordinal))
+            .Distinct()
+            .ToList();
+
+        Assert.AreEqual(1, columns.Count, "the colons are in columns " + string.Join(", ", columns));
+        Assert.IsTrue(columns[0] >= minimumColumn, $"the column is {columns[0]}");
+    }
 }

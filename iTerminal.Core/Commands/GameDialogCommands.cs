@@ -66,3 +66,12 @@ public class JassDialogCommand(JassDialog dialog) : ShowDialogCommand<JassDialog
         "Play four-player partnership Jass (Schieber) at one keyboard.");
     public override Key? Key { get; init; } = null;
 }
+
+public class RiskDialogCommand(RiskDialog dialog) : ShowDialogCommand<RiskDialog>(dialog)
+{
+    public override string Title => "Risk";
+    public override string Description => "Play Risk: take territories from the computer or a friend, one turn at a time.";
+
+    // No hot key: every Ctrl+Shift+F-key is taken. Open it from Tools or the command palette.
+    public override Key? Key { get; init; } = null;
+}

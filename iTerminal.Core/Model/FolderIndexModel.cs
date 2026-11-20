@@ -18,4 +18,24 @@ public class FolderIndexModel : Folder
     /// the request starts it, unless the folder index is configured to start sooner. Idempotent.
     /// </summary>
     public void RequestIndexing() => _backgroundStart?.Request(BackgroundServices.FolderIndex);
+
+    private bool _isWalking;
+
+    /// <summary>
+    /// True while the index has folders queued to read: the walk has not caught up with the drives yet, so the
+    /// tree can still grow. It is false once the queue is empty. Written by <c>FolderIndexJob</c>, which owns the queue.
+    /// </summary>
+    public bool IsWalking
+    {
+        get => _isWalking;
+        set
+        {
+            if (_isWalking == value)
+            {
+                return;
+            }
+            _isWalking = value;
+            OnPropertyChanged();
+        }
+    }
 }

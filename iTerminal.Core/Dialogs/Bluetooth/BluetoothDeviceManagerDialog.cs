@@ -115,10 +115,16 @@ public class BluetoothDeviceManagerDialog : Dialog
         _listBox.ViewSize = new Size(ViewSize.Width - 2, ViewSize.Height - 5);
         _listBox.ScrollableModel.ViewSize = _listBox.ViewSize;
 
-        int nameWidth = Math.Clamp((int)ViewSize.Width - 2 - 1 - 17 - 2 - 10, 10, NameColumnWidth);
-        if (nameWidth != _nameWidth)
+        // The state ends the row and is the part to read, so what comes before it gives way: first the name column, and when even that
+        // would leave the name too short, the address shows only its last three bytes (enough to tell two devices apart).
+        int inner = (int)ViewSize.Width - 2;
+        bool shortAddress = inner - 1 - 17 - 2 - StateColumnWidth < MinimumFullAddressNameWidth;
+        int addressWidth = shortAddress ? ShortAddressLength : 17;
+        int nameWidth = Math.Clamp(inner - 1 - addressWidth - 2 - StateColumnWidth, MinimumNameWidth, NameColumnWidth);
+        if (nameWidth != _nameWidth || shortAddress != _shortAddress)
         {
             _nameWidth = nameWidth;
+            _shortAddress = shortAddress;
             _listBox.UpdateModel();
         }
 
@@ -132,11 +138,24 @@ public class BluetoothDeviceManagerDialog : Dialog
     }
 
     /// <summary>One device as a row: name in a fixed column, then the address, then its state.</summary>
-    internal static string FormatRow(BluetoothDevice device, string stateText, int nameWidth = NameColumnWidth)
+    internal static string FormatRow(BluetoothDevice device, string stateText, int nameWidth = NameColumnWidth, bool shortAddress = false)
     {
         var name = (device.Name ?? string.Empty).Trim().Shrink(nameWidth - 1) ?? string.Empty;
-        return name.PadRight(nameWidth) + " " + device.Address.PadRight(17) + "  " + stateText;
+        var address = shortAddress && device.Address.Length > ShortAddressLength ? device.Address[^ShortAddressLength..] : device.Address.PadRight(17);
+        return name.PadRight(nameWidth) + " " + address + "  " + stateText;
     }
+
+    /// <summary>The room the state needs at the end of a row ("connected" is the longest).</summary>
+    private const int StateColumnWidth = 10;
+
+    /// <summary>Below this much room for the name, the address is shortened to its last three bytes.</summary>
+    private const int MinimumFullAddressNameWidth = 12;
+
+    private const int MinimumNameWidth = 6;
+
+    private const int ShortAddressLength = 8;
+
+    private bool _shortAddress;
 
     /// <summary>The name column as wide as the dialog allows: at the full 30 a 60-column terminal cut the address after 15 characters.</summary>
     private int _nameWidth = NameColumnWidth;
@@ -150,7 +169,7 @@ public class BluetoothDeviceManagerDialog : Dialog
                 : UiText.Get("State.Bluetooth.Nearby", "nearby");
         return new ListItem<BluetoothDevice>(device)
         {
-            Value = FormatRow(device, state, _nameWidth),
+            Value = FormatRow(device, state, _nameWidth, _shortAddress),
             IsEnabled = true,
         };
     }

@@ -22,12 +22,12 @@ internal static class UrlPath
     }
 
     /// <summary>True when <paramref name="inner"/> is <paramref name="outer"/> itself or lies inside it (case-insensitive, either separator).</summary>
-    public static bool SameOrInside(Url outer, Url inner)
+    public static bool SameOrInside(Url outer, Url inner, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
     {
         static string Norm(string? url) => TrimFolder(url).Replace('\\', '/');
         string o = Norm(outer.FullUrl);
         string i = Norm(inner.FullUrl);
-        return i.Equals(o, StringComparison.OrdinalIgnoreCase) || i.StartsWith(o + "/", StringComparison.OrdinalIgnoreCase);
+        return i.Equals(o, comparison) || i.StartsWith(o + "/", comparison);
     }
 
     /// <summary>The separator a URL is written with: backslashes only on a local Windows path ("file://C:\x" still has the scheme's slashes).</summary>

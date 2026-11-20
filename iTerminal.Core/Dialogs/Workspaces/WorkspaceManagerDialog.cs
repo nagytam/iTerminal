@@ -625,8 +625,14 @@ public class WorkspaceManagerDialog : Dialog
 
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, Say("Workspaces.Empty1", "No workspaces yet. S saves the screen as it is now: both panels,"), colorScheme.DisabledForeground, colorScheme.Background);
-            Put(buffer, 1, 3, iw - 2, Say("Workspaces.Empty2", "their sort order and what is under them. Enter brings one back."), colorScheme.DisabledForeground, colorScheme.Background);
+            // Two strings because one line was the width of the old dialog; joined and wrapped, a narrow terminal does not cut them off.
+            var emptyRow = 2;
+            var emptyText = Say("Workspaces.Empty1", "No workspaces yet. S saves the screen as it is now: both panels,") + " " + Say("Workspaces.Empty2", "their sort order and what is under them. Enter brings one back.");
+            foreach (var part in emptyText.WrapWords(iw - 2).Take(ListRows))
+            {
+                Put(buffer, 1, emptyRow++, iw - 2, part, colorScheme.DisabledForeground, colorScheme.Background);
+            }
+
             return;
         }
 

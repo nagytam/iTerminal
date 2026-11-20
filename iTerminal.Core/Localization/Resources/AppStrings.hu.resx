@@ -4178,6 +4178,12 @@
   <data name="DialogHint.VoiceInput" xml:space="preserve">
     <value>Kérdés bemondása (indítás és leállítás)</value>
   </data>
+  <data name="Voice.MicButton" xml:space="preserve">
+    <value>Mikrofon</value>
+  </data>
+  <data name="Voice.StopButton" xml:space="preserve">
+    <value>Leállít</value>
+  </data>
   <data name="Voice.Title" xml:space="preserve">
     <value>Hangbevitel</value>
   </data>
@@ -6799,7 +6805,7 @@
   <data name="CmdTitle.28c83220" xml:space="preserve">
     <value>Rendszerbeállítások</value>
   </data>
-  <data name="CmdTitle.4e510b97" xml:space="preserve">
+  <data name="CmdTitle.73f58c5e" xml:space="preserve">
     <value>Feladatlista</value>
   </data>
   <data name="CmdTitle.45b9ef99" xml:space="preserve">
@@ -6964,7 +6970,7 @@
   <data name="CmdTitle.20eac5aa" xml:space="preserve">
     <value>Szóköz</value>
   </data>
-  <data name="CmdTitle.fd40ab96" xml:space="preserve">
+  <data name="CmdTitle.f0b4acbf" xml:space="preserve">
     <value>Futtatás terminálban</value>
   </data>
   <data name="CmdTitle.3d03a1de" xml:space="preserve">
@@ -7029,6 +7035,15 @@
   </data>
   <data name="FolderSelector.Tab1" xml:space="preserve">
     <value>1-Meghajtók</value>
+  </data>
+  <data name="FolderSelector.Drives.Empty" xml:space="preserve">
+    <value> Nem található meghajtó.</value>
+  </data>
+  <data name="FolderSelector.Drives.Reading" xml:space="preserve">
+    <value> Meghajtók beolvasása…</value>
+  </data>
+  <data name="FolderSelector.Favourites.ConfirmRemove" xml:space="preserve">
+    <value>Eltávolítja a(z) {0} elemet a kedvencek közül?  y:igen  n:nem</value>
   </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Legutóbbi</value>
@@ -8550,6 +8565,9 @@
   </data>
   <data name="FolderTree.Count" xml:space="preserve">
     <value>Mappák száma: {0}</value>
+  </data>
+  <data name="FolderTree.Indexing" xml:space="preserve">
+    <value>Indexelés... eddig {0} mappa</value>
   </data>
   <data name="FolderPath.TabCompletes" xml:space="preserve">
     <value>A Tab kiegészít. Sémák: </value>
@@ -10110,20 +10128,20 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} háttérfeladat még fut. Kilépjen mégis?</value>
   </data>
-  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
-    <value>Átnevezés visszavonása</value>
+  <data name="CmdTitle.97bca610" xml:space="preserve">
+    <value>Átnevezés vagy áthelyezés visszavonása</value>
   </data>
-  <data name="CmdDesc.e5781ae9" xml:space="preserve">
-    <value>Visszaállítja az utolsó átnevezés által módosított nevet.</value>
+  <data name="CmdDesc.b4114ce8" xml:space="preserve">
+    <value>Visszaállítja az utolsó átnevezés, tömeges átnevezés vagy áthelyezés által módosított neveket.</value>
   </data>
   <data name="Undo.RenameTitle" xml:space="preserve">
-    <value>Átnevezés visszavonása</value>
+    <value>Átnevezés vagy áthelyezés visszavonása</value>
   </data>
   <data name="Undo.RenameGone" xml:space="preserve">
-    <value>Az átnevezett elem már nincs meg, így nincs mit visszaállítani.</value>
+    <value>Az elem már nincs meg, így nincs mit visszaállítani.</value>
   </data>
   <data name="Undo.RenameNameTaken" xml:space="preserve">
-    <value>A régi név mostanra foglalt, ezért az átnevezést nem lehetett visszavonni.</value>
+    <value>A régi név mostanra foglalt, ezért nem lehetett visszaállítani.</value>
   </data>
   <data name="CmdTitle.19b314a4" xml:space="preserve">
     <value>Aktív panel nagyítása</value>
@@ -10342,6 +10360,9 @@
   <data name="FolderSelector.Smb.Anonymous" xml:space="preserve">
     <value>A(z) {0} névtelenül böngészve. Az L bejelentkeztet.</value>
   </data>
+  <data name="FolderSelector.Smb.Version" xml:space="preserve">
+    <value>SMB {0} használatban.</value>
+  </data>
   <data name="FolderSelector.Smb.LogoutSelectHost" xml:space="preserve">
     <value>Előbb válasszon ki egy gépet a kijelentkezéshez.</value>
   </data>
@@ -10414,6 +10435,9 @@
   </data>
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Kijelentkezés SMB-gépről</value>
+  </data>
+  <data name="CmdTitle.550033f7" xml:space="preserve">
+    <value>Kedvenc törlése</value>
   </data>
   <data name="Dep.PowerShellPurpose" xml:space="preserve">
     <value>PowerShell futtatása: Ctrl+O Windowson és távoli PowerShell-munkamenetek (Alt+F2)</value>
@@ -10609,5 +10633,287 @@
   </data>
   <data name="Weather.Updated.Old" xml:space="preserve">
     <value>régi, frissítve {0:g}</value>
+  </data>
+  <data name="Games.Risk.SideBlue" xml:space="preserve">
+    <value>Kék</value>
+  </data>
+  <data name="Games.Risk.SideRed" xml:space="preserve">
+    <value>Piros</value>
+  </data>
+  <data name="Games.Risk.Draw" xml:space="preserve">
+    <value>Döntetlen: elérte a körszámkorlátot.</value>
+  </data>
+  <data name="Games.Risk.Wins" xml:space="preserve">
+    <value>{0} nyert!</value>
+  </data>
+  <data name="Games.Risk.ToMove" xml:space="preserve">
+    <value>{0} következik.</value>
+  </data>
+  <data name="Games.Risk.PlaceHint" xml:space="preserve">
+    <value>{0}: helyezz le {1} sereget a saját területeidre.</value>
+  </data>
+  <data name="Games.Risk.AttackHint" xml:space="preserve">
+    <value>{0}: támadj legalább 2 sereggel rendelkező területről, vagy E a támadás befejezéséhez.</value>
+  </data>
+  <data name="Games.Risk.FortifyHint" xml:space="preserve">
+    <value>{0}: mozgass egy sereget egy szomszédos saját területre, vagy E a kör befejezéséhez.</value>
+  </data>
+  <data name="Games.Risk.PlaceOwn" xml:space="preserve">
+    <value>Csak saját területre helyezhetsz sereget.</value>
+  </data>
+  <data name="Games.Risk.AttackFromTwo" xml:space="preserve">
+    <value>Legalább 2 sereggel rendelkező területről támadj.</value>
+  </data>
+  <data name="Games.Risk.MoveFromTwo" xml:space="preserve">
+    <value>Legalább 2 sereggel rendelkező területről mozgass.</value>
+  </data>
+  <data name="Games.Risk.SelectFirst" xml:space="preserve">
+    <value>Válassz egy saját területet, ahonnan támadsz.</value>
+  </data>
+  <data name="Games.Risk.NotAdjacent" xml:space="preserve">
+    <value>Ez a terület nem szomszédos azzal, ahonnan támadsz.</value>
+  </data>
+  <data name="Games.Risk.PlaceFirst" xml:space="preserve">
+    <value>Először helyezd le a még hátralévő {0} sereget.</value>
+  </data>
+  <data name="Games.Risk.MoveToOwn" xml:space="preserve">
+    <value>Saját területre mozgass.</value>
+  </data>
+  <data name="Games.Risk.Battle" xml:space="preserve">
+    <value>{0} dobott: {1}, {2} pedig {3}: {0} veszít {4}, {2} veszít {5}.</value>
+  </data>
+  <data name="Games.Risk.Conquers" xml:space="preserve">
+    <value>{0} elfoglalja a területet.</value>
+  </data>
+  <data name="Games.Risk.Select" xml:space="preserve">
+    <value>kiválaszt</value>
+  </data>
+  <data name="Games.Risk.Hint" xml:space="preserve">
+    <value>Kiválasztás, támadás, mozgatás vagy lerakás</value>
+  </data>
+  <data name="CmdTitle.0711a8d6" xml:space="preserve">
+    <value>Risk</value>
+  </data>
+  <data name="CmdDesc.3655a48d" xml:space="preserve">
+    <value>Játsszon Risk-et: foglaljon el területeket a számítógép vagy egy barát ellen, körönként.</value>
+  </data>
+  <data name="Undo.RenameBatchPartial" xml:space="preserve">
+    <value>{0} / {1} elem visszaállítva. A többi nem: az új név már nincs meg, vagy a régi név ismét foglalt.</value>
+  </data>
+  <data name="Transfer.SameFile" xml:space="preserve">
+    <value>A forrás és a cél ugyanaz a fájl. Válasszon másik nevet vagy mappát.</value>
+  </data>
+  <data name="Transfer.FolderIntoItself" xml:space="preserve">
+    <value>Egy mappa nem másolható és nem helyezhető át önmagába vagy valamelyik almappájába.</value>
+  </data>
+  <data name="Transfer.FolderReplaceAncestor" xml:space="preserve">
+    <value>Egy mappa nem cserélheti le önmagát, sem azt a mappát, amelyben van.</value>
+  </data>
+  <data name="Sync.NestedFolders" xml:space="preserve">
+    <value>Egy mappa nem szinkronizálható a saját almappájával.</value>
+  </data>
+  <data name="Menu.Undorenameormove" xml:space="preserve">
+    <value>Átnevezés vagy áthelyezés visszavonása</value>
+  </data>
+  <data name="SettingsTab.Global" xml:space="preserve">
+    <value>1-Általános </value>
+  </data>
+  <data name="SettingsTab.Network" xml:space="preserve">
+    <value>2-Hálózat</value>
+  </data>
+  <data name="SettingsTab.Indicators" xml:space="preserve">
+    <value>3-Jelzők </value>
+  </data>
+  <data name="SettingsTab.Music" xml:space="preserve">
+    <value>4-Zene </value>
+  </data>
+  <data name="SettingsTab.Documents" xml:space="preserve">
+    <value>5-Dokumentumok </value>
+  </data>
+  <data name="SettingsTab.Panels" xml:space="preserve">
+    <value>6-Panelek </value>
+  </data>
+  <data name="SettingsTab.Background" xml:space="preserve">
+    <value>7-Háttér</value>
+  </data>
+  <data name="SettingsTab.ScreenSaver" xml:space="preserve">
+    <value>8-Képernyővédő</value>
+  </data>
+  <data name="Calculator.TabBasic" xml:space="preserve">
+    <value>Alap</value>
+  </data>
+  <data name="Calculator.TabScientific" xml:space="preserve">
+    <value>Tudományos</value>
+  </data>
+  <data name="Calculator.TabProgramming" xml:space="preserve">
+    <value>Programozó</value>
+  </data>
+  <data name="DriveType.Fixed" xml:space="preserve">
+    <value>Fix</value>
+  </data>
+  <data name="DriveType.Removable" xml:space="preserve">
+    <value>Cserélhető</value>
+  </data>
+  <data name="DriveType.CDRom" xml:space="preserve">
+    <value>CD-ROM</value>
+  </data>
+  <data name="DriveType.Network" xml:space="preserve">
+    <value>Hálózati</value>
+  </data>
+  <data name="DriveType.Ram" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="DriveType.NoRootDirectory" xml:space="preserve">
+    <value>Nincs gyökér</value>
+  </data>
+  <data name="DriveType.Unknown" xml:space="preserve">
+    <value>Ismeretlen</value>
+  </data>
+  <data name="DriveList.Label" xml:space="preserve">
+    <value>Címke:</value>
+  </data>
+  <data name="Msg.RenameTargetExists" xml:space="preserve">
+    <value>A(z) „{0}” már létezik. Jelölje be a(z) „{1}” négyzetet a cseréhez.</value>
+  </data>
+  <data name="Radio.Title" xml:space="preserve">
+    <value>Internetes rádió</value>
+  </data>
+  <data name="Radio.ColName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Radio.ColGenre" xml:space="preserve">
+    <value>Műfaj</value>
+  </data>
+  <data name="Radio.Count" xml:space="preserve">
+    <value>{0} állomás</value>
+  </data>
+  <data name="Radio.CountFiltered" xml:space="preserve">
+    <value>{0} / {1} állomás</value>
+  </data>
+  <data name="Radio.Favourites" xml:space="preserve">
+    <value>Kedvencek</value>
+  </data>
+  <data name="Radio.NoMatch" xml:space="preserve">
+    <value>Nincs ilyen állomás: „{0}”.</value>
+  </data>
+  <data name="Radio.NoFavourites" xml:space="preserve">
+    <value>Nincs kedvenc állomás. Jelöléséhez nyomja meg az F billentyűt.</value>
+  </data>
+  <data name="Radio.Empty" xml:space="preserve">
+    <value>Még nincs állomás. Nyomja meg az N billentyűt egy hozzáadásához.</value>
+  </data>
+  <data name="Radio.GenreLine" xml:space="preserve">
+    <value>Műfaj: {0}</value>
+  </data>
+  <data name="Radio.FieldName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Radio.FieldGenre" xml:space="preserve">
+    <value>Műfaj</value>
+  </data>
+  <data name="Radio.FieldUrl" xml:space="preserve">
+    <value>Adatfolyam</value>
+  </data>
+  <data name="Radio.FormNew" xml:space="preserve">
+    <value>Új állomás: név és http:// vagy https:// adatfolyam-cím</value>
+  </data>
+  <data name="Radio.FormChange" xml:space="preserve">
+    <value>Állomás módosítása: név és http:// vagy https:// adatfolyam-cím</value>
+  </data>
+  <data name="Radio.Duplicate" xml:space="preserve">
+    <value>Ez az adatfolyam-cím már szerepel a listában</value>
+  </data>
+  <data name="Radio.FilterInput" xml:space="preserve">
+    <value>Szűrő: {0}_</value>
+  </data>
+  <data name="Radio.FilterHint" xml:space="preserve">
+    <value>Szűrő: {0}  (Esc: minden állomás)</value>
+  </data>
+  <data name="Radio.NotPlaying" xml:space="preserve">
+    <value>Nincs lejátszás</value>
+  </data>
+  <data name="Radio.OnAir" xml:space="preserve">
+    <value>Adás</value>
+  </data>
+  <data name="Radio.Paused" xml:space="preserve">
+    <value>Szüneteltetve</value>
+  </data>
+  <data name="Radio.FooterForm" xml:space="preserve">
+    <value>Enter következő mező  Tab/Shift+Tab mozgás  Esc elvetés</value>
+  </data>
+  <data name="Radio.FooterFilter" xml:space="preserve">
+    <value>Gépelés a szűréshez  Enter megtart  Esc töröl</value>
+  </data>
+  <data name="Radio.FooterBrowse" xml:space="preserve">
+    <value>Enter lejátszás  Szóköz szünet  S megállít  F kedvenc  N új  D törlés  / keresés  Esc bezár</value>
+  </data>
+  <data name="Radio.NeedsName" xml:space="preserve">
+    <value>Az állomásnak nevet kell adni</value>
+  </data>
+  <data name="Radio.NeedsUrl" xml:space="preserve">
+    <value>Az adatfolyam-címnek http:// vagy https:// kezdetűnek kell lennie</value>
+  </data>
+  <data name="Radio.FavouriteAdded" xml:space="preserve">
+    <value>{0} kedvenc lett</value>
+  </data>
+  <data name="Radio.FavouriteRemoved" xml:space="preserve">
+    <value>{0} már nem kedvenc</value>
+  </data>
+  <data name="DialogHint.DeleteStation" xml:space="preserve">
+    <value>Állomás törlése</value>
+  </data>
+  <data name="DialogHint.KeepStation" xml:space="preserve">
+    <value>Állomás megtartása</value>
+  </data>
+  <data name="DialogHint.PlayStation" xml:space="preserve">
+    <value>Állomás lejátszása</value>
+  </data>
+  <data name="DialogHint.PauseStation" xml:space="preserve">
+    <value>Állomás szüneteltetése vagy folytatása</value>
+  </data>
+  <data name="DialogHint.StopStation" xml:space="preserve">
+    <value>Lejátszás leállítása</value>
+  </data>
+  <data name="DialogHint.ToggleFavourite" xml:space="preserve">
+    <value>Állomás kedvenccé tétele vagy eltávolítása</value>
+  </data>
+  <data name="DialogHint.FavouritesOnly" xml:space="preserve">
+    <value>Csak a kedvencek megjelenítése</value>
+  </data>
+  <data name="DialogHint.MoveOverStations" xml:space="preserve">
+    <value>Mozgás az állomások között</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastStation" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó állomásra</value>
+  </data>
+  <data name="DialogHint.AddStation" xml:space="preserve">
+    <value>Állomás hozzáadása</value>
+  </data>
+  <data name="DialogHint.ChangeStation" xml:space="preserve">
+    <value>Állomás módosítása</value>
+  </data>
+  <data name="DialogHint.DeleteStationAsks" xml:space="preserve">
+    <value>Állomás törlése (előbb megkérdez)</value>
+  </data>
+  <data name="DialogHint.FilterStations" xml:space="preserve">
+    <value>Állomások szűrése</value>
+  </data>
+  <data name="CmdTitle.836a989d" xml:space="preserve">
+    <value>Internetes rádió</value>
+  </data>
+  <data name="CmdDesc.332485aa" xml:space="preserve">
+    <value>Internetes rádióállomások hallgatása: lejátszás, szüneteltetés és leállítás, kedvencek jelölése és a lista szűrése.</value>
+  </data>
+  <data name="Drive.CloudNotConfigured" xml:space="preserve">
+    <value>A felhőbejelentkezés nincs beállítva</value>
+  </data>
+  <data name="DiskMgr.CloudDrive" xml:space="preserve">
+    <value>Felhőmeghajtó (a szolgáltató szerverein van)</value>
+  </data>
+  <data name="Disk.Status.EjectCloud" xml:space="preserve">
+    <value>A felhőmeghajtóban nincs kiadható adathordozó.</value>
+  </data>
+  <data name="Disk.Status.FormatCloud" xml:space="preserve">
+    <value>A felhőmeghajtó nem formázható: a szolgáltató szerverein van.</value>
   </data>
 </root>

@@ -831,7 +831,7 @@ public partial class TextBox : Control, IReadOnly
         }
 
         var completion = ShowsCompletion ? AutoCompletion?.CompletionModel?.MatchingValues.FirstOrDefault() : null;
-        if (string.IsNullOrEmpty(completion) || !completion.StartsWith(typed))
+        if (string.IsNullOrEmpty(completion) || !completion.StartsWith(typed, StringComparison.OrdinalIgnoreCase))
         {
             return string.Empty;
         }

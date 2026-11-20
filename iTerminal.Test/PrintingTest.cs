@@ -72,4 +72,21 @@ public class PrintingTest
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();
     }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task OnANarrowTerminal_ALongFileNameKeepsItsExtensionAndThePrinterKeepsItsPosition()
+    {
+        // The File line used to end mid-name and the Printer line before its "[1/2]" and status, so what was about to be printed could not be checked.
+        const string name = "quarterly-report-final-version-2026.txt";
+        _app = await TerminalApp.StartAsync((left, _) => File.WriteAllText(Path.Combine(left, name), "x"), width: 45, height: 16);
+        await _app.SelectEntryAsync(name);
+
+        await _app.PressAsync("Ctrl+P");
+        await _app.Driver.WaitForModalAsync<PrintDialog>();
+
+        await _app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("File") && l.Contains("quarterly") && l.Contains(".txt")), "the file name, shortened at its middle");
+        Assert.IsFalse(_app.Screen.Lines.Any(l => l.Contains("File") && l.Contains(name)), "the whole name does not fit, so it was shortened: " + _app.Screen.Dump());
+        await _app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Printer") && l.Contains("[1/2]") && l.Contains("idle")), "the printer's position and status");
+    }
 }

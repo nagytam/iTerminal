@@ -84,6 +84,11 @@ public class AiPromptBar : Window
             _speech.Changed += (_, _) => StateHasChanged();
             // Only for a bar that can take a question and has the focus; the key is offered to every control otherwise.
             AddCommand(new VoiceInputCommand(() => _model.IsAvailable && IsFocused, () => _speech.Toggle()));
+            // Alt+F1 is swallowed by some terminal hosts; Ctrl+F7 (a free Ctrl chord) does the same.
+            AddCommand(new VoiceInputCommand(() => _model.IsAvailable && IsFocused, () => _speech.Toggle())
+            {
+                Key = new Key(ConsoleKey.F7, false, false, true),
+            });
         }
 
         AddCommand(new TabForwardCommand());
@@ -132,6 +137,37 @@ public class AiPromptBar : Window
         SpeechState.Transcribing => $"[{UiText.Get("Voice.Transcribing", "transcribing…")}]",
         _ => _model.IsThinking ? $"[{_model.ModelInfo}]" : $"[{_model.ModelInfo}]>",
     };
+
+    /// <summary>Narrower than this and the prompt keeps the whole row: the mic button is not worth the room.</summary>
+    private const int MinWidthForMicButton = 40;
+
+    /// <summary>Columns of the mic button, set by the last draw; <c>_micWidth</c> is 0 while it is not shown.</summary>
+    private int _micLeft;
+    private int _micWidth;
+
+    /// <summary>The mic button's label: what a click does, and the keys that do the same.</summary>
+    internal string MicButtonText() => _speech?.State switch
+    {
+        SpeechState.Recording => $" [■ {UiText.Get("Voice.StopButton", "Stop")}: Alt+F1] ",
+        SpeechState.Transcribing => $" [{UiText.Get("Voice.Transcribing", "transcribing…")}] ",
+        _ => $" [● {UiText.Get("Voice.MicButton", "Mic")}: Alt+F1] ",
+    };
+
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        var isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (!isHandled && _speech is not null && _model.IsAvailable && _micWidth > 0
+            && mouseEvent.LeftClicked && mouseEvent.WheelDelta == 0
+            && mouseEvent.Position.Y == AbsolutePosition.Y
+            && mouseEvent.Position.X >= _micLeft && mouseEvent.Position.X < _micLeft + _micWidth)
+        {
+            SetFocus();
+            _speech.Toggle();
+            return true;
+        }
+
+        return isHandled;
+    }
 
     /// <summary>The local AI server starts when the bar is first focused, or as configured (BackgroundStart.OllamaServer).</summary>
     protected override void OnFocusChanged()
@@ -223,6 +259,7 @@ public class AiPromptBar : Window
         if (_speech is not null)
         {
             yield return ("Alt+F1", UiText.Get("DialogHint.VoiceInput", "Speak the question (start and stop)"));
+            yield return ("Ctrl+F7", UiText.Get("DialogHint.VoiceInput", "Speak the question (start and stop)"));
         }
     }
 
@@ -447,7 +484,8 @@ public class AiPromptBar : Window
         // Prompt label: whatever the user has typed so far, filling the rest of the row — its *end*
         // kept in view once it no longer fits, since that is where the typing is.
         var promptColumn = ModelLabelColumn + modelWidth;
-        var promptWidth = Math.Max(0, width - promptColumn);
+        var micText = _speech is not null && width >= MinWidthForMicButton ? MicButtonText() : string.Empty;
+        var promptWidth = Math.Max(0, width - promptColumn - micText.Length);
         _promptLabel.Text = PromptLine.Format(" ", _model.Input, promptWidth);
         _promptLabel.ForegroundColor = inputFg;
         _promptLabel.BackgroundColor = bg;
@@ -458,6 +496,16 @@ public class AiPromptBar : Window
         _spinner.Draw(buffer);
         _modelLabel.Draw(buffer);
         _promptLabel.Draw(buffer);
+
+        // The mic button at the right end of the first row: red while recording.
+        _micWidth = micText.Length;
+        _micLeft = (int)AbsolutePosition.X + promptColumn + promptWidth;
+        if (micText.Length > 0)
+        {
+            var micFg = _speech!.State == SpeechState.Recording ? Color.Red : inputFg;
+            buffer.Write(ZOrder, new Position(_micLeft, AbsolutePosition.Y), new Size(micText.Length, 1),
+                new ConxelString(micText, micFg, bg));
+        }
 
         // Response rows (remaining height)
         if (ViewSize.Height > 1)

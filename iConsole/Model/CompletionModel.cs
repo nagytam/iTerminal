@@ -1,9 +1,13 @@
 ﻿using iConsole.Data;
+using iConsole.Helper;
 
 namespace iConsole.Model;
 
 public class CompletionModel : ICompletionModel
 {
+    /// <summary>Fewer typed letters than this match too much to be worth a fuzzy fallback (the command palette uses the same limit).</summary>
+    private const int FuzzyMinimumLength = 3;
+
     private ConcurrentList<string> _completions { get; set; } = [];
     public IEnumerable<string> Completions => _completions;
     public ConcurrentObservableCollection<string> MatchingValues { get; internal set; } = [];
@@ -34,7 +38,19 @@ public class CompletionModel : ICompletionModel
         }
         else
         {
-            matchingValues = Completions.Where(c => c.StartsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            matchingValues = Completions.Where(c => c.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+            // A prefix that matches nothing usually means a skipped letter or a half-remembered name: fall back to a
+            // ranked subsequence match, as the command palette does, so the list is not simply empty.
+            if (!matchingValues.Any() && value.Length >= FuzzyMinimumLength)
+            {
+                matchingValues = Completions
+                    .Select(c => (Completion: c, Match: FuzzyMatcher.Match(value, c)))
+                    .Where(x => x.Match is not null)
+                    .OrderByDescending(x => x.Match!.Value.Score)
+                    .Select(x => x.Completion)
+                    .ToList();
+            }
         }
 
         foreach (var matchingValue in matchingValues)

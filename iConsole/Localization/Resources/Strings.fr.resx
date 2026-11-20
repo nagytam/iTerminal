@@ -1286,16 +1286,34 @@
     <value>Prise en main :</value>
   </data>
   <data name="Help.Started.Tab" xml:space="preserve">
-    <value>Tab / Maj+Tab    Déplacer le focus entre les panneaux et les contrôles</value>
+    <value>Déplacer le focus entre les panneaux et les contrôles</value>
+  </data>
+  <data name="Help.Started.Tab.Key" xml:space="preserve">
+    <value>Tab / Maj+Tab</value>
   </data>
   <data name="Help.Started.Enter" xml:space="preserve">
-    <value>Entrée          Lancer la commande principale de l'élément actif</value>
+    <value>Lancer la commande principale de l'élément actif</value>
+  </data>
+  <data name="Help.Started.Enter.Key" xml:space="preserve">
+    <value>Entrée</value>
   </data>
   <data name="Help.Started.Esc" xml:space="preserve">
-    <value>Échap           Fermer le dialogue ou le menu au premier plan</value>
+    <value>Fermer le dialogue ou le menu au premier plan</value>
+  </data>
+  <data name="Help.Started.Esc.Key" xml:space="preserve">
+    <value>Échap</value>
   </data>
   <data name="Help.Started.F1" xml:space="preserve">
-    <value>F1              Ouvrir cette aide depuis n'importe quel écran</value>
+    <value>Ouvrir cette aide depuis n'importe quel écran</value>
+  </data>
+  <data name="Help.Started.F1.Key" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="Help.Started.Palette.Key" xml:space="preserve">
+    <value>Shift+F1</value>
+  </data>
+  <data name="Help.Started.Palette" xml:space="preserve">
+    <value>Trouver une commande par son nom dans la palette de commandes</value>
   </data>
   <data name="Help.Started.Lists" xml:space="preserve">
     <value>La première liste ci-dessous correspond à ce qui fonctionne ici et maintenant.</value>
