@@ -113,15 +113,15 @@ public class AutoCompletion : Window, ITransientOverlayHost
         if (CompletionModel is IBlockingCompletionModel)
         {
             // A model that may do I/O must not run on the initialising thread. The update goes through the same
-            // background path a keystroke takes, and parks its visibility for OnIdle. UpdateTask is set so a Tab
-            // pressed straight away waits for it.
+            // background path a keystroke takes, and parks its visibility for OnIdle. It is not the model's UpdateTask:
+            // Tab completes only for a keystroke's update, and an opening box has none.
             //
             // It works out the matches and keeps the list down: it answers the text the box was opened with, not a
             // keystroke, and a dialog that opens on a folder would otherwise put its subfolders over its own buttons
             // before anything was typed. (An argument, not SuppressNextVisibilityUpdate: that counter is consumed by
             // whichever update reaches it first, and would be left set if this one lost to a Hide.)
             var generation = CurrentGeneration;
-            CompletionModel.UpdateTask = Task.Run(() => UpdateMatches(value, generation, keepListDown: true));
+            _ = Task.Run(() => UpdateMatches(value, generation, keepListDown: true));
             return;
         }
 

@@ -63,13 +63,21 @@ public class BlockingCompletionModelTest
         // The model is blocked: an update run inline would hold this call until the gate times out.
         Task init = box.AutoCompletion!.OnInitializeAsync();
         Assert.IsTrue(init.Wait(TimeSpan.FromSeconds(10)), "initialising returned while the model was still blocked");
-        Task? update = model.UpdateTask;
-        Assert.IsNotNull(update, "the first update is the model's UpdateTask, so a Tab pressed at once waits for it");
-        Assert.IsFalse(update.IsCompleted);
+        Assert.IsNull(model.UpdateTask, "the opening update is not a keystroke's: Tab does not wait for it or complete from it");
+        for (int i = 0; i < 100 && Volatile.Read(ref model.Updates) == 0; i++)
+        {
+            await Task.Delay(20);
+        }
+
+        Assert.AreEqual(1, model.Updates, "but it did start, off this thread");
 
         model.Gate.Set();
-        await update;
-        Assert.AreEqual(1, model.Updates, "the first update ran once");
+        for (int i = 0; i < 100 && model.MatchingValues.Count == 0; i++)
+        {
+            await Task.Delay(20);
+        }
+
+        Assert.AreEqual(1, model.MatchingValues.Count, "and it landed");
         model.Gate.Dispose();
     }
 
@@ -84,7 +92,12 @@ public class BlockingCompletionModelTest
         var autoCompletion = new AutoCompletion(textModel, model, theme.Object) { ViewSize = new Size(20, 5) };
 
         await autoCompletion.OnInitializeAsync();
-        await model.UpdateTask!;
+        for (int i = 0; i < 100 && model.MatchingValues.Count == 0; i++)
+        {
+            await Task.Delay(20);
+        }
+
+        await Task.Delay(100);
         autoCompletion.OnIdle();
         Assert.IsTrue(model.MatchingValues.Any(), "the opening text has matches");
         Assert.IsFalse(autoCompletion.IsVisible, "but the list stays down until something is typed");

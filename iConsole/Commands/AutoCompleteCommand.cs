@@ -12,7 +12,20 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
 
     public override bool CanExecute()
     {
-        return base.CanExecute();
+        if (!base.CanExecute())
+        {
+            return false;
+        }
+
+        // A box whose model lists folders sits in dialogs where Tab is also how focus moves on (Copy, Compress...): it
+        // completes only while the list is up, or while the update for the last keystroke is still on its way. With
+        // the list down — nothing typed yet, or Esc pressed — Tab is left for the dialog.
+        if (completionModel is IBlockingCompletionModel)
+        {
+            return Control is AutoCompletion { IsPopupOpen: true } || completionModel.UpdateTask is { IsCompleted: false };
+        }
+
+        return true;
     }
 
     /// <summary>
