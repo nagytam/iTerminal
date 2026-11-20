@@ -320,17 +320,17 @@ public class Tab(IThemeService themeService) : Control(themeService)
                 tabName.Append(Border.OpenToLeft + " " + name + " " + Border.OpenToRight,
                     foregroundColor, backgroundColor);
             }
-            tabName.HighlightHotKey(tabPage.HotConsoleKey, tabPage.HotKeyChar, Color.Green, Color.Blue);
+            tabName.HighlightHotKey(tabPage.HotConsoleKey, tabPage.HotKeyChar, consoleColor.SelectedFocusedForeground, backgroundColor);
             line2.Append(tabName);
         }
         line2.Expand((int)ViewSize.Width - 1, consoleColor.Foreground, consoleColor.Background);
         line2.Append(hiddenRight ? OverflowRightMarker : Border.Vertical,
             hiddenRight ? consoleColor.SelectedFocusedForeground : consoleColor.Foreground, consoleColor.Background);
         var line3 = Border.BottomLeft + Border.Horizontal.Repeat((int)ViewSize.Width - 2) + Border.BottomRight;
-        var line1String = new ConxelString(line1, Color.White, Color.Blue);
+        var line1String = new ConxelString(line1, consoleColor.Foreground, consoleColor.Background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line1String);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + 1), ViewSize, line2);
-        var line3String = new ConxelString(line3, Color.White, Color.Blue);
+        var line3String = new ConxelString(line3, consoleColor.Foreground, consoleColor.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + 2), ViewSize, line3String);
     }
 
@@ -382,7 +382,7 @@ public class Tab(IThemeService themeService) : Control(themeService)
                     foregroundColor, backgroundColor);
             }
             tabName.Append(Border.Vertical, consoleColor.Foreground, consoleColor.Background);
-            tabName.HighlightHotKey(tabPage.HotConsoleKey, tabPage.HotKeyChar, Color.Green, Color.Blue);
+            tabName.HighlightHotKey(tabPage.HotConsoleKey, tabPage.HotKeyChar, consoleColor.SelectedFocusedForeground, backgroundColor);
             buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + y), ViewSize, tabName);
             y++;
             bool lastShown = i == plan.First + plan.Visible - 1;
