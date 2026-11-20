@@ -240,3 +240,71 @@ This survey covers eight libraries and tools from five languages no earlier surv
 - **Built, no item:** `Breadcrumb`, `Chips`, `Tab`, `Pagination`, `CheckList`, `NumericUpDown`, `RadioGroup`, `ComboBox`, `Button`, `LinkLabel`, `TextBox` (`iConsole/Controls/TextBox.cs`), `TextEditorControl`, `Expander`, `Accordion`, `Calendar`, `TimePicker`, `Slider`, `FilePicker`, `TreeView`, `ProgressGroup`, `LogView` (follow, cap and streaming), `Wizard`, `GroupBox`, `FormPanel`, `GridPanel`, `StackPanel` (with `Wrap`, line 154), `BoxPanel`, `SizeRule.Percent`, `Popup`, `Window` (a `Control`, `iConsole/Controls/Window.cs:8-9`), `ColorScheme` (`iConsole/Display/ColorScheme.cs`), the `Desktop` lifecycle, `ConsoleInterruptShield` (Ctrl+C, Ctrl+\ and Ctrl+Z while the terminal is lent), `Cursor.IsCursorVisible`, `OnIdle` and `OnWindowSizeChanged`.
 - **Wide characters** (tuish, item 1, built as `TextWidth`); **Kitty keyboard** (tuish, item 6, partly built); **box styles and joins** (tuish, items 11 and 37); **theme styles** (vui.el, items 10 and 98); **effects** (roc-tui, items 13 and 76); **typed inputs and validation** (vui.el, item 23); **reactive state** (vui.el, item 27, partly built as `ObservableValue`); **fixed-region and grow modes** (tuish, items 28 and 69; item 28 is still missing, 69 is built as `LogView`); **named bindings** (tuish, item 25); **key-hint help on focus** (Emacs, item 51; hints exist per control, the footer does not); **named focus rings** (Emacs and vui.el, item 44, still missing); **background work tied to a control** (vui.el, item 56, still missing; `RemoveControl` (`Control.cs:822`) has no hook, and `OnBeforeClose` runs only from `Close()`, line 831); **embedded pane** (tuish, item 64, a child process); **pause, message and wait boxes** (boxlib, item 94, still missing); **typed dialog results** (boxlib, item 119; prompts built, `ShowDialogAsync<T>` missing); **typed value editors** (Emacs, item 124, still missing); **clickable spans inside text** (Emacs `%[` buttons, item 131, still missing; no match for `ClickableSpan`, `InlineButton`, `ClickableText`, `SpanClick`, `TextAction`, `ClickRegion`, `LinkSpan`, `InlineLink`).
 - **Not added:** a value shared down the control tree (vui.el's context), because services reach controls through constructors and the DI container; responsive breakpoints (roc-tui), because `OnWindowSizeChanged` is the hook and the layout is application code; a wrapped paragraph (roc-tui), because `Label` does not wrap but `TextViewerControl` does; an in-process nested application (tuish), because a `Window` is a `Control` and can sit in a panel, which is present by construction but not tested.
+
+#### Survey 3: libraries from Gren, PureScript and Eiffel
+
+This survey covers three libraries from three languages no earlier survey covers: gren-tui (Gren), purescript-blessed (PureScript) and simple_tui (Eiffel). It was run on 2026-11-20. Only three libraries were read, not the six to ten the brief asks for, because the other candidates in the languages searched were bindings, GUI toolkits, pages that could not be read, or had no terminal widget library (see "Considered and skipped"). The basis is the README or repository record of each project (GitHub API for tags, commits and the licence field, the registry page where one exists), read on the same day; it is not run-time behaviour. "Not found" means a grep of `iConsole/` and `iTerminal.Core/` (`*.cs`) on branch `docs/compare-console-survey-3` at commit `3ba7401f`. Phase 2 found no status change in the existing items it re-checked (see the last paragraph of this survey).
+
+**Languages covered before this survey** (from Survey 1, Survey 2, the older comparison and its later surveys, not searched again): C#, Python, Rust, Go, C++, C, JavaScript and TypeScript, Java, Kotlin, Scala, Swift, Dart, Haskell, OCaml, Elixir, Gleam (BEAM), Erlang, Zig, Nim, Ruby, PHP, Julia, Perl, Raku, Common Lisp, Pascal and Delphi, Ada, Haxe, D, V, Lua, Racket, Odin, Clojure, Crystal, Elm, Tcl, Pharo, Vala, F#, PowerShell, R, Scheme, Mojo, Fortran, Bash, Pony, Roc, Objective-C and Emacs Lisp. Gren is treated as its own language, although it is an Elm dialect, because Elm is the only related entry and Gren is a separate language.
+
+**Research table**
+
+| Library | Language | Repository | Docs read | Version and release date |
+| --- | --- | --- | --- | --- |
+| gren-tui | Gren | [blaix/gren-tui](https://github.com/blaix/gren-tui) | [README](https://github.com/blaix/gren-tui), [Gren package page](https://packages.gren-lang.org/package/blaix/gren-tui/version/4.0.0/overview) | 5.0.0 (tag dated 8 January 2026; last push 8 January 2026); the registry page read shows 4.0.0; BSD-3-Clause |
+| purescript-blessed | PureScript | [shamansir/purescript-blessed](https://github.com/shamansir/purescript-blessed) | [README](https://github.com/shamansir/purescript-blessed); the [Pursuit page](https://pursuit.purescript.org/packages/purescript-blessed) returned a bot check and was not read | No release; tag v1.0.0 dated 10 July 2025; last push 5 August 2025, more than a year before this run; MIT |
+| simple_tui | Eiffel | [simple-eiffel/simple_tui](https://github.com/simple-eiffel/simple_tui) | [README](https://github.com/simple-eiffel/simple_tui#readme), with its CHANGELOG and source tree | No release or tag; last commit 8 November 2026; the README badge says MIT, the GitHub licence field is empty; the README calls it "Phase 2" (core widgets complete) |
+
+**Features read, with sources**
+
+- **gren-tui.** Terminal apps written in The Elm Architecture (model, update and view) in a pure style; a layout DSL inspired by elm-ui for reactive layouts; the module list on the registry page names attributes, borders, spinners with selectable variants and a text-field module; the README examples are a menu, a progress bar and a game. Source: [README](https://github.com/blaix/gren-tui), [Gren package page](https://packages.gren-lang.org/package/blaix/gren-tui/version/4.0.0/overview). Mouse support and colour are not described. Unverified (from a search summary, not the README): the view is printed and redrawn by clearing only the lines it printed before, and Ctrl+C is intercepted to exit. A search summary says it runs on the Node platform only (unverified).
+- **purescript-blessed.** A draft port of the Node.js Blessed library, per its README: windows (boxes) that can be dragged, lists, a file manager, buttons and most of the original components, options, methods and styles; text tagging for colour and style; events are typed through a unique key per component instance. The README lists as not yet done the decoding of event subjects from JSON and "a lot of things". It is not on Spago; it is installed with npm and a custom Dhall entry. Source: [README](https://github.com/shamansir/purescript-blessed).
+- **simple_tui.** Per the README and the source tree: bordered frames with titles; buttons with a press animation; a single-line text field with a cursor; check boxes, radio buttons, a list and a combo box with a popup; labels, a progress bar, separators and a modal message box with buttons; boxes, vertical and horizontal boxes, tabs and a radio group; a drop-down menu bar with Alt+key shortcuts and `&` markers on menu titles; global shortcuts with Ctrl, Alt and Shift; a per-frame tick callback; mouse click, drag and hover; a 256-colour palette with bold, reverse and underline; Unicode box drawing; a Windows and a POSIX backend (`platform/windows`, `platform/posix`). The API is described as EiffelVision2-inspired. Source: [README](https://github.com/simple-eiffel/simple_tui#readme), `platform/` in the source tree.
+
+**Considered and skipped**
+
+- marionette-commander (PureScript, MIT): last published 5 January 2023, more than three years before this run; it maps text output and keys onto a state, update and view loop, which item 27 already covers. Read on the [Pursuit page](https://pursuit.purescript.org/packages/purescript-marionette-commander/0.1.1). It is the only other PureScript option, so blessed is kept.
+- ncurses-idris and the gallais fork (Idris 2): bindings to libncurses with no widgets; last push 3 January 2023. Source: [repository](https://github.com/gallais/ncurses-idris). Idris 2 is not covered before, so it is recorded here.
+- Micro Focus COBOL (Panels and the Dialog System): the vendor documentation pages returned HTTP 403 to `WebFetch` on two attempts, so the features are known from a search snippet only and are not listed. COBOL is not covered before.
+- libvt (FreeBASIC, a text screen library with an optional widget layer): its documentation site returned HTTP 404 on two URLs, and the repository was not found, so it is known from a search snippet only. FreeBASIC is not covered before.
+- EiffelVision (Eiffel GUI toolkit) and the Gobo project: a GUI toolkit and a library set, not a terminal UI.
+- ReScript bindings for OpenTUI and Ink (opentui-rescript, rescript-ink): bindings to JavaScript libraries, which are covered.
+- Fennel, Carp, Hy, Hare, Chapel, Ballerina, Wren, Ring, Factor, Standard ML, Modula-2, Logo, Oberon, Smalltalk, GNU APL and Icon: searched once each, no terminal widget library found; the results were other languages or GUI toolkits.
+- Extended search for new 2026 libraries: Symfony Tui (PHP), TamboUI (Java) and gotui (Go) are new, but their languages are covered, so none was added.
+
+**Missing features**
+
+**Controls**
+
+147. **Hot-key marker in a caption.** *Partly.* An `&` before a letter makes that letter the hot key and underlines it, in `ContextMenuItem` only (`iConsole/Controls/ContextMenuItem.cs:20-22`, `HotKey`, `HotKeyIndex`); `&&` is a literal ampersand. `Button`, `CheckBox`, `TextBox`, `Tab`, `MenuBar` and `MenuItem` take a `HotKeyChar` set in code (`Control.cs:909`, `Button.cs:131`), and their titles are not parsed. Missing: the caption marker on those controls and on menu titles. Seen in: simple_tui (`&` markers on menu bar items and drop-down menus). Search terms in the title parse: `'&'` matches only `ContextMenuItem.cs` and the input-mask character in `InputMask.cs`; `HotKeyIndex` matches only `ContextMenuItem.cs`. A marker on a menu bar title must keep Alt+letter out of the global hot keys (CLAUDE.md); a caption hot key that acts only while its control has focus does not break that rule. Fits `Button`, `MenuItem` and `MenuBar`.
+
+148. **Find a control by name.** *Missing.* `AddControl(control, name)` stores the name in `Control.Name` (`iConsole/Controls/Control.cs:292-297`), and `HelpDialog` reads it for its "Focused control" line, but no method returns a control by that name. Seen in: purescript-blessed (every component instance has a unique key, and its methods are called through that key). Search terms with no match in `iConsole/` or `iTerminal.Core/`: `FindControl`, `FindByName`, `GetControlByName`, `ControlByName`, `FindChild`, `FindDescendant`, `GetControl(`; the `.Name ==` matches are for drives, networks, content models (`ContentModelService.Left` and `Right`), file rows and XML, not for controls. Fits `Control` and `IControl`. A lookup walks the tree, so it must stay off the render path. Low priority.
+
+**Suggested order** (new items of this survey only)
+
+1. Item 147 (caption hot keys): small; menu and button titles could take the `&` marker that the context menu already reads.
+2. Item 148 (control lookup): low; useful when a dialog or test needs a control it has not kept in a field.
+
+**Candidates already covered** (item numbers, or built type names)
+
+- Elm architecture with model, update and view (gren-tui): item 27.
+- Layout DSL with attributes, reactive layout and nested boxes (gren-tui): items 9, 65, 66 and 128; built as `StackPanel`, `GridPanel`, `DockPanel`, `SizeRule`, `BoxPanel`.
+- Spinners with selectable variants (gren-tui): item 71, still missing; `Spinner` has one frame set (`iConsole/Controls/Spinner.cs:9`).
+- Inline output that redraws only its own lines (gren-tui, unverified): item 28, still missing; no `Inline`, `scrollback` or line-clearing term found in `iConsole/` or `iTerminal.Core/`.
+- Text field with a cursor (gren-tui, simple_tui): built (`TextBox`).
+- Ctrl+C that exits the program (gren-tui, unverified): built (the key router and `ConsoleInterruptShield`).
+- Draggable boxes, lists, a file manager and buttons (purescript-blessed): built (`Window` drag under item 43, `ListBox`, `FilePicker`, `Button`).
+- Inline colour and style tags (purescript-blessed): item 47, still missing; `MarkupTextExtractor` reads documents and gives no label markup.
+- Per-component styles (purescript-blessed): items 10 and 98.
+- Mouse click, drag and hover (simple_tui): built (SGR mouse, any-motion hover).
+- 256-colour palette (simple_tui): item 34, still missing; `Color` has the 16 `ConsoleColor` values (`iConsole/Display/Color.cs`), and no `38;5` or 256-colour term was found.
+- Modal message box with buttons and quick dialogs (simple_tui `TUI_MESSAGE_BOX`, `TUI_QUICK`): item 94; prompts are built, message and wait dialogs are still missing (no `MessageBox`, `ShowMessageAsync` or `WaitDialog`).
+- Button press animation and timed effects (simple_tui): item 13, still missing; no `Animator`, `Tween` or `Easing` type was found.
+- Per-frame tick callback (simple_tui `set_on_tick`): built (`OnIdle`).
+- Global shortcuts with Ctrl, Alt and Shift (simple_tui `register_shortcut`): built (the command router).
+- Tabs, radio group, combo box with a popup, progress bar, separator and scroll bar (simple_tui): built (`Tab`, `RadioGroup`, `ComboBox`, `ProgressGroup`, `Separator`, `ScrollBar`).
+- Windows and POSIX terminal backends (simple_tui): built (`iConsole.Inputs.Windows`, `iConsole.Inputs.Posix`, `SystemConsoleDriver`).
+
+**Status check**
+
+Phase 2 re-checked items 13, 28, 34, 47, 71 and 94 by the searches above; each is still missing, and no item changed status, so no status line was added. Item 19 (hot keys in `ContextMenu`) still matches the source.
