@@ -1,6 +1,6 @@
 @ignore
 Feature: Bluetooth devices
-  Ctrl+Shift+J lists Bluetooth devices known to BlueZ and scans, connects and pairs them. Linux only.
+  Ctrl+Shift+J lists Bluetooth devices known to BlueZ and scans, connects and pairs them on Linux. On Windows it lists the paired devices only.
 
   Background:
     Given iTerminal has just started
@@ -30,7 +30,9 @@ Feature: Bluetooth devices
     When I press "C" on another device
     Then nothing starts and the status line says an operation is already running
 
-  Scenario: On Windows the device manager is not offered
+  Scenario: On Windows the device manager lists paired devices and refuses changes
     Given the machine runs Windows
-    When I open the Tools menu
-    Then "Bluetooth devices" is not listed
+    When I press "Ctrl+Shift+J"
+    Then the paired devices are listed with connected or paired state
+    When I press "S"
+    Then the status line says Windows can only list Bluetooth devices

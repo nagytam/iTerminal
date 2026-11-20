@@ -57,6 +57,44 @@ public class BluetoothDeviceManagerDialogTest
 
     [TestMethod]
     [Timeout(60_000)]
+    public async Task AReadOnlyBackendListsTheDevicesAndSaysNothingCanBeChanged()
+    {
+        var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: false)) { CanChange = false };
+        var dialog = new BluetoothDeviceManagerDialog(bluetooth, TestTheme());
+        await ShowAsync(dialog);
+        await dialog.OperationForTest;
+        dialog.OnIdle();
+
+        AssertScreenContains(Render(dialog), "Headphones");
+        CollectionAssert.AreEqual(new[] { "R" }, dialog.GetKeyHints().Select(hint => hint.Key).ToArray(), "Only the refresh key is offered.");
+
+        foreach (ConsoleKey key in new[] { ConsoleKey.C, ConsoleKey.P, ConsoleKey.S, ConsoleKey.Delete })
+        {
+            await dialog.HandleKeyEventAsync(Key(key));
+            await dialog.OperationForTest;
+            StringAssert.Contains(dialog.StatusForTest, "can only list");
+            Assert.IsFalse(dialog.ConfirmingRemoveForTest, "Delete must not ask whether to remove.");
+        }
+
+        Assert.AreEqual(0, bluetooth.Connected.Count + bluetooth.Paired.Count + bluetooth.Removed.Count);
+        Assert.AreEqual(1, bluetooth.ListCount, "Only the first read listed; the refused keys read nothing.");
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task AReadOnlyBackendWithNoDevicesDoesNotAdvertiseScanning()
+    {
+        var dialog = new BluetoothDeviceManagerDialog(new RecordingBluetooth { CanChange = false }, TestTheme());
+        await ShowAsync(dialog);
+        await dialog.OperationForTest;
+        dialog.OnIdle();
+
+        AssertScreenContains(Render(dialog), "No paired Bluetooth devices");
+        Assert.IsFalse(Render(dialog).ToString()!.Contains("Press S"));
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
     public async Task COnAConnectedDeviceDisconnectsIt()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: true));
@@ -267,6 +305,8 @@ public class BluetoothDeviceManagerDialogTest
         private int _listCount;
 
         public bool IsSupported { get; init; } = true;
+
+        public bool CanChange { get; init; } = true;
 
         public BluetoothOutcome ConnectOutcome { get; init; } = new(true, string.Empty);
 

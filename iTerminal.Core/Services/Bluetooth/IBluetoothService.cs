@@ -12,14 +12,21 @@ public sealed record BluetoothOutcome(bool Succeeded, string Message);
 
 /// <summary>
 /// Lists and changes Bluetooth devices through the host's Bluetooth stack. On Linux that is BlueZ, driven
-/// through <c>bluetoothctl</c>; elsewhere <see cref="IsSupported"/> is false and every call reports why.
+/// through <c>bluetoothctl</c>. On Windows the paired devices are listed and nothing can be changed
+/// (<see cref="CanChange"/> is false). Elsewhere <see cref="IsSupported"/> is false and every call reports why.
 /// </summary>
 public interface IBluetoothService
 {
-    /// <summary>False where this build has no Bluetooth backend (Windows for now).</summary>
+    /// <summary>False where this build has no Bluetooth backend (neither Linux nor Windows).</summary>
     bool IsSupported { get; }
 
-    /// <summary>The devices BlueZ knows: every paired device, every device seen recently, with their state.</summary>
+    /// <summary>
+    /// True when scan, connect, pair and forget work. False on a backend that only lists (Windows); those calls then
+    /// fail with a message that says so, and the dialog does not offer them.
+    /// </summary>
+    bool CanChange => IsSupported;
+
+    /// <summary>The devices the host knows: every paired device and, on Linux, every device seen recently, with their state.</summary>
     Task<BluetoothListing> ListAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Looks for nearby devices for a few seconds. The listing afterwards shows what was found.</summary>

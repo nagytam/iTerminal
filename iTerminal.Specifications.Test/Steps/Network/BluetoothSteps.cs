@@ -43,9 +43,9 @@ public sealed class BluetoothSteps
     [Given(@"the machine runs Windows")]
     public void GivenTheMachineRunsWindows() => throw new PendingStepException();
 
-    [When(@"I open the Tools menu")]
-    public void WhenIOpenTheToolsMenu() => throw new PendingStepException();
+    [Then(@"the paired devices are listed with connected or paired state")]
+    public void ThenThePairedDevicesAreListedWithConnectedOrPairedState() => throw new PendingStepException();
 
-    [Then(@"{string} is not listed")]
-    public void ThenValueIsNotListed(string value1) => throw new PendingStepException();
+    [Then(@"the status line says Windows can only list Bluetooth devices")]
+    public void ThenTheStatusLineSaysWindowsCanOnlyListBluetoothDevices() => throw new PendingStepException();
 }
