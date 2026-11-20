@@ -198,6 +198,10 @@ public sealed class TerminalApp : IAsyncDisposable
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
                     .RemoveAll<Core.Services.Translation.ITranslationProvider>(services);
                 services.AddSingleton<Core.Services.Translation.ITranslationProvider, SandboxServices.Translation>();
+                // AI queries in the file viewers: the model is not asked, a fixed draft answers at once, so no run reaches an AI provider.
+                Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
+                    .RemoveAll<iConsole.Tabular.IGridQueryAssistant>(services);
+                services.AddSingleton<iConsole.Tabular.IGridQueryAssistant, SandboxServices.GridQueryAssistant>();
                 services.AddSingleton<Core.Services.Currency.ICurrencyRateProvider, SandboxServices.CurrencyRates>();
                 // Tools > Weather: the forecast and the place search are answered from a fixed table, so no run reaches Open-Meteo.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions

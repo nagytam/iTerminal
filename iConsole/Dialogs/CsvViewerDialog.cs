@@ -1,4 +1,5 @@
 using System.Text;
+using iConsole.Tabular;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -16,7 +17,7 @@ namespace iConsole.Dialogs;
 
 /// <summary>
 /// The CSV viewer: the file as a grid, with the header on top and the columns scrolling sideways. The query line above the grid
-/// takes a small SQL-like query (see <see cref="CsvQuery"/>): <c>SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC</c>.
+/// takes a small SQL-like query (see <see cref="GridQuery"/>): <c>SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC</c>.
 /// Enter runs it; the grid then shows its rows and the status line says how many matched. F4 switches to the file's text.
 /// F8 / Shift+F8 read the grid again under the next / previous code page (the title names the current one); the F4 text
 /// view always picks its own code page, the way the F3 viewer does, and ignores the switch.
@@ -30,6 +31,7 @@ public class CsvViewerDialog : Dialog
 
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly GridQueryDrafter _drafter;
     private readonly TextBox _queryBox;
     private readonly CsvGrid _grid;
     private readonly TextViewerControl _textViewerControl;
@@ -39,8 +41,9 @@ public class CsvViewerDialog : Dialog
     private bool _textLoaded;
     private int _generation;
     private int _pendingGeneration;
-    private Task<CsvQueryResult>? _query;
+    private Task<GridQueryResult>? _query;
     private string _queryError = string.Empty;
+    private string _statusNote = string.Empty;
     private int _matched;
     private byte[]? _bytes;
     private int _bomLength;
@@ -54,9 +57,11 @@ public class CsvViewerDialog : Dialog
         IFileToTextConverterService fileToTextConverterService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IGridQueryAssistant? queryAssistant = null)
         : base(nameof(CsvViewerDialog), themeService)
     {
+        _drafter = new GridQueryDrafter(queryAssistant ?? new UnavailableGridQueryAssistant());
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
         // The query line is added first: a dialog gives the keyboard to its first focusable control, and the query is where a person starts.
@@ -96,7 +101,7 @@ public class CsvViewerDialog : Dialog
     public Task<CsvDocument>? SwitchTask => _switch;
 
     /// <summary>The query that the grid's rows came from, or null while the query is still running.</summary>
-    public Task<CsvQueryResult>? QueryTask => _query;
+    public Task<GridQueryResult>? QueryTask => _query;
 
     /// <summary>What the status line says: the row count, the query's error, or why the file could not be shown.</summary>
     public string Status => _statusLabel.Text;
@@ -145,6 +150,12 @@ public class CsvViewerDialog : Dialog
 
     /// <summary>What the query line says.</summary>
     public string QueryText => _queryBox.Text;
+
+    /// <summary>Replaces the text in the query line, as typing would.</summary>
+    public void SetQueryText(string text) => _queryBox.Text = text;
+
+    /// <summary>The AI draft being waited for, or null.</summary>
+    public Task<string>? DraftTask => _drafter.Request;
 
     /// <summary>The query the line starts with: every column of every row.</summary>
     public const string DefaultQuery = "SELECT * FROM file";
@@ -204,13 +215,34 @@ public class CsvViewerDialog : Dialog
         }
 
         CsvDocument document = _document;
+        _statusNote = string.Empty;
         _pendingGeneration = ++_generation;
-        _query = Task.Run(() => CsvQuery.Run(document, text));
+        // The rows are a two-axis array in memory; the query runs over the table the array backend reads from it.
+        _query = GridQueryRun.RunOverAsync(new InMemoryGridArray(document.Rows, document.Headers), text);
+    }
+
+    /// <summary>Asks the AI model for a query for the question in the query line. The draft lands in the line; Enter runs it.</summary>
+    public void StartDraft()
+    {
+        if (_document is null || _switch is not null)
+        {
+            return;
+        }
+
+        string kind = _document.Delimiter == '\t' ? "tab-separated file" : "CSV file";
+        IReadOnlyList<GridColumnSchema> columns = [.. _document.Headers.Select(header => new GridColumnSchema(header))];
+        _drafter.Start(_queryBox.Text, GridSchema.ForSingleTable(kind, columns, _document.Rows.Count));
+        _statusLabel.Text = UiText.Get("Grid.Ai.Asking", "Asking the AI model…");
     }
 
     /// <summary>Puts a finished query on screen. A query that was overtaken by a newer one is dropped, as is one that failed to parse, which keeps the old rows.</summary>
     public override void OnIdle()
     {
+        if (_drafter.TakeDraft() is { } draft)
+        {
+            ApplyDraft(draft);
+        }
+
         if (_switch is { IsCompleted: true } reread && _pendingDocumentGeneration == _documentGeneration)
         {
             _switch = null;
@@ -244,7 +276,7 @@ public class CsvViewerDialog : Dialog
             }
             else
             {
-                CsvQueryResult result = query.Result;
+                GridQueryResult result = query.Result;
                 _queryError = string.Empty;
                 _matched = result.Matched;
                 _grid.SetData(result.Headers, result.Rows);
@@ -257,11 +289,36 @@ public class CsvViewerDialog : Dialog
         base.OnIdle();
     }
 
+    /// <summary>Puts an AI draft in the query line, or says why it cannot be used. The draft runs only when the user presses Enter.</summary>
+    private void ApplyDraft(GridDraft draft)
+    {
+        if (draft.Query is { } query)
+        {
+            _queryBox.Text = query;
+            _queryError = string.Empty;
+            _statusNote = UiText.Get("Grid.Ai.Ready", "Draft in the query line: press Enter to run it");
+        }
+        else
+        {
+            _queryError = draft.Error ?? string.Empty;
+            _statusNote = string.Empty;
+        }
+
+        UpdateStatus();
+        StateHasChanged();
+    }
+
     private void UpdateStatus()
     {
         if (_queryError.Length > 0)
         {
             _statusLabel.Text = _queryError;
+            return;
+        }
+
+        if (_statusNote.Length > 0)
+        {
+            _statusLabel.Text = _statusNote;
             return;
         }
 
@@ -359,7 +416,15 @@ public class CsvViewerDialog : Dialog
 
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt && !_textMode)
         {
-            StartQuery(_queryBox.Text);
+            if (GridQueryDrafter.IsQuestion(_queryBox.Text))
+            {
+                StartDraft();
+            }
+            else
+            {
+                StartQuery(_queryBox.Text);
+            }
+
             return true;
         }
 
@@ -383,6 +448,7 @@ public class CsvViewerDialog : Dialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", UiText.Get("Csv.Hint.RunQuery", "Run the query over the rows"));
+        yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
         yield return ("F4", UiText.Get("Viewer.HintToggleText", "Show the file's text, or the grid again"));
         yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));
     }

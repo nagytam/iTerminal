@@ -44,9 +44,11 @@ public sealed class ParquetFileReader : IParquetFileReader
             long limit = Math.Min(totalRows, Math.Min(maxRows, cellRows));
 
             var headers = new List<string>(shownColumns);
+            var names = new List<string>(shownColumns);
             for (int column = 0; column < shownColumns; column++)
             {
                 headers.Add($"{fields[column].Name} ({TypeName(fields[column])})");
+                names.Add(fields[column].Name);
             }
 
             var rows = new List<string[]>();
@@ -77,7 +79,7 @@ public sealed class ParquetFileReader : IParquetFileReader
                 }
             }
 
-            return new ParquetPreview(headers, rows, totalRows, fields.Count);
+            return new ParquetPreview(headers, rows, totalRows, fields.Count, names);
         }
         catch (Exception ex) when (ex is not ParquetReadException and not OperationCanceledException)
         {

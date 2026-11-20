@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using iConsole.Csv;
+using iConsole.Tabular;
 using iConsole.Dialogs;
 
 namespace iConsole.Test.Csv;
@@ -9,7 +10,7 @@ namespace iConsole.Test.Csv;
 [TestClass]
 public class CsvEdgeCasesTest
 {
-    private static string[] First(CsvQueryResult result) => result.Rows.Select(row => row[0]).ToArray();
+    private static string[] First(GridQueryResult result) => result.Rows.Select(row => row[0]).ToArray();
 
     #region Quotes inside quotes
 
@@ -19,7 +20,7 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse("name,city\nO'Brien,Cork\nSmith,Leeds\n");
 
-        CsvQueryResult result = CsvQuery.Run(document, "WHERE name = 'O''Brien'");
+        GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'O''Brien'");
 
         CollectionAssert.AreEqual(new[] { "O'Brien" }, First(result));
     }
@@ -30,7 +31,7 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse("\"say \"\"hi\"\"\",n\nx,1\n");
 
-        CsvQueryResult result = CsvQuery.Run(document, "SELECT \"say \"\"hi\"\"\"");
+        GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "SELECT \"say \"\"hi\"\"\"");
 
         Assert.AreEqual("say \"hi\"", result.Headers[0]);
         Assert.AreEqual("x", result.Rows[0][0]);
@@ -42,7 +43,7 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse("name\nrock'\nrock\n");
 
-        CsvQueryResult result = CsvQuery.Run(document, "WHERE name = 'rock'''");
+        GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'rock'''");
 
         CollectionAssert.AreEqual(new[] { "rock'" }, First(result));
     }
@@ -53,8 +54,8 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse("name\nx\n");
 
-        Assert.ThrowsExactly<CsvQueryException>(() => CsvQuery.Run(document, "WHERE name = 'abc"));
-        Assert.ThrowsExactly<CsvQueryException>(() => CsvQuery.Run(document, "WHERE name = 'abc''"));
+        Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'abc"));
+        Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'abc''"));
     }
 
     #endregion
@@ -83,7 +84,7 @@ public class CsvEdgeCasesTest
     [DataRow("mississippi", "m%iss%ppx", false)]
     public void LikeMatchesAsSqlDoes(string text, string pattern, bool expected)
     {
-        Assert.AreEqual(expected, CsvQuery.GlobMatch(text, pattern), $"'{text}' LIKE '{pattern}'");
+        Assert.AreEqual(expected, GridQuery.GlobMatch(text, pattern), $"'{text}' LIKE '{pattern}'");
     }
 
     [Timeout(60_000)]
@@ -95,7 +96,7 @@ public class CsvEdgeCasesTest
         CsvDocument document = CsvDocument.Parse($"x\n{field}\n{field}\n");
         Stopwatch clock = Stopwatch.StartNew();
 
-        CsvQueryResult result = CsvQuery.Run(document, "WHERE x LIKE '%a%a%a%a%a%a%a%a%a%a%a%a%b'");
+        GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "WHERE x LIKE '%a%a%a%a%a%a%a%a%a%a%a%a%b'");
 
         Assert.AreEqual(0, result.Rows.Count);
         Assert.IsTrue(clock.ElapsedMilliseconds < 500, $"took {clock.ElapsedMilliseconds} ms");
@@ -107,7 +108,7 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse("x\napple\nberry\n");
 
-        CollectionAssert.AreEqual(new[] { "berry" }, First(CsvQuery.Run(document, "WHERE x NOT LIKE 'a%'")));
+        CollectionAssert.AreEqual(new[] { "berry" }, First(GridQuery.Run(document.Headers, document.Rows, "WHERE x NOT LIKE 'a%'")));
     }
 
     #endregion
@@ -121,8 +122,8 @@ public class CsvEdgeCasesTest
         // "10" < "1a" and "1a" < "9" as text, but "9" < "10" as numbers: no single order satisfied all three pairs.
         CsvDocument document = CsvDocument.Parse("v\n10\n9\n1a\napple\n2\n");
 
-        CsvQueryResult ascending = CsvQuery.Run(document, "ORDER BY v");
-        CsvQueryResult descending = CsvQuery.Run(document, "ORDER BY v DESC");
+        GridQueryResult ascending = GridQuery.Run(document.Headers, document.Rows, "ORDER BY v");
+        GridQueryResult descending = GridQuery.Run(document.Headers, document.Rows, "ORDER BY v DESC");
 
         CollectionAssert.AreEqual(new[] { "2", "9", "10", "1a", "apple" }, First(ascending));
         CollectionAssert.AreEqual(new[] { "apple", "1a", "10", "9", "2" }, First(descending));
@@ -133,14 +134,15 @@ public class CsvEdgeCasesTest
     public void TheOrderDoesNotDependOnWhereTheRowsStarted()
     {
         string[] values = ["10", "9", "1a", "apple", "2", "B", "a", "-3", "0.5", ""];
-        string[] expected = [.. CsvQuery.Run(CsvDocument.Parse("v\n" + string.Join("\n", values.Where(v => v.Length > 0)) + "\n"), "ORDER BY v").Rows.Select(r => r[0])];
+        CsvDocument sorted = CsvDocument.Parse("v\n" + string.Join("\n", values.Where(v => v.Length > 0)) + "\n");
+        string[] expected = [.. GridQuery.Run(sorted.Headers, sorted.Rows, "ORDER BY v").Rows.Select(r => r[0])];
 
         for (int shift = 1; shift < values.Length - 1; shift++)
         {
             string[] rotated = [.. values.Skip(shift), .. values.Take(shift)];
             CsvDocument document = CsvDocument.Parse("v\n" + string.Join("\n", rotated.Where(v => v.Length > 0)) + "\n");
 
-            CollectionAssert.AreEqual(expected, CsvQuery.Run(document, "ORDER BY v").Rows.Select(r => r[0]).ToArray(), $"rotated by {shift}");
+            CollectionAssert.AreEqual(expected, GridQuery.Run(document.Headers, document.Rows, "ORDER BY v").Rows.Select(r => r[0]).ToArray(), $"rotated by {shift}");
         }
     }
 
@@ -150,8 +152,8 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse("n,v\na,5\nb,\nc,1\n");
 
-        CollectionAssert.AreEqual(new[] { "c", "a", "b" }, First(CsvQuery.Run(document, "ORDER BY v")));
-        CollectionAssert.AreEqual(new[] { "a", "c", "b" }, First(CsvQuery.Run(document, "ORDER BY v DESC")));
+        CollectionAssert.AreEqual(new[] { "c", "a", "b" }, First(GridQuery.Run(document.Headers, document.Rows, "ORDER BY v")));
+        CollectionAssert.AreEqual(new[] { "a", "c", "b" }, First(GridQuery.Run(document.Headers, document.Rows, "ORDER BY v DESC")));
     }
 
     [Timeout(60_000)]
@@ -163,9 +165,9 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse($"v\n{word}\n5\n");
 
-        CollectionAssert.AreEqual(new[] { "5", word }, First(CsvQuery.Run(document, "ORDER BY v")));
-        Assert.AreEqual(1, CsvQuery.Run(document, $"WHERE v = '{word.ToLowerInvariant()}'").Rows.Count, "compared as text, ignoring case");
-        Assert.AreEqual(0, CsvQuery.Run(document, "WHERE v > 4 AND v < 6 AND v = 'x'").Rows.Count);
+        CollectionAssert.AreEqual(new[] { "5", word }, First(GridQuery.Run(document.Headers, document.Rows, "ORDER BY v")));
+        Assert.AreEqual(1, GridQuery.Run(document.Headers, document.Rows, $"WHERE v = '{word.ToLowerInvariant()}'").Rows.Count, "compared as text, ignoring case");
+        Assert.AreEqual(0, GridQuery.Run(document.Headers, document.Rows, "WHERE v > 4 AND v < 6 AND v = 'x'").Rows.Count);
     }
 
     #endregion
@@ -197,7 +199,7 @@ public class CsvEdgeCasesTest
     {
         CsvDocument document = CsvDocument.Parse("a,a,a_2\n1,2,3\n");
 
-        CsvQueryResult result = CsvQuery.Run(document, "SELECT a, a_2, a_2_2");
+        GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "SELECT a, a_2, a_2_2");
 
         CollectionAssert.AreEqual(new[] { "1", "2", "3" }, result.Rows[0]);
     }

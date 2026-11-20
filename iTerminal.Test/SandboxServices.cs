@@ -1363,6 +1363,17 @@ public static class SandboxServices
     }
 
     /// <summary>The Whisper model as if it were installed, and a recogniser that answers with a fixed sentence at once: no model is read, no engine loaded.</summary>
+    /// <summary>The AI query draft in the file viewers: a fixed query that every table can answer, so no run asks the model.</summary>
+    public sealed class GridQueryAssistant : iConsole.Tabular.IGridQueryAssistant
+    {
+        public const string Draft = "SELECT * LIMIT 3";
+
+        public string? UnavailableReason => null;
+
+        public Task<string> DraftAsync(string question, iConsole.Tabular.GridSchema schema, CancellationToken cancellationToken) =>
+            Task.FromResult(Draft);
+    }
+
     public sealed class SpeechRecognizer : Core.Speech.ISpeechRecognizer
     {
         public const string Sentence = "what is the weather in Budapest";
