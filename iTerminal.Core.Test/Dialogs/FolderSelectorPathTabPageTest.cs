@@ -1,6 +1,7 @@
 using iConsole.Data;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model.Validations;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -238,6 +239,35 @@ public class FolderSelectorPathTabPageTest
         foreach (var control in page.Controls.AsSnapshot())
         {
             Assert.IsTrue(control.ViewSize.Width >= 0 && control.ViewSize.Height >= 0);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSchemesHint_WrapsSoEveryScheme_IsReadableOnANarrowPage()
+    {
+        // The hint runs to several hundred characters; on a page this narrow a single line showed only its first few schemes.
+        var harness = new FolderSelectorTestHarness();
+        var page = new FolderSelectorPathTabPage(
+            harness.ContentModelService,
+            harness.FolderHistoryService,
+            harness.BeepService,
+            harness.DateTimeProviderService,
+            harness.SettingsService,
+            harness.ThemeService)
+        {
+            ViewSize = new Size(50, 24)
+        };
+        await page.OnInitializeAsync();
+        page.OnIdle();
+        page.OnInitializeLayout();
+
+        Render(page);
+        var screen = Render(page);
+
+        foreach (var scheme in FolderUrlValidationModel.SupportedSchemes)
+        {
+            AssertScreenContains(screen, scheme);
         }
     }
 }

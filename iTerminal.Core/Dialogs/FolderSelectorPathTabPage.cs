@@ -4,6 +4,7 @@ using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Extensions;
+using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Commands;
@@ -28,7 +29,9 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
 {
     public TextBox TextBoxPath { get; private set; }
     private ErrorMessage _errorMessage { get; set; }
-    private Label _schemesLabel { get; set; }
+    // The schemes hint is about 300 characters, so it is wrapped over these rows rather than cut to one line.
+    private const int SchemeRows = 8;
+    private readonly List<Label> _schemeLines = [];
     private Button _goButton { get; set; }
     private Breadcrumb _crumbs { get; set; }
 
@@ -64,7 +67,10 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         TextBoxPath.ValidationModel = PathValidator;
         _errorMessage = new ErrorMessage(PathValidator, themeService);
 
-        _schemesLabel = new Label(GetSchemesHint(), themeService);
+        for (int row = 0; row < SchemeRows; row++)
+        {
+            _schemeLines.Add(new Label(string.Empty, themeService));
+        }
 
         _goToPathCommand = new GoToPathCommand(contentModelService, PathValidator);
         _goButton = new Button(iConsole.Localization.UiText.Get("Button.Go", "Go"), _goToPathCommand, themeService)
@@ -81,7 +87,10 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         AddControl(TextBoxPath);
         AddControl(_crumbs);
         AddControl(_errorMessage);
-        AddControl(_schemesLabel);
+        foreach (Label schemeLine in _schemeLines)
+        {
+            AddControl(schemeLine);
+        }
         AddControl(_goButton);
     }
 
@@ -192,8 +201,14 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         _errorMessage.Position = new Position(1, 1);
         _errorMessage.ViewSize = new Size(Math.Max(0, ViewSize.Width - 6), 1);
 
-        _schemesLabel.Position = new Position(1, Math.Max(0, ViewSize.Height - 2));
-        _schemesLabel.ViewSize = new Size(innerWidth, 1);
+        // Wrapped from the row under the breadcrumbs down, one row per line; a row with no line left is blank.
+        var schemeLines = GetSchemesHint().WrapWords((int)innerWidth);
+        for (int row = 0; row < _schemeLines.Count; row++)
+        {
+            _schemeLines[row].Text = row < schemeLines.Count ? schemeLines[row] : string.Empty;
+            _schemeLines[row].Position = new Position(1, 3 + row);
+            _schemeLines[row].ViewSize = new Size(innerWidth, 1);
+        }
 
         _goButton.Position = new Position(1, Math.Max(0, ViewSize.Height - 1));
         _goButton.ViewSize = new Size(innerWidth, 1);
