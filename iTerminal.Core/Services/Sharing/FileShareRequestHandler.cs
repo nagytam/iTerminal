@@ -61,7 +61,7 @@ internal sealed class FileShareRequestHandler
         string[] segments = raw[1..].Select(Uri.UnescapeDataString).ToArray();
         foreach (string segment in segments)
         {
-            if (segment.Contains('/') || segment.Contains('\\') || segment.Contains('\0') || segment is "." or "..")
+            if (segment.Contains('/') || segment.Contains('\\') || segment.Contains('\0') || segment is "." or ".." || IsRefusedName(segment, OperatingSystem.IsWindows()))
             {
                 return await WriteStatusAsync(output, 404, "Not Found", null, cancellationToken);
             }
@@ -121,6 +121,22 @@ internal sealed class FileShareRequestHandler
         string full = Path.GetFullPath(candidate);
         string rootWithSeparator = root.EndsWith(Path.DirectorySeparatorChar) ? root : root + Path.DirectorySeparatorChar;
         return full == root || full.StartsWith(rootWithSeparator, StringComparison.Ordinal) ? full : null;
+    }
+
+    /// <summary>
+    /// True for a name Windows reserves for devices (<c>CON</c>, <c>NUL</c>, <c>COM1</c> and so on, with or without an
+    /// extension): opening one reads a device, not a file. Only refused on Windows, where the name means that.
+    /// </summary>
+    internal static bool IsRefusedName(string segment, bool windows)
+    {
+        if (!windows)
+        {
+            return false;
+        }
+
+        string stem = segment.Split('.')[0].TrimEnd(' ').ToUpperInvariant();
+        return stem is "CON" or "PRN" or "AUX" or "NUL"
+            || (stem.Length == 4 && (stem.StartsWith("COM", StringComparison.Ordinal) || stem.StartsWith("LPT", StringComparison.Ordinal)) && stem[3] is >= '1' and <= '9');
     }
 
     /// <summary>False for a symbolic link or a reparse point, and for a path that is missing.</summary>

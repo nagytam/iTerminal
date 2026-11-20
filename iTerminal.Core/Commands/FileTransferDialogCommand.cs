@@ -17,7 +17,7 @@ public class FileTransferDialogCommand(FileTransferDialog fileTransferDialog, IC
     private IContentModel? SourceModel =>
         contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel();
 
-    public override bool CanExecute() => true;
+    public override bool CanExecute() => FocusedEntry.ActionableUrls(SourceModel).Count > 0;
 
     protected override void OnBeforeShow(FileTransferDialog dialog)
     {

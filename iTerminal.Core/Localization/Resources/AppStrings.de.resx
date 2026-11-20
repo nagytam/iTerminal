@@ -11268,4 +11268,7 @@
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>Die ausgewählten Dateien im Netzwerk freigeben: ein QR-Code und ein Link öffnen sie im Browser eines Telefons, solange dieser Dialog offen ist.</value>
   </data>
+  <data name="FileTransfer.Expired" xml:space="preserve">
+    <value>Die Freigabe ist abgelaufen. Schließen Sie den Dialog und öffnen Sie Dateiübertragung erneut für eine neue Adresse.</value>
+  </data>
 </root>

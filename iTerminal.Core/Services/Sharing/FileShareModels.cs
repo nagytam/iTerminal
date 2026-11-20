@@ -10,6 +10,7 @@ public enum FileShareStatus
     Starting,
     Running,
     Failed,
+    Expired,
 }
 
 /// <summary>

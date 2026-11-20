@@ -12,7 +12,7 @@ namespace iTerminal.Core.Services.Sharing;
 
 public interface IFileShareService : IDisposable
 {
-    /// <summary>The current state. Replaced whole on every change, so a reader never sees a half-written one.</summary>
+    /// <summary>The current state. Each read returns a fresh snapshot; expiry and the request count are computed into it.</summary>
     FileShareState State { get; }
 
     /// <summary>Starts a share of the given local paths. A second start while one runs returns <c>FileTransfer.Busy</c>.</summary>
@@ -23,9 +23,9 @@ public interface IFileShareService : IDisposable
 }
 
 /// <summary>
-/// The HTTPS file share. A session binds one port in 8080 to 8089 on all interfaces, serves the selected local paths
-/// under a random token, and ends when stopped. Encoding, binding and the certificate happen on the background start;
-/// the dialog only reads <see cref="State"/>.
+/// The HTTPS file share. A session binds the chosen LAN address on the first free port from 8080 to 8089, serves the
+/// selected local paths under a random token, and ends when stopped. Encoding, binding and the certificate happen on the
+/// background start; the dialog only reads <see cref="State"/>.
 /// </summary>
 public sealed class FileShareService(IFileShareAddressSource addressSource) : IFileShareService
 {
@@ -37,7 +37,12 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
 
     private readonly IFileShareAddressSource _addressSource = addressSource ?? throw new ArgumentNullException(nameof(addressSource));
     private readonly SemaphoreSlim _gate = new(1, 1);
-    private volatile FileShareState _state = FileShareState.Stopped;
+
+    // The lifecycle (status, URL, code) and the request count are kept apart: a connection only counts, so it can
+    // never write a stale lifecycle back over a stop.
+    private volatile FileShareState _lifecycle = FileShareState.Stopped;
+    // Kept as ticks: a 16-byte DateTimeOffset cannot be read atomically from another thread.
+    private long _expiresAtTicks = DateTimeOffset.MinValue.UtcTicks;
     private int _requests;
     private Task _lastStop = Task.CompletedTask;
 
@@ -46,7 +51,24 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     private Task? _acceptLoop;
     private X509Certificate2? _certificate;
 
-    public FileShareState State => _state;
+    public FileShareState State => Snapshot(_lifecycle, new DateTimeOffset(Volatile.Read(ref _expiresAtTicks), TimeSpan.Zero), Volatile.Read(ref _requests), DateTimeOffset.UtcNow);
+
+    /// <summary>
+    /// The state a reader sees at <paramref name="now"/>: a running share whose certificate has run out is reported as
+    /// <see cref="FileShareStatus.Expired"/>, with its address still shown.
+    /// </summary>
+    internal static FileShareState Snapshot(FileShareState lifecycle, DateTimeOffset expiresAt, int requests, DateTimeOffset now)
+    {
+        FileShareStatus status = lifecycle.Status;
+        string? message = lifecycle.Message;
+        if (status == FileShareStatus.Running && now > expiresAt)
+        {
+            status = FileShareStatus.Expired;
+            message = "FileTransfer.Expired";
+        }
+
+        return lifecycle with { Status = status, Requests = requests, Message = message };
+    }
 
     public async Task<FileShareStartResult> StartAsync(IReadOnlyList<string> selectedPaths, CancellationToken cancellationToken = default)
     {
@@ -63,28 +85,28 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
 
             if (selectedPaths.Count == 0 || selectedPaths.Any(path => !File.Exists(path) && !Directory.Exists(path)))
             {
-                SetState(FileShareStatus.Failed, null, null, "FileTransfer.NoSelection");
+                Publish(FileShareStatus.Failed, null, null, "FileTransfer.NoSelection");
                 return FileShareStartResult.Failed("FileTransfer.NoSelection");
             }
 
             if (selectedPaths.Any(path => path.Contains("@/", StringComparison.Ordinal)))
             {
-                SetState(FileShareStatus.Failed, null, null, "FileTransfer.ContainsAt");
+                Publish(FileShareStatus.Failed, null, null, "FileTransfer.ContainsAt");
                 return FileShareStartResult.Failed("FileTransfer.ContainsAt");
             }
 
-            SetState(FileShareStatus.Starting, null, null, "FileTransfer.Starting");
+            Publish(FileShareStatus.Starting, null, null, "FileTransfer.Starting");
             IPAddress? address = FileShareAddress.Choose(_addressSource.Candidates());
             if (address is null)
             {
-                SetState(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
+                Publish(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
                 return FileShareStartResult.Failed("FileTransfer.BindFailed");
             }
 
-            TcpListener? listener = BindFirstFreePort();
+            TcpListener? listener = BindFirstFreePort(address);
             if (listener is null)
             {
-                SetState(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
+                Publish(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
                 return FileShareStartResult.Failed("FileTransfer.BindFailed");
             }
 
@@ -99,18 +121,20 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
 
                 CancellationTokenSource cancellation = new();
                 FileShareRequestHandler handler = new(selectedPaths, token);
+                Interlocked.Exchange(ref _requests, 0);
+                Volatile.Write(ref _expiresAtTicks, certificate.NotAfter.ToUniversalTime().Ticks);
                 _listener = listener;
                 _certificate = certificate;
                 _cancellation = cancellation;
                 _acceptLoop = Task.Run(() => AcceptLoopAsync(listener, certificate, handler, cancellation.Token));
-                SetState(FileShareStatus.Running, url, qr, null);
+                Publish(FileShareStatus.Running, url, qr, null);
                 return new FileShareStartResult(true, url, null);
             }
             catch (Exception)
             {
                 listener.Stop();
                 certificate?.Dispose();
-                SetState(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
+                Publish(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
                 return FileShareStartResult.Failed("FileTransfer.BindFailed");
             }
         }
@@ -150,6 +174,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
             _gate.Release();
         }
 
+        // Cancelled, not disposed: a connection still running holds this token and must be able to read it.
         cancellation?.Cancel();
         listener?.Stop();
         if (acceptLoop is not null)
@@ -158,9 +183,8 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
             await Task.WhenAny(acceptLoop, Task.Delay(StopWait));
         }
 
-        cancellation?.Dispose();
         certificate?.Dispose();
-        SetState(FileShareStatus.Stopped, null, null, null);
+        Publish(FileShareStatus.Stopped, null, null, null);
     }
 
     /// <summary>
@@ -171,23 +195,25 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     {
         CancellationTokenSource? cancellation = _cancellation;
         TcpListener? listener = _listener;
+        X509Certificate2? certificate = _certificate;
         _cancellation = null;
         _listener = null;
         _acceptLoop = null;
         _certificate = null;
-        X509Certificate2? certificate = _certificate;
-        _certificate = null;
         cancellation?.Cancel();
         listener?.Stop();
-        cancellation?.Dispose();
         certificate?.Dispose();
+        Publish(FileShareStatus.Stopped, null, null, null);
     }
 
-    private static TcpListener? BindFirstFreePort()
+    private void Publish(FileShareStatus status, string? url, bool[,]? qr, string? message) =>
+        _lifecycle = new FileShareState(status, url, qr, 0, message);
+
+    private static TcpListener? BindFirstFreePort(IPAddress address)
     {
         for (int port = FirstPort; port <= LastPort; port++)
         {
-            TcpListener listener = new(IPAddress.Any, port);
+            TcpListener listener = new(address, port);
             try
             {
                 listener.Start();
@@ -270,18 +296,12 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
                 }
 
                 Interlocked.Increment(ref _requests);
-                SetState(_state.Status, _state.Url, _state.QrModules, null);
             }
             catch (Exception) when (!cancellationToken.IsCancellationRequested)
             {
                 // A client that drops or sends garbage ends its own connection; the share keeps running.
             }
         }
-    }
-
-    private void SetState(FileShareStatus status, string? url, bool[,]? qr, string? message)
-    {
-        _state = new FileShareState(status, url ?? (status == FileShareStatus.Running ? _state.Url : null), qr ?? (status == FileShareStatus.Running ? _state.QrModules : null), Volatile.Read(ref _requests), message);
     }
 }
 
