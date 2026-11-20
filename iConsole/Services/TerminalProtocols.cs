@@ -25,6 +25,7 @@ public static class TerminalProtocols
         new("Hyperlinks OSC 8", AnsiRenderer.HyperlinksEnabled),
         new("Title OSC 2", !outputRedirected && environment("ITERMINAL_TERMINAL_TITLE") != "0"),
         new("Notify OSC 9/777", !outputRedirected && TerminalSequences.DetectNotificationStyle(environment) is TerminalNotificationStyle.Osc9 or TerminalNotificationStyle.Osc777),
+        new("Progress OSC 9;4", !outputRedirected && TerminalProgressSequences.SupportsProgress(environment)),
         new("Pointer OSC 22", !outputRedirected && PointerShapeService.DetectSupport(environment)),
         new("Cursor shape", CursorShapes.IsEnabledByEnvironment),
         new("Focus reports", TerminalFocusReporting.IsEnabledByEnvironment),

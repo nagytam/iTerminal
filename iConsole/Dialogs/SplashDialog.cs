@@ -181,7 +181,7 @@ public class SplashDialog : Dialog
 
         if (Parent != null)
         {
-            // The text, the motto, the colour map and the list of protocols (a heading and five rows).
+            // The text, the motto, the colour map and the list of protocols (a heading and six rows).
             ViewSize = new Size(50, (uint)(16 + top));
             Position = new Position(
                 Math.Max(0, (Parent.ViewSize.Width - ViewSize.Width) / 2),
