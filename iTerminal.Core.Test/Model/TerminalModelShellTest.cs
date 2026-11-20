@@ -113,17 +113,20 @@ public class TerminalModelShellTest
     [TestMethod]
     public void FollowPanel_MovesThePanel_WhileItStillShowsTheStartFolder()
     {
+        // Platform paths: the follow adds Path.DirectorySeparatorChar, so a "/" folder would not match on Windows.
+        string work = Path.Combine(Path.GetTempPath(), "work") + Path.DirectorySeparatorChar;
+        string sub = Path.Combine(work, "sub");
         var model = new Mock<IContentModel>();
-        model.SetupGet(m => m.Url).Returns(new Url("/work/"));
+        model.SetupGet(m => m.Url).Returns(new Url(work));
         model.SetupGet(m => m.Name).Returns("LeftPanel");
         var contentModelService = new Mock<IContentModelService>();
         contentModelService.Setup(s => s.GetLastContentModel()).Returns(model.Object);
         contentModelService.Setup(s => s.SetUrlAsync("LeftPanel", It.IsAny<Url>())).Returns(Task.CompletedTask);
         var terminal = NewTerminal(contentModelService.Object);
 
-        terminal.FollowPanel(model.Object, new Url("/work/"), "/work/sub");
+        terminal.FollowPanel(model.Object, new Url(work), sub);
 
-        contentModelService.Verify(s => s.SetUrlAsync("LeftPanel", It.Is<Url>(u => (string)u == (string)new Url("/work/sub/"))), Times.Once);
+        contentModelService.Verify(s => s.SetUrlAsync("LeftPanel", It.Is<Url>(u => (string)u == (string)new Url(sub + Path.DirectorySeparatorChar))), Times.Once);
     }
 
     [TestMethod]

@@ -12,6 +12,10 @@ namespace iConsole.Test.Dialogs;
 [TestClass]
 public class CsvViewerExportTest
 {
+    // Built with the platform's separator: Url.ParentUrl splits on Path.DirectorySeparatorChar, so a "/" path breaks on Windows.
+    private static readonly string Sales = Path.Combine(Path.GetTempPath(), "data", "sales.csv");
+    private static readonly string Notes = Path.Combine(Path.GetTempPath(), "data", "notes.tsv");
+
     private sealed class Fixture
     {
         public required CsvViewerDialog Dialog { get; init; }
@@ -65,7 +69,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task ExportWritesEveryRowOnScreenWhenNothingIsMarked()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name,amount\nA,1\nB,2\n");
+        Fixture fixture = CreateFixture(Sales, "name,amount\nA,1\nB,2\n");
         AnswerName(fixture, "out.csv");
         Holder written = CaptureWrites(fixture);
         await fixture.Dialog.OnInitializeAsync();
@@ -80,7 +84,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task ExportWritesOnlyTheMarkedRowsInGridOrder()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name,amount\nA,1\nB,2\nC,3\n");
+        Fixture fixture = CreateFixture(Sales, "name,amount\nA,1\nB,2\nC,3\n");
         AnswerName(fixture, "out.csv");
         Holder written = CaptureWrites(fixture);
         await fixture.Dialog.OnInitializeAsync();
@@ -98,7 +102,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task ExportOfATabFileUsesCommasAndQuotesWhatNeedsIt()
     {
-        Fixture fixture = CreateFixture("file:///data/notes.tsv", "name\tnote\nA\tone, two\n");
+        Fixture fixture = CreateFixture(Notes, "name\tnote\nA\tone, two\n");
         AnswerName(fixture, "out.csv");
         Holder written = CaptureWrites(fixture);
         await fixture.Dialog.OnInitializeAsync();
@@ -111,7 +115,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task ExportDefaultsTheNameToTheFileStemWithExportAndCsv()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         await fixture.Dialog.OnInitializeAsync();
 
         await fixture.Dialog.ExportAsync();
@@ -124,7 +128,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task AnExistingFileIsReplacedOnlyAfterYes()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         fixture.FileSystem.Setup(f => f.ExistsFile(It.IsAny<Url>())).Returns(true);
         AnswerName(fixture, "out.csv");
         AnswerOverwrite(fixture, true);
@@ -138,7 +142,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task AnExistingFileIsNotWrittenOnNo()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         fixture.FileSystem.Setup(f => f.ExistsFile(It.IsAny<Url>())).Returns(true);
         AnswerName(fixture, "out.csv");
         AnswerOverwrite(fixture, false);
@@ -153,7 +157,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task AnExistingFileIsNotWrittenWhenTheQuestionIsCancelled()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         fixture.FileSystem.Setup(f => f.ExistsFile(It.IsAny<Url>())).Returns(true);
         AnswerName(fixture, "out.csv");
         AnswerOverwrite(fixture, null);
@@ -168,7 +172,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task ACancelledNamePromptWritesNothing()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         AnswerName(fixture, null);
         await fixture.Dialog.OnInitializeAsync();
 
@@ -181,7 +185,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task ANameWithAFolderInItWritesNothing()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         AnswerName(fixture, "sub/out.csv");
         await fixture.Dialog.OnInitializeAsync();
 
@@ -194,7 +198,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task AReadOnlyFolderWritesNothing()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         fixture.FileSystem.SetupGet(f => f.IsReadOnly).Returns(true);
         AnswerName(fixture, "out.csv");
         await fixture.Dialog.OnInitializeAsync();
@@ -209,7 +213,7 @@ public class CsvViewerExportTest
     [TestMethod]
     public async Task F2AsksForTheFileNameOnTheGrid()
     {
-        Fixture fixture = CreateFixture("file:///data/sales.csv", "name\nA\n");
+        Fixture fixture = CreateFixture(Sales, "name\nA\n");
         AnswerName(fixture, null);
         await fixture.Dialog.OnInitializeAsync();
 
