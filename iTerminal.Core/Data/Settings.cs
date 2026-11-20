@@ -32,6 +32,7 @@ public static class Settings
     public const string MusicOutputDeviceId = nameof(MusicOutputDeviceId);
     public const string MusicRepeatMode = nameof(MusicRepeatMode);
     public const string MusicShuffle = nameof(MusicShuffle);
+    public const string MusicMuted = nameof(MusicMuted);
 
     /// <summary>
     /// Position in the queue of the track that was cued when the app closed. A setting rather than a

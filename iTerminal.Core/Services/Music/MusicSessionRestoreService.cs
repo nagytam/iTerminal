@@ -69,6 +69,7 @@ public sealed class MusicSessionRestoreService(
         }
 
         musicPlayerService.IsShuffled = settingsService.GetAsBool(Settings.MusicShuffle) ?? false;
+        musicPlayerService.IsMuted = settingsService.GetAsBool(Settings.MusicMuted) ?? false;
     }
 
     private void RestoreQueue()

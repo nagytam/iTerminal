@@ -8623,6 +8623,15 @@
   <data name="Indicator.Online" xml:space="preserve">
     <value>En línea</value>
   </data>
+  <data name="Indicator.Stop" xml:space="preserve">
+    <value>Parar</value>
+  </data>
+  <data name="Indicator.Mute" xml:space="preserve">
+    <value>Silenciar</value>
+  </data>
+  <data name="Indicator.Unmute" xml:space="preserve">
+    <value>Activar</value>
+  </data>
   <data name="Indicator.Offline" xml:space="preserve">
     <value>Sin conexión</value>
   </data>

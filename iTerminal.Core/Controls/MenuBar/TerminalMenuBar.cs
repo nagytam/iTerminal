@@ -7,9 +7,11 @@ using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Data;
+using iTerminal.Core.Data.Music;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Music;
 using iTerminal.Core.Services.Remote;
 
 namespace iTerminal.Core.Controls.MenuBar;
@@ -30,6 +32,11 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     private QuoteIndicator _quoteETH { get; set; }
     private QuoteIndicator _quoteBTC { get; set; }
     private OnlineIndicator _online { get; set; }
+    private MusicIndicator? _music { get; set; }
+    private IMusicPlayerService? _musicPlayer { get; set; }
+
+    /// <summary>Whether music or radio was playing at the last layout or idle pass; a change lays the bar out again.</summary>
+    private bool _isMusicPlaying;
 
     private bool _isWeatherIndicatorEnabled = true;
     private bool _isOnlineIndicatorEnabled = true;
@@ -172,7 +179,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Viewers.FileViewerRegistry? fileViewers = null,
         iConsole.Viewers.FileEditorRegistry? fileEditors = null,
         iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
-        InternetConnectivityService? connectivityService = null
+        InternetConnectivityService? connectivityService = null,
+        IMusicPlayerService? musicPlayerService = null
         )
         : base([], themeService)
     {
@@ -348,6 +356,14 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
 
         _online = new OnlineIndicator(connectivityService ?? new InternetConnectivityService(), themeService);
         AddControl(_online);
+
+        if (musicPlayerService is not null)
+        {
+            _musicPlayer = musicPlayerService;
+            // Hidden until playback starts: the bar shows it from layout, not on its own.
+            _music = new MusicIndicator(musicPlayerService, taskManager, themeService) { IsVisible = false };
+            AddControl(_music);
+        }
     }
 
     public override Task OnInitializeAsync()
@@ -401,11 +417,32 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             LocalizeMenus();
         }
 
-        if (ReadIndicatorSettings() || languageChanged)
+        // The widget and the budget depend on whether anything plays, so a change re-lays the bar out at once.
+        bool musicChanged = IsMusicPlayingChanged();
+
+        if (ReadIndicatorSettings() || languageChanged || musicChanged)
         {
             OnInitializeLayout();
             GetRootControl()?.Refresh();
         }
+    }
+
+    /// <summary>True when playback started or stopped since the last call. The player has no event the bar can use from its pump thread, so this polls on the UI thread.</summary>
+    private bool IsMusicPlayingChanged()
+    {
+        if (_musicPlayer is null)
+        {
+            return false;
+        }
+
+        bool isPlaying = _musicPlayer.State != PlaybackState.Stopped;
+        if (isPlaying == _isMusicPlaying)
+        {
+            return false;
+        }
+
+        _isMusicPlaying = isPlaying;
+        return true;
     }
 
     /// <summary>Shows every menu and entry in the localizer's language; the menu titles change width, so the bar lays out again.</summary>
@@ -425,6 +462,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     internal bool IsQuoteIndicatorShownForTest => _quoteBTC.IsVisible && _quoteETH.IsVisible;
     internal bool IsWeatherIndicatorShownForTest => _weather.IsVisible;
     internal bool IsOnlineIndicatorShownForTest => _online.IsVisible;
+    internal bool IsMusicIndicatorShownForTest => _music?.IsVisible ?? false;
 
     public override void OnInitializeLayout()
     {
@@ -469,6 +507,25 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         else
         {
             _taskStatus.IsVisible = false;
+        }
+
+        // Placed before Quotes and Weather, so when the bar is short those two give way first. Reserved only
+        // while something plays: a Stopped player leaves its room to the quotes and weather.
+        if (_music is not null)
+        {
+            if (_musicPlayer is not null)
+            {
+                _isMusicPlaying = _musicPlayer.State != PlaybackState.Stopped;
+            }
+
+            if (_isMusicPlaying && remainingForOptionalIndicators >= MusicIndicator.Width)
+            {
+                PlaceIndicator(_music, MusicIndicator.Width);
+            }
+            else
+            {
+                _music.IsVisible = false;
+            }
         }
 
         long quotesWidth = QuoteEthIndicatorWidth + QuoteBtcIndicatorWidth;

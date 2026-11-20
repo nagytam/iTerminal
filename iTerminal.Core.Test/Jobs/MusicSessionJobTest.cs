@@ -220,4 +220,34 @@ public class MusicSessionJobTest
         Assert.Fail($"Timed out waiting for: {because}");
         return false;
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AMutedPlayerIsWrittenBackAsMuted()
+    {
+        using var player = new MusicPlayerService(new FakeAudioDeviceService());
+        var store = new FakeMusicPlaylistStore();
+        var files = new PlaylistService(Path.Combine(_tempRoot, "playlists"));
+        var settings = new SettingsService();
+        var restore = new MusicSessionRestoreService(player, store, files, settings);
+        restore.RestoreOnce();
+        var job = new MusicSessionJob(player, store, restore, settings)
+        {
+            PollInterval = TimeSpan.FromMilliseconds(20),
+        };
+
+        using var cancellation = new CancellationTokenSource();
+        var run = job.ExecuteAsync(cancellation.Token);
+
+        player.IsMuted = true;
+
+        var persisted = await WaitAsync(
+            () => settings.Get(iTerminal.Core.Data.Settings.MusicMuted) == "True",
+            "the mute to be written out");
+
+        await cancellation.CancelAsync();
+        await run;
+
+        Assert.IsTrue(persisted);
+    }
 }
