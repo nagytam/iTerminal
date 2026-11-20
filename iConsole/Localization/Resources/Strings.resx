@@ -2130,4 +2130,10 @@
   <data name="Hdf.Hint.Transpose" xml:space="preserve">
     <value>Swap the rows and the columns</value>
   </data>
+  <data name="Hdf.Status.LongFormCut" xml:space="preserve">
+    <value>; the long form is cut to its first {0:N0} cells</value>
+  </data>
+  <data name="Hdf.Hint.LongForm" xml:space="preserve">
+    <value>Query every cell, with a column per axis (axis0, axis1, ...)</value>
+  </data>
 </root>

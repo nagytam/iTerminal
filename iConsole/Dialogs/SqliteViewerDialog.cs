@@ -199,7 +199,11 @@ public class SqliteViewerDialog : Dialog
                 SqlTable table = query.Result;
                 _table = table;
                 _textDirty = true;
-                _grid.SetData(table.Headers, table.Rows);
+                // The result is a two-axis array in memory, shown through the same array view as the other grid viewers.
+                GridTable window = GridArrayView.Open(new InMemoryGridArray(table.Rows, table.Headers))
+                    .MaterializeAsync(int.MaxValue, int.MaxValue, int.MaxValue, CancellationToken.None, withRowNumbers: false)
+                    .GetAwaiter().GetResult();
+                _grid.SetData(window.Headers, window.Rows);
                 _statusLabel.Text = StatusFor(table);
             }
 

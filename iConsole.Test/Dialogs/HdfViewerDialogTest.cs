@@ -541,4 +541,21 @@ public class HdfViewerDialogTest
         StringAssert.Contains(dialog.SliceText, "[<0>, *, *]");
         Assert.AreEqual(reads + 1, reader.Reads.Count, "the block is read again with the axes swapped");
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFromCellsQueryRunsOverEveryCellOfTheArrayNotJustTheWindow()
+    {
+        // The window is one 3 x 2 plane; FROM cells reaches the whole array, where axis1 = 2 holds three rows of two columns' cells on each axis0 plane.
+        HdfViewerDialog dialog = await OpenAsync(ThreeRowReader());
+
+        dialog.SetQueryText("FROM cells WHERE axis1 = 2");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(6, dialog.Grid.RowCount);
+        Assert.AreEqual("0", dialog.Grid.CellAt(0, 0), "the first cell with axis1 = 2 is at axis0 0");
+    }
 }

@@ -194,6 +194,74 @@ public sealed class GridArrayView
         return new GridTable(Headers(columns, byField, fields, withRowNumbers), table, rowsTruncated, columnsTruncated);
     }
 
+    /// <summary>
+    /// Every cell of the array as one row: an index column for each axis, then the value. A query over this table selects on the
+    /// axes by name (<c>axis0</c>, <c>axis1</c>, ...), so it can pick any N-dimensional selection a two-axis window cannot show.
+    /// Reads the largest rectangle that fits <paramref name="maxCells"/> cells, which is a prefix of the array in row-major order;
+    /// <see cref="GridTable.RowsTruncated"/> says when that is less than the whole.
+    /// </summary>
+    public async Task<GridTable> LongFormAsync(long maxCells, CancellationToken cancellationToken)
+    {
+        if (Shape.Any(length => length == 0))
+        {
+            return new GridTable(LongFormHeaders, [], false, false);
+        }
+
+        long[] count = Rectangle(Shape, Math.Max(1, maxCells));
+        long total = Shape.Aggregate(1L, (product, length) => product * length);
+        long read = count.Aggregate(1L, (product, length) => product * length);
+        var start = new long[Rank];
+        IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, count, cancellationToken);
+        var table = new List<string[]>((int)read);
+        var coordinate = new long[Rank];
+        for (long at = 0; at < read; at++)
+        {
+            var line = new string[Rank + 1];
+            for (int axis = 0; axis < Rank; axis++)
+            {
+                line[axis] = coordinate[axis].ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            line[Rank] = at < cells.Count ? cells[(int)at] : string.Empty;
+            table.Add(line);
+            for (int axis = Rank - 1; axis >= 0; axis--)
+            {
+                if (++coordinate[axis] < count[axis])
+                {
+                    break;
+                }
+
+                coordinate[axis] = 0;
+            }
+        }
+
+        return new GridTable(LongFormHeaders, table, read < total, false);
+    }
+
+    /// <summary>The headers of <see cref="LongFormAsync"/>: <c>axis0</c> ... one per axis, then <c>value</c>.</summary>
+    public IReadOnlyList<string> LongFormHeaders =>
+        [.. Enumerable.Range(0, Rank).Select(axis => "axis" + axis.ToString(System.Globalization.CultureInfo.InvariantCulture)), "value"];
+
+    /// <summary>The largest rectangle, cut from the first axis inward, of at most <paramref name="budget"/> cells: a prefix of the array in row-major order.</summary>
+    private static long[] Rectangle(IReadOnlyList<long> shape, long budget)
+    {
+        var count = new long[shape.Count];
+        long remaining = budget;
+        for (int axis = 0; axis < shape.Count; axis++)
+        {
+            long inner = 1;
+            for (int rest = axis + 1; rest < shape.Count; rest++)
+            {
+                inner *= shape[rest];
+            }
+
+            count[axis] = Math.Max(1, Math.Min(shape[axis], remaining / inner));
+            remaining = Math.Max(1, remaining / Math.Max(1, count[axis]));
+        }
+
+        return count;
+    }
+
     /// <summary>The headers of a window of <paramref name="columns"/> columns: the names the source gives, or the numbers, field names or <c>value</c>.</summary>
     private IReadOnlyList<string> Headers(int columns, bool byField, IReadOnlyList<string> fields, bool withRowNumbers)
     {

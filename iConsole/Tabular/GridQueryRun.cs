@@ -63,6 +63,20 @@ public sealed class GridQueryRun
         _task = RunOverAsync(source, text);
     }
 
+    /// <summary>
+    /// Runs <paramref name="text"/> over the long form of an array: one row per cell, an index column per axis, read to the cell cap.
+    /// The result says when the cap cut it short.
+    /// </summary>
+    public void StartLongForm(GridArrayView view, long maxCells, string text)
+    {
+        _pendingGeneration = ++_generation;
+        _task = System.Threading.Tasks.Task.Run(async () =>
+        {
+            GridTable table = await view.LongFormAsync(maxCells, CancellationToken.None);
+            return GridQuery.Run(table.Headers, table.Rows, text) with { Truncated = table.RowsTruncated };
+        });
+    }
+
     /// <summary>Drops the query in progress.</summary>
     public void Cancel()
     {

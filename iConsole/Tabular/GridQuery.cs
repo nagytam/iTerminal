@@ -8,7 +8,8 @@ namespace iConsole.Tabular;
 public sealed class GridQueryException(string message) : Exception(message);
 
 /// <summary>What a query returned: the columns it selected, the rows after its filter, order and limit, and how many rows matched before the limit.</summary>
-public sealed record GridQueryResult(IReadOnlyList<string> Headers, IReadOnlyList<string[]> Rows, int Matched);
+/// <param name="Truncated">True when the rows were cut before the query saw them all (a long form of an array read to its cell cap).</param>
+public sealed record GridQueryResult(IReadOnlyList<string> Headers, IReadOnlyList<string[]> Rows, int Matched, bool Truncated = false);
 
 /// <summary>
 /// The one query language every grid viewer takes (CSV, Parquet, HDF5 slices and SQLite): a small SQL-like text such as

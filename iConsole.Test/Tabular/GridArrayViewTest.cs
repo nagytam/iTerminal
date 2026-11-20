@@ -201,4 +201,26 @@ public class GridArrayViewTest
         CollectionAssert.AreEqual(new[] { "name", "amount" }, plain.Headers.ToArray());
         Assert.AreEqual("Anna", plain.Rows[0][0]);
     }
+
+    [TestMethod]
+    public async Task TheLongFormHasOneRowPerCellWithAnIndexPerAxis()
+    {
+        GridTable table = await GridArrayView.Open(new CoordinateArray([2, 3])).LongFormAsync(100, CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "axis0", "axis1", "value" }, table.Headers.ToArray());
+        Assert.AreEqual(6, table.Rows.Count);
+        CollectionAssert.AreEqual(new[] { "1", "2", "1.2" }, table.Rows[5], "the cell at (1, 2) carries its own coordinates");
+        Assert.IsFalse(table.RowsTruncated);
+    }
+
+    [TestMethod]
+    public async Task TheLongFormStopsAtTheCellCapAsAPrefixOfTheArray()
+    {
+        GridTable table = await GridArrayView.Open(new CoordinateArray([4, 3, 2])).LongFormAsync(6, CancellationToken.None);
+
+        Assert.AreEqual(6, table.Rows.Count, "a rectangle of at most six cells");
+        CollectionAssert.AreEqual(new[] { "0", "0", "0", "0.0.0" }, table.Rows[0], "the first cell");
+        CollectionAssert.AreEqual(new[] { "0", "2", "1", "0.2.1" }, table.Rows[5], "the last cell of the rectangle, in row-major order");
+        Assert.IsTrue(table.RowsTruncated);
+    }
 }

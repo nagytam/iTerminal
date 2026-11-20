@@ -2114,4 +2114,10 @@
   <data name="Hdf.Hint.Transpose" xml:space="preserve">
     <value>Zeilen und Spalten vertauschen</value>
   </data>
+  <data name="Hdf.Status.LongFormCut" xml:space="preserve">
+    <value>; die lange Form ist auf die ersten {0:N0} Zellen gekürzt</value>
+  </data>
+  <data name="Hdf.Hint.LongForm" xml:space="preserve">
+    <value>Jede Zelle abfragen, mit einer Spalte pro Achse (axis0, axis1, ...)</value>
+  </data>
 </root>

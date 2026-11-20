@@ -482,7 +482,10 @@ lands in the query line and runs only when the user presses Enter, like any quer
   so a dataset of any rank is one view: `+ -` step the fixed axes, `[ ]` choose the active one, and `T` swaps the rows and the
   columns. CSV and Parquet rows are a two-axis `InMemoryGridArray`. The query runs over the table the view materialises
   (`GridQueryRun.RunOverAsync`), so every in-memory viewer reads its data through the same backend. SQLite is a relation, not an
-  array: its query is compiled to SQL, and its results are not read as blocks.
+  array: the SQL does the relational work (filter, order, limit), and each result is wrapped as a two-axis array in memory and shown
+  through the same view. `FROM cells` in the HDF5 query line runs the query over the long form of the whole array
+  (`GridArrayView.LongFormAsync`): one row per cell, with an `axis0` ... `axisN` column for each axis and `value`, read to the
+  cell cap (`MaxCells`, with the rows cut to a rectangle at the start of the array). The status line says when that cap cut it.
 - **One parser, three uses.** `GridQuery.Parse` turns the text into a `GridQueryPlan` (table, columns, a `GridCondition` of OR-joined
   AND groups, order, limit). `GridQuery.Execute` runs a plan over rows in memory; `GridQuery.Run` is the two together. `GridQuery.ToSql`
   renders the same plan as one SQLite statement. A plan is inspectable, so the AI draft and the SQLite viewer use the same checks.

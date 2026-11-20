@@ -57,6 +57,7 @@ public class HdfViewerDialog : Dialog
     private readonly GridQueryRun _queryRun = new();
     private readonly GridQueryDrafter _drafter;
     private GridTable? _sliceData;
+    private bool _longFormCut;
     private int? _matched;
     private string _queryError = string.Empty;
     private string _statusNote = string.Empty;
@@ -298,7 +299,32 @@ public class HdfViewerDialog : Dialog
 
         _statusNote = string.Empty;
         _queryError = string.Empty;
+        if (_view is not null && AsksForLongForm(text))
+        {
+            // FROM cells: the query runs over every cell of the array, one row each, with a column per axis.
+            _queryRun.StartLongForm(_view, MaxCells, text);
+            return;
+        }
+
         _queryRun.Start(slice.Headers, slice.Rows, text);
+    }
+
+    /// <summary>Whether a query names the long form (<c>FROM cells</c>), which runs over every cell of the array rather than the window.</summary>
+    private bool AsksForLongForm(string text)
+    {
+        if (_view is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            return string.Equals(GridQuery.Parse(text, _view.LongFormHeaders).From, "cells", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (GridQueryException)
+        {
+            return false;
+        }
     }
 
     private void ShowAllRows()
@@ -309,6 +335,7 @@ public class HdfViewerDialog : Dialog
         }
 
         _matched = null;
+        _longFormCut = false;
         _grid.SetData(slice.Headers, slice.Rows);
         UpdateStatus();
     }
@@ -319,6 +346,7 @@ public class HdfViewerDialog : Dialog
         {
             _queryError = string.Empty;
             _matched = result.Matched;
+            _longFormCut = result.Truncated;
             _grid.SetData(result.Headers, result.Rows);
         }
         else
@@ -386,6 +414,11 @@ public class HdfViewerDialog : Dialog
         if (_matched is { } matched)
         {
             status += string.Format(UiText.Get("Grid.Status.Matched", "; {0:N0} of the {1:N0} shown row(s) match"), matched, slice.Rows.Count);
+        }
+
+        if (_longFormCut)
+        {
+            status += string.Format(UiText.Get("Hdf.Status.LongFormCut", "; the long form is cut to its first {0:N0} cells"), MaxCells);
         }
 
         _statusLabel.Text = status;
@@ -674,6 +707,7 @@ public class HdfViewerDialog : Dialog
         yield return ("+ / -  (Ctrl+↑ / Ctrl+↓)", UiText.Get("Hdf.Hint.Index", "Step the index of the active dimension"));
         yield return ("[ / ]  (Ctrl+← / Ctrl+→)", UiText.Get("Hdf.Hint.Dimension", "Choose the active dimension"));
         yield return ("T", UiText.Get("Hdf.Hint.Transpose", "Swap the rows and the columns"));
+        yield return ("FROM cells", UiText.Get("Hdf.Hint.LongForm", "Query every cell, with a column per axis (axis0, axis1, ...)"));
         yield return ("Enter", UiText.Get("Grid.Hint.RunQuery", "Run the query over the rows shown"));
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
     }
