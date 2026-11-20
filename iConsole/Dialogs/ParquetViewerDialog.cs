@@ -42,6 +42,7 @@ public class ParquetViewerDialog : Dialog
     private readonly GridQueryRun _queryRun = new();
     private readonly GridQueryDrafter _drafter;
     private CancellationTokenSource? _cancellation;
+    private readonly GridQueryCompletionModel _completion;
     private Task<ParquetPreview>? _read;
     private ParquetPreview? _preview;
     private int? _matched;
@@ -64,6 +65,7 @@ public class ParquetViewerDialog : Dialog
             Label = UiText.Get("Csv.Query.Label", "Query"),
             Placeholder = UiText.Get("Grid.Query.Placeholder", "e.g. SELECT name WHERE amount > 10, or ? and a question"),
         };
+        _completion = GridQueryCompletionModel.Attach(_queryBox);
         _grid = new CsvGrid(themeService) { EmptyText = UiText.Get("Parquet.Grid.Empty", "This file has no rows") };
         _statusLabel = new Label(string.Empty, themeService);
         AddControl(_queryBox);
@@ -212,6 +214,7 @@ public class ParquetViewerDialog : Dialog
         }
 
         _matched = null;
+        _completion.SetColumns(preview.Headers);
         _grid.SetData(preview.Headers, preview.Rows);
         UpdateStatus();
     }
@@ -377,7 +380,7 @@ public class ParquetViewerDialog : Dialog
         if (keyEvent.KeyPressType == KeyPressType.Down
             && keyEvent.ConsoleKey == ConsoleKey.Enter
             && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt
-            && _preview is not null)
+            && _queryBox.IsFocused && _preview is not null)
         {
             if (GridQueryDrafter.IsQuestion(_queryBox.Text))
             {
@@ -405,6 +408,11 @@ public class ParquetViewerDialog : Dialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", UiText.Get("Grid.Hint.RunQuery", "Run the query over the rows shown"));
+        foreach ((string Key, string Description) hint in GridQueryCompletionModel.Hints())
+        {
+            yield return hint;
+        }
+
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
     }
 

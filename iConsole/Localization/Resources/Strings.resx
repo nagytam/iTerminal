@@ -2178,6 +2178,12 @@
   <data name="Grid.Hint.Ask" xml:space="preserve">
     <value>Ask the AI model: type ? and a question, then Enter drafts the query</value>
   </data>
+  <data name="Grid.Hint.Syntax" xml:space="preserve">
+    <value>Operators: = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY; join with AND / OR; then ORDER BY column [DESC] and LIMIT n</value>
+  </data>
+  <data name="Grid.Hint.Complete" xml:space="preserve">
+    <value>Complete the word being typed: a column name or a keyword</value>
+  </data>
   <data name="Grid.Status.Matched" xml:space="preserve">
     <value>; {0:N0} of the {1:N0} shown row(s) match</value>
   </data>

@@ -55,6 +55,7 @@ public class SqliteViewerDialog : Dialog
         public SqlQueryArray? Array { get; set; }
     }
     private readonly GridQueryDrafter _drafter;
+    private readonly GridQueryCompletionModel _completion;
 
     public SqliteViewerDialog(
         ISqliteDatabaseReader reader,
@@ -72,6 +73,7 @@ public class SqliteViewerDialog : Dialog
             Label = UiText.Get("Sqlite.Query.Label", "Query"),
             Placeholder = UiText.Get("Sqlite.Query.Placeholder", "e.g. SELECT * FROM table LIMIT 20"),
         };
+        _completion = GridQueryCompletionModel.Attach(_queryBox);
         _grid = new CsvGrid(themeService) { EmptyText = UiText.Get("Sqlite.Grid.Empty", "The query returned no rows") };
         _textViewerControl = new TextViewerControl(false, themeService);
         _statusLabel = new Label(string.Empty, themeService);
@@ -284,6 +286,7 @@ public class SqliteViewerDialog : Dialog
                 SqlTable table = query.Result;
                 _table = table;
                 _textDirty = true;
+                _completion.SetColumns(table.Headers);
                 _grid.SetData(table.Headers, table.Rows);
                 _statusLabel.Text = StatusFor(table);
             }
@@ -419,7 +422,7 @@ public class SqliteViewerDialog : Dialog
             return await base.HandleKeyEventAsync(keyEvent);
         }
 
-        if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt && !_textMode)
+        if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt && !_textMode && _queryBox.IsFocused)
         {
             if (GridQueryDrafter.IsQuestion(_queryBox.Text))
             {
@@ -450,6 +453,7 @@ public class SqliteViewerDialog : Dialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", UiText.Get("Sqlite.Hint.RunQuery", "Run the query"));
+        yield return ("Tab", UiText.Get("Grid.Hint.Complete", "Complete the word being typed: a column name or a keyword"));
         yield return (":", UiText.Get("Sqlite.Hint.GridQuery", "Filter the result: start the line with : and a grid query"));
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
         yield return ("F4", UiText.Get("Viewer.HintToggleText", "Show the text output, or the grid again"));
