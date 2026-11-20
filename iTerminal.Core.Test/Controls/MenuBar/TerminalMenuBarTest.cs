@@ -6,8 +6,10 @@ using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Controls.MenuBar;
 using iTerminal.Core.Data;
+using iTerminal.Core.Data.Music;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Music;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 using iTerminal.Core.Test.Dialogs;
@@ -18,7 +20,7 @@ namespace iTerminal.Core.Controls.MenuBar.Test;
 [TestClass]
 public class TerminalMenuBarTest
 {
-    private static (TerminalMenuBar Bar, SettingsService Settings, TaskManager TaskManager) Create(int width = 200, InternetConnectivityService? connectivity = null)
+    private static (TerminalMenuBar Bar, SettingsService Settings, TaskManager TaskManager) Create(int width = 200, InternetConnectivityService? connectivity = null, IMusicPlayerService? player = null)
     {
         var settings = new SettingsService();
         var taskManager = new TaskManager();
@@ -31,7 +33,7 @@ public class TerminalMenuBarTest
             null!, null!, null!,
             null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), null!, null!, null!,
             null!, null!, null!, null!, null!, null!, null!, null!, null!,
-            null!, null!, connectivityService: connectivity);
+            null!, null!, connectivityService: connectivity, musicPlayerService: player);
 
         var parent = new Control(TestTheme()) { ViewSize = new Size(width, 40) };
         parent.AddControl(bar);
@@ -150,5 +152,86 @@ public class TerminalMenuBarTest
         var menus = bar.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToList();
 
         CollectionAssert.AreEqual(new[] { "File", "Edit", "Navigate", "Tools", "Help" }, menus);
+    }
+
+    private static Mock<IMusicPlayerService> MusicPlayer(Func<PlaybackState> state)
+    {
+        var player = new Mock<IMusicPlayerService>();
+        player.Setup(p => p.State).Returns(state);
+        return player;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WhileMusicPlaysTheMusicWidgetIsShown()
+    {
+        var player = MusicPlayer(() => PlaybackState.Playing);
+        var (bar, _, taskManager) = Create(width: 200, player: player.Object);
+        using var _ = taskManager;
+        await bar.OnInitializeAsync();
+
+        bar.OnInitializeLayout();
+
+        Assert.IsTrue(bar.IsMusicIndicatorShownForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WhileStoppedTheMusicWidgetIsHidden()
+    {
+        var player = MusicPlayer(() => PlaybackState.Stopped);
+        var (bar, _, taskManager) = Create(width: 200, player: player.Object);
+        using var _ = taskManager;
+        await bar.OnInitializeAsync();
+
+        bar.OnInitializeLayout();
+
+        Assert.IsFalse(bar.IsMusicIndicatorShownForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task StartingAndStoppingPlaybackLaysTheBarOutAgain()
+    {
+        var state = PlaybackState.Stopped;
+        var player = MusicPlayer(() => state);
+        var (bar, _, taskManager) = Create(width: 200, player: player.Object);
+        using var _ = taskManager;
+        await bar.OnInitializeAsync();
+        bar.OnInitializeLayout();
+        Assert.IsFalse(bar.IsMusicIndicatorShownForTest);
+
+        state = PlaybackState.Playing;
+        bar.OnIdle();
+        Assert.IsTrue(bar.IsMusicIndicatorShownForTest, "the idle pass sees playback start and lays the bar out");
+
+        state = PlaybackState.Stopped;
+        bar.OnIdle();
+        Assert.IsFalse(bar.IsMusicIndicatorShownForTest, "and sees it stop");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void WhilePlayingTheWidgetTakesRoomFromTheQuotesFirst()
+    {
+        // The narrowest bar that shows the quotes while stopped: music needs its room from them.
+        int width = 0;
+        for (int candidate = 40; candidate <= 260 && width == 0; candidate++)
+        {
+            var (bar, _, taskManager) = Create(candidate, player: MusicPlayer(() => PlaybackState.Stopped).Object);
+            using var _ = taskManager;
+            bar.OnInitializeLayout();
+            if (bar.IsQuoteIndicatorShownForTest)
+            {
+                width = candidate;
+            }
+        }
+        Assert.AreNotEqual(0, width, "some bar width shows the quotes while stopped");
+
+        var (playing, _, playingTasks) = Create(width, player: MusicPlayer(() => PlaybackState.Playing).Object);
+        using var __ = playingTasks;
+        playing.OnInitializeLayout();
+
+        Assert.IsFalse(playing.IsQuoteIndicatorShownForTest, "the quotes give way to the music widget");
     }
 }

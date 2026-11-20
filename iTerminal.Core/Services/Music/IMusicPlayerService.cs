@@ -30,6 +30,12 @@ public interface IMusicPlayerService : IDisposable
 
     bool IsShuffled { get; set; }
 
+    /// <summary>
+    /// Silences the output without touching <see cref="Volume"/>, so unmuting returns to the level
+    /// that was set. Independent of transport: it stays set across stop and restart.
+    /// </summary>
+    bool IsMuted { get; set; }
+
     /// <summary>Id of the chosen output device; null or empty means the system default.</summary>
     string? DeviceId { get; }
 

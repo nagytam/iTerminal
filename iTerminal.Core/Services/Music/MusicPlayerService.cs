@@ -42,6 +42,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
     private long _positionTicks;
     private long _durationTicks;
     private volatile int _volume = 70;
+    private volatile bool _muted;
     private volatile string _statusMessage = string.Empty;
     private volatile bool _statusIsError;
     private string? _deviceId;
@@ -104,6 +105,19 @@ public sealed class MusicPlayerService : IMusicPlayerService
         {
             Playlist.IsShuffled = value;
             RaiseStateChanged();
+        }
+    }
+
+    public bool IsMuted
+    {
+        get => _muted;
+        set
+        {
+            if (_muted != value)
+            {
+                _muted = value;
+                RaiseStateChanged();
+            }
         }
     }
 
@@ -549,7 +563,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
                 return true;
             }
 
-            ApplyVolume(buffer.AsSpan(0, read), _volume);
+            ApplyVolume(buffer.AsSpan(0, read), _muted ? 0 : _volume);
 
             var written = sink.Write(buffer.AsSpan(0, read));
             if (written <= 0)

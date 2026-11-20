@@ -107,6 +107,7 @@ public class MusicSessionJob(
             _settingsService.Set(Settings.MusicOutputDeviceId, _musicPlayerService.DeviceId ?? string.Empty);
             _settingsService.Set(Settings.MusicRepeatMode, _musicPlayerService.RepeatMode.ToString());
             _settingsService.Set(Settings.MusicShuffle, _musicPlayerService.IsShuffled.ToString());
+            _settingsService.Set(Settings.MusicMuted, _musicPlayerService.IsMuted.ToString());
             _settingsService.Set(
                 Settings.MusicCurrentIndex,
                 _musicPlayerService.Playlist.CurrentIndex.ToString(CultureInfo.InvariantCulture));
@@ -126,5 +127,6 @@ public class MusicSessionJob(
             _musicPlayerService.DeviceId ?? string.Empty,
             _musicPlayerService.RepeatMode,
             _musicPlayerService.IsShuffled,
+            _musicPlayerService.IsMuted,
             _musicPlayerService.Playlist.CurrentIndex);
 }

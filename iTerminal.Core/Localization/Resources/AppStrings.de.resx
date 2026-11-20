@@ -8687,6 +8687,15 @@
   <data name="Indicator.Online" xml:space="preserve">
     <value>Online</value>
   </data>
+  <data name="Indicator.Stop" xml:space="preserve">
+    <value>Stopp</value>
+  </data>
+  <data name="Indicator.Mute" xml:space="preserve">
+    <value>Stumm</value>
+  </data>
+  <data name="Indicator.Unmute" xml:space="preserve">
+    <value>Ton an</value>
+  </data>
   <data name="Indicator.Offline" xml:space="preserve">
     <value>Offline</value>
   </data>

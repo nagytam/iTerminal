@@ -601,4 +601,39 @@ public class MusicPlayerServiceTest
 
         Assert.IsTrue(failures.IsEmpty, string.Join(Environment.NewLine, failures));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsMuted_RaisesStateChangedOnlyWhenItChanges_AndLeavesTheVolume()
+    {
+        using var player = new MusicPlayerService(new FakeAudioDeviceService());
+        int raised = 0;
+        player.StateChanged += (_, _) => raised++;
+
+        player.IsMuted = true;
+        player.IsMuted = true;
+
+        Assert.IsTrue(player.IsMuted);
+        Assert.AreEqual(1, raised, "setting the same mute again is not a change");
+        Assert.AreEqual(70, player.Volume, "muting does not touch the level, so unmuting returns to it");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsMuted_WritesSilenceToTheDevice()
+    {
+        var path = WriteTone("muted.wav", TimeSpan.FromSeconds(0.5));
+        var deviceService = new FakeAudioDeviceService();
+        using var player = new MusicPlayerService(deviceService);
+        player.Playlist.Add(new MusicTrack(path));
+        player.IsMuted = true;
+
+        player.PlayIndex(0);
+
+        const int expectedBytes = 16000;
+        WaitFor(() => deviceService.LastSink is { } written && written.WrittenByteCount >= expectedBytes,
+            "the whole track to be written to the device");
+        var sink = deviceService.LastSink!;
+        Assert.IsTrue(sink.WrittenBytes.Take(expectedBytes).All(b => b == 0), "a muted track reaches the device as silence");
+    }
 }

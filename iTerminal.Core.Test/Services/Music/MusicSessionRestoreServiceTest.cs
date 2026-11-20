@@ -193,4 +193,20 @@ public class MusicSessionRestoreServiceTest
             Assert.AreEqual(0, player.Playlist.Count, "A queue the user cleared stays cleared");
         }
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RestoreOnce_RestoresAMuteButStartsStopped()
+    {
+        var (restore, player, _, settings) = Build();
+        using (player)
+        {
+            settings.Set(Settings.MusicMuted, "True");
+
+            restore.RestoreOnce();
+
+            Assert.IsTrue(player.IsMuted);
+            Assert.AreEqual(PlaybackState.Stopped, player.State);
+        }
+    }
 }
