@@ -282,4 +282,44 @@ public class SqliteViewerDialogTest
         Assert.AreEqual("? anything", dialog.QueryText);
         StringAssert.Contains(dialog.Status, "AI is not set up");
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AColonLineFiltersTheResultAsOneStatementInTheDatabase()
+    {
+        var reader = new FakeReader
+        {
+            Run = (sql, _) => Task.FromResult(sql.Contains("AS result", StringComparison.Ordinal)
+                ? new SqlTable(["id", "name"], [["2", "b"]], false)
+                : new SqlTable(["id", "name"], [["1", "a"], ["2", "b"]], false)),
+        };
+        SqliteViewerDialog dialog = CreateDialog(reader);
+        await dialog.OnInitializeAsync();
+        await LandAsync(dialog);
+
+        dialog.SetQueryText(": id > 1");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.GridQueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(1, dialog.Grid.RowCount, "the filtered result is on screen");
+        Assert.IsTrue(reader.Queries.Any(query => query.Contains("AS result", StringComparison.Ordinal) && query.Contains("WHERE", StringComparison.Ordinal)),
+            "the filter reaches the database inside one statement over the result");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ARawSqlLineIsStillRunAsSql()
+    {
+        var reader = new FakeReader { Run = (_, _) => Task.FromResult(new SqlTable(["id"], [["1"]], false)) };
+        SqliteViewerDialog dialog = CreateDialog(reader);
+        await dialog.OnInitializeAsync();
+        await LandAsync(dialog);
+
+        dialog.SetQueryText("SELECT id FROM t");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await LandAsync(dialog);
+
+        Assert.IsTrue(reader.Queries.Any(query => query.Contains("SELECT id FROM t", StringComparison.Ordinal) && !query.Contains("AS result", StringComparison.Ordinal)), "a line without a colon is raw SQL, run as written inside the window");
+    }
 }

@@ -12,6 +12,7 @@ public sealed class GridQueryRun
     private int _generation;
     private int _pendingGeneration;
     private Task<GridQueryResult>? _task;
+    private CancellationTokenSource? _cancellation;
 
     /// <summary>The query being waited for, or null.</summary>
     public Task<GridQueryResult>? Task => _task;
@@ -65,8 +66,12 @@ public sealed class GridQueryRun
     /// </summary>
     public void StartLongForm(GridArrayView view, string text, int maxMatches)
     {
+        _cancellation?.Cancel();
+        _cancellation?.Dispose();
+        _cancellation = new CancellationTokenSource();
+        CancellationToken token = _cancellation.Token;
         _pendingGeneration = ++_generation;
-        _task = System.Threading.Tasks.Task.Run(() => view.QueryLongFormAsync(text, GridArrayView.DefaultChunkCells, maxMatches, CancellationToken.None));
+        _task = System.Threading.Tasks.Task.Run(() => view.QueryLongFormAsync(text, GridArrayView.DefaultChunkCells, maxMatches, token), token);
     }
 
     /// <summary>Drops the query in progress.</summary>
@@ -74,5 +79,6 @@ public sealed class GridQueryRun
     {
         _generation++;
         _task = null;
+        _cancellation?.Cancel();
     }
 }

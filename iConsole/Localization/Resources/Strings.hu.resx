@@ -2120,4 +2120,10 @@
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Minden cella lekérdezése, tengelyenként egy oszloppal (axis0, axis1, ...)</value>
   </data>
+  <data name="Sqlite.Status.Matched" xml:space="preserve">
+    <value>{0:N0} egyező sor</value>
+  </data>
+  <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
+    <value>Az eredmény szűrése: a sor : jellel kezdődjön, majd rácslekérdezés</value>
+  </data>
 </root>

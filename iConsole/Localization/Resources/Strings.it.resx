@@ -2120,4 +2120,10 @@
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Interroga ogni cella, con una colonna per asse (axis0, axis1, ...)</value>
   </data>
+  <data name="Sqlite.Status.Matched" xml:space="preserve">
+    <value>{0:N0} riga/e corrispondente/i</value>
+  </data>
+  <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
+    <value>Filtra il risultato: inizia la riga con : e una query di griglia</value>
+  </data>
 </root>

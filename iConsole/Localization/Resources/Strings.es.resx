@@ -2120,4 +2120,10 @@
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Consultar cada celda, con una columna por eje (axis0, axis1, ...)</value>
   </data>
+  <data name="Sqlite.Status.Matched" xml:space="preserve">
+    <value>{0:N0} fila(s) coincidente(s)</value>
+  </data>
+  <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
+    <value>Filtrar el resultado: empiece la línea con : y una consulta de cuadrícula</value>
+  </data>
 </root>

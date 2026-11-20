@@ -2136,4 +2136,10 @@
   <data name="Hdf.Hint.LongForm" xml:space="preserve">
     <value>Query every cell, with a column per axis (axis0, axis1, ...)</value>
   </data>
+  <data name="Sqlite.Status.Matched" xml:space="preserve">
+    <value>{0:N0} matching row(s)</value>
+  </data>
+  <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
+    <value>Filter the result: start the line with : and a grid query</value>
+  </data>
 </root>

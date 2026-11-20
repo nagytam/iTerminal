@@ -509,6 +509,10 @@ lands in the query line and runs only when the user presses Enter, like any quer
   `sqlite_master` and runs `SELECT * ... LIMIT 0` for each table on a worker thread, and the question waits for it.
 - **HDF5 keys.** `T` swaps the rows and the columns and reads the window again, and only for a dataset of two or more axes. While the query line has focus, `+ - [ ]` type into the line, because `-` is part of a number in a query. Ctrl+arrows
   still step the slice. Stepping the slice runs the query again over the new slice.
+- **SQLite `:` lines.** A query line that starts with `:` runs a grid query over the result on screen, through `SqlQueryArray.QueryAsync`,
+  so the filter, order and limit run in one statement inside the database. Any other line stays raw SQL, run as written.
+- **Cancellation.** A `FROM cells` search is cancelled between blocks when the query is replaced or the dialog closes; a block that is
+  already being read finishes first.
 - **Not built:** grouping and aggregates (`GROUP BY`, `COUNT`, averages), joins, saving a result, and queries over a Parquet file beyond
   the rows the viewer reads (10,000 rows, 100 columns, 100,000 cells). The model cannot average a column because the language cannot.
 - **Tests:** `GridQueryTest` (parsing, the plan, in-memory and SQL rendering, quoting), `GridQueryDrafterTest` (cleaning, checking,
