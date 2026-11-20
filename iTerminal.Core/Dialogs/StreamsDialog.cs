@@ -565,7 +565,7 @@ public class StreamsDialog : Dialog
 
             DrawPreview(buffer, iw, ih, colors);
 
-            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : Color.Cyan, colors.Background);
+            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : colors.Foreground, colors.Background);
             Put(buffer, 1, ih - 1, iw - 2, _confirmDelete
                 ? UiText.Get("Streams.Hint.Confirm", "y deletes it  any other key keeps it")
                 : UiText.Get("Streams.Hint.List", "↑↓ choose  H text/hex  Del delete  F5 refresh  Esc close").FitHints(iw - 2),

@@ -596,7 +596,7 @@ public class TorrentManagerDialog : Dialog
                 DrawForm(buffer, iw, colorScheme);
             }
 
-            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colorScheme.Error : Color.Cyan, colorScheme.Background);
+            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colorScheme.Error : colorScheme.Foreground, colorScheme.Background);
             Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
         }
     }
@@ -612,7 +612,7 @@ public class TorrentManagerDialog : Dialog
     {
         long down = _list.Sum(t => t.DownloadRate);
         long up = _list.Sum(t => t.UploadRate);
-        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Torrents.Header", "{0} torrents  ·  down {1}  ·  up {2}"), _list.Count, FormatRate(down), FormatRate(up)), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Torrents.Header", "{0} torrents  ·  down {1}  ·  up {2}"), _list.Count, FormatRate(down), FormatRate(up)), colorScheme.Foreground, colorScheme.Background);
 
         int nameWidth = Math.Max(10, iw - 2 - 2 - 53);
         Put(buffer, 1, 1, iw - 2, "  " + UiText.Get("Torrent.Col.Name", "Name").PadRight(nameWidth) + " " + UiText.Get("Torrent.Col.State", "State").PadRight(8) + " "
@@ -664,7 +664,7 @@ public class TorrentManagerDialog : Dialog
 
     private void DrawForm(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, iConsole.Localization.UiText.Get("Dialog.AddTorrent", "Add a torrent"), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, iConsole.Localization.UiText.Get("Dialog.AddTorrent", "Add a torrent"), colorScheme.Foreground, colorScheme.Background);
         string[] labels =
         [
             iConsole.Localization.UiText.Get("Field.MagnetFileOrUrl", "Magnet / file / URL"),

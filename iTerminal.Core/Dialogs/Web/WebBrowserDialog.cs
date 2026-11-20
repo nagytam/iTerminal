@@ -1435,11 +1435,11 @@ public class WebBrowserDialog : Dialog
         if (_confirmingRemoveBookmark && _listIndex >= 0 && _listIndex < _list.Count)
         {
             var entry = _list[_listIndex];
-            WriteText(buffer, x, y, width, $" Remove the bookmark \"{(entry.Title.Length > 0 ? entry.Title : entry.Url)}\"? (y/n)", Color.Red, scheme.Background, true);
+            WriteText(buffer, x, y, width, $" Remove the bookmark \"{(entry.Title.Length > 0 ? entry.Title : entry.Url)}\"? (y/n)", scheme.Error, scheme.Background, true);
         }
         else
         {
-            WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", Color.Yellow, scheme.Background, true);
+            WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", scheme.Foreground, scheme.Background, true);
         }
 
         var rows = Math.Max(0, height - 1);

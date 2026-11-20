@@ -445,6 +445,6 @@ public class YouTubeDialog : SplitPaneDialog
         DrawSectionHeader(buffer, ix + leftWidth + 1, iy + 2, rightWidth, UiText.Get("YouTube.Details", "Details"), _details.IsFocused, colorScheme);
 
         string hints = string.Join("  ", GetKeyHints().Select(hint => $"{hint.Key}:{hint.Description}"));
-        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : Color.Cyan, hints, colorScheme);
+        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : colorScheme.Foreground, hints, colorScheme);
     }
 }

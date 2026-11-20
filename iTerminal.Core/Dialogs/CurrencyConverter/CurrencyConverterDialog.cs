@@ -400,7 +400,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
             WriteLine(buffer, ix, iy + row, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
         }
 
-        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : Color.Cyan, KeyHints, colorScheme);
+        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : colorScheme.Foreground, KeyHints, colorScheme);
     }
 
     #endregion

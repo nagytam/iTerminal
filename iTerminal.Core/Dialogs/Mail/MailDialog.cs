@@ -1001,7 +1001,7 @@ public class MailDialog : Dialog
                     break;
             }
 
-            var statusColor = _statusIsError ? colorScheme.Error : Color.Cyan;
+            var statusColor = _statusIsError ? colorScheme.Error : colorScheme.Foreground;
             Put(buffer, 1, ih - 2, iw - 2, Ellipsize(_status, iw - 2), statusColor, colorScheme.Background);
             Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
         }
@@ -1018,7 +1018,7 @@ public class MailDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, int rows, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, string.Format(iConsole.Localization.UiText.Get("Mail.Inbox", "Inbox — {0} {1}"), _account?.Name ?? string.Empty, _account?.UserName), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, string.Format(iConsole.Localization.UiText.Get("Mail.Inbox", "Inbox — {0} {1}"), _account?.Name ?? string.Empty, _account?.UserName), colorScheme.Foreground, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "  Date              From                       Subject", colorScheme.DisabledForeground, colorScheme.Background);
         if (_listings.Count == 0)
         {

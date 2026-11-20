@@ -555,7 +555,7 @@ public class ToDoListDialog : Dialog
     {
         var open = _store.Visible(false).Count;
         var heading = DoneColumn + PriorityColumn + DueColumn + RemindColumn + iConsole.Localization.UiText.Get("ToDo.Subject", "Subject");
-        Put(buffer, 1, 0, iw - 2, heading, Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, heading, colorScheme.Foreground, colorScheme.Background);
 
         // The counts sit at the right edge; where the full text would run into the heading, only the open count, else none.
         var title = $"{open} open  ·  {_store.Visible(true).Count - open} done";

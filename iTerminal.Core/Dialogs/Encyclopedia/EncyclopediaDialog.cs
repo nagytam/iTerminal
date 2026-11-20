@@ -553,7 +553,7 @@ public class EncyclopediaDialog : SplitPaneDialog
         DrawSectionHeader(buffer, ix, iy + 2, leftWidth, string.Format(UiText.Get("Encyclopedia.Results", "Results ({0})"), _hits.Count), _results.IsFocused, colorScheme);
         DrawSectionHeader(buffer, ix + leftWidth + 1, iy + 2, rightWidth, UiText.Get("Encyclopedia.Article", "Article"), _article.IsFocused, colorScheme);
 
-        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : Color.Cyan, KeyHints, colorScheme);
+        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : colorScheme.Foreground, KeyHints, colorScheme);
     }
 
     #endregion
