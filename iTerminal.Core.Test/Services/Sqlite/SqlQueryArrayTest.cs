@@ -80,4 +80,26 @@ public class SqlQueryArrayTest
 
         await Assert.ThrowsExactlyAsync<iConsole.Sqlite.SqlQueryException>(() => array.InitializeAsync(CancellationToken.None));
     }
+
+    [TestMethod]
+    public async Task AQueryOverTheResultRunsAsOneStatementInTheDatabase()
+    {
+        var array = new SqlQueryArray(new SqliteDatabaseReader(), _path, "SELECT id, label FROM t");
+        await array.InitializeAsync(CancellationToken.None);
+
+        GridQueryResult result = await array.QueryAsync("SELECT label WHERE id > 2 ORDER BY id DESC LIMIT 2", 100, CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "label" }, result.Headers.ToArray());
+        CollectionAssert.AreEqual(new[] { "e", "d" }, result.Rows.Select(r => r[0]).ToArray(), "the filter, order and limit ran in the database");
+        Assert.IsFalse(result.Truncated);
+    }
+
+    [TestMethod]
+    public async Task AQueryOverTheResultCannotNameAColumnTheResultLacks()
+    {
+        var array = new SqlQueryArray(new SqliteDatabaseReader(), _path, "SELECT id FROM t");
+        await array.InitializeAsync(CancellationToken.None);
+
+        await Assert.ThrowsExactlyAsync<iConsole.Tabular.GridQueryException>(() => array.QueryAsync("WHERE label = 'a'", 100, CancellationToken.None));
+    }
 }

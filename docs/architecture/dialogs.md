@@ -480,9 +480,7 @@ lands in the query line and runs only when the user presses Enter, like any quer
   (`[1, *, *]`), and `MaterializeAsync` reads the window shown: the rows are cut first to honour the row, column and cell caps, and
   only the cells of the window are read. The HDF5 viewer reads every dataset through `HdfGridArray` and `IHdfFileReader.ReadBlockAsync`,
   so a dataset of any rank is one view: `+ -` step the fixed axes, `[ ]` choose the active one, and `T` swaps the rows and the
-  columns. CSV and Parquet rows are a two-axis `InMemoryGridArray`. The query runs over the table the view materialises
-  (`GridQueryRun.RunOverAsync`), so every in-memory viewer reads its data through the same backend. SQLite is a relation, not an
-  array. A SQLite `SELECT` or `WITH` is a `SqlQueryArray`: the column names and the row count come from two queries, and each block
+  columns. CSV and Parquet rows are a two-axis `InMemoryGridArray`. Every query goes through one path, `GridArrayView.QueryAsync`: a query that names `FROM cells` (or an array of three or more axes) runs over the long form, one row per cell with an `axis0` ... `axisN` column per axis; any other query runs over the rows of a one- or two-axis array, one row per index of the first axis. Either way the array is streamed in blocks of at most `DefaultChunkCells` cells, each block is filtered as it arrives, and only matches are kept (`MaxMatches`). Order and limit run over the matches. SQLite is a relation, not an array. A SQLite `SELECT` or `WITH` is a `SqlQueryArray`: the column names and the row count come from two queries, and each block
   the view asks for is the statement with `LIMIT` and `OFFSET`, so the viewer reads only the window it shows (`PRAGMA` and other
   non-row statements keep the direct path, because they cannot be wrapped as a subquery). `FROM cells` in the HDF5 query line runs
   the query over every cell of the array (`GridArrayView.QueryLongFormAsync`): the array is read in blocks of at most

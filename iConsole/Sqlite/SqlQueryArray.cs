@@ -37,6 +37,18 @@ public sealed class SqlQueryArray(ISqliteDatabaseReader reader, string path, str
         _shape = [rows, columns.Headers.Count];
     }
 
+    /// <summary>
+    /// Runs a query over the statement's result as one SQLite statement: the query is compiled over <c>(statement) AS result</c>, so the filter,
+    /// order and limit run inside the database in a single run, not one run per block. Call <see cref="InitializeAsync"/> first.
+    /// </summary>
+    public async Task<GridQueryResult> QueryAsync(string text, int maxRows, CancellationToken cancellationToken)
+    {
+        GridQueryPlan plan = GridQuery.Parse(text, _columnNames);
+        string sql = GridQuery.ToSqlFrom(plan, $"({Inner}) AS result");
+        SqlTable table = await reader.QueryAsync(path, sql, maxRows, cancellationToken);
+        return new GridQueryResult(table.Headers, table.Rows, table.Rows.Count, table.Truncated);
+    }
+
     /// <summary>The cells of a block: the rows from <c>start[0]</c>, and the columns from <c>start[1]</c>, read with <c>LIMIT</c> and <c>OFFSET</c>.</summary>
     public async Task<IReadOnlyList<string>> ReadBlockAsync(long[] start, long[] count, CancellationToken cancellationToken)
     {

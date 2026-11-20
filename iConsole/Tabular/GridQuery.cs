@@ -83,11 +83,17 @@ public static class GridQuery
     /// stop matching <c>'0123'</c>. SQLite applies the column's own type to a quoted value, so <c>amount &gt; '10'</c> compares as a
     /// number on a numeric column. Blank values sort last, as they do in memory.
     /// </summary>
-    public static string ToSql(GridQueryPlan plan, string table)
+    public static string ToSql(GridQueryPlan plan, string table) => ToSqlFrom(plan, QuoteIdentifier(table));
+
+    /// <summary>
+    /// The plan as one SQLite statement over any table expression, such as a subquery <c>(SELECT ...) AS result</c>. The filter, order and
+    /// limit are pushed into that one statement, so the database does the work in a single run.
+    /// </summary>
+    public static string ToSqlFrom(GridQueryPlan plan, string tableExpression)
     {
         StringBuilder sql = new("SELECT ");
         sql.Append(plan.Columns is null ? "*" : string.Join(", ", plan.Columns.Select(QuoteIdentifier)));
-        sql.Append(" FROM ").Append(QuoteIdentifier(table));
+        sql.Append(" FROM ").Append(tableExpression);
         if (plan.Where is { Groups.Count: > 0 } where)
         {
             sql.Append(" WHERE ").Append(string.Join(" OR ", where.Groups.Select(group => "(" + string.Join(" AND ", group.Select(TermToSql)) + ")")));

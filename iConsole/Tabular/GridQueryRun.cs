@@ -50,11 +50,7 @@ public sealed class GridQueryRun
     /// numbers, and the query runs over that table. The source must be in memory: a read here is not cancellable.
     /// </summary>
     public static Task<GridQueryResult> RunOverAsync(IGridArraySource source, string text) =>
-        System.Threading.Tasks.Task.Run(async () =>
-        {
-            GridTable table = await GridArrayView.Open(source).MaterializeAsync(int.MaxValue, int.MaxValue, int.MaxValue, CancellationToken.None, withRowNumbers: false);
-            return GridQuery.Run(table.Headers, table.Rows, text);
-        });
+        System.Threading.Tasks.Task.Run(() => GridArrayView.Open(source).QueryAsync(text, GridArrayView.DefaultChunkCells, int.MaxValue, CancellationToken.None));
 
     /// <summary>Starts <paramref name="text"/> over a source, through <see cref="RunOverAsync"/>. An earlier query still running is overtaken.</summary>
     public void Start(IGridArraySource source, string text)

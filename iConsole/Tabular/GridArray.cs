@@ -199,6 +199,85 @@ public sealed class GridArrayView
     public const long DefaultChunkCells = 100_000;
 
     /// <summary>
+    /// The one query path for every array. A query that names <c>FROM cells</c>, or any array of three or more axes (or none), runs over
+    /// the long form: one row per cell with an index column per axis. Any other query runs over the rows of a one- or two-axis array:
+    /// one row per index of the first axis, with the array's column names. Either way the array is streamed in blocks of at most
+    /// <paramref name="chunkCells"/> cells, each block is filtered as it arrives, and at most <paramref name="maxMatches"/> matches are kept.
+    /// Order and limit run over the matches.
+    /// </summary>
+    public Task<GridQueryResult> QueryAsync(string text, long chunkCells, int maxMatches, CancellationToken cancellationToken) =>
+        AsksForCells(text)
+            ? QueryLongFormAsync(text, chunkCells, maxMatches, cancellationToken)
+            : QueryRowsAsync(text, chunkCells, maxMatches, cancellationToken);
+
+    private bool AsksForCells(string text)
+    {
+        if (Rank != 1 && Rank != 2)
+        {
+            return true;
+        }
+
+        try
+        {
+            return string.Equals(GridQuery.Parse(text, LongFormHeaders).From, "cells", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (GridQueryException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>The rows of a one- or two-axis array: one row per index of the first axis, one column per field or per column of the second.</summary>
+    private async Task<GridQueryResult> QueryRowsAsync(string text, long chunkCells, int maxMatches, CancellationToken cancellationToken)
+    {
+        IReadOnlyList<string> fields = _source.Fields;
+        int width = Rank == 1 ? (fields.Count > 0 ? fields.Count : 1) : (int)Shape[1];
+        IReadOnlyList<string> headers = Rank == 1
+            ? (fields.Count > 0 ? fields : ["value"])
+            : (_source.ColumnNames.Count == width ? _source.ColumnNames : [.. Enumerable.Range(0, width).Select(column => column.ToString(System.Globalization.CultureInfo.InvariantCulture))]);
+        GridQueryPlan plan = GridQuery.Parse(text, headers);
+        GridQueryPlan filter = new(plan.From, null, plan.Where, null, false, null);
+        var matched = new List<string[]>();
+        bool truncated = false;
+        long rows = Shape[0];
+        long perBlock = Math.Max(1, chunkCells / Math.Max(1, width));
+        for (long first = 0; first < rows && !truncated; first += perBlock)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            long count = Math.Min(perBlock, rows - first);
+            long[] start = Rank == 1 ? [first] : [first, 0];
+            long[] blockCount = Rank == 1 ? [count] : [count, width];
+            IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, blockCount, cancellationToken);
+            var lines = new List<string[]>((int)count);
+            for (long row = 0; row < count; row++)
+            {
+                var line = new string[width];
+                for (int column = 0; column < width; column++)
+                {
+                    long at = row * width + column;
+                    line[column] = at < cells.Count ? cells[(int)at] : string.Empty;
+                }
+
+                lines.Add(line);
+            }
+
+            foreach (string[] line in GridQuery.Execute(headers, lines, filter).Rows)
+            {
+                if (matched.Count >= maxMatches)
+                {
+                    truncated = true;
+                    break;
+                }
+
+                matched.Add(line);
+            }
+        }
+
+        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit));
+        return shaped with { Matched = matched.Count, Truncated = truncated };
+    }
+
+    /// <summary>
     /// Runs a query over every cell of the array, as the long form: one row per cell, with an index column for each axis and a
     /// <c>value</c> column. The array is read in blocks of at most <paramref name="chunkCells"/> cells; each block is filtered as it
     /// arrives, and only the matching rows are kept, so the whole array is searched without holding it. Order and limit then run over

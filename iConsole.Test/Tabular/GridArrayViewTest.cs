@@ -240,4 +240,28 @@ public class GridArrayViewTest
         Assert.AreEqual(4, result.Rows.Count);
         Assert.IsTrue(result.Truncated);
     }
+
+    [TestMethod]
+    public async Task TheRowsOfATableAreStreamedWhateverTheBlockSize()
+    {
+        string[][] rows = [["Anna", "5"], ["Bela", "20"], ["Cecil", ""], ["Dora", "100"]];
+        var table = new InMemoryGridArray(rows, ["name", "amount"]);
+        const string query = "SELECT name WHERE amount > 4 ORDER BY amount DESC";
+
+        GridQueryResult oneRowAtATime = await GridArrayView.Open(table).QueryAsync(query, 2, int.MaxValue, CancellationToken.None);
+        GridQueryResult wholeTable = await GridArrayView.Open(table).QueryAsync(query, 100_000, int.MaxValue, CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "name" }, wholeTable.Headers.ToArray(), "the query's own columns");
+        CollectionAssert.AreEqual(new[] { "Dora", "Bela", "Anna" }, wholeTable.Rows.Select(r => r[0]).ToArray());
+        CollectionAssert.AreEqual(wholeTable.Rows.Select(r => r[0]).ToArray(), oneRowAtATime.Rows.Select(r => r[0]).ToArray(), "the same answer whatever the block size");
+        Assert.AreEqual(3, wholeTable.Matched);
+    }
+
+    [TestMethod]
+    public async Task ARowsQueryNamingAMissingColumnIsRefused()
+    {
+        var table = new InMemoryGridArray([["Anna", "5"]], ["name", "amount"]);
+
+        await Assert.ThrowsExactlyAsync<GridQueryException>(() => GridArrayView.Open(table).QueryAsync("WHERE salary > 1", 100, int.MaxValue, CancellationToken.None));
+    }
 }
