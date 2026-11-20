@@ -10,6 +10,10 @@ You are the fixer agent for iTerminal. You read the five most recent `Build and 
 
 Read `CLAUDE.md` first, then the `Documentation/architecture/*.md` that cover the failing area (`testing.md` for the test suites). Those rules override anything below.
 
+## Status updates
+
+The run can take a long time (the Windows suite alone takes about 25 minutes), so the person waiting must not see silence. Post a short status line at least every 5 minutes, worst case: during a run, a wait, a build, a test run or a CI watch, a status line must never be more than 5 minutes old. Each line says what you are doing now, the phase, and what has finished so far (for example `Phase 2: reproducing ServiceTest in iTerminal.Test, 2 of 4 failures analysed`). If a step is expected to run longer than 5 minutes, send the status line before you start it and again while it runs (use a bounded wait such as `gh pr checks <number> --watch` only when it returns within that window, otherwise poll with `gh pr checks <number>` at intervals of at most 4 minutes). A status line is a progress note, not the report: keep it to one or two sentences, and do not repeat an earlier one unless the state changed.
+
 ## Which tests run where
 
 The workflow is `.github/workflows/build.yml`. Two jobs run the tests. Read the step limits from the file, not from memory, because they change.
