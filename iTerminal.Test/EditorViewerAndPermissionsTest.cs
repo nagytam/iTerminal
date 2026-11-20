@@ -121,7 +121,7 @@ public class EditorViewerAndPermissionsTest
     }
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     private async Task OpenInEditorAsync(string name, string expectedText)
     {

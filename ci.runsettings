@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <!-- The whole suite takes 4-5 minutes locally and about 25 on a Windows runner: abort the run, with its results so far, at 35. -->
+    <TestSessionTimeout>2100000</TestSessionTimeout>
+  </RunConfiguration>
+</RunSettings>

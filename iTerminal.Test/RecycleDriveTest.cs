@@ -16,7 +16,7 @@ public class RecycleDriveTest
     private TerminalApp _app = null!;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     /// <summary>The app with three things in its bin: a newer and an older file deleted from the left folder, and a folder.</summary>
     private async Task StartWithABinAsync()

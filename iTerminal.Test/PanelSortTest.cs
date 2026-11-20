@@ -13,7 +13,7 @@ public class PanelSortTest
     private TerminalApp _app = null!;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     /// <summary>
     /// The sandbox plus one file, with dates set: by name the files read notes.md, readme.txt,

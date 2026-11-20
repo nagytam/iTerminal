@@ -10,7 +10,7 @@ public class ContextMenuAndDiffTest
     public async Task StartAsync() => _app = await TerminalApp.StartAsync();
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     [Timeout(120_000)]
     [TestMethod]

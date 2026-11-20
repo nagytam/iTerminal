@@ -13,7 +13,7 @@ public class EvidenceNotebookTest
     private TerminalApp _app = null!;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     private string NotebookFolder => Path.Combine(Path.GetDirectoryName(_app.LeftRoot)!, "case-42");
 

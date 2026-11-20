@@ -16,7 +16,7 @@ public class VoiceInputTest
     public async Task StartAsync() => _app = await TerminalApp.StartAsync();
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     /// <summary>The assistant is not reachable in the sandbox: the bar is made available by hand once its own check has answered.</summary>
     private async Task<AiChatModel> MakeTheBarAvailableAsync()

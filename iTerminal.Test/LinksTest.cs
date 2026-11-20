@@ -13,7 +13,7 @@ public class LinksTest
     private TerminalApp _app = null!;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     /// <summary>A link to a folder any account can make: symbolic where allowed, a junction on Windows otherwise.</summary>
     private static void CreateFolderLink(string linkPath, string targetPath)

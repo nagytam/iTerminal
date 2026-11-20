@@ -13,7 +13,7 @@ public class FileOperationsTest
     public async Task StartAsync() => _app = await TerminalApp.StartAsync();
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     /// <summary>The file's text, or null while it is missing or still held open by the operation writing it.</summary>
     private static string? ReadIfFinished(string path)

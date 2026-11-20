@@ -16,7 +16,7 @@ public class NotificationsTest
     public async Task StartAsync() => _app = await TerminalApp.StartAsync();
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     private INotificationService Notifications => _app.Driver.GetRequiredService<INotificationService>();
 

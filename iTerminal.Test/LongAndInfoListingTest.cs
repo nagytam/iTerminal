@@ -15,7 +15,7 @@ public class LongAndInfoListingTest
     private TerminalApp _app = null!;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     private async Task RunPaletteCommandAsync(string name)
     {

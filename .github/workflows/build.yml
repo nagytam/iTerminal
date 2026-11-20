@@ -47,7 +47,10 @@ jobs:
           && dotnet build iTerminal/iTerminal.csproj -c Release --no-restore
           && dotnet build iTerminal.Test/iTerminal.Test.csproj -c Release --no-restore
 
+      # Every test has a 120 s [Timeout]; the blame timeout kills the test host when one stops answering altogether
+      # (and names it), and the step limit is the backstop, so a run can never hang for the rest of the job.
       - name: Tests (including end-to-end suite)
+        timeout-minutes: 20
         run: >-
           dotnet test iConsole.Test/iConsole.Test.csproj
           -c Release --no-build
@@ -66,6 +69,7 @@ jobs:
           && dotnet test iTerminal.Test/iTerminal.Test.csproj
           -c Release --no-build
           --logger "trx;LogFileName=iterminal-e2e.trx"
+          --settings ci.runsettings --blame-hang-timeout 5m --blame-hang-dump-type none
           --results-directory TestResults
 
       - name: Code coverage report
@@ -113,9 +117,12 @@ jobs:
       - name: Build
         run: dotnet build iTerminal.slnx -c Release --no-restore -m:1
 
+      # The suite takes about 25 minutes here; see the Linux job for what the limits are for.
       - name: Test (including end-to-end suite)
+        timeout-minutes: 38
         run: >-
           dotnet test iTerminal.slnx -c Release --no-build
+          --settings ci.runsettings --blame-hang-timeout 5m --blame-hang-dump-type none
           --logger "trx;LogFileName=all.trx"
           --results-directory TestResults
 

@@ -14,7 +14,7 @@ public class LanguageTest
     public async Task StartAsync() => _app = await TerminalApp.StartAsync();
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     private async Task OpenSelectorAsync()
     {
