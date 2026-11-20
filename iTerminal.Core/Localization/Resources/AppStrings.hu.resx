@@ -8557,6 +8557,9 @@
   <data name="FolderTree.Count" xml:space="preserve">
     <value>Mappák száma: {0}</value>
   </data>
+  <data name="FolderTree.Indexing" xml:space="preserve">
+    <value>Indexelés... eddig {0} mappa</value>
+  </data>
   <data name="FolderPath.TabCompletes" xml:space="preserve">
     <value>A Tab kiegészít. Sémák: </value>
   </data>

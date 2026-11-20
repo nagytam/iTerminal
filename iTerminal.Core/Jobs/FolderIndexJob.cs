@@ -41,6 +41,9 @@ public class FolderIndexJob : Job
                 _folderIndexModel.Children.Add(child);
             }
         }
+
+        // Set before the walk is requested, so the tree says it is still growing from the first frame.
+        _folderIndexModel.IsWalking = !_queue.IsEmpty;
     }
 
     private void LoadCacheEntries()
@@ -108,6 +111,11 @@ public class FolderIndexJob : Job
             catch
             {
             }
+
+            // The walker is the only writer after start, so the flag cannot race the drive handler. It is set here, before
+            // the idle delay below, so the tree stops saying it is growing as soon as the queue drains (and a drive added
+            // during the delay shows within one throttle step).
+            _folderIndexModel.IsWalking = !_queue.IsEmpty;
 
             if (!cancellationToken.IsCancellationRequested && _queue.IsEmpty)
             {
