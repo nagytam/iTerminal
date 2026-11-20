@@ -2208,4 +2208,37 @@
   <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
     <value>Filter the result: start the line with : and a grid query</value>
   </data>
+  <data name="Key.ExportCsv" xml:space="preserve">
+    <value>F2-Export</value>
+  </data>
+  <data name="Csv.Hint.Mark" xml:space="preserve">
+    <value>Mark the row and move down</value>
+  </data>
+  <data name="Csv.Hint.Export" xml:space="preserve">
+    <value>Export the marked rows, or the rows on screen, to a CSV file</value>
+  </data>
+  <data name="Csv.Export.Ask" xml:space="preserve">
+    <value>Save the rows as</value>
+  </data>
+  <data name="Csv.Export.Invalid" xml:space="preserve">
+    <value>Give a file name, with no folder in it</value>
+  </data>
+  <data name="Csv.Export.Overwrite" xml:space="preserve">
+    <value>{0} already exists. Overwrite it?</value>
+  </data>
+  <data name="Csv.Export.Done" xml:space="preserve">
+    <value>Exported {0:N0} row(s) to {1}</value>
+  </data>
+  <data name="Csv.Export.Cancelled" xml:space="preserve">
+    <value>Nothing was written</value>
+  </data>
+  <data name="Csv.Export.ReadOnly" xml:space="preserve">
+    <value>This folder is read-only: nothing was written</value>
+  </data>
+  <data name="Csv.Export.NoFolder" xml:space="preserve">
+    <value>Nothing can be written next to this file</value>
+  </data>
+  <data name="Csv.Export.Failed" xml:space="preserve">
+    <value>Could not write the file: {0}</value>
+  </data>
 </root>

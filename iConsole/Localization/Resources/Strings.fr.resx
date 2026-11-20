@@ -2192,4 +2192,37 @@
   <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
     <value>Filtrer le résultat : commencer la ligne par : et une requête de grille</value>
   </data>
+  <data name="Key.ExportCsv" xml:space="preserve">
+    <value>F2-Exporter</value>
+  </data>
+  <data name="Csv.Hint.Mark" xml:space="preserve">
+    <value>Marquer la ligne et descendre d'une ligne</value>
+  </data>
+  <data name="Csv.Hint.Export" xml:space="preserve">
+    <value>Exporter les lignes marquées, ou celles affichées, dans un fichier CSV</value>
+  </data>
+  <data name="Csv.Export.Ask" xml:space="preserve">
+    <value>Enregistrer les lignes sous</value>
+  </data>
+  <data name="Csv.Export.Invalid" xml:space="preserve">
+    <value>Donner un nom de fichier, sans dossier</value>
+  </data>
+  <data name="Csv.Export.Overwrite" xml:space="preserve">
+    <value>{0} existe déjà. L'écraser ?</value>
+  </data>
+  <data name="Csv.Export.Done" xml:space="preserve">
+    <value>{0:N0} ligne(s) exportée(s) vers {1}</value>
+  </data>
+  <data name="Csv.Export.Cancelled" xml:space="preserve">
+    <value>Rien n'a été écrit</value>
+  </data>
+  <data name="Csv.Export.ReadOnly" xml:space="preserve">
+    <value>Ce dossier est en lecture seule : rien n'a été écrit</value>
+  </data>
+  <data name="Csv.Export.NoFolder" xml:space="preserve">
+    <value>Rien ne peut être écrit à côté de ce fichier</value>
+  </data>
+  <data name="Csv.Export.Failed" xml:space="preserve">
+    <value>Impossible d'écrire le fichier : {0}</value>
+  </data>
 </root>
