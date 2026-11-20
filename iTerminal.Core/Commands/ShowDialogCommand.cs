@@ -24,7 +24,11 @@ public static class DialogRefresh
     public static string Language => UiText.Current?.LanguageCode ?? "en";
 }
 
-/// <summary>Hands the application's services to <see cref="DialogRefresh"/> once they exist.</summary>
+/// <summary>
+/// Hands the application's services to <see cref="DialogRefresh"/> once they exist, and takes them back when the host stops: the static
+/// would otherwise keep the whole container, with every panel, dialog and buffer in it, alive after the application is gone (a process
+/// that starts the application repeatedly, such as the end-to-end suite, grew by about 40 MB per start).
+/// </summary>
 public sealed class DialogRefreshHostedService(IServiceProvider services) : Microsoft.Extensions.Hosting.IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
@@ -33,7 +37,16 @@ public sealed class DialogRefreshHostedService(IServiceProvider services) : Micr
         return Task.CompletedTask;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        // Only release our own: a newer application may already have registered its services.
+        if (ReferenceEquals(DialogRefresh.Services, services))
+        {
+            DialogRefresh.Services = null;
+        }
+
+        return Task.CompletedTask;
+    }
 }
 
 /// <summary>

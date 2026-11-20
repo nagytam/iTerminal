@@ -206,6 +206,7 @@ public class DesktopTest
         var screen = new Mock<IScreen>(MockBehavior.Strict);
         screen.SetupProperty(s => s.Desktop);
         screen.Setup(s => s.Close());
+        screen.SetupGet(s => s.Controls).Returns([]);
 
         var job = new Mock<IJob>(MockBehavior.Strict);
         job.Setup(j => j.OnInitialize(It.IsAny<IDesktop>()));
@@ -218,6 +219,35 @@ public class DesktopTest
         screen.Verify(s => s.Close(), Times.Once);
         job.Verify(j => j.OnAfterStop(), Times.Once);
         consoleDriver.Verify(d => d.Clear(), Times.Once);
+    }
+
+    private sealed class DisposableLabel(IThemeService themeService) : Label("x", themeService), IDisposable
+    {
+        public int Disposed { get; private set; }
+
+        public void Dispose() => Disposed++;
+    }
+
+    [TestMethod]
+    [Timeout(5000)]
+    public void StopAsync_DisposesTheDisposableControlsOfTheTree_SoTheirTimersStop()
+    {
+        var consoleDriver = new Mock<IConsoleDriver>();
+        var themeService = new Mock<IThemeService>();
+        var buffer = new MockBuffer(new Size(10, 10));
+        var theme = new TestThemeService();
+        var inner = new DisposableLabel(theme);
+        var outer = new DisposableLabel(theme);
+        outer.AddControl(inner);
+        var screen = new Mock<IScreen>();
+        screen.SetupProperty(s => s.Desktop);
+        screen.SetupGet(s => s.Controls).Returns([outer]);
+        var desktop = new Desktop(consoleDriver.Object, screen.Object, buffer, Array.Empty<IJob>());
+
+        desktop.StopAsync(CancellationToken.None).GetAwaiter().GetResult();
+
+        Assert.AreEqual(1, inner.Disposed);
+        Assert.AreEqual(1, outer.Disposed);
     }
 
     [TestMethod]

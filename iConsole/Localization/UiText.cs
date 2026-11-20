@@ -17,6 +17,9 @@ public static class UiText
         set => Volatile.Write(ref _current, value);
     }
 
+    /// <summary>Clears <see cref="Current"/> if it is still <paramref name="localizer"/>: a localizer that is going away must not stay reachable from here.</summary>
+    internal static void Release(ILocalizer localizer) => Interlocked.CompareExchange(ref _current, null, localizer);
+
     /// <summary>
     /// Speaks <paramref name="localizer"/> to the calling async flow only, until the returned scope is disposed; null
     /// speaks English for that flow even when the application chose another language. Tests use it so that several
