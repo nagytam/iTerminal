@@ -6,6 +6,7 @@ using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Screens;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.KeyBindings;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -84,9 +85,10 @@ public sealed class TerminalApp : IAsyncDisposable
     /// <summary>
     /// Builds the sandbox, starts the app and waits until both panels list their folders and the
     /// splash screen is gone. <paramref name="seed"/> may add files to <see cref="LeftRoot"/> /
-    /// <see cref="RightRoot"/> before the app reads them.
+    /// <see cref="RightRoot"/> before the app reads them. <paramref name="keyMapJson"/>, if given, is written to
+    /// <c>keymap.json</c> in the data folder before the first start.
     /// </summary>
-    public static async Task<TerminalApp> StartAsync(Action<string, string>? seed = null, int width = 140, int height = 40)
+    public static async Task<TerminalApp> StartAsync(Action<string, string>? seed = null, int width = 140, int height = 40, string? keyMapJson = null)
     {
         var root = Path.Combine(Path.GetTempPath(), "iTerminal.E2E." + Guid.NewGuid().ToString("N")[..8]);
         var left = Path.Combine(root, "left");
@@ -104,6 +106,11 @@ public sealed class TerminalApp : IAsyncDisposable
         Directory.CreateDirectory(Path.Combine(right, "target"));
         File.WriteAllText(Path.Combine(right, "right_only.txt"), "right");
         seed?.Invoke(left, right);
+        if (keyMapJson is not null)
+        {
+            Directory.CreateDirectory(Path.Combine(root, "data"));
+            File.WriteAllText(Path.Combine(root, "data", KeyMapFile.FileName), keyMapJson);
+        }
 
         var app = await LaunchAsync(root, firstRun: true, width, height);
         try

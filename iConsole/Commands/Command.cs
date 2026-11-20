@@ -11,9 +11,10 @@ public abstract class Command : ICommand
 {
     public virtual string Title => CreateDisplayTextFromTypeName(GetType().Name, nameof(Command));
     public virtual string Description => Title;
-    public virtual string KeyDisplayText => FormatKey(Key);
+    public virtual string KeyDisplayText => FormatKey(ActiveKey);
     public IControl? Control { get; set; }
     public virtual Key? Key { get; init; }
+    public Key? ActiveKey => KeyMap.Resolve(GetType(), Key);
     public ICommandLogger CommandLogger { get; set; } = NullCommandLogger.Instance;
     protected bool IsReadOnlyControl
     {
@@ -81,7 +82,7 @@ public abstract class Command : ICommand
     public virtual async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isHandled = false;
-        if (Key?.IsIdentical(keyEvent) ?? false)
+        if (ActiveKey?.IsIdentical(keyEvent) ?? false)
         {
             isHandled = await RunAsync(null);
         }

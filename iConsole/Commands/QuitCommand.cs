@@ -19,7 +19,7 @@ public class QuitCommand : Command
     /// </summary>
     public Key AlternateKey { get; init; } = new(ConsoleKey.C, false, false, true);
 
-    public override string KeyDisplayText => $"{FormatKey(Key)} / {FormatKey(AlternateKey)}";
+    public override string KeyDisplayText => $"{FormatKey(ActiveKey)} / {FormatKey(AlternateKey)}";
 
     public override Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
@@ -28,15 +28,27 @@ public class QuitCommand : Command
         // the file panel's Alt+letter search filter), which would otherwise make the strict
         // Key.IsIdentical comparison silently fail to quit. F10 has no other binding and
         // Alt+F10 isn't bound to anything, so relaxing Alt here is safe.
-        if (keyEvent.ConsoleKey == ConsoleKey.F10 && !keyEvent.Shift)
-        {
-            return RunAsync(null);
-        }
-        if (AlternateKey.IsIdentical(keyEvent))
+        if (IsActiveKey(keyEvent) || AlternateKey.IsIdentical(keyEvent))
         {
             return RunAsync(null);
         }
         return Task.FromResult(false);
+    }
+
+    /// <summary>
+    /// Whether the key is the one this command answers to now: the user's mapped key, or F10 with Ctrl or Alt
+    /// tolerated as above. A mapped key of <c>none</c> leaves only <see cref="AlternateKey"/>.
+    /// </summary>
+    private bool IsActiveKey(KeyEvent keyEvent)
+    {
+        if (ActiveKey is not { } active || active.ConsoleKey != keyEvent.ConsoleKey)
+        {
+            return false;
+        }
+
+        return active.ConsoleKey == ConsoleKey.F10
+            ? keyEvent.Shift == active.Shift
+            : active.IsIdentical(keyEvent);
     }
 
     public override Task ExecuteAsync(object? arg)

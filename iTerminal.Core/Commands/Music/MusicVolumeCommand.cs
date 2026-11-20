@@ -26,7 +26,7 @@ public abstract class MusicVolumeCommand(
 
     protected abstract MusicAction Action { get; }
 
-    public override string KeyDisplayText => $"{FormatKey(Key)} / {FormatKey(AlternateKey)}";
+    public override string KeyDisplayText => $"{FormatKey(ActiveKey)} / {FormatKey(AlternateKey)}";
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {

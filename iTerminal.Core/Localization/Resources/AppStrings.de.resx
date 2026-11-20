@@ -11109,4 +11109,13 @@
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Prüft, ob jeder Eintrag der Beweissammlung noch seinem gespeicherten SHA-256 und seiner Größe entspricht.</value>
   </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Tastenbelegung</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>keymap.json konnte nicht gelesen werden, daher gelten die Standardtasten. Das Protokoll nennt den Grund.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} Tastenbelegung(en) in keymap.json wurden nicht verwendet: {1}. Das Protokoll nennt den Grund.</value>
+  </data>
 </root>

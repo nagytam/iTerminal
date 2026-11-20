@@ -33,7 +33,7 @@ public class MusicPanelsCommand(IContentModelService? contentModelService) : Com
     /// <summary>Ctrl+F7, accepted alongside <see cref="Key"/> because function keys pass every layer.</summary>
     public Key AlternateKey { get; init; } = new(ConsoleKey.F7, false, false, true);
 
-    public override string KeyDisplayText => $"{FormatKey(Key)} / {FormatKey(AlternateKey)}";
+    public override string KeyDisplayText => $"{FormatKey(ActiveKey)} / {FormatKey(AlternateKey)}";
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
