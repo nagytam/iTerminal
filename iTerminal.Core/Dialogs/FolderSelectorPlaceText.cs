@@ -21,17 +21,22 @@ internal static class FolderSelectorPlaceText
     }
 
     /// <summary>
-    /// The local path a file:// URL names (percent-decoded, and without the slash that sits before a Windows drive
-    /// letter in file:///C:/...). Anything else is returned unchanged.
+    /// The local path a file:// URL names, as the OS writes it (<see cref="Uri.LocalPath"/>: percent-decoded, with the
+    /// drive letter or UNC share in place). Anything else, or a URL that does not parse, is returned unchanged.
     /// </summary>
     private static string FilePathOf(string place)
     {
-        const string prefix = "file://";
-        if (!place.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        if (!place.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
         {
             return place;
         }
-        var path = Uri.UnescapeDataString(place[prefix.Length..]);
-        return System.Text.RegularExpressions.Regex.IsMatch(path, "^/[A-Za-z]:") ? path[1..] : path;
+        try
+        {
+            return new Uri(place).LocalPath;
+        }
+        catch (UriFormatException)
+        {
+            return place;
+        }
     }
 }

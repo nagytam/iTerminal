@@ -158,7 +158,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void PlaceLabel_ShowsTheFolderNameBeforeThePath()
+    public void Label_ShowsTheFolderNameBeforeThePath()
     {
         var path = Path.Combine(Path.GetTempPath(), "Downloads");
 
@@ -167,7 +167,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void PlaceLabel_LeavesARootAndAnAppDriveAsTheyAre()
+    public void Label_LeavesARootAndAnAppDriveAsTheyAre()
     {
         var root = Path.GetPathRoot(Path.GetTempPath())!;
 
@@ -192,7 +192,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void PlaceLabel_OfAFolderWithATrailingSeparator_StillLeadsWithTheName()
+    public void Label_OfAFolderWithATrailingSeparator_StillLeadsWithTheName()
     {
         var place = Path.Combine(Path.GetTempPath(), "Downloads") + Path.DirectorySeparatorChar;
 
@@ -205,6 +205,24 @@ public class FolderSelectorSpecialFoldersTabPageTest
     {
         Assert.AreEqual("Projects  /tmp/Projects", FolderSelectorPlaceText.Label("file:///tmp/Projects"));
         Assert.AreEqual("My Docs  /tmp/My Docs", FolderSelectorPlaceText.Label("file:///tmp/My%20Docs"));
-        Assert.AreEqual("Projects  C:/Users/Projects", FolderSelectorPlaceText.Label("file:///C:/Users/Projects"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Label_OfAWindowsFileUrl_UsesTheWindowsPath()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows drive and UNC paths only exist on Windows.");
+        }
+        Assert.AreEqual(@"Projects  C:\Users\Projects", FolderSelectorPlaceText.Label("file:///C:/Users/Projects"));
+        Assert.AreEqual(@"alpha  \\fileserver\projects\alpha", FolderSelectorPlaceText.Label("file://fileserver/projects/alpha"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Label_OfAMalformedFileUrl_IsShownAsItIs()
+    {
+        Assert.AreEqual("file://%zz", FolderSelectorPlaceText.Label("file://%zz"));
     }
 }
