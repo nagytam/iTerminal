@@ -95,6 +95,7 @@ keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
   suggestions at the bottom of the screen, a dozen rows from the text being completed. Leaving a page
   also takes the list down (`Tab.SwitchToPage`): the popup is attached to the *root*, so hiding the
   page it belongs to does not hide it.
+- **Every page answers to Alt+&lt;number&gt; as well as Ctrl+&lt;number&gt;.** A legacy terminal sends no byte for Ctrl+0, Ctrl+1 or Ctrl+9 (it sends the digit) and sends Ctrl+2 to Ctrl+8 as control codes the decoder does not name, so the Ctrl form only arrives with the Kitty keyboard protocol or on the Windows console. Alt+digit is ESC plus the digit everywhere, and `FolderSelectorDialog` rewrites it to the Ctrl form before the children see it, so the Path page's text box does not type the digit. Tests for the Ctrl form inject synthetic events, which is why they never caught this.
 - **Enter is claimed by `FolderSelectorTabPage`, the shared base, ahead of the page's children.**
   Each page's real work lives in a command attached to its *Select* button, but the control that
   holds focus is the list — and `ListBox<T>` binds Enter to its own `SelectListItemCommand`, which

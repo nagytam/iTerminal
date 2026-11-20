@@ -14,9 +14,9 @@ using iTerminal.Core.Services.Remote;
 namespace iTerminal.Core.Dialogs;
 
 /// <summary>
-/// Ctrl+F1 — "where do you want to go?". Seven pages, one per way of naming a folder, and the same
+/// Ctrl+F1 — "where do you want to go?". Nine pages, one per way of naming a folder, and the same
 /// three keys on every one of them: the arrows move, Enter goes, Esc cancels. Ctrl+Up/Ctrl+Down (or
-/// Ctrl and the number in a page's name) changes page; the arrows alone are left to the page's own
+/// Alt, or Ctrl, and the number in a page's name) changes page; the arrows alone are left to the page's own
 /// list, which is the only thing that makes the lists usable.
 ///
 /// <b>Esc closes it at any time</b>, from any page, whatever is focused — and where the page has a
@@ -154,12 +154,30 @@ public class FolderSelectorDialog : Dialog
             lineString);
     }
 
+    /// <summary>
+    /// Alt+&lt;digit&gt; jumps to a page exactly as Ctrl+&lt;digit&gt; does. A legacy terminal has no byte for
+    /// Ctrl+0, Ctrl+1 or Ctrl+9 (it sends the digit itself) and sends Ctrl+2 to Ctrl+8 as control bytes
+    /// that the input decoder does not name a digit for, so the Ctrl form only arrives on a terminal with
+    /// the Kitty keyboard protocol or on the Windows console. Alt+digit arrives as ESC followed by the
+    /// digit on every terminal, so it is turned into the Ctrl form here, ahead of the children: a focused
+    /// text box on the Path page would otherwise type the digit before the page jump was offered.
+    /// </summary>
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift
+            && keyEvent.ConsoleKey is >= ConsoleKey.D0 and <= ConsoleKey.D8)
+        {
+            keyEvent = new KeyEvent(keyEvent.KeyChar, keyEvent.ConsoleKey, shift: false, alt: false, control: true);
+        }
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", iConsole.Localization.UiText.Get("FolderSelector.Hint.Enter", "Go to the folder the focused page has under its cursor, and close."));
         yield return ("Esc", iConsole.Localization.UiText.Get("FolderSelector.Hint.Esc", "Dismiss the suggestion list if one is up, otherwise close without navigating."));
         yield return ("Ctrl+Up / Ctrl+Down", iConsole.Localization.UiText.Get("FolderSelector.Hint.PageSwitch", "Move to the previous / next page of the selector."));
-        yield return ("Ctrl+0 … Ctrl+8",iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
+        yield return ("Alt+0 … Alt+8 / Ctrl+0 … Ctrl+8", iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
         yield return ("Tab / Shift+Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.TabFocusedPage", "Move between the focused page's list and its buttons."));
     }
 }

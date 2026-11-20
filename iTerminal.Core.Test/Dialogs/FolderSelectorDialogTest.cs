@@ -90,6 +90,46 @@ public class FolderSelectorDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AltDigit_ShowsEveryPageAndPutsTheCursorOnItsFirstControl()
+    {
+        // Alt+<digit> is the page jump a legacy terminal can send (Ctrl+1, Ctrl+5 and friends never reach
+        // the app there), so every page has to answer to it, not only the Ctrl form the other tests use.
+        var harness = new FolderSelectorTestHarness();
+        var root = new FolderSelectorTestHarness.TestRoot(harness.ThemeService);
+        var dialog = CreateDialog(harness);
+        await root.ShowDialogAsync(dialog);
+
+        for (int page = 0; page < dialog.TabPages.Count; page++)
+        {
+            await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.D0 + page, alt: true));
+
+            var tabPage = dialog.TabPages[page];
+            Assert.IsTrue(tabPage.IsFocused, $"Alt+{page} did not show {tabPage.Name}.");
+            Assert.AreSame(tabPage.Controls[0], tabPage.GetFocusedControl(), $"{tabPage.Name} did not put the cursor on its first control.");
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AltDigit_OnThePathPage_JumpsInsteadOfTyping()
+    {
+        // The Path page's text box would take a digit as text; the page jump has to win over it.
+        var harness = new FolderSelectorTestHarness();
+        var root = new FolderSelectorTestHarness.TestRoot(harness.ThemeService);
+        var dialog = CreateDialog(harness);
+        await root.ShowDialogAsync(dialog);
+        await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.D6, control: true));
+        var path = (FolderSelectorPathTabPage)dialog.TabPages[6];
+        var textBefore = path.Path;
+
+        await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.D2, alt: true));
+
+        Assert.IsTrue(dialog.TabPages[2].IsFocused, "Alt+2 should show the Recent page.");
+        Assert.AreEqual(textBefore, path.Path, "Alt+2 typed into the Path page's text box.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task CtrlDown_MovesToTheNextPage()
     {
         var harness = new FolderSelectorTestHarness();
