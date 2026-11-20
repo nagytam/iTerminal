@@ -10875,7 +10875,7 @@
     <value>Taper pour filtrer  Entrée garder  Échap effacer</value>
   </data>
   <data name="Radio.FooterBrowse" xml:space="preserve">
-    <value>Entrée lire  Espace pause  S arrêter  F favori  N nouvelle  D supprimer  / chercher  Échap fermer</value>
+    <value>Entrée lire  Espace pause  F favori  / chercher  Échap fermer</value>
   </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>Une station a besoin d'un nom</value>

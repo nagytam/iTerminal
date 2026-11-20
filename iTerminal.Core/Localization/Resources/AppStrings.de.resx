@@ -10939,7 +10939,7 @@
     <value>Tippen zum Filtern  Enter behalten  Esc löschen</value>
   </data>
   <data name="Radio.FooterBrowse" xml:space="preserve">
-    <value>Enter abspielen  Leer Pause  S stopp  F Favorit  N neu  D löschen  / suchen  Esc schließen</value>
+    <value>Enter abspielen  Leer Pause  F Favorit  / suchen  Esc schließen</value>
   </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>Ein Sender braucht einen Namen</value>

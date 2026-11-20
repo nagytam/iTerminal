@@ -10875,7 +10875,7 @@
     <value>Digita per filtrare  Invio mantieni  Esc cancella</value>
   </data>
   <data name="Radio.FooterBrowse" xml:space="preserve">
-    <value>Invio riproduci  Spazio pausa  S stop  F preferita  N nuova  D elimina  / cerca  Esc chiudi</value>
+    <value>Invio riproduci  Spazio pausa  F preferita  / cerca  Esc chiudi</value>
   </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>Una stazione ha bisogno di un nome</value>

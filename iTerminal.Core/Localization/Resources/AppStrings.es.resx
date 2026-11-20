@@ -10875,7 +10875,7 @@
     <value>Escriba para filtrar  Intro mantener  Esc borrar</value>
   </data>
   <data name="Radio.FooterBrowse" xml:space="preserve">
-    <value>Intro reproducir  Espacio pausa  S parar  F favorita  N nueva  D borrar  / buscar  Esc cerrar</value>
+    <value>Intro reproducir  Espacio pausa  F favorita  / buscar  Esc cerrar</value>
   </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>Una emisora necesita un nombre</value>

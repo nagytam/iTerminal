@@ -11081,7 +11081,7 @@
     <value>Type to filter  Enter keep  Esc clear</value>
   </data>
   <data name="Radio.FooterBrowse" xml:space="preserve">
-    <value>Enter play  Space pause  S stop  F favourite  N new  D delete  / find  Esc close</value>
+    <value>Enter play  Space pause  F favourite  / find  Esc close</value>
   </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>A station needs a name</value>
