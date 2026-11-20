@@ -2094,4 +2094,37 @@
   <data name="Editor.HintHexRow" xml:space="preserve">
     <value>Start or end of the row</value>
   </data>
+  <data name="Grid.Ai.Asking" xml:space="preserve">
+    <value>Asking the AI model…</value>
+  </data>
+  <data name="Grid.Ai.Ready" xml:space="preserve">
+    <value>Draft in the query line: press Enter to run it</value>
+  </data>
+  <data name="Grid.Ai.NoQuestion" xml:space="preserve">
+    <value>Type a question after the ?, for example ? rows where amount is over 10</value>
+  </data>
+  <data name="Grid.Ai.NoQuery" xml:space="preserve">
+    <value>The AI model sent no query</value>
+  </data>
+  <data name="Grid.Ai.NoTable" xml:space="preserve">
+    <value>There is no table called '{0}'</value>
+  </data>
+  <data name="Grid.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT name WHERE amount &gt; 10, or ? and a question</value>
+  </data>
+  <data name="Grid.Hint.RunQuery" xml:space="preserve">
+    <value>Run the query over the rows shown</value>
+  </data>
+  <data name="Grid.Hint.Ask" xml:space="preserve">
+    <value>Ask the AI model: type ? and a question, then Enter drafts the query</value>
+  </data>
+  <data name="Grid.Status.Matched" xml:space="preserve">
+    <value>; {0:N0} of the {1:N0} shown row(s) match</value>
+  </data>
+  <data name="Grid.Ai.NoTables" xml:space="preserve">
+    <value>There are no tables to query</value>
+  </data>
+  <data name="Grid.Ai.PickTable" xml:space="preserve">
+    <value>Name one of the tables after FROM: {0}</value>
+  </data>
 </root>

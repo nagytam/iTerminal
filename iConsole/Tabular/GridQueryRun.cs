@@ -1,0 +1,54 @@
+namespace iConsole.Tabular;
+
+/// <summary>What a query over rows in memory gave: the result, or the message of the query that was refused.</summary>
+public sealed record GridRunOutcome(GridQueryResult? Result, string? Error);
+
+/// <summary>
+/// Runs a query over rows a viewer already holds, on a background task, and keeps only the newest one: an answer overtaken by
+/// a later query, or cancelled, is never taken. The viewer polls <see cref="TakeOutcome"/> from its idle pass.
+/// </summary>
+public sealed class GridQueryRun
+{
+    private int _generation;
+    private int _pendingGeneration;
+    private Task<GridQueryResult>? _task;
+
+    /// <summary>The query being waited for, or null.</summary>
+    public Task<GridQueryResult>? Task => _task;
+
+    /// <summary>Starts <paramref name="text"/> over the rows. Returns at once; an earlier query still running is overtaken.</summary>
+    public void Start(IReadOnlyList<string> names, IReadOnlyList<string[]> rows, string text)
+    {
+        _pendingGeneration = ++_generation;
+        _task = System.Threading.Tasks.Task.Run(() => GridQuery.Run(names, rows, text));
+    }
+
+    /// <summary>The outcome of the newest query, once. Null while it runs, and for a query that was overtaken or cancelled.</summary>
+    public GridRunOutcome? TakeOutcome()
+    {
+        if (_task is not { IsCompleted: true } task)
+        {
+            return null;
+        }
+
+        _task = null;
+        if (_pendingGeneration != _generation || task.IsCanceled)
+        {
+            return null;
+        }
+
+        if (task.Exception is { } failure)
+        {
+            return new GridRunOutcome(null, failure.InnerException?.Message ?? failure.Message);
+        }
+
+        return new GridRunOutcome(task.Result, null);
+    }
+
+    /// <summary>Drops the query in progress.</summary>
+    public void Cancel()
+    {
+        _generation++;
+        _task = null;
+    }
+}

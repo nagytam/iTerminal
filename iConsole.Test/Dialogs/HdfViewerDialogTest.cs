@@ -1,7 +1,11 @@
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Hdf;
+using iConsole.Interfaces;
 using iConsole.Services;
+using iConsole.Tabular;
+using iConsole.Test.Tabular;
+using Moq;
 
 namespace iConsole.Test.Dialogs;
 
@@ -32,8 +36,8 @@ public class HdfViewerDialogTest
         }
     }
 
-    private static HdfViewerDialog CreateDialog(FakeReader reader) =>
-        new(reader, new ThemeService()) { Url = new Url("file:///data/sample.h5") };
+    private static HdfViewerDialog CreateDialog(FakeReader reader, IGridQueryAssistant? assistant = null) =>
+        new(reader, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService(), assistant) { Url = new Url("file:///data/sample.h5") };
 
     private static async Task LandListAsync(HdfViewerDialog dialog)
     {
@@ -397,7 +401,7 @@ public class HdfViewerDialogTest
     [TestMethod]
     public async Task WithoutAFileThereIsNothingToShow()
     {
-        var dialog = new HdfViewerDialog(new FakeReader(), new ThemeService());
+        var dialog = new HdfViewerDialog(new FakeReader(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService());
 
         await dialog.OnInitializeAsync();
 
@@ -421,5 +425,76 @@ public class HdfViewerDialogTest
         Assert.AreEqual(many.Length, dialog.Picker.Items.Count);
         Assert.AreEqual(many[^1].Path, dialog.CurrentDataset!.Path);
         Assert.IsTrue(watch.ElapsedMilliseconds < 3_000, $"opening and choosing took {watch.ElapsedMilliseconds} ms");
+    }
+
+    /// <summary>A slice of three rows, so a query has something to keep or drop.</summary>
+    private static FakeReader ThreeRowReader()
+    {
+        var reader = new FakeReader();
+        reader.Slice = (_, _, _) => Task.FromResult(new HdfSlice(["#", "0"], [["0", "a"], ["1", "b"], ["2", "c"]], false, false));
+        return reader;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQueryRunsOverTheSliceAndStays_WhenTheIndexSteps()
+    {
+        FakeReader reader = ThreeRowReader();
+        HdfViewerDialog dialog = await OpenAsync(reader);
+        Assert.IsGreaterThan(0, dialog.LeadingIndices.Count, "the cube has a leading dimension to step");
+
+        dialog.SetQueryText("WHERE \"#\" >= 1");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+
+        dialog.StepIndex(1);
+        await LandSliceAsync(dialog);
+
+        Assert.AreEqual(2, dialog.Grid.RowCount, "the query is run again over the new slice");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ATypedMinusGoesIntoTheQueryLineAndDoesNotStepTheSlice()
+    {
+        HdfViewerDialog dialog = await OpenAsync(ThreeRowReader());
+        long[] before = [.. dialog.LeadingIndices];
+
+        dialog.SetQueryText("WHERE \"#\" > ");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('-', ConsoleKey.OemMinus));
+
+        CollectionAssert.AreEqual(before, dialog.LeadingIndices.ToArray(), "- is a character in the query, not the slice key");
+        Assert.AreEqual(13, dialog.QueryText.Length, "the character went into the line");
+        Assert.Contains('-', dialog.QueryText.ToCharArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQuestionDraftsAQueryOverTheSliceAndRunsOnlyOnEnter()
+    {
+        FakeGridQueryAssistant assistant = new("WHERE \"#\" >= 1");
+        HdfViewerDialog dialog = CreateDialog(ThreeRowReader(), assistant);
+        await dialog.OnInitializeAsync();
+        await LandListAsync(dialog);
+        await LandSliceAsync(dialog);
+
+        dialog.SetQueryText("? the rows after the first");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("WHERE \"#\" >= 1", dialog.QueryText);
+        Assert.AreEqual(3, dialog.Grid.RowCount, "nothing ran yet");
+
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount);
     }
 }

@@ -1,4 +1,5 @@
 using iConsole.Csv;
+using iConsole.Tabular;
 
 namespace iConsole.Test.Csv;
 
@@ -13,13 +14,13 @@ public class CsvQueryTest
         "Figs,,Szeged\n" +
         "Limes,100,Debrecen\n");
 
-    private static string[] Names(CsvQueryResult result) => result.Rows.Select(row => row[0]).ToArray();
+    private static string[] Names(GridQueryResult result) => result.Rows.Select(row => row[0]).ToArray();
 
     [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyQueryShowsEveryRowAndColumn()
     {
-        CsvQueryResult result = CsvQuery.Run(Sample, string.Empty);
+        GridQueryResult result = GridQuery.Run(Sample.Headers, Sample.Rows, string.Empty);
 
         CollectionAssert.AreEqual(Sample.Headers.ToArray(), result.Headers.ToArray());
         Assert.AreEqual(5, result.Rows.Count);
@@ -30,7 +31,7 @@ public class CsvQueryTest
     [TestMethod]
     public void SelectChoosesAndOrdersTheColumns()
     {
-        CsvQueryResult result = CsvQuery.Run(Sample, "SELECT city, name");
+        GridQueryResult result = GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT city, name");
 
         CollectionAssert.AreEqual(new[] { "city", "name" }, result.Headers.ToArray());
         CollectionAssert.AreEqual(new[] { "Pécs", "Apples" }, result.Rows[0]);
@@ -40,7 +41,7 @@ public class CsvQueryTest
     [TestMethod]
     public void NumbersCompareAsNumbers_NotAsText()
     {
-        CsvQueryResult result = CsvQuery.Run(Sample, "amount > 5");
+        GridQueryResult result = GridQuery.Run(Sample.Headers, Sample.Rows, "amount > 5");
 
         // 12 and 8 and 100; as text "100" would sort below "3" and "12" would fail "> 5" in text order.
         CollectionAssert.AreEqual(new[] { "Pears", "Plums", "Limes" }, Names(result));
@@ -50,7 +51,7 @@ public class CsvQueryTest
     [TestMethod]
     public void WhereWithAndOrAndAndBindsTighterThanOr()
     {
-        CsvQueryResult result = CsvQuery.Run(Sample, "SELECT name WHERE city = 'Pécs' AND amount < 5 OR city = 'Szeged'");
+        GridQueryResult result = GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT name WHERE city = 'Pécs' AND amount < 5 OR city = 'Szeged'");
 
         CollectionAssert.AreEqual(new[] { "Apples", "Figs" }, Names(result));
     }
@@ -59,7 +60,7 @@ public class CsvQueryTest
     [TestMethod]
     public void TextComparisonIgnoresCase()
     {
-        CsvQueryResult result = CsvQuery.Run(Sample, "city = 'PÉCS'");
+        GridQueryResult result = GridQuery.Run(Sample.Headers, Sample.Rows, "city = 'PÉCS'");
 
         CollectionAssert.AreEqual(new[] { "Apples", "Plums" }, Names(result));
     }
@@ -68,32 +69,32 @@ public class CsvQueryTest
     [TestMethod]
     public void LikeUsesPercentAndUnderscore()
     {
-        CollectionAssert.AreEqual(new[] { "Pears", "Plums" }, Names(CsvQuery.Run(Sample, "SELECT name WHERE name LIKE 'P%'")));
-        CollectionAssert.AreEqual(new[] { "Figs" }, Names(CsvQuery.Run(Sample, "SELECT name WHERE name LIKE 'Fi_s'")));
+        CollectionAssert.AreEqual(new[] { "Pears", "Plums" }, Names(GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT name WHERE name LIKE 'P%'")));
+        CollectionAssert.AreEqual(new[] { "Figs" }, Names(GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT name WHERE name LIKE 'Fi_s'")));
         CollectionAssert.AreEqual(new[] { "Apples", "Pears", "Plums", "Figs", "Limes" },
-            Names(CsvQuery.Run(Sample, "SELECT name WHERE name NOT LIKE 'zzz'")));
+            Names(GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT name WHERE name NOT LIKE 'zzz'")));
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void ContainsIsASubstringMatch()
     {
-        CollectionAssert.AreEqual(new[] { "Budapest", "Debrecen" }, Names(CsvQuery.Run(Sample, "SELECT city WHERE city CONTAINS 'PEST' OR city CONTAINS 'rec'")));
+        CollectionAssert.AreEqual(new[] { "Budapest", "Debrecen" }, Names(GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT city WHERE city CONTAINS 'PEST' OR city CONTAINS 'rec'")));
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void IsEmptyFindsTheBlankFields()
     {
-        CollectionAssert.AreEqual(new[] { "Figs" }, Names(CsvQuery.Run(Sample, "SELECT name WHERE amount IS EMPTY")));
-        Assert.AreEqual(4, CsvQuery.Run(Sample, "amount IS NOT EMPTY").Rows.Count);
+        CollectionAssert.AreEqual(new[] { "Figs" }, Names(GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT name WHERE amount IS EMPTY")));
+        Assert.AreEqual(4, GridQuery.Run(Sample.Headers, Sample.Rows, "amount IS NOT EMPTY").Rows.Count);
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void OrderByAndLimitApplyAfterTheFilter()
     {
-        CsvQueryResult result = CsvQuery.Run(Sample, "SELECT name, amount ORDER BY amount DESC LIMIT 2");
+        GridQueryResult result = GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT name, amount ORDER BY amount DESC LIMIT 2");
 
         CollectionAssert.AreEqual(new[] { "Limes", "Pears" }, Names(result));
         Assert.AreEqual(5, result.Matched, "Matched counts the rows before the limit");
@@ -105,14 +106,14 @@ public class CsvQueryTest
     {
         var document = CsvDocument.Parse("First name,Total\nAda,4\n");
 
-        CollectionAssert.AreEqual(new[] { "Ada" }, CsvQuery.Run(document, "SELECT [First name] WHERE \"Total\" = 4").Rows[0]);
+        CollectionAssert.AreEqual(new[] { "Ada" }, GridQuery.Run(document.Headers, document.Rows, "SELECT [First name] WHERE \"Total\" = 4").Rows[0]);
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownColumnIsNamedAndTheColumnsAreListed()
     {
-        var error = Assert.Throws<CsvQueryException>(() => CsvQuery.Run(Sample, "SELECT colour"));
+        var error = Assert.Throws<GridQueryException>(() => GridQuery.Run(Sample.Headers, Sample.Rows, "SELECT colour"));
 
         StringAssert.Contains(error.Message, "'colour'");
         StringAssert.Contains(error.Message, "name, amount, city");
@@ -122,10 +123,10 @@ public class CsvQueryTest
     [TestMethod]
     public void AMalformedQueryIsRejectedInWords()
     {
-        Assert.Throws<CsvQueryException>(() => CsvQuery.Run(Sample, "amount >"));
-        Assert.Throws<CsvQueryException>(() => CsvQuery.Run(Sample, "name = 'open"));
-        Assert.Throws<CsvQueryException>(() => CsvQuery.Run(Sample, "name ! 'x'"));
-        Assert.Throws<CsvQueryException>(() => CsvQuery.Run(Sample, "LIMIT many"));
-        Assert.Throws<CsvQueryException>(() => CsvQuery.Run(Sample, "name = 'x' extra"));
+        Assert.Throws<GridQueryException>(() => GridQuery.Run(Sample.Headers, Sample.Rows, "amount >"));
+        Assert.Throws<GridQueryException>(() => GridQuery.Run(Sample.Headers, Sample.Rows, "name = 'open"));
+        Assert.Throws<GridQueryException>(() => GridQuery.Run(Sample.Headers, Sample.Rows, "name ! 'x'"));
+        Assert.Throws<GridQueryException>(() => GridQuery.Run(Sample.Headers, Sample.Rows, "LIMIT many"));
+        Assert.Throws<GridQueryException>(() => GridQuery.Run(Sample.Headers, Sample.Rows, "name = 'x' extra"));
     }
 }

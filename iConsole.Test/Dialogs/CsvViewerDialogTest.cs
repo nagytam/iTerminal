@@ -1,11 +1,13 @@
 using System.Text;
 using iConsole.Csv;
+using iConsole.Tabular;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Test.Tabular;
 using Moq;
 
 namespace iConsole.Test.Dialogs;
@@ -15,7 +17,7 @@ public class CsvViewerDialogTest
 {
     private static CsvViewerDialog CreateDialog(string path, string text) => CreateDialog(path, Encoding.UTF8.GetBytes(text));
 
-    private static CsvViewerDialog CreateDialog(string path, byte[] content)
+    private static CsvViewerDialog CreateDialog(string path, byte[] content, IGridQueryAssistant? assistant = null)
     {
         var document = new Url(path);
         Mock<IMemoryFile> file = new();
@@ -25,7 +27,7 @@ public class CsvViewerDialogTest
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(fileSystem.Object);
         return new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
-            Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = document };
+            Mock.Of<IDateTimeProviderService>(), new ThemeService(), assistant) { Url = document };
     }
 
     [Timeout(60_000)]
@@ -228,7 +230,7 @@ public class CsvViewerDialogTest
         CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", "name,amount\nA,1\nB,20\nC,30\n");
         await dialog.OnInitializeAsync();
         dialog.StartQuery("SELECT name WHERE amount > 10");
-        Task<CsvQueryResult> query = dialog.QueryTask!;
+        Task<GridQueryResult> query = dialog.QueryTask!;
 
         await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.F8, false, false, false));
         await query;
@@ -316,5 +318,64 @@ public class CsvViewerDialogTest
 
         Assert.AreEqual(2, dialog.Grid.RowCount);
         Assert.AreEqual(2, dialog.Grid.ColumnCount);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQuestionDraftsAQueryIntoTheLineAndRunsOnlyOnEnter()
+    {
+        FakeGridQueryAssistant assistant = new("SELECT name WHERE amount > 10");
+        CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", Encoding.UTF8.GetBytes("name,amount\nA,5\nB,20\nC,30\nD,1\n"), assistant);
+        await dialog.OnInitializeAsync();
+
+        dialog.SetQueryText("? names of the big sales");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("names of the big sales", assistant.Question);
+        Assert.AreEqual("SELECT name WHERE amount > 10", dialog.QueryText, "the draft is in the query line");
+        Assert.AreEqual(4, dialog.Grid.RowCount, "nothing ran yet: the grid still shows every row");
+        StringAssert.Contains(dialog.Status, "press Enter");
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount, "Enter runs the draft like any query");
+        Assert.AreEqual(1, assistant.Calls);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ADraftNamingAColumnTheFileLacksIsNotPutInTheLine()
+    {
+        FakeGridQueryAssistant assistant = new("SELECT salary WHERE amount > 10");
+        CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", Encoding.UTF8.GetBytes("name,amount\nA,5\n"), assistant);
+        await dialog.OnInitializeAsync();
+
+        dialog.SetQueryText("? salaries");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("? salaries", dialog.QueryText, "the question stays, so it can be edited");
+        StringAssert.Contains(dialog.Status, "salary");
+        Assert.AreEqual(1, dialog.Grid.RowCount);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WithoutAiTheQuestionSaysSoAndAsksNothing()
+    {
+        CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", "name,amount\nA,5\n");
+        await dialog.OnInitializeAsync();
+
+        dialog.SetQueryText("? anything");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        dialog.OnIdle();
+
+        Assert.AreEqual("? anything", dialog.QueryText);
+        StringAssert.Contains(dialog.Status, "AI is not set up");
     }
 }

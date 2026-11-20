@@ -9,6 +9,7 @@ using iConsole.Layouts;
 using iConsole.Localization;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Tabular;
 
 namespace iConsole.Dialogs;
 
@@ -50,11 +51,24 @@ public class HdfViewerDialog : Dialog
     private Task<HdfDatasetList>? _list;
     private CancellationTokenSource? _sliceCancellation;
     private Task<HdfSlice>? _slice;
+    private readonly TextBox _queryBox;
+    private readonly GridQueryRun _queryRun = new();
+    private readonly GridQueryDrafter _drafter;
+    private HdfSlice? _sliceData;
+    private int? _matched;
+    private string _queryError = string.Empty;
+    private string _statusNote = string.Empty;
 
-    public HdfViewerDialog(IHdfFileReader reader, IThemeService themeService)
+    public HdfViewerDialog(
+        IHdfFileReader reader,
+        IBeepService beepService,
+        IDateTimeProviderService dateTimeProviderService,
+        IThemeService themeService,
+        IGridQueryAssistant? queryAssistant = null)
         : base(nameof(HdfViewerDialog), themeService)
     {
         _reader = reader;
+        _drafter = new GridQueryDrafter(queryAssistant ?? new UnavailableGridQueryAssistant());
         // The picker is added first: a dialog gives the keyboard to its first focusable control, and the dataset is where a person starts.
         _picker = new ComboBox<HdfDatasetInfo>(themeService)
         {
@@ -65,11 +79,33 @@ public class HdfViewerDialog : Dialog
         _grid = new CsvGrid(themeService) { EmptyText = UiText.Get("Hdf.Grid.Empty", "This dataset has no values") };
         _sliceLabel = new Label(string.Empty, themeService);
         _statusLabel = new Label(string.Empty, themeService);
+        // The query line sits under the picker. It runs over the slice shown, and a line that starts with ? asks the AI model.
+        _queryBox = new TextBox(beepService, dateTimeProviderService, themeService)
+        {
+            Label = UiText.Get("Csv.Query.Label", "Query"),
+            Placeholder = UiText.Get("Grid.Query.Placeholder", "e.g. SELECT * WHERE 0 > 10, or ? and a question"),
+        };
         AddControl(_picker);
+        AddControl(_queryBox);
         AddControl(_grid);
         AddControl(_sliceLabel);
         AddControl(_statusLabel);
     }
+
+    /// <summary>The text in the query line.</summary>
+    public string QueryText => _queryBox.Text;
+
+    /// <summary>Replaces the text in the query line, as typing would.</summary>
+    public void SetQueryText(string text) => _queryBox.Text = text;
+
+    /// <summary>Gives the query line the keyboard, as Tab does; typed characters then go to the line and not to the slice keys.</summary>
+    public void FocusQueryLine() => _queryBox.SetFocus();
+
+    /// <summary>The query being waited for, or null.</summary>
+    public Task<GridQueryResult>? QueryTask => _queryRun.Task;
+
+    /// <summary>The AI draft being waited for, or null.</summary>
+    public Task<string>? DraftTask => _drafter.Request;
 
     /// <summary>The file shown. Must be a local file.</summary>
     public Url? Url { get; set; }
@@ -114,6 +150,13 @@ public class HdfViewerDialog : Dialog
         _grid.SetData([], []);
         _sliceLabel.Text = string.Empty;
         _statusLabel.Text = string.Empty;
+        _sliceData = null;
+        _queryRun.Cancel();
+        _drafter.Cancel();
+        _queryBox.Text = string.Empty;
+        _queryError = string.Empty;
+        _statusNote = string.Empty;
+        _matched = null;
         if (Url is null)
         {
             _statusLabel.Text = UiText.Get("Viewer.NothingToShow", "Nothing to show");
@@ -131,7 +174,20 @@ public class HdfViewerDialog : Dialog
     /// <summary>Puts a finished listing or slice on screen. A stale or cancelled one is dropped without a word; a failed one keeps the grid.</summary>
     public override void OnIdle()
     {
-        bool changed = LandList();
+        bool changed = false;
+        if (_drafter.TakeDraft() is { } draft)
+        {
+            ApplyDraft(draft);
+            changed = true;
+        }
+
+        if (_queryRun.TakeOutcome() is { } outcome)
+        {
+            ApplyOutcome(outcome);
+            changed = true;
+        }
+
+        changed |= LandList();
         changed |= LandSlice();
         if (changed)
         {
@@ -197,9 +253,19 @@ public class HdfViewerDialog : Dialog
             return false;
         }
 
-        HdfSlice result = slice.Result;
-        _grid.SetData(result.Headers, result.Rows);
-        _statusLabel.Text = StatusFor(_current, result);
+        _sliceData = slice.Result;
+        _queryError = string.Empty;
+        _statusNote = string.Empty;
+        // A query in the line applies to the slice that has just arrived, so stepping an index keeps the query.
+        if (_queryBox.Text.Trim().Length > 0 && !GridQueryDrafter.IsQuestion(_queryBox.Text))
+        {
+            RunQuery(_queryBox.Text);
+        }
+        else
+        {
+            ShowAllRows();
+        }
+
         return true;
     }
 
@@ -218,6 +284,109 @@ public class HdfViewerDialog : Dialog
             HdfReadException => inner.Message,
             _ => string.Format(UiText.Get("Hdf.Error.Unexpected", "The file could not be read: {0}"), inner.Message),
         };
+    }
+
+    /// <summary>Runs the query line over the slice shown. The grid changes on a later idle pass.</summary>
+    private void RunQuery(string text)
+    {
+        if (_sliceData is not { } slice)
+        {
+            return;
+        }
+
+        _statusNote = string.Empty;
+        _queryError = string.Empty;
+        _queryRun.Start(slice.Headers, slice.Rows, text);
+    }
+
+    private void ShowAllRows()
+    {
+        if (_sliceData is not { } slice)
+        {
+            return;
+        }
+
+        _matched = null;
+        _grid.SetData(slice.Headers, slice.Rows);
+        UpdateStatus();
+    }
+
+    private void ApplyOutcome(GridRunOutcome outcome)
+    {
+        if (outcome.Result is { } result)
+        {
+            _queryError = string.Empty;
+            _matched = result.Matched;
+            _grid.SetData(result.Headers, result.Rows);
+        }
+        else
+        {
+            // A query that was refused keeps the slice on screen and says why.
+            _queryError = outcome.Error ?? string.Empty;
+        }
+
+        UpdateStatus();
+    }
+
+    /// <summary>Asks the AI model for a query for the question in the query line, over the columns of the slice shown.</summary>
+    private void StartDraft()
+    {
+        if (_sliceData is not { } slice)
+        {
+            return;
+        }
+
+        IReadOnlyList<GridColumnSchema> columns = [.. slice.Headers.Select(header => new GridColumnSchema(header))];
+        _drafter.Start(_queryBox.Text, GridSchema.ForSingleTable("HDF5 dataset slice", columns, slice.Rows.Count));
+        _queryError = string.Empty;
+        _statusNote = UiText.Get("Grid.Ai.Asking", "Asking the AI model…");
+        UpdateStatus();
+    }
+
+    /// <summary>Puts an AI draft in the query line, or says why it cannot be used. The draft runs only when the user presses Enter.</summary>
+    private void ApplyDraft(GridDraft draft)
+    {
+        if (draft.Query is { } query)
+        {
+            _queryBox.Text = query;
+            _queryError = string.Empty;
+            _statusNote = UiText.Get("Grid.Ai.Ready", "Draft in the query line: press Enter to run it");
+        }
+        else
+        {
+            _queryError = draft.Error ?? string.Empty;
+            _statusNote = string.Empty;
+        }
+
+        UpdateStatus();
+    }
+
+    private void UpdateStatus()
+    {
+        if (_queryError.Length > 0)
+        {
+            _statusLabel.Text = _queryError;
+            return;
+        }
+
+        if (_statusNote.Length > 0)
+        {
+            _statusLabel.Text = _statusNote;
+            return;
+        }
+
+        if (_current is null || _sliceData is not { } slice)
+        {
+            return;
+        }
+
+        string status = StatusFor(_current, slice);
+        if (_matched is { } matched)
+        {
+            status += string.Format(UiText.Get("Grid.Status.Matched", "; {0:N0} of the {1:N0} shown row(s) match"), matched, slice.Rows.Count);
+        }
+
+        _statusLabel.Text = status;
     }
 
     private string StatusFor(HdfDatasetInfo dataset, HdfSlice slice)
@@ -332,6 +501,8 @@ public class HdfViewerDialog : Dialog
     /// <summary>Cancels what is running and drops its result, so nothing lands on a dialog that is gone.</summary>
     public override void Close()
     {
+        _queryRun.Cancel();
+        _drafter.Cancel();
         _pendingGeneration = ++_generation;
         Retire(_listCancellation, _list);
         Retire(_sliceCancellation, _slice);
@@ -370,6 +541,30 @@ public class HdfViewerDialog : Dialog
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && keyEvent.ConsoleKey == ConsoleKey.Enter
+            && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt
+            && !_picker.IsOpen && _queryBox.IsFocused && _sliceData is not null)
+        {
+            if (GridQueryDrafter.IsQuestion(_queryBox.Text))
+            {
+                StartDraft();
+            }
+            else if (_queryBox.Text.Trim().Length == 0)
+            {
+                _queryRun.Cancel();
+                _queryError = string.Empty;
+                _statusNote = string.Empty;
+                ShowAllRows();
+            }
+            else
+            {
+                RunQuery(_queryBox.Text);
+            }
+
+            return true;
+        }
+
         if (keyEvent.KeyPressType == KeyPressType.Down && !_picker.IsOpen && _indices.Length > 0 && HandleSliceKey(keyEvent))
         {
             return true;
@@ -402,6 +597,12 @@ public class HdfViewerDialog : Dialog
                     return true;
             }
 
+            return false;
+        }
+
+        if (_queryBox.IsFocused)
+        {
+            // The query line takes typed characters: + and - are part of a number in a query. Ctrl+arrows still step.
             return false;
         }
 
@@ -450,6 +651,8 @@ public class HdfViewerDialog : Dialog
     {
         yield return ("+ / -  (Ctrl+↑ / Ctrl+↓)", UiText.Get("Hdf.Hint.Index", "Step the index of the active dimension"));
         yield return ("[ / ]  (Ctrl+← / Ctrl+→)", UiText.Get("Hdf.Hint.Dimension", "Choose the active dimension"));
+        yield return ("Enter", UiText.Get("Grid.Hint.RunQuery", "Run the query over the rows shown"));
+        yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
     }
 
     private sealed class CloseSelfCommand(HdfViewerDialog owner) : Command
@@ -472,12 +675,15 @@ public class HdfViewerDialog : Dialog
 
         // Inside the border: the picker, the grid, the slice line and the status line above the bottom border.
         int width = Math.Max(0, (int)ViewSize.Width - 2);
-        int gridHeight = Math.Max(1, (int)ViewSize.Height - 5);
+        int gridHeight = Math.Max(1, (int)ViewSize.Height - 6);
 
         _picker.Position = new Position(1, 1);
         _picker.ViewSize = new Size(width, 1);
 
-        _grid.Position = new Position(1, 2);
+        _queryBox.Position = new Position(1, 2);
+        _queryBox.ViewSize = new Size(width, 1);
+
+        _grid.Position = new Position(1, 3);
         _grid.ViewSize = new Size(width, gridHeight);
 
         _sliceLabel.Position = new Position(1, Math.Max(0, (int)ViewSize.Height - 3));

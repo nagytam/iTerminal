@@ -5,6 +5,8 @@ using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
 using iConsole.Sqlite;
+using iConsole.Tabular;
+using iConsole.Test.Tabular;
 using Moq;
 
 namespace iConsole.Test.Dialogs;
@@ -26,10 +28,24 @@ public class SqliteViewerDialogTest
         }
     }
 
-    private static SqliteViewerDialog CreateDialog(FakeReader reader) =>
-        new(reader, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService())
+    private static SqliteViewerDialog CreateDialog(FakeReader reader, IGridQueryAssistant? assistant = null) =>
+        new(reader, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService(), assistant)
         {
             Url = new Url("file:///data/app.db"),
+        };
+
+    /// <summary>A database with two tables: the schema query and the zero-row column reads each get their own answer.</summary>
+    private static FakeReader TwoTableReader() =>
+        new()
+        {
+            Run = (sql, _) => Task.FromResult(sql switch
+            {
+                _ when sql.Contains("sqlite_master", StringComparison.Ordinal) && sql.Contains("type IN", StringComparison.Ordinal) =>
+                    new SqlTable(["name"], [["albums"], ["artists"]], false),
+                "SELECT * FROM \"albums\" LIMIT 0" => new SqlTable(["title", "year"], [], false),
+                "SELECT * FROM \"artists\" LIMIT 0" => new SqlTable(["name"], [], false),
+                _ => new SqlTable(["name"], [], false),
+            }),
         };
 
     /// <summary>Waits for the running query to finish, then lets the dialog take its result on an idle pass, as the UI does.</summary>
@@ -179,5 +195,65 @@ public class SqliteViewerDialogTest
 
         dialog.ToggleTextMode();
         Assert.IsFalse(dialog.IsTextMode);
+    }
+
+    [TestMethod]
+    public async Task ADraftIsCheckedAgainstTheTablesAndLandsAsTheSqlItMeans()
+    {
+        FakeGridQueryAssistant assistant = new("SELECT title FROM albums WHERE year > 1990 ORDER BY year DESC LIMIT 5");
+        FakeReader reader = TwoTableReader();
+        SqliteViewerDialog dialog = CreateDialog(reader, assistant);
+        await dialog.OnInitializeAsync();
+        await LandAsync(dialog);
+
+        dialog.SetQueryText("? the newest albums after 1990");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("albums", assistant.Schema!.Tables.Single(t => t.Name == "albums").Name);
+        CollectionAssert.AreEqual(new[] { "title", "year" }, assistant.Schema.Tables.Single(t => t.Name == "albums").Columns.Select(c => c.Name).ToArray());
+        Assert.AreEqual(
+            "SELECT \"title\" FROM \"albums\" WHERE (\"year\" > '1990') ORDER BY (\"year\" IS NULL OR \"year\" = '') ASC, \"year\" DESC LIMIT 5",
+            dialog.QueryText,
+            "the line holds the SQL that will run, so the user sees what it does");
+        Assert.IsFalse(reader.Queries.Any(sql => sql.Contains("1990", StringComparison.Ordinal) && sql.StartsWith("SELECT \"title\"", StringComparison.Ordinal)), "nothing ran yet");
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await LandAsync(dialog);
+
+        Assert.IsTrue(reader.Queries.Contains(dialog.QueryText), "Enter runs the draft through the read-only reader");
+    }
+
+    [TestMethod]
+    public async Task ADraftNamingATableTheDatabaseLacksIsRefused()
+    {
+        FakeGridQueryAssistant assistant = new("SELECT title FROM songs");
+        SqliteViewerDialog dialog = CreateDialog(TwoTableReader(), assistant);
+        await dialog.OnInitializeAsync();
+        await LandAsync(dialog);
+
+        dialog.SetQueryText("? songs");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("? songs", dialog.QueryText);
+        StringAssert.Contains(dialog.Status, "songs");
+    }
+
+    [TestMethod]
+    public async Task WithoutAiTheQuestionSaysSo()
+    {
+        SqliteViewerDialog dialog = CreateDialog(TwoTableReader());
+        await dialog.OnInitializeAsync();
+        await LandAsync(dialog);
+
+        dialog.SetQueryText("? anything");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        dialog.OnIdle();
+
+        Assert.AreEqual("? anything", dialog.QueryText);
+        StringAssert.Contains(dialog.Status, "AI is not set up");
     }
 }

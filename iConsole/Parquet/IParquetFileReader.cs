@@ -5,8 +5,12 @@ namespace iConsole.Parquet;
 /// <param name="Rows">The shown rows, each with one cell per shown column. A null cell is an empty string.</param>
 /// <param name="TotalRows">The number of rows in the file, from its footer.</param>
 /// <param name="TotalColumns">The number of top-level columns in the file.</param>
-public sealed record ParquetPreview(IReadOnlyList<string> Headers, IReadOnlyList<string[]> Rows, long TotalRows, int TotalColumns)
+/// <param name="ColumnNames">The bare column names, one per shown column, for a query to name; null means the headers are the names.</param>
+public sealed record ParquetPreview(IReadOnlyList<string> Headers, IReadOnlyList<string[]> Rows, long TotalRows, int TotalColumns, IReadOnlyList<string>? ColumnNames = null)
 {
+    /// <summary>The names a query matches: the bare column names, without the type.</summary>
+    public IReadOnlyList<string> Names => ColumnNames ?? Headers;
+
     public bool RowsTruncated => TotalRows > Rows.Count;
 
     public bool ColumnsTruncated => TotalColumns > Headers.Count;

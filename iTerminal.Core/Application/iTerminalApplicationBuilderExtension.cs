@@ -129,6 +129,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IAiActionApprovalService, AiActionApprovalService>();
         services.AddSingleton<AiPanelTools>();
         services.AddSingleton<IAiChatService, AiChatService>();
+        services.AddSingleton<iConsole.Tabular.IGridQueryAssistant, iTerminal.Core.AI.GridQueryAssistant>();
         services.AddTransient<AiModelDialog>();
         services.AddTransient<AiPromptBar>();
 

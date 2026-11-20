@@ -1,7 +1,11 @@
 using iConsole.Data;
 using iConsole.Dialogs;
+using iConsole.Interfaces;
 using iConsole.Parquet;
 using iConsole.Services;
+using iConsole.Tabular;
+using iConsole.Test.Tabular;
+using Moq;
 
 namespace iConsole.Test.Dialogs;
 
@@ -12,7 +16,8 @@ public class ParquetViewerDialogTest
         ["id (int64)", "name (string)"],
         [["1", "Alpha"], ["2", ""]],
         TotalRows: 2,
-        TotalColumns: 2);
+        TotalColumns: 2,
+        ColumnNames: ["id", "name"]);
 
     private sealed class FakeReader : IParquetFileReader
     {
@@ -49,10 +54,23 @@ public class ParquetViewerDialogTest
         }
     }
 
-    private static ParquetViewerDialog CreateDialog(IParquetFileReader reader) =>
-        new(reader, new ThemeService()) { Url = new Url("file:///data/sample.parquet") };
+    private static ParquetViewerDialog CreateDialog(IParquetFileReader reader, IGridQueryAssistant? assistant = null) =>
+        new(reader, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService(), assistant) { Url = new Url("file:///data/sample.parquet") };
 
     /// <summary>Waits for the running read, then lets the dialog take it on an idle pass, as the UI does.</summary>
+    /// <summary>Waits for a query to finish; a refused query faults its task, which OnIdle reports on the status line.</summary>
+    private static async Task FinishQuietlyAsync(Task task)
+    {
+        try
+        {
+            await task;
+        }
+        catch
+        {
+            // The refusal is what is under test; OnIdle puts it on the status line.
+        }
+    }
+
     private static async Task LandAsync(ParquetViewerDialog dialog)
     {
         try
@@ -159,7 +177,7 @@ public class ParquetViewerDialogTest
     [TestMethod]
     public async Task WithNoUrlItSaysThereIsNothingToShow()
     {
-        var dialog = new ParquetViewerDialog(new FakeReader(), new ThemeService());
+        var dialog = new ParquetViewerDialog(new FakeReader(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService());
 
         await dialog.OnInitializeAsync();
 
@@ -200,5 +218,88 @@ public class ParquetViewerDialogTest
         Assert.AreEqual(0, dialog.Grid.RowCount);
         await LandAsync(dialog);
         Assert.AreEqual("/data/other.parquet", reader.LastPath);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQueryRunsOverTheShownRowsByTheirBareNames()
+    {
+        ParquetViewerDialog dialog = CreateDialog(new FakeReader());
+        await dialog.OnInitializeAsync();
+        await dialog.ReadTask!;
+        dialog.OnIdle();
+
+        dialog.SetQueryText("SELECT id WHERE name = 'Alpha'");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(1, dialog.Grid.RowCount);
+        Assert.AreEqual("1", dialog.Grid.CellAt(0, 0));
+        StringAssert.Contains(dialog.Status, "1 of the 2 shown row(s) match");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQueryNamingAMissingColumnKeepsTheRowsAndSaysSo()
+    {
+        ParquetViewerDialog dialog = CreateDialog(new FakeReader());
+        await dialog.OnInitializeAsync();
+        await dialog.ReadTask!;
+        dialog.OnIdle();
+
+        dialog.SetQueryText("WHERE salary > 1");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await FinishQuietlyAsync(dialog.QueryTask!);
+        dialog.OnIdle();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+        StringAssert.Contains(dialog.Status, "salary");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQuestionDraftsAQueryAndRunsOnlyOnEnter()
+    {
+        FakeGridQueryAssistant assistant = new("SELECT id WHERE name = 'Alpha'");
+        ParquetViewerDialog dialog = CreateDialog(new FakeReader(), assistant);
+        await dialog.OnInitializeAsync();
+        await dialog.ReadTask!;
+        dialog.OnIdle();
+
+        dialog.SetQueryText("? the id of Alpha");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("the id of Alpha", assistant.Question);
+        Assert.AreEqual("SELECT id WHERE name = 'Alpha'", dialog.QueryText);
+        Assert.AreEqual(2, dialog.Grid.RowCount, "nothing ran yet");
+        StringAssert.Contains(dialog.Status, "press Enter");
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(1, dialog.Grid.RowCount);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ADraftWithAColumnTheFileLacksIsRefused()
+    {
+        FakeGridQueryAssistant assistant = new("SELECT salary");
+        ParquetViewerDialog dialog = CreateDialog(new FakeReader(), assistant);
+        await dialog.OnInitializeAsync();
+        await dialog.ReadTask!;
+        dialog.OnIdle();
+
+        dialog.SetQueryText("? salaries");
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("? salaries", dialog.QueryText);
+        StringAssert.Contains(dialog.Status, "salary");
     }
 }
