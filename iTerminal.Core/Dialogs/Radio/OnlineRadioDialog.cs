@@ -164,7 +164,7 @@ public class OnlineRadioDialog : Dialog
         yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
         yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastStation", "Jump to the first or last station"));
         yield return ("Insert/N", UiText.Get("DialogHint.AddStation", "Add a station"));
-        yield return ("Enter/F2/E", UiText.Get("DialogHint.ChangeStation", "Change the station"));
+        yield return ("F2/E", UiText.Get("DialogHint.ChangeStation", "Change the station"));
         yield return ("Delete/D", UiText.Get("DialogHint.DeleteStationAsks", "Delete the station (asks first)"));
         yield return ("/", UiText.Get("DialogHint.FilterStations", "Filter the stations"));
     }
@@ -659,7 +659,7 @@ public class OnlineRadioDialog : Dialog
     {
         Mode.Form => UiText.Get("Radio.FooterForm", "Enter next field  Tab/Shift+Tab move  Esc discard"),
         Mode.Filter => UiText.Get("Radio.FooterFilter", "Type to filter  Enter keep  Esc clear"),
-        _ => UiText.Get("Radio.FooterBrowse", "Enter play  Space pause  S stop  F favourite  N new  D delete  / find  Esc close"),
+        _ => UiText.Get("Radio.FooterBrowse", "Enter play  Space pause  F favourite  / find  Esc close"),
     };
 
     /// <summary>Column widths: the name takes what the genre column leaves, and the genre is dropped on a narrow dialog.</summary>

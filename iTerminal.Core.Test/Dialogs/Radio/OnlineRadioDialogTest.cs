@@ -255,6 +255,28 @@ public class OnlineRadioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheFooterFitsTheFrameSoItsCloseHintIsSeen()
+    {
+        var (dialog, store, _) = Create();
+        Add(store, "Rock Live", Rock);
+        await ShowAsync(dialog);
+
+        AssertScreenContains(Render(dialog), "Esc close", "expected the footer to show the close hint");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheChangeHintNamesOnlyTheKeysThatChangeAStation()
+    {
+        var (dialog, _, _) = Create();
+
+        var keys = dialog.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(keys, "F2/E");
+        Assert.IsFalse(keys.Contains("Enter/F2/E"), "Enter plays a station; it does not change one");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task RShowsTheStationsLastPlayedAndVGoesBackToTheFullList()
     {
         var (dialog, store, player) = Create();

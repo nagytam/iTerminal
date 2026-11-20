@@ -10875,7 +10875,7 @@
     <value>Gépelés a szűréshez  Enter megtart  Esc töröl</value>
   </data>
   <data name="Radio.FooterBrowse" xml:space="preserve">
-    <value>Enter lejátszás  Szóköz szünet  S megállít  F kedvenc  N új  D törlés  / keresés  Esc bezár</value>
+    <value>Enter lejátszás  Szóköz szünet  F kedvenc  / keresés  Esc bezár</value>
   </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>Az állomásnak nevet kell adni</value>
