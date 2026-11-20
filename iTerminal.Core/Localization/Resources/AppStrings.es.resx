@@ -11162,4 +11162,49 @@
   <data name="Solution.SbomFormat" xml:space="preserve">
     <value>Formato del SBOM: {0}.</value>
   </data>
+  <data name="Menu.Filetransfer" xml:space="preserve">
+    <value>Transferencia de archivos</value>
+  </data>
+  <data name="FileTransfer.Title" xml:space="preserve">
+    <value>Transferencia de archivos</value>
+  </data>
+  <data name="FileTransfer.Selection" xml:space="preserve">
+    <value>Seleccionado: {0}</value>
+  </data>
+  <data name="FileTransfer.CertificateWarning" xml:space="preserve">
+    <value>El teléfono muestra una advertencia de certificado: acéptela para descargar. Cualquiera con esta dirección puede leer los archivos seleccionados mientras este diálogo esté abierto.</value>
+  </data>
+  <data name="FileTransfer.Stop" xml:space="preserve">
+    <value>Detener el uso compartido y cerrar</value>
+  </data>
+  <data name="FileTransfer.Requests" xml:space="preserve">
+    <value>Solicitudes atendidas: {0}</value>
+  </data>
+  <data name="FileTransfer.Starting" xml:space="preserve">
+    <value>Iniciando…</value>
+  </data>
+  <data name="FileTransfer.Stopped" xml:space="preserve">
+    <value>Detenido</value>
+  </data>
+  <data name="FileTransfer.NoSelection" xml:space="preserve">
+    <value>Primero seleccione un archivo o una carpeta.</value>
+  </data>
+  <data name="FileTransfer.DriveNotShareable" xml:space="preserve">
+    <value>Solo se pueden compartir archivos de este equipo.</value>
+  </data>
+  <data name="FileTransfer.BindFailed" xml:space="preserve">
+    <value>Ningún puerto del 8080 al 8089 está libre, o no se encontró una dirección LAN.</value>
+  </data>
+  <data name="FileTransfer.Busy" xml:space="preserve">
+    <value>Ya hay un uso compartido en marcha.</value>
+  </data>
+  <data name="FileTransfer.ContainsAt" xml:space="preserve">
+    <value>La ruta de esta carpeta contiene "@/" y no se puede compartir.</value>
+  </data>
+  <data name="CmdTitle.558ee613" xml:space="preserve">
+    <value>Transferencia de archivos</value>
+  </data>
+  <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
+    <value>Compartir los archivos seleccionados en esta red: un código QR y un enlace los abren en el navegador de un teléfono mientras este diálogo esté abierto.</value>
+  </data>
 </root>

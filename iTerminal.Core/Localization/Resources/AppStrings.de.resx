@@ -11226,4 +11226,49 @@
   <data name="Solution.SbomFormat" xml:space="preserve">
     <value>SBOM-Format: {0}.</value>
   </data>
+  <data name="Menu.Filetransfer" xml:space="preserve">
+    <value>Dateiübertragung</value>
+  </data>
+  <data name="FileTransfer.Title" xml:space="preserve">
+    <value>Dateiübertragung</value>
+  </data>
+  <data name="FileTransfer.Selection" xml:space="preserve">
+    <value>Ausgewählt: {0}</value>
+  </data>
+  <data name="FileTransfer.CertificateWarning" xml:space="preserve">
+    <value>Das Telefon zeigt eine Zertifikatwarnung: Bestätigen Sie sie, um herunterzuladen. Wer diese Adresse hat, kann die ausgewählten Dateien lesen, solange dieser Dialog offen ist.</value>
+  </data>
+  <data name="FileTransfer.Stop" xml:space="preserve">
+    <value>Freigabe beenden und schließen</value>
+  </data>
+  <data name="FileTransfer.Requests" xml:space="preserve">
+    <value>Beantwortete Anfragen: {0}</value>
+  </data>
+  <data name="FileTransfer.Starting" xml:space="preserve">
+    <value>Wird gestartet…</value>
+  </data>
+  <data name="FileTransfer.Stopped" xml:space="preserve">
+    <value>Angehalten</value>
+  </data>
+  <data name="FileTransfer.NoSelection" xml:space="preserve">
+    <value>Wählen Sie zuerst eine Datei oder einen Ordner aus.</value>
+  </data>
+  <data name="FileTransfer.DriveNotShareable" xml:space="preserve">
+    <value>Nur Dateien auf diesem Computer können freigegeben werden.</value>
+  </data>
+  <data name="FileTransfer.BindFailed" xml:space="preserve">
+    <value>Kein Port von 8080 bis 8089 ist frei, oder keine LAN-Adresse wurde gefunden.</value>
+  </data>
+  <data name="FileTransfer.Busy" xml:space="preserve">
+    <value>Eine Freigabe läuft bereits.</value>
+  </data>
+  <data name="FileTransfer.ContainsAt" xml:space="preserve">
+    <value>Der Pfad dieses Ordners enthält "@/" und kann nicht freigegeben werden.</value>
+  </data>
+  <data name="CmdTitle.558ee613" xml:space="preserve">
+    <value>Dateiübertragung</value>
+  </data>
+  <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
+    <value>Die ausgewählten Dateien im Netzwerk freigeben: ein QR-Code und ein Link öffnen sie im Browser eines Telefons, solange dieser Dialog offen ist.</value>
+  </data>
 </root>

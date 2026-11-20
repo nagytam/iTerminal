@@ -11368,4 +11368,49 @@
   <data name="Solution.SbomFormat" xml:space="preserve">
     <value>SBOM format: {0}.</value>
   </data>
+  <data name="Menu.Filetransfer" xml:space="preserve">
+    <value>File transfer</value>
+  </data>
+  <data name="FileTransfer.Title" xml:space="preserve">
+    <value>File transfer</value>
+  </data>
+  <data name="FileTransfer.Selection" xml:space="preserve">
+    <value>Selected: {0}</value>
+  </data>
+  <data name="FileTransfer.CertificateWarning" xml:space="preserve">
+    <value>The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files while this dialog is open.</value>
+  </data>
+  <data name="FileTransfer.Stop" xml:space="preserve">
+    <value>Stop the share and close</value>
+  </data>
+  <data name="FileTransfer.Requests" xml:space="preserve">
+    <value>Requests served: {0}</value>
+  </data>
+  <data name="FileTransfer.Starting" xml:space="preserve">
+    <value>Starting…</value>
+  </data>
+  <data name="FileTransfer.Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="FileTransfer.NoSelection" xml:space="preserve">
+    <value>Select a file or folder first.</value>
+  </data>
+  <data name="FileTransfer.DriveNotShareable" xml:space="preserve">
+    <value>Only files on this computer can be shared.</value>
+  </data>
+  <data name="FileTransfer.BindFailed" xml:space="preserve">
+    <value>No port of 8080 to 8089 is free, or no LAN address was found.</value>
+  </data>
+  <data name="FileTransfer.Busy" xml:space="preserve">
+    <value>A share is already running.</value>
+  </data>
+  <data name="FileTransfer.ContainsAt" xml:space="preserve">
+    <value>This folder's path contains "@/" and cannot be shared.</value>
+  </data>
+  <data name="CmdTitle.558ee613" xml:space="preserve">
+    <value>File transfer</value>
+  </data>
+  <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
+    <value>Share the selected files on this network: a QR code and a link open them in a phone's browser while this dialog is open.</value>
+  </data>
 </root>

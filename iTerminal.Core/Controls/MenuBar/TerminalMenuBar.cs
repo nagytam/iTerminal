@@ -180,7 +180,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Viewers.FileEditorRegistry? fileEditors = null,
         iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
         InternetConnectivityService? connectivityService = null,
-        IMusicPlayerService? musicPlayerService = null
+        IMusicPlayerService? musicPlayerService = null,
+        iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null
         )
         : base([], themeService)
     {
@@ -326,7 +327,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             scannerDialog: scannerDialog,
             networkToolsDialog: networkToolsDialog,
             weatherDialog: weatherDialog,
-            pluginManagerDialog: pluginManagerDialog));
+            pluginManagerDialog: pluginManagerDialog,
+            fileTransferDialog: fileTransferDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));
 

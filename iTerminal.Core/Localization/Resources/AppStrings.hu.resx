@@ -11162,4 +11162,49 @@
   <data name="Solution.SbomFormat" xml:space="preserve">
     <value>SBOM formátuma: {0}.</value>
   </data>
+  <data name="Menu.Filetransfer" xml:space="preserve">
+    <value>Fájlátvitel</value>
+  </data>
+  <data name="FileTransfer.Title" xml:space="preserve">
+    <value>Fájlátvitel</value>
+  </data>
+  <data name="FileTransfer.Selection" xml:space="preserve">
+    <value>Kijelölve: {0}</value>
+  </data>
+  <data name="FileTransfer.CertificateWarning" xml:space="preserve">
+    <value>A telefon tanúsítványfigyelmeztetést jelenít meg: fogadja el a letöltéshez. Bárki, aki ismeri ezt a címet, olvashatja a kijelölt fájlokat, amíg ez a párbeszédablak nyitva van.</value>
+  </data>
+  <data name="FileTransfer.Stop" xml:space="preserve">
+    <value>Megosztás leállítása és bezárás</value>
+  </data>
+  <data name="FileTransfer.Requests" xml:space="preserve">
+    <value>Kiszolgált kérések: {0}</value>
+  </data>
+  <data name="FileTransfer.Starting" xml:space="preserve">
+    <value>Indítás…</value>
+  </data>
+  <data name="FileTransfer.Stopped" xml:space="preserve">
+    <value>Leállítva</value>
+  </data>
+  <data name="FileTransfer.NoSelection" xml:space="preserve">
+    <value>Előbb jelöljön ki egy fájlt vagy mappát.</value>
+  </data>
+  <data name="FileTransfer.DriveNotShareable" xml:space="preserve">
+    <value>Csak ezen a számítógépen lévő fájlok oszthatók meg.</value>
+  </data>
+  <data name="FileTransfer.BindFailed" xml:space="preserve">
+    <value>A 8080–8089 portok közül egy sincs szabadon, vagy nem található LAN-cím.</value>
+  </data>
+  <data name="FileTransfer.Busy" xml:space="preserve">
+    <value>Már fut egy megosztás.</value>
+  </data>
+  <data name="FileTransfer.ContainsAt" xml:space="preserve">
+    <value>Ennek a mappának az elérési útja tartalmazza a "@/" jelet, ezért nem osztható meg.</value>
+  </data>
+  <data name="CmdTitle.558ee613" xml:space="preserve">
+    <value>Fájlátvitel</value>
+  </data>
+  <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
+    <value>A kijelölt fájlok megosztása ezen a hálózaton: egy QR-kód és egy hivatkozás nyitja meg őket a telefon böngészőjében, amíg ez a párbeszédablak nyitva van.</value>
+  </data>
 </root>

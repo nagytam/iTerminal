@@ -240,6 +240,10 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.Encyclopedia.IEncyclopediaProvider, SandboxServices.Encyclopedia>();
                 // The network tools would ping, resolve and query whois for the typed target: a fixed answer stands in, so no run reaches the network.
                 services.AddSingleton<Core.Services.NetworkTools.INetworkToolService, SandboxServices.NetworkToolRunner>();
+                // The file transfer would bind a port on the LAN and serve the selection: a fixed share stands in, so no run listens on a socket.
+                Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
+                    .RemoveAll<Core.Services.Sharing.IFileShareService>(services);
+                services.AddSingleton<Core.Services.Sharing.IFileShareService, SandboxServices.FileShareStub>();
                 services.AddSingleton<Core.Services.YouTube.IYouTubeService, SandboxServices.YouTube>();
                 // The benchmark's probes read the disk and the network: each one gives a fixed figure, so no run measures this machine.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
