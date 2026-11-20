@@ -1,6 +1,8 @@
 using iConsole.Data;
+using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -144,5 +146,80 @@ public class FolderSelectorFavouritesTabPageTest
         var page = new FolderSelectorFavouritesTabPage(harness.ContentModelService, null!, harness.ThemeService);
 
         Assert.AreEqual(0, page.Favourites.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CtrlD_AsksBeforeRemovingTheFavourite()
+    {
+        var (page, _) = await CreatePageAsync(@"C:\one", @"C:\two");
+        page.SetFocus();
+
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+
+        Assert.IsTrue(page.IsAskingToDeleteForTest);
+        Assert.AreEqual(2, page.Favourites.Count, "nothing is removed until y");
+        StringAssert.Contains(page.ConfirmTextForTest, @"C:\one");
+        StringAssert.Contains(page.ConfirmTextForTest, "y:yes");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Y_RemovesTheFavouriteUnderTheCursor()
+    {
+        var (page, _) = await CreatePageAsync(@"C:\one", @"C:\two");
+        page.SetFocus();
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+
+        await page.HandleKeyEventAsync(new KeyEvent('y', ConsoleKey.Y, false, false, false));
+
+        CollectionAssert.AreEqual(new[] { new Url(@"C:\two").FullUrl }, page.Favourites.Select(f => f.FullUrl).ToArray());
+        Assert.IsFalse(page.IsAskingToDeleteForTest);
+        Assert.AreEqual(string.Empty, page.ConfirmTextForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task N_KeepsTheFavouriteAndDropsTheQuestion()
+    {
+        var (page, _) = await CreatePageAsync(@"C:\one", @"C:\two");
+        page.SetFocus();
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+
+        await page.HandleKeyEventAsync(new KeyEvent('n', ConsoleKey.N, false, false, false));
+
+        Assert.AreEqual(2, page.Favourites.Count);
+        Assert.IsFalse(page.IsAskingToDeleteForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EnterWhileAsking_DropsTheQuestionWithoutGoingThere()
+    {
+        var (page, harness) = await CreatePageAsync(@"C:\one", @"C:\two");
+        page.SetFocus();
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.Enter));
+
+        Assert.AreEqual(2, page.Favourites.Count);
+        Assert.IsFalse(page.IsAskingToDeleteForTest);
+        Assert.AreEqual(0, harness.Navigations.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ThePageDrawsTheQuestionAboveTheButtons()
+    {
+        var (page, _) = await CreatePageAsync(@"C:\one", @"C:\two");
+        page.OnInitializeLayout();
+        page.SetFocus();
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "Remove ");
+        AssertScreenContains(again, "from the favourites?");
     }
 }

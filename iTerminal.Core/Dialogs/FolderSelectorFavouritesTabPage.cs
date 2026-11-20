@@ -24,6 +24,9 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
     private Button _addToFavouritesButton { get; set; }
     private Button _deleteFavouriteButton { get; set; }
     private Button _selectFavouriteButton { get; set; }
+    private readonly Label _confirmLabel;
+    private readonly DeleteFavouriteCommand _deleteFavouriteCommand;
+    private int? _pendingDeleteIndex;
     public ScrollableModel ScrollableModel => _listBox.ScrollableModel;
 
     /// <summary>The favourites as they are listed, in list order. Exposed for the select command
@@ -73,11 +76,14 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
         {
             HotKeyChar = 'A'
         };
+        // Removing a favourite is not undoable, so the button and Ctrl+D only ask; the answer runs the delete.
+        _deleteFavouriteCommand = new DeleteFavouriteCommand(
+            contentModelService,
+            _listBox.ScrollableModel,
+            _favourites);
+        _confirmLabel = new Label(string.Empty, themeService);
         _deleteFavouriteButton = new Button(iConsole.Localization.UiText.Get("Button.DeleteFavourite", "Delete favourite"),
-            new DeleteFavouriteCommand(
-                contentModelService,
-                _listBox.ScrollableModel,
-                _favourites), themeService)
+            new BeginDeleteFavouriteCommand(), themeService)
         {
             HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Button.DeleteFavourite", "Delete favourite"), 'D'),
             IsDestructive = true
@@ -87,9 +93,79 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
         // Enter with the wrong verb.
         AddControl(_listBox);
         AddControl(_scrollBar);
+        AddControl(_confirmLabel);
         AddControl(_addToFavouritesButton);
         AddControl(_deleteFavouriteButton);
         AddControl(_selectFavouriteButton);
+    }
+
+    /// <summary>
+    /// Asks, on the status line above the buttons, whether the favourite under the cursor goes. Nothing is removed
+    /// until <c>y</c>; <c>n</c>, Enter or any other key drops the question.
+    /// </summary>
+    internal void BeginDelete()
+    {
+        var index = (int)_listBox.ScrollableModel.CursorPosition.Y;
+        if (index < 0 || index >= _favourites.Count)
+        {
+            return;
+        }
+        _pendingDeleteIndex = index;
+        _confirmLabel.Text = string.Format(
+            iConsole.Localization.UiText.Get("FolderSelector.Favourites.ConfirmRemove", "Remove {0} from the favourites?  y:yes  n:no"),
+            _favourites.AsSnapshot().ElementAt(index).FullUrl.Shrink(Math.Max(0, (int)ViewSize.Width - 40))!);
+    }
+
+    /// <summary>The question on the status line, for a test to read.</summary>
+    internal string ConfirmTextForTest => _confirmLabel.Text;
+
+    /// <summary>Whether a delete is waiting for its y or n, for a test to read.</summary>
+    internal bool IsAskingToDeleteForTest => _pendingDeleteIndex is not null;
+
+    private async Task AnswerDelete(bool yes)
+    {
+        var pending = _pendingDeleteIndex;
+        _pendingDeleteIndex = null;
+        _confirmLabel.Text = string.Empty;
+        // The cursor cannot have moved since the question went up (a key other than y cancels it first), but the
+        // delete acts on the cursor, so check it has not before running it.
+        if (yes && pending is int index && (int)_listBox.ScrollableModel.CursorPosition.Y == index)
+        {
+            await _deleteFavouriteCommand.RunAsync(null);
+        }
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (_pendingDeleteIndex is not null)
+        {
+            var plain = !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt;
+            var answer = char.ToLowerInvariant(keyEvent.KeyChar);
+            if (plain && (answer is 'y' or 'n' || keyEvent.ConsoleKey == ConsoleKey.Enter))
+            {
+                await AnswerDelete(answer == 'y');
+                return true;
+            }
+            // Any other key drops the question and then does what it does.
+            await AnswerDelete(false);
+        }
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    private sealed class BeginDeleteFavouriteCommand : Command
+    {
+        public override string Title => "Delete a favourite";
+
+        public override bool CanExecute() => Control?.Parent is FolderSelectorFavouritesTabPage page && page._favourites.Any();
+
+        public override Task ExecuteAsync(object? arg)
+        {
+            if (Control?.Parent is FolderSelectorFavouritesTabPage page)
+            {
+                page.BeginDelete();
+            }
+            return Task.CompletedTask;
+        }
     }
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -127,7 +203,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
     public override void OnInitializeLayout()
     {
         var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
-        var listHeight = Math.Max(0, (int)ViewSize.Height - 3);
+        var listHeight = Math.Max(0, (int)ViewSize.Height - 4);
         var halfWidth = innerWidth / 2;
 
         _listBox.Position = new Position(1, 1);
@@ -136,6 +212,9 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
 
         _scrollBar.Position = new Position(Math.Max(0, ViewSize.Width - 1), 1);
         _scrollBar.ViewSize = new Size(1, listHeight);
+
+        _confirmLabel.Position = new Position(1, Math.Max(0, ViewSize.Height - 3));
+        _confirmLabel.ViewSize = new Size(innerWidth, 1);
 
         _addToFavouritesButton.Position = new Position(1, Math.Max(0, ViewSize.Height - 2));
         _addToFavouritesButton.ViewSize = new Size(halfWidth, 1);
