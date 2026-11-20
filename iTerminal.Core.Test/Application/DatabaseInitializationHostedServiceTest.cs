@@ -114,13 +114,15 @@ public class DatabaseInitializationHostedServiceTest
 
         try
         {
-            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService())
+            // Both start-ups use a delay no stalled runner can outlast. The first one's clean-up is queued too: with the
+            // default 10 s it ran on a Windows runner that paused for that long, and removed the seeded entry before the
+            // assertion. The clean-up is queued, not run on the start-up path.
+            TimeSpan neverWithinTheTest = TimeSpan.FromMinutes(10);
+            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService(), neverWithinTheTest)
                 .StartAsync(CancellationToken.None);
             await SeedObsoleteWeatherAsync(factory);
 
-            // The next start-up with a delay no stalled runner can outlast: the clean-up is queued, not run on the start-up path.
-            // (With the default 10 s a Windows runner that paused for that long ran the clean-up before the assertion.)
-            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService(), TimeSpan.FromMinutes(10))
+            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService(), neverWithinTheTest)
                 .StartAsync(CancellationToken.None);
 
             await using iTerminalDbContext context = await factory.CreateDbContextAsync();

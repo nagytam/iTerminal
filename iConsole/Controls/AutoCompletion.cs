@@ -30,6 +30,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
     private CancellationTokenSource? _updateCts;
     private int _suppressVisibilityUpdates;
     private int _generation;
+    private long _updateSequence;
     private bool? _pendingVisibility;
 
     /// <summary>The control the suggestion popup is anchored beneath (the owning text box).</summary>
@@ -121,11 +122,12 @@ public class AutoCompletion : Window, ITransientOverlayHost
             // before anything was typed. (An argument, not SuppressNextVisibilityUpdate: that counter is consumed by
             // whichever update reaches it first, and would be left set if this one lost to a Hide.)
             var generation = CurrentGeneration;
-            _ = Task.Run(() => UpdateMatches(value, generation, keepListDown: true));
+            long sequence = StartUpdate();
+            _ = Task.Run(() => UpdateMatches(value, generation, sequence, keepListDown: true));
             return;
         }
 
-        UpdateMatches(value, CurrentGeneration, onUiThread: true);
+        UpdateMatches(value, CurrentGeneration, StartUpdate(), onUiThread: true);
     }
 
     public override void Draw(IBuffer buffer)
@@ -200,12 +202,14 @@ public class AutoCompletion : Window, ITransientOverlayHost
         var value = _textModel.Lines.FirstOrDefault() ?? string.Empty;
 
         CancellationToken token;
+        long sequence;
         lock (_updateGate)
         {
             _updateCts?.Cancel();
             _updateCts?.Dispose();
             _updateCts = new CancellationTokenSource();
             token = _updateCts.Token;
+            sequence = StartUpdate();
         }
 
         // Read before the task starts: this update belongs to the state the text was in when the key
@@ -219,7 +223,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
                 return;
             }
 
-            UpdateMatches(value, generation);
+            UpdateMatches(value, generation, sequence);
         }, token);
     }
 
@@ -244,7 +248,13 @@ public class AutoCompletion : Window, ITransientOverlayHost
         }
     }
 
-    private void UpdateMatches(string value, int generation, bool onUiThread = false, bool keepListDown = false)
+    /// <summary>
+    /// Numbers an update as it starts. Updates run on background tasks and can finish in any order, so an older one
+    /// (the opening update, or an earlier keystroke) that finishes last must not decide the visibility.
+    /// </summary>
+    private long StartUpdate() => Interlocked.Increment(ref _updateSequence);
+
+    private void UpdateMatches(string value, int generation, long sequence, bool onUiThread = false, bool keepListDown = false)
     {
         CompletionModel.UpdateMatchingValues(value);
 
@@ -262,6 +272,12 @@ public class AutoCompletion : Window, ITransientOverlayHost
             // An update that lost to a dismissal has nothing to say about the list: Hide already closed it, and a
             // newer update may have opened it again since. Applying "not visible" here closed that newer list.
             if (generation != CurrentGeneration)
+            {
+                return;
+            }
+
+            // A newer update has started since this one: its keystroke decides the list, so this older result is dropped.
+            if (sequence != Volatile.Read(ref _updateSequence))
             {
                 return;
             }
