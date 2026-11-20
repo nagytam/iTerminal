@@ -71,10 +71,11 @@ public class CsvGrid : Control
         var widths = new int[_headers.Count];
         for (int column = 0; column < widths.Length; column++)
         {
-            int width = _headers[column].Length;
+            // Terminal columns, not characters: a CJK character takes two, so counting chars misaligns every column after it.
+            int width = TextWidth.Of(Display(_headers[column]));
             for (int row = 0; row < _rows.Count && row < WidthSampleRows; row++)
             {
-                width = Math.Max(width, Display(Field(_rows[row], column)).Length);
+                width = Math.Max(width, TextWidth.Of(Display(Field(_rows[row], column))));
             }
 
             widths[column] = Math.Clamp(width, MinColumnWidth, MaxColumnWidth);
@@ -277,7 +278,7 @@ public class CsvGrid : Control
         return string.Join(Separator, parts);
     }
 
-    private static string Fit(string value, int width) => value.Cut(width).ExpandRight(width);
+    private static string Fit(string value, int width) => TextWidth.Fit(value, width);
 
     private void WriteCell(IBuffer buffer, int y, int column, string value, Color foreground, Color background)
     {
@@ -296,7 +297,7 @@ public class CsvGrid : Control
 
     private void WriteLine(IBuffer buffer, int y, int width, string text, Color foreground, Color background)
     {
-        string line = (text.Length > width ? text.Cut(width) : text).ExpandRight(width);
+        string line = TextWidth.Fit(text, width);
         buffer.Write(
             ZOrder,
             new Position(AbsolutePosition.X, AbsolutePosition.Y + y),

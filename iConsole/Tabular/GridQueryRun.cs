@@ -20,8 +20,12 @@ public sealed class GridQueryRun
     /// <summary>Starts <paramref name="text"/> over the rows. Returns at once; an earlier query still running is overtaken.</summary>
     public void Start(IReadOnlyList<string> names, IReadOnlyList<string[]> rows, string text)
     {
+        _cancellation?.Cancel();
+        _cancellation?.Dispose();
+        _cancellation = new CancellationTokenSource();
+        CancellationToken token = _cancellation.Token;
         _pendingGeneration = ++_generation;
-        _task = System.Threading.Tasks.Task.Run(() => GridQuery.Run(names, rows, text));
+        _task = System.Threading.Tasks.Task.Run(() => GridQuery.Run(names, rows, text, token), token);
     }
 
     /// <summary>The outcome of the newest query, once. Null while it runs, and for a query that was overtaken or cancelled.</summary>
@@ -50,14 +54,17 @@ public sealed class GridQueryRun
     /// Runs <paramref name="text"/> over every row of a source: its whole window is read through the array backend, with no row
     /// numbers, and the query runs over that table. The source must be in memory: a read here is not cancellable.
     /// </summary>
-    public static Task<GridQueryResult> RunOverAsync(IGridArraySource source, string text) =>
-        System.Threading.Tasks.Task.Run(() => GridArrayView.Open(source).QueryAsync(text, GridArrayView.DefaultChunkCells, int.MaxValue, CancellationToken.None));
+    public static Task<GridQueryResult> RunOverAsync(IGridArraySource source, string text, CancellationToken cancellationToken = default) =>
+        System.Threading.Tasks.Task.Run(() => GridArrayView.Open(source).QueryAsync(text, GridArrayView.DefaultChunkCells, int.MaxValue, cancellationToken), cancellationToken);
 
-    /// <summary>Starts <paramref name="text"/> over a source, through <see cref="RunOverAsync"/>. An earlier query still running is overtaken.</summary>
+    /// <summary>Starts <paramref name="text"/> over a source, through <see cref="RunOverAsync"/>. An earlier query still running is cancelled.</summary>
     public void Start(IGridArraySource source, string text)
     {
+        _cancellation?.Cancel();
+        _cancellation?.Dispose();
+        _cancellation = new CancellationTokenSource();
         _pendingGeneration = ++_generation;
-        _task = RunOverAsync(source, text);
+        _task = RunOverAsync(source, text, _cancellation.Token);
     }
 
     /// <summary>

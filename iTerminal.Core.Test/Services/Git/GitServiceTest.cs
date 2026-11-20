@@ -3,10 +3,13 @@ using iTerminal.Core.Services.Git;
 namespace iTerminal.Core.Test.Services.Git;
 
 [TestClass]
-[DoNotParallelize]
 public class GitServiceTest
 {
-    private static bool GitAvailable()
+    private static readonly Lazy<bool> GitProbe = new(ProbeGit);
+
+    private static bool GitAvailable() => GitProbe.Value;
+
+    private static bool ProbeGit()
     {
         try
         {

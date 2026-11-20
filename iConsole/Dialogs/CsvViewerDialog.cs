@@ -42,6 +42,8 @@ public class CsvViewerDialog : Dialog
     private int _generation;
     private int _pendingGeneration;
     private Task<GridQueryResult>? _query;
+    private CancellationTokenSource? _queryCancellation;
+    private readonly GridQueryCompletionModel _completion;
     private string _queryError = string.Empty;
     private string _statusNote = string.Empty;
     private int _matched;
@@ -70,6 +72,7 @@ public class CsvViewerDialog : Dialog
             Label = UiText.Get("Csv.Query.Label", "Query"),
             Placeholder = UiText.Get("Csv.Query.Placeholder", "e.g. SELECT name, amount WHERE amount > 10 ORDER BY amount DESC LIMIT 20"),
         };
+        _completion = GridQueryCompletionModel.Attach(_queryBox);
         _grid = new CsvGrid(themeService) { EmptyText = UiText.Get("Csv.Grid.Empty", "No rows match the query") };
         _textViewerControl = new TextViewerControl(false, themeService);
         _statusLabel = new Label(string.Empty, themeService);
@@ -140,6 +143,7 @@ public class CsvViewerDialog : Dialog
         }
 
         _document = document;
+        _completion.SetColumns(document.Headers);
         _grid.SetData(document.Headers, document.Rows);
         _matched = document.Rows.Count;
         // The grid already shows every row, which is what this query would give; the line says so and is ready to edit.
@@ -197,6 +201,7 @@ public class CsvViewerDialog : Dialog
         Encoding encoding = TextEncodings.Next(_encoding, backwards);
         char? delimiter = DelimiterFor(Url);
         _encoding = encoding;
+        CancelQuery();
         _query = null;
         int generation = ++_documentGeneration;
         _pendingDocumentGeneration = generation;
@@ -217,8 +222,18 @@ public class CsvViewerDialog : Dialog
         CsvDocument document = _document;
         _statusNote = string.Empty;
         _pendingGeneration = ++_generation;
-        // The rows are a two-axis array in memory; the query runs over the table the array backend reads from it.
-        _query = GridQueryRun.RunOverAsync(new InMemoryGridArray(document.Rows, document.Headers), text);
+        // A query still running is cancelled: it would only be overtaken, and a large file keeps a core busy until it ends.
+        CancelQuery();
+        _queryCancellation = new CancellationTokenSource();
+        // The rows are a two-axis array in memory; the query filters them where they are and stops when cancelled.
+        _query = GridQueryRun.RunOverAsync(new InMemoryGridArray(document.Rows, document.Headers), text, _queryCancellation.Token);
+    }
+
+    private void CancelQuery()
+    {
+        _queryCancellation?.Cancel();
+        _queryCancellation?.Dispose();
+        _queryCancellation = null;
     }
 
     /// <summary>Asks the AI model for a query for the question in the query line. The draft lands in the line; Enter runs it.</summary>
@@ -255,6 +270,7 @@ public class CsvViewerDialog : Dialog
                 _document = reread.Result;
                 _queryError = string.Empty;
                 _matched = _document.Rows.Count;
+                _completion.SetColumns(_document.Headers);
                 _grid.SetData(_document.Headers, _document.Rows);
                 if (_queryBox.Text.Trim().Length > 0 && !string.Equals(_queryBox.Text, DefaultQuery, StringComparison.Ordinal))
                 {
@@ -274,7 +290,7 @@ public class CsvViewerDialog : Dialog
             {
                 _queryError = failure.InnerException?.Message ?? failure.Message;
             }
-            else
+            else if (!query.IsCanceled)
             {
                 GridQueryResult result = query.Result;
                 _queryError = string.Empty;
@@ -414,7 +430,7 @@ public class CsvViewerDialog : Dialog
             return await base.HandleKeyEventAsync(keyEvent);
         }
 
-        if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt && !_textMode)
+        if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt && !_textMode && _queryBox.IsFocused)
         {
             if (GridQueryDrafter.IsQuestion(_queryBox.Text))
             {
@@ -448,6 +464,11 @@ public class CsvViewerDialog : Dialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", UiText.Get("Csv.Hint.RunQuery", "Run the query over the rows"));
+        foreach ((string Key, string Description) hint in GridQueryCompletionModel.Hints())
+        {
+            yield return hint;
+        }
+
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
         yield return ("F4", UiText.Get("Viewer.HintToggleText", "Show the file's text, or the grid again"));
         yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));

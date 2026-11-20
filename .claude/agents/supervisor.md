@@ -26,7 +26,7 @@ Collect facts first, with commands; do not guess. If a source is unavailable (`g
 - `git log --oneline <window>` and `git log --name-only --format=%h <window>`. Classify commits by prefix and by the paths they touch: `iConsole/`, `iTerminal.Core/`, `iTerminal/`, test projects, `.github/`, `Documentation/`, `.claude/`, packaging projects.
 - Find repeated work no agent covers: the same kind of change made by hand three or more times (new drive wiring, new dialog, new `.resx` keys, new sandbox replacement, installer or packaging fixes, dependency bumps, documentation sync).
 - Find fixes that follow features: `Fix`/`Repair`/`Revert` commits and the feature they patch. A recurring defect class (stale-result checks, padding of drawn lines, key conflicts, missing localisation keys) points to a missing review step in an agent or skill.
-- Find which agents' outputs were used: commits touching `Documentation/research/`, `Documentation/plans/`, `Documentation/design-review/`, `Documentation/agents/`, and whether a proposal later shipped.
+- Find which agents' outputs were used: commits touching `Documentation/research/` (including `design-review-overview.md`), `Documentation/plans/`, `Documentation/agents/`, and whether a proposal later shipped.
 - Find changes to `.claude/agents/`, `.claude/skills/` and `CLAUDE.md`, so a suggestion does not duplicate a change that just landed.
 
 **Pipeline results**

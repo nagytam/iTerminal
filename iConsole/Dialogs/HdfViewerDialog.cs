@@ -57,6 +57,7 @@ public class HdfViewerDialog : Dialog
     private CancellationTokenSource? _sliceCancellation;
     private Task<GridTable>? _slice;
     private readonly TextBox _queryBox;
+    private readonly GridQueryCompletionModel _completion;
     private readonly GridQueryRun _queryRun = new();
     private readonly GridQueryDrafter _drafter;
     private GridTable? _sliceData;
@@ -91,6 +92,7 @@ public class HdfViewerDialog : Dialog
             Label = UiText.Get("Csv.Query.Label", "Query"),
             Placeholder = UiText.Get("Grid.Query.Placeholder", "e.g. SELECT * WHERE 0 > 10, or ? and a question"),
         };
+        _completion = GridQueryCompletionModel.Attach(_queryBox);
         AddControl(_picker);
         AddControl(_queryBox);
         AddControl(_grid);
@@ -346,6 +348,7 @@ public class HdfViewerDialog : Dialog
 
         _matched = null;
         _longFormCut = false;
+        _completion.SetColumns(slice.Headers);
         _grid.SetData(slice.Headers, slice.Rows);
         UpdateStatus();
     }
@@ -719,6 +722,11 @@ public class HdfViewerDialog : Dialog
         yield return ("T", UiText.Get("Hdf.Hint.Transpose", "Swap the rows and the columns"));
         yield return ("FROM cells", UiText.Get("Hdf.Hint.LongForm", "Query every cell, with a column per axis (axis0, axis1, ...)"));
         yield return ("Enter", UiText.Get("Grid.Hint.RunQuery", "Run the query over the rows shown"));
+        foreach ((string Key, string Description) hint in GridQueryCompletionModel.Hints())
+        {
+            yield return hint;
+        }
+
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
     }
 
