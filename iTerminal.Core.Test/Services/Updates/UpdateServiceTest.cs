@@ -1,5 +1,7 @@
+using System.Formats.Tar;
 using System.IO.Compression;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using iTerminal.Core.Services;
@@ -62,7 +64,35 @@ public class UpdateServiceTest
         return memory.ToArray();
     }
 
-    private static HttpResponseMessage Respond(HttpRequestMessage request, string tags, byte[] portable)
+    /// <summary>A Linux portable archive as release.yml builds it: a folder named after the release, holding the marker and the program.</summary>
+    private static readonly byte[] LinuxPortable = BuildTarGz(
+        "iTerminal-1.2.0-linux-x64-portable/",
+        ("iTerminal-1.2.0-linux-x64-portable/iTerminal.portable", []),
+        ("iTerminal-1.2.0-linux-x64-portable/iTerminal", [1, 2, 3]),
+        ("iTerminal-1.2.0-linux-x64-portable/Assets/readme.txt", "hi"u8.ToArray()));
+
+    private static byte[] BuildTarGz(string folder, params (string Name, byte[] Bytes)[] entries)
+    {
+        using var memory = new MemoryStream();
+        using (var gzip = new GZipStream(memory, CompressionLevel.Fastest, leaveOpen: true))
+        using (var tar = new TarWriter(gzip, TarEntryFormat.Pax, leaveOpen: true))
+        {
+            tar.WriteEntry(new PaxTarEntry(TarEntryType.Directory, folder) { Mode = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute });
+            foreach ((string name, byte[] bytes) in entries)
+            {
+                PaxTarEntry entry = new(TarEntryType.RegularFile, name)
+                {
+                    Mode = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute,
+                    DataStream = new MemoryStream(bytes),
+                };
+                tar.WriteEntry(entry);
+            }
+        }
+
+        return memory.ToArray();
+    }
+
+    private static HttpResponseMessage Respond(HttpRequestMessage request, string tags, byte[] portable, byte[] linux)
     {
         string url = request.RequestUri!.ToString();
         if (url.Contains("/releases/tags/"))
@@ -70,7 +100,8 @@ public class UpdateServiceTest
             return Json($$"""
                 { "tag_name": "v1.2.0", "assets": [
                   { "name": "iTerminal-1.2.0-x64.msi", "browser_download_url": "https://downloads.test/a.msi", "size": 4, "digest": "sha256:{{Sha256(Msi)}}" },
-                  { "name": "iTerminal-1.2.0-x64-portable.zip", "browser_download_url": "https://downloads.test/p.zip", "size": {{portable.Length}}, "digest": "sha256:{{Sha256(portable)}}" }
+                  { "name": "iTerminal-1.2.0-x64-portable.zip", "browser_download_url": "https://downloads.test/p.zip", "size": {{portable.Length}}, "digest": "sha256:{{Sha256(portable)}}" },
+                  { "name": "iTerminal-1.2.0-linux-x64-portable.tar.gz", "browser_download_url": "https://downloads.test/l.tar.gz", "size": {{linux.Length}}, "digest": "sha256:{{Sha256(linux)}}" }
                 ] }
                 """);
         }
@@ -80,12 +111,14 @@ public class UpdateServiceTest
             return Json(tags);
         }
 
-        byte[] body = url.EndsWith(".zip", StringComparison.Ordinal) ? portable : Msi;
+        byte[] body = url.EndsWith(".zip", StringComparison.Ordinal) ? portable
+            : url.EndsWith(".tar.gz", StringComparison.Ordinal) ? linux
+            : Msi;
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(body) };
     }
 
-    private static GitHubReleaseFeed FeedFor(byte[]? portable = null) =>
-        new(new HttpClient(new StubHandler(request => Respond(request, Tags, portable ?? Portable))), Api);
+    private static GitHubReleaseFeed FeedFor(byte[]? portable = null, byte[]? linux = null) =>
+        new(new HttpClient(new StubHandler(request => Respond(request, Tags, portable ?? Portable, linux ?? LinuxPortable))), Api);
 
     private static UpdateService NewService(
         string current,
@@ -97,7 +130,7 @@ public class UpdateServiceTest
         IAuthenticodeVerifier? authenticode = null) =>
         new(
             settings ?? new SettingsService(),
-            new GitHubReleaseFeed(new HttpClient(new StubHandler(request => Respond(request, tags, Portable))), Api),
+            new GitHubReleaseFeed(new HttpClient(new StubHandler(request => Respond(request, tags, Portable, LinuxPortable))), Api),
             current,
             start ?? (_ => true),
             directory ?? Path.Combine(Path.GetTempPath(), $"iTerminal.Update.{Guid.NewGuid():N}"),
@@ -110,7 +143,9 @@ public class UpdateServiceTest
         Func<string, bool> startScript,
         GitHubReleaseFeed? feed = null,
         IAuthenticodeVerifier? authenticode = null,
-        Func<string, bool>? startInstaller = null) =>
+        Func<string, bool>? startInstaller = null,
+        bool windows = true,
+        string? portableSuffix = UpdateService.PortableArchiveSuffix) =>
         new(
             new SettingsService(),
             feed ?? FeedFor(),
@@ -120,7 +155,9 @@ public class UpdateServiceTest
             UpdateInstallKind.PortableArchive,
             authenticode ?? Signed(),
             startScript,
-            installDirectory);
+            installDirectory,
+            windows,
+            portableSuffix);
 
     private static string NewDirectory() => Path.Combine(Path.GetTempPath(), $"iTerminal.Update.{Guid.NewGuid():N}");
 
@@ -362,7 +399,10 @@ public class UpdateServiceTest
 
             File.WriteAllText(Path.Combine(directory, UpdateService.PortableMarker), string.Empty);
             Assert.AreEqual(UpdateInstallKind.PortableArchive, UpdateService.KindFor(windows: true, directory));
-            Assert.AreEqual(UpdateInstallKind.Unsupported, UpdateService.KindFor(windows: false, directory), "Only Windows updates itself.");
+            Assert.AreEqual(UpdateInstallKind.PortableArchive, UpdateService.KindFor(windows: false, directory), "A portable Linux copy updates from its archive too.");
+
+            File.Delete(Path.Combine(directory, UpdateService.PortableMarker));
+            Assert.AreEqual(UpdateInstallKind.Unsupported, UpdateService.KindFor(windows: false, directory), "A Linux package is only announced.");
         }
         finally
         {
@@ -491,6 +531,68 @@ public class UpdateServiceTest
         {
             DeleteQuietly(directory);
         }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ALinuxPortableCopyDownloadsItsTarArchiveAndSchedulesAShellScript()
+    {
+        string directory = NewDirectory();
+        string install = Path.Combine(directory, "app");
+        string? script = null;
+        try
+        {
+            var verifier = Signed();
+            UpdateService service = NewPortable(
+                directory,
+                install,
+                path => { script = path; return true; },
+                authenticode: verifier,
+                windows: false,
+                portableSuffix: "-linux-x64-portable.tar.gz");
+
+            UpdateInfo? update = await service.CheckAsync(CancellationToken.None);
+            Assert.AreEqual("iTerminal-1.2.0-linux-x64-portable.tar.gz", update?.Installer?.Name, "A Linux portable copy takes the tar.gz of its architecture.");
+            Assert.IsTrue(await service.InstallAsync(CancellationToken.None));
+
+            Assert.AreEqual(0, verifier.Calls, "Linux releases carry no Authenticode signature to check.");
+            Assert.AreEqual(Path.Combine(directory, "apply-update.sh"), script);
+            string text = File.ReadAllText(script!);
+            StringAssert.Contains(text, $"PID={Environment.ProcessId}");
+            StringAssert.Contains(text, "kill -0 \"$PID\"", "The script waits for iTerminal to close before it copies.");
+            string root = Path.Combine(directory, "staging", "iTerminal-1.2.0-linux-x64-portable");
+            StringAssert.Contains(text, $"cp -a '{root}/.' '{install}/'");
+            StringAssert.Contains(text, "rm -f \"$0\"");
+            Assert.IsFalse(text.Contains("start ", StringComparison.Ordinal), "A Linux update is not restarted by the script.");
+
+            Assert.IsTrue(File.Exists(Path.Combine(root, "iTerminal")));
+            Assert.IsTrue(File.Exists(Path.Combine(root, "Assets", "readme.txt")));
+            Assert.IsTrue(service.Log.Any(line => line.Contains("SHA-256 digest")));
+        }
+        finally
+        {
+            DeleteQuietly(directory);
+        }
+    }
+
+    [TestMethod]
+    public void TheLinuxArchiveIsTheOneForTheArchitectureOfThisSystem()
+    {
+        Assert.AreEqual("-linux-x64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.X64));
+        Assert.AreEqual("-linux-arm64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.Arm64));
+        Assert.IsNull(UpdateService.PortableSuffixFor(windows: false, Architecture.X86), "No portable archive is published for other architectures.");
+        Assert.AreEqual(UpdateService.PortableArchiveSuffix, UpdateService.PortableSuffixFor(windows: true, Architecture.X64));
+    }
+
+    [TestMethod]
+    public void TheShellScriptQuotesItsPathsAndRemovesOnlyTheStagedFiles()
+    {
+        string script = UpdateService.ShellUpdateScript(4242, "/home/me/stage/app", "/home/me/it's here", "/home/me/stage.tar.gz", "/home/me/stage");
+
+        StringAssert.Contains(script, "PID=4242");
+        StringAssert.Contains(script, "cp -a '/home/me/stage/app/.' '/home/me/it'\\''s here/'");
+        StringAssert.Contains(script, "rm -rf '/home/me/stage'");
+        StringAssert.Contains(script, "rm -f '/home/me/stage.tar.gz'");
     }
 
     [TestMethod]
