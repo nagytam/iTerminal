@@ -7949,6 +7949,21 @@
   <data name="Sign.NoFile" xml:space="preserve">
     <value>The file is not there.</value>
   </data>
+  <data name="Sign.Packet.Facts" xml:space="preserve">
+    <value>Packet: v{0}, sig type {1}, {2}, {3}, created {4}</value>
+  </data>
+  <data name="Sign.Packet.NoTime" xml:space="preserve">
+    <value>not stated</value>
+  </data>
+  <data name="Sign.Packet.SignerFingerprint" xml:space="preserve">
+    <value>signer fingerprint {0}</value>
+  </data>
+  <data name="Sign.Packet.SignerKeyId" xml:space="preserve">
+    <value>signer key ID {0}</value>
+  </data>
+  <data name="Sign.Packet.SignerNone" xml:space="preserve">
+    <value>signer not named</value>
+  </data>
   <data name="Sign.NoneFound" xml:space="preserve">
     <value>No signature found: nothing embedded in the file and no .asc, .sig, .gpg or .sign beside it.</value>
   </data>

@@ -143,13 +143,12 @@ There are 32 items. Each appears once, under its group, with its latest status. 
 
 #### 22. OpenPGP signature packet reader
 
-- **Status:** Partly. `SignatureService` runs `gpg --status-fd 1 --batch --no-tty --verify` and reads the status lines, including `GOODSIG` (`iTerminal.Core/Services/Signing/SignatureService.cs`, around lines 181 and 200). gpg parses the packets, so when gpg is missing or has no key the dialog cannot name the signer.
-- **Missing:** a reader of the packets of a detached `.asc` file that gives the signature version, the signature type, the public-key and hash algorithms, and the signer's key ID or fingerprint, with no key lookup.
-- **Fits:** a pure parser in `iConsole` beside `iConsole/Certificates`, used by `SignatureDialog` for a line such as "made by key X, not checked". The reader does not decide trust: the keyring rule of publisher signatures still applies (file-operations.md).
+- **Status:** Built. `iConsole/OpenPgp/OpenPgpSignatureReader.cs` reads the first signature packet of a detached signature, armored or binary, for versions 3, 4 and 6: version, signature type, public-key and hash algorithms, creation time, and the issuer fingerprint or key ID. `SignatureService` reads the file once before gpg runs and puts the packet on the gpg verdict (`SignatureVerdict.Packet`); `SignatureDialog` shows it as two facts lines under the gpg verdict. Parser tests use a gpg 2.4.9 v4 signature and hand-built v3 and v6 packets.
+- **Left out on purpose:** key lookup, cryptographic verification, trust decisions, and cleartext-signed messages. gpg's verdict is still the only check; the packet line is a fact about the file, and the keyring rule of publisher signatures still applies (file-operations.md). A version 6 signature carrying an Issuer Key ID subpacket has it ignored and flagged.
 - **Sources:** RFC 9580, OpenPGP, a Proposed Standard of July 2024, which obsoletes RFC 4880, 5581 and 6637. Its section 5.2.3 sets the layout of version 4 and version 6 signature packets: the version, the signature type, the algorithm IDs, the hashed and unhashed subpackets (with 4-octet lengths in version 6), a salt in version 6 and the algorithm values. The packet tags are in a registry table in section 5 ([RFC 9580](https://www.rfc-editor.org/rfc/rfc9580.html)).
 - **Size:** not estimated in the survey. Effort note: a pure parser that names the signer without gpg.
 - **Not found:** `rfc 9580`, `rfc 4880`, `signature packet`, `packet tag`, `OpenPgpPacket`. `openpgp` matches only labels and comments.
-- **Unverified:** how a version 6 signature names its signer (fingerprint, key ID or both), because the text read stopped before that part; the packet tag numbers.
+- **Resolved on the 70fe8ad5 pass:** a version 6 signer is named by the issuer fingerprint (subpacket 33, which RFC 9580 section 5.2.3.35 says should be in every signature). The Issuer Key ID subpacket (16) must not appear in a version 6 signature (section 5.2.3.12), taken from the RFC's text as summarised, not read verbatim. The signature packet is tag 2, confirmed by the parser's tests against gpg output.
 
 ### Inventory
 
@@ -463,9 +462,10 @@ Consolidated on 2026-11-20 from the four surveys and their status blocks. Status
 - Item 21 (Landlock, bubblewrap and firejail): Missing to Partly. Commit `e5e95062` (#712) adds the bwrap shell sandbox. The Landlock part is still missing.
 - Item 4 (CycloneDX): still Missing as a reader. Commit `4ad0edba` (#717) adds a writer.
 - Item 5 (.lnk inspector): still Missing. Commit `265f9aee` adds a sample file only.
-- Items 1, 2, 3, 6, 8, 9, 10, 13 to 20 and 22 to 24 were re-checked and still match. Item 12 was not re-checked in the latest pull.
+- Item 22 (OpenPGP signature packet reader): Partly to Built. This change adds `iConsole/OpenPgp/OpenPgpSignatureReader.cs`, shows the first packet of a gpg signature in `SignatureDialog` (`SignatureVerdict.Packet`), and records the facts in file-operations.md. Key lookup and trust stay out of scope by design.
+- Items 1, 2, 3, 6, 8, 9, 10, 13 to 20 and 23 to 24 were re-checked against the source on the 70fe8ad5 pass (key terms grepped in `iConsole/` and `iTerminal.Core/`) and still match. Item 12 was not re-checked in the latest pull. Item 21 was checked on the same pass: the Landlock part is still missing, and the bwrap and MXC sandboxes are for the shell session only.
 
-Totals: 32 items. Partly: 7, 11, 12, 13, 16, 18, 20, 21, 22, 23, 27, 30 (12 items). Missing: the other 20. Built: none.
+Totals: 32 items. Partly: 7, 11, 12, 13, 16, 18, 20, 21, 23, 27, 30 (11 items). Built: 22 (1 item). Missing: the other 20.
 
 ## Open issue for the maintainer
 

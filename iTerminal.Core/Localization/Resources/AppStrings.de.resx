@@ -7808,6 +7808,21 @@
   <data name="Sign.NoFile" xml:space="preserve">
     <value>Die Datei ist nicht vorhanden.</value>
   </data>
+  <data name="Sign.Packet.Facts" xml:space="preserve">
+    <value>Paket: v{0}, Signaturtyp {1}, {2}, {3}, erstellt {4}</value>
+  </data>
+  <data name="Sign.Packet.NoTime" xml:space="preserve">
+    <value>nicht angegeben</value>
+  </data>
+  <data name="Sign.Packet.SignerFingerprint" xml:space="preserve">
+    <value>Fingerabdruck des Signierers {0}</value>
+  </data>
+  <data name="Sign.Packet.SignerKeyId" xml:space="preserve">
+    <value>Schlüssel-ID des Signierers {0}</value>
+  </data>
+  <data name="Sign.Packet.SignerNone" xml:space="preserve">
+    <value>Signierer nicht genannt</value>
+  </data>
   <data name="Sign.NoneFound" xml:space="preserve">
     <value>Keine Signatur gefunden: nichts in der Datei eingebettet und keine .asc-, .sig-, .gpg- oder .sign-Datei daneben.</value>
   </data>
