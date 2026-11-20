@@ -11087,6 +11087,18 @@
   <data name="Terminal.ShellSwitched" xml:space="preserve">
     <value>El shell ahora es {0}. Las variables y la carpeta de la sesión anterior se han perdido.</value>
   </data>
+  <data name="Terminal.SandboxList" xml:space="preserve">
+    <value>Sandboxes: {0}. Actual: {1}.</value>
+  </data>
+  <data name="Terminal.SandboxUnknown" xml:space="preserve">
+    <value>sandbox: {0} no está disponible aquí. Disponibles: {1}.</value>
+  </data>
+  <data name="Terminal.SandboxBusy" xml:space="preserve">
+    <value>Hay un comando en ejecución: el sandbox solo puede cambiarse cuando termine.</value>
+  </data>
+  <data name="Terminal.SandboxSwitched" xml:space="preserve">
+    <value>El sandbox es ahora {0}. Las variables y la carpeta de la sesión se han perdido.</value>
+  </data>
   <data name="Terminal.ShellInterrupted" xml:space="preserve">
     <value>Interrumpido con Esc: la sesión del shell terminó, así que sus variables y su carpeta se perdieron.</value>
   </data>

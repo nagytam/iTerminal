@@ -40,7 +40,7 @@ public class LocalShellSessionServiceTest
     {
         var settings = new Mock<ISettingsService>();
         settings.Setup(s => s.Get(ShellKinds.SettingKey)).Returns(saved);
-        return (new LocalShellSessionService(settings.Object), settings);
+        return (new LocalShellSessionService(settings.Object, [new NoSandbox()]), settings);
     }
 
     private static LocalShellSessionService RequireShell(out Mock<ISettingsService> settings)

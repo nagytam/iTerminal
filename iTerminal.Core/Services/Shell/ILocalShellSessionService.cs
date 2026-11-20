@@ -18,6 +18,18 @@ public interface ILocalShellSessionService : IDisposable
     /// <summary>True while a command runs in the session. Enter-runs and typed commands both check it.</summary>
     bool IsBusy { get; }
 
+    /// <summary>The names of the sandboxes that can run here; <c>none</c> is always one of them.</summary>
+    IReadOnlyList<string> AvailableSandboxes();
+
+    /// <summary>The sandbox a session starts through: the saved choice when it is available, else <c>none</c>.</summary>
+    string SelectedSandbox { get; }
+
+    /// <summary>
+    /// Selects the sandbox <paramref name="name"/> and saves it as the default. Ends the current session, so its
+    /// variables and folder are gone. Refused (false) while a command runs or when the sandbox is not available.
+    /// </summary>
+    bool SwitchSandbox(string name);
+
     /// <summary>
     /// Selects <paramref name="kind"/> and saves it as the default. Ends the current session, so its variables and
     /// folder are gone. Refused (false) while a command runs or when the shell is not available.

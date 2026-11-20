@@ -11087,6 +11087,18 @@
   <data name="Terminal.ShellSwitched" xml:space="preserve">
     <value>Le shell est maintenant {0}. Les variables et le dossier de la session précédente ont disparu.</value>
   </data>
+  <data name="Terminal.SandboxList" xml:space="preserve">
+    <value>Bacs à sable : {0}. Actuel : {1}.</value>
+  </data>
+  <data name="Terminal.SandboxUnknown" xml:space="preserve">
+    <value>sandbox : {0} n'est pas disponible ici. Disponibles : {1}.</value>
+  </data>
+  <data name="Terminal.SandboxBusy" xml:space="preserve">
+    <value>Une commande est en cours : le bac à sable ne peut être changé qu'à la fin.</value>
+  </data>
+  <data name="Terminal.SandboxSwitched" xml:space="preserve">
+    <value>Le bac à sable est maintenant {0}. Les variables et le dossier de la session sont perdus.</value>
+  </data>
   <data name="Terminal.ShellInterrupted" xml:space="preserve">
     <value>Interrompue avec Échap : la session shell a été terminée, ses variables et son dossier sont perdus.</value>
   </data>

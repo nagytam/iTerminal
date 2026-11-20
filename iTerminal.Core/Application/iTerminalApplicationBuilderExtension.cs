@@ -719,6 +719,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<TerminalModel>();
         // The command log's shell session (sh or bash, one process at a time). Disposed with the host.
         services.AddSingleton<Services.Shell.ILocalShellSessionService, Services.Shell.LocalShellSessionService>();
+        // The sandboxes the shell session can be confined in (the "sandbox" line picks one). A new one is one more registration here.
+        services.AddSingleton<Services.Shell.ISessionSandbox, Services.Shell.NoSandbox>();
+        services.AddSingleton<Services.Shell.ISessionSandbox, Services.Shell.BubblewrapSandbox>();
+        services.AddSingleton<Services.Shell.ISessionSandbox, Services.Shell.BubblewrapOfflineSandbox>();
         services.AddTransient<TerminalDialog>();
         services.AddSingleton<Serilog.ILogger>(provider =>
             new Logger.Logger(provider.GetRequiredService<ISettingsService>(), databaseDirectory));

@@ -76,14 +76,25 @@ public class TerminalModel(
         command.Output = null;
         command.Error = null;
 
-        // "shell" is the app's own line, like "cd": it changes the session, so it is not sent to the shell.
+        // "shell" and "sandbox" are the app's own lines, like "cd": they change the session, so they are not sent to it.
         var shellArgument = ShellLineArgument(command.Command);
+        var sandboxArgument = SandboxLineArgument(command.Command);
+        Func<Task>? builtin = null;
+        if (shellArgument is not null)
+        {
+            builtin = () => RunShellLineAsync(command, shellArgument);
+        }
+        else if (sandboxArgument is not null)
+        {
+            builtin = () => RunSandboxLineAsync(command, sandboxArgument);
+        }
+
         var contentModel = contentModelService.GetLastContentModel();
         var executeCommandTask = new ExecuteCommandTask()
         {
-            ContentModel = shellArgument is null ? contentModel : null,
+            ContentModel = builtin is null ? contentModel : null,
             TerminalModel = this,
-            Builtin = shellArgument is null ? null : () => RunShellLineAsync(command, shellArgument),
+            Builtin = builtin,
         };
 
         command.CommandTask = executeCommandTask.Completion;
@@ -261,21 +272,26 @@ public class TerminalModel(
     /// otherwise, or null when the line is not a shell line. A line joined to something with a shell operator is not
     /// one, so it is sent to the shell as typed.
     /// </summary>
-    internal static string? ShellLineArgument(string? commandText)
+    internal static string? ShellLineArgument(string? commandText) => KeywordLineArgument(commandText, "shell");
+
+    /// <summary>The argument of a <c>sandbox</c> line, by the same rules as <see cref="ShellLineArgument"/>.</summary>
+    internal static string? SandboxLineArgument(string? commandText) => KeywordLineArgument(commandText, "sandbox");
+
+    private static string? KeywordLineArgument(string? commandText, string keyword)
     {
         var text = (commandText ?? string.Empty).Trim();
-        if (text == "shell")
+        if (text == keyword)
         {
             return string.Empty;
         }
 
-        if (!(text.StartsWith("shell ", StringComparison.Ordinal) || text.StartsWith("shell	", StringComparison.Ordinal))
+        if (!(text.StartsWith(keyword + " ", StringComparison.Ordinal) || text.StartsWith(keyword + "\t", StringComparison.Ordinal))
             || text.IndexOfAny(ShellOperators) >= 0)
         {
             return null;
         }
 
-        return text[5..].Trim();
+        return text[(keyword.Length + 1)..].Trim();
     }
 
     /// <summary>
@@ -311,6 +327,45 @@ public class TerminalModel(
         else
         {
             command.Output = string.Format(UiText.Get("Terminal.ShellSwitched", "Shell is now {0}. The previous session's variables and folder are gone."), ShellKinds.Name(kind));
+        }
+
+        command.ExitTime = DateTime.Now;
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Runs a <c>sandbox</c> line on the background task: lists the sandboxes that can run here, or switches to the
+    /// named one (the session restarts in it on the next command). Refused while a command runs in the session.
+    /// </summary>
+    internal Task RunSandboxLineAsync(ITerminalCommand command, string argument)
+    {
+        command.StartTime = DateTime.Now;
+        var sessions = ShellSessions;
+        var available = sessions is null ? [] : sessions.AvailableSandboxes();
+        var names = string.Join(", ", available);
+
+        if (sessions is null)
+        {
+            command.Error = UiText.Get("Terminal.ShellNone", "No shell session is available here: sh or bash must be on the PATH. Commands run one at a time, as before.");
+            command.ExitCode = 1;
+        }
+        else if (argument.Length == 0)
+        {
+            command.Output = string.Format(UiText.Get("Terminal.SandboxList", "Sandboxes: {0}. Current: {1}."), names, sessions.SelectedSandbox);
+        }
+        else if (!available.Contains(argument, StringComparer.Ordinal))
+        {
+            command.Error = string.Format(UiText.Get("Terminal.SandboxUnknown", "sandbox: {0} is not available here. Available: {1}."), argument, names);
+            command.ExitCode = 1;
+        }
+        else if (sessions.IsBusy || !sessions.SwitchSandbox(argument))
+        {
+            command.Error = UiText.Get("Terminal.SandboxBusy", "A command is running: the sandbox can be changed when it finishes.");
+            command.ExitCode = 1;
+        }
+        else
+        {
+            command.Output = string.Format(UiText.Get("Terminal.SandboxSwitched", "Sandbox is now {0}. The session's variables and folder are gone."), argument);
         }
 
         command.ExitTime = DateTime.Now;

@@ -622,6 +622,12 @@ public static class SandboxServices
             return true;
         }
 
+        public IReadOnlyList<string> AvailableSandboxes() => ["none"];
+
+        public string SelectedSandbox => "none";
+
+        public bool SwitchSandbox(string name) => name == "none";
+
         public Task<Core.Services.Shell.ShellCommandResult> RunAsync(string folder, string command, CancellationToken cancellationToken = default) =>
             Task.FromResult(new Core.Services.Shell.ShellCommandResult("sandbox: " + command, string.Empty, 0, folder, Core.Services.Shell.ShellRunState.Completed));
 

@@ -59,10 +59,14 @@ public sealed class LocalShellSession : IDisposable
 
     public ShellKind Kind => _kind;
 
-    /// <summary>Starts the shell in <paramref name="folder"/>. Throws when the program cannot be started.</summary>
-    public static LocalShellSession Start(ShellKind kind, string programPath, string folder)
+    /// <summary>
+    /// Starts the shell in <paramref name="folder"/>, through <paramref name="sandbox"/> (which may wrap it in a
+    /// confinement program). Throws when the program cannot be started.
+    /// </summary>
+    public static LocalShellSession Start(ShellKind kind, string programPath, string folder, ISessionSandbox sandbox)
     {
-        var info = new ProcessStartInfo(programPath)
+        var launch = sandbox.Wrap(new SessionLaunch(programPath, ShellKinds.LaunchArguments(kind)), folder);
+        var info = new ProcessStartInfo(launch.Program)
         {
             UseShellExecute = false,
             RedirectStandardInput = true,
@@ -72,7 +76,7 @@ public sealed class LocalShellSession : IDisposable
             StandardOutputEncoding = Utf8,
             StandardErrorEncoding = Utf8,
         };
-        foreach (var argument in ShellKinds.LaunchArguments(kind))
+        foreach (var argument in launch.Arguments)
         {
             info.ArgumentList.Add(argument);
         }
