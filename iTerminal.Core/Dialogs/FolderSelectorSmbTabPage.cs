@@ -776,11 +776,14 @@ internal static class SmbBrowserRows
             }
             var saved = savedProfiles.Any(p => string.Equals(p.Host, address, StringComparison.OrdinalIgnoreCase));
             var login = LoginFor(address, loginList);
+            var thisMachine = NetworkDiscoveryService.IsLocalAddress(host.IPAddress)
+                ? ", " + UiText.Get("FolderSelector.Smb.ThisMachine", "this machine")
+                : string.Empty;
             var label = saved
-                ? $"{address} (SMB, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"
+                ? $"{address} (SMB{thisMachine}, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"
                 : login is not null
-                    ? $"{address} (SMB, {LoggedIn(login.Username)})"
-                    : $"{address} (SMB)";
+                    ? $"{address} (SMB{thisMachine}, {LoggedIn(login.Username)})"
+                    : $"{address} (SMB{thisMachine})";
             rows.Add(new(address, null, null, label));
         }
 

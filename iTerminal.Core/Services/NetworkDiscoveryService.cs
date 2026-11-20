@@ -128,10 +128,36 @@ public class NetworkDiscoveryService(ISmbFileSystemService smbFileSystemService)
                 {
                     continue;
                 }
+                // This machine's own address first, so its shares are listed even when no other host answers.
+                addresses.Add(unicast.Address);
                 addresses.AddRange(EnumerateLocalSubnet(unicast.Address));
             }
         }
+        if (addresses.Count == 0)
+        {
+            // No active network: the machine is still reachable on loopback.
+            addresses.Add(IPAddress.Loopback);
+        }
         return [.. addresses.Distinct()];
+    }
+
+    /// <summary>True when <paramref name="address"/> belongs to this machine.</summary>
+    internal static bool IsLocalAddress(IPAddress address)
+    {
+        if (IPAddress.IsLoopback(address))
+        {
+            return true;
+        }
+        try
+        {
+            return NetworkInterface.GetAllNetworkInterfaces()
+                .SelectMany(nic => nic.GetIPProperties().UnicastAddresses)
+                .Any(unicast => unicast.Address.Equals(address));
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>Enumerates the /24 range anchored at <paramref name="address"/>'s own subnet

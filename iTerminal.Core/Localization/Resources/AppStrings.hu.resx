@@ -10381,6 +10381,9 @@
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>mentett</value>
   </data>
+  <data name="FolderSelector.Smb.ThisMachine" xml:space="preserve">
+    <value>ez a gép</value>
+  </data>
   <data name="FolderSelector.Smb.Logout" xml:space="preserve">
     <value>Kijelentkezés…</value>
   </data>
