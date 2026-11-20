@@ -300,6 +300,9 @@ public class ChessGame : GameBase
         return rows;
     }
 
+    /// <summary>How long the computer may search for a move, in milliseconds. Tests lower it.</summary>
+    public int SearchMilliseconds { get; set; } = 2000;
+
     public override Func<CancellationToken, Action?>? PlanComputerMove()
     {
         if (!IsComputerTurn)
@@ -310,9 +313,10 @@ public class ChessGame : GameBase
         ChessState snapshot = _state;
         int version = Version;
         int seed = Random.Next();
+        int budget = SearchMilliseconds;
         return token =>
         {
-            ChessMove? move = new ChessSearch(new Random(seed), token, 2000, 6).Best(snapshot);
+            ChessMove? move = new ChessSearch(new Random(seed), token, budget, 6).Best(snapshot);
             return move is null ? null : () =>
             {
                 if (version == Version)
