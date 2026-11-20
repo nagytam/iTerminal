@@ -20,8 +20,14 @@ public class CsvGrid : Control
     internal const int MaxColumnWidth = 40;
     internal const string Separator = " │ ";
 
+    /// <summary>The mark column at the left: two cells, the mark and a gap, so a marked row has a cue that is not its colour.</summary>
+    internal const int MarkWidth = 2;
+    internal const string MarkedCell = "* ";
+    internal const string UnmarkedCell = "  ";
+
     private IReadOnlyList<string> _headers = [];
     private IReadOnlyList<string[]> _rows = [];
+    private readonly SortedSet<int> _marked = new();
     private int[] _widths = [];
     private int _cursorRow;
     private int _cursorColumn;
@@ -50,11 +56,23 @@ public class CsvGrid : Control
 
     public int ColumnCount => _headers.Count;
 
-    /// <summary>Replaces the grid's contents and puts the cursor on the first cell.</summary>
+    /// <summary>The column names, as the grid shows them.</summary>
+    public IReadOnlyList<string> Headers => _headers;
+
+    /// <summary>The rows, as the grid shows them (a query's result, not the whole file).</summary>
+    public IReadOnlyList<string[]> Rows => _rows;
+
+    /// <summary>The indexes of the marked rows, in order.</summary>
+    public IEnumerable<int> MarkedRows => _marked;
+
+    public int MarkedCount => _marked.Count;
+
+    /// <summary>Replaces the grid's contents and puts the cursor on the first cell. The marks belong to the old rows, so they go too.</summary>
     public void SetData(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows)
     {
         _headers = headers;
         _rows = rows;
+        _marked.Clear();
         _widths = ComputeWidths();
         _cursorRow = 0;
         _cursorColumn = 0;
@@ -91,7 +109,7 @@ public class CsvGrid : Control
     /// <summary>Whether the columns from <paramref name="first"/> to <paramref name="last"/>, with their separators, fit the width.</summary>
     private bool Fits(int first, int last)
     {
-        int total = 0;
+        int total = MarkWidth;
         for (int column = first; column <= last; column++)
         {
             total += _widths[column] + (column > first ? Separator.Length : 0);
@@ -144,6 +162,7 @@ public class CsvGrid : Control
         yield return ("←→", UiText.Get("Csv.Hint.MoveColumns", "Move between the columns"));
         yield return ("PgUp/PgDn", UiText.Get("Csv.Hint.Page", "Move a page at a time"));
         yield return ("Home/End", UiText.Get("Csv.Hint.Ends", "Go to the first or the last row"));
+        yield return ("Space", UiText.Get("Csv.Hint.Mark", "Mark the row and move down"));
     }
 
     /// <summary>A left click inside the grid gives it the focus, as a click on any focusable control does.</summary>
@@ -192,6 +211,14 @@ public class CsvGrid : Control
             case ConsoleKey.LeftArrow:
                 _cursorColumn--;
                 break;
+            case ConsoleKey.Spacebar:
+                if (!_marked.Remove(_cursorRow))
+                {
+                    _marked.Add(_cursorRow);
+                }
+
+                _cursorRow++;
+                break;
             default:
                 return await base.HandleKeyEventAsync(keyEvent);
         }
@@ -231,7 +258,7 @@ public class CsvGrid : Control
         int last = FirstFittingLast();
         Color text = IsEnabled ? scheme.Foreground : scheme.DisabledForeground;
         Color headerBackground = IsFocused ? scheme.SelectedFocusedBackground : scheme.Background;
-        WriteLine(buffer, 0, width, Compose(first: _firstColumn, last, i => Display(_headers[i])), text, headerBackground);
+        WriteLine(buffer, 0, width, new string(' ', MarkWidth) + Compose(first: _firstColumn, last, i => Display(_headers[i])), text, headerBackground);
         WriteLine(buffer, 1, width, new string('─', width), scheme.DisabledForeground, scheme.Background);
 
         for (int y = 2; y < height; y++)
@@ -246,7 +273,8 @@ public class CsvGrid : Control
             bool cursorRow = row == _cursorRow;
             Color background = cursorRow && IsFocused ? scheme.SelectedFocusedBackground : cursorRow ? scheme.SelectedBackground : scheme.Background;
             Color foreground = cursorRow && IsFocused ? scheme.SelectedFocusedForeground : cursorRow ? scheme.SelectedForeground : text;
-            WriteLine(buffer, y, width, Compose(_firstColumn, last, column => Display(Field(_rows[row], column))), foreground, background);
+            string mark = _marked.Contains(row) ? MarkedCell : UnmarkedCell;
+            WriteLine(buffer, y, width, mark + Compose(_firstColumn, last, column => Display(Field(_rows[row], column))), foreground, background);
             if (cursorRow && IsFocused)
             {
                 WriteCell(buffer, y, _cursorColumn, Display(Field(_rows[row], _cursorColumn)), foreground, scheme.SelectedBackground);
@@ -282,7 +310,7 @@ public class CsvGrid : Control
 
     private void WriteCell(IBuffer buffer, int y, int column, string value, Color foreground, Color background)
     {
-        int x = 0;
+        int x = MarkWidth;
         for (int c = _firstColumn; c < column; c++)
         {
             x += _widths[c] + Separator.Length;

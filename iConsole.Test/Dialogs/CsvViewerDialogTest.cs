@@ -27,7 +27,7 @@ public class CsvViewerDialogTest
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(fileSystem.Object);
         return new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
-            Mock.Of<IDateTimeProviderService>(), new ThemeService(), assistant) { Url = document };
+            Mock.Of<IDateTimeProviderService>(), new ThemeService(), Mock.Of<IPromptService>(), assistant) { Url = document };
     }
 
     [Timeout(60_000)]
@@ -320,7 +320,7 @@ public class CsvViewerDialogTest
         models.Setup(m => m.GetFocusedModel()).Returns((IContentModel?)null);
         models.Setup(m => m.GetLastContentModel()).Returns(panel.Object);
         var dialog = new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
-            Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = document };
+            Mock.Of<IDateTimeProviderService>(), new ThemeService(), Mock.Of<IPromptService>()) { Url = document };
 
         await dialog.OnInitializeAsync();
 

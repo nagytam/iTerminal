@@ -11,6 +11,7 @@ using iConsole.Interfaces;
 using iConsole.Layouts;
 using iConsole.Localization;
 using iConsole.Model;
+using iConsole.Prompts;
 using iConsole.Services;
 
 namespace iConsole.Dialogs;
@@ -31,6 +32,7 @@ public class CsvViewerDialog : Dialog
 
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly IPromptService _promptService;
     private readonly GridQueryDrafter _drafter;
     private readonly TextBox _queryBox;
     private readonly CsvGrid _grid;
@@ -60,12 +62,14 @@ public class CsvViewerDialog : Dialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
+        IPromptService promptService,
         IGridQueryAssistant? queryAssistant = null)
         : base(nameof(CsvViewerDialog), themeService)
     {
         _drafter = new GridQueryDrafter(queryAssistant ?? new UnavailableGridQueryAssistant());
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
+        _promptService = promptService;
         // The query line is added first: a dialog gives the keyboard to its first focusable control, and the query is where a person starts.
         _queryBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
@@ -80,7 +84,11 @@ public class CsvViewerDialog : Dialog
         AddControl(_grid);
         AddControl(_textViewerControl);
         AddControl(_statusLabel);
+        AddCommand(new CsvExportCommand(this));
     }
+
+    /// <summary>True when F2 can export: the rows are read and the grid, not the text view, is showing.</summary>
+    public bool CanExport => Url is not null && _document is not null && !_textMode && _switch is null;
 
     /// <summary>The file shown.</summary>
     public Url? Url { get; set; }
@@ -472,6 +480,119 @@ public class CsvViewerDialog : Dialog
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
         yield return ("F4", UiText.Get("Viewer.HintToggleText", "Show the file's text, or the grid again"));
         yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));
+        yield return ("F2", UiText.Get("Csv.Hint.Export", "Export the marked rows, or the rows on screen, to a CSV file"));
+    }
+
+    /// <summary>
+    /// F2: asks for a file name, then writes the marked rows (in grid order), or every row on screen when none is marked, as CSV.
+    /// The file goes in the folder of the file being viewed. An existing file is replaced only after a yes; a no or a cancelled
+    /// prompt writes nothing. The text is built and written on a background task.
+    /// </summary>
+    public async Task ExportAsync()
+    {
+        try
+        {
+            await ExportRowsAsync();
+        }
+        catch (Exception exception)
+        {
+            // Nobody awaits the export when F2 starts it, so a failure has to be shown here.
+            _statusLabel.Text = string.Format(UiText.Get("Csv.Export.Failed", "Could not write the file: {0}"), exception.Message);
+            StateHasChanged();
+        }
+    }
+
+    private async Task ExportRowsAsync()
+    {
+        if (!CanExport || Url is null || _document is null)
+        {
+            return;
+        }
+
+        IFileSystem? fileSystem = (_contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel()) as IFileSystem;
+        if (fileSystem is null)
+        {
+            _statusLabel.Text = UiText.Get("Viewer.NothingToShow", "Nothing to show");
+            return;
+        }
+
+        if (fileSystem.IsReadOnly)
+        {
+            _statusLabel.Text = UiText.Get("Csv.Export.ReadOnly", "This folder is read-only: nothing was written");
+            return;
+        }
+
+        // A folder URL is not always typed as one (a path without a trailing slash reads as a file), so the folder is checked on disk.
+        Url folder = Url.ParentUrl;
+        if (!fileSystem.ExistsFolder(folder))
+        {
+            _statusLabel.Text = UiText.Get("Csv.Export.NoFolder", "Nothing can be written next to this file");
+            return;
+        }
+
+        string defaultName = Path.GetFileNameWithoutExtension(Url.Name) + "-export.csv";
+        string? answer = await _promptService.AskAsync(
+            new TextPrompt<string>(UiText.Get("Csv.Export.Ask", "Save the rows as")) { DefaultValue = defaultName }.Validate(ValidFileName));
+        if (answer is null)
+        {
+            _statusLabel.Text = UiText.Get("Csv.Export.Cancelled", "Nothing was written");
+            StateHasChanged();
+            return;
+        }
+
+        string name = answer.Trim();
+        if (ValidFileName(name) is { } problem)
+        {
+            _statusLabel.Text = problem;
+            StateHasChanged();
+            return;
+        }
+
+        string folderText = folder.FullUrl.EndsWith('/') ? folder.FullUrl : folder.FullUrl + "/";
+        Url target = new(folderText + name);
+        if (fileSystem.ExistsFile(target))
+        {
+            bool? overwrite = await _promptService.ConfirmAsync(
+                new ConfirmationPrompt(string.Format(UiText.Get("Csv.Export.Overwrite", "{0} already exists. Overwrite it?"), name)));
+            if (overwrite != true)
+            {
+                _statusLabel.Text = UiText.Get("Csv.Export.Cancelled", "Nothing was written");
+                StateHasChanged();
+                return;
+            }
+        }
+
+        IReadOnlyList<string> headers = _grid.Headers;
+        IReadOnlyList<string[]> rows = _grid.MarkedCount > 0
+            ? [.. _grid.MarkedRows.Select(index => _grid.Rows[index])]
+            : _grid.Rows;
+        try
+        {
+            string text = await Task.Run(() => CsvExport.Build(headers, rows));
+            byte[] bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
+            await fileSystem.WriteFileAsync(target, new MemoryStream(bytes));
+            string status = string.Format(UiText.Get("Csv.Export.Done", "Exported {0:N0} row(s) to {1}"), rows.Count, name);
+            if (_document?.Truncated == true)
+            {
+                status += string.Format(UiText.Get("Csv.Status.Truncated", "; only the first {0:N0} rows are read"), CsvDocument.MaxRows);
+            }
+
+            _statusLabel.Text = status;
+        }
+        catch (Exception exception)
+        {
+            _statusLabel.Text = string.Format(UiText.Get("Csv.Export.Failed", "Could not write the file: {0}"), exception.Message);
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>A name in the file's own folder: no folder parts, no characters a file name cannot hold.</summary>
+    private static string? ValidFileName(string name)
+    {
+        string trimmed = name.Trim();
+        bool invalid = trimmed.Length == 0 || trimmed is "." or ".." || trimmed.Contains('\\') || trimmed.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0;
+        return invalid ? UiText.Get("Csv.Export.Invalid", "Give a file name, with no folder in it") : null;
     }
 
     private sealed class CloseSelfCommand(CsvViewerDialog owner) : Command

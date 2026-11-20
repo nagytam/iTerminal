@@ -619,7 +619,8 @@ public class ViewFileDialogCommandTest
             Mock.Of<IFileToTextConverterService>(),
             Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(),
-            themeService);
+            themeService,
+            Mock.Of<IPromptService>());
         var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
         File.WriteAllText(path, "a,b\n1,2\n");
 

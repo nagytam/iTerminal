@@ -2192,4 +2192,37 @@
   <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
     <value>Az eredmény szűrése: a sor : jellel kezdődjön, majd rácslekérdezés</value>
   </data>
+  <data name="Key.ExportCsv" xml:space="preserve">
+    <value>F2-Exportálás</value>
+  </data>
+  <data name="Csv.Hint.Mark" xml:space="preserve">
+    <value>Sor megjelölése, és egy sorral lejjebb lépés</value>
+  </data>
+  <data name="Csv.Hint.Export" xml:space="preserve">
+    <value>A megjelölt, vagy a képernyőn látható sorok exportálása CSV-fájlba</value>
+  </data>
+  <data name="Csv.Export.Ask" xml:space="preserve">
+    <value>Sorok mentése ide:</value>
+  </data>
+  <data name="Csv.Export.Invalid" xml:space="preserve">
+    <value>Adjon meg fájlnevet, mappa nélkül</value>
+  </data>
+  <data name="Csv.Export.Overwrite" xml:space="preserve">
+    <value>A(z) {0} már létezik. Felülírja?</value>
+  </data>
+  <data name="Csv.Export.Done" xml:space="preserve">
+    <value>{0:N0} sor exportálva ide: {1}</value>
+  </data>
+  <data name="Csv.Export.Cancelled" xml:space="preserve">
+    <value>Semmi nem íródott</value>
+  </data>
+  <data name="Csv.Export.ReadOnly" xml:space="preserve">
+    <value>Ez a mappa csak olvasható: semmi nem íródott</value>
+  </data>
+  <data name="Csv.Export.NoFolder" xml:space="preserve">
+    <value>Ebbe a fájl mellé nem lehet írni</value>
+  </data>
+  <data name="Csv.Export.Failed" xml:space="preserve">
+    <value>A fájl nem írható: {0}</value>
+  </data>
 </root>

@@ -149,6 +149,25 @@ public class EditorViewerAndPermissionsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task F2InTheCsvViewerAsksForAFileNameAndWritesTheRowsOnScreen()
+    {
+        await _app.SelectEntryAsync("hu.csv");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.CsvViewerDialog, "the CSV viewer to open");
+        await _app.WaitForTextAsync("alma");
+
+        Assert.IsTrue(await _app.PressAsync("F2"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Prompts.TextPromptDialog<string>, "the file name prompt");
+
+        // Enter takes the suggested name, hu-export.csv, which the prompt starts with.
+        Assert.IsTrue(await _app.PressAsync("Enter"));
+        string target = Path.Combine(_app.LeftRoot, "hu-export.csv");
+        await _app.WaitUntilAsync(() => File.Exists(target), "the exported file to be written");
+        Assert.AreEqual("tûrõ,név\r\nalma,3\r\n", System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(target)));
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task F3OnASqliteFileOpensTheDatabaseViewerAndF4ShowsItsText()
     {
         await _app.SelectEntryAsync("shop.sqlite");
