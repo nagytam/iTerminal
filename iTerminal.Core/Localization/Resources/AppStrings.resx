@@ -11410,4 +11410,7 @@
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>Share the selected files on this network: a QR code and a link open them in a phone's browser while this dialog is open.</value>
   </data>
+  <data name="FileTransfer.Expired" xml:space="preserve">
+    <value>The share has expired. Close the dialog and open File transfer again for a new address.</value>
+  </data>
 </root>

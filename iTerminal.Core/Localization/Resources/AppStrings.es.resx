@@ -11204,4 +11204,7 @@
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>Compartir los archivos seleccionados en esta red: un código QR y un enlace los abren en el navegador de un teléfono mientras este diálogo esté abierto.</value>
   </data>
+  <data name="FileTransfer.Expired" xml:space="preserve">
+    <value>El uso compartido ha caducado. Cierre el diálogo y abra Transferencia de archivos de nuevo para obtener una dirección nueva.</value>
+  </data>
 </root>

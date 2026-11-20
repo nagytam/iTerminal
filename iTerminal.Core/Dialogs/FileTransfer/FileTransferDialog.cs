@@ -1,3 +1,4 @@
+using System.Text;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -21,16 +22,20 @@ public class FileTransferDialog : Dialog
     /// <summary>The QR code is shown only when the dialog is at least this many rows tall.</summary>
     internal const int MinimumHeightForCode = 30;
 
+    private const int WarningLines = 3;
+
     private readonly IFileShareService _service;
     private readonly Label _selection;
     private readonly Label _url;
     private readonly QrCodeView _code;
     private readonly Label _status;
-    private readonly Label _warning;
+    private readonly Label[] _warning = new Label[WarningLines];
 
     private FileShareState? _shown;
     private string? _failureKey;
-    private int _selectionCount;
+    private volatile string? _startFailureKey;
+    private int _innerWidth;
+    private int _innerHeight;
 
     public FileTransferDialog(IFileShareService service, IThemeService themeService)
         : base(nameof(FileTransferDialog), themeService)
@@ -42,12 +47,15 @@ public class FileTransferDialog : Dialog
         _url = new Label(string.Empty, themeService);
         _code = new QrCodeView(themeService);
         _status = new Label(string.Empty, themeService);
-        _warning = new Label(UiText.Get("FileTransfer.CertificateWarning", "The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files while this dialog is open."), themeService);
-
         AddControl(_selection);
         AddControl(_url);
         AddControl(_code);
-        AddControl(_warning);
+        for (int i = 0; i < WarningLines; i++)
+        {
+            _warning[i] = new Label(string.Empty, themeService);
+            AddControl(_warning[i]);
+        }
+
         AddControl(_status);
     }
 
@@ -58,6 +66,7 @@ public class FileTransferDialog : Dialog
     internal string StatusText => _status.Text;
     internal bool CodeIsShown => _code.IsVisible;
     internal QrCodeView CodeView => _code;
+    internal IReadOnlyList<string> WarningText => _warning.Select(label => label.Text).ToList();
 
     #endregion
 
@@ -68,7 +77,6 @@ public class FileTransferDialog : Dialog
     public void Begin(IReadOnlyList<Url> selection)
     {
         ArgumentNullException.ThrowIfNull(selection);
-        _selectionCount = selection.Count;
         _selection.Text = UiText.Get("FileTransfer.Selection", "Selected: {0}").Replace("{0}", selection.Count.ToString(), StringComparison.Ordinal);
 
         if (selection.Count == 0)
@@ -84,9 +92,25 @@ public class FileTransferDialog : Dialog
         }
 
         _failureKey = null;
+        _startFailureKey = null;
         _status.Text = UiText.Get("FileTransfer.Starting", "Starting…");
         IReadOnlyList<string> paths = selection.Select(url => url.Path).ToList();
-        _ = Task.Run(() => _service.StartAsync(paths));
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                FileShareStartResult result = await _service.StartAsync(paths);
+                if (!result.Started)
+                {
+                    // A refusal that leaves the state alone (busy) is shown from the idle pass rather than lost here.
+                    _startFailureKey = result.FailureKey;
+                }
+            }
+            catch (Exception)
+            {
+                _startFailureKey = "FileTransfer.BindFailed";
+            }
+        });
     }
 
     public override void OnInitializeLayout()
@@ -98,6 +122,8 @@ public class FileTransferDialog : Dialog
 
         int inner = (int)ViewSize.Width - 2;
         int height = (int)ViewSize.Height - 2;
+        _innerWidth = inner;
+        _innerHeight = height;
         if (inner > 0 && height > 0)
         {
             int width = Math.Max(1, inner - 2);
@@ -106,11 +132,10 @@ public class FileTransferDialog : Dialog
             _url.Position = new Position(1, 2);
             _url.ViewSize = new Size(width, 1);
             _code.Position = new Position(1, 4);
-            _code.IsVisible = height >= MinimumHeightForCode;
-            _warning.Position = new Position(1, Math.Max(1, height - 2));
-            _warning.ViewSize = new Size(width, 1);
+            LayOutWarning(width, height);
             _status.Position = new Position(1, height);
             _status.ViewSize = new Size(width, 1);
+            UpdateCodeVisibility();
         }
 
         base.OnInitializeLayout();
@@ -140,22 +165,25 @@ public class FileTransferDialog : Dialog
             return;
         }
 
+        string? startFailure = _startFailureKey;
         FileShareState state = _service.State;
-        if (ReferenceEquals(state, _shown))
+        if (_shown is null || !SameShown(_shown, state))
         {
-            return;
+            _shown = state;
+            _url.Text = state.Url ?? string.Empty;
+            if (state.QrModules is null)
+            {
+                _code.SetModules(null);
+            }
+            else if (!ReferenceEquals(_code.LastModules, state.QrModules))
+            {
+                _code.SetModules(state.QrModules);
+            }
+
+            UpdateCodeVisibility();
         }
 
-        _shown = state;
-        _url.Text = state.Url ?? string.Empty;
-        _code.SetModules(state.QrModules);
-        _status.Text = state.Status switch
-        {
-            FileShareStatus.Running => UiText.Get("FileTransfer.Requests", "Requests served: {0}").Replace("{0}", state.Requests.ToString(), StringComparison.Ordinal),
-            FileShareStatus.Starting => UiText.Get("FileTransfer.Starting", "Starting…"),
-            FileShareStatus.Failed => Reason(state.Message),
-            _ => UiText.Get("FileTransfer.Stopped", "Stopped"),
-        };
+        _status.Text = startFailure is not null ? Reason(startFailure) : StatusFor(state);
     }
 
     public override void Close()
@@ -168,6 +196,15 @@ public class FileTransferDialog : Dialog
         base.Close();
     }
 
+    private static string StatusFor(FileShareState state) => state.Status switch
+    {
+        FileShareStatus.Running => UiText.Get("FileTransfer.Requests", "Requests served: {0}").Replace("{0}", state.Requests.ToString(), StringComparison.Ordinal),
+        FileShareStatus.Starting => UiText.Get("FileTransfer.Starting", "Starting…"),
+        FileShareStatus.Failed => Reason(state.Message),
+        FileShareStatus.Expired => UiText.Get("FileTransfer.Expired", "The share has expired. Close the dialog and open File transfer again for a new address."),
+        _ => UiText.Get("FileTransfer.Stopped", "Stopped"),
+    };
+
     private void ShowFailure(string key, string english)
     {
         _failureKey = key;
@@ -175,6 +212,72 @@ public class FileTransferDialog : Dialog
         _code.SetModules(null);
         _status.Text = UiText.Get(key, english);
     }
+
+    /// <summary>The code is shown only when the dialog is tall enough and the code fits its width.</summary>
+    private void UpdateCodeVisibility()
+    {
+        _code.IsVisible = _innerHeight >= MinimumHeightForCode
+            && _code.ViewSize.Width > 0
+            && _code.ViewSize.Width <= _innerWidth - 2;
+    }
+
+    private void LayOutWarning(int width, int height)
+    {
+        IReadOnlyList<string> lines = WrapWords(UiText.Get("FileTransfer.CertificateWarning", "The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files while this dialog is open."), width);
+        for (int i = 0; i < WarningLines; i++)
+        {
+            Label label = _warning[i];
+            label.Text = i < lines.Count ? lines[i] : string.Empty;
+            label.Position = new Position(1, Math.Max(1, height - WarningLines + i));
+            label.ViewSize = new Size(width, 1);
+        }
+    }
+
+    /// <summary>Splits text into lines no wider than <paramref name="width"/>, at spaces where it can. A word longer than a line is cut.</summary>
+    internal static IReadOnlyList<string> WrapWords(string text, int width)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(width, 1);
+        List<string> lines = [];
+        StringBuilder line = new();
+        foreach (string word in text.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            string piece = word;
+            while (piece.Length > width)
+            {
+                if (line.Length > 0)
+                {
+                    lines.Add(line.ToString());
+                    line.Clear();
+                }
+
+                lines.Add(piece[..width]);
+                piece = piece[width..];
+            }
+
+            if (line.Length > 0 && line.Length + 1 + piece.Length > width)
+            {
+                lines.Add(line.ToString());
+                line.Clear();
+            }
+
+            if (line.Length > 0)
+            {
+                line.Append(' ');
+            }
+
+            line.Append(piece);
+        }
+
+        if (line.Length > 0)
+        {
+            lines.Add(line.ToString());
+        }
+
+        return lines;
+    }
+
+    private static bool SameShown(FileShareState a, FileShareState b) =>
+        a.Status == b.Status && a.Url == b.Url && a.Requests == b.Requests && a.Message == b.Message;
 
     private static string Reason(string? key) => key switch
     {
@@ -195,8 +298,12 @@ internal sealed class QrCodeView : Control
     {
     }
 
+    /// <summary>The matrix the lines were drawn from, so an idle pass does not encode the same code again.</summary>
+    public bool[,]? LastModules { get; private set; }
+
     public void SetModules(bool[,]? modules)
     {
+        LastModules = modules;
         _lines = modules is null ? [] : iConsole.Qr.QrTextRenderer.Render(modules);
         ViewSize = new Size(_lines.Count == 0 ? 0 : _lines[0].Length, _lines.Count);
     }

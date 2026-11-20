@@ -109,6 +109,50 @@ public class FileTransferDialogTest
         service.Verify(s => s.StopAsync(), Times.Once);
     }
 
+    [TestMethod]
+    public void WrapWords_KeepsEveryLineWithinTheWidth()
+    {
+        string text = "The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files.";
+
+        IReadOnlyList<string> lines = FileTransferDialog.WrapWords(text, 24);
+
+        Assert.IsTrue(lines.All(line => line.Length <= 24), "no line is wider than the dialog");
+        CollectionAssert.AreEqual(text.Split(' '), string.Join(' ', lines).Split(' '), "no word is lost");
+    }
+
+    [TestMethod]
+    public void WrapWords_CutsAWordLongerThanALine()
+    {
+        IReadOnlyList<string> lines = FileTransferDialog.WrapWords("abcdefghij", 4);
+
+        CollectionAssert.AreEqual(new[] { "abcd", "efgh", "ij" }, lines.ToArray());
+    }
+
+    [TestMethod]
+    public async Task StartRefusedWithoutAChangedState_IsShownFromTheIdlePass()
+    {
+        Mock<IFileShareService> service = Service(FileShareState.Stopped);
+        service.Setup(s => s.StartAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(FileShareStartResult.Failed("FileTransfer.Busy"));
+        FileTransferDialog dialog = Create(service);
+        string path = Path.Combine(Path.GetTempPath(), "iTerminal-busy-" + Guid.NewGuid().ToString("N") + ".txt");
+        File.WriteAllText(path, "x");
+        try
+        {
+            dialog.Begin([new Url(path)]);
+            await WaitUntilAsync(() => service.Invocations.Any(call => call.Method.Name == nameof(IFileShareService.StartAsync)));
+            await Task.Delay(50);
+
+            dialog.OnIdle();
+
+            Assert.AreEqual("A share is already running.", dialog.StatusText);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static async Task WaitUntilAsync(Func<bool> condition)
     {
         DateTime deadline = DateTime.UtcNow.AddSeconds(5);

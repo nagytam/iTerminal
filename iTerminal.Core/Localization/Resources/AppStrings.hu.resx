@@ -11204,4 +11204,7 @@
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>A kijelölt fájlok megosztása ezen a hálózaton: egy QR-kód és egy hivatkozás nyitja meg őket a telefon böngészőjében, amíg ez a párbeszédablak nyitva van.</value>
   </data>
+  <data name="FileTransfer.Expired" xml:space="preserve">
+    <value>A megosztás lejárt. Zárja be a párbeszédablakot, és nyissa meg újra a Fájlátvitelt új címért.</value>
+  </data>
 </root>
