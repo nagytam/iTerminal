@@ -214,7 +214,22 @@ public class FolderSelectorDrivesTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task WithNoDrives_SaysSoInsteadOfDrawingAnEmptyList()
+    public async Task WithNoDrivesAfterTheFirstRead_SaysSoInsteadOfDrawingAnEmptyList()
+    {
+        var (page, harness) = await CreatePageAsync();
+        harness.DriveInfoModel.IsLoaded = true;
+        page.OnIdle();
+        page.OnInitializeLayout();
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "No drives found.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task BeforeTheFirstRead_SaysTheDrivesAreBeingReadNotThatThereAreNone()
     {
         var (page, _) = await CreatePageAsync();
         page.OnInitializeLayout();
@@ -222,6 +237,7 @@ public class FolderSelectorDrivesTabPageTest
         Render(page);
         ScreenBuffer again = Render(page);
 
-        AssertScreenContains(again, "No drives found.");
+        AssertScreenContains(again, "Reading the drives");
+        AssertScreenDoesNotContain(again, "No drives found.");
     }
 }

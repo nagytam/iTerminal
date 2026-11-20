@@ -61,9 +61,11 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
             TransformItem = TransformItem,
             IsItemEnabled = IsEnabledItem
         };
+        _noDrivesText = iConsole.Localization.UiText.Get("FolderSelector.Drives.Empty", " No drives found.");
+        _readingDrivesText = iConsole.Localization.UiText.Get("FolderSelector.Drives.Reading", " Reading the drives…");
         _listBox = new ListBox<Drive>(listModel, themeService)
         {
-            EmptyText = iConsole.Localization.UiText.Get("FolderSelector.Drives.Empty", " No drives found."),
+            EmptyText = _readingDrivesText,
         };
         _scrollBar = new ScrollBar(themeService)
         {
@@ -78,6 +80,17 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
         AddControl(_listBox);
         AddControl(_scrollBar);
         AddControl(_selectDriveButton);
+    }
+
+    // An empty list means "not read yet" until the drive job's first pass sets IsLoaded; saying "No drives found."
+    // before that would read as a broken page to a user who opens the selector right after start-up.
+    private readonly string _noDrivesText;
+    private readonly string _readingDrivesText;
+
+    public override void OnIdle()
+    {
+        _listBox.EmptyText = _driveInfoModel.IsLoaded ? _noDrivesText : _readingDrivesText;
+        base.OnIdle();
     }
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

@@ -7039,6 +7039,9 @@
   <data name="FolderSelector.Drives.Empty" xml:space="preserve">
     <value> No se encontraron unidades.</value>
   </data>
+  <data name="FolderSelector.Drives.Reading" xml:space="preserve">
+    <value> Leyendo las unidades…</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Recientes</value>
   </data>
