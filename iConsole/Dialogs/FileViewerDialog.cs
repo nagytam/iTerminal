@@ -449,7 +449,16 @@ public class FileViewerDialog : Dialog
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         // The length is taken before the text is read: anything appended after this is followed, so nothing is missed.
         _followBytes = LocalPath is { } path && File.Exists(path) ? new FileInfo(path).Length : -1;
-        await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
+        // A debug symbol file (.pdb) is summarised here only; the preview and the editor read plain text.
+        if (Url is not null && FileToTextConverterService.HasPdbSummary(Url) && fileSystem is not null)
+        {
+            await _fileToTextConverterService.ReadPdbForViewerAsync(Url, fileSystem, _textViewerControl.TextModel);
+        }
+        else
+        {
+            await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
+        }
+
         _textViewerControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
         StartDisassembly(fileSystem);
         StartPdfSignatures(fileSystem);

@@ -25,6 +25,9 @@ public class FileViewerDialogDisassemblyTest
 
         public bool ReturnNullTask { get; set; }
 
+        public Task ReadPdbForViewerAsync(Url url, IFileSystem fileSystem, ITextModel textModel) =>
+            ReadFileAsync(url, fileSystem, textModel);
+
         public Task ReadFileAsync(Url? url, IFileSystem fileSystem, ITextModel textModel)
         {
             textModel.Lines.Clear();

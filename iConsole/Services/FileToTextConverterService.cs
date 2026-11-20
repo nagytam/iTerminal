@@ -20,6 +20,7 @@ using iConsole.IWork;
 using iConsole.Fonts;
 using iConsole.Photoshop;
 using iConsole.Cad;
+using iConsole.Pdb;
 using iConsole.Wasm;
 
 namespace iConsole.Services;
@@ -182,6 +183,36 @@ public class FileToTextConverterService : IFileToTextConverterService
     /// <summary>True for the binaries whose F3 view adds a disassembly after the metadata page.</summary>
     public static bool HasDisassembly(Url? url) =>
         url is not null && AssemblyExtensions.Contains(url.Extension);
+
+    /// <summary>True for a <c>.pdb</c> file, whose F3 view is its debug symbol summary (<see cref="PdbFileSummary"/>).</summary>
+    public static bool HasPdbSummary(Url? url) =>
+        url is not null && PdbFileSummary.Extensions.Contains(url.Extension);
+
+    public async Task ReadPdbForViewerAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        textModel.Lines.Clear();
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is null)
+        {
+            return;
+        }
+
+        // The summary is read from the bytes, so a file on an SSH, archive or memory drive reads the same as one on disk.
+        byte[] content = memoryFile.Content;
+        IReadOnlyList<string> lines;
+        try
+        {
+            lines = await Task.Run(() => PdbFileSummary.Summarize(content));
+        }
+        catch (FormatException)
+        {
+            // Neither debug symbol format: a .pdb that is really text (or anything else) is shown as text, as before.
+            await ReadTextFileAsync(url, fileSystem, textModel);
+            return;
+        }
+
+        AddLines(textModel, lines);
+    }
 
     public async Task<IReadOnlyList<string>> BuildDisassemblyAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken)
     {

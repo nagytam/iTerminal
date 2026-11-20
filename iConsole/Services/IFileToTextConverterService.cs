@@ -21,4 +21,10 @@ public interface IFileToTextConverterService
     /// for it, in the background, so the preview and the editor never carry it in their text.
     /// </summary>
     Task<IReadOnlyList<string>> BuildPdfSignatureLinesAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Fills the F3 viewer for a <c>.pdb</c> debug symbol file with its summary. Only the F3 viewer calls it, so the preview and
+    /// the editor keep the plain text that <see cref="ReadFileAsync"/> gives and can never save the summary into the file.
+    /// </summary>
+    Task ReadPdbForViewerAsync(Url url, IFileSystem fileSystem, ITextModel textModel);
 }
