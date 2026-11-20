@@ -33,6 +33,7 @@ A panel's drive kind is derived from the URL scheme (`iConsole/Data/Container.cs
 | `preview://` | `ContentModelPreview` | `IFilePreviewService` |
 | `archive://<archive>/<path>` | `ContentModelArchiveDrive` | `IArchiveDriveService` (SharpZipLib; 7-Zip CLI) |
 | `recycle://<name>` | `ContentModelRecycleDrive` | `IRecycleBinService` over an `IRecycleBinStore` |
+| `evidence://<file name>` | `ContentModelEvidenceNotebook` | `IEvidenceNotebookService` over a notebook folder the person chooses |
 | `dav://`, `davs://` `[user@]host[:port]/path` | `ContentModelWebDavDrive` | `IWebDavFileSystemService` (HttpClient + PROPFIND) |
 | `mtp://<device>/<storage>/<path>` | `ContentModelMtpDrive` | `IMtpDriveService` over an `IMtpBackend` (`gio` / the Windows shell) |
 
@@ -106,3 +107,18 @@ Ctrl+F8 — beside F8, which fills it — points the focused panel at the recycl
 - **Opening a zip** (`ContentModelFileSystemArchive.Refresh`): the ".." row is shown at once and the archive is read on a background task, which lands its listing only if the panel still shows that location. The key handler never waits for the read.
 - **S3 credentials and region** (`S3CredentialResolver`): the password manager first, then the standard `AWS_*` environment, then the `Cloud:S3` configuration. Configuration fills only what the two above did not give; an unsigned request is the last resort.
 - **Cached quotes** (`CacheService`, `InstrumentQuoteHelper`): each quote is judged on its own age, and a quote's history is bounded (the newest 100 values).
+
+### The evidence notebook (`evidence://`, Ctrl+Shift+Q, Ctrl+Shift+X)
+A notebook is a folder the person chooses when it is opened. It holds a copy of everything gathered into it and an index that records where each entry came from, so it is a plain folder on disk that can be copied or read without the application.
+
+- **Layout** (`Services/Evidence/EvidenceNotebookService.cs`): `notebook.json` is the index (every entry's record, and the notebook's creator origin); `items/NNNN_<name>` is the content, numbered in the order added. The index is rewritten whole on every change, through `notebook.json.tmp`, so a crash leaves the old index or the new one.
+- **Kinds** (`EvidenceKind`): a file copied from the other panel, a note, a voice recording (a WAV file, 16 kHz mono from the speech capture), clipboard text, and a web address.
+- **Origin is recorded without asking** (`EvidenceOriginCapture`): the source path and drive, the source size and modified time where the listing knows them, the machine, the operating user and system, the application version, the local addresses, the capture time in UTC and the UTC offset.
+- **A file is read once.** `AddFileAsync` hashes the bytes as `HashingStream` writes them into the notebook, so the SHA-256 recorded is that of what was stored. A failed copy deletes its partial file and records nothing.
+- **Sequence numbers are reserved before a copy starts**, so two adds in flight never share a name. A failed copy leaves a gap, which is correct.
+- **The drive is read-only.** `EvidenceNotebookService` is an `IFileSystem` whose writes, moves and deletes throw; the drive lists, opens and copies out, and `IsReadOnly` keeps the panel commands from offering the rest. New entries come only through the typed `Add*` methods.
+- **Verify** (palette only, "Verify evidence notebook") re-hashes every entry and reports the missing, resized or changed ones.
+- **Commands run their questions in the background** (`OpenEvidenceNotebookCommand`, `AddEvidenceCommand`): a prompt can only be answered through the keyboard loop, so awaiting it on the key handler would block the key that asks it. Each command has a guard so a second press does not stack a second question.
+- **Files are taken through `FileSystemResolver`**, the same resolution a copy uses. A panel model's own `StreamToAsync` is not implemented, so streaming straight from the model fails.
+- **The folder is remembered** in the `EvidenceNotebook.Folder` setting, which only seeds the prompt; the notebook itself is whatever index is in that folder.
+- **Not yet done:** a Places entry and menu items (the commands are reached through the hot keys and the palette only), and a details view of the origin beyond the footer line.

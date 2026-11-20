@@ -873,6 +873,7 @@ public partial class Url
             (Data.Container.PREVIEW, ContainerType.Preview),
             (Data.Container.ARCHIVE, ContainerType.Archive),
             (Data.Container.RECYCLE, ContainerType.Recycle),
+            (Data.Container.EVIDENCE, ContainerType.EvidenceNotebook),
             (Data.Container.MTP, ContainerType.Mtp),
         ];
         foreach (var (candidate, type) in drives)
@@ -901,6 +902,7 @@ public partial class Url
             or ContainerType.Preview
             or ContainerType.Archive
             or ContainerType.Recycle
+            or ContainerType.EvidenceNotebook
             or ContainerType.Mtp;
 
     /// <summary>The HTTP-backed drives whose URL is <c>scheme://[user@]authority/raw/path</c>.</summary>
