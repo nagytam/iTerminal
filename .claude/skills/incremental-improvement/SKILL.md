@@ -9,7 +9,7 @@ One improvement, one branch, one PR. Four phases run in order. **Every phase end
 either passes, and the next phase starts, or fails, and the phase is redone with the findings. Nothing moves
 forward on a failed or skipped gate.
 
-Read `CLAUDE.md` and the relevant `docs/architecture/*.md` before phase 1. The rules there override anything below.
+Read `CLAUDE.md` and the relevant `Documentation/architecture/*.md` before phase 1. The rules there override anything below.
 
 ## Working record
 
@@ -41,7 +41,7 @@ a question alone. Sort each question into one of two kinds:
   Only the user can settle this. Stop the gate and ask the user, with the question and the options the reviewer
   proposed. Do not guess.
 - **Anything else.** Implementation detail, style, architecture, test shape, or a point the reviewer can answer
-  from `CLAUDE.md`, the `docs/architecture/*.md` files or the code. Take the reviewer's proposed answer into account:
+  from `CLAUDE.md`, the `Documentation/architecture/*.md` files or the code. Take the reviewer's proposed answer into account:
   apply it, or write down why it does not apply. Record the question, the proposed answer and the decision in the
   working record under the gate. The gate then continues without stopping.
 
@@ -53,7 +53,7 @@ that is rejected needs a reason in the working record; an unreasoned rejection i
 **Output.** A short plan written to the working record:
 
 1. The goal, in one sentence, and what is out of scope.
-2. The files and subsystems that will change, each with the doc in `docs/architecture/` that governs it.
+2. The files and subsystems that will change, each with the doc in `Documentation/architecture/` that governs it.
 3. The tests that will prove it: unit tests (`iConsole.Test`, `iTerminal.Core.Test`) and, if the change is a key or
    a panel behaviour, an end-to-end test in `iTerminal.Test`.
 4. The risks: threading (the 200 ms budget, `IsCurrentUrl()`), terminal ownership, sandbox services a new

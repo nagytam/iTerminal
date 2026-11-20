@@ -33,7 +33,7 @@ target outside it asks first.
 
 **Data leaving the machine.** Any feature that calls an outside service sends the least it can: a SHA-256, a five-character
 hash prefix, or a package name and version. Never file contents, never a whole log, and never on opening a dialog. This is
-how the existing VirusTotal lookup already works (see `docs/architecture/file-operations.md`).
+how the existing VirusTotal lookup already works (see `Documentation/architecture/file-operations.md`).
 
 **Where code goes.** The architecture rules apply unchanged (`CLAUDE.md`):
 
@@ -41,10 +41,10 @@ how the existing VirusTotal lookup already works (see `docs/architecture/file-op
   steps of a recipe) belong in `iConsole`, with unit tests in `iConsole.Test`.
 - Behaviour, dialogs, services and drives belong in `iTerminal.Core`.
 - External programs (YARA, ClamAV, nmap, tshark, OpenSSL, GnuPG, age, osv-scanner, testssl.sh) follow the runtime-dependency
-  pattern in `docs/architecture/runtime-dependencies.md`: installed on demand, never shipped, and absent means a clear
+  pattern in `Documentation/architecture/runtime-dependencies.md`: installed on demand, never shipped, and absent means a clear
   message, not an error.
 - Anything file-shaped that a user browses (evidence bundles, captures, certificate stores) can get a URL scheme, following
-  the checklist in `docs/architecture/panels-and-drives.md`.
+  the checklist in `Documentation/architecture/panels-and-drives.md`.
 
 ## 2. What iTerminal already has
 
@@ -77,9 +77,9 @@ how the existing VirusTotal lookup already works (see `docs/architecture/file-op
 | **Have** HTTP archive and certificate views | HAR files and certificate details | HAR viewer, F3 | `iConsole/Har/`, `Dialogs/HarViewerDialog.cs` |
 | **Have** Log highlighting | Colour for log files | F3 viewer | `iConsole/Helper/LogHighlighting.cs` |
 | **Have** Recycle bin and Trash | Restore and delete-for-good through the real bin | Ctrl+F8 drive | `Model/ContentModels/ContentModelRecycleDrive.cs` |
-| **Have** Link-safe deletes | A recursive delete never walks through a symbolic link into another folder | F8 | `docs/architecture/file-operations.md` |
-| **Have** Sandboxed reading | Archives are read with 7-Zip's stdin closed; previews never execute; files open with a named program, never through a shell | Panels, F3, Shift+F3 | `docs/architecture/panels-and-drives.md`, `docs/architecture/file-operations.md` |
-| **Have** Remote drives | SSH, SFTP, SCP, FTP and FTPS, WebDAV, SMB, S3 (hand-signed SigV4), OneDrive, Google Drive | Drive URL schemes | `docs/architecture/panels-and-drives.md` |
+| **Have** Link-safe deletes | A recursive delete never walks through a symbolic link into another folder | F8 | `Documentation/architecture/file-operations.md` |
+| **Have** Sandboxed reading | Archives are read with 7-Zip's stdin closed; previews never execute; files open with a named program, never through a shell | Panels, F3, Shift+F3 | `Documentation/architecture/panels-and-drives.md`, `Documentation/architecture/file-operations.md` |
+| **Have** Remote drives | SSH, SFTP, SCP, FTP and FTPS, WebDAV, SMB, S3 (hand-signed SigV4), OneDrive, Google Drive | Drive URL schemes | `Documentation/architecture/panels-and-drives.md` |
 | **Have** AI assistant tools | The AI bar can act on the panels (copy, compare, read) with approval for actions | Alt+F1 and AI bar | `AI/AiPanelTools.cs`, `Dialogs/AiActionApprovalDialog.cs` |
 
 The gaps below are things the app does not do yet. Several are small extensions of what is already built.
@@ -264,7 +264,7 @@ Each audit reports findings and remediation text. None of them changes the syste
 - **Redact text.** Replace matches of user-chosen patterns (an address, a token, a user name) in a text file, writing a copy
   and leaving the original alone. For sharing a log without its secrets.
 - **Session clear.** Clear the command log, folder history, recent searches and the terminal history on demand, with one key
-  that asks first. The keys must follow `docs/architecture/key-patterns.md`.
+  that asks first. The keys must follow `Documentation/architecture/key-patterns.md`.
 - **Auto-lock.** Lock the app after an idle period, with the same unlock as the vault. `ScreenSavers` already draws an idle
   screen; check whether it can take a lock.
 

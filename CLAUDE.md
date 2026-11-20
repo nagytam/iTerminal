@@ -42,22 +42,22 @@ Runtime state lives outside the repo: the SQLite database (settings, folder cach
 
 Dependency chain: `iConsole` ← `iTerminal.Core` ← `iTerminal`. The platform input plug-ins `iConsole.Inputs.Posix` and `iConsole.Inputs.Windows` also depend on `iConsole` and are selected at startup. Reusable primitives belong in `iConsole`; app behaviour belongs in `iTerminal.Core`. `Program.cs` is the composition root: register new services and controls in `iConsoleApplicationBuilderExtension` / `iTerminalApplicationBuilderExtension`, not in `Program.cs`.
 
-The detailed write-ups are in `docs/architecture/`. Read the relevant one before changing a subsystem:
+The detailed write-ups are in `Documentation/architecture/`. Read the relevant one before changing a subsystem:
 
 | Area | Summary | Detail |
 | --- | --- | --- |
-| `iConsole` UI framework: controls, `Command`, `Job`, `TaskManager`, services, diagnostics | `Window` is the base for panels; commands are dispatched by the key router; jobs are `IJob` singletons on the `Desktop` lifecycle; one-shot async work goes to `TaskManager` (priorities `Rendering > Input > Background`). | [ui-framework.md](docs/architecture/ui-framework.md) |
-| Notifications and toasts | `INotificationService.Notify` from any thread; `NotificationJob` advances the clock; `ToastHost` draws. | [ui-framework.md](docs/architecture/ui-framework.md) |
-| Rendering pipeline | `ControlRendererJob` → `BufferLayer`s → `Buffer.Merge()` → `ConsoleBufferRendererJob` diffs and writes. `ITERMINAL_RENDER_DUMPS=1` dumps frames for visual bugs. | [ui-framework.md](docs/architecture/ui-framework.md) |
-| Lending the terminal (Ctrl+O) | `ConsoleOwnership` hands the whole terminal to a child shell; Ctrl+C, Ctrl+\ and Ctrl+Z go to the child. | [ui-framework.md](docs/architecture/ui-framework.md) |
-| Key handling and hot keys | Global hot keys are almost always function keys; see the key rules below. | [key-patterns.md](docs/architecture/key-patterns.md) |
-| Panels, content models, drives and URL schemes | `ContentModelService` owns the two panels; the URL scheme picks the content model. Tool-backed drives (docker, git, search, preview), archives, WebDAV, MTP, FTP, cloud, recycle bin, AI bar and the `iTerminal.Core` services. | [panels-and-drives.md](docs/architecture/panels-and-drives.md) |
-| File operations | Marking, command line, file associations, links, checksums and properties, wipe and signing, file encryption (Ctrl+Shift+E: AES-256-GCM, PBKDF2, `.enc`), file clipboard, drive actions, sorting, folder/file comparison, compress, extract, command palette, user menu. | [file-operations.md](docs/architecture/file-operations.md) |
-| Media and documents | Audio decoders, sinks and `MusicPlayerService`; the music drives and F3 music viewer; code pages; document index and extractors. | [media-and-documents.md](docs/architecture/media-and-documents.md) |
-| Dialogs | Git client, folder selector, remote connection manager (Alt+F2), translator (Ctrl+Shift+F4), currency converter (Ctrl+Shift+F5), BitTorrent manager (Ctrl+Shift+F1), contact manager (Ctrl+Shift+K), environment variables editor (Ctrl+Shift+H), encyclopedia (Ctrl+Shift+W), print dialog (Ctrl+P), performance benchmark (Ctrl+Shift+B), workspace manager (Ctrl+Shift+F2), one dialog per game (Tools menu), and the F3 CSV and HDF5 viewers. | [dialogs.md](docs/architecture/dialogs.md) |
-| Localization and the language selector | `ILocalizer` (iConsole) resolves keys from `.resx` files (neutral English + de, fr, es, it, hu), falls back to English, and the choice is the `Language` setting. `LanguageDialog` (Ctrl+Shift+F3) changes it at run time; menus and the footer re-read on `LanguageChanged`. A new string needs a key in all six files. | [ui-framework.md](docs/architecture/ui-framework.md), [dialogs.md](docs/architecture/dialogs.md) |
-| Runtime dependencies | Playwright, Ollama, git and the Whisper speech model (voice input in the AI bar, Alt+F1) are downloaded or installed on demand, not shipped. | [runtime-dependencies.md](docs/architecture/runtime-dependencies.md) |
-| Packaging | Windows MSI (WiX) and Linux tar.gz / deb / rpm. | [build-and-packaging.md](docs/architecture/build-and-packaging.md) |
+| `iConsole` UI framework: controls, `Command`, `Job`, `TaskManager`, services, diagnostics | `Window` is the base for panels; commands are dispatched by the key router; jobs are `IJob` singletons on the `Desktop` lifecycle; one-shot async work goes to `TaskManager` (priorities `Rendering > Input > Background`). | [ui-framework.md](Documentation/architecture/ui-framework.md) |
+| Notifications and toasts | `INotificationService.Notify` from any thread; `NotificationJob` advances the clock; `ToastHost` draws. | [ui-framework.md](Documentation/architecture/ui-framework.md) |
+| Rendering pipeline | `ControlRendererJob` → `BufferLayer`s → `Buffer.Merge()` → `ConsoleBufferRendererJob` diffs and writes. `ITERMINAL_RENDER_DUMPS=1` dumps frames for visual bugs. | [ui-framework.md](Documentation/architecture/ui-framework.md) |
+| Lending the terminal (Ctrl+O) | `ConsoleOwnership` hands the whole terminal to a child shell; Ctrl+C, Ctrl+\ and Ctrl+Z go to the child. | [ui-framework.md](Documentation/architecture/ui-framework.md) |
+| Key handling and hot keys | Global hot keys are almost always function keys; see the key rules below. | [key-patterns.md](Documentation/architecture/key-patterns.md) |
+| Panels, content models, drives and URL schemes | `ContentModelService` owns the two panels; the URL scheme picks the content model. Tool-backed drives (docker, git, search, preview), archives, WebDAV, MTP, FTP, cloud, recycle bin, AI bar and the `iTerminal.Core` services. | [panels-and-drives.md](Documentation/architecture/panels-and-drives.md) |
+| File operations | Marking, command line, file associations, links, checksums and properties, wipe and signing, file encryption (Ctrl+Shift+E: AES-256-GCM, PBKDF2, `.enc`), file clipboard, drive actions, sorting, folder/file comparison, compress, extract, command palette, user menu. | [file-operations.md](Documentation/architecture/file-operations.md) |
+| Media and documents | Audio decoders, sinks and `MusicPlayerService`; the music drives and F3 music viewer; code pages; document index and extractors. | [media-and-documents.md](Documentation/architecture/media-and-documents.md) |
+| Dialogs | Git client, folder selector, remote connection manager (Alt+F2), translator (Ctrl+Shift+F4), currency converter (Ctrl+Shift+F5), BitTorrent manager (Ctrl+Shift+F1), contact manager (Ctrl+Shift+K), environment variables editor (Ctrl+Shift+H), encyclopedia (Ctrl+Shift+W), print dialog (Ctrl+P), performance benchmark (Ctrl+Shift+B), workspace manager (Ctrl+Shift+F2), one dialog per game (Tools menu), and the F3 CSV and HDF5 viewers. | [dialogs.md](Documentation/architecture/dialogs.md) |
+| Localization and the language selector | `ILocalizer` (iConsole) resolves keys from `.resx` files (neutral English + de, fr, es, it, hu), falls back to English, and the choice is the `Language` setting. `LanguageDialog` (Ctrl+Shift+F3) changes it at run time; menus and the footer re-read on `LanguageChanged`. A new string needs a key in all six files. | [ui-framework.md](Documentation/architecture/ui-framework.md), [dialogs.md](Documentation/architecture/dialogs.md) |
+| Runtime dependencies | Playwright, Ollama, git and the Whisper speech model (voice input in the AI bar, Alt+F1) are downloaded or installed on demand, not shipped. | [runtime-dependencies.md](Documentation/architecture/runtime-dependencies.md) |
+| Packaging | Windows MSI (WiX) and Linux tar.gz / deb / rpm. | [build-and-packaging.md](Documentation/architecture/build-and-packaging.md) |
 
 ## Rules that are easy to break
 
@@ -104,7 +104,7 @@ The detailed write-ups are in `docs/architecture/`. Read the relevant one before
 
 ## Testing
 
-Detailed conventions, including the end-to-end suite and `ConsoleAppDriver` automation, are in [docs/architecture/testing.md](docs/architecture/testing.md). The essentials:
+Detailed conventions, including the end-to-end suite and `ConsoleAppDriver` automation, are in [Documentation/architecture/testing.md](Documentation/architecture/testing.md). The essentials:
 - MSTest with Moq. Test folders mirror source folders.
 - Assert on what a control drew with `ScreenBuffer`, not `MockBuffer`, and draw twice to catch stale text.
 - `iTerminal.Test` is sequential (`[DoNotParallelize]`), takes ~4–5 minutes, and boots the real app on a virtual terminal.
@@ -115,14 +115,14 @@ Detailed conventions, including the end-to-end suite and `ConsoleAppDriver` auto
 
 Each improvement goes through `/incremental-improvement` (`.claude/skills/incremental-improvement/SKILL.md`): one branch cut from `main`, one PR, four phases (plan, implement, test, integrate into main). Each phase ends in a review gate that must pass before the next phase starts. Merging into `main` waits for the user's approval.
 
-Two more project skills: `/fix-main` (`.claude/skills/fix-main/SKILL.md`) repairs a failing "Build and test" or "Release builds" pipeline on `main` through a branch and PR, and `/compare-console` (`.claude/skills/compare-console/SKILL.md`) adds a survey of other console UI libraries to `docs/architecture/ui-framework/tui-library-comparison.md`.
+One more project skill: `/fix-main` (`.claude/skills/fix-main/SKILL.md`) repairs a failing "Build and test" or "Release builds" pipeline on `main` through a branch and PR. The `researcher-console-libraries` agent (`.claude/agents/researcher-console-libraries.md`) adds a survey of other console UI libraries to `Documentation/architecture/ui-framework/tui-library-comparison.md`.
 
 `.claude/skills` also vendors the C#-relevant subset of the .NET team's [skills](https://github.com/dotnet/skills): C# language, MSBuild, NuGet, testing, diagnostics and .NET 11. `csharp-expert` is the routing entry point, and `.claude/skills/NOTICE.md` records the source commit, license and local changes.
 
 ## Further reference
 
-- [docs/architecture/key-patterns.md](docs/architecture/key-patterns.md): the full list of UI, navigation and state patterns (why a rule exists, with the bug it fixed).
-- [docs/mc-parity.md](docs/mc-parity.md): feature comparison with mc, Total Commander, Far, Double Commander, Directory Opus and Explorer, with a prioritized gap list.
+- [Documentation/architecture/key-patterns.md](Documentation/architecture/key-patterns.md): the full list of UI, navigation and state patterns (why a rule exists, with the bug it fixed).
+- [Documentation/mc-parity.md](Documentation/mc-parity.md): feature comparison with mc, Total Commander, Far, Double Commander, Directory Opus and Explorer, with a prioritized gap list.
 
 ## Code style
 

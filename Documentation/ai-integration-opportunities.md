@@ -308,4 +308,4 @@ some version numbers, so these were not relied on for anything beyond the points
   [insiderllm.com, Ollama 0.17 features](https://insiderllm.com/guides/ollama-0-17-new-features/)
 
 Repository sources: `iTerminal.Core/AI/*.cs`, `iTerminal.Core/Speech/*.cs`,
-`iTerminal.Core/Services/Translation/LlmTranslationProvider.cs`, `docs/architecture/*.md`.
+`iTerminal.Core/Services/Translation/LlmTranslationProvider.cs`, `Documentation/architecture/*.md`.
