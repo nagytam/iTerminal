@@ -17,7 +17,7 @@ public class BriefListingTest
     private static bool HasTwoNamesOnARow(string row) => Names.Count(name => row.Contains(name)) >= 2;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     [Timeout(120_000)]
     [TestMethod]

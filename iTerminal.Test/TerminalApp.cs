@@ -34,6 +34,13 @@ public sealed class TerminalApp : IAsyncDisposable
 {
     private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(InternetConnectivityJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob), typeof(UpdateCheckJob), typeof(OllamaServerJob)];
 
+    /// <summary>How long a test may run (<c>[Timeout]</c> is 120 s): an app older than this belongs to a test that was abandoned.</summary>
+    private static readonly TimeSpan LeakAge = TimeSpan.FromSeconds(150);
+
+    // MSTest abandons a test that times out without running its <c>await using</c>, so its app, with every job, would keep
+    // polling for the rest of the run and slow each test after it. Every live app is listed here and the abandoned ones are swept.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<TerminalApp, DateTime> Live = new();
+
     private readonly string _root;
     private bool _ownsSandbox = true;
 
@@ -41,6 +48,20 @@ public sealed class TerminalApp : IAsyncDisposable
     {
         _root = root;
         Driver = driver;
+        Live[this] = DateTime.UtcNow;
+    }
+
+    /// <summary>Disposes the apps of tests that timed out (or, with <paramref name="all"/>, every app that is still up).</summary>
+    public static async Task SweepLeakedAsync(bool all = false)
+    {
+        DateTime cutoff = DateTime.UtcNow - LeakAge;
+        foreach (KeyValuePair<TerminalApp, DateTime> entry in Live.ToArray())
+        {
+            if (all || entry.Value < cutoff)
+            {
+                await entry.Key.DisposeAsync();
+            }
+        }
     }
 
     public ConsoleAppDriver Driver { get; }
@@ -90,6 +111,7 @@ public sealed class TerminalApp : IAsyncDisposable
     /// </summary>
     public static async Task<TerminalApp> StartAsync(Action<string, string>? seed = null, int width = 140, int height = 40, string? keyMapJson = null)
     {
+        await SweepLeakedAsync();
         var root = Path.Combine(Path.GetTempPath(), "iTerminal.E2E." + Guid.NewGuid().ToString("N")[..8]);
         var left = Path.Combine(root, "left");
         var right = Path.Combine(root, "right");
@@ -140,6 +162,7 @@ public sealed class TerminalApp : IAsyncDisposable
     public async Task<TerminalApp> RestartAsync()
     {
         _ownsSandbox = false;
+        Live.TryRemove(this, out _);
         await Driver.DisposeAsync();
         SqliteConnection.ClearAllPools();
         var restarted = await LaunchAsync(_root, firstRun: false, Driver.Options.Width, Driver.Options.Height);
@@ -521,6 +544,7 @@ public sealed class TerminalApp : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        Live.TryRemove(this, out _);
         await Driver.DisposeAsync();
         if (_ownsSandbox)
         {

@@ -333,7 +333,9 @@ public sealed class ConsoleAppDriver : IAsyncDisposable
         }
         finally
         {
-            _host.Dispose();
+            // Dispose waits for the host's services: a job that never returns must not hold the test (and the run) up with it.
+            Task disposing = Task.Run(_host.Dispose);
+            await Task.WhenAny(disposing, Task.Delay(TimeSpan.FromSeconds(15)));
         }
     }
 

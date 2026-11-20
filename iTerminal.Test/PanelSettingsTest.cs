@@ -14,7 +14,7 @@ public class PanelSettingsTest
     private TerminalApp _app = null!;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     /// <summary>The sandbox plus a hidden file and two numbered ones, in both panels.</summary>
     private async Task StartAsync()

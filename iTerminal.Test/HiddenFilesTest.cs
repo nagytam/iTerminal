@@ -20,7 +20,7 @@ public class HiddenFilesTest
     });
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync() => await (_app?.DisposeAsync() ?? ValueTask.CompletedTask);
 
     [Timeout(120_000)]
     [TestMethod]
