@@ -1000,6 +1000,18 @@
   <data name="Exe.Title.Hint" xml:space="preserve">
     <value>  Haut/Bas:défiler</value>
   </data>
+  <data name="Exe.Button.Disassemble" xml:space="preserve">
+    <value>Désassembler</value>
+  </data>
+  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
+    <value>Le fichier dépasse {0:N0} Mo et n'est pas désassemblé</value>
+  </data>
+  <data name="Exe.Disassembly.Failed" xml:space="preserve">
+    <value>Échec du désassemblage : {0}</value>
+  </data>
+  <data name="Exe.Disassembly.None" xml:space="preserve">
+    <value>Aucun code à désassembler trouvé</value>
+  </data>
   <data name="Exe.Grid.Empty" xml:space="preserve">
     <value>Rien à afficher</value>
   </data>

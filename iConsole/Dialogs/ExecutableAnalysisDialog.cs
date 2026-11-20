@@ -2,6 +2,7 @@ using System.Globalization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
+using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Executables;
 using iConsole.Interfaces;
@@ -9,6 +10,7 @@ using iConsole.Layouts;
 using iConsole.Localization;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Services.Disassembly;
 
 namespace iConsole.Dialogs;
 
@@ -16,29 +18,50 @@ namespace iConsole.Dialogs;
 /// The executable analysis view: what a PE, ELF or Mach-O file is and how hardened it is, as a two-column grid (item, value). The file is
 /// parsed, never run, on a background task; the result lands on the next idle pass. Closing the dialog cancels the read and drops the
 /// result. A file that cannot be parsed leaves an empty grid and says why on the status line.
+/// F5 (or the Disassemble button) swaps the grid for a disassembly listing of the file, built on a background task the same way;
+/// F5 again swaps back.
 /// </summary>
 public class ExecutableAnalysisDialog : Dialog
 {
     private const string CloseActionView = " [X]";
+    private const string DisassembleActionView = " [F5]";
 
     /// <summary>The widest value cell; a longer value continues on the following rows.</summary>
     internal const int ValueWidth = 38;
 
     private readonly IExecutableAnalyzer _analyzer;
+    private readonly Func<string, CancellationToken, IReadOnlyList<string>> _disassemble;
     private readonly CsvGrid _grid;
+    private readonly TextViewerControl _listing;
     private readonly Label _statusLabel;
     private CancellationTokenSource? _cancellation;
     private Task<ExecutableReport>? _task;
     private int _generation;
     private int _pendingGeneration;
+    private CancellationTokenSource? _listingCancellation;
+    private Task<IReadOnlyList<string>>? _listingTask;
+    private bool _listingReady;
+    private bool _listingShown;
 
     public ExecutableAnalysisDialog(IExecutableAnalyzer analyzer, IThemeService themeService)
+        : this(analyzer, ExecutableDisassembly.Build, themeService)
+    {
+    }
+
+    /// <param name="disassemble">Builds the listing of a file; the default reads the file and disassembles it. A seam for tests.</param>
+    public ExecutableAnalysisDialog(
+        IExecutableAnalyzer analyzer,
+        Func<string, CancellationToken, IReadOnlyList<string>> disassemble,
+        IThemeService themeService)
         : base(nameof(ExecutableAnalysisDialog), themeService)
     {
         _analyzer = analyzer;
+        _disassemble = disassemble;
         _grid = new CsvGrid(themeService) { EmptyText = UiText.Get("Exe.Grid.Empty", "Nothing to show") };
+        _listing = new TextViewerControl(false, themeService) { IsVisible = false };
         _statusLabel = new Label(string.Empty, themeService);
         AddControl(_grid);
+        AddControl(_listing);
         AddControl(_statusLabel);
     }
 
@@ -54,6 +77,15 @@ public class ExecutableAnalysisDialog : Dialog
     /// <summary>The report on screen, or null before it lands or when the file could not be read.</summary>
     public ExecutableReport? Report { get; private set; }
 
+    /// <summary>The disassembly listing, shown in place of the grid when F5 is pressed.</summary>
+    public TextViewerControl Listing => _listing;
+
+    /// <summary>True while the disassembly listing is shown instead of the analysis grid.</summary>
+    public bool IsShowingListing => _listingShown;
+
+    /// <summary>The listing build in progress, or null when none is running.</summary>
+    public Task<IReadOnlyList<string>>? ListingTask => _listingTask;
+
     /// <summary>What the status line says: the file and its format, an error, or that the file is being read.</summary>
     public string Status => _statusLabel.Text;
 
@@ -64,6 +96,7 @@ public class ExecutableAnalysisDialog : Dialog
         Report = null;
         _grid.SetData([], []);
         _statusLabel.Text = string.Empty;
+        ResetListing();
         if (Url is null)
         {
             _statusLabel.Text = UiText.Get("Viewer.NothingToShow", "Nothing to show");
@@ -93,7 +126,109 @@ public class ExecutableAnalysisDialog : Dialog
             StateHasChanged();
         }
 
+        if (LandListing())
+        {
+            StateHasChanged();
+        }
+
         base.OnIdle();
+    }
+
+    /// <summary>Puts a finished listing into the text view. A listing that was dropped (the dialog was closed or reset) has no task left to land.</summary>
+    private bool LandListing()
+    {
+        if (_listingTask is not { IsCompleted: true } task)
+        {
+            return false;
+        }
+
+        _listingTask = null;
+        _listingCancellation?.Dispose();
+        _listingCancellation = null;
+        if (task.IsCanceled)
+        {
+            return false;
+        }
+
+        if (task.Exception is { } exception)
+        {
+            _listing.TextModel.Lines.ReplaceAll([string.Format(UiText.Get("Exe.Disassembly.Failed", "Disassembly failed: {0}"), exception.GetBaseException().Message)]);
+            return true;
+        }
+
+        IReadOnlyList<string> lines = task.Result;
+        _listing.TextModel.Lines.ReplaceAll(lines.Count > 0 ? lines : [UiText.Get("Exe.Disassembly.None", "No code found to disassemble")]);
+        _listingReady = true;
+        return true;
+    }
+
+    /// <summary>Swaps the analysis grid and the disassembly listing. The listing is built on the first show of a file and kept until the file changes.</summary>
+    public void ToggleListing()
+    {
+        if (Url is null)
+        {
+            return;
+        }
+
+        _listingShown = !_listingShown;
+        ApplyListingVisibility();
+        if (_listingShown)
+        {
+            _listing.SetFocus();
+            if (!_listingReady && _listingTask is null)
+            {
+                StartListing(Url.Path);
+            }
+        }
+        else
+        {
+            _listing.ResetFocus();
+            _grid.SetFocus();
+        }
+
+        StateHasChanged();
+    }
+
+    private void StartListing(string path)
+    {
+        _listingCancellation = new CancellationTokenSource();
+        CancellationToken token = _listingCancellation.Token;
+        _listing.TextModel.Lines.ReplaceAll([UiText.Get("Viewer.Disassembling", "Disassembling…")]);
+        Func<string, CancellationToken, IReadOnlyList<string>> disassemble = _disassemble;
+        // Reading and disassembling the file is blocking work, so it runs on a worker thread like the analysis.
+        _listingTask = Task.Run(() => disassemble(path, token), token);
+    }
+
+    /// <summary>Drops the listing of the last file, cancelling a build that is still running.</summary>
+    private void ResetListing()
+    {
+        Retire(_listingCancellation, _listingTask);
+        _listingCancellation = null;
+        _listingTask = null;
+        _listingReady = false;
+        _listingShown = false;
+        _listing.TextModel.Lines.ReplaceAll([]);
+        ApplyListingVisibility();
+    }
+
+    /// <summary>Shows exactly one of the two views: the grid or the listing.</summary>
+    private void ApplyListingVisibility()
+    {
+        _grid.IsVisible = !_listingShown;
+        _listing.IsVisible = _listingShown;
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && keyEvent.ConsoleKey == ConsoleKey.F5
+            && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt)
+        {
+            ToggleListing();
+            return true;
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
     }
 
     private void Land(Task<ExecutableReport> task)
@@ -296,6 +431,9 @@ public class ExecutableAnalysisDialog : Dialog
         Retire(_cancellation, _task);
         _cancellation = null;
         _task = null;
+        Retire(_listingCancellation, _listingTask);
+        _listingCancellation = null;
+        _listingTask = null;
         base.Close();
     }
 
@@ -314,11 +452,21 @@ public class ExecutableAnalysisDialog : Dialog
     public override async Task ShowAsync()
     {
         await base.ShowAsync();
-        _grid.SetFocus();
+        // ShowAsync makes every child visible; the listing is on demand, so the view that is not wanted is hidden again.
+        ApplyListingVisibility();
+        if (_listingShown)
+        {
+            _listing.SetFocus();
+        }
+        else
+        {
+            _grid.SetFocus();
+        }
     }
 
     public override void OnInitializeActionButtons()
     {
+        AddActionButton(new ActionButton(UiText.Get("Exe.Button.Disassemble", "Disassemble"), DisassembleActionView, new ToggleListingCommand(this), ThemeService));
         AddActionButton(new ActionButton(UiText.Get("Common.Close", "Close"), CloseActionView, new CloseSelfCommand(this), ThemeService));
     }
 
@@ -327,6 +475,15 @@ public class ExecutableAnalysisDialog : Dialog
         public override Task ExecuteAsync(object? arg)
         {
             owner.Close();
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class ToggleListingCommand(ExecutableAnalysisDialog owner) : Command
+    {
+        public override Task ExecuteAsync(object? arg)
+        {
+            owner.ToggleListing();
             return Task.CompletedTask;
         }
     }
@@ -343,6 +500,8 @@ public class ExecutableAnalysisDialog : Dialog
         int width = Math.Max(0, (int)ViewSize.Width - 2);
         _grid.Position = new Position(1, 1);
         _grid.ViewSize = new Size(width, Math.Max(1, (int)ViewSize.Height - 4));
+        _listing.Position = new Position(1, 1);
+        _listing.ViewSize = new Size(width, Math.Max(1, (int)ViewSize.Height - 4));
 
         _statusLabel.Position = new Position(1, Math.Max(0, (int)ViewSize.Height - 2));
         _statusLabel.ViewSize = new Size(width, 1);

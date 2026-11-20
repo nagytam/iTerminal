@@ -1000,6 +1000,18 @@
   <data name="Exe.Title.Hint" xml:space="preserve">
     <value>  Auf/Ab:Blättern</value>
   </data>
+  <data name="Exe.Button.Disassemble" xml:space="preserve">
+    <value>Disassemblieren</value>
+  </data>
+  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
+    <value>Die Datei ist größer als {0:N0} MB und wird nicht disassembliert</value>
+  </data>
+  <data name="Exe.Disassembly.Failed" xml:space="preserve">
+    <value>Disassemblierung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Exe.Disassembly.None" xml:space="preserve">
+    <value>Kein Code zum Disassemblieren gefunden</value>
+  </data>
   <data name="Exe.Grid.Empty" xml:space="preserve">
     <value>Nichts anzuzeigen</value>
   </data>

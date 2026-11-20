@@ -309,6 +309,28 @@ public class EditorViewerAndPermissionsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task F5OnAnElfAnalysisSwapsTheGridForADisassemblyListingAndBack()
+    {
+        await _app.SelectEntryAsync("tool.elf");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.ExecutableAnalysisDialog, "the executable analysis to open");
+        var dialog = (iConsole.Dialogs.ExecutableAnalysisDialog)_app.Driver.FocusedModal!;
+        await _app.WaitForTextAsync("Hardening");
+
+        Assert.IsTrue(await _app.PressAsync("F5"));
+        Assert.IsTrue(dialog.IsShowingListing, "F5 shows the listing in place of the grid");
+        await _app.WaitUntilAsync(() => dialog.ListingTask is null && dialog.Listing.TextModel.Lines.Count > 0, "the listing to land");
+        Assert.IsFalse(dialog.Grid.IsVisible);
+
+        Assert.IsTrue(await _app.PressAsync("F5"));
+        Assert.IsFalse(dialog.IsShowingListing, "F5 again shows the analysis grid");
+        await _app.WaitForTextAsync("Hardening");
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.ExecutableAnalysisDialog, "the analysis to close");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task F3OnATruncatedExecutableOpensTheAnalysisAndSaysItCannotBeRead()
     {
         await _app.SelectEntryAsync("broken.exe");

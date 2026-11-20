@@ -1000,6 +1000,18 @@
   <data name="Exe.Title.Hint" xml:space="preserve">
     <value>  Arriba/Abajo:desplazar</value>
   </data>
+  <data name="Exe.Button.Disassemble" xml:space="preserve">
+    <value>Desensamblar</value>
+  </data>
+  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
+    <value>El archivo es mayor de {0:N0} MB y no se desensambla</value>
+  </data>
+  <data name="Exe.Disassembly.Failed" xml:space="preserve">
+    <value>Error al desensamblar: {0}</value>
+  </data>
+  <data name="Exe.Disassembly.None" xml:space="preserve">
+    <value>No se encontró código que desensamblar</value>
+  </data>
   <data name="Exe.Grid.Empty" xml:space="preserve">
     <value>Nada que mostrar</value>
   </data>
