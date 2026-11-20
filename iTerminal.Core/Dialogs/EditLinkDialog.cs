@@ -1,3 +1,6 @@
+using iTerminal.Core.Services;
+using iTerminal.Core.Model;
+using iTerminal.Core.Controls;
 using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -36,7 +39,8 @@ public class EditLinkDialog : FormDialog
         IContentModelService contentModelService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IDirectoryLister? directoryLister = null)
         : base(nameof(EditLinkDialog), themeService)
     {
         _linkService = linkService;
@@ -45,7 +49,7 @@ public class EditLinkDialog : FormDialog
         var saveCommand = new SaveCommand();
         AddCommand(saveCommand);
 
-        _textBoxTarget = new TextBox(beepService, dateTimeProviderService, themeService) { Label = iConsole.Localization.UiText.Get("Label.Target", "Target") };
+        _textBoxTarget = new TextBox(beepService, dateTimeProviderService, themeService) { Label = iConsole.Localization.UiText.Get("Label.Target", "Target") }.WithDirectoryCompletion(directoryLister, DirectoryCompletionMode.FilesAndFolders);
         _labelLink = new Label(string.Empty, themeService);
         _labelKind = new Label(string.Empty, themeService);
         _checkBoxHard = new CheckBox(themeService) { Label = UiText.Get("Field.HardLink", "Hard link (a second name for the file; same volume)") };

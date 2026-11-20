@@ -1,3 +1,6 @@
+using iTerminal.Core.Services;
+using iTerminal.Core.Model;
+using iTerminal.Core.Controls;
 using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -34,7 +37,8 @@ public class CreateLinkDialog : FormDialog
         IContentModelService contentModelService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IDirectoryLister? directoryLister = null)
         : base(nameof(CreateLinkDialog), themeService)
     {
         _linkService = linkService;
@@ -43,7 +47,7 @@ public class CreateLinkDialog : FormDialog
         var createCommand = new CreateCommand();
         AddCommand(createCommand);
 
-        _textBoxLink = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Link", "Link") };
+        _textBoxLink = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Link", "Link") }.WithDirectoryCompletion(directoryLister, DirectoryCompletionMode.FilesAndFolders);
         _labelTarget = new Label(string.Empty, themeService);
         _checkBoxHard = new CheckBox(themeService) { Label = UiText.Get("Field.HardLink", "Hard link (a second name for the file; same volume)") };
         _checkBoxRelative = new CheckBox(themeService) { Label = UiText.Get("Field.RelativeTarget", "Relative target (the pair can be moved together)") };

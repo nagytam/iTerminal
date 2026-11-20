@@ -21,6 +21,9 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
     /// </summary>
     internal static readonly TimeSpan PendingUpdateWait = TimeSpan.FromMilliseconds(150);
 
+    /// <summary>The same wait for an <see cref="IBlockingCompletionModel"/>, whose update lists a folder (bounded at 750 ms by the model).</summary>
+    internal static readonly TimeSpan BlockingUpdateWait = TimeSpan.FromMilliseconds(1000);
+
     public override async Task ExecuteAsync(object? arg)
     {
         // Matches are computed on a background task per keystroke. A Tab pressed straight after
@@ -29,7 +32,9 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
         // UpdateTask; let it land first.
         if (completionModel.UpdateTask is { IsCompleted: false } pending)
         {
-            await Task.WhenAny(pending, Task.Delay(PendingUpdateWait));
+            // A model that does I/O may take longer than an in-memory filter; Tab waits (asynchronously) for it, or the
+            // matches it completes from would still belong to the folder before.
+            await Task.WhenAny(pending, Task.Delay(completionModel is IBlockingCompletionModel ? BlockingUpdateWait : PendingUpdateWait));
         }
 
         if (completionModel.MatchingValues.Any())

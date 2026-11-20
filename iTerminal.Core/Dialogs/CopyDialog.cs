@@ -25,7 +25,8 @@ public class CopyDialog : TransferDialog
         ISshFileSystemService sshFileSystemService,
         IArchiveFileSystemService archiveFileSystemService,
         ISettingsService? settingsService = null,
-        IChecksumService? checksumService = null)
+        IChecksumService? checksumService = null,
+        IDirectoryLister? directoryLister = null)
         : base(
             nameof(CopyDialog),
             "Copy",
@@ -37,7 +38,8 @@ public class CopyDialog : TransferDialog
             beepService,
             dateTimeProviderService,
             themeService,
-            settingsService)
+            settingsService,
+            directoryLister)
     {
     }
 }

@@ -1,3 +1,5 @@
+using iTerminal.Core.Model;
+using iTerminal.Core.Controls;
 using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -92,7 +94,8 @@ public class ExtractDialog : FormDialog
         IFileSystemService fileSystemService,
         IMemoryDriveService memoryDriveService,
         ISshFileSystemService sshFileSystemService,
-        IArchiveFileSystemService archiveFileSystemService)
+        IArchiveFileSystemService archiveFileSystemService,
+        IDirectoryLister? directoryLister = null)
         : base(nameof(ExtractDialog), themeService)
     {
         _contentModelService = contentModelService;
@@ -109,7 +112,7 @@ public class ExtractDialog : FormDialog
         {
             MaxLength = Url.MaxLength,
             IsReadOnly = false,
-        };
+        }.WithDirectoryCompletion(directoryLister);
         _textBoxTarget.PropertyChanged += (_, _) => UpdateLanding();
         _password = new PasswordBox(beepService, dateTimeProviderService, themeService);
 

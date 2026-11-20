@@ -1,3 +1,5 @@
+using iTerminal.Core.Model;
+using iTerminal.Core.Controls;
 using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -166,7 +168,8 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
         IFileSystemService fileSystemService,
         IMemoryDriveService memoryDriveService,
         ISshFileSystemService sshFileSystemService,
-        IArchiveFileSystemService archiveFileSystemService)
+        IArchiveFileSystemService archiveFileSystemService,
+        IDirectoryLister? directoryLister = null)
         : base(nameof(CompressDialog), themeService)
     {
         _contentModelService = contentModelService;
@@ -185,7 +188,7 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
         {
             MaxLength = Url.MaxLength,
             IsReadOnly = false,
-        };
+        }.WithDirectoryCompletion(directoryLister, DirectoryCompletionMode.FilesAndFolders);
         _textBoxArchive.PropertyChanged += (_, _) => OnArchivePathChanged();
 
         _comboFormat = new ComboBox<ArchiveFormat>(themeService) { DisplaySelector = DescribeFormat };

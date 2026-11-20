@@ -26,7 +26,8 @@ public class MoveDialog : TransferDialog
         IArchiveFileSystemService archiveFileSystemService,
         ISettingsService? settingsService = null,
         IChecksumService? checksumService = null,
-        RenameUndoService? renameUndo = null)
+        RenameUndoService? renameUndo = null,
+        IDirectoryLister? directoryLister = null)
         : base(
             nameof(MoveDialog),
             "Move",
@@ -38,7 +39,8 @@ public class MoveDialog : TransferDialog
             beepService,
             dateTimeProviderService,
             themeService,
-            settingsService)
+            settingsService,
+            directoryLister)
     {
     }
 }
