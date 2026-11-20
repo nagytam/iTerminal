@@ -1,3 +1,4 @@
+using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Executables;
@@ -236,5 +237,157 @@ public class ExecutableAnalysisDialogTest
         IReadOnlyList<string[]> rows = ExecutableAnalysisDialog.BuildRows(report);
 
         Assert.IsTrue(rows.Any(r => r[1] == "nothing suspicious found"));
+    }
+
+    private static ExecutableAnalysisDialog CreateWithListing(FakeAnalyzer analyzer, Func<string, CancellationToken, IReadOnlyList<string>> disassemble) =>
+        new(analyzer, disassemble, new ThemeService()) { Url = new Url("file:///usr/bin/sample") };
+
+    /// <summary>Shows the dialog in a window, as the app does, so the children's IsVisible reflects the dialog being up; then starts the read.</summary>
+    private static async Task ShowAndInitializeAsync(ExecutableAnalysisDialog dialog)
+    {
+        Control root = new Window(new ThemeService()) { ViewSize = new Size(100, 30) };
+        await root.ShowDialogAsync(dialog);
+        await dialog.OnInitializeAsync();
+    }
+
+    private static Task PressF5(ExecutableAnalysisDialog dialog) =>
+        dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.F5, false, false, false));
+
+    private static async Task LandListingAsync(ExecutableAnalysisDialog dialog)
+    {
+        try
+        {
+            await dialog.ListingTask!;
+        }
+        catch
+        {
+            // A failed build is handled by OnIdle, which is what is under test.
+        }
+
+        dialog.OnIdle();
+    }
+
+    private static List<string> ListingLines(ExecutableAnalysisDialog dialog) => dialog.Listing.TextModel.Lines.ToList();
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F5SwapsTheGridForTheListingAndLandsTheListingOnAnIdlePass()
+    {
+        var dialog = CreateWithListing(new FakeAnalyzer(), (_, _) => ["  0x0000  push rbp", "  0x0001  mov rbp, rsp"]);
+        await ShowAndInitializeAsync(dialog);
+        await LandAsync(dialog);
+
+        await PressF5(dialog);
+
+        Assert.IsTrue(dialog.IsShowingListing);
+        Assert.IsTrue(dialog.Listing.IsVisible);
+        Assert.IsFalse(dialog.Grid.IsVisible);
+        await LandListingAsync(dialog);
+        CollectionAssert.AreEqual(new[] { "  0x0000  push rbp", "  0x0001  mov rbp, rsp" }, ListingLines(dialog));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F5AgainShowsTheGridAgainWithoutBuildingTheListingTwice()
+    {
+        int builds = 0;
+        var dialog = CreateWithListing(new FakeAnalyzer(), (_, _) => { builds++; return ["  0x0000  ret"]; });
+        await ShowAndInitializeAsync(dialog);
+        await PressF5(dialog);
+        await LandListingAsync(dialog);
+
+        await PressF5(dialog);
+
+        Assert.IsFalse(dialog.IsShowingListing);
+        Assert.IsTrue(dialog.Grid.IsVisible);
+        Assert.IsFalse(dialog.Listing.IsVisible);
+
+        await PressF5(dialog);
+
+        Assert.IsTrue(dialog.IsShowingListing);
+        Assert.AreEqual(1, builds, "the listing is kept until the file changes");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheListingIsBuiltOnAWorkerThread()
+    {
+        int dialogThread = Environment.CurrentManagedThreadId;
+        int workerThread = -1;
+        var dialog = CreateWithListing(new FakeAnalyzer(), (_, _) =>
+        {
+            workerThread = Environment.CurrentManagedThreadId;
+            return ["  0x0000  ret"];
+        });
+        await dialog.OnInitializeAsync();
+
+        await PressF5(dialog);
+        await dialog.ListingTask!;
+
+        Assert.AreNotEqual(dialogThread, workerThread);
+        Assert.IsFalse(ListingLines(dialog).Any(l => l.Contains("ret")), "the result lands on an idle pass, not on the worker");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFailedListing_SaysWhyInTheListing()
+    {
+        var dialog = CreateWithListing(new FakeAnalyzer(), (_, _) => throw new InvalidOperationException("boom"));
+        await dialog.OnInitializeAsync();
+        await PressF5(dialog);
+        await LandListingAsync(dialog);
+
+        Assert.IsTrue(ListingLines(dialog).Any(l => l.Contains("boom")));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ClosingTheDialogCancelsTheListingBuild()
+    {
+        CancellationToken seen = default;
+        using var started = new ManualResetEventSlim();
+        var dialog = CreateWithListing(new FakeAnalyzer(), (_, token) =>
+        {
+            seen = token;
+            started.Set();
+            token.WaitHandle.WaitOne(TimeSpan.FromSeconds(30));
+            token.ThrowIfCancellationRequested();
+            return ["  0x0000  ret"];
+        });
+        await dialog.OnInitializeAsync();
+        await PressF5(dialog);
+        started.Wait(TimeSpan.FromSeconds(30));
+        Task<IReadOnlyList<string>> task = dialog.ListingTask!;
+
+        dialog.Close();
+        try
+        {
+            await task;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
+        dialog.OnIdle();
+
+        Assert.IsTrue(seen.IsCancellationRequested);
+        Assert.IsNull(dialog.ListingTask);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task OpeningAnotherFile_DropsTheListingOfTheFirst()
+    {
+        var dialog = CreateWithListing(new FakeAnalyzer(), (_, _) => ["  0x0000  ret"]);
+        await ShowAndInitializeAsync(dialog);
+        await PressF5(dialog);
+        await LandListingAsync(dialog);
+
+        dialog.Url = new Url("file:///usr/bin/other");
+        await dialog.OnInitializeAsync();
+
+        Assert.IsFalse(dialog.IsShowingListing);
+        Assert.IsTrue(dialog.Grid.IsVisible);
+        Assert.AreEqual(0, ListingLines(dialog).Count);
     }
 }

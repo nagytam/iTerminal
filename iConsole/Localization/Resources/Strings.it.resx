@@ -1000,6 +1000,18 @@
   <data name="Exe.Title.Hint" xml:space="preserve">
     <value>  Su/Giù:scorri</value>
   </data>
+  <data name="Exe.Button.Disassemble" xml:space="preserve">
+    <value>Disassembla</value>
+  </data>
+  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
+    <value>Il file supera {0:N0} MB e non viene disassemblato</value>
+  </data>
+  <data name="Exe.Disassembly.Failed" xml:space="preserve">
+    <value>Disassemblaggio non riuscito: {0}</value>
+  </data>
+  <data name="Exe.Disassembly.None" xml:space="preserve">
+    <value>Nessun codice da disassemblare trovato</value>
+  </data>
   <data name="Exe.Grid.Empty" xml:space="preserve">
     <value>Niente da mostrare</value>
   </data>

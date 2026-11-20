@@ -1000,6 +1000,18 @@
   <data name="Exe.Title.Hint" xml:space="preserve">
     <value>  Fel/Le:görgetés</value>
   </data>
+  <data name="Exe.Button.Disassemble" xml:space="preserve">
+    <value>Visszafejtés</value>
+  </data>
+  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
+    <value>A fájl nagyobb, mint {0:N0} MB, ezért nincs visszafejtve</value>
+  </data>
+  <data name="Exe.Disassembly.Failed" xml:space="preserve">
+    <value>A visszafejtés sikertelen: {0}</value>
+  </data>
+  <data name="Exe.Disassembly.None" xml:space="preserve">
+    <value>Nincs visszafejthető kód</value>
+  </data>
   <data name="Exe.Grid.Empty" xml:space="preserve">
     <value>Nincs mit megjeleníteni</value>
   </data>
