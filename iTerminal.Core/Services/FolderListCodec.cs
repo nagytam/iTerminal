@@ -3,19 +3,29 @@ using System.Text;
 namespace iTerminal.Core.Services;
 
 /// <summary>
-/// A folder list saved as one setting value: the entries joined by <c>;</c>. An entry that holds <c>;</c> or <c>%</c>
-/// is escaped (<c>%3B</c>, <c>%25</c>) so that it reads back whole; an entry with neither is stored as it always was,
-/// so a value saved before this existed reads the same.
+/// A folder list saved as one setting value: the entries joined by <c>;</c>. A value written by this codec starts with
+/// <see cref="Marker"/>, and its entries have <c>;</c> and <c>%</c> escaped (<c>%3B</c>, <c>%25</c>), so an entry that
+/// holds either reads back whole. A value without the marker was saved before the codec existed: it is split on
+/// <c>;</c> and not unescaped, so a literal <c>%25</c> or <c>%3B</c> in an old path is read as it was written.
 /// </summary>
 public static class FolderListCodec
 {
     private const char Separator = ';';
 
-    public static string Join(IEnumerable<string> entries) =>
-        string.Join(Separator, entries.Select(entry => entry.Replace("%", "%25", StringComparison.Ordinal).Replace(";", "%3B", StringComparison.Ordinal)));
+    // A record separator: it cannot be in a path, so no value saved before this codec starts with it.
+    private const string Marker = "\u001E";
 
-    public static List<string> Split(string value) =>
-        value.Split(Separator).Select(Unescape).ToList();
+    public static string Join(IEnumerable<string> entries) =>
+        Marker + string.Join(Separator, entries.Select(entry => entry.Replace("%", "%25", StringComparison.Ordinal).Replace(";", "%3B", StringComparison.Ordinal)));
+
+    public static List<string> Split(string value)
+    {
+        if (!value.StartsWith(Marker, StringComparison.Ordinal))
+        {
+            return value.Split(Separator).ToList();
+        }
+        return value[Marker.Length..].Split(Separator).Select(Unescape).ToList();
+    }
 
     private static string Unescape(string entry)
     {

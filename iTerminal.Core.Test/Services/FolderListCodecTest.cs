@@ -16,15 +16,16 @@ public class FolderListCodecTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void AnEntryWithNeitherCharacter_IsStoredAsItAlwaysWas()
+    public void AValueSavedBeforeTheCodec_IsSplitWithoutUnescaping()
     {
-        Assert.AreEqual("/a;/b", FolderListCodec.Join(["/a", "/b"]));
+        // A literal %25 or %3B in a path saved before the codec must read back as it was written.
+        CollectionAssert.AreEqual(new[] { "/home/u/50%25off", "/tmp/%3B" }, FolderListCodec.Split("/home/u/50%25off;/tmp/%3B"));
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void A_ValueSavedBeforeTheCodec_ReadsAsItDid()
+    public void AValueWrittenByTheCodec_CarriesTheMarker()
     {
-        CollectionAssert.AreEqual(new[] { "/a", "/b" }, FolderListCodec.Split("/a;/b"));
+        Assert.IsTrue(FolderListCodec.Join(["/a"]).StartsWith("\u001E", StringComparison.Ordinal));
     }
 }
