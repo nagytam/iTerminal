@@ -732,7 +732,7 @@ public class ViewFileDialogCommandTest
     }
 
     private static iConsole.Dialogs.ParquetViewerDialog CreateParquetDialog(IThemeService themeService) =>
-        new(Mock.Of<iConsole.Parquet.IParquetFileReader>(), themeService);
+        new(Mock.Of<iConsole.Parquet.IParquetFileReader>(), Mock.Of<iConsole.Services.IBeepService>(), Mock.Of<iConsole.Services.IDateTimeProviderService>(), themeService);
 
     [TestMethod]
     [Timeout(60_000)]
@@ -793,7 +793,7 @@ public class ViewFileDialogCommandTest
     }
 
     private static iConsole.Dialogs.HdfViewerDialog CreateHdfDialog(IThemeService themeService) =>
-        new(Mock.Of<iConsole.Hdf.IHdfFileReader>(), themeService);
+        new(Mock.Of<iConsole.Hdf.IHdfFileReader>(), Mock.Of<iConsole.Services.IBeepService>(), Mock.Of<iConsole.Services.IDateTimeProviderService>(), themeService);
 
     [TestMethod]
     [Timeout(60_000)]

@@ -41,7 +41,8 @@ public class ContentModelService(
     iTerminal.Core.Services.Cloud.IS3FileSystemService? s3FileSystemService = null,
     iTerminal.Core.Services.Cloud.IOneDriveFileSystemService? oneDriveFileSystemService = null,
     iTerminal.Core.Services.Cloud.IGoogleDriveFileSystemService? googleDriveFileSystemService = null,
-    Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>? cloudOptions = null)
+    Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>? cloudOptions = null,
+    iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null)
     : IContentModelService, IDisposable
 {
     /// <summary>The singletons the music drives are views over, resolved together.</summary>
@@ -83,6 +84,9 @@ public class ContentModelService(
 
     private readonly Lazy<iTerminal.Core.Services.Recycle.IRecycleBinService> _recycleBinService = new(() =>
         recycleBinService ?? new iTerminal.Core.Services.Recycle.RecycleBinService(iTerminal.Core.Services.Recycle.RecycleBinService.CreateStore()));
+
+    private readonly Lazy<iTerminal.Core.Services.Evidence.IEvidenceNotebookService> _evidenceNotebook = new(() =>
+        evidenceNotebookService ?? new iTerminal.Core.Services.Evidence.EvidenceNotebookService());
 
     private readonly Lazy<iTerminal.Core.Services.Archives.IArchiveDriveService> _archiveDriveService = new(() =>
         archiveDriveService ?? new iTerminal.Core.Services.Archives.ArchiveDriveService(new iTerminal.Core.Services.Processes.ExternalProcessRunner()));
@@ -239,6 +243,11 @@ public class ContentModelService(
             case ContainerType.Recycle:
                 {
                     contentModel = new ContentModelRecycleDrive(name, settingsService, _recycleBinService.Value, folderHistoryService, frequentExecutionGuardService, logger);
+                    break;
+                }
+            case ContainerType.EvidenceNotebook:
+                {
+                    contentModel = new ContentModelEvidenceNotebook(name, settingsService, _evidenceNotebook.Value, folderHistoryService, frequentExecutionGuardService, logger);
                     break;
                 }
             case ContainerType.SearchResults:

@@ -1,7 +1,11 @@
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Hdf;
+using iConsole.Interfaces;
 using iConsole.Services;
+using iConsole.Tabular;
+using iConsole.Test.Tabular;
+using Moq;
 
 namespace iConsole.Test.Dialogs;
 
@@ -30,10 +34,39 @@ public class HdfViewerDialogTest
             Reads.Add((datasetPath, [.. leadingIndices]));
             return Slice(datasetPath, leadingIndices, cancellationToken);
         }
+
+        /// <summary>
+        /// The dialog reads blocks: the fake answers a block from its slice, the slice at the block's leading indices, cut or padded to
+        /// the block's rows and columns. The leading indices of a block are the starts of every axis but the last two.
+        /// </summary>
+        public async Task<IReadOnlyList<string>> ReadBlockAsync(string path, string datasetPath, long[] start, long[] count, CancellationToken cancellationToken)
+        {
+            long[] leading = start.Length >= 2 ? start[..^2] : [];
+            Reads.Add((datasetPath, leading));
+            HdfSlice slice = await Slice(datasetPath, leading, cancellationToken);
+            if (count.Length == 0)
+            {
+                // A scalar is one cell.
+                return [slice.Rows.Count > 0 && slice.Rows[0].Length > 1 ? slice.Rows[0][1] : string.Empty];
+            }
+
+            int rows = (int)count[start.Length >= 2 ? ^2 : ^1];
+            int columns = start.Length >= 2 ? (int)count[^1] : 1;
+            var cells = new List<string>();
+            for (int row = 0; row < rows; row++)
+            {
+                for (int column = 0; column < columns; column++)
+                {
+                    cells.Add(row < slice.Rows.Count && column + 1 < slice.Rows[row].Length ? slice.Rows[row][column + 1] : string.Empty);
+                }
+            }
+
+            return cells;
+        }
     }
 
-    private static HdfViewerDialog CreateDialog(FakeReader reader) =>
-        new(reader, new ThemeService()) { Url = new Url("file:///data/sample.h5") };
+    private static HdfViewerDialog CreateDialog(FakeReader reader, IGridQueryAssistant? assistant = null) =>
+        new(reader, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService(), assistant) { Url = new Url("file:///data/sample.h5") };
 
     private static async Task LandListAsync(HdfViewerDialog dialog)
     {
@@ -332,16 +365,14 @@ public class HdfViewerDialogTest
     [TestMethod]
     public async Task TheStatusLineSaysWhichAxesWereCutAndThatTheListWasCut()
     {
-        var reader = new FakeReader
-        {
-            List = () => new HdfDatasetList([Matrix], Truncated: true),
-            Slice = (_, _, _) => Task.FromResult(new HdfSlice(["#", "0", "1"], [["0", "a", "b"], ["1", "c", "d"], ["2", "e", "f"]], RowsTruncated: true, ColumnsTruncated: true)),
-        };
+        // 12,000 rows by 200 columns: the caps cut both axes, and the 100,000-cell cap cuts the rows to 1,000 of the 100 columns.
+        var big = new HdfDatasetInfo("/grp/matrix", [12_000, 200], "float32");
+        var reader = new FakeReader { List = () => new HdfDatasetList([big], Truncated: true) };
 
         HdfViewerDialog dialog = await OpenAsync(reader);
 
         Assert.AreEqual(
-            "/grp/matrix  float32 [2 × 2]; only the first 3 rows are shown; only the first 2 columns are shown; the list holds only the first 5,000 datasets",
+            "/grp/matrix  float32 [12000 × 200]; only the first 1,000 rows are shown; only the first 100 columns are shown; the list holds only the first 5,000 datasets",
             dialog.Status);
     }
 
@@ -397,7 +428,7 @@ public class HdfViewerDialogTest
     [TestMethod]
     public async Task WithoutAFileThereIsNothingToShow()
     {
-        var dialog = new HdfViewerDialog(new FakeReader(), new ThemeService());
+        var dialog = new HdfViewerDialog(new FakeReader(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService());
 
         await dialog.OnInitializeAsync();
 
@@ -421,5 +452,110 @@ public class HdfViewerDialogTest
         Assert.AreEqual(many.Length, dialog.Picker.Items.Count);
         Assert.AreEqual(many[^1].Path, dialog.CurrentDataset!.Path);
         Assert.IsTrue(watch.ElapsedMilliseconds < 3_000, $"opening and choosing took {watch.ElapsedMilliseconds} ms");
+    }
+
+    /// <summary>A slice of three rows, so a query has something to keep or drop.</summary>
+    private static FakeReader ThreeRowReader()
+    {
+        var reader = new FakeReader { List = () => new HdfDatasetList([new HdfDatasetInfo("/cube", [3, 3, 2], "float64")], false) };
+        reader.Slice = (_, _, _) => Task.FromResult(new HdfSlice(["#", "0"], [["0", "a"], ["1", "b"], ["2", "c"]], false, false));
+        return reader;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQueryRunsOverTheSliceAndStays_WhenTheIndexSteps()
+    {
+        FakeReader reader = ThreeRowReader();
+        HdfViewerDialog dialog = await OpenAsync(reader);
+        Assert.IsGreaterThan(0, dialog.LeadingIndices.Count, "the cube has a leading dimension to step");
+
+        dialog.SetQueryText("WHERE \"#\" >= 1");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+
+        dialog.StepIndex(1);
+        await LandSliceAsync(dialog);
+
+        Assert.AreEqual(2, dialog.Grid.RowCount, "the query is run again over the new slice");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ATypedMinusGoesIntoTheQueryLineAndDoesNotStepTheSlice()
+    {
+        HdfViewerDialog dialog = await OpenAsync(ThreeRowReader());
+        long[] before = [.. dialog.LeadingIndices];
+
+        dialog.SetQueryText("WHERE \"#\" > ");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('-', ConsoleKey.OemMinus));
+
+        CollectionAssert.AreEqual(before, dialog.LeadingIndices.ToArray(), "- is a character in the query, not the slice key");
+        Assert.AreEqual(13, dialog.QueryText.Length, "the character went into the line");
+        Assert.Contains('-', dialog.QueryText.ToCharArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AQuestionDraftsAQueryOverTheSliceAndRunsOnlyOnEnter()
+    {
+        FakeGridQueryAssistant assistant = new("WHERE \"#\" >= 1");
+        HdfViewerDialog dialog = CreateDialog(ThreeRowReader(), assistant);
+        await dialog.OnInitializeAsync();
+        await LandListAsync(dialog);
+        await LandSliceAsync(dialog);
+
+        dialog.SetQueryText("? the rows after the first");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.DraftTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("WHERE \"#\" >= 1", dialog.QueryText);
+        Assert.AreEqual(3, dialog.Grid.RowCount, "nothing ran yet");
+
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheTKeySwapsTheRowsAndTheColumnsAndReadsTheBlockAgain()
+    {
+        FakeReader reader = ThreeRowReader();
+        HdfViewerDialog dialog = await OpenAsync(reader);
+        long[] before = [.. dialog.LeadingIndices];
+        int reads = reader.Reads.Count;
+
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(Key('T', ConsoleKey.T, shift: true)));
+        await LandSliceAsync(dialog);
+
+        CollectionAssert.AreEqual(before, dialog.LeadingIndices.ToArray(), "the fixed indices stay where they were");
+        StringAssert.Contains(dialog.SliceText, "[<0>, *, *]");
+        Assert.AreEqual(reads + 1, reader.Reads.Count, "the block is read again with the axes swapped");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFromCellsQueryRunsOverEveryCellOfTheArrayNotJustTheWindow()
+    {
+        // The window is one 3 x 2 plane; FROM cells reaches the whole array, where axis1 = 2 holds three rows of two columns' cells on each axis0 plane.
+        HdfViewerDialog dialog = await OpenAsync(ThreeRowReader());
+
+        dialog.SetQueryText("FROM cells WHERE axis1 = 2");
+        dialog.FocusQueryLine();
+        await dialog.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(6, dialog.Grid.RowCount);
+        Assert.AreEqual("0", dialog.Grid.CellAt(0, 0), "the first cell with axis1 = 2 is at axis0 0");
     }
 }

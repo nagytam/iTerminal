@@ -227,7 +227,7 @@ public class MenuItemTest
     {
         var mockThemeService = CreateThemeServiceMock();
         var mockCommand = new Mock<ICommand>();
-        mockCommand.SetupGet(c => c.Key).Returns(new Key(ConsoleKey.F1, false, false, false));
+        mockCommand.SetupGet(c => c.ActiveKey).Returns(new Key(ConsoleKey.F1, false, false, false));
         var menuItem = new MenuItem("Open", mockCommand.Object, [], mockThemeService.Object)
         {
             ViewSize = new Size(12, 1)
@@ -517,7 +517,7 @@ public class MenuItemTest
     {
         var mockThemeService = CreateThemeServiceMock();
         var mockCommand = new Mock<ICommand>();
-        mockCommand.SetupGet(c => c.Key).Returns(new Key(ConsoleKey.Q, false, false, true));
+        mockCommand.SetupGet(c => c.ActiveKey).Returns(new Key(ConsoleKey.Q, false, false, true));
         mockCommand.Setup(c => c.CanExecute()).Returns(true);
         mockCommand.Setup(c => c.RunAsync(null)).ReturnsAsync(true);
         var leaf = new MenuItem("Quit", mockCommand.Object, [], mockThemeService.Object);
@@ -662,7 +662,7 @@ public class MenuItemTest
     public void AShortcutInTheLabelIsShownOnceAndNeverTheBareConsoleKey()
     {
         var command = new Mock<ICommand>();
-        command.SetupGet(c => c.Key).Returns(new Key(ConsoleKey.F4, true, false, false));
+        command.SetupGet(c => c.ActiveKey).Returns(new Key(ConsoleKey.F4, true, false, false));
         var menuItem = new MenuItem("Create File\tShift+F4", command.Object, [], CreateThemeServiceMock().Object);
 
         Assert.AreEqual("Create File", menuItem.Label);
@@ -766,7 +766,7 @@ public class MenuItemTest
     {
         var mockThemeService = CreateThemeServiceMock();
         var mockCommand = new Mock<ICommand>();
-        mockCommand.SetupGet(c => c.Key).Returns(new Key(ConsoleKey.Q, false, false, true));
+        mockCommand.SetupGet(c => c.ActiveKey).Returns(new Key(ConsoleKey.Q, false, false, true));
         mockCommand.Setup(c => c.CanExecute()).Returns(true);
         mockCommand.Setup(c => c.RunAsync(null)).ReturnsAsync(true);
         var leaf = new MenuItem("Quit", mockCommand.Object, [], mockThemeService.Object);

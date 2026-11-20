@@ -10916,4 +10916,142 @@
   <data name="Disk.Status.FormatCloud" xml:space="preserve">
     <value>Un lecteur cloud ne peut pas être formaté : il se trouve sur les serveurs du fournisseur.</value>
   </data>
+  <data name="Evidence.Drive.Title" xml:space="preserve">
+    <value>Carnet de preuves : {0}</value>
+  </data>
+  <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
+    <value>Carnet de preuves (aucun ouvert)</value>
+  </data>
+  <data name="Evidence.Drive.Origin" xml:space="preserve">
+    <value>{0} depuis {1} · {2} · {3}</value>
+  </data>
+  <data name="Evidence.Open.Question" xml:space="preserve">
+    <value>Dossier du carnet de preuves (créé s'il n'existe pas)</value>
+  </data>
+  <data name="Evidence.Open.BadFolder" xml:space="preserve">
+    <value>Saisissez un chemin de dossier, par exemple ~/dossiers/dossier-42</value>
+  </data>
+  <data name="Evidence.Open.Failed" xml:space="preserve">
+    <value>Le carnet n'a pas pu être ouvert</value>
+  </data>
+  <data name="Evidence.Open.Opened" xml:space="preserve">
+    <value>Carnet de preuves ouvert</value>
+  </data>
+  <data name="Evidence.Add.Question" xml:space="preserve">
+    <value>Qu'ajouter au carnet de preuves ?</value>
+  </data>
+  <data name="Evidence.Add.Files" xml:space="preserve">
+    <value>Fichiers de l'autre panneau</value>
+  </data>
+  <data name="Evidence.Add.Note" xml:space="preserve">
+    <value>Une note</value>
+  </data>
+  <data name="Evidence.Add.Voice" xml:space="preserve">
+    <value>Un enregistrement vocal</value>
+  </data>
+  <data name="Evidence.Add.Clipboard" xml:space="preserve">
+    <value>Du texte du presse-papiers</value>
+  </data>
+  <data name="Evidence.Add.Link" xml:space="preserve">
+    <value>Une adresse web</value>
+  </data>
+  <data name="Evidence.Add.NoSource" xml:space="preserve">
+    <value>Aucun autre panneau d'où prendre des fichiers</value>
+  </data>
+  <data name="Evidence.Add.NoFiles" xml:space="preserve">
+    <value>Rien à ajouter : marquez des fichiers ou placez le curseur sur l'un d'eux</value>
+  </data>
+  <data name="Evidence.Add.Added" xml:space="preserve">
+    <value>{0} ajouté(s) au carnet</value>
+  </data>
+  <data name="Evidence.Add.Folders" xml:space="preserve">
+    <value>; {0} dossier(s) ignoré(s) : un dossier n'est pas une preuve en soi</value>
+  </data>
+  <data name="Evidence.Add.Failed" xml:space="preserve">
+    <value>L'entrée n'a pas été ajoutée</value>
+  </data>
+  <data name="Evidence.Note.Question" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Evidence.Note.Added" xml:space="preserve">
+    <value>Note ajoutée</value>
+  </data>
+  <data name="Evidence.Link.Question" xml:space="preserve">
+    <value>Adresse web</value>
+  </data>
+  <data name="Evidence.Link.Invalid" xml:space="preserve">
+    <value>Saisissez une adresse web, par exemple https://example.com</value>
+  </data>
+  <data name="Evidence.Link.Added" xml:space="preserve">
+    <value>Adresse web ajoutée</value>
+  </data>
+  <data name="Evidence.Clipboard.Empty" xml:space="preserve">
+    <value>Le presse-papiers ne contient pas de texte</value>
+  </data>
+  <data name="Evidence.Clipboard.Added" xml:space="preserve">
+    <value>Texte du presse-papiers ajouté</value>
+  </data>
+  <data name="Evidence.Voice.Unavailable" xml:space="preserve">
+    <value>Pas d'enregistrement</value>
+  </data>
+  <data name="Evidence.Voice.Question" xml:space="preserve">
+    <value>Enregistrement depuis {0}. Entrée le conserve, Échap le supprime.</value>
+  </data>
+  <data name="Evidence.Voice.Discarded" xml:space="preserve">
+    <value>Enregistrement supprimé</value>
+  </data>
+  <data name="Evidence.Voice.TooShort" xml:space="preserve">
+    <value>L'enregistrement est trop court pour être conservé</value>
+  </data>
+  <data name="Evidence.Voice.Added" xml:space="preserve">
+    <value>Enregistrement vocal ajouté</value>
+  </data>
+  <data name="Evidence.Verify.NoNotebook" xml:space="preserve">
+    <value>Aucun carnet de preuves ouvert</value>
+  </data>
+  <data name="Evidence.Verify.Clean" xml:space="preserve">
+    <value>Les {0} entrées correspondent à leurs enregistrements</value>
+  </data>
+  <data name="Evidence.Verify.Problems" xml:space="preserve">
+    <value>{0} entrée(s) sur {1} ne correspondent pas</value>
+  </data>
+  <data name="Evidence.Service.ReadOnly" xml:space="preserve">
+    <value>Une preuve ne se modifie pas une fois dans le carnet. Ajoutez une nouvelle preuve à la place.</value>
+  </data>
+  <data name="Evidence.Service.Missing" xml:space="preserve">
+    <value>Le fichier de contenu est absent.</value>
+  </data>
+  <data name="Evidence.Service.SizeChanged" xml:space="preserve">
+    <value>Le contenu a une taille différente de celle enregistrée.</value>
+  </data>
+  <data name="Evidence.Service.HashChanged" xml:space="preserve">
+    <value>Le contenu ne correspond plus à son SHA-256 enregistré.</value>
+  </data>
+  <data name="CmdTitle.0c1f9f7d" xml:space="preserve">
+    <value>Carnet de preuves</value>
+  </data>
+  <data name="CmdTitle.93a5927c" xml:space="preserve">
+    <value>Ajouter une preuve</value>
+  </data>
+  <data name="CmdTitle.ee237cac" xml:space="preserve">
+    <value>Vérifier le carnet de preuves</value>
+  </data>
+  <data name="CmdDesc.6de8559e" xml:space="preserve">
+    <value>Affiche le carnet de preuves dans le panneau actif, en choisissant le dossier où il est conservé. Appuyez à nouveau pour revenir.</value>
+  </data>
+  <data name="CmdDesc.ad28a2e7" xml:space="preserve">
+    <value>Ajouter au carnet de preuves : fichiers de l'autre panneau, une note, un enregistrement vocal, du texte du presse-papiers ou une adresse web.</value>
+  </data>
+  <data name="CmdDesc.45aa5ec6" xml:space="preserve">
+    <value>Vérifie que chaque entrée du carnet correspond encore à son SHA-256 et à sa taille enregistrés.</value>
+  </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Raccourcis clavier</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>keymap.json n'a pas pu être lu : les touches par défaut sont utilisées. Le journal indique la cause.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} raccourci(s) de keymap.json non utilisé(s) : {1}. Le journal indique la cause.</value>
+  </data>
 </root>

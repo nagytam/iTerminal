@@ -1,6 +1,7 @@
 using iConsole.Data;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model.Validations;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -239,5 +240,51 @@ public class FolderSelectorPathTabPageTest
         {
             Assert.IsTrue(control.ViewSize.Width >= 0 && control.ViewSize.Height >= 0);
         }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSchemesHint_WrapsSoEveryScheme_IsReadableOnANarrowPage()
+    {
+        // The hint is longer than one line; on a page this narrow a single line showed only its first few schemes.
+        var page = await CreateSchemesPageAsync(new Size(30, 24));
+
+        Render(page);
+        var screen = Render(page);
+
+        AssertScreenContains(screen, FolderUrlValidationModel.SupportedSchemes.Last());
+        AssertScreenDoesNotContain(screen, "...");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSchemesHint_OnAShortPage_EndsInAMarkerAndLeavesTheGoButtonAlone()
+    {
+        var page = await CreateSchemesPageAsync(new Size(30, 8));
+
+        Render(page);
+        var screen = Render(page);
+
+        AssertScreenContains(screen, "...");
+        AssertScreenContains(screen, "Go");
+    }
+
+    private static async Task<FolderSelectorPathTabPage> CreateSchemesPageAsync(Size size)
+    {
+        var harness = new FolderSelectorTestHarness();
+        var page = new FolderSelectorPathTabPage(
+            harness.ContentModelService,
+            harness.FolderHistoryService,
+            harness.BeepService,
+            harness.DateTimeProviderService,
+            harness.SettingsService,
+            harness.ThemeService)
+        {
+            ViewSize = size
+        };
+        await page.OnInitializeAsync();
+        page.OnIdle();
+        page.OnInitializeLayout();
+        return page;
     }
 }

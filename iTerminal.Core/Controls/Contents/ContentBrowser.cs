@@ -84,6 +84,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private StreamsDialog? _streamsDialog { get; set; }
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
     private INotificationService? _notificationService { get; set; }
+    private iTerminal.Core.Services.Evidence.IEvidenceNotebookService? _evidenceNotebookService { get; set; }
+    private iTerminal.Core.Services.ISettingsService? _evidenceSettingsService { get; set; }
+    private iConsole.Services.IPromptService? _promptService { get; set; }
+    private iConsole.Services.ITextClipboardService? _textClipboard { get; set; }
+    private iTerminal.Core.Speech.IMicrophoneCaptureFactory? _microphoneCaptureFactory { get; set; }
     private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
     private iTerminal.Core.Dialogs.Git.GitSyncDialog? _gitSyncDialog { get; set; }
     private readonly iConsole.Viewers.FileViewerRegistry? _fileViewers;
@@ -151,9 +156,19 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null,
         iTerminal.Core.Services.RenameUndoService? renameUndoService = null,
         iConsole.Viewers.FileViewerRegistry? fileViewers = null,
-        iConsole.Viewers.FileEditorRegistry? fileEditors = null)
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null,
+        iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null,
+        iTerminal.Core.Services.ISettingsService? evidenceSettingsService = null,
+        iConsole.Services.IPromptService? promptService = null,
+        iConsole.Services.ITextClipboardService? textClipboard = null,
+        iTerminal.Core.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
         : base(themeService)
     {
+        _evidenceNotebookService = evidenceNotebookService;
+        _evidenceSettingsService = evidenceSettingsService;
+        _promptService = promptService;
+        _textClipboard = textClipboard;
+        _microphoneCaptureFactory = microphoneCaptureFactory;
         _fileViewers = fileViewers;
         _fileEditors = fileEditors;
         _webBrowserDialog = webBrowserDialog;
@@ -323,6 +338,17 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
         // Enter on the recycle drive restores; inert anywhere else, and on that drive's ".." row.
         AddCommand(new Commands.Drives.RestoreRecycledCommand(ContentModelService));
+
+        // Ctrl+Shift+Q opens the evidence notebook here; Ctrl+Shift+X adds to it. Both need every service they use.
+        if (_evidenceNotebookService is not null && _promptService is not null && _evidenceSettingsService is not null)
+        {
+            AddCommand(new Commands.Evidence.OpenEvidenceNotebookCommand(ContentModelService, _evidenceNotebookService, _promptService, _evidenceSettingsService, _notificationService));
+            AddCommand(new Commands.Evidence.VerifyEvidenceNotebookCommand(_evidenceNotebookService, _notificationService));
+            if (_textClipboard is not null && _microphoneCaptureFactory is not null && _fileSystemResolver is not null)
+            {
+                AddCommand(new Commands.Evidence.AddEvidenceCommand(ContentModelService, _evidenceNotebookService, _promptService, _evidenceSettingsService, _textClipboard, _microphoneCaptureFactory, _fileSystemResolver, _notificationService));
+            }
+        }
 
         AddCommand(new NavigateToParentFolderCommand(ContentModel, ContentModelService));
         CommandHelper.AddVerticalScrollingCommands(this, ContentModel, true);

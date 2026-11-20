@@ -2078,4 +2078,52 @@
   <data name="Editor.HintHexRow" xml:space="preserve">
     <value>A sor eleje vagy vége</value>
   </data>
+  <data name="Grid.Ai.Asking" xml:space="preserve">
+    <value>A MI-modell kérdezése…</value>
+  </data>
+  <data name="Grid.Ai.Ready" xml:space="preserve">
+    <value>Javaslat a lekérdezési sorban: Enter a futtatáshoz</value>
+  </data>
+  <data name="Grid.Ai.NoQuestion" xml:space="preserve">
+    <value>Írjon kérdést a ? után, például ? sorok, ahol az amount nagyobb 10-nél</value>
+  </data>
+  <data name="Grid.Ai.NoQuery" xml:space="preserve">
+    <value>Az MI-modell nem küldött lekérdezést</value>
+  </data>
+  <data name="Grid.Ai.NoTable" xml:space="preserve">
+    <value>Nincs '{0}' nevű tábla</value>
+  </data>
+  <data name="Grid.Query.Placeholder" xml:space="preserve">
+    <value>pl. SELECT name WHERE amount &gt; 10, vagy ? és egy kérdés</value>
+  </data>
+  <data name="Grid.Hint.RunQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása a megjelenített sorokon</value>
+  </data>
+  <data name="Grid.Hint.Ask" xml:space="preserve">
+    <value>MI megkérdezése: írjon ?-et és egy kérdést, majd az Enter javasol egy lekérdezést</value>
+  </data>
+  <data name="Grid.Status.Matched" xml:space="preserve">
+    <value>; a megjelenített {1:N0} sorból {0:N0} egyezik</value>
+  </data>
+  <data name="Grid.Ai.NoTables" xml:space="preserve">
+    <value>Nincs lekérdezhető tábla</value>
+  </data>
+  <data name="Grid.Ai.PickTable" xml:space="preserve">
+    <value>Nevezzen meg egy táblát a FROM után: {0}</value>
+  </data>
+  <data name="Hdf.Hint.Transpose" xml:space="preserve">
+    <value>A sorok és oszlopok felcserélése</value>
+  </data>
+  <data name="Hdf.Status.LongFormCut" xml:space="preserve">
+    <value>; csak az első {0:N0} egyező cella marad meg</value>
+  </data>
+  <data name="Hdf.Hint.LongForm" xml:space="preserve">
+    <value>Minden cella lekérdezése, tengelyenként egy oszloppal (axis0, axis1, ...)</value>
+  </data>
+  <data name="Sqlite.Status.Matched" xml:space="preserve">
+    <value>{0:N0} egyező sor</value>
+  </data>
+  <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
+    <value>Az eredmény szűrése: a sor : jellel kezdődjön, majd rácslekérdezés</value>
+  </data>
 </root>

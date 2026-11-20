@@ -846,9 +846,21 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// The terminal's OSC 9;4 progress: nothing is written, so a run never changes the tab or the taskbar of the developer's
+    /// own terminal.
+    /// </summary>
+    public sealed class TerminalProgress : iConsole.Services.ITerminalProgressService
+    {
+        public void Update(iConsole.Services.TerminalProgressState state, long percentage)
+        {
+        }
+    }
+
+    /// <summary>
     /// The Bluetooth stack of the machine a run is on is never asked: no test scans, pairs, connects or forgets a
     /// device of the person's own. Two made-up devices are listed, so the dialog has rows to act on.
     /// </summary>
+
     public sealed class Bluetooth : Core.Services.Bluetooth.IBluetoothService
     {
         public bool IsSupported => true;
@@ -1363,6 +1375,17 @@ public static class SandboxServices
     }
 
     /// <summary>The Whisper model as if it were installed, and a recogniser that answers with a fixed sentence at once: no model is read, no engine loaded.</summary>
+    /// <summary>The AI query draft in the file viewers: a fixed query that every table can answer, so no run asks the model.</summary>
+    public sealed class GridQueryAssistant : iConsole.Tabular.IGridQueryAssistant
+    {
+        public const string Draft = "SELECT * LIMIT 3";
+
+        public string? UnavailableReason => null;
+
+        public Task<string> DraftAsync(string question, iConsole.Tabular.GridSchema schema, CancellationToken cancellationToken) =>
+            Task.FromResult(Draft);
+    }
+
     public sealed class SpeechRecognizer : Core.Speech.ISpeechRecognizer
     {
         public const string Sentence = "what is the weather in Budapest";

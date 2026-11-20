@@ -192,7 +192,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransient
         // FullUrl, not the Url itself: Url does not override ToString, so joining the objects wrote
         // one "iConsole.Data.Url" per favourite into the settings and every saved favourite came
         // back as that string.
-        _settingsService.Set(_key, string.Join(';', _favourites.AsSnapshot().Select(f => f.FullUrl)));
+        _settingsService.Set(_key, FolderListCodec.Join(_favourites.AsSnapshot().Select(f => f.FullUrl)));
     }
 
     public override Task OnInitializeAsync()
@@ -204,7 +204,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransient
         _favourites.Clear();
         if (favourites is not null)
         {
-            foreach (var favourite in favourites.Split(';'))
+            foreach (var favourite in FolderListCodec.Split(favourites))
             {
                 // An empty entry is what a wiped setting splits into; a Url built from it points at
                 // nothing and Enter on that row would navigate the panel to nowhere.

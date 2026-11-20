@@ -18,7 +18,7 @@ public class PasswordManagerDialogCommand(PasswordManagerDialog passwordManagerD
     /// </summary>
     public Key AlternateKey { get; init; } = new(ConsoleKey.X, true, false, true);
 
-    public override string KeyDisplayText => $"{FormatKey(Key)} / {FormatKey(AlternateKey)}";
+    public override string KeyDisplayText => $"{FormatKey(ActiveKey)} / {FormatKey(AlternateKey)}";
 
     public override Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {

@@ -578,7 +578,7 @@ public class HotKeys : StatusBarItem
                 continue;
             all.Add(button);
             var command = button.Commands.FirstOrDefault();
-            var match = command?.Key is Key k
+            var match = command?.ActiveKey is Key k
                 && CommandKeyMatchesModifierLayer(k, IsShiftActive, IsControlActive, IsAltActive);
             // The sync has nothing to do outside a working tree, so its key is not offered there.
             if (match && command is GitSyncCommand sync && !sync.CanExecute())

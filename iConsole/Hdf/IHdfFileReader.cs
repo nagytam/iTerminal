@@ -4,7 +4,8 @@ namespace iConsole.Hdf;
 /// <param name="Path">The absolute path inside the file, starting with '/'.</param>
 /// <param name="Shape">The size of each dimension; empty for a scalar.</param>
 /// <param name="TypeName">A short name for the element type, such as <c>float64</c> or <c>compound (2 fields)</c>.</param>
-public sealed record HdfDatasetInfo(string Path, long[] Shape, string TypeName)
+/// <param name="Fields">The field names of a one-dimensional compound dataset, one column each; null for every other dataset.</param>
+public sealed record HdfDatasetInfo(string Path, long[] Shape, string TypeName, IReadOnlyList<string>? Fields = null)
 {
     public int Rank => Shape.Length;
 
@@ -56,5 +57,16 @@ public interface IHdfFileReader
         int maxRows,
         int maxColumns,
         int maxCells,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// The cells of a block of a dataset: where it starts and how many it spans along each axis, read row-major as text (a compound
+    /// element of a one-dimensional dataset gives one cell per field). Only the cells of the block are read.
+    /// </summary>
+    Task<IReadOnlyList<string>> ReadBlockAsync(
+        string path,
+        string datasetPath,
+        long[] start,
+        long[] count,
         CancellationToken cancellationToken);
 }

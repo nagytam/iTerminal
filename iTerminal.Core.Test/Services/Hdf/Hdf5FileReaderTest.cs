@@ -402,4 +402,41 @@ public class Hdf5FileReaderTest
 
         Assert.IsFalse(File.Exists(path));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ABlockStartsWhereItSaysAndComesBackRowMajor()
+    {
+        string path = Path.Combine(_folder, "block.h5");
+        var grid = new double[3, 4, 5];
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    grid[i, j, k] = (i * 100) + (j * 10) + k;
+                }
+            }
+        }
+
+        new H5File { ["grid"] = grid }.Write(path);
+
+        // One plane (axis 0 at 1), rows 2 and 3 of axis 1, columns 3 and 4 of axis 2: four cells, last axis fastest.
+        IReadOnlyList<string> cells = await Reader().ReadBlockAsync(path, "/grid", [1, 2, 3], [1, 2, 2], CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "123", "124", "133", "134" }, cells.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ABlockOfOneAxisIsItsElementsInOrder()
+    {
+        string path = Path.Combine(_folder, "vector.h5");
+        new H5File { ["vector"] = new[] { 10, 20, 30, 40 } }.Write(path);
+
+        IReadOnlyList<string> cells = await Reader().ReadBlockAsync(path, "/vector", [1], [2], CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "20", "30" }, cells.ToArray());
+    }
 }

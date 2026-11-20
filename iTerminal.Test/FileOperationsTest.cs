@@ -409,6 +409,11 @@ public class FileOperationsTest
     public async Task CreateFolderWithAnIllegalCharacter_SaysTheNameIsNotValid_InsteadOfFailing()
     {
         // "a|b" is not a Windows name; checking it threw out of the key handler.
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("'|' is a legal file name on Linux, so there is no invalid name to refuse.");
+        }
+
         await _app.SelectEntryAsync("readme.txt");
 
         await _app.PressAsync("Shift+F7");

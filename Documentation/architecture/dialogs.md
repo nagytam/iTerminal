@@ -468,6 +468,65 @@ Tools > Network tools opens a tool (a combo box), a target (a text box) and the 
 - **The end-to-end suite replaces the service** (`SandboxServices.NetworkToolRunner`, fixed answers), so no run pings or queries anything.
 - **Tests:** `NetworkToolTargetsTest` (target rules, whois referrals), `NetworkToolServiceTest` (port check against a loopback listener and a closed port, refused targets) and `NetworkToolsDialogTest` (the tool and target reach the service, output lands on the idle pass, a refused target and Esc).
 
+### Grid queries and the AI draft (`iConsole/Tabular/`, `GridQuery`, `GridQueryDrafter`, `IGridQueryAssistant`)
+The CSV, Parquet, HDF5 and SQLite viewers share one query language and one way of asking the AI model for a query. The query line
+takes `SELECT`, `WHERE`, `ORDER BY` and `LIMIT` (the CSV language, see below). A line that starts with `?` asks the model: the draft
+lands in the query line and runs only when the user presses Enter, like any query typed by hand.
+
+- **The data is an N-dimensional array (`iConsole/Tabular/GridArray.cs`).** `IGridArraySource` gives the shape, the column names (a
+  file's headers) or the compound fields of a one-dimensional dataset, and reads a block: a start and a count per axis, returned
+  row-major with the last axis fastest. `GridArrayView` is an immutable view of such an array. `WithIndex` and `Step` fix an axis,
+  `Project` and `Transpose` choose which two axes are the rows and the columns, `Describe` gives the position for the slice line
+  (`[1, *, *]`), and `MaterializeAsync` reads the window shown: the rows are cut first to honour the row, column and cell caps, and
+  only the cells of the window are read. The HDF5 viewer reads every dataset through `HdfGridArray` and `IHdfFileReader.ReadBlockAsync`,
+  so a dataset of any rank is one view: `+ -` step the fixed axes, `[ ]` choose the active one, and `T` swaps the rows and the
+  columns. CSV and Parquet rows are a two-axis `InMemoryGridArray`. Every query goes through one path, `GridArrayView.QueryAsync`: a query that names `FROM cells` (or an array of three or more axes) runs over the long form, one row per cell with an `axis0` ... `axisN` column per axis; any other query runs over the rows of a one- or two-axis array, one row per index of the first axis. Either way the array is streamed in blocks of at most `DefaultChunkCells` cells, each block is filtered as it arrives, and only matches are kept (`MaxMatches`). Order and limit run over the matches. SQLite is a relation, not an array. A SQLite `SELECT` or `WITH` is a `SqlQueryArray`: the column names and the row count come from two queries, and each block
+  the view asks for is the statement with `LIMIT` and `OFFSET`, so the viewer reads only the window it shows (`PRAGMA` and other
+  non-row statements keep the direct path, because they cannot be wrapped as a subquery). `FROM cells` in the HDF5 query line runs
+  the query over every cell of the array (`GridArrayView.QueryLongFormAsync`): the array is read in blocks of at most
+  `DefaultChunkCells` cells, each block is filtered as it arrives, and only the matches are kept (at most `MaxMatches`; the status
+  line says when that cap cut them). Order and limit then run over the matches, so they hold across blocks.
+- **One parser, three uses.** `GridQuery.Parse` turns the text into a `GridQueryPlan` (table, columns, a `GridCondition` of OR-joined
+  AND groups, order, limit). `GridQuery.Execute` runs a plan over rows in memory; `GridQuery.Run` is the two together. `GridQuery.ToSql`
+  renders the same plan as one SQLite statement. A plan is inspectable, so the AI draft and the SQLite viewer use the same checks.
+- **In memory:** the CSV viewer (the whole document), the Parquet viewer (the rows it has read, `ParquetPreview.Names` for the bare
+  column names), and the HDF5 viewer (the current slice). A query over these runs on a background task (`GridQueryRun`) and only the
+  newest result lands on the idle pass. The status line says how many of the shown rows match.
+- **SQLite:** the plan is rendered as SQL and run through the existing read-only reader, so `SqliteStatementChecker` and the read-only
+  connection still apply. Every name is quoted and every value is a quoted literal, never bare: a text column holding `0123` must keep
+  its zero. SQLite applies the column's own type to a quoted value, so `amount > '10'` compares as a number on an INTEGER column.
+  A numeric-looking value in a text column compares by SQLite's affinity rules, not as the in-memory engine does; that is the one place
+  the two differ. `NULL` ordering and `CONTAINS` (`instr(lower(...))`) are rendered to match the in-memory meaning.
+- **The draft is checked before it is shown.** `GridQueryDrafter` cleans the model's reply (a code fence, a `Query:` label, a trailing `;`,
+  only the first line), parses it against each table's column names, and takes the table a `FROM` names or the only table. A draft that
+  names a missing column or table is refused with the reason on the status line, and the question stays in the line so it can be edited.
+- **What the model sees.** `GridSchema` holds table and column names, types and row counts, never a cell value. The question is the
+  user's own text. The model's answer is never run without the user's Enter.
+- **AI off.** `GridQueryAssistant` (`iTerminal.Core/AI/`) reports `AI is off` for `AI:Provider = None`, and the drafter then says so
+  without calling a model. The viewers take `IGridQueryAssistant` as an optional constructor argument; without one they report `AI is not
+  set up`. The end-to-end suite replaces the assistant with `SandboxServices.GridQueryAssistant`, which answers a fixed query at once.
+- **SQLite schema.** The draft needs the tables and columns: `GridQueryDrafter` takes the schema as a task, so the viewer reads
+  `sqlite_master` and runs `SELECT * ... LIMIT 0` for each table on a worker thread, and the question waits for it.
+- **HDF5 keys.** `T` swaps the rows and the columns and reads the window again, and only for a dataset of two or more axes. While the query line has focus, `+ - [ ]` type into the line, because `-` is part of a number in a query. Ctrl+arrows
+  still step the slice. Stepping the slice runs the query again over the new slice.
+- **Axis clauses (first-class axes in the language).** After `FROM`, a query may name axes of an array of two or more axes:
+  `AT axis1 = 2` fixes an axis at an index (repeatable), `ROWS axis0` and `COLUMNS axis2` choose the axes shown. The query then reads
+  the window those choices give (`GridArrayView.QueryAsync` through `QueryWindowAsync`), and its `WHERE`, `ORDER BY` and `LIMIT` run over
+  that window's own columns, labelled by the remaining axis's indices. Example: `FROM cube AT axis0 = 2 ROWS axis1 COLUMNS axis2 WHERE "1" = '2.0.1'`.
+  The clause is read without resolving the filter's columns (`GridQuery.AxisClauseOf`), and a query without one is unchanged. Axes
+  named but not in the array, or fixed and shown at once, are refused.
+- **SQLite `:` lines.** A query line that starts with `:` runs a grid query over the result on screen, through `SqlQueryArray.QueryAsync`,
+  so the filter, order and limit run in one statement inside the database. Any other line stays raw SQL, run as written.
+- **Cancellation.** A `FROM cells` search is cancelled between blocks when the query is replaced or the dialog closes; a block that is
+  already being read finishes first.
+- **Not built:** grouping and aggregates (`GROUP BY`, `COUNT`, averages), joins, saving a result, and queries over a Parquet file beyond
+  the rows the viewer reads (10,000 rows, 100 columns, 100,000 cells). The model cannot average a column because the language cannot.
+- **Tests:** `GridQueryTest` (parsing, the plan, in-memory and SQL rendering, quoting), `GridQueryDrafterTest` (cleaning, checking,
+  overtaken and cancelled answers, the no-AI and failure paths), `GridQuerySqliteAgreementTest` (iTerminal.Core.Test: the rendered SQL and
+  the in-memory engine return the same rows, through the real reader), `GridQueryAssistantTest` (the model adapter: no values are sent,
+  AI off makes no call), and the viewer tests in `CsvViewerDialogTest`, `ParquetViewerDialogTest`, `HdfViewerDialogTest` and
+  `SqliteViewerDialogTest`.
+
 ### CSV viewer (`CsvViewerDialog`, F3 on a `.csv` or `.tsv` file, `iConsole/Csv/`, `iConsole/Controls/CsvGrid.cs`)
 F3 opens a delimited file as a grid: the header on top, the rows below, and the columns scroll sideways to keep the cursor cell on screen. The query line above the grid takes a small SQL-like query, `SELECT name, amount WHERE amount > 10 AND city = 'Pécs' ORDER BY amount DESC LIMIT 20`, and the status line says how many rows matched. F4 switches to the file's text, as in the JSON and XML viewers.
 
@@ -525,7 +584,7 @@ F3 opens an HDF5 file with a picker of its datasets on top and the chosen datase
 - **Threading.** The listing and each slice run on `Task.Run`, results land on the next `OnIdle`, and only the newest slice may land (a generation counter, as in the SQLite viewer); `Close()` cancels both. A read that fails keeps the grid and shows its message on the status line.
 - **Menu and panels.** File > View, the panel's F3 and the right-click View all route here (the SQLite viewer is not threaded through the File menu's View item, an existing gap this change leaves alone).
 - **Tests:** `HdfFileTypesTest`, `HdfViewerDialogTest` (a fake reader: slices, the keys on several layouts, clamping, stale results, failures, close, 5,000 datasets), `Hdf5FileReaderTest` (files written by PureHDF's own writer, cell by cell), `ViewFileDialogCommandTest` (the routing) and `EditorViewerAndPermissionsTest` (F3, `+`, Ctrl+Up and `-` in the real app). `Test/FileTypes/example.h5` is a sample file.
-- Not built: HDF4, writing, attributes, choosing which axes are the rows and columns, scrolling past the row cap, an F4 text view, export.
+- The query line runs the grid query language over the slice shown, and a `?` line asks the AI model (see *Grid queries and the AI draft*). Not built: HDF4, writing, attributes, choosing which axes are the rows and columns, scrolling past the row cap, an F4 text view, export.
 
 ### Markdown, YAML, TOML and dBase viewers (`MarkdownViewerDialog`, `YamlViewerDialog`, `TomlViewerDialog`, `DbfViewerDialog`, `iConsole/Markdown/`, `iConsole/Yaml/`, `iConsole/Toml/`, `iConsole/Dbf/`, `iConsole/Structured/`)
 - **Markdown** (`.md`, `.markdown`, from any drive) renders through the existing `MarkdownViewerControl`. F4 shows the file's text and back again.
@@ -550,7 +609,7 @@ F3 opens a Parquet file as a grid of its first rows. The headers are the column 
 - **Files.** Only a local file opens here, and its first four bytes must be `PAR1`. An encrypted file (`PARE`), or a `.parquet` file that is not Parquet, is read by the generic viewer, as before.
 - **The read runs on a worker thread.** `ViewFileDialogCommand` checks the magic on `Task.Run` and sets the dialog's `Url`; the dialog reads on another `Task.Run` and lands the result on the next idle pass. A read that is cancelled by closing the dialog lands nowhere.
 - **Tests:** `ParquetFileTypesTest`, `ParquetViewerDialogTest` (a fake reader: the headers and cells, the cut notices, an empty file, failures, close, reopening), `ParquetFileReaderTest` (files written by Parquet.Net, with nulls, several row groups, the three caps, nested columns and failures, plus `Test/FileTypes/example.parquet`, which Apache Arrow wrote), and `ViewFileDialogCommandTest` (the routing). `Test/FileTypes/example.parquet` is a sample file.
-- Not built: nested values (the list, struct and map contents), writing, schema or statistics pages, row-group or page navigation, sorting or filtering, and encrypted files.
+- The query line runs the grid query language over the rows shown (see *Grid queries and the AI draft*); a `?` line asks the AI model. Not built: nested values (the list, struct and map contents), writing, schema or statistics pages, row-group or page navigation, and encrypted files.
 
 ### Executable analysis (`ExecutableAnalysisDialog`, F3 on a local PE, ELF or Mach-O file, `iConsole/Executables/`, `iTerminal.Core/Services/Executables/`)
 F3 on a Windows (PE), Linux (ELF) or Apple (Mach-O) executable, library or driver opens a read-only analysis instead of the text viewer. It is a two-column grid (item, value) in sections: General (format, architecture, kind, platform or subsystem, build time, entry point), Hardening, Imports, Exports, Sections (size in the file, entropy, access), Signature and Hints. Esc closes it. **The file is parsed, never run or loaded.**

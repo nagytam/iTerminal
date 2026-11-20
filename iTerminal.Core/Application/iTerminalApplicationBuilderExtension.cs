@@ -55,6 +55,8 @@ public static class iTerminalApplicationBuilderExtension
         Directory.CreateDirectory(databaseDirectory);
 
         string databasePath = Path.Combine(databaseDirectory, "iTerminal.sqlite");
+        services.AddSingleton(new iTerminal.Core.Services.KeyBindings.KeyMapLocation(
+            Path.Combine(databaseDirectory, iTerminal.Core.Services.KeyBindings.KeyMapFile.FileName)));
 
         // Bind FileInformationRefreshOptions from configuration if available.
         // This is optional; consumers may register configuration under
@@ -129,6 +131,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IAiActionApprovalService, AiActionApprovalService>();
         services.AddSingleton<AiPanelTools>();
         services.AddSingleton<IAiChatService, AiChatService>();
+        services.AddSingleton<iConsole.Tabular.IGridQueryAssistant, iTerminal.Core.AI.GridQueryAssistant>();
         services.AddTransient<AiModelDialog>();
         services.AddTransient<AiPromptBar>();
 
@@ -148,6 +151,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddHostedService<DatabaseInitializationHostedService>();
         services.AddHostedService<iTerminal.Core.Commands.DialogRefreshHostedService>();
         services.AddHostedService<iTerminal.Core.Services.Plugins.PluginStartupHostedService>();
+        services.AddHostedService<iTerminal.Core.Services.KeyBindings.KeyMapStartupHostedService>();
         services.AddTransient<TerminalMenuBar>();
         services.AddSingleton<Content>();
         services.AddSingleton<iTerminal.Core.Services.RenameUndoService>();
@@ -371,6 +375,9 @@ public static class iTerminalApplicationBuilderExtension
         // deleted files; a test registers one built in a folder of its own.
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinStore>(_ => iTerminal.Core.Services.Recycle.RecycleBinService.CreateStore());
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinService, iTerminal.Core.Services.Recycle.RecycleBinService>();
+
+        // Ctrl+Shift+Q: the evidence notebook as a drive. One instance holds the open notebook folder for the run.
+        services.AddSingleton<iTerminal.Core.Services.Evidence.IEvidenceNotebookService, iTerminal.Core.Services.Evidence.EvidenceNotebookService>();
         // Alt+F7: the full-screen stock browser. Quotes come from Yahoo Finance; a test replaces the
         // provider so no run reaches the network.
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockQuoteProvider, iTerminal.Core.Services.Stocks.YahooStockQuoteProvider>();
@@ -579,11 +586,13 @@ public static class iTerminalApplicationBuilderExtension
         services.AddHostedService<iTerminal.Core.Services.Clipboard.TextClipboardHostedService>();
         // Stalls of the main loop (a key handler or render pass past its 200 ms budget) go to the log.
         services.AddHostedService<iTerminal.Core.Services.Diagnostics.MainLoopWatchDogLoggingHostedService>();
-        // The taskbar's progress indicator: Windows drives the taskbar button, everywhere else it is a no-op. A job keeps it in
-        // step with the background tasks.
-        services.AddSingleton<iTerminal.Core.Services.Taskbar.ITaskbarProgress>(_ => OperatingSystem.IsWindows()
-            ? new iTerminal.Core.Services.Taskbar.WindowsTaskbarProgress()
-            : iTerminal.Core.Services.Taskbar.NullTaskbarProgress.Instance);
+        // The taskbar's progress indicator: Windows drives the taskbar button, everywhere else it is a no-op; Windows Terminal also
+        // shows it in its tab through OSC 9;4. A job keeps it in step with the background tasks.
+        services.AddSingleton<iTerminal.Core.Services.Taskbar.ITaskbarProgress>(provider => new iTerminal.Core.Services.Taskbar.CompositeTaskbarProgress(
+            OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.Taskbar.WindowsTaskbarProgress()
+                : iTerminal.Core.Services.Taskbar.NullTaskbarProgress.Instance,
+            new iTerminal.Core.Services.Taskbar.TerminalTaskbarProgress(provider.GetRequiredService<iConsole.Services.ITerminalProgressService>())));
         services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Taskbar.TaskbarProgressJob>();
         // The terminal's title follows the folder of the focused panel and is put back when the application stops.
         services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Terminal.TerminalTitleJob>();
