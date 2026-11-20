@@ -55,6 +55,7 @@ The detailed write-ups, one file per subsystem:
 - **Markdown viewer.** `MarkdownViewerControl` renders headings, paragraphs, nested lists, quotes, fenced code, rules and inline emphasis, code and links. It wraps to the width, scrolls with the arrow, Page, Home and End keys and the wheel, and only acts when focused.
 - **`IInputInjector`.** Sends keys and mouse events through the same consumer and routing as a real keyboard and mouse. `VirtualTerminalInput` implements it for the test suite.
 - **`ITimeProvider`.** `SystemTimeProvider` for the application and `VirtualTimeProvider` for tests, which moves the clock with `Advance` instead of sleeping.
+- **Press animation.** A button's press runs a `TimedAnimation` (`iConsole/Display/TimedAnimation.cs`) on `Button.Clock`: 150 ms in three steps (the pressed colours, then the normal background brightened, then the normal colours). It starts from a click, Space, a Ctrl+hot key, and any key bound to the button's own command (function-key bar buttons, Enter on a close button), and a key the command declines ends it at once. `ActionButton` does not press, because its parent draws it. The press only changes colours: a Draw repaints only when `OnIdle` sees the step change. Escape on a dialog's Cancel button shows no press, because `Dialog` claims Escape before its children and closes directly.
 
 ### Text attributes, hyperlinks, popovers and context menus
 
@@ -130,7 +131,7 @@ The first comparison above was against Terminal.Gui only. This one widens it to 
 | Declarative styling (a style sheet or theme file, per-state selectors) | Textual CSS, Lip Gloss, tview themes | Themes exist as code and a theme dialog; no file format | `ColorScheme`, `ThemeService`; a JSON theme file is the small version |
 | Grid layout with row/column spans; wrap panel; dock layout | Textual (`grid`, `dock`), FTXUI `gridbox`, Ratatui `Layout` | *Built:* `GridPanel` and `DockPanel` (see below). Wrap is `StackPanel.Wrap` (no separate panel) | next to `StackPanel` and `SizeSolver` |
 | Scroll container for arbitrary children (clipping plus scroll bars) | Textual `ScrollableContainer`, Terminal.Gui, FTXUI `frame` | *Built:* `ScrollView` (see below) | `ScrollView` |
-| Animation and easing (property tweens, fade, slide) on a frame clock | Textual `animate`, Bubble Tea `harmonica`, Notcurses | Not found; `Spinner`, `Skeleton` and `BouncingLabel` animate by hand | `ITimeProvider`, `StartAutoRefresh` |
+| Animation and easing (property tweens, fade, slide) on a frame clock | Textual `animate`, Bubble Tea `harmonica`, Notcurses | Partly built: `TimedAnimation` (stepped, on `ITimeProvider`) drives the button press; `Spinner`, `Skeleton` and `BouncingLabel` still animate by hand; no easing or RGB fades (colours are the 16-entry `Color` enum) | `ITimeProvider`, `StartAutoRefresh` |
 | Rich inline markup in a label (`[bold red]text[/]`) | Spectre.Console, Textual `Rich` | Not found; attributes are set through `ConxelString` calls | `Label`, `ConxelString` |
 | Mouse text selection and copy in viewers and editors | Textual, tview, Terminal.Gui | Not found (drag selection) | `TextViewerControl`, `TextEditorControl`, `ITextClipboardService` |
 | Mouse hold to repeat (scroll arrows, spin buttons) | Terminal.Gui, Textual | Not built (item 10) | `ScrollBar`, `NumericUpDown`, `Slider` |
