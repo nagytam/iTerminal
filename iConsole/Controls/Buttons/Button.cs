@@ -48,17 +48,58 @@ public class Button : Control
         }
     }
 
-    /// <summary>How long a click leaves the button drawn as pressed.</summary>
+    /// <summary>How long a press animation runs.</summary>
     public static readonly TimeSpan PressFeedback = TimeSpan.FromMilliseconds(150);
 
-    private long _pressedAt;
+    /// <summary>The press animation, in three steps: pressed colours, then brightened, then the normal colours.</summary>
+    private readonly TimedAnimation _press = new((long)PressFeedback.TotalMilliseconds, PressSteps);
+
+    private const int PressSteps = 3;
+
+    /// <summary>The step the button was last drawn at, read and written on the UI loop only. <see cref="PressSteps"/> is the normal state.</summary>
+    private int _shownPressStep = PressSteps;
 
     /// <summary>
-    /// True for a moment after a mouse click. A click runs the command on the press, as it always
-    /// has, so there is no held-down state to show; the flash is what tells the user the button
-    /// took the click — most of all for one that closes the dialog it is in a frame later.
+    /// The clock the press animation is measured on. The application uses the system clock; a test sets a
+    /// <see cref="VirtualTimeProvider"/> and advances it instead of sleeping.
     /// </summary>
-    public bool IsPressed => Volatile.Read(ref _pressedAt) != 0;
+    public ITimeProvider Clock { get; set; } = new SystemTimeProvider();
+
+    /// <summary>
+    /// True for the length of a press animation: from a click, a Space or a key that runs the button's command, until
+    /// <see cref="PressFeedback"/> has passed. The press runs the command as it always has, so there is no held-down state;
+    /// the animation is what tells the user the button took the input, most of all for one that closes its dialog a frame later.
+    /// </summary>
+    public bool IsPressed => _press.Step(Clock.MonotonicMilliseconds) != PressSteps;
+
+    /// <summary>False for a button whose press cannot be painted (the action button draws nothing; its parent draws it).</summary>
+    protected virtual bool ShowsPress => true;
+
+    /// <summary>
+    /// Starts the press animation, if the button is enabled and paints its press. Called from every path that runs
+    /// the button's command: a click, Space, the Ctrl+hot key, and any key bound to the command itself.
+    /// Safe to call from the input thread.
+    /// </summary>
+    public void StartPress()
+    {
+        if (!IsEnabled || !ShowsPress)
+        {
+            return;
+        }
+        _press.Start(Clock.MonotonicMilliseconds);
+        StateHasChanged();
+    }
+
+    /// <summary>Ends the press animation at once, for a key the button's command did not take.</summary>
+    public void StopPress()
+    {
+        if (!IsPressed)
+        {
+            return;
+        }
+        _press.Stop();
+        StateHasChanged();
+    }
 
     public override bool IsEnabled
     {
@@ -117,11 +158,18 @@ public class Button : Control
             foregroundColor = visualState == VisualState.Focused ? Color.Yellow : Color.White;
             hotKeyColor = Color.Yellow;
         }
-        if (IsPressed && visualState != VisualState.Disabled)
+        // A disabled button does not press. Step 0 is the pressed colours; step 1 brightens a normal background
+        // (a destructive one keeps its error colour, which has no brighter form in the palette); the end is the normal colours.
+        var pressStep = visualState == VisualState.Disabled ? PressSteps : _press.Step(Clock.MonotonicMilliseconds);
+        if (pressStep == 0)
         {
             foregroundColor = colorScheme.SelectedFocusedForeground;
             backgroundColor = colorScheme.SelectedFocusedBackground;
             hotKeyColor = colorScheme.SelectedFocusedForeground;
+        }
+        else if (pressStep == 1 && !IsDestructive)
+        {
+            backgroundColor = Brighten(backgroundColor);
         }
         var inner = Math.Max(0, (int)ViewSize.Width - 2);
         var title = inner == 0
@@ -136,13 +184,27 @@ public class Button : Control
     public override void OnIdle()
     {
         base.OnIdle();
-        var pressedAt = Volatile.Read(ref _pressedAt);
-        if (pressedAt != 0 && Environment.TickCount64 - pressedAt >= PressFeedback.TotalMilliseconds)
+        // Repaint only when the press moves to another step, or ends, so an idle button costs nothing.
+        var step = _press.Step(Clock.MonotonicMilliseconds);
+        if (step != _shownPressStep)
         {
-            Volatile.Write(ref _pressedAt, 0);
+            _shownPressStep = step;
             StateHasChanged();
         }
     }
+
+    /// <summary>The background of the brightened press step: each dark colour becomes its bright counterpart.</summary>
+    private static Color Brighten(Color color) => color switch
+    {
+        Color.DarkBlue => Color.Blue,
+        Color.DarkGreen => Color.Green,
+        Color.DarkCyan => Color.Cyan,
+        Color.DarkRed => Color.Red,
+        Color.DarkMagenta => Color.Magenta,
+        Color.DarkYellow => Color.Yellow,
+        Color.DarkGray => Color.Gray,
+        _ => color,
+    };
 
     public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
     {
@@ -170,19 +232,41 @@ public class Button : Control
         }
     }
 
-    private async Task RunFirstCommandAsync()
+    private async Task<bool> RunFirstCommandAsync()
     {
         ICommand? command = Commands.FirstOrDefault();
-        if (command is not null)
-        {
-            await command.RunAsync(null);
-        }
+        return command is not null && await command.RunAsync(null);
     }
 
     public override async Task TriggerHotKeyAsync()
     {
         await base.TriggerHotKeyAsync();
-        await RunFirstCommandAsync();
+        StartPress();
+        if (!await RunFirstCommandAsync())
+        {
+            StopPress();
+        }
+    }
+
+    /// <summary>
+    /// A key bound to the button's own command (a function key on the key bar, Enter on a close button) runs it through
+    /// the command, not through <see cref="RunFirstCommandAsync"/>, so the press starts here. A key the command declines
+    /// (its <c>RunAsync</c> returns false, for example a copy with nothing to copy) ends the press at once.
+    /// Space is handled by <see cref="SpaceCommand"/>, which is the button's second command.
+    /// </summary>
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        var takesKey = IsEnabled && (Commands.FirstOrDefault()?.ActiveKey?.IsIdentical(keyEvent) ?? false);
+        if (takesKey)
+        {
+            StartPress();
+        }
+        var isHandled = await base.HandleKeyEventAsync(keyEvent);
+        if (takesKey && !isHandled)
+        {
+            StopPress();
+        }
+        return isHandled;
     }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
@@ -214,10 +298,12 @@ public class Button : Control
                     SetFocus();
                 }
 
-                Volatile.Write(ref _pressedAt, Math.Max(1, Environment.TickCount64));
-                StateHasChanged();
+                StartPress();
             }
-            await RunFirstCommandAsync();
+            if (!await RunFirstCommandAsync())
+            {
+                StopPress();
+            }
             isHandled = true;
         }
         return isHandled;

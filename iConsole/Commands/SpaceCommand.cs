@@ -12,10 +12,16 @@ public class SpaceCommand : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Spacebar, false, false, false);
 
-    public override Task ExecuteAsync(object? args)
+    public override async Task ExecuteAsync(object? args)
     {
-        var button = Control as Button;
-        button?.Commands.First().RunAsync(args);
-        return Task.CompletedTask;
+        if (Control is not Button button)
+        {
+            return;
+        }
+        button.StartPress();
+        if (!await button.Commands.First().RunAsync(args))
+        {
+            button.StopPress();
+        }
     }
 }
