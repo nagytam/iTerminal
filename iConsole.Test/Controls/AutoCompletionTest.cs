@@ -55,6 +55,7 @@ public class AutoCompletionTest
         textModel.Lines[0] = "Hu";
         textModel.TriggerPropertyChanged();
         await autoCompletion.CompletionModel.UpdateTask!;
+        autoCompletion.OnIdle(); // visibility is applied on the UI thread
 
         Assert.IsTrue(autoCompletion.IsVisible);
         CollectionAssert.AreEqual(new string[] { "Hungary" }, autoCompletion.CompletionModel.MatchingValues.ToArray());
@@ -62,6 +63,7 @@ public class AutoCompletionTest
         textModel.Lines[0] = "ZZZ";
         textModel.TriggerPropertyChanged();
         await autoCompletion.CompletionModel.UpdateTask!;
+        autoCompletion.OnIdle();
 
         Assert.IsFalse(autoCompletion.IsVisible);
         Assert.AreEqual(0, autoCompletion.CompletionModel.MatchingValues.Count);
@@ -195,6 +197,7 @@ public class AutoCompletionTest
         textModel.TriggerPropertyChanged();
         autoCompletion.CloseOverlay();
         await completionModel.UpdateTask!;
+        autoCompletion.OnIdle();
 
         Assert.IsFalse(autoCompletion.IsPopupOpen, "A stale match update must not re-open a dismissed list.");
         Assert.IsFalse(autoCompletion.IsVisible);
@@ -230,6 +233,7 @@ public class AutoCompletionTest
         textModel.Lines[0] = "H";
         textModel.TriggerPropertyChanged();
         await completionModel.UpdateTask!;
+        autoCompletion.OnIdle();
 
         Assert.IsTrue(autoCompletion.IsVisible, "Typing after a dismissal should bring the suggestions back.");
     }
@@ -272,6 +276,7 @@ public class AutoCompletionTest
         await completionModel.UpdateTask!;
         for (int i = 0; i < 500 && !autoCompletion.IsPopupOpen; i++)
         {
+            autoCompletion.OnIdle();
             await Task.Delay(10);
         }
 
@@ -279,6 +284,7 @@ public class AutoCompletionTest
 
         releaseFirstUpdate.Set();
         await firstUpdate;
+        autoCompletion.OnIdle();
 
         Assert.IsTrue(autoCompletion.IsPopupOpen, "A dismissed update finishing late must not close the newer list.");
     }
@@ -333,6 +339,7 @@ public class AutoCompletionTest
 
         var handled = await autoCompletion.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.Tab, false, false, false));
         await autoCompletion.CompletionModel.UpdateTask!;
+        autoCompletion.OnIdle();
 
         Assert.IsTrue(handled);
         Assert.AreEqual("Hungary", textModel.Lines[0]);
