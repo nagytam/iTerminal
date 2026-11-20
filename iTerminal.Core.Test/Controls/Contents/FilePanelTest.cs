@@ -31,7 +31,7 @@ public class FilePanelTest
         terminalModel: new Mock<iTerminal.Core.Model.TerminalModel>(
             MockBehavior.Loose,
             Mock.Of<iConsole.Tasks.TaskManager>(),
-            Mock.Of<IContentModelService>()).Object,
+            Mock.Of<IContentModelService>(), null).Object,
         taskManager: Mock.Of<iConsole.Tasks.TaskManager>(),
         themeService: themeService)
     {
@@ -414,7 +414,7 @@ public class FilePanelTest
             var terminalModel = new Mock<iTerminal.Core.Model.TerminalModel>(
                 MockBehavior.Loose,
                 Mock.Of<iConsole.Tasks.TaskManager>(),
-                Mock.Of<IContentModelService>()).Object;
+                Mock.Of<IContentModelService>(), null).Object;
 
             var themeService = new ThemeService();
             var contentBrowser = new ContentBrowser(

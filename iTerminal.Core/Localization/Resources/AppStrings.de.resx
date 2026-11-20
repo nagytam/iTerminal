@@ -11136,4 +11136,25 @@
   <data name="KeyMap.Notify.Problems" xml:space="preserve">
     <value>{0} Tastenbelegung(en) in keymap.json wurden nicht verwendet: {1}. Das Protokoll nennt den Grund.</value>
   </data>
+  <data name="Terminal.ShellNone" xml:space="preserve">
+    <value>Hier ist keine Shell-Sitzung verfügbar: sh oder bash muss im PATH liegen. Befehle laufen wie bisher einzeln.</value>
+  </data>
+  <data name="Terminal.ShellList" xml:space="preserve">
+    <value>Shells: {0}. Aktuell: {1}.</value>
+  </data>
+  <data name="Terminal.ShellUnknown" xml:space="preserve">
+    <value>shell: {0} ist hier nicht verfügbar. Verfügbar: {1}.</value>
+  </data>
+  <data name="Terminal.ShellBusy" xml:space="preserve">
+    <value>Ein Befehl läuft: die Shell kann erst danach gewechselt werden.</value>
+  </data>
+  <data name="Terminal.ShellSwitched" xml:space="preserve">
+    <value>Shell ist jetzt {0}. Die Variablen und der Ordner der bisherigen Sitzung sind weg.</value>
+  </data>
+  <data name="Terminal.ShellInterrupted" xml:space="preserve">
+    <value>Mit Esc unterbrochen: die Shell-Sitzung wurde beendet, ihre Variablen und ihr Ordner sind weg.</value>
+  </data>
+  <data name="Terminal.ShellEnded" xml:space="preserve">
+    <value>Die Shell wurde beendet (exit oder ein Fehler, der sie gestoppt hat). Der nächste Befehl startet eine neue Sitzung.</value>
+  </data>
 </root>

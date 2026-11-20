@@ -11072,4 +11072,25 @@
   <data name="KeyMap.Notify.Problems" xml:space="preserve">
     <value>{0} raccourci(s) de keymap.json non utilisé(s) : {1}. Le journal indique la cause.</value>
   </data>
+  <data name="Terminal.ShellNone" xml:space="preserve">
+    <value>Aucune session shell n'est disponible ici : sh ou bash doit être dans le PATH. Les commandes s'exécutent une à la fois, comme avant.</value>
+  </data>
+  <data name="Terminal.ShellList" xml:space="preserve">
+    <value>Shells : {0}. Actuel : {1}.</value>
+  </data>
+  <data name="Terminal.ShellUnknown" xml:space="preserve">
+    <value>shell : {0} n'est pas disponible ici. Disponibles : {1}.</value>
+  </data>
+  <data name="Terminal.ShellBusy" xml:space="preserve">
+    <value>Une commande est en cours : le shell ne peut être changé qu'à sa fin.</value>
+  </data>
+  <data name="Terminal.ShellSwitched" xml:space="preserve">
+    <value>Le shell est maintenant {0}. Les variables et le dossier de la session précédente ont disparu.</value>
+  </data>
+  <data name="Terminal.ShellInterrupted" xml:space="preserve">
+    <value>Interrompue avec Échap : la session shell a été terminée, ses variables et son dossier sont perdus.</value>
+  </data>
+  <data name="Terminal.ShellEnded" xml:space="preserve">
+    <value>Le shell s'est arrêté (exit, ou une erreur qui l'a stoppé). La commande suivante démarre une nouvelle session.</value>
+  </data>
 </root>

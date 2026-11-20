@@ -11278,4 +11278,25 @@
   <data name="KeyMap.Notify.Problems" xml:space="preserve">
     <value>{0} key binding(s) in keymap.json were not used: {1}. The log says why.</value>
   </data>
+  <data name="Terminal.ShellNone" xml:space="preserve">
+    <value>No shell session is available here: sh or bash must be on the PATH. Commands run one at a time, as before.</value>
+  </data>
+  <data name="Terminal.ShellList" xml:space="preserve">
+    <value>Shells: {0}. Current: {1}.</value>
+  </data>
+  <data name="Terminal.ShellUnknown" xml:space="preserve">
+    <value>shell: {0} is not available here. Available: {1}.</value>
+  </data>
+  <data name="Terminal.ShellBusy" xml:space="preserve">
+    <value>A command is running: the shell can be changed when it finishes.</value>
+  </data>
+  <data name="Terminal.ShellSwitched" xml:space="preserve">
+    <value>Shell is now {0}. The previous session's variables and folder are gone.</value>
+  </data>
+  <data name="Terminal.ShellInterrupted" xml:space="preserve">
+    <value>Interrupted with Esc: the shell session was ended, so its variables and folder are gone.</value>
+  </data>
+  <data name="Terminal.ShellEnded" xml:space="preserve">
+    <value>The shell ended (exit, or an error that stopped it). The next command starts a new session.</value>
+  </data>
 </root>

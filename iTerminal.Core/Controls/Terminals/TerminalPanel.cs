@@ -78,6 +78,16 @@ public class TerminalPanel : Window
     {
         var isHandled = await base.HandleKeyEventAsync(keyEvent);
 
+        if (!isHandled && _terminalModel.IsRunning && keyEvent.ConsoleKey == ConsoleKey.Escape
+            && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift
+            && _terminalModel.ShellSessions is { IsBusy: true } sessions)
+        {
+            // Esc ends a command running in the shell session. It must come before the edit-key swallow below, which
+            // would otherwise take Esc. The shell is killed, so its variables and folder are gone.
+            sessions.Interrupt();
+            isHandled = true;
+        }
+
         if (!isHandled && _terminalModel.IsRunning && IsCommandEditKey(keyEvent))
         {
             // The command being typed *is* the running command until it finishes and is moved to

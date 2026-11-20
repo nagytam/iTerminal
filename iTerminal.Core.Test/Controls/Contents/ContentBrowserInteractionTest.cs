@@ -38,7 +38,7 @@ public class ContentBrowserInteractionTest
     {
         var contentModelService = new Mock<IContentModelService>().Object;
         var taskManager = new Mock<TaskManager>(MockBehavior.Loose).Object;
-        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, contentModelService).Object;
+        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, contentModelService, null).Object;
         var browser = new ContentBrowser("Panel", contentModelService, terminalModel, taskManager, new TestThemeService())
         {
             ViewSize = new Size(20, 12),
@@ -175,7 +175,7 @@ public class ContentBrowserInteractionTest
         var contentModelService = new Mock<IContentModelService>();
         contentModelService.SetupGet(s => s.ContentModels).Returns([replacement.Object]);
         var taskManager = new Mock<TaskManager>(MockBehavior.Loose).Object;
-        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, contentModelService.Object).Object;
+        var terminalModel = new Mock<TerminalModel>(MockBehavior.Loose, taskManager, contentModelService.Object, null).Object;
         var browser = new ContentBrowser("Panel", contentModelService.Object, terminalModel, taskManager, new TestThemeService())
         {
             ViewSize = new Size(20, 12),

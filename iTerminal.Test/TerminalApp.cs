@@ -249,6 +249,8 @@ public sealed class TerminalApp : IAsyncDisposable
                     services.AddSingleton(probe);
                 }
                 services.AddSingleton<SandboxServices.Shell>();
+                // The command log's shell session is a fake: no test starts a real sh or bash.
+                services.AddSingleton<Core.Services.Shell.ILocalShellSessionService, SandboxServices.LocalShellSessions>();
                 services.AddSingleton<Core.Services.Shell.IInteractiveShellService>(provider => provider.GetRequiredService<SandboxServices.Shell>());
                 services.AddSingleton<SandboxServices.Launcher>();
                 services.AddSingleton<Core.Services.FileAssociations.IFileLauncher>(provider => provider.GetRequiredService<SandboxServices.Launcher>());

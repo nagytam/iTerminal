@@ -11072,4 +11072,25 @@
   <data name="KeyMap.Notify.Problems" xml:space="preserve">
     <value>A keymap.json {0} billentyűkiosztása nem lett használva: {1}. A napló megadja az okát.</value>
   </data>
+  <data name="Terminal.ShellNone" xml:space="preserve">
+    <value>Itt nem érhető el shell-munkamenet: sh vagy bash kell legyen a PATH-on. A parancsok továbbra is egyenként futnak.</value>
+  </data>
+  <data name="Terminal.ShellList" xml:space="preserve">
+    <value>Shell-ek: {0}. Jelenlegi: {1}.</value>
+  </data>
+  <data name="Terminal.ShellUnknown" xml:space="preserve">
+    <value>shell: {0} itt nem érhető el. Elérhető: {1}.</value>
+  </data>
+  <data name="Terminal.ShellBusy" xml:space="preserve">
+    <value>Parancs fut: a shell csak a befejezése után váltható.</value>
+  </data>
+  <data name="Terminal.ShellSwitched" xml:space="preserve">
+    <value>A shell most {0}. Az előző munkamenet változói és mappája megszűnt.</value>
+  </data>
+  <data name="Terminal.ShellInterrupted" xml:space="preserve">
+    <value>Esc-cel megszakítva: a shell-munkamenet véget ért, változói és mappája elvesztek.</value>
+  </data>
+  <data name="Terminal.ShellEnded" xml:space="preserve">
+    <value>A shell leállt (exit, vagy olyan hiba, ami megállította). A következő parancs új munkamenetet indít.</value>
+  </data>
 </root>

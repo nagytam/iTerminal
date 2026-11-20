@@ -73,7 +73,7 @@ public class ContentBrowserTest
         var terminalModel = new Mock<TerminalModel>(
             MockBehavior.Loose,
             taskManager,
-            contentModelService).Object;
+            contentModelService, null).Object;
 
         return new ContentBrowser(
             name,
@@ -184,7 +184,7 @@ public class ContentBrowserTest
         var terminalModel = new Mock<TerminalModel>(
             MockBehavior.Loose,
             taskManager,
-            contentModelService).Object;
+            contentModelService, null).Object;
 
         var sut = new ContentBrowser(
             "Panel",
@@ -469,7 +469,7 @@ public class ContentBrowserTest
         var terminalModel = new Mock<TerminalModel>(
             MockBehavior.Loose,
             taskManager,
-            contentModelService).Object;
+            contentModelService, null).Object;
 
         var sut = new ContentBrowser(
             "Panel",
