@@ -65,7 +65,7 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 #### Suggested order
 
 1. Items 1, 2, 3, 4: terminal fidelity, each small to medium, no API change for consumers.
-2. Items 9, 18, 25: layout, splitter and key maps, which unblock panel ratios and `docs/mc-parity.md` items 9 and 11.
+2. Items 9, 18, 25: layout, splitter and key maps, which unblock panel ratios and `Documentation/mc-parity.md` items 9 and 11.
 3. Items 7, 6, 5: protocol additions that need a capability query at start-up; share one detection step.
 4. Items 17, 19, 20, 22, 23: control upgrades the file manager can use at once.
 5. The rest as needed.

@@ -161,7 +161,7 @@ Credentials come from the built-in vault or password manager, never from a URL. 
 Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Nine Men's Morris, Snake and Tetris, all in the Tools menu.
 
 ### 3.9 For .NET developers: iConsole
-`iConsole` is a reusable terminal UI framework that lives in the same repository: controls, commands, background jobs, a layered rendering pipeline with diffed output, a notification and toast system, localisation, and platform input plug-ins for Windows and POSIX. If you want to build your own text UI in C#, it is open source and documented under `docs/architecture/`.
+`iConsole` is a reusable terminal UI framework that lives in the same repository: controls, commands, background jobs, a layered rendering pipeline with diffed output, a notification and toast system, localisation, and platform input plug-ins for Windows and POSIX. If you want to build your own text UI in C#, it is open source and documented under `Documentation/architecture/`.
 
 ---
 
@@ -281,7 +281,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 > iTerminal is an open-source terminal file manager written in C# on .NET 11, and it is now open
 > for contributions. You do not need to understand all of it: the code is split into a reusable UI
 > framework (`iConsole`), the application behaviour (`iTerminal.Core`) and a thin executable, and
-> each subsystem has a write-up in `docs/architecture/`.
+> each subsystem has a write-up in `Documentation/architecture/`.
 >
 > **Ways to help, from small to large**
 > - Report a bug with the terminal emulator and OS you use (the single most useful thing in a beta).
@@ -391,7 +391,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 
 ### 7.1 Why a developer would contribute
 - **Small, bounded entry points.** Drives, viewers, games, dialogs and translations are separate, self-contained pieces.
-- **Documented architecture.** One write-up per subsystem in `docs/architecture/`, plus a list of easy-to-break rules in `CLAUDE.md`.
+- **Documented architecture.** One write-up per subsystem in `Documentation/architecture/`, plus a list of easy-to-break rules in `CLAUDE.md`.
 - **A real safety net.** Unit tests per project and an end-to-end suite that boots the whole app on a virtual terminal.
 - **Modern C#.** .NET 11, nullable enabled, async-first, constructor injection, an `.editorconfig`.
 - **Visible results.** A change appears in a running app within minutes, and the project is small enough for a maintainer to notice it.
@@ -432,7 +432,7 @@ The repository currently has no `CONTRIBUTING.md`, issue templates or code of co
 iTerminal welcomes bug fixes, new drives, file viewers, translations and docs.
 Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the issues labelled
 [`good first issue`](https://github.com/nagytam/iTerminal/labels/good%20first%20issue).
-Architecture notes per subsystem are in [docs/architecture](docs/architecture).
+Architecture notes per subsystem are in [Documentation/architecture](Documentation/architecture).
 ```
 
 ### 7.6 Where to find contributors
@@ -516,7 +516,7 @@ infrastructure. Thank you to all [sponsors](SPONSORS.md).
 
 **Does it work over SSH?** Yes, it is a terminal application, so it works wherever your terminal does.
 
-**How does it compare with Midnight Commander, Far, Total Commander or Double Commander?** It follows the same two-panel, function-key workflow and adds drives for Git, Docker, cloud and phones, a built-in Git client and a wide-ranging viewer. The repository's `docs/mc-parity.md` keeps an honest feature-by-feature comparison, including the gaps.
+**How does it compare with Midnight Commander, Far, Total Commander or Double Commander?** It follows the same two-panel, function-key workflow and adds drives for Git, Docker, cloud and phones, a built-in Git client and a wide-ranging viewer. The repository's `Documentation/mc-parity.md` keeps an honest feature-by-feature comparison, including the gaps.
 
 **Can I use the UI framework in my own app?** Yes. `iConsole` is a separate project in the same repository under the same licence.
 
