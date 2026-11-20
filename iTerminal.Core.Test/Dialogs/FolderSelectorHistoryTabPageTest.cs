@@ -1,5 +1,7 @@
 using iConsole.Data;
+using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iTerminal.Core.Dialogs;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -118,5 +120,20 @@ public class FolderSelectorHistoryTabPageTest
 
         Assert.IsTrue(hints.Any(h => h.Key == "Enter"));
         Assert.IsTrue(hints.Any(h => h.Key == "Esc"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EachVisitedFolder_ShowsItsNameBeforeItsPath()
+    {
+        var folder = Path.Combine(Path.GetTempPath(), "Projects");
+        var (page, _) = await CreatePageAsync(folder);
+        page.OnInitializeLayout();
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        // The name, then the start of the path straight after it: the old row was the path alone, which also ends in the name.
+        AssertScreenContains(again, "Projects  " + folder.Substring(0, 8));
     }
 }

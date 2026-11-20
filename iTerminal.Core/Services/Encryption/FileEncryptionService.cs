@@ -56,7 +56,7 @@ public sealed record EncryptionProgress(long BytesDone, long BytesTotal, string 
 
 /// <summary>
 /// Encrypts and decrypts files with a passphrase. The format is described in
-/// <c>docs/architecture/file-operations.md</c> ("File encryption"): AES-256-GCM in 1 MiB chunks, a key from the passphrase
+/// <c>Documentation/architecture/file-operations.md</c> ("File encryption"): AES-256-GCM in 1 MiB chunks, a key from the passphrase
 /// by PBKDF2-HMAC-SHA256, a header that is authenticated with every chunk, and a final-chunk flag that makes a cut file fail.
 /// </summary>
 public interface IFileEncryptionService

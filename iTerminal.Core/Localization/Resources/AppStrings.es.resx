@@ -7042,6 +7042,9 @@
   <data name="FolderSelector.Drives.Reading" xml:space="preserve">
     <value> Leyendo las unidades…</value>
   </data>
+  <data name="FolderSelector.Favourites.ConfirmRemove" xml:space="preserve">
+    <value>¿Quitar {0} de los favoritos?  y:sí  n:no</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Recientes</value>
   </data>
@@ -10432,6 +10435,9 @@
   </data>
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Cerrar sesión en un host SMB</value>
+  </data>
+  <data name="CmdTitle.550033f7" xml:space="preserve">
+    <value>Eliminar un favorito</value>
   </data>
   <data name="Dep.PowerShellPurpose" xml:space="preserve">
     <value>Ejecutar PowerShell: Ctrl+O en Windows y sesiones remotas de PowerShell (Alt+F2)</value>

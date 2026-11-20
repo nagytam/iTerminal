@@ -7106,6 +7106,9 @@
   <data name="FolderSelector.Drives.Reading" xml:space="preserve">
     <value> Laufwerke werden gelesen…</value>
   </data>
+  <data name="FolderSelector.Favourites.ConfirmRemove" xml:space="preserve">
+    <value>{0} aus den Favoriten entfernen?  y:ja  n:nein</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Zuletzt</value>
   </data>
@@ -10496,6 +10499,9 @@
   </data>
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Von einem SMB-Host abmelden</value>
+  </data>
+  <data name="CmdTitle.550033f7" xml:space="preserve">
+    <value>Favorit löschen</value>
   </data>
   <data name="Dep.PowerShellPurpose" xml:space="preserve">
     <value>PowerShell ausführen: Ctrl+O unter Windows und entfernte PowerShell-Sitzungen (Alt+F2)</value>
