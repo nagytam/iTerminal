@@ -108,7 +108,7 @@ Ctrl+F8 — beside F8, which fills it — points the focused panel at the recycl
 - **S3 credentials and region** (`S3CredentialResolver`): the password manager first, then the standard `AWS_*` environment, then the `Cloud:S3` configuration. Configuration fills only what the two above did not give; an unsigned request is the last resort.
 - **Cached quotes** (`CacheService`, `InstrumentQuoteHelper`): each quote is judged on its own age, and a quote's history is bounded (the newest 100 values).
 
-### The evidence notebook (`evidence://`, Ctrl+Shift+Q, Ctrl+Shift+X)
+### The evidence notebook (`evidence://`, Ctrl+Shift+Q, Ctrl+Shift+Delete)
 A notebook is a folder the person chooses when it is opened. It holds a copy of everything gathered into it and an index that records where each entry came from, so it is a plain folder on disk that can be copied or read without the application.
 
 - **Layout** (`Services/Evidence/EvidenceNotebookService.cs`): `notebook.json` is the index (every entry's record, and the notebook's creator origin); `items/NNNN_<name>` is the content, numbered in the order added. The index is rewritten whole on every change, through `notebook.json.tmp`, so a crash leaves the old index or the new one.
