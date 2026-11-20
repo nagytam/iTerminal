@@ -4497,7 +4497,7 @@
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:vissza  Del/c:törlés  Space:gomb megnyomása  Ctrl+←/→:mód  Esc:bezár</value>
   </data>
   <data name="Hints.SolutionViewer" xml:space="preserve">
-    <value>b:fordítás c:tisztítás t:teszt r:futtatás x:megszakítás v:SDK Space:kijelölés a:mind T:tesztek PgUp/PgDn/Home/End:kimenet Esc:bezár</value>
+    <value>b:fordítás c:tisztítás t:teszt r:futtatás x:megszakítás v:SDK s:SBOM f:XML/JSON Space:kijelölés a:mind T:tesztek PgUp/PgDn/Home/End:kimenet Esc:bezár</value>
   </data>
   <data name="Hints.MusicViewer" xml:space="preserve">
     <value> Space:lejátszás/szünet Enter:elölről s:leállítás ←/→:tekerés Shift+←/→:nagyobb tekerés +/-:hangerő e:címkék Esc:bezár</value>
@@ -11104,5 +11104,32 @@
   </data>
   <data name="Terminal.ShellEnded" xml:space="preserve">
     <value>A shell leállt (exit, vagy olyan hiba, ami megállította). A következő parancs új munkamenetet indít.</value>
+  </data>
+  <data name="DialogHint.GenerateSbom" xml:space="preserve">
+    <value>CycloneDX SBOM írása a megoldásról</value>
+  </data>
+  <data name="DialogHint.SbomFormat" xml:space="preserve">
+    <value>SBOM váltása XML és JSON között</value>
+  </data>
+  <data name="Solution.SbomWriting" xml:space="preserve">
+    <value>SBOM írása...</value>
+  </data>
+  <data name="Solution.SbomWritten" xml:space="preserve">
+    <value>SBOM {0} csomaggal írva ide: {1}.</value>
+  </data>
+  <data name="Solution.SbomNoAssets" xml:space="preserve">
+    <value>Nincs project.assets.json: előbb építsd vagy állítsd vissza a megoldást.</value>
+  </data>
+  <data name="Solution.SbomMissingSome" xml:space="preserve">
+    <value>{0} projektnek nincs assets fájlja, ezek kimaradtak.</value>
+  </data>
+  <data name="Solution.SbomBusy" xml:space="preserve">
+    <value>A dotnet {0} még fut; az SBOM a befejezése után írható.</value>
+  </data>
+  <data name="Solution.SbomFailed" xml:space="preserve">
+    <value>Az SBOM sikertelen: {0}</value>
+  </data>
+  <data name="Solution.SbomFormat" xml:space="preserve">
+    <value>SBOM formátuma: {0}.</value>
   </data>
 </root>

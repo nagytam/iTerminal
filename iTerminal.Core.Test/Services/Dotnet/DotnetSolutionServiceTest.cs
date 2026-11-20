@@ -1,4 +1,6 @@
+using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
+using System.Xml.Linq;
 
 namespace iTerminal.Core.Test.Services.Dotnet;
 
@@ -32,6 +34,106 @@ public class DotnetSolutionServiceTest
         {
             return false;
         }
+    }
+
+    // ── GenerateSbom ─────────────────────────────────────────────────────────
+
+    private const string AssetsWithTwoPackages =
+        """
+        {
+          "version": 3,
+          "libraries": {
+            "Newtonsoft.Json/13.0.3": { "type": "package" },
+            "Serilog/4.2.0+build.1": { "type": "package" },
+            "App.Core/1.0.0": { "type": "project" }
+          }
+        }
+        """;
+
+    private static void WriteAssets(string projectDirectory, string json)
+    {
+        var obj = Path.Combine(projectDirectory, "obj");
+        Directory.CreateDirectory(obj);
+        File.WriteAllText(Path.Combine(obj, "project.assets.json"), json);
+    }
+
+    private static SolutionInfo SolutionWith(string root, params string[] projectNames)
+    {
+        var projects = projectNames
+            .Select(name => new SolutionProject(name, name + "/" + name + ".csproj", Path.Combine(root, name, name + ".csproj"), false))
+            .ToList();
+        return new SolutionInfo(Path.Combine(root, "Demo.slnx"), "Demo", root, projects);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GenerateSbom_Xml_ListsPackagesOnceAcrossProjectsAndWritesBesideTheSolution()
+    {
+        var root = CreateTempDir();
+        WriteAssets(Path.Combine(root, "App"), AssetsWithTwoPackages);
+        WriteAssets(Path.Combine(root, "Core"), """
+            { "libraries": { "newtonsoft.json/13.0.3": { "type": "package" } } }
+            """);
+
+        var result = new DotnetSolutionService().GenerateSbom(SolutionWith(root, "App", "Core"), SbomFormat.Xml);
+
+        Assert.AreEqual(Path.Combine(root, "Demo.cdx.xml"), result.Path);
+        Assert.AreEqual(2, result.ComponentCount);
+        Assert.AreEqual(0, result.ProjectsWithoutAssets);
+
+        var document = System.Xml.Linq.XDocument.Load(result.Path);
+        XNamespace ns = "http://cyclonedx.org/schema/bom/1.6";
+        Assert.AreEqual(ns + "bom", document.Root!.Name);
+        var purls = document.Descendants(ns + "purl").Select(element => element.Value).ToList();
+        CollectionAssert.AreEqual(
+            new[] { "pkg:nuget/newtonsoft.json@13.0.3", "pkg:nuget/serilog@4.2.0%2Bbuild.1" },
+            purls);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GenerateSbom_Json_WritesCycloneDxJsonAndNoProjectReferences()
+    {
+        var root = CreateTempDir();
+        WriteAssets(Path.Combine(root, "App"), AssetsWithTwoPackages);
+
+        var result = new DotnetSolutionService().GenerateSbom(SolutionWith(root, "App"), SbomFormat.Json);
+
+        Assert.AreEqual(Path.Combine(root, "Demo.cdx.json"), result.Path);
+        Assert.AreEqual(2, result.ComponentCount);
+
+        using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(result.Path));
+        var bom = document.RootElement;
+        Assert.AreEqual("CycloneDX", bom.GetProperty("bomFormat").GetString());
+        Assert.AreEqual("1.6", bom.GetProperty("specVersion").GetString());
+        Assert.AreEqual("Demo", bom.GetProperty("metadata").GetProperty("component").GetProperty("name").GetString());
+        Assert.AreEqual(2, bom.GetProperty("components").GetArrayLength());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GenerateSbom_ProjectWithoutAssets_IsCountedAndSkipped()
+    {
+        var root = CreateTempDir();
+        WriteAssets(Path.Combine(root, "App"), AssetsWithTwoPackages);
+
+        var result = new DotnetSolutionService().GenerateSbom(SolutionWith(root, "App", "NotRestored"), SbomFormat.Xml);
+
+        Assert.AreEqual(1, result.ProjectsWithoutAssets);
+        Assert.AreEqual(2, result.ComponentCount);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GenerateSbom_NoProjectRestored_WritesNothing()
+    {
+        var root = CreateTempDir();
+
+        var result = new DotnetSolutionService().GenerateSbom(SolutionWith(root, "App"), SbomFormat.Xml);
+
+        Assert.AreEqual(string.Empty, result.Path);
+        Assert.AreEqual(1, result.ProjectsWithoutAssets);
+        Assert.IsFalse(File.Exists(Path.Combine(root, "Demo.cdx.xml")));
     }
 
     // ── ParseSolution: slnx ──────────────────────────────────────────────────

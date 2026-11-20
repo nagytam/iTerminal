@@ -103,6 +103,9 @@ public class SolutionViewerDialog : SplitPaneDialog
     private StatusSeverity _statusSeverity = StatusSeverity.Info;
     private CancellationTokenSource? _runCts;
 
+    /// <summary>The serialisation <c>s</c> writes the SBOM in. XML by default; <c>f</c> switches it to JSON.</summary>
+    private SbomFormat _sbomFormat = SbomFormat.Xml;
+
     /// <summary>Verb of the run in progress ("build"/"test"/"run"); drives test-summary parsing in <see cref="AppendOutput"/>.</summary>
     private string _currentVerb = string.Empty;
     private TestTotals _testTotals = TestTotals.Empty;
@@ -569,6 +572,77 @@ public class SolutionViewerDialog : SplitPaneDialog
 
     #endregion
 
+    #region SBOM
+
+    /// <summary>
+    /// s: writes the solution's SBOM in the chosen format. It reads the assets files off the UI thread and is refused
+    /// while a dotnet command is running, since that command owns the status line.
+    /// </summary>
+    private void GenerateSbom()
+    {
+        if (_busy)
+        {
+            _status = string.Format(iConsole.Localization.UiText.Get("Solution.SbomBusy", "dotnet {0} is still running; the SBOM can be written when it finishes."), _currentVerb);
+            _statusSeverity = StatusSeverity.Info;
+            StateHasChanged();
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_solution.Directory))
+        {
+            return;
+        }
+
+        var solution = _solution;
+        var format = _sbomFormat;
+        _status = iConsole.Localization.UiText.Get("Solution.SbomWriting", "Writing the SBOM...");
+        _statusSeverity = StatusSeverity.Info;
+        StateHasChanged();
+
+        _ = Task.Run(() =>
+        {
+            string message;
+            var severity = StatusSeverity.Success;
+            try
+            {
+                var result = _dotnetSolutionService.GenerateSbom(solution, format);
+                if (result.Path.Length == 0)
+                {
+                    message = iConsole.Localization.UiText.Get("Solution.SbomNoAssets", "No project.assets.json found: build or restore the solution first.");
+                    severity = StatusSeverity.Error;
+                }
+                else
+                {
+                    message = string.Format(iConsole.Localization.UiText.Get("Solution.SbomWritten", "Wrote an SBOM of {0} packages to {1}."), result.ComponentCount, result.Path);
+                    if (result.ProjectsWithoutAssets > 0)
+                    {
+                        message += " " + string.Format(iConsole.Localization.UiText.Get("Solution.SbomMissingSome", "{0} projects had no assets file and are left out."), result.ProjectsWithoutAssets);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                message = string.Format(iConsole.Localization.UiText.Get("Solution.SbomFailed", "SBOM failed: {0}"), exception.Message);
+                severity = StatusSeverity.Error;
+            }
+
+            _status = message;
+            _statusSeverity = severity;
+            StateHasChanged();
+        });
+    }
+
+    /// <summary>f: switches the SBOM between XML and JSON. Takes effect on the next s.</summary>
+    private void CycleSbomFormat()
+    {
+        _sbomFormat = _sbomFormat == SbomFormat.Xml ? SbomFormat.Json : SbomFormat.Xml;
+        _status = string.Format(iConsole.Localization.UiText.Get("Solution.SbomFormat", "SBOM format: {0}."), _sbomFormat == SbomFormat.Json ? "JSON" : "XML");
+        _statusSeverity = StatusSeverity.Info;
+        StateHasChanged();
+    }
+
+    #endregion
+
     #region Input
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
@@ -582,6 +656,8 @@ public class SolutionViewerDialog : SplitPaneDialog
         yield return ("R", UiText.Get("DialogHint.RunProject", "Run the project"));
         yield return ("X", UiText.Get("DialogHint.CancelRunningCommand", "Cancel the running command"));
         yield return ("V", UiText.Get("DialogHint.NextDotnetSdk", "Switch to the next .NET SDK"));
+        yield return ("S", UiText.Get("DialogHint.GenerateSbom", "Write a CycloneDX SBOM of the solution"));
+        yield return ("F", UiText.Get("DialogHint.SbomFormat", "Switch the SBOM between XML and JSON"));
         yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollOutput", "Scroll the output"));
         yield return ("Home/End", UiText.Get("DialogHint.TopOfOutputOrFollow", "Top of the output, or follow the end"));
     }
@@ -654,6 +730,12 @@ public class SolutionViewerDialog : SplitPaneDialog
                 return true;
             case 'v':
                 CycleSdk();
+                return true;
+            case 's':
+                GenerateSbom();
+                return true;
+            case 'f':
+                CycleSbomFormat();
                 return true;
         }
 
@@ -757,7 +839,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         WriteLine(buffer, x, y, w, text, Color.Cyan, colorScheme.Background);
     }
 
-    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.SolutionViewer", "b:build c:clean t:test r:run x:cancel v:SDK Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close");
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.SolutionViewer", "b:build c:clean t:test r:run x:cancel v:SDK s:SBOM f:XML/JSON Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close");
 
     /// <summary>The SDK new commands run with: the one chosen with v, the newest stable one by default.</summary>
     private DotnetSdk? SelectedSdk => _sdkIndex >= 0 && _sdkIndex < _sdks.Count ? _sdks[_sdkIndex] : null;

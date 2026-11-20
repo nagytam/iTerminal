@@ -15,6 +15,14 @@ public interface IDotnetSolutionService
     SolutionInfo ParseSolution(string solutionPath);
 
     /// <summary>
+    /// Writes a CycloneDX 1.6 software bill of materials for the solution, as XML or JSON, to
+    /// <c>&lt;SolutionName&gt;.cdx.xml</c> or <c>.cdx.json</c> beside the solution file, replacing an earlier one. The
+    /// packages come from each project's <c>obj/project.assets.json</c>, so the projects must have been restored or built
+    /// first. Writes nothing when no project has such a file. Pure file I/O; runs no process.
+    /// </summary>
+    SbomResult GenerateSbom(SolutionInfo solution, SbomFormat format);
+
+    /// <summary>
     /// The .NET SDKs installed on this machine, newest first. Empty when <c>dotnet</c> cannot be run.
     /// </summary>
     IReadOnlyList<DotnetSdk> ListSdks();

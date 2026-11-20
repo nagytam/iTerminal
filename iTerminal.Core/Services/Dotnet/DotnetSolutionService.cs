@@ -1,5 +1,7 @@
 using iTerminal.Core.Model.Dotnet;
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -136,6 +138,171 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
     private static bool IsProjectPath(string? value) =>
         !string.IsNullOrWhiteSpace(value)
         && ProjectExtensions.Any(extension => value!.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
+
+    public SbomResult GenerateSbom(SolutionInfo solution, SbomFormat format)
+    {
+        if (string.IsNullOrEmpty(solution.Directory))
+        {
+            return new SbomResult(string.Empty, 0, 0);
+        }
+
+        var components = new Dictionary<string, SbomComponent>(StringComparer.OrdinalIgnoreCase);
+        var withAssets = 0;
+        var withoutAssets = 0;
+        foreach (var project in solution.Projects)
+        {
+            var projectDirectory = Path.GetDirectoryName(project.AbsolutePath) ?? string.Empty;
+            var assetsPath = Path.Combine(projectDirectory, "obj", "project.assets.json");
+            if (!TryReadPackages(assetsPath, out var packages))
+            {
+                withoutAssets++;
+                continue;
+            }
+
+            withAssets++;
+            foreach (var package in packages)
+            {
+                components.TryAdd(package.Purl, package);
+            }
+        }
+
+        if (withAssets == 0)
+        {
+            return new SbomResult(string.Empty, 0, withoutAssets);
+        }
+
+        var sorted = components.Values
+            .OrderBy(component => component.Name, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(component => component.Version, StringComparer.Ordinal)
+            .ToList();
+
+        var timestamp = DateTimeOffset.UtcNow;
+        var serialNumber = "urn:uuid:" + Guid.NewGuid();
+        var (extension, content) = format == SbomFormat.Json
+            ? ("cdx.json", BuildCycloneDxJson(solution.Name, sorted, serialNumber, timestamp))
+            : ("cdx.xml", BuildCycloneDxXml(solution.Name, sorted, serialNumber, timestamp));
+
+        var path = Path.Combine(solution.Directory, $"{solution.Name}.{extension}");
+        File.WriteAllBytes(path, content);
+        return new SbomResult(path, sorted.Count, withoutAssets);
+    }
+
+    /// <summary>Reads the NuGet packages from a <c>project.assets.json</c>. False when it is missing or unreadable.</summary>
+    private static bool TryReadPackages(string assetsPath, out List<SbomComponent> packages)
+    {
+        packages = [];
+        if (!File.Exists(assetsPath))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(File.ReadAllText(assetsPath));
+            if (!document.RootElement.TryGetProperty("libraries", out var libraries)
+                || libraries.ValueKind != JsonValueKind.Object)
+            {
+                return false;
+            }
+
+            foreach (var library in libraries.EnumerateObject())
+            {
+                // Keys are "Id/Version"; project references are listed too but are not packages.
+                if (!library.Value.TryGetProperty("type", out var type)
+                    || type.ValueKind != JsonValueKind.String
+                    || type.GetString() != "package")
+                {
+                    continue;
+                }
+
+                var slash = library.Name.IndexOf('/');
+                if (slash <= 0 || slash == library.Name.Length - 1)
+                {
+                    continue;
+                }
+
+                var name = library.Name[..slash];
+                var version = library.Name[(slash + 1)..];
+                var purl = $"pkg:nuget/{Uri.EscapeDataString(name.ToLowerInvariant())}@{Uri.EscapeDataString(version)}";
+                packages.Add(new SbomComponent(name, version, purl));
+            }
+
+            return true;
+        }
+        catch (Exception exception) when (exception is IOException or JsonException or UnauthorizedAccessException)
+        {
+            packages = [];
+            return false;
+        }
+    }
+
+    private static byte[] BuildCycloneDxJson(
+        string solutionName, IReadOnlyList<SbomComponent> components, string serialNumber, DateTimeOffset timestamp)
+    {
+        using var stream = new MemoryStream();
+        using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }))
+        {
+            writer.WriteStartObject();
+            writer.WriteString("bomFormat", "CycloneDX");
+            writer.WriteString("specVersion", "1.6");
+            writer.WriteString("serialNumber", serialNumber);
+            writer.WriteNumber("version", 1);
+            writer.WriteStartObject("metadata");
+            writer.WriteString("timestamp", timestamp);
+            writer.WriteStartObject("component");
+            writer.WriteString("type", "application");
+            writer.WriteString("name", solutionName);
+            writer.WriteEndObject();
+            writer.WriteEndObject();
+            writer.WriteStartArray("components");
+            foreach (var component in components)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("type", "library");
+                writer.WriteString("bom-ref", component.Purl);
+                writer.WriteString("name", component.Name);
+                writer.WriteString("version", component.Version);
+                writer.WriteString("purl", component.Purl);
+                writer.WriteEndObject();
+            }
+
+            writer.WriteEndArray();
+            writer.WriteEndObject();
+        }
+
+        return stream.ToArray();
+    }
+
+    private static byte[] BuildCycloneDxXml(
+        string solutionName, IReadOnlyList<SbomComponent> components, string serialNumber, DateTimeOffset timestamp)
+    {
+        XNamespace ns = "http://cyclonedx.org/schema/bom/1.6";
+        var document = new XDocument(
+            new XDeclaration("1.0", "utf-8", null),
+            new XElement(ns + "bom",
+                new XAttribute("serialNumber", serialNumber),
+                new XAttribute("version", 1),
+                new XElement(ns + "metadata",
+                    new XElement(ns + "timestamp", timestamp.ToString("O")),
+                    new XElement(ns + "component",
+                        new XAttribute("type", "application"),
+                        new XElement(ns + "name", solutionName))),
+                new XElement(ns + "components",
+                    components.Select(component => new XElement(ns + "component",
+                        new XAttribute("type", "library"),
+                        new XAttribute("bom-ref", component.Purl),
+                        new XElement(ns + "name", component.Name),
+                        new XElement(ns + "version", component.Version),
+                        new XElement(ns + "purl", component.Purl))))));
+
+        using var stream = new MemoryStream();
+        using (var writer = new StreamWriter(stream, new UTF8Encoding(false)))
+        {
+            document.Save(writer);
+        }
+
+        return stream.ToArray();
+    }
 
     public IReadOnlyList<DotnetSdk> ListSdks()
     {
