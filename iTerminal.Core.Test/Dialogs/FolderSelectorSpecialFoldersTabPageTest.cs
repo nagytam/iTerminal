@@ -174,4 +174,28 @@ public class FolderSelectorSpecialFoldersTabPageTest
         Assert.AreEqual(root, FolderSelectorSpecialFoldersTabPage.PlaceLabel(root));
         Assert.AreEqual(Container.MUSIC_CATALOG, FolderSelectorSpecialFoldersTabPage.PlaceLabel(Container.MUSIC_CATALOG));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TypingALetter_JumpsToAPlaceWhoseFolderNameStartsWithIt()
+    {
+        // Type-ahead matches the row's label, which leads with the folder name, so a letter finds a place by its name.
+        var (page, _) = await CreatePageAsync();
+        var letter = FolderSelectorSpecialFoldersTabPage.PlaceLabel(page.Places[0])[0];
+        page.SetFocus();
+
+        await page.HandleKeyEventAsync(new KeyEvent(letter, (ConsoleKey)char.ToUpperInvariant(letter), false, false, false));
+
+        var cursor = (int)page.ScrollableModel.CursorPosition.Y;
+        StringAssert.StartsWith(FolderSelectorSpecialFoldersTabPage.PlaceLabel(page.Places[cursor]), letter.ToString(), StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void PlaceLabel_OfAFolderWithATrailingSeparator_StillLeadsWithTheName()
+    {
+        var place = Path.Combine(Path.GetTempPath(), "Downloads") + Path.DirectorySeparatorChar;
+
+        StringAssert.StartsWith(FolderSelectorSpecialFoldersTabPage.PlaceLabel(place), "Downloads  ");
+    }
 }
