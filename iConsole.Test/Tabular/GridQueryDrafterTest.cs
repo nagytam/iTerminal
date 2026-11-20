@@ -161,7 +161,15 @@ public class GridQueryDrafterTest
         drafter.Start("? first", Sales);
         Task<string> overtaken = drafter.Request!;
         drafter.Start("? second", Sales);
-        await overtaken;
+        try
+        {
+            // The overtaken request is cancelled or finished, depending on how far it got; either way it is never taken.
+            await overtaken;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
         await drafter.Request!;
 
         GridDraft? draft = drafter.TakeDraft();

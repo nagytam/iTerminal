@@ -217,7 +217,8 @@ public class CsvViewerDialog : Dialog
         CsvDocument document = _document;
         _statusNote = string.Empty;
         _pendingGeneration = ++_generation;
-        _query = Task.Run(() => GridQuery.Run(document.Headers, document.Rows, text));
+        // The rows are a two-axis array in memory; the query runs over the table the array backend reads from it.
+        _query = GridQueryRun.RunOverAsync(new InMemoryGridArray(document.Rows, document.Headers), text);
     }
 
     /// <summary>Asks the AI model for a query for the question in the query line. The draft lands in the line; Enter runs it.</summary>

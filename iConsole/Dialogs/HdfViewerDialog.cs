@@ -42,7 +42,9 @@ public class HdfViewerDialog : Dialog
     private readonly Label _sliceLabel;
     private readonly Label _statusLabel;
     private HdfDatasetInfo? _current;
-    private long[] _indices = [];
+    private GridArrayView? _view;
+    /// <summary>The number of fixed axes: the axes a slice fixes by index, which the picker's dimension keys step through.</summary>
+    private int LeadingCount => _view?.FixedAxes.Count ?? 0;
     private int _activeDimension;
     private bool _datasetsTruncated;
     private int _generation;
@@ -50,11 +52,11 @@ public class HdfViewerDialog : Dialog
     private CancellationTokenSource? _listCancellation;
     private Task<HdfDatasetList>? _list;
     private CancellationTokenSource? _sliceCancellation;
-    private Task<HdfSlice>? _slice;
+    private Task<GridTable>? _slice;
     private readonly TextBox _queryBox;
     private readonly GridQueryRun _queryRun = new();
     private readonly GridQueryDrafter _drafter;
-    private HdfSlice? _sliceData;
+    private GridTable? _sliceData;
     private int? _matched;
     private string _queryError = string.Empty;
     private string _statusNote = string.Empty;
@@ -120,13 +122,13 @@ public class HdfViewerDialog : Dialog
     public HdfDatasetInfo? CurrentDataset => _current;
 
     /// <summary>The index of each leading dimension of the slice on screen; empty for a dataset of two dimensions or fewer.</summary>
-    public IReadOnlyList<long> LeadingIndices => _indices;
+    public IReadOnlyList<long> LeadingIndices => _view is null ? [] : [.. _view.FixedAxes.Select(axis => _view.IndexOf(axis))];
 
     /// <summary>Which leading dimension <c>+</c> and <c>-</c> step.</summary>
     public int ActiveDimension => _activeDimension;
 
     /// <summary>The slice read in progress, or null when none is running.</summary>
-    public Task<HdfSlice>? SliceTask => _slice;
+    public Task<GridTable>? SliceTask => _slice;
 
     /// <summary>The dataset listing in progress, or null when it has landed.</summary>
     public Task<HdfDatasetList>? ListTask => _list;
@@ -143,7 +145,7 @@ public class HdfViewerDialog : Dialog
         // ShowAsync runs this on every open and a panel reuses one dialog for every file, so nothing of the last file may
         // survive: the picker would keep its old selected index and open the new file on the wrong dataset.
         _current = null;
-        _indices = [];
+        _view = null;
         _activeDimension = 0;
         _datasetsTruncated = false;
         _picker.SetItems([]);
@@ -389,7 +391,7 @@ public class HdfViewerDialog : Dialog
         _statusLabel.Text = status;
     }
 
-    private string StatusFor(HdfDatasetInfo dataset, HdfSlice slice)
+    private string StatusFor(HdfDatasetInfo dataset, GridTable slice)
     {
         string shape = dataset.Shape.Length == 0 ? UiText.Get("Hdf.Shape.Scalar", "scalar") : string.Join(" × ", dataset.Shape);
         string status = $"{dataset.Path}  {dataset.TypeName} [{shape}]";
@@ -415,7 +417,7 @@ public class HdfViewerDialog : Dialog
     private void SelectCurrent()
     {
         _current = _picker.SelectedItem;
-        _indices = _current is null ? [] : new long[_current.LeadingDimensions];
+        _view = _current is null || Url is null ? null : GridArrayView.Open(new HdfGridArray(_reader, Url.Path, _current));
         _activeDimension = 0;
         UpdateSliceText();
         StartSlice();
@@ -433,27 +435,27 @@ public class HdfViewerDialog : Dialog
         _sliceCancellation = new CancellationTokenSource();
         CancellationToken token = _sliceCancellation.Token;
         _pendingGeneration = ++_generation;
-        string path = Url.Path;
-        string dataset = _current.Path;
-        long[] indices = [.. _indices];
-        _slice = Task.Run(async () => await _reader.ReadSliceAsync(path, dataset, indices, MaxRows, MaxColumns, MaxCells, token));
+        // The view is immutable, so the read keeps the axes it was started with even if a key moves them meanwhile.
+        GridArrayView view = _view!;
+        _slice = Task.Run(async () => await view.MaterializeAsync(MaxRows, MaxColumns, MaxCells, token));
     }
 
     /// <summary>Moves the active leading dimension's index by <paramref name="delta"/>, clamped to the dimension, and reads the new slice.</summary>
     public void StepIndex(int delta)
     {
-        if (_current is null || _indices.Length == 0)
+        if (_view is null || LeadingCount == 0)
         {
             return;
         }
 
-        long next = Math.Clamp(_indices[_activeDimension] + delta, 0, _current.Shape[_activeDimension] - 1);
-        if (next == _indices[_activeDimension])
+        int axis = _view.FixedAxes[_activeDimension];
+        long before = _view.IndexOf(axis);
+        _view = _view.Step(axis, delta);
+        if (_view.IndexOf(axis) == before)
         {
             return;
         }
 
-        _indices[_activeDimension] = next;
         UpdateSliceText();
         StartSlice();
     }
@@ -461,12 +463,12 @@ public class HdfViewerDialog : Dialog
     /// <summary>Makes the previous or next leading dimension the active one, clamped to the leading dimensions.</summary>
     public void StepDimension(int delta)
     {
-        if (_indices.Length == 0)
+        if (LeadingCount == 0)
         {
             return;
         }
 
-        int next = Math.Clamp(_activeDimension + delta, 0, _indices.Length - 1);
+        int next = Math.Clamp(_activeDimension + delta, 0, LeadingCount - 1);
         if (next != _activeDimension)
         {
             _activeDimension = next;
@@ -477,21 +479,30 @@ public class HdfViewerDialog : Dialog
 
     private void UpdateSliceText()
     {
-        if (_current is null || _indices.Length == 0)
+        if (_current is null || _view is null || LeadingCount == 0)
         {
             _sliceLabel.Text = string.Empty;
             return;
         }
 
-        string cut = string.Join(", ", _indices.Select((index, dimension) => dimension == _activeDimension ? $"<{index}>" : index.ToString())
-            .Concat(["*", "*"]));
+        // The position as the view describes it: the fixed index of each axis, with the active one marked, and * for the shown axes.
+        string[] parts = [.. Enumerable.Range(0, _view.Rank).Select(axis =>
+        {
+            if (axis == _view.RowAxis || axis == _view.ColumnAxis)
+            {
+                return "*";
+            }
+
+            return _view.FixedAxes.ToList().IndexOf(axis) == _activeDimension ? $"<{_view.IndexOf(axis)}>" : _view.IndexOf(axis).ToString();
+        })];
+        int active = _view.FixedAxes[_activeDimension];
         _sliceLabel.Text = string.Format(
             UiText.Get("Hdf.Slice.Line", "Slice [{0}]  dimension {1} of {2}, index {3} of {4}   [ ] dimension   + - index"),
-            cut,
+            string.Join(", ", parts),
             _activeDimension + 1,
-            _indices.Length,
-            _indices[_activeDimension] + 1,
-            _current.Shape[_activeDimension]);
+            LeadingCount,
+            _view.IndexOf(active) + 1,
+            _view.Shape[active]);
     }
 
     private string TitleText() =>
@@ -565,7 +576,7 @@ public class HdfViewerDialog : Dialog
             return true;
         }
 
-        if (keyEvent.KeyPressType == KeyPressType.Down && !_picker.IsOpen && _indices.Length > 0 && HandleSliceKey(keyEvent))
+        if (keyEvent.KeyPressType == KeyPressType.Down && !_picker.IsOpen && LeadingCount > 0 && HandleSliceKey(keyEvent))
         {
             return true;
         }
@@ -641,6 +652,17 @@ public class HdfViewerDialog : Dialog
             case ']':
                 StepDimension(1);
                 return true;
+            case 'T':
+            case 't':
+                // Swaps the rows and the columns: the same two axes, shown the other way round.
+                if (_view is { Rank: >= 2 })
+                {
+                    _view = _view.Transpose();
+                    UpdateSliceText();
+                    StartSlice();
+                }
+
+                return true;
         }
 
         return false;
@@ -651,6 +673,7 @@ public class HdfViewerDialog : Dialog
     {
         yield return ("+ / -  (Ctrl+↑ / Ctrl+↓)", UiText.Get("Hdf.Hint.Index", "Step the index of the active dimension"));
         yield return ("[ / ]  (Ctrl+← / Ctrl+→)", UiText.Get("Hdf.Hint.Dimension", "Choose the active dimension"));
+        yield return ("T", UiText.Get("Hdf.Hint.Transpose", "Swap the rows and the columns"));
         yield return ("Enter", UiText.Get("Grid.Hint.RunQuery", "Run the query over the rows shown"));
         yield return ("?", UiText.Get("Grid.Hint.Ask", "Ask the AI model: type ? and a question, then Enter drafts the query"));
     }

@@ -473,6 +473,16 @@ The CSV, Parquet, HDF5 and SQLite viewers share one query language and one way o
 takes `SELECT`, `WHERE`, `ORDER BY` and `LIMIT` (the CSV language, see below). A line that starts with `?` asks the model: the draft
 lands in the query line and runs only when the user presses Enter, like any query typed by hand.
 
+- **The data is an N-dimensional array (`iConsole/Tabular/GridArray.cs`).** `IGridArraySource` gives the shape, the column names (a
+  file's headers) or the compound fields of a one-dimensional dataset, and reads a block: a start and a count per axis, returned
+  row-major with the last axis fastest. `GridArrayView` is an immutable view of such an array. `WithIndex` and `Step` fix an axis,
+  `Project` and `Transpose` choose which two axes are the rows and the columns, `Describe` gives the position for the slice line
+  (`[1, *, *]`), and `MaterializeAsync` reads the window shown: the rows are cut first to honour the row, column and cell caps, and
+  only the cells of the window are read. The HDF5 viewer reads every dataset through `HdfGridArray` and `IHdfFileReader.ReadBlockAsync`,
+  so a dataset of any rank is one view: `+ -` step the fixed axes, `[ ]` choose the active one, and `T` swaps the rows and the
+  columns. CSV and Parquet rows are a two-axis `InMemoryGridArray`. The query runs over the table the view materialises
+  (`GridQueryRun.RunOverAsync`), so every in-memory viewer reads its data through the same backend. SQLite is a relation, not an
+  array: its query is compiled to SQL, and its results are not read as blocks.
 - **One parser, three uses.** `GridQuery.Parse` turns the text into a `GridQueryPlan` (table, columns, a `GridCondition` of OR-joined
   AND groups, order, limit). `GridQuery.Execute` runs a plan over rows in memory; `GridQuery.Run` is the two together. `GridQuery.ToSql`
   renders the same plan as one SQLite statement. A plan is inspectable, so the AI draft and the SQLite viewer use the same checks.
@@ -494,7 +504,7 @@ lands in the query line and runs only when the user presses Enter, like any quer
   set up`. The end-to-end suite replaces the assistant with `SandboxServices.GridQueryAssistant`, which answers a fixed query at once.
 - **SQLite schema.** The draft needs the tables and columns: `GridQueryDrafter` takes the schema as a task, so the viewer reads
   `sqlite_master` and runs `SELECT * ... LIMIT 0` for each table on a worker thread, and the question waits for it.
-- **HDF5 keys.** While the query line has focus, `+ - [ ]` type into the line, because `-` is part of a number in a query. Ctrl+arrows
+- **HDF5 keys.** `T` swaps the rows and the columns and reads the window again, and only for a dataset of two or more axes. While the query line has focus, `+ - [ ]` type into the line, because `-` is part of a number in a query. Ctrl+arrows
   still step the slice. Stepping the slice runs the query again over the new slice.
 - **Not built:** grouping and aggregates (`GROUP BY`, `COUNT`, averages), joins, saving a result, and queries over a Parquet file beyond
   the rows the viewer reads (10,000 rows, 100 columns, 100,000 cells). The model cannot average a column because the language cannot.

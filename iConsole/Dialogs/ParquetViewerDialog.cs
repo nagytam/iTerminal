@@ -201,7 +201,7 @@ public class ParquetViewerDialog : Dialog
 
         _statusNote = string.Empty;
         _queryError = string.Empty;
-        _queryRun.Start(preview.Names, preview.Rows, text);
+        _queryRun.Start(new InMemoryGridArray(preview.Rows, preview.Names), text);
     }
 
     private void ShowAllRows()

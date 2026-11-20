@@ -2111,4 +2111,7 @@
   <data name="Grid.Ai.PickTable" xml:space="preserve">
     <value>Nevezzen meg egy táblát a FROM után: {0}</value>
   </data>
+  <data name="Hdf.Hint.Transpose" xml:space="preserve">
+    <value>A sorok és oszlopok felcserélése</value>
+  </data>
 </root>

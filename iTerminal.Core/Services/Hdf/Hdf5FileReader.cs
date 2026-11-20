@@ -99,7 +99,50 @@ public sealed class Hdf5FileReader : IHdfFileReader
         long[] shape = dataset.Space.Type == H5DataspaceType.Null
             ? [0]
             : [.. dataset.Space.Dimensions.Select(dimension => (long)dimension)];
-        return new HdfDatasetInfo(path, shape, TypeName(dataset.Type));
+        return new HdfDatasetInfo(path, shape, TypeName(dataset.Type), FieldsOf(dataset));
+    }
+
+    /// <summary>The field names of a one-dimensional compound dataset, which a grid shows as columns; null for every other dataset.</summary>
+    private static IReadOnlyList<string>? FieldsOf(IH5Dataset dataset) =>
+        dataset.Space.Rank == 1 && dataset.Type.Class == H5DataTypeClass.Compound
+            ? [.. dataset.Type.Compound.Members.Select(member => member.Name)]
+            : null;
+
+    public Task<IReadOnlyList<string>> ReadBlockAsync(
+        string path,
+        string datasetPath,
+        long[] start,
+        long[] count,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            CheckFile(path);
+            using var file = H5File.OpenRead(path);
+            IH5Dataset dataset = Find(file, datasetPath);
+            cancellationToken.ThrowIfCancellationRequested();
+            int rank = dataset.Space.Rank;
+            if (rank == 0)
+            {
+                return Task.FromResult<IReadOnlyList<string>>(ReadCells(dataset, null, cancellationToken));
+            }
+
+            var selection = new HyperslabSelection(rank, [.. start.Select(value => (ulong)value)], [.. count.Select(value => (ulong)value)]);
+            IReadOnlyList<string>? fields = FieldsOf(dataset);
+            if (fields is not null)
+            {
+                Dictionary<string, object>[] elements = dataset.Read<Dictionary<string, object>[]>(fileSelection: selection);
+                cancellationToken.ThrowIfCancellationRequested();
+                IReadOnlyList<string> cells = [.. elements.SelectMany(element => fields.Select(field => element.TryGetValue(field, out object? value) ? FormatObject(value) : string.Empty))];
+                return Task.FromResult(cells);
+            }
+
+            return Task.FromResult<IReadOnlyList<string>>(ReadCells(dataset, selection, cancellationToken));
+        }
+        catch (Exception ex) when (ex is not HdfReadException and not OperationCanceledException)
+        {
+            throw new HdfReadException($"The dataset could not be read: {ex.Message}", ex);
+        }
     }
 
     private static string TypeName(IH5DataType type) => type.Class switch

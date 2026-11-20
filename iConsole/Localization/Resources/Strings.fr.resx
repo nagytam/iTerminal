@@ -2111,4 +2111,7 @@
   <data name="Grid.Ai.PickTable" xml:space="preserve">
     <value>Indiquez l'une des tables après FROM : {0}</value>
   </data>
+  <data name="Hdf.Hint.Transpose" xml:space="preserve">
+    <value>Échanger les lignes et les colonnes</value>
+  </data>
 </root>
