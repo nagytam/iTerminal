@@ -4733,6 +4733,9 @@
   <data name="Update.ClosesDuringPortable" xml:space="preserve">
     <value>Az iTerminal bezárul, amíg a fájljai cserélődnek, majd újraindul.</value>
   </data>
+  <data name="Update.ClosesDuringPortableLinux" xml:space="preserve">
+    <value>Az iTerminal bezárul, amíg a fájljai cserélődnek. Indítsa újra az új verzió használatához.</value>
+  </data>
   <data name="Update.PortableDescription" xml:space="preserve">
     <value>Töltse le az új kiadást, és cserélje le vele ezt az iTerminal-példányt.</value>
   </data>

@@ -200,9 +200,11 @@ public partial class UpdateDialog : FormDialog
         ? iConsole.Localization.UiText.Get("Update.NoPortableArchive", "This release has no portable archive yet.")
         : iConsole.Localization.UiText.Get("Update.NoInstaller", "This release has no Windows installer yet.");
 
-    private string ClosesDuringText() => _service.InstallKind == UpdateInstallKind.PortableArchive
-        ? iConsole.Localization.UiText.Get("Update.ClosesDuringPortable", "iTerminal closes while its files are replaced, then starts again.")
-        : iConsole.Localization.UiText.Get("Update.ClosesDuring", "iTerminal closes while the installer runs.");
+    private string ClosesDuringText() => _service.InstallKind != UpdateInstallKind.PortableArchive
+        ? iConsole.Localization.UiText.Get("Update.ClosesDuring", "iTerminal closes while the installer runs.")
+        : OperatingSystem.IsWindows()
+            ? iConsole.Localization.UiText.Get("Update.ClosesDuringPortable", "iTerminal closes while its files are replaced, then starts again.")
+            : iConsole.Localization.UiText.Get("Update.ClosesDuringPortableLinux", "iTerminal closes while its files are replaced. Start it again to run the new release.");
 
     /// <summary>"Working..." while something runs and nothing can be shown as progress yet; the bar says it all otherwise.</summary>
     internal string Hint => _service.IsBusy && ParseProgress(_service.Log) is null ? "Working..." : string.Empty;

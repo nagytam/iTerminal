@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.Formats.Tar;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Text;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.RuntimeDependencies;
@@ -26,8 +28,10 @@ public sealed class UpdateService : IUpdateService
     internal const int MaxLogLines = 20;
 
     private const string ExecutableName = "iTerminal.exe";
+    private const string LinuxExecutableName = "iTerminal";
     private const string StagingFolder = "staging";
     private const string UpdateScriptName = "apply-update.cmd";
+    private const string ShellUpdateScriptName = "apply-update.sh";
 
     private readonly ISettingsService _settings;
     private readonly GitHubReleaseFeed _feed;
@@ -38,6 +42,8 @@ public sealed class UpdateService : IUpdateService
     private readonly string _downloadDirectory;
     private readonly string _installDirectory;
     private readonly UpdateInstallKind _kind;
+    private readonly bool _windows;
+    private readonly string? _portableSuffix;
     private readonly object _gate = new();
     private readonly List<string> _log = [];
     private UpdateInfo? _available;
@@ -52,8 +58,10 @@ public sealed class UpdateService : IUpdateService
             Path.Combine(Path.GetTempPath(), "iTerminal-update"),
             KindFor(OperatingSystem.IsWindows(), AppContext.BaseDirectory),
             authenticode,
-            StartPortableScript,
-            AppContext.BaseDirectory)
+            OperatingSystem.IsWindows() ? StartPortableScript : StartShellScript,
+            AppContext.BaseDirectory,
+            OperatingSystem.IsWindows(),
+            PortableSuffixFor(OperatingSystem.IsWindows(), RuntimeInformation.ProcessArchitecture))
     {
     }
 
@@ -66,7 +74,9 @@ public sealed class UpdateService : IUpdateService
         UpdateInstallKind kind,
         IAuthenticodeVerifier? authenticode = null,
         Func<string, bool>? startPortableScript = null,
-        string installDirectory = "")
+        string installDirectory = "",
+        bool windows = true,
+        string? portableSuffix = PortableArchiveSuffix)
     {
         _settings = settings;
         _feed = feed;
@@ -78,6 +88,8 @@ public sealed class UpdateService : IUpdateService
         _downloadDirectory = downloadDirectory;
         _installDirectory = installDirectory;
         _kind = kind;
+        _windows = windows;
+        _portableSuffix = portableSuffix;
     }
 
     public string CurrentVersion { get; }
@@ -124,19 +136,37 @@ public sealed class UpdateService : IUpdateService
     public string ReleasesAddress => $"https://github.com/{Repository}/releases";
 
     /// <summary>
-    /// How the copy in <paramref name="baseDirectory"/> was installed. Only Windows can update itself; there, a copy
-    /// with the portable marker beside it is a portable one, and anything else came from the installer.
+    /// How the copy in <paramref name="baseDirectory"/> was installed. A copy with the portable marker beside it is a
+    /// portable one on any system (it updates from its portable archive); on Windows anything else came from the
+    /// installer; other systems' packages are only announced.
     /// </summary>
     internal static UpdateInstallKind KindFor(bool windows, string baseDirectory)
     {
-        if (!windows)
+        if (IsPortable(baseDirectory))
         {
-            return UpdateInstallKind.Unsupported;
+            return UpdateInstallKind.PortableArchive;
         }
 
-        return IsPortable(baseDirectory)
-            ? UpdateInstallKind.PortableArchive
-            : UpdateInstallKind.Installer;
+        return windows ? UpdateInstallKind.Installer : UpdateInstallKind.Unsupported;
+    }
+
+    /// <summary>
+    /// The end of the portable archive's name for this system: the zip on Windows, the tar.gz of the matching
+    /// architecture on Linux. Null where no portable archive is published.
+    /// </summary>
+    internal static string? PortableSuffixFor(bool windows, Architecture architecture)
+    {
+        if (windows)
+        {
+            return PortableArchiveSuffix;
+        }
+
+        return architecture switch
+        {
+            Architecture.X64 => "-linux-x64-portable.tar.gz",
+            Architecture.Arm64 => "-linux-arm64-portable.tar.gz",
+            _ => null,
+        };
     }
 
     /// <summary>Whether the copy in <paramref name="baseDirectory"/> is an unzipped portable one (on any system).</summary>
@@ -248,7 +278,7 @@ public sealed class UpdateService : IUpdateService
 
     private bool IsDownloadForThisInstall(GitHubAsset asset) =>
         _kind == UpdateInstallKind.PortableArchive
-            ? asset.Name.EndsWith(PortableArchiveSuffix, StringComparison.OrdinalIgnoreCase)
+            ? _portableSuffix is { } suffix && asset.Name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)
             : asset.Name.EndsWith(".msi", StringComparison.OrdinalIgnoreCase);
 
     private bool StartMsi(string package)
@@ -289,21 +319,43 @@ public sealed class UpdateService : IUpdateService
             DeleteDirectory(staging);
             ExtractArchive(archive, staging);
 
-            if (!File.Exists(Path.Combine(staging, PortableMarker)) || !File.Exists(Path.Combine(staging, ExecutableName)))
+            string root = PortableRoot(staging);
+            string executable = Path.Combine(root, _windows ? ExecutableName : LinuxExecutableName);
+            if (!File.Exists(Path.Combine(root, PortableMarker)) || !File.Exists(executable))
             {
-                AddLog($"The archive is not a portable iTerminal release: it has no {ExecutableName}.");
+                AddLog($"The archive is not a portable iTerminal release: it has no {Path.GetFileName(executable)}.");
                 return false;
             }
 
-            if (!AcceptSignature(_authenticode.Verify(Path.Combine(staging, ExecutableName))))
+            if (_windows)
             {
-                return false;
+                if (!AcceptSignature(_authenticode.Verify(executable)))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                AddLog("Linux releases are not Authenticode-signed; the archive matches the SHA-256 digest GitHub publishes.");
             }
 
-            string script = Path.Combine(_downloadDirectory, UpdateScriptName);
-            File.WriteAllText(script, UpdateScript(Environment.ProcessId, staging, Path.TrimEndingDirectorySeparator(_installDirectory), archive), new UTF8Encoding(false));
+            string installDirectory = Path.TrimEndingDirectorySeparator(_installDirectory);
+            string script;
+            string text;
+            if (_windows)
+            {
+                script = Path.Combine(_downloadDirectory, UpdateScriptName);
+                text = UpdateScript(Environment.ProcessId, root, installDirectory, archive);
+            }
+            else
+            {
+                script = Path.Combine(_downloadDirectory, ShellUpdateScriptName);
+                text = ShellUpdateScript(Environment.ProcessId, root, installDirectory, archive, staging);
+            }
 
-            AddLog("Starting the installer. iTerminal closes so its files can be replaced.");
+            File.WriteAllText(script, text, new UTF8Encoding(false));
+
+            AddLog("Starting the update. iTerminal closes so its files can be replaced.");
             if (!_startPortableScript(script))
             {
                 AddLog("The installer was not started.");
@@ -351,6 +403,30 @@ public sealed class UpdateService : IUpdateService
     }
 
     /// <summary>
+    /// The batch-free counterpart for Linux: waits for iTerminal to exit, copies the new files over the install
+    /// folder with <c>cp -a</c> (which keeps the executable bit), and deletes the staged files and itself. Nothing
+    /// is restarted: iTerminal is a terminal program, and there is no terminal for a script to reopen it in. Output
+    /// is discarded, because the script outlives the terminal it was started from.
+    /// </summary>
+    internal static string ShellUpdateScript(int processId, string source, string installDirectory, string archive, string staging) =>
+        string.Join("\n",
+        [
+            "#!/bin/sh",
+            "exec >/dev/null 2>&1 </dev/null",
+            $"PID={processId}",
+            "while kill -0 \"$PID\" 2>/dev/null; do sleep 1; done",
+            $"if cp -a {ShellQuote(source + "/.")} {ShellQuote(installDirectory + "/")}; then",
+            $"  rm -rf {ShellQuote(staging)}",
+            $"  rm -f {ShellQuote(archive)}",
+            "fi",
+            "rm -f \"$0\"",
+            string.Empty,
+        ]);
+
+    /// <summary>Quotes a value for a POSIX shell: single quotes, with any single quote written as <c>'\''</c>.</summary>
+    internal static string ShellQuote(string value) => "'" + value.Replace("'", "'\\''", StringComparison.Ordinal) + "'";
+
+    /// <summary>
     /// Decides what to do with an Authenticode verdict. A valid signature is reported (with the signer when the
     /// verifier knows it); an unsigned program is a warning and still runs (release signing is not configured
     /// yet); anything else — a signature that does not match, an untrusted chain, or a check that could not be
@@ -377,22 +453,24 @@ public sealed class UpdateService : IUpdateService
     }
 
     /// <summary>
-    /// Unpacks a release archive into <paramref name="destination"/>. An entry that would land outside it stops
-    /// the whole unpacking (an archive from GitHub is digest-checked, but the paths are still not trusted).
+    /// Unpacks a release archive into <paramref name="destination"/>: a zip (Windows) or a tar.gz (Linux, which keeps
+    /// the executable bit). An entry that would land outside it stops the whole unpacking (an archive from GitHub is
+    /// digest-checked, but the paths are still not trusted).
     /// </summary>
     private static void ExtractArchive(string archive, string destination)
     {
         Directory.CreateDirectory(destination);
         string root = Path.GetFullPath(destination) + Path.DirectorySeparatorChar;
+        if (archive.EndsWith(".tar.gz", StringComparison.OrdinalIgnoreCase))
+        {
+            ExtractTarGz(archive, root);
+            return;
+        }
+
         using ZipArchive zip = ZipFile.OpenRead(archive);
         foreach (ZipArchiveEntry entry in zip.Entries)
         {
-            string target = Path.GetFullPath(Path.Combine(destination, entry.FullName));
-            if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidDataException($"{entry.FullName} would be unpacked outside the update folder.");
-            }
-
+            string target = TargetInside(root, entry.FullName);
             if (entry.FullName.EndsWith('/') || entry.FullName.EndsWith('\\'))
             {
                 Directory.CreateDirectory(target);
@@ -402,6 +480,59 @@ public sealed class UpdateService : IUpdateService
             Directory.CreateDirectory(Path.GetDirectoryName(target)!);
             entry.ExtractToFile(target, overwrite: true);
         }
+    }
+
+    private static void ExtractTarGz(string archive, string root)
+    {
+        using FileStream file = File.OpenRead(archive);
+        using GZipStream gzip = new(file, CompressionMode.Decompress);
+        using TarReader tar = new(gzip);
+        while (tar.GetNextEntry() is { } entry)
+        {
+            string target = TargetInside(root, entry.Name);
+            switch (entry.EntryType)
+            {
+                case TarEntryType.Directory:
+                    Directory.CreateDirectory(target);
+                    break;
+
+                case TarEntryType.RegularFile or TarEntryType.V7RegularFile:
+                    Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                    entry.ExtractToFile(target, overwrite: true);
+                    break;
+
+                case TarEntryType.SymbolicLink or TarEntryType.HardLink:
+                    // A link could point outside the folder, and an iTerminal release has none.
+                    throw new InvalidDataException($"{entry.Name} is a link, which a portable iTerminal release does not contain.");
+            }
+        }
+    }
+
+    /// <summary>The full path of an archive entry under <paramref name="root"/>; throws when it would land outside.</summary>
+    private static string TargetInside(string root, string entryName)
+    {
+        string target = Path.GetFullPath(Path.Combine(root, entryName));
+        if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidDataException($"{entryName} would be unpacked outside the update folder.");
+        }
+
+        return target;
+    }
+
+    /// <summary>
+    /// The folder that holds the portable files: the unpacked folder itself, or the one folder inside it. The Linux
+    /// archive wraps its files in a folder named after the release; the Windows zip does not.
+    /// </summary>
+    private static string PortableRoot(string staging)
+    {
+        if (File.Exists(Path.Combine(staging, PortableMarker)))
+        {
+            return staging;
+        }
+
+        string[] folders = Directory.Exists(staging) ? Directory.GetDirectories(staging) : [];
+        return folders.Length == 1 && File.Exists(Path.Combine(folders[0], PortableMarker)) ? folders[0] : staging;
     }
 
     private static void TryDelete(string path)
@@ -452,6 +583,15 @@ public sealed class UpdateService : IUpdateService
         ProcessStartInfo start = new("cmd.exe") { UseShellExecute = false, CreateNoWindow = true };
         start.ArgumentList.Add("/d");
         start.ArgumentList.Add("/c");
+        start.ArgumentList.Add(script);
+        using Process? process = Process.Start(start);
+        return process is not null;
+    }
+
+    /// <summary>The Linux update script outlives this process too; it redirects its own output, so it keeps no terminal.</summary>
+    private static bool StartShellScript(string script)
+    {
+        ProcessStartInfo start = new("/bin/sh") { UseShellExecute = false, CreateNoWindow = true };
         start.ArgumentList.Add(script);
         using Process? process = Process.Start(start);
         return process is not null;

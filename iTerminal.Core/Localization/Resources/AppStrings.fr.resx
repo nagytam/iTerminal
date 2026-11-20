@@ -4733,6 +4733,9 @@
   <data name="Update.ClosesDuringPortable" xml:space="preserve">
     <value>iTerminal se ferme pendant le remplacement de ses fichiers, puis redémarre.</value>
   </data>
+  <data name="Update.ClosesDuringPortableLinux" xml:space="preserve">
+    <value>iTerminal se ferme pendant le remplacement de ses fichiers. Relancez-le pour utiliser la nouvelle version.</value>
+  </data>
   <data name="Update.PortableDescription" xml:space="preserve">
     <value>Télécharger la nouvelle version et remplacer par elle cette copie d’iTerminal.</value>
   </data>

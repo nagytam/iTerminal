@@ -4733,6 +4733,9 @@
   <data name="Update.ClosesDuringPortable" xml:space="preserve">
     <value>iTerminal closes while its files are replaced, then starts again.</value>
   </data>
+  <data name="Update.ClosesDuringPortableLinux" xml:space="preserve">
+    <value>iTerminal closes while its files are replaced. Start it again to run the new release.</value>
+  </data>
   <data name="Update.PortableDescription" xml:space="preserve">
     <value>Download the new release and replace this copy of iTerminal with it.</value>
   </data>

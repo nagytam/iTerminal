@@ -8,20 +8,23 @@ public sealed record UpdateInfo(string Version, RuntimeDependencies.GitHubAsset?
 /// <summary>How the running copy of iTerminal was installed, and therefore what an update downloads.</summary>
 public enum UpdateInstallKind
 {
-    /// <summary>Not on Windows: the release is only announced.</summary>
+    /// <summary>Not a portable copy outside Windows (a Linux package): the release is only announced.</summary>
     Unsupported,
 
     /// <summary>Installed by the Windows installer (MSI): the release's <c>.msi</c> runs with msiexec.</summary>
     Installer,
 
-    /// <summary>An unzipped portable copy (it carries the portable marker file): the release's portable archive replaces its files.</summary>
+    /// <summary>
+    /// An unzipped portable copy (it carries the portable marker file) on Windows or Linux: the release's portable
+    /// archive (zip, or tar.gz on Linux) replaces its files.
+    /// </summary>
     PortableArchive,
 }
 
 /// <summary>
-/// Looks for a newer release of iTerminal itself on GitHub and, on Windows, downloads the release for the
-/// way it was installed (the MSI, or the portable archive) and applies it. Other systems are told where the
-/// release is; their packages are installed by hand.
+/// Looks for a newer release of iTerminal itself on GitHub and downloads the release for the way it was installed
+/// (the MSI on Windows, or the portable archive of a portable copy on Windows or Linux) and applies it. Other copies
+/// (Linux packages) are told where the release is; their packages are installed by hand.
 /// </summary>
 public interface IUpdateService
 {
