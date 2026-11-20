@@ -5,6 +5,7 @@ using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Evidence;
+using iTerminal.Core.Services.Timestamps;
 using Serilog;
 
 namespace iTerminal.Core.Model.ContentModels;
@@ -77,6 +78,21 @@ public class ContentModelEvidenceNotebook(
             row.Record.Kind,
             origin.SourceUrl,
             origin.Machine,
-            captured) + " ";
+            captured) + " · " + TimestampText(row.Record.Timestamp) + " ";
+    }
+
+    /// <summary>The RFC 3161 part of the footer: when the authority says the entry existed, and which authority said so.</summary>
+    internal static string TimestampText(Rfc3161Timestamp? timestamp)
+    {
+        if (timestamp is null)
+        {
+            return UiText.Get("Evidence.Drive.NoTimestamp", "not time-stamped");
+        }
+
+        var generated = timestamp.GeneratedUtc.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+        return string.Format(
+            UiText.Get("Evidence.Drive.Timestamp", "RFC 3161 {0} UTC by {1}"),
+            generated,
+            Uri.TryCreate(timestamp.Authority, UriKind.Absolute, out var uri) ? uri.Host : timestamp.Authority);
     }
 }

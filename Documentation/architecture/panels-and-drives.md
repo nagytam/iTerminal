@@ -118,7 +118,17 @@ A notebook is a folder the person chooses when it is opened. It holds a copy of 
 - **Sequence numbers are reserved before a copy starts**, so two adds in flight never share a name. A failed copy leaves a gap, which is correct.
 - **The drive is read-only.** `EvidenceNotebookService` is an `IFileSystem` whose writes, moves and deletes throw; the drive lists, opens and copies out, and `IsReadOnly` keeps the panel commands from offering the rest. New entries come only through the typed `Add*` methods.
 - **Verify** (palette only, "Verify evidence notebook") re-hashes every entry and reports the missing, resized or changed ones.
+- **RFC 3161 time stamps** (`Services/Timestamps/`): each entry is time-stamped over its SHA-256 as it is added, so the
+  time it existed is attested by a time-stamp authority, not only by the machine's clock. `Rfc3161TimestampAuthority`
+  POSTs an `application/timestamp-query` to the address in the `EvidenceNotebook.TimestampAuthority` setting (default
+  `https://freetsa.org/tsr`; empty turns stamping off). Only the digest leaves the machine, never the content.
+  `Rfc3161` builds the request and parses the answer with `System.Formats.Asn1` and checks the token's signature with
+  `SignedCms` against the certificate inside it; the authority's chain is not checked against trusted roots. The token is
+  stored base64 in the entry's `Timestamp` field (absent in older indexes, so they still open). A failed or refused request
+  keeps the entry without a stamp and says so; Verify reports every unstamped or badly stamped entry. The footer shows
+  `RFC 3161 <UTC time> by <host>` or `not time-stamped`. The end-to-end suite replaces the authority with
+  `SandboxServices.TimestampAuthority`, which obtains no token.
 - **Commands run their questions in the background** (`OpenEvidenceNotebookCommand`, `AddEvidenceCommand`): a prompt can only be answered through the keyboard loop, so awaiting it on the key handler would block the key that asks it. Each command has a guard so a second press does not stack a second question.
 - **Files are taken through `FileSystemResolver`**, the same resolution a copy uses. A panel model's own `StreamToAsync` is not implemented, so streaming straight from the model fails.
 - **The folder is remembered** in the `EvidenceNotebook.Folder` setting, which only seeds the prompt; the notebook itself is whatever index is in that folder.
-- **Not yet done:** a Places entry and menu items (the commands are reached through the hot keys and the palette only), and a details view of the origin beyond the footer line.
+- **Not yet done:** a settings page for the timestamp authority (the setting is edited directly), a re-stamp command for entries that were added unstamped, a Places entry and menu items (the commands are reached through the hot keys and the palette only), and a details view of the origin beyond the footer line.

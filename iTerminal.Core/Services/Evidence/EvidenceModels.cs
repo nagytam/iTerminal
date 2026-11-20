@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using iTerminal.Core.Services.Timestamps;
 
 namespace iTerminal.Core.Services.Evidence;
 
@@ -41,9 +42,10 @@ public sealed record EvidenceOrigin(
     string UtcOffset);
 
 /// <summary>
-/// One entry of the notebook: its content file, what it is, its digest, and where it came from.
-/// <see cref="FileName"/> is the content file's name inside the notebook's <c>items</c> folder and
-/// doubles as the entry's name on the <c>evidence://</c> drive.
+/// One entry of the notebook: its content file, what it is, its digest, where it came from, and the RFC 3161
+/// time stamp over its digest. <see cref="FileName"/> is the content file's name inside the notebook's
+/// <c>items</c> folder and doubles as the entry's name on the <c>evidence://</c> drive. <see cref="Timestamp"/>
+/// is null when the entry was added while no authority answered; <c>VerifyAsync</c> reports those.
 /// </summary>
 public sealed record EvidenceRecord(
     int Sequence,
@@ -53,7 +55,8 @@ public sealed record EvidenceRecord(
     long Size,
     string Sha256,
     EvidenceOrigin Origin,
-    double? DurationSeconds = null);
+    double? DurationSeconds = null,
+    Rfc3161Timestamp? Timestamp = null);
 
 /// <summary>
 /// The notebook's index, <c>notebook.json</c> in the notebook folder. It is rewritten whole on every

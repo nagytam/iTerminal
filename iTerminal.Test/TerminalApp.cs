@@ -219,6 +219,8 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
                 services.AddSingleton<Core.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();
+                // Evidence entries are time-stamped by no authority: no request leaves the sandbox.
+                services.AddSingleton<Core.Services.Timestamps.ITimestampAuthority, SandboxServices.TimestampAuthority>();
                 // Voice input records from no microphone and recognises with no model: the real service runs on stand-ins.
                 services.AddSingleton<Core.Speech.ISpeechRecognizer, SandboxServices.SpeechRecognizer>();
                 services.AddSingleton<Core.Speech.IMicrophoneCaptureFactory, SandboxServices.Microphone>();

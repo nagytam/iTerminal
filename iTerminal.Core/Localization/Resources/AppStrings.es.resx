@@ -10922,6 +10922,24 @@
   <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
     <value>Cuaderno de evidencias (ninguno abierto)</value>
   </data>
+  <data name="Evidence.Drive.NoTimestamp" xml:space="preserve">
+    <value>sin sello de tiempo</value>
+  </data>
+  <data name="Evidence.Drive.Timestamp" xml:space="preserve">
+    <value>RFC 3161 {0} UTC por {1}</value>
+  </data>
+  <data name="Evidence.Add.Untimestamped" xml:space="preserve">
+    <value>; {0} sin sello de tiempo RFC 3161</value>
+  </data>
+  <data name="Evidence.Add.NoTimestampNote" xml:space="preserve">
+    <value>No se obtuvo un sello de tiempo RFC 3161; la entrada se conserva y la verificación lo indica.</value>
+  </data>
+  <data name="Evidence.Service.NoTimestamp" xml:space="preserve">
+    <value>No se obtuvo un sello de tiempo RFC 3161 para esta entrada.</value>
+  </data>
+  <data name="Evidence.Service.BadTimestamp" xml:space="preserve">
+    <value>El sello de tiempo RFC 3161 no coincide con el contenido, o su firma no es válida.</value>
+  </data>
   <data name="Evidence.Drive.Origin" xml:space="preserve">
     <value>{0} desde {1} · {2} · {3}</value>
   </data>
