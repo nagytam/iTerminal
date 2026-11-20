@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.Extensions.AI" Version="11.0.0" />
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="11.0.0" />
     <PackageReference Include="imobiledevice-net" Version="1.3.17" />
+    <PackageReference Include="Microsoft.Mxc.Sdk" Version="1.1.0" />
     <!--
       The library only. Its build assets would copy the Playwright driver (a Node.js runtime, ~130 MB, and
       the JavaScript package) into every output and package. The driver is downloaded into the data folder

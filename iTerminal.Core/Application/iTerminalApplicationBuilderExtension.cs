@@ -723,6 +723,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<Services.Shell.ISessionSandbox, Services.Shell.NoSandbox>();
         services.AddSingleton<Services.Shell.ISessionSandbox, Services.Shell.BubblewrapSandbox>();
         services.AddSingleton<Services.Shell.ISessionSandbox, Services.Shell.BubblewrapOfflineSandbox>();
+        services.AddSingleton<Services.Shell.ISessionSandbox, Services.Shell.ProcessContainerSandbox>();
         services.AddTransient<TerminalDialog>();
         services.AddSingleton<Serilog.ILogger>(provider =>
             new Logger.Logger(provider.GetRequiredService<ISettingsService>(), databaseDirectory));

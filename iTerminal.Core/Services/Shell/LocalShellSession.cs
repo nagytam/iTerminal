@@ -39,13 +39,13 @@ public sealed class LocalShellSession : IDisposable
     private static readonly UTF8Encoding Utf8 = new(encoderShouldEmitUTF8Identifier: false);
 
     private readonly ShellKind _kind;
-    private readonly Process _process;
+    private readonly IShellProcess _process;
     private readonly Channel<string> _stdout = Channel.CreateUnbounded<string>(new UnboundedChannelOptions { SingleReader = true, SingleWriter = true });
     private readonly Channel<string> _stderr = Channel.CreateUnbounded<string>(new UnboundedChannelOptions { SingleReader = true, SingleWriter = true });
     private readonly string _token = Guid.NewGuid().ToString("N");
     private volatile bool _killRequested;
 
-    private LocalShellSession(ShellKind kind, Process process, string folder)
+    private LocalShellSession(ShellKind kind, IShellProcess process, string folder)
     {
         _kind = kind;
         _process = process;
@@ -65,7 +65,17 @@ public sealed class LocalShellSession : IDisposable
     /// </summary>
     public static LocalShellSession Start(ShellKind kind, string programPath, string folder, ISessionSandbox sandbox)
     {
-        var launch = sandbox.Wrap(new SessionLaunch(programPath, ShellKinds.LaunchArguments(kind)), folder);
+        var shell = new SessionLaunch(programPath, ShellKinds.LaunchArguments(kind));
+        var existingFolder = Directory.Exists(folder) ? folder : string.Empty;
+
+        // A sandbox that creates the process itself: no command to rewrite, and no unconfined fallback here.
+        var owned = sandbox.Start(shell, folder);
+        if (owned is not null)
+        {
+            return new LocalShellSession(kind, owned, existingFolder);
+        }
+
+        var launch = sandbox.Wrap(shell, folder);
         var info = new ProcessStartInfo(launch.Program)
         {
             UseShellExecute = false,
@@ -87,7 +97,7 @@ public sealed class LocalShellSession : IDisposable
         }
 
         var process = Process.Start(info) ?? throw new InvalidOperationException($"{programPath} did not start.");
-        return new LocalShellSession(kind, process, Directory.Exists(folder) ? folder : string.Empty);
+        return new LocalShellSession(kind, new ChildShellProcess(process), existingFolder);
     }
 
     /// <summary>True once the shell process has gone.</summary>
@@ -149,7 +159,7 @@ public sealed class LocalShellSession : IDisposable
         {
             if (!_process.HasExited)
             {
-                _process.Kill(entireProcessTree: true);
+                _process.Kill();
             }
         }
         catch (InvalidOperationException)
@@ -215,7 +225,7 @@ public sealed class LocalShellSession : IDisposable
         return new StreamRead(lines, -1, null, true);
     }
 
-    private static async Task Pump(StreamReader reader, ChannelWriter<string> writer)
+    private static async Task Pump(TextReader reader, ChannelWriter<string> writer)
     {
         try
         {
