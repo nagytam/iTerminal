@@ -14,9 +14,17 @@ public class OnlineRadioDialogTest
     private const string Jazz = "https://jazz.example.com/stream";
     private const string Rock = "https://rock.example.com/live";
 
+    /// <summary>Settings that hold an empty list, so the store starts without the preseeded stations.</summary>
+    private static ISettingsService EmptySettings()
+    {
+        var settings = new Mock<ISettingsService>();
+        settings.Setup(s => s.Get(RadioStationStore.SettingsKey)).Returns("[]");
+        return settings.Object;
+    }
+
     private static (OnlineRadioDialog Dialog, RadioStationStore Store, Mock<IMusicPlayerService> Player) Create()
     {
-        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var store = new RadioStationStore(EmptySettings());
         var player = new Mock<IMusicPlayerService>();
         return (new OnlineRadioDialog(store, player.Object, TestTheme()), store, player);
     }

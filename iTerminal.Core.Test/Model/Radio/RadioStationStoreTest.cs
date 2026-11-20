@@ -11,11 +11,52 @@ public class RadioStationStoreTest
     private static RadioStation Make(string name, string url = "", string genre = "", bool favourite = false) =>
         new(Guid.NewGuid(), name, url == string.Empty ? $"https://{name.Replace(' ', '-').ToLowerInvariant()}.example/stream" : url, genre, favourite);
 
+    /// <summary>Settings that hold an empty list, so the store starts without the preseeded stations.</summary>
+    private static ISettingsService EmptySettings()
+    {
+        var settings = new Mock<ISettingsService>();
+        settings.Setup(s => s.Get(RadioStationStore.SettingsKey)).Returns("[]");
+        return settings.Object;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AStoreThatWasNeverSavedStartsWithThePreseededStations()
+    {
+        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+
+        Assert.AreEqual(DefaultRadioStations.All.Count, store.Count);
+        Assert.IsTrue(store.Find().All(s => s.Validate(out _)));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void EmptyingTheListIsSavedAndNotRefilledAtTheNextStart()
+    {
+        var settings = new Mock<ISettingsService>();
+        settings.Setup(s => s.Get(RadioStationStore.SettingsKey)).Returns("[]");
+
+        Assert.AreEqual(0, new RadioStationStore(settings.Object).Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ThePreseededStationsAreDistinctAndPlayable()
+    {
+        var urls = DefaultRadioStations.All.Select(s => s.Url).ToList();
+        var ids = DefaultRadioStations.All.Select(s => s.Id).ToList();
+
+        Assert.AreEqual(urls.Count, urls.Distinct(StringComparer.OrdinalIgnoreCase).Count(), "a stream address is listed twice");
+        Assert.AreEqual(ids.Count, ids.Distinct().Count());
+        Assert.IsTrue(DefaultRadioStations.All.All(s => s.Validate(out _)));
+        Assert.IsTrue(DefaultRadioStations.All.All(s => !s.IsFavourite));
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public void FavouritesAreListedFirst_ThenByName()
     {
-        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var store = new RadioStationStore(EmptySettings());
         store.Add(Make("Zebra FM"));
         store.Add(Make("Beta Radio", favourite: true));
         store.Add(Make("Alpha Jazz"));
@@ -30,7 +71,7 @@ public class RadioStationStoreTest
     [TestMethod]
     public void FavouritesOnly_CutsTheListToTheFavourites()
     {
-        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var store = new RadioStationStore(EmptySettings());
         store.Add(Make("Alpha Jazz"));
         store.Add(Make("Beta Radio", favourite: true));
 
@@ -44,7 +85,7 @@ public class RadioStationStoreTest
     [TestMethod]
     public void TheFilterMatchesNameGenreAndAddress()
     {
-        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var store = new RadioStationStore(EmptySettings());
         store.Add(new RadioStation(Guid.NewGuid(), "Groove Salad", "https://ice.somafm.com/groovesalad", "Ambient", false));
         store.Add(new RadioStation(Guid.NewGuid(), "Radio Paradise", "https://stream.radioparadise.com/rock", "Rock", false));
 
@@ -58,7 +99,7 @@ public class RadioStationStoreTest
     [TestMethod]
     public void HasUrl_FindsADuplicateAddressIgnoringTheStationBeingEdited()
     {
-        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var store = new RadioStationStore(EmptySettings());
         var station = Make("One", "https://example.com/one");
         store.Add(station);
 
@@ -71,7 +112,7 @@ public class RadioStationStoreTest
     [TestMethod]
     public void UpdateReplacesTheStationWithTheSameId_AndRemoveDropsIt()
     {
-        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var store = new RadioStationStore(EmptySettings());
         var station = Make("Old Name", "https://example.com/a");
         store.Add(station);
 

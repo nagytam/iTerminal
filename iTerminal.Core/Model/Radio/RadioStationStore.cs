@@ -97,7 +97,13 @@ public sealed class RadioStationStore(ISettingsService settingsService)
         try
         {
             var json = settingsService.Get(SettingsKey);
-            if (!string.IsNullOrWhiteSpace(json))
+            if (json is null)
+            {
+                // Never saved: start with the preseeded stations. Loading does not save (the dialog reads the list while
+                // drawing); the first change writes the whole list, and a list the person empties stays empty.
+                _stations.AddRange(DefaultRadioStations.All);
+            }
+            else if (!string.IsNullOrWhiteSpace(json))
             {
                 // A null entry is not a station, and an older entry may lack a text field; the rest is still good.
                 _stations.AddRange((JsonSerializer.Deserialize<List<RadioStation>>(json, Json) ?? [])
