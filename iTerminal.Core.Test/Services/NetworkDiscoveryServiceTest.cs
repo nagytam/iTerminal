@@ -182,4 +182,22 @@ public class NetworkDiscoveryServiceTest
 
         Assert.IsNotNull(addresses);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GetCandidateAddresses_IncludesThisMachine()
+    {
+        var addresses = NetworkDiscoveryService.GetCandidateAddresses();
+
+        Assert.IsTrue(addresses.Count > 0);
+        Assert.IsTrue(addresses.Any(NetworkDiscoveryService.IsLocalAddress));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsLocalAddress_RecognisesLoopbackAndRejectsForeignAddress()
+    {
+        Assert.IsTrue(NetworkDiscoveryService.IsLocalAddress(IPAddress.Loopback));
+        Assert.IsFalse(NetworkDiscoveryService.IsLocalAddress(IPAddress.Parse("203.0.113.7")));
+    }
 }

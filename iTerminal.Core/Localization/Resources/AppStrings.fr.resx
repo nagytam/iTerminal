@@ -10381,6 +10381,9 @@
   <data name="FolderSelector.Smb.Saved" xml:space="preserve">
     <value>enregistré</value>
   </data>
+  <data name="FolderSelector.Smb.ThisMachine" xml:space="preserve">
+    <value>cet ordinateur</value>
+  </data>
   <data name="FolderSelector.Smb.Logout" xml:space="preserve">
     <value>Se déconnecter…</value>
   </data>
