@@ -509,6 +509,12 @@ lands in the query line and runs only when the user presses Enter, like any quer
   `sqlite_master` and runs `SELECT * ... LIMIT 0` for each table on a worker thread, and the question waits for it.
 - **HDF5 keys.** `T` swaps the rows and the columns and reads the window again, and only for a dataset of two or more axes. While the query line has focus, `+ - [ ]` type into the line, because `-` is part of a number in a query. Ctrl+arrows
   still step the slice. Stepping the slice runs the query again over the new slice.
+- **Axis clauses (first-class axes in the language).** After `FROM`, a query may name axes of an array of two or more axes:
+  `AT axis1 = 2` fixes an axis at an index (repeatable), `ROWS axis0` and `COLUMNS axis2` choose the axes shown. The query then reads
+  the window those choices give (`GridArrayView.QueryAsync` through `QueryWindowAsync`), and its `WHERE`, `ORDER BY` and `LIMIT` run over
+  that window's own columns, labelled by the remaining axis's indices. Example: `FROM cube AT axis0 = 2 ROWS axis1 COLUMNS axis2 WHERE "1" = '2.0.1'`.
+  The clause is read without resolving the filter's columns (`GridQuery.AxisClauseOf`), and a query without one is unchanged. Axes
+  named but not in the array, or fixed and shown at once, are refused.
 - **SQLite `:` lines.** A query line that starts with `:` runs a grid query over the result on screen, through `SqlQueryArray.QueryAsync`,
   so the filter, order and limit run in one statement inside the database. Any other line stays raw SQL, run as written.
 - **Cancellation.** A `FROM cells` search is cancelled between blocks when the query is replaced or the dialog closes; a block that is

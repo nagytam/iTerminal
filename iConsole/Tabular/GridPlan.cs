@@ -10,7 +10,17 @@ public sealed record GridQueryPlan(
     GridCondition? Where,
     string? OrderBy,
     bool Descending,
-    int? Limit);
+    int? Limit,
+    GridAxisClause? Axes = null);
+
+/// <summary>
+/// The axis clause of a query over an array of two or more axes: <c>AT axis1 = 2</c> fixes an axis at an index, <c>ROWS axis0</c> and
+/// <c>COLUMNS axis2</c> choose the axes shown. The query then runs over the window those choices give. Null when the query has no clause.
+/// </summary>
+/// <param name="Fixed">Each axis fixed, and at which index.</param>
+/// <param name="Rows">The axis shown as rows, or null to keep the array's own.</param>
+/// <param name="Columns">The axis shown as columns, or null to keep the array's own.</param>
+public sealed record GridAxisClause(IReadOnlyList<(string Axis, long Index)> Fixed, string? Rows, string? Columns);
 
 /// <summary>A filter: groups joined by <c>OR</c>, each group a list of terms joined by <c>AND</c> (so AND binds tighter).</summary>
 public sealed record GridCondition(IReadOnlyList<IReadOnlyList<GridTerm>> Groups);

@@ -136,4 +136,31 @@ public class GridQueryTest
     {
         Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Parse("WHERE name = 'open", Headers));
     }
+
+    [TestMethod]
+    public void TheAxisClauseIsParsedAfterFrom()
+    {
+        GridQueryPlan plan = GridQuery.Parse("FROM cube AT axis1 = 2 AT axis3 = 0 ROWS axis0 COLUMNS axis2 WHERE name = 'x'", Headers);
+
+        Assert.AreEqual("cube", plan.From);
+        Assert.IsNotNull(plan.Axes);
+        CollectionAssert.AreEqual(new (string Axis, long Index)[] { ("axis1", 2), ("axis3", 0) }, plan.Axes.Fixed.ToArray());
+        Assert.AreEqual("axis0", plan.Axes.Rows);
+        Assert.AreEqual("axis2", plan.Axes.Columns);
+        Assert.IsNotNull(plan.Where, "the filter still follows the clause");
+    }
+
+    [TestMethod]
+    public void AQueryWithoutAClauseHasNoAxes()
+    {
+        Assert.IsNull(GridQuery.Parse("FROM cube WHERE amount > 1", Headers).Axes);
+        Assert.IsNull(GridQuery.Parse("rows > 1", ["rows"]).Axes, "rows without FROM is a column test, not a clause");
+    }
+
+    [TestMethod]
+    public void AnAxisNameThatIsNotAnAxisIsRefused()
+    {
+        Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Parse("FROM cube AT amount = 1", Headers));
+        Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Parse("FROM cube AT axis1 = two", Headers));
+    }
 }

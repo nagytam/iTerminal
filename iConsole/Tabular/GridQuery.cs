@@ -42,6 +42,22 @@ public static class GridQuery
     /// <exception cref="GridQueryException">The query is not valid, or names a column the table does not have.</exception>
     public static GridQueryPlan Parse(string text, IReadOnlyList<string> headers) => new Parser(Tokenize(text), headers).ParsePlan();
 
+    /// <summary>
+    /// The axis clause of a query, read without resolving its columns: the clause is found whatever the filter names, because the window's
+    /// columns are only known once the axes are chosen. Null when the query has no clause or does not parse.
+    /// </summary>
+    public static GridAxisClause? AxisClauseOf(string text)
+    {
+        try
+        {
+            return new Parser(Tokenize(text), [], permissive: true).ParsePlan().Axes;
+        }
+        catch (GridQueryException)
+        {
+            return null;
+        }
+    }
+
     /// <summary>Runs a parsed plan over rows in memory.</summary>
     public static GridQueryResult Execute(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows, GridQueryPlan plan)
     {
@@ -366,7 +382,7 @@ public static class GridQuery
         return tokens;
     }
 
-    private sealed class Parser(List<Token> tokens, IReadOnlyList<string> headers)
+    private sealed class Parser(List<Token> tokens, IReadOnlyList<string> headers, bool permissive = false)
     {
         private int _position;
 
@@ -380,15 +396,18 @@ public static class GridQuery
             }
 
             string? from = null;
+            GridAxisClause? axes = null;
             if (IsKeyword("FROM"))
             {
                 // The table name is taken as written; a file has one table, so for a file it is accepted and ignored.
                 _position++;
-                if (Peek() is { Kind: not Kind.Symbol } name && !IsKeyword("WHERE") && !IsKeyword("ORDER") && !IsKeyword("LIMIT"))
+                if (Peek() is { Kind: not Kind.Symbol } name && !IsKeyword("WHERE") && !IsKeyword("ORDER") && !IsKeyword("LIMIT") && !IsKeyword("AT") && !IsKeyword("ROWS") && !IsKeyword("COLUMNS"))
                 {
                     from = name.Value;
                     _position++;
                 }
+
+                axes = ParseAxisClause();
             }
 
             GridCondition? where = null;
@@ -439,7 +458,69 @@ public static class GridQuery
                 throw Unexpected("the end of the query", rest);
             }
 
-            return new GridQueryPlan(from, columns, where, orderBy, descending, limit);
+            return new GridQueryPlan(from, columns, where, orderBy, descending, limit, axes);
+        }
+
+        /// <summary>The axis clauses that follow FROM: any number of <c>AT axisN = k</c>, <c>ROWS axisN</c> and <c>COLUMNS axisN</c>.</summary>
+        private GridAxisClause? ParseAxisClause()
+        {
+            if (!IsKeyword("AT") && !IsKeyword("ROWS") && !IsKeyword("COLUMNS"))
+            {
+                return null;
+            }
+
+            var fixedAxes = new List<(string Axis, long Index)>();
+            string? rows = null;
+            string? columns = null;
+            while (true)
+            {
+                if (IsKeyword("AT"))
+                {
+                    _position++;
+                    string axis = ReadAxisName();
+                    Token equals = Next("= after the axis");
+                    if (equals.Kind != Kind.Symbol || equals.Value != "=")
+                    {
+                        throw Unexpected("=", equals);
+                    }
+
+                    Token number = Next("an index after =");
+                    if (!long.TryParse(number.Value, NumberStyles.None, CultureInfo.InvariantCulture, out long index) || number.Kind == Kind.Symbol)
+                    {
+                        throw new GridQueryException(string.Format(UiText.Get("Csv.Error.Expected", "Expected {0}, found {1}"), "a whole index", $"'{number.Value}'"));
+                    }
+
+                    fixedAxes.Add((axis, index));
+                }
+                else if (IsKeyword("ROWS"))
+                {
+                    _position++;
+                    rows = ReadAxisName();
+                }
+                else if (IsKeyword("COLUMNS"))
+                {
+                    _position++;
+                    columns = ReadAxisName();
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return new GridAxisClause(fixedAxes, rows, columns);
+        }
+
+        /// <summary>An axis name, <c>axis</c> followed by its number, such as <c>axis1</c>.</summary>
+        private string ReadAxisName()
+        {
+            Token token = Next("an axis name such as axis1");
+            if (token.Kind != Kind.Word || !System.Text.RegularExpressions.Regex.IsMatch(token.Value, "^axis[0-9]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                throw Unexpected("an axis name such as axis1", token);
+            }
+
+            return token.Value.ToLowerInvariant();
         }
 
         private IReadOnlyList<string>? ParseSelectList()
@@ -567,6 +648,11 @@ public static class GridQuery
 
         private string ResolveColumn(string name)
         {
+            if (permissive)
+            {
+                return name;
+            }
+
             for (int i = 0; i < headers.Count; i++)
             {
                 if (string.Equals(headers[i], name, StringComparison.OrdinalIgnoreCase))

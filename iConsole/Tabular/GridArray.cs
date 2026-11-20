@@ -205,10 +205,69 @@ public sealed class GridArrayView
     /// <paramref name="chunkCells"/> cells, each block is filtered as it arrives, and at most <paramref name="maxMatches"/> matches are kept.
     /// Order and limit run over the matches.
     /// </summary>
-    public Task<GridQueryResult> QueryAsync(string text, long chunkCells, int maxMatches, CancellationToken cancellationToken) =>
-        AsksForCells(text)
+    public Task<GridQueryResult> QueryAsync(string text, long chunkCells, int maxMatches, CancellationToken cancellationToken)
+    {
+        // A query with an axis clause names the window it reads: its axes are chosen and fixed first, then the query runs over that window.
+        if (AxisClauseOf(text) is { } clause)
+        {
+            return QueryWindowAsync(text, clause, cancellationToken);
+        }
+
+        return AsksForCells(text)
             ? QueryLongFormAsync(text, chunkCells, maxMatches, cancellationToken)
             : QueryRowsAsync(text, chunkCells, maxMatches, cancellationToken);
+    }
+
+    /// <summary>The axis clause of a query (<c>AT</c>, <c>ROWS</c>, <c>COLUMNS</c>), or null when it has none or does not parse.</summary>
+    public GridAxisClause? AxisClauseOf(string text) => GridQuery.AxisClauseOf(text);
+
+    /// <summary>
+    /// Runs a query over a window of the array: the rows and columns are the axes the clause names (or the array's own), each fixed axis
+    /// is fixed at its index, and the window is read whole, up to the window cap. The query's filter, order and limit then run over that
+    /// window's table, with the window's own column labels.
+    /// </summary>
+    private async Task<GridQueryResult> QueryWindowAsync(string text, GridAxisClause clause, CancellationToken cancellationToken)
+    {
+        if (Rank < 2)
+        {
+            throw new GridQueryException("An axis clause needs an array of two or more axes.");
+        }
+
+        int rowAxis = clause.Rows is null ? RowAxis : AxisNumber(clause.Rows);
+        int columnAxis = clause.Columns is null ? ColumnAxis : AxisNumber(clause.Columns);
+        if (rowAxis == columnAxis)
+        {
+            throw new GridQueryException("The rows and the columns must be different axes.");
+        }
+
+        GridArrayView window = Project(rowAxis, columnAxis);
+        foreach ((string axisName, long index) in clause.Fixed)
+        {
+            int axis = AxisNumber(axisName);
+            if (axis == rowAxis || axis == columnAxis)
+            {
+                throw new GridQueryException($"{axisName} is shown as rows or columns, so it cannot also be fixed.");
+            }
+
+            window = window.WithIndex(axis, index);
+        }
+
+        GridTable table = await window.MaterializeAsync(int.MaxValue, int.MaxValue, (int)Math.Min(int.MaxValue, DefaultChunkCells), cancellationToken, withRowNumbers: false);
+        GridQueryResult shaped = GridQuery.Execute(table.Headers, table.Rows, GridQuery.Parse(text, table.Headers));
+        return shaped with { Truncated = table.RowsTruncated || table.ColumnsTruncated };
+    }
+
+    /// <summary>The number of an axis named <c>axisN</c>, checked against the array's axes.</summary>
+    private int AxisNumber(string name)
+    {
+        int axis = int.Parse(name.AsSpan(4), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
+        if (axis >= Rank)
+        {
+            throw new GridQueryException($"An array of {Rank} axes has no {name}.");
+        }
+
+        return axis;
+    }
 
     private bool AsksForCells(string text)
     {

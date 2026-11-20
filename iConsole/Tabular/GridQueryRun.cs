@@ -74,6 +74,20 @@ public sealed class GridQueryRun
         _task = System.Threading.Tasks.Task.Run(() => view.QueryLongFormAsync(text, GridArrayView.DefaultChunkCells, maxMatches, token), token);
     }
 
+    /// <summary>
+    /// Runs a query that carries an axis clause: it reads the window the clause names from the array (see <see cref="GridArrayView.QueryAsync"/>),
+    /// cancellable like a long-form search.
+    /// </summary>
+    public void StartWindow(GridArrayView view, string text, int maxMatches)
+    {
+        _cancellation?.Cancel();
+        _cancellation?.Dispose();
+        _cancellation = new CancellationTokenSource();
+        CancellationToken token = _cancellation.Token;
+        _pendingGeneration = ++_generation;
+        _task = System.Threading.Tasks.Task.Run(() => view.QueryAsync(text, GridArrayView.DefaultChunkCells, maxMatches, token), token);
+    }
+
     /// <summary>Drops the query in progress.</summary>
     public void Cancel()
     {

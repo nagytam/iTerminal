@@ -264,4 +264,41 @@ public class GridArrayViewTest
 
         await Assert.ThrowsExactlyAsync<GridQueryException>(() => GridArrayView.Open(table).QueryAsync("WHERE salary > 1", 100, int.MaxValue, CancellationToken.None));
     }
+
+    [TestMethod]
+    public async Task AnAxisClauseReadsTheWindowItNames()
+    {
+        var array = new CoordinateArray([4, 3, 2]);
+
+        GridQueryResult window = await GridArrayView.Open(array).QueryAsync("FROM cube AT axis0 = 2 ROWS axis1 COLUMNS axis2", 100, int.MaxValue, CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "0", "1" }, window.Headers.ToArray(), "the columns are the axis-2 indices");
+        Assert.AreEqual(3, window.Rows.Count, "the rows are the axis-1 indices");
+        Assert.AreEqual("2.1.0", window.Rows[1][0], "axis 0 fixed at 2, row 1 is axis 1, column 0 is axis 2");
+        Assert.IsFalse(window.Truncated);
+    }
+
+    [TestMethod]
+    public async Task AQueryOverTheWindowFiltersItsOwnCells()
+    {
+        GridQueryResult result = await GridArrayView.Open(new CoordinateArray([4, 3, 2]))
+            .QueryAsync("FROM cube AT axis0 = 2 ROWS axis1 COLUMNS axis2 WHERE \"1\" = '2.0.1'", 100, int.MaxValue, CancellationToken.None);
+
+        Assert.AreEqual(1, result.Matched);
+        Assert.AreEqual("2.0.1", result.Rows[0][1]);
+    }
+
+    [TestMethod]
+    public async Task AnAxisClauseNamingAnAxisTheArrayLacksIsRefused()
+    {
+        await Assert.ThrowsExactlyAsync<GridQueryException>(() => GridArrayView.Open(new CoordinateArray([4, 3, 2]))
+            .QueryAsync("FROM cube AT axis7 = 0", 100, int.MaxValue, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task AnAxisCannotBeFixedAndShownAtOnce()
+    {
+        await Assert.ThrowsExactlyAsync<GridQueryException>(() => GridArrayView.Open(new CoordinateArray([4, 3, 2]))
+            .QueryAsync("FROM cube AT axis1 = 0 ROWS axis1 COLUMNS axis2", 100, int.MaxValue, CancellationToken.None));
+    }
 }

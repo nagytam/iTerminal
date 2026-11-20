@@ -309,6 +309,13 @@ public class HdfViewerDialog : Dialog
             return;
         }
 
+        if (_view is not null && _view.AxisClauseOf(text) is not null)
+        {
+            // AT, ROWS or COLUMNS: the query names the window of the array it reads, which may differ from the slice on screen.
+            _queryRun.StartWindow(_view, text, MaxMatches);
+            return;
+        }
+
         _queryRun.Start(slice.Headers, slice.Rows, text);
     }
 
