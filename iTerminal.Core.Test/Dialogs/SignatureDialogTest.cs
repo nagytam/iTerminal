@@ -1,4 +1,5 @@
 using iConsole.Interfaces;
+using iConsole.OpenPgp;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.Signing;
@@ -82,6 +83,35 @@ public class SignatureDialogTest
         await OpenAsync();
 
         UiTestHelper.AssertScreenContains(Screen(), "gpg is not installed");
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task GpgVerdictWithAPacket_ShowsItsFactsAndSignerOnTheirOwnLines()
+    {
+        Verdicts(new SignatureVerdict(
+            SignatureMethod.Gpg,
+            SignatureStatus.Valid,
+            "Ada",
+            "Good signature.",
+            new OpenPgpSignaturePacket(4, 0, 22, 8, DateTimeOffset.FromUnixTimeSeconds(1795191148), "2FE5F219018BA41B", "A42EF39E87573109FD17DAFB2FE5F219018BA41B", false)));
+
+        await OpenAsync();
+
+        var screen = Screen();
+        UiTestHelper.AssertScreenContains(screen, "Packet: v4, sig type 00, EdDSA, SHA-256, created ");
+        UiTestHelper.AssertScreenContains(screen, "signer fingerprint A42EF39E87573109FD17DAFB2FE5F219018BA41B");
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task GpgVerdictWithoutAPacket_ShowsNoPacketLine()
+    {
+        Verdicts(new SignatureVerdict(SignatureMethod.Gpg, SignatureStatus.Valid, "Ada", "Good signature."));
+
+        await OpenAsync();
+
+        UiTestHelper.AssertScreenDoesNotContain(Screen(), "Packet:");
     }
 
     [TestMethod]

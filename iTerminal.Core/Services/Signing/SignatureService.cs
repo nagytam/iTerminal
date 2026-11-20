@@ -1,4 +1,5 @@
 using iConsole.Localization;
+using iConsole.OpenPgp;
 using iTerminal.Core.Services.Processes;
 using System.Security.Cryptography;
 using System.Text;
@@ -37,8 +38,11 @@ public enum SignatureStatus
     Unavailable,
 }
 
-/// <summary>What one method found: the verdict, who signed, and a sentence for the screen.</summary>
-public sealed record SignatureVerdict(SignatureMethod Method, SignatureStatus Status, string Signer, string Message);
+/// <summary>
+/// What one method found: the verdict, who signed, and a sentence for the screen. <see cref="Packet"/> is the first signature
+/// packet of a gpg signature, read from the file's bytes before gpg ran; it is a fact about the file, not part of the verdict.
+/// </summary>
+public sealed record SignatureVerdict(SignatureMethod Method, SignatureStatus Status, string Signer, string Message, OpenPgpSignaturePacket? Packet = null);
 
 /// <summary>What signing did. <see cref="SignaturePath"/> is the detached file written, or null for an embedded signature.</summary>
 public sealed record SignResult(bool Success, string? SignaturePath, string Message);
@@ -178,13 +182,53 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
 
     private async Task<SignatureVerdict> VerifyGpgAsync(string filePath, string signaturePath, CancellationToken cancellationToken)
     {
+        // The packet summary is read before gpg runs; a file changed between the two reads is not caught, and the summary says when it was read.
+        OpenPgpSignaturePacket? packet = await ReadFirstPacketAsync(signaturePath, cancellationToken);
         var output = await runner.RunAsync("gpg", ["--status-fd", "1", "--batch", "--no-tty", "--verify", signaturePath, filePath], null, cancellationToken);
         if (output.ExitCode == -1)
         {
-            return new(SignatureMethod.Gpg, SignatureStatus.Unavailable, string.Empty, "gpg is not installed (or not on the PATH), so the signature cannot be checked.");
+            return new(SignatureMethod.Gpg, SignatureStatus.Unavailable, string.Empty, "gpg is not installed (or not on the PATH), so the signature cannot be checked.", packet);
         }
 
-        return ParseGpgStatus(output.StandardOutput, output.ExitCode, output.FirstErrorLine);
+        return ParseGpgStatus(output.StandardOutput, output.ExitCode, output.FirstErrorLine) with { Packet = packet };
+    }
+
+    /// <summary>
+    /// The first signature packet of a detached signature, or null when the file cannot be read or is not an OpenPGP signature.
+    /// The read stops after <see cref="OpenPgpSignatureReader.MaxBytes"/> + 1 octets; a longer file is refused and never parsed.
+    /// </summary>
+    internal static async Task<OpenPgpSignaturePacket?> ReadFirstPacketAsync(string signaturePath, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await using var stream = new FileStream(signaturePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+            using var buffer = new MemoryStream();
+            byte[] chunk = new byte[8192];
+            while (true)
+            {
+                int room = (int)Math.Min(chunk.Length, OpenPgpSignatureReader.MaxBytes + 1 - buffer.Length);
+                if (room <= 0)
+                {
+                    return null;
+                }
+
+                int read = await stream.ReadAsync(chunk.AsMemory(0, room), cancellationToken);
+                if (read == 0)
+                {
+                    break;
+                }
+
+                buffer.Write(chunk, 0, read);
+            }
+
+            OpenPgpSignatureReport report = OpenPgpSignatureReader.Read(buffer.ToArray());
+            return report.Readable ? report.Packets[0] : null;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            // The packet is optional extra information: a path that cannot be opened leaves it out and never fails the verdict.
+            return null;
+        }
     }
 
     /// <summary>Reads gpg's <c>[GNUPG:]</c> status lines into a verdict. Public for tests: it is the part that can be wrong.</summary>

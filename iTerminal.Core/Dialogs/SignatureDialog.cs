@@ -1,3 +1,4 @@
+using System.Globalization;
 using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
@@ -6,6 +7,7 @@ using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.OpenPgp;
 using iConsole.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Services.Signing;
@@ -258,6 +260,13 @@ public class SignatureDialog : Dialog
             {
                 lines.Add(new(("    by " + verdict.Signer).Shrink(width) ?? string.Empty, colors.DisabledForeground));
             }
+
+            if (verdict.Packet is { } packet)
+            {
+                // Facts about the file's first signature packet, not a verdict: the signer goes on its own line so Shrink does not cut it.
+                lines.Add(new(("    " + PacketFacts(packet)).Shrink(width) ?? string.Empty, colors.DisabledForeground));
+                lines.Add(new(("    " + PacketSigner(packet)).Shrink(width) ?? string.Empty, colors.DisabledForeground));
+            }
         }
 
         if (_busy.Length > 0)
@@ -287,6 +296,28 @@ public class SignatureDialog : Dialog
 
         _info.Lines = lines;
     }
+
+    private static string PacketFacts(OpenPgpSignaturePacket packet)
+    {
+        string created = packet.CreationTime is { } time
+            ? time.ToUniversalTime().ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) + " UTC"
+            : UiText.Get("Sign.Packet.NoTime", "not stated");
+        return string.Format(
+            CultureInfo.CurrentCulture,
+            UiText.Get("Sign.Packet.Facts", "Packet: v{0}, sig type {1}, {2}, {3}, created {4}"),
+            packet.Version,
+            packet.SignatureType.ToString("x2", CultureInfo.InvariantCulture),
+            OpenPgpSignatureReader.PublicKeyName(packet.PublicKeyAlgorithm),
+            OpenPgpSignatureReader.HashName(packet.HashAlgorithm),
+            created);
+    }
+
+    private static string PacketSigner(OpenPgpSignaturePacket packet) =>
+        packet.Fingerprint is { } fingerprint
+            ? string.Format(CultureInfo.CurrentCulture, UiText.Get("Sign.Packet.SignerFingerprint", "signer fingerprint {0}"), fingerprint)
+            : packet.KeyId is { } keyId
+                ? string.Format(CultureInfo.CurrentCulture, UiText.Get("Sign.Packet.SignerKeyId", "signer key ID {0}"), keyId)
+                : UiText.Get("Sign.Packet.SignerNone", "signer not named");
 
     private static string MethodName(SignatureMethod method) => method switch
     {

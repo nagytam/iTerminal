@@ -7744,6 +7744,21 @@
   <data name="Sign.NoFile" xml:space="preserve">
     <value>El archivo no existe.</value>
   </data>
+  <data name="Sign.Packet.Facts" xml:space="preserve">
+    <value>Paquete: v{0}, tipo de firma {1}, {2}, {3}, creada {4}</value>
+  </data>
+  <data name="Sign.Packet.NoTime" xml:space="preserve">
+    <value>no indicada</value>
+  </data>
+  <data name="Sign.Packet.SignerFingerprint" xml:space="preserve">
+    <value>huella del firmante {0}</value>
+  </data>
+  <data name="Sign.Packet.SignerKeyId" xml:space="preserve">
+    <value>ID de clave del firmante {0}</value>
+  </data>
+  <data name="Sign.Packet.SignerNone" xml:space="preserve">
+    <value>firmante no identificado</value>
+  </data>
   <data name="Sign.NoneFound" xml:space="preserve">
     <value>No se encontró ninguna firma: nada incrustado en el archivo y ningún .asc, .sig, .gpg o .sign junto a él.</value>
   </data>

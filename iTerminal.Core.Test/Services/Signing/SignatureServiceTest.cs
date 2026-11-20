@@ -117,6 +117,63 @@ public class SignatureServiceTest
         CollectionAssert.AreEqual(new[] { "--status-fd", "1", "--batch", "--no-tty", "--verify", file + ".asc", file }, call.Arguments.ToArray());
     }
 
+    /// <summary>A detached signature made by gpg 2.4.9 with a throwaway key (version 4). Only the signature is kept.</summary>
+    private const string GpgV4Armor = """
+        -----BEGIN PGP SIGNATURE-----
+
+        iHUEABYIAB0WIQSkLvOeh1cxCf0X2vsv5fIZAYukGwUCawBxbAAKCRAv5fIZAYuk
+        G+SIAP0ROqWOB7vZ5t3s1oavKQSkjsTlBsXinF14cHTa/py35AEAliGAkgJja6dW
+        6oPG/7gD9TrYio3BMRHfA/dh6QZTNQs=
+        =VDEd
+        -----END PGP SIGNATURE-----
+        """;
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task VerifyAsync_GpgSignature_AttachesTheFirstPacketReadFromTheFile()
+    {
+        var file = Write("release.zip", "x");
+        Write("release.zip.asc", GpgV4Armor);
+        var runner = Runner().Answer("gpg", "[GNUPG:] GOODSIG 2FE5F219018BA41B Throwaway Test");
+
+        var verdicts = await new SignatureService(runner).VerifyAsync(file);
+
+        var gpg = verdicts.Single(v => v.Method == SignatureMethod.Gpg);
+        Assert.AreEqual(SignatureStatus.Valid, gpg.Status);
+        Assert.AreEqual(4, gpg.Packet?.Version);
+        Assert.AreEqual("A42EF39E87573109FD17DAFB2FE5F219018BA41B", gpg.Packet?.Fingerprint);
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task VerifyAsync_GpgSignatureThatIsNotOpenPgp_KeepsTheVerdictWithNoPacket()
+    {
+        var file = Write("release.zip", "x");
+        Write("release.zip.asc", "-----BEGIN PGP SIGNATURE-----\n\nnot base64 !!\n-----END PGP SIGNATURE-----\n");
+        var runner = Runner().Answer("gpg", "[GNUPG:] NODATA 1", exitCode: 2);
+
+        var verdicts = await new SignatureService(runner).VerifyAsync(file);
+
+        var gpg = verdicts.Single(v => v.Method == SignatureMethod.Gpg);
+        Assert.AreEqual(SignatureStatus.NotSigned, gpg.Status);
+        Assert.IsNull(gpg.Packet);
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task VerifyAsync_GpgMissing_KeepsThePacketBesideTheUnavailableVerdict()
+    {
+        var file = Write("release.zip", "x");
+        Write("release.zip.asc", GpgV4Armor);
+        var runner = Runner().Answer("gpg", string.Empty, exitCode: -1);
+
+        var verdicts = await new SignatureService(runner).VerifyAsync(file);
+
+        var gpg = verdicts.Single(v => v.Method == SignatureMethod.Gpg);
+        Assert.AreEqual(SignatureStatus.Unavailable, gpg.Status);
+        Assert.AreEqual("A42EF39E87573109FD17DAFB2FE5F219018BA41B", gpg.Packet?.Fingerprint);
+    }
+
     [TestMethod]
     [Timeout(15_000)]
     [DoNotParallelize]
