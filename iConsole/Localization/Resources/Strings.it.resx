@@ -1330,6 +1330,66 @@
   <data name="Viewer.DisassemblyFailed" xml:space="preserve">
     <value>Disassemblaggio non riuscito: {0}</value>
   </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Firme digitali</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>Firma {0}</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Firmatario</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Firmato il</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Integrità</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>I byte firmati non sono cambiati.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>MODIFICATO: il file non corrisponde a questa firma.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>Non verificato: questo formato di firma non è supportato.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>Impossibile leggere la firma.</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Copertura</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>L&apos;intero file.</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Dopo la firma sono state aggiunte modifiche.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Attendibilità</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>Attendibile: il certificato risale a una radice considerata attendibile da questo computer.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Non attendibile: il certificato non risale a una radice considerata attendibile da questo computer.</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Non attendibile: il certificato è scaduto.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>La revoca non è stata verificata.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>Altre {0} firme non vengono mostrate.</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>Le firme non sono state verificate: il file supera {0} MB.</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Avanti</value>
   </data>

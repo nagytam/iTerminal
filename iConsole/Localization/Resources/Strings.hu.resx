@@ -1330,6 +1330,66 @@
   <data name="Viewer.DisassemblyFailed" xml:space="preserve">
     <value>A visszafejtés nem sikerült: {0}</value>
   </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Digitális aláírások</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>{0}. aláírás</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Aláíró</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Aláírva</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Épség</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>Az aláírt bájtok nem változtak.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>MEGVÁLTOZOTT: a fájl nem egyezik az aláírással.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>Nem ellenőrzött: ez az aláírásformátum nem támogatott.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>Az aláírás nem olvasható.</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Lefedettség</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>A teljes fájl.</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Az aláírás után módosításokat fűztek hozzá.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Megbízhatóság</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>Megbízható: a tanúsítvány olyan főtanúsítványhoz vezet, amelyben ez a gép megbízik.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Nem megbízható: a tanúsítvány nem vezet olyan főtanúsítványhoz, amelyben ez a gép megbízik.</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Nem megbízható: a tanúsítvány lejárt.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>A visszavonást nem ellenőrizték.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>További {0} aláírás nincs megjelenítve.</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>Az aláírásokat nem ellenőrizték: a fájl nagyobb, mint {0} MB.</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Köv.</value>
   </data>

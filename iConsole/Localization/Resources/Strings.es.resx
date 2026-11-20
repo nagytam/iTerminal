@@ -1330,6 +1330,66 @@
   <data name="Viewer.DisassemblyFailed" xml:space="preserve">
     <value>Error al desensamblar: {0}</value>
   </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Firmas digitales</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>Firma {0}</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Firmante</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Firmado</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Integridad</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>Los bytes firmados no han cambiado.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>MODIFICADO: el archivo no coincide con esta firma.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>No comprobado: este formato de firma no es compatible.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>No se pudo leer la firma.</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Cobertura</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>Todo el archivo.</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Se añadieron cambios después de firmar.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Confianza</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>De confianza: el certificado enlaza con una raíz en la que este equipo confía.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Sin confianza: el certificado no enlaza con una raíz en la que este equipo confíe.</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Sin confianza: el certificado ha caducado.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>No se comprobó la revocación.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>No se muestran {0} firmas más.</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>No se comprobaron las firmas: el archivo supera {0} MB.</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Siguiente</value>
   </data>

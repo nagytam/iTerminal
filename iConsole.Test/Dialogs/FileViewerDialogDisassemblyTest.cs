@@ -43,6 +43,9 @@ public class FileViewerDialogDisassemblyTest
             Started.TrySetResult(true);
             return ReturnNullTask ? null! : Gate.Task;
         }
+
+        public Task<IReadOnlyList<string>> BuildPdfSignatureLinesAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<string>>([]);
     }
 
     private static FileViewerDialog CreateDialog(GatedConverter converter, string url = "file://C:/x/app.dll")

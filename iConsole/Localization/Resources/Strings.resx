@@ -1346,6 +1346,66 @@
   <data name="Viewer.DisassemblyFailed" xml:space="preserve">
     <value>Disassembly failed: {0}</value>
   </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Digital signatures</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>Signature {0}</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Signer</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Signed</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Integrity</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>The signed bytes are unchanged.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>CHANGED: the file does not match this signature.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>Not checked: this signature format is not supported.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>The signature could not be read.</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>The whole file.</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Changes were added after signing.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Trust</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>Trusted: the certificate chains to a root this machine trusts.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Not trusted: the certificate does not chain to a root this machine trusts.</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Not trusted: the certificate has expired.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>Revocation was not checked.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>{0} more signatures are not shown.</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>Signatures were not checked: the file is larger than {0} MB.</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-FindNext</value>
   </data>
