@@ -536,7 +536,7 @@ public class PrintDialog : Dialog
                     highlighted ? colors.SelectedFocusedBackground : colors.Background);
             }
 
-            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : Color.Cyan, colors.Background);
+            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : colors.Foreground, colors.Background);
             // Whole hints only: cut at the edge, the row ended in "Del can" on a narrow terminal.
             string hints = _confirmCancel
                 ? UiText.Get("Print.Hint.Confirm", "y cancels the job  any other key keeps it")

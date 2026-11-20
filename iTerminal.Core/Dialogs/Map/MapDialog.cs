@@ -748,7 +748,7 @@ public class MapDialog : Dialog
     {
         var heading = _listKind == ListKind.Places ? UiText.Get("Map.SavedPlaces", "Saved places") : UiText.Get("Map.SearchResults", "Search results");
         var hint = _listKind == ListKind.Places ? UiText.Get("Map.PlacesHint", "Enter:go   Del:remove   Esc:back") : UiText.Get("Map.ResultsHint", "Enter:go   Esc:back");
-        WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", Color.Yellow, scheme.Background, true);
+        WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", scheme.Foreground, scheme.Background, true);
         for (var row = 0; row < height - 1; row++)
         {
             var index = _listScroll + row;

@@ -585,7 +585,7 @@ public class ImageFileViewerDialog : Dialog
             ? FilePath
             : pathWidth <= 1 ? new string('…', pathWidth) : "…" + FilePath[^(pathWidth - 1)..];
         string header = $" {path}{suffix}";
-        buffer.Write(ZOrder, new Position((uint)ix, (uint)iy), size, new ConxelString(Fit(header, iw), Color.Cyan, colorScheme.Background));
+        buffer.Write(ZOrder, new Position((uint)ix, (uint)iy), size, new ConxelString(Fit(header, iw), colorScheme.Foreground, colorScheme.Background));
 
         List<string> lines = MetadataLines();
         int rows = Math.Max(0, ih - HeaderRows - FooterRows);
@@ -667,7 +667,7 @@ public class ImageFileViewerDialog : Dialog
             }
         }
 
-        WriteLine(buffer, ix, iy, iw, header, Color.Cyan, colorScheme.Background);
+        WriteLine(buffer, ix, iy, iw, header, colorScheme.Foreground, colorScheme.Background);
         if (sixel is not null && _sixelOverlay is not null && string.IsNullOrEmpty(error)
             && sixel.Columns <= areaColumns && sixel.Rows <= areaRows)
         {

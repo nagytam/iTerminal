@@ -594,7 +594,7 @@ public class ScannerDialog : Dialog
                 }
             }
 
-            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : Color.Cyan, colors.Background);
+            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : colors.Foreground, colors.Background);
             string hints = string.Join("  ", GetKeyHints().Select(h => $"{h.Key}:{h.Description}"));
             Put(buffer, 1, ih - 1, iw - 2, hints.FitHints(iw - 2), colors.Foreground, colors.Background);
         }

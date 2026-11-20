@@ -589,7 +589,7 @@ public class WorkspaceManagerDialog : Dialog
 
             if (ih >= 2)
             {
-                Put(buffer, 1, ih - 2, iw - 2, StatusText(), _statusIsError || _pending != Pending.None ? colorScheme.Error : Color.Cyan, colorScheme.Background);
+                Put(buffer, 1, ih - 2, iw - 2, StatusText(), _statusIsError || _pending != Pending.None ? colorScheme.Error : colorScheme.Foreground, colorScheme.Background);
             }
 
             Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.DisabledForeground, colorScheme.Background);
@@ -620,7 +620,7 @@ public class WorkspaceManagerDialog : Dialog
             : Selected is not null && _activeName is not null && _list.FirstOrDefault(w => w.Name == _activeName) is { } active
                 ? Say("Workspaces.OnScreen", "On screen: {0}", active.Name) + (_now is not null && active.Layout.SameScreenAs(_now) ? string.Empty : Say("Workspaces.ScreenChanged", "  (the screen has changed since)"))
                 : Say("Workspaces.NotSaved", "The screen is not saved as a workspace.");
-        Put(buffer, 1, 0, iw - 2, Say("Workspaces.SavedCount", "{0} saved  ·  {1}", _list.Count, summary), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, Say("Workspaces.SavedCount", "{0} saved  ·  {1}", _list.Count, summary), colorScheme.Foreground, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, Say("Workspaces.Header", "     # Name                      Left panel  →  Right panel"), colorScheme.DisabledForeground, colorScheme.Background);
 
         if (_list.Count == 0)

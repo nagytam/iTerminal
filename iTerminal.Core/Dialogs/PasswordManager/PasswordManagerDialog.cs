@@ -536,7 +536,7 @@ public class PasswordManagerDialog : Dialog
                     break;
             }
 
-            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colorScheme.Error : Color.Cyan, colorScheme.Background);
+            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colorScheme.Error : colorScheme.Foreground, colorScheme.Background);
             Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
         }
     }
@@ -551,7 +551,7 @@ public class PasswordManagerDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Passwords.ListHeader", "{0} saved  ·  unlocked"), _list.Count), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Passwords.ListHeader", "{0} saved  ·  unlocked"), _list.Count), colorScheme.Foreground, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "  " + UiText.Get("Passwords.ColCategory", "Category").PadRight(10) + "  " + UiText.Get("Passwords.ColTitle", "Title").PadRight(30) + "  " + UiText.Get("Passwords.ColUsername", "Username"), colorScheme.DisabledForeground, colorScheme.Background);
         var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
         for (var i = 0; i < ListRows; i++)
@@ -604,7 +604,7 @@ public class PasswordManagerDialog : Dialog
 
     private void DrawForm(IBuffer buffer, int iw, string heading, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, heading, Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, heading, colorScheme.Foreground, colorScheme.Background);
         for (var i = 0; i < _fields.Length; i++)
         {
             DrawField(buffer, iw, 2 + i * 2, _fields[i], i == _field, colorScheme);

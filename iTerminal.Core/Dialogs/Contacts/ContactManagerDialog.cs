@@ -546,7 +546,7 @@ public class ContactManagerDialog : Dialog
         var (nameWidth, emailWidth, phoneWidth) = Columns(iw - 2);
         var titles = FieldLabels;
         string header = Fit(titles[0], nameWidth) + Fit(titles[1], emailWidth) + Fit(titles[2], phoneWidth) + titles[3];
-        Put(buffer, 1, 0, iw - 2, header, Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, header, colorScheme.Foreground, colorScheme.Background);
 
         // The count sits at the right edge and must not paint over the last column title: the short form
         // ("3/10", "10") takes over where the words do not fit beside it.

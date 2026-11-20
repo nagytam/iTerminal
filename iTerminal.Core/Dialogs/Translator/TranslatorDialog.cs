@@ -560,7 +560,7 @@ public class TranslatorDialog : SplitPaneDialog
         DrawSectionHeader(buffer, ix, iy + 2, leftWidth, Say("Translator.InputHeader", "Text"), _input.IsFocused, colorScheme);
         DrawSectionHeader(buffer, ix + leftWidth + 1, iy + 2, rightWidth, Say("Translator.OutputHeader", "Translation"), _output.IsFocused, colorScheme);
 
-        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : Color.Cyan, KeyHints, colorScheme);
+        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : colorScheme.Foreground, KeyHints, colorScheme);
     }
 
     /// <summary>The line under the pickers: which language the text was found to be in, or why the chosen engine cannot be used.</summary>

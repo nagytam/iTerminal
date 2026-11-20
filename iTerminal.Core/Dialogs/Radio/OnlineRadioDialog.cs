@@ -667,7 +667,7 @@ public class OnlineRadioDialog : Dialog
         var (nameWidth, genreWidth) = Columns(iw - 2);
         var header = new string(' ', MarkerWidth) + Fit(UiText.Get("Radio.ColName", "Name"), nameWidth)
             + (genreWidth > 0 ? UiText.Get("Radio.ColGenre", "Genre") : string.Empty);
-        Put(buffer, 1, 0, iw - 2, header, Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, header, colorScheme.Foreground, colorScheme.Background);
 
         if (count.Length < iw - header.Length - 3)
         {

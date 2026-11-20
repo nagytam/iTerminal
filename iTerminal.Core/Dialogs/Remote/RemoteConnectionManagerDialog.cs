@@ -705,7 +705,7 @@ public class RemoteConnectionManagerDialog : Dialog
                 DrawForm(buffer, iw, colorScheme);
             }
 
-            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colorScheme.Error : Color.Cyan, colorScheme.Background);
+            Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colorScheme.Error : colorScheme.Foreground, colorScheme.Background);
             Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
         }
     }
@@ -719,7 +719,7 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, Ellipsize(string.Format(iConsole.Localization.UiText.Get("Remote.Summary", "{0} saved  ·  shells ask for a password; FTP/WebDAV use the password manager"), _list.Count), iw - 2), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, Ellipsize(string.Format(iConsole.Localization.UiText.Get("Remote.Summary", "{0} saved  ·  shells ask for a password; FTP/WebDAV use the password manager"), _list.Count), iw - 2), colorScheme.Foreground, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, iConsole.Localization.UiText.Get("Remote.ListHeader", "  Type  Name                          Destination"), colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
@@ -775,7 +775,7 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private void DrawForm(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, _editing is null ? iConsole.Localization.UiText.Get("Remote.NewConnection", "New connection") : iConsole.Localization.UiText.Get("Remote.EditConnection", "Edit connection"), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, _editing is null ? iConsole.Localization.UiText.Get("Remote.NewConnection", "New connection") : iConsole.Localization.UiText.Get("Remote.EditConnection", "Edit connection"), colorScheme.Foreground, colorScheme.Background);
         for (var i = 0; i < _fields.Length; i++)
         {
             var field = _fields[i];

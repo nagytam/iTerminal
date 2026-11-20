@@ -713,7 +713,7 @@ public class StockBrowserDialog : SplitPaneDialog
     {
         if (_confirmAction is not null)
         {
-            WriteLine(buffer, x, y, w, _confirmPrompt, Color.Red, colorScheme.Background);
+            WriteLine(buffer, x, y, w, _confirmPrompt, colorScheme.Error, colorScheme.Background);
             return;
         }
 
