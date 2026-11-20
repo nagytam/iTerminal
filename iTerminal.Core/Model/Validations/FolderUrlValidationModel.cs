@@ -42,6 +42,7 @@ public class FolderUrlValidationModel(ITextModel model, IDateTimeProviderService
         Container.PREVIEW,
         Container.ARCHIVE,
         Container.RECYCLE,
+        Container.EVIDENCE,
         Container.MTP,
         Container.S3,
         Container.ONEDRIVE,

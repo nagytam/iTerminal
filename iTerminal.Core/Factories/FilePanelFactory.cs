@@ -73,7 +73,11 @@ public class FilePanelFactory(
     iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
     Services.RenameUndoService? renameUndoService = null,
     iConsole.Viewers.FileViewerRegistry? fileViewers = null,
-    iConsole.Viewers.FileEditorRegistry? fileEditors = null)
+    iConsole.Viewers.FileEditorRegistry? fileEditors = null,
+    iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null,
+    iConsole.Services.IPromptService? promptService = null,
+    iConsole.Services.ITextClipboardService? textClipboard = null,
+    iTerminal.Core.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -105,6 +109,11 @@ public class FilePanelFactory(
             dbfViewerDialog: dbfViewerDialog,
             fileViewers: fileViewers,
             fileEditors: fileEditors,
+            evidenceNotebookService: evidenceNotebookService,
+            evidenceSettingsService: settingsService,
+            promptService: promptService,
+            textClipboard: textClipboard,
+            microphoneCaptureFactory: microphoneCaptureFactory,
             solutionViewerDialog: solutionViewerDialog,
             contentLenses: contentLenses,
             musicFileViewerDialog: musicFileViewerDialog,

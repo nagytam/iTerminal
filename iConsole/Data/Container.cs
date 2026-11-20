@@ -52,6 +52,12 @@ public static class Container
     public const string RECYCLE = "recycle://";
 
     /// <summary>
+    /// The evidence notebook as a drive: <c>evidence://&lt;file name&gt;</c>, one flat list of what was
+    /// gathered into the notebook folder the user chose. A row's URL is its file's name in that folder.
+    /// </summary>
+    public const string EVIDENCE = "evidence://";
+
+    /// <summary>
     /// Phones and cameras that speak MTP: <c>mtp://&lt;device&gt;/&lt;storage&gt;/&lt;path&gt;</c> — the
     /// root lists the connected devices, a device lists its storages.
     /// </summary>

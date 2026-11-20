@@ -25,5 +25,6 @@ public enum ContainerType
     Mtp,
     S3,
     OneDrive,
-    GoogleDrive
+    GoogleDrive,
+    EvidenceNotebook
 }

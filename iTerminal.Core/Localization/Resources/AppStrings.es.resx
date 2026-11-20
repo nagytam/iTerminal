@@ -10916,4 +10916,133 @@
   <data name="Disk.Status.FormatCloud" xml:space="preserve">
     <value>Una unidad en la nube no se puede formatear: está en los servidores del proveedor.</value>
   </data>
+  <data name="Evidence.Drive.Title" xml:space="preserve">
+    <value>Cuaderno de evidencias: {0}</value>
+  </data>
+  <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
+    <value>Cuaderno de evidencias (ninguno abierto)</value>
+  </data>
+  <data name="Evidence.Drive.Origin" xml:space="preserve">
+    <value>{0} desde {1} · {2} · {3}</value>
+  </data>
+  <data name="Evidence.Open.Question" xml:space="preserve">
+    <value>Carpeta del cuaderno de evidencias (se crea si no existe)</value>
+  </data>
+  <data name="Evidence.Open.BadFolder" xml:space="preserve">
+    <value>Escriba una ruta de carpeta, por ejemplo ~/casos/caso-42</value>
+  </data>
+  <data name="Evidence.Open.Failed" xml:space="preserve">
+    <value>El cuaderno no se pudo abrir</value>
+  </data>
+  <data name="Evidence.Open.Opened" xml:space="preserve">
+    <value>Cuaderno de evidencias abierto</value>
+  </data>
+  <data name="Evidence.Add.Question" xml:space="preserve">
+    <value>¿Qué añadir al cuaderno de evidencias?</value>
+  </data>
+  <data name="Evidence.Add.Files" xml:space="preserve">
+    <value>Archivos del otro panel</value>
+  </data>
+  <data name="Evidence.Add.Note" xml:space="preserve">
+    <value>Una nota</value>
+  </data>
+  <data name="Evidence.Add.Voice" xml:space="preserve">
+    <value>Una grabación de voz</value>
+  </data>
+  <data name="Evidence.Add.Clipboard" xml:space="preserve">
+    <value>Texto del portapapeles</value>
+  </data>
+  <data name="Evidence.Add.Link" xml:space="preserve">
+    <value>Una dirección web</value>
+  </data>
+  <data name="Evidence.Add.NoSource" xml:space="preserve">
+    <value>No hay otro panel del que tomar archivos</value>
+  </data>
+  <data name="Evidence.Add.NoFiles" xml:space="preserve">
+    <value>Nada que añadir: marque archivos o ponga el cursor en uno</value>
+  </data>
+  <data name="Evidence.Add.Added" xml:space="preserve">
+    <value>{0} añadido(s) al cuaderno</value>
+  </data>
+  <data name="Evidence.Add.Folders" xml:space="preserve">
+    <value>; {0} carpeta(s) omitida(s): una carpeta no es evidencia por sí sola</value>
+  </data>
+  <data name="Evidence.Add.Failed" xml:space="preserve">
+    <value>La entrada no se añadió</value>
+  </data>
+  <data name="Evidence.Note.Question" xml:space="preserve">
+    <value>Nota</value>
+  </data>
+  <data name="Evidence.Note.Added" xml:space="preserve">
+    <value>Nota añadida</value>
+  </data>
+  <data name="Evidence.Link.Question" xml:space="preserve">
+    <value>Dirección web</value>
+  </data>
+  <data name="Evidence.Link.Invalid" xml:space="preserve">
+    <value>Escriba una dirección web, por ejemplo https://example.com</value>
+  </data>
+  <data name="Evidence.Link.Added" xml:space="preserve">
+    <value>Dirección web añadida</value>
+  </data>
+  <data name="Evidence.Clipboard.Empty" xml:space="preserve">
+    <value>El portapapeles no contiene texto</value>
+  </data>
+  <data name="Evidence.Clipboard.Added" xml:space="preserve">
+    <value>Texto del portapapeles añadido</value>
+  </data>
+  <data name="Evidence.Voice.Unavailable" xml:space="preserve">
+    <value>Sin grabación</value>
+  </data>
+  <data name="Evidence.Voice.Question" xml:space="preserve">
+    <value>Grabando desde las {0}. Intro la conserva, Esc la descarta.</value>
+  </data>
+  <data name="Evidence.Voice.Discarded" xml:space="preserve">
+    <value>Grabación descartada</value>
+  </data>
+  <data name="Evidence.Voice.TooShort" xml:space="preserve">
+    <value>La grabación es demasiado corta para conservarla</value>
+  </data>
+  <data name="Evidence.Voice.Added" xml:space="preserve">
+    <value>Grabación de voz añadida</value>
+  </data>
+  <data name="Evidence.Verify.NoNotebook" xml:space="preserve">
+    <value>No hay ningún cuaderno de evidencias abierto</value>
+  </data>
+  <data name="Evidence.Verify.Clean" xml:space="preserve">
+    <value>Las {0} entradas coinciden con sus registros</value>
+  </data>
+  <data name="Evidence.Verify.Problems" xml:space="preserve">
+    <value>{0} de {1} entradas no coinciden</value>
+  </data>
+  <data name="Evidence.Service.ReadOnly" xml:space="preserve">
+    <value>Una evidencia no se modifica una vez en el cuaderno. Añada una nueva evidencia.</value>
+  </data>
+  <data name="Evidence.Service.Missing" xml:space="preserve">
+    <value>Falta el archivo de contenido.</value>
+  </data>
+  <data name="Evidence.Service.SizeChanged" xml:space="preserve">
+    <value>El contenido tiene un tamaño distinto al registrado.</value>
+  </data>
+  <data name="Evidence.Service.HashChanged" xml:space="preserve">
+    <value>El contenido ya no coincide con su SHA-256 registrado.</value>
+  </data>
+  <data name="CmdTitle.0c1f9f7d" xml:space="preserve">
+    <value>Cuaderno de evidencias</value>
+  </data>
+  <data name="CmdTitle.93a5927c" xml:space="preserve">
+    <value>Añadir evidencia</value>
+  </data>
+  <data name="CmdTitle.ee237cac" xml:space="preserve">
+    <value>Verificar cuaderno de evidencias</value>
+  </data>
+  <data name="CmdDesc.6de8559e" xml:space="preserve">
+    <value>Muestra el cuaderno de evidencias en el panel activo, eligiendo la carpeta donde se guarda. Pulse de nuevo para volver.</value>
+  </data>
+  <data name="CmdDesc.ad28a2e7" xml:space="preserve">
+    <value>Añadir al cuaderno de evidencias: archivos del otro panel, una nota, una grabación de voz, texto del portapapeles o una dirección web.</value>
+  </data>
+  <data name="CmdDesc.45aa5ec6" xml:space="preserve">
+    <value>Comprueba que cada entrada del cuaderno sigue coincidiendo con su SHA-256 y tamaño registrados.</value>
+  </data>
 </root>

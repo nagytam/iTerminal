@@ -10916,4 +10916,133 @@
   <data name="Disk.Status.FormatCloud" xml:space="preserve">
     <value>A felhőmeghajtó nem formázható: a szolgáltató szerverein van.</value>
   </data>
+  <data name="Evidence.Drive.Title" xml:space="preserve">
+    <value>Bizonyítéknapló: {0}</value>
+  </data>
+  <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
+    <value>Bizonyítéknapló (nincs megnyitva)</value>
+  </data>
+  <data name="Evidence.Drive.Origin" xml:space="preserve">
+    <value>{0} innen: {1} · {2} · {3}</value>
+  </data>
+  <data name="Evidence.Open.Question" xml:space="preserve">
+    <value>A bizonyítéknapló mappája (ha nincs, létrejön)</value>
+  </data>
+  <data name="Evidence.Open.BadFolder" xml:space="preserve">
+    <value>Adjon meg mappaútvonalat, például ~/ugyek/ugy-42</value>
+  </data>
+  <data name="Evidence.Open.Failed" xml:space="preserve">
+    <value>A naplót nem sikerült megnyitni</value>
+  </data>
+  <data name="Evidence.Open.Opened" xml:space="preserve">
+    <value>Bizonyítéknapló megnyitva</value>
+  </data>
+  <data name="Evidence.Add.Question" xml:space="preserve">
+    <value>Mit adjon a bizonyítéknaplóhoz?</value>
+  </data>
+  <data name="Evidence.Add.Files" xml:space="preserve">
+    <value>Fájlok a másik panelről</value>
+  </data>
+  <data name="Evidence.Add.Note" xml:space="preserve">
+    <value>Jegyzet</value>
+  </data>
+  <data name="Evidence.Add.Voice" xml:space="preserve">
+    <value>Hangfelvétel</value>
+  </data>
+  <data name="Evidence.Add.Clipboard" xml:space="preserve">
+    <value>Szöveg a vágólapról</value>
+  </data>
+  <data name="Evidence.Add.Link" xml:space="preserve">
+    <value>Webcím</value>
+  </data>
+  <data name="Evidence.Add.NoSource" xml:space="preserve">
+    <value>Nincs másik panel, ahonnan fájlt lehetne venni</value>
+  </data>
+  <data name="Evidence.Add.NoFiles" xml:space="preserve">
+    <value>Nincs mit hozzáadni: jelöljön ki fájlokat, vagy állítsa a kurzort egyre</value>
+  </data>
+  <data name="Evidence.Add.Added" xml:space="preserve">
+    <value>{0} hozzáadva a naplóhoz</value>
+  </data>
+  <data name="Evidence.Add.Folders" xml:space="preserve">
+    <value>; {0} mappa kihagyva: a mappa önmagában nem bizonyíték</value>
+  </data>
+  <data name="Evidence.Add.Failed" xml:space="preserve">
+    <value>A bejegyzést nem sikerült hozzáadni</value>
+  </data>
+  <data name="Evidence.Note.Question" xml:space="preserve">
+    <value>Jegyzet</value>
+  </data>
+  <data name="Evidence.Note.Added" xml:space="preserve">
+    <value>Jegyzet hozzáadva</value>
+  </data>
+  <data name="Evidence.Link.Question" xml:space="preserve">
+    <value>Webcím</value>
+  </data>
+  <data name="Evidence.Link.Invalid" xml:space="preserve">
+    <value>Adjon meg webcímet, például https://example.com</value>
+  </data>
+  <data name="Evidence.Link.Added" xml:space="preserve">
+    <value>Webcím hozzáadva</value>
+  </data>
+  <data name="Evidence.Clipboard.Empty" xml:space="preserve">
+    <value>A vágólap nem tartalmaz szöveget</value>
+  </data>
+  <data name="Evidence.Clipboard.Added" xml:space="preserve">
+    <value>Vágólapszöveg hozzáadva</value>
+  </data>
+  <data name="Evidence.Voice.Unavailable" xml:space="preserve">
+    <value>Nincs felvétel</value>
+  </data>
+  <data name="Evidence.Voice.Question" xml:space="preserve">
+    <value>Felvétel {0} óta. Az Enter megtartja, az Esc eldobja.</value>
+  </data>
+  <data name="Evidence.Voice.Discarded" xml:space="preserve">
+    <value>Felvétel eldobva</value>
+  </data>
+  <data name="Evidence.Voice.TooShort" xml:space="preserve">
+    <value>A felvétel túl rövid a megtartáshoz</value>
+  </data>
+  <data name="Evidence.Voice.Added" xml:space="preserve">
+    <value>Hangfelvétel hozzáadva</value>
+  </data>
+  <data name="Evidence.Verify.NoNotebook" xml:space="preserve">
+    <value>Nincs megnyitott bizonyítéknapló</value>
+  </data>
+  <data name="Evidence.Verify.Clean" xml:space="preserve">
+    <value>Mind a {0} bejegyzés egyezik a nyilvántartásával</value>
+  </data>
+  <data name="Evidence.Verify.Problems" xml:space="preserve">
+    <value>{1} bejegyzésből {0} nem egyezik</value>
+  </data>
+  <data name="Evidence.Service.ReadOnly" xml:space="preserve">
+    <value>A bizonyíték a naplóba kerülve nem módosítható. Adjon hozzá új bizonyítékot helyette.</value>
+  </data>
+  <data name="Evidence.Service.Missing" xml:space="preserve">
+    <value>A tartalomfájl hiányzik.</value>
+  </data>
+  <data name="Evidence.Service.SizeChanged" xml:space="preserve">
+    <value>A tartalom mérete eltér a rögzítettől.</value>
+  </data>
+  <data name="Evidence.Service.HashChanged" xml:space="preserve">
+    <value>A tartalom már nem egyezik a rögzített SHA-256 értékével.</value>
+  </data>
+  <data name="CmdTitle.0c1f9f7d" xml:space="preserve">
+    <value>Bizonyítéknapló</value>
+  </data>
+  <data name="CmdTitle.93a5927c" xml:space="preserve">
+    <value>Bizonyíték hozzáadása</value>
+  </data>
+  <data name="CmdTitle.ee237cac" xml:space="preserve">
+    <value>Bizonyítéknapló ellenőrzése</value>
+  </data>
+  <data name="CmdDesc.6de8559e" xml:space="preserve">
+    <value>Megjeleníti a bizonyítéknaplót az aktív panelen, a mappa kiválasztásával. Újra megnyomva visszatér.</value>
+  </data>
+  <data name="CmdDesc.ad28a2e7" xml:space="preserve">
+    <value>Hozzáadás a bizonyítéknaplóhoz: fájlok a másik panelről, jegyzet, hangfelvétel, vágólapon lévő szöveg vagy webcím.</value>
+  </data>
+  <data name="CmdDesc.45aa5ec6" xml:space="preserve">
+    <value>Ellenőrzi, hogy a bizonyítéknapló minden bejegyzése még megfelel-e a rögzített SHA-256 értékének és méretének.</value>
+  </data>
 </root>
