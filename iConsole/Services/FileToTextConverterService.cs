@@ -200,6 +200,80 @@ public class FileToTextConverterService : IFileToTextConverterService
         return Disassembly.DisassemblyBuilder.Build(file.Content, cancellationToken);
     }
 
+    /// <summary>True for a file named like a PDF, the only kind whose F3 view can carry a signature section.</summary>
+    public static bool HasPdfSignatures(Url? url) =>
+        url is not null && url.Extension.Equals("pdf", StringComparison.OrdinalIgnoreCase);
+
+    public async Task<IReadOnlyList<string>> BuildPdfSignatureLinesAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken)
+    {
+        if (url is null || !HasPdfSignatures(url) || !fileSystem.ExistsFile(url))
+        {
+            return [];
+        }
+
+        // Only the bytes are read, so a PDF on an SSH, archive or memory drive is checked like a local one. The PDF text itself is
+        // still read from a path, so on those drives the two can disagree. The read stops at the size limit instead of loading a
+        // file that would only be refused afterwards.
+        byte[] content;
+        try
+        {
+            using CappedStream capped = new(Pdf.PdfSignatureReader.MaxBytes);
+            await fileSystem.StreamToAsync(url, capped, null, cancellationToken);
+            content = capped.ToArray();
+        }
+        catch (CappedStream.LimitExceededException)
+        {
+            return Pdf.PdfSignatureReader.Describe(new Pdf.PdfSignatureReport([], 0, TooLarge: true));
+        }
+
+        if (!Pdf.PdfSignatureReader.LooksLikePdf(content))
+        {
+            return [];
+        }
+
+        return await Task.Run(
+            () => Pdf.PdfSignatureReader.Describe(Pdf.PdfSignatureReader.Read(content, null, cancellationToken)),
+            cancellationToken);
+    }
+
+    /// <summary>A write-only buffer that refuses to grow past a limit, so a read into it can be stopped early.</summary>
+    private sealed class CappedStream(long limit) : MemoryStream
+    {
+        internal sealed class LimitExceededException : IOException;
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            Check(count);
+            base.Write(buffer, offset, count);
+        }
+
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {
+            Check(buffer.Length);
+            base.Write(buffer);
+        }
+
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            Check(buffer.Length);
+            return base.WriteAsync(buffer, cancellationToken);
+        }
+
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            Check(count);
+            return base.WriteAsync(buffer, offset, count, cancellationToken);
+        }
+
+        private void Check(int adding)
+        {
+            if (Length + adding > limit)
+            {
+                throw new LimitExceededException();
+            }
+        }
+    }
+
     public async Task ReadFileAsync(Url? url, IFileSystem fileSystem, ITextModel textModel)
     {
         textModel.Lines.Clear();

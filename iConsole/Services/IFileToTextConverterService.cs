@@ -14,4 +14,11 @@ public interface IFileToTextConverterService
     /// background, while the preview and the editor keep showing the metadata page alone.
     /// </summary>
     Task<IReadOnlyList<string>> BuildDisassemblyAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// The "Digital signatures" section of a signed PDF as lines of text; empty for any other file or a PDF without embedded
+    /// signatures. Kept apart from <see cref="ReadFileAsync"/> for the same reason as the disassembly: only the F3 viewer asks
+    /// for it, in the background, so the preview and the editor never carry it in their text.
+    /// </summary>
+    Task<IReadOnlyList<string>> BuildPdfSignatureLinesAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken);
 }

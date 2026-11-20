@@ -1330,6 +1330,66 @@
   <data name="Viewer.DisassemblyFailed" xml:space="preserve">
     <value>Disassemblierung fehlgeschlagen: {0}</value>
   </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Digitale Signaturen</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>Signatur {0}</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Unterzeichner</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Signiert am</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Integrität</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>Die signierten Bytes sind unverändert.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>GEÄNDERT: Die Datei passt nicht zu dieser Signatur.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>Nicht geprüft: Dieses Signaturformat wird nicht unterstützt.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>Die Signatur konnte nicht gelesen werden.</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Abdeckung</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>Die ganze Datei.</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Nach dem Signieren wurden Änderungen hinzugefügt.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Vertrauen</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>Vertrauenswürdig: Das Zertifikat führt zu einem Stammzertifikat, dem dieser Rechner vertraut.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Nicht vertrauenswürdig: Das Zertifikat führt zu keinem Stammzertifikat, dem dieser Rechner vertraut.</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Nicht vertrauenswürdig: Das Zertifikat ist abgelaufen.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>Der Widerruf wurde nicht geprüft.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>{0} weitere Signaturen werden nicht angezeigt.</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>Signaturen wurden nicht geprüft: Die Datei ist größer als {0} MB.</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Weiter</value>
   </data>

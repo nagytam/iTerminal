@@ -33,6 +33,12 @@ public class FileViewerDialog : Dialog
     private List<string>? _metadataLines;
     private string? _disassemblyUrl;
 
+    // The signature section of a signed PDF is built the same way, separately from the disassembly (a PDF has none): the worker
+    // returns lines, and OnIdle puts them above the text on the UI thread.
+    private Task<IReadOnlyList<string>>? _signatures;
+    private CancellationTokenSource? _signaturesCancellation;
+    private string? _signaturesUrl;
+
     /// <summary>How often a followed file is checked for new lines.</summary>
     public static readonly TimeSpan FollowInterval = TimeSpan.FromSeconds(1);
 
@@ -240,6 +246,9 @@ public class FileViewerDialog : Dialog
     /// <summary>The disassembly that is being built in the background, or null; exposed so tests can wait for it.</summary>
     public Task? DisassemblyTask => _disassembly;
 
+    /// <summary>The signature check of a signed PDF while it runs; null when there is none. A test waits on it.</summary>
+    public Task? PdfSignaturesTask => _signatures;
+
     /// <summary>The hex dump control; exposed so tests can read the loaded bytes.</summary>
     public HexViewer HexViewer => _hexViewer;
 
@@ -443,8 +452,90 @@ public class FileViewerDialog : Dialog
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
         _textViewerControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
         StartDisassembly(fileSystem);
+        StartPdfSignatures(fileSystem);
 
         await base.OnInitializeAsync();
+    }
+
+    /// <summary>Starts checking the embedded signatures of a PDF in the background; the text is already on screen.</summary>
+    private void StartPdfSignatures(IFileSystem? fileSystem)
+    {
+        CancelPdfSignatures();
+        if (Url is null || fileSystem is null || !FileToTextConverterService.HasPdfSignatures(Url))
+        {
+            return;
+        }
+
+        _signaturesUrl = Url.FullUrl;
+        _signaturesCancellation = new CancellationTokenSource();
+        CancellationToken token = _signaturesCancellation.Token;
+        Url url = Url;
+        IFileToTextConverterService converter = _fileToTextConverterService;
+        // A converter that hands back no task (a test double) means there is nothing to add.
+        _signatures = Task.Run(
+            async () => await (converter.BuildPdfSignatureLinesAsync(url, fileSystem, token) ?? Task.FromResult<IReadOnlyList<string>>([])),
+            token);
+    }
+
+    /// <summary>
+    /// Puts a finished signature section above the text. A cancelled or failed check, or one for another file, adds nothing: the
+    /// text is what was asked for. Cursor and scroll move down with the text unless they are at the top, where the section is seen.
+    /// </summary>
+    private bool LandPdfSignatures()
+    {
+        if (_signatures is not { IsCompleted: true } task)
+        {
+            return false;
+        }
+
+        string? startedFor = _signaturesUrl;
+        _signatures = null;
+        _signaturesCancellation?.Dispose();
+        _signaturesCancellation = null;
+        if (task.IsCanceled || task.IsFaulted || !string.Equals(startedFor, Url?.FullUrl, StringComparison.Ordinal))
+        {
+            _ = task.Exception;
+            return false;
+        }
+
+        IReadOnlyList<string>? section = task.Result;
+        if (section is null || section.Count == 0)
+        {
+            return false;
+        }
+
+        List<string> lines = [.. section, .. _textViewerControl.TextModel.Lines];
+        iConsole.Model.IScrollableModel scrollable = _textViewerControl.ScrollableModel;
+        bool atTop = scrollable.ScrollPosition.Y == 0 && scrollable.CursorPosition.Y == 0;
+        _textViewerControl.TextModel.Lines.ReplaceAll(lines);
+        if (!atTop)
+        {
+            scrollable.ScrollPosition.Y += section.Count;
+            scrollable.CursorPosition.Y += section.Count;
+        }
+
+        return true;
+    }
+
+    private void CancelPdfSignatures()
+    {
+        CancellationTokenSource? source = _signaturesCancellation;
+        Task? running = _signatures;
+        _signaturesCancellation = null;
+        _signatures = null;
+        if (source is null)
+        {
+            return;
+        }
+
+        source.Cancel();
+        (running ?? Task.CompletedTask).ContinueWith(
+            finished =>
+            {
+                _ = finished.Exception;
+                source.Dispose();
+            },
+            TaskScheduler.Default);
     }
 
     /// <summary>Starts the disassembly of a binary in the background and marks the end of the metadata page as in progress.</summary>
@@ -475,7 +566,7 @@ public class FileViewerDialog : Dialog
     public override void OnIdle()
     {
         TickFollow();
-        if (LandDisassembly())
+        if (LandDisassembly() | LandPdfSignatures())
         {
             StateHasChanged();
         }
@@ -523,6 +614,7 @@ public class FileViewerDialog : Dialog
     public override void Close()
     {
         CancelDisassembly();
+        CancelPdfSignatures();
         base.Close();
     }
 

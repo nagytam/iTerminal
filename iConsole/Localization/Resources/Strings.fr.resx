@@ -1330,6 +1330,66 @@
   <data name="Viewer.DisassemblyFailed" xml:space="preserve">
     <value>Échec du désassemblage : {0}</value>
   </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Signatures numériques</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>Signature {0}</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Signataire</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Signé le</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Intégrité</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>Les octets signés n&apos;ont pas changé.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>MODIFIÉ : le fichier ne correspond pas à cette signature.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>Non vérifié : ce format de signature n&apos;est pas pris en charge.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>La signature n&apos;a pas pu être lue.</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Couverture</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>Le fichier entier.</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Des modifications ont été ajoutées après la signature.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Confiance</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>Fiable : le certificat remonte à une racine approuvée par cet ordinateur.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Non fiable : le certificat ne remonte à aucune racine approuvée par cet ordinateur.</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Non fiable : le certificat a expiré.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>La révocation n&apos;a pas été vérifiée.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>{0} autres signatures ne sont pas affichées.</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>Les signatures n&apos;ont pas été vérifiées : le fichier dépasse {0} Mo.</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Suivant</value>
   </data>
