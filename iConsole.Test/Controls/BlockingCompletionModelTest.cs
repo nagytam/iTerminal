@@ -115,6 +115,63 @@ public class BlockingCompletionModelTest
         model.Gate.Dispose();
     }
 
+    /// <summary>Blocks only its first call (the opening update) until released, so a later keystroke's update can finish first.</summary>
+    private sealed class OpeningIsSlowModel : IBlockingCompletionModel
+    {
+        private int _calls;
+        public int Finished;
+
+        public ManualResetEventSlim OpeningGate { get; } = new();
+
+        public Task? UpdateTask { get; set; }
+
+        public ConcurrentObservableCollection<string> MatchingValues { get; } = [];
+
+        public IEnumerable<string> Completions => ["one"];
+
+        public void InsertCompletion(string value)
+        {
+        }
+
+        public void UpdateMatchingValues(string value)
+        {
+            if (Interlocked.Increment(ref _calls) == 1)
+            {
+                OpeningGate.Wait(TimeSpan.FromSeconds(30));
+            }
+
+            MatchingValues.ReplaceAll(["one"]);
+            Interlocked.Increment(ref Finished);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnOpeningUpdateThatFinishesAfterAKeystrokeDoesNotCloseTheList()
+    {
+        var theme = Theme();
+        var model = new OpeningIsSlowModel();
+        var textModel = new TextModel("pre");
+        var autoCompletion = new AutoCompletion(textModel, model, theme.Object) { ViewSize = new Size(20, 5) };
+
+        // The opening update is still running (blocked) when the user types.
+        await autoCompletion.OnInitializeAsync();
+        textModel.TriggerPropertyChanged();
+        await model.UpdateTask!;
+
+        // Now the opening update lands last. It kept the list down, but its result is older than the keystroke's.
+        model.OpeningGate.Set();
+        for (int i = 0; i < 100 && Volatile.Read(ref model.Finished) < 2; i++)
+        {
+            await Task.Delay(20);
+        }
+
+        await Task.Delay(200);
+        autoCompletion.OnIdle();
+        Assert.IsTrue(autoCompletion.IsVisible, "the keystroke opened the list, and the older opening update must not close it again");
+        model.OpeningGate.Dispose();
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public void AModelThatIsNotBlockingIsStillUpdatedWhenTheBoxIsBuilt()
