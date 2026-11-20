@@ -10,9 +10,6 @@ public class DeleteFavouriteCommand(
     IScrollableModel scrollableModel,
     ConcurrentObservableCollection<Url> favourites) : Command
 {
-    public override Key? Key { get; init; } =
-        new Key(ConsoleKey.Enter, false, false, false);
-
     public override bool CanExecute()
     {
         return favourites.Any();

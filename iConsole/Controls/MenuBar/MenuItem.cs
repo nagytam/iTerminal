@@ -53,7 +53,7 @@ public class MenuItem : PopUpWindow
                 return string.Empty;
             }
             var display = command.KeyDisplayText;
-            return string.IsNullOrEmpty(display) ? Command.FormatKey(command.Key) : display;
+            return string.IsNullOrEmpty(display) ? Command.FormatKey(command.ActiveKey) : display;
         }
     }
 
@@ -557,7 +557,7 @@ public class MenuItem : PopUpWindow
 
         foreach (var command in concrete.Commands.AsSnapshot())
         {
-            if (command.Key is not null && command.Key.IsIdentical(keyEvent))
+            if (command.ActiveKey is not null && command.ActiveKey.IsIdentical(keyEvent))
             {
                 return true;
             }

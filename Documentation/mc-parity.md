@@ -42,14 +42,14 @@ general knowledge of each product and are approximate.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Dual panes, F-key workflow | Y | Y | Y | Y | Y | Y | - |
 | **Tabs per panel** | **-** | - | Y | - | Y | Y | Y |
-| **Multi-rename (patterns, counters, regex, preview)** | **-** (single rename only) | - | Y | Y | Y | Y | P |
+| **Multi-rename (patterns, counters, regex, preview)** | **P** (`[N]`, `[N:n]`, `[C]`, `[E]`, plain Find/Replace, live preview; no regex, case or date tokens) | - | Y | Y | Y | Y | P |
 | Marks by pattern, invert | Y | Y | Y | Y | Y | Y | P |
-| **Conflict prompt (overwrite/skip/rename/newer/all)** | **P** (Overwrite checkbox, error prompt) | Y | Y | Y | Y | Y | Y |
-| Verify after copy | **-** (noted as missing) | - | Y | - | Y | Y | - |
+| Conflict prompt (overwrite/skip/rename/newer/all) | Y (per file, keep newer/larger, apply to all) | Y | Y | Y | Y | Y | Y |
+| Verify after copy | Y (`TransferVerifier`, checksum compare) | - | Y | - | Y | Y | - |
 | Resume / bandwidth limit for transfers | - | - | Y | - | P | Y | - |
-| Undo of rename / move / copy | **-** | - | - | - | - | Y | Y |
+| Undo of rename / move / copy | **P** (one step: rename, multi-rename and dialog moves; copy not covered) | - | - | - | - | Y | Y |
 | Queue, pause, reorder | Y | P | Y | P | Y | Y | - |
-| **Brief / Long / Thumbnail panel modes** | **-** (one layout) | Y | Y | Y | Y | Y | Y |
+| **Brief / Long / Thumbnail panel modes** | **P** (Full, Brief, Long, Info; no thumbnails) | Y | Y | Y | Y | Y | Y |
 | Tree panel, Info panel as panel modes | - (tree only in selector) | Y | Y | Y | Y | Y | Y |
 | Custom columns (EXIF, tags, hash, ...) | - | P | Y | Y | Y | Y | Y |
 | Horizontal split, panel ratio, hide a panel | **?** (workspaces save locations, not geometry) | Y | Y | Y | Y | Y | - |
@@ -86,19 +86,19 @@ by power users; **P3** polish or niche.
 
 ### P1
 
-1. **Multi-rename.** Confirmed absent: `RenameDialog` renames one entry. Needs masks (`[N]`, `[E]`,
-   `[C]`, `[d]` dates, EXIF/tag tokens), search/replace with regex, case changes, a live
-   old/new preview, conflict detection, and one-key undo. Acts on marks, so it fits `ActionableUrls`.
+1. **Multi-rename (partly done).** `MultiRenameDialog` exists with `[N]`, `[N:n]`, `[C]`, `[E]`, plain
+   Find/Replace, a live preview and one-step undo. Still missing: regex Find/Replace, case-change
+   tokens, `[d]` date and EXIF/tag tokens. See file-manager-comparison.md, item 12.
 2. **Panel tabs.** Confirmed absent. The workspace manager swaps whole layouts; tabs are many
    locations per panel with history, lock and duplicate. Probably a `PanelTabsService` in
    front of the `ContentModelService` (which assumes one model per panel name).
-3. **Conflict handling in copy/move.** Only the "Overwrite" checkbox and an error prompt were
-   found. Add per-file Overwrite / Skip / Rename / Keep newer / Keep larger / Resume, each with
-   "all", and a verify-after-copy option (hash compare, reusing `ChecksumService`).
-4. **Undo journal for rename, move and copy.** Delete is already recoverable; the rest is not.
-5. **Panel listing modes.** Brief (multi-column), Long (dates, attributes, owner), Info and Tree
-   panels. `ContentBrowser` draws one layout. Thumbnails could use the Kitty/Sixel graphics
-   protocols with an ASCII fallback.
+3. ~~**Conflict handling in copy/move.**~~ **Done**: per-file Overwrite / Skip / Rename / Keep newer /
+   Keep larger with apply-to-all (`FileConflictResolver`), and verify-after-copy (`TransferVerifier`).
+   Resume is still missing (item 15 below).
+4. **Undo journal for copy and delete.** Rename, multi-rename and dialog moves have one-step undo
+   (`RenameUndoService`); copy is not covered and there is no journal of several operations.
+5. **Panel listing modes.** Brief, Long and Info exist. Still missing: a tree panel mode and
+   thumbnails (Kitty/Sixel with an ASCII fallback). `SixelOverlay` exists for the image viewer only.
 6. ~~**Owner and ACL editing.**~~ **Done**: Ctrl+P in Properties opens `AccessControlDialog` (NTFS entries with
    allow/deny and inheritance, owner; POSIX ACL entries, owner and group). See file-operations.md.
 7. **Site manager for remote profiles.** FTP and WebDAV (HTTP/HTTPS) are done in `RemoteConnectionManagerDialog`, with

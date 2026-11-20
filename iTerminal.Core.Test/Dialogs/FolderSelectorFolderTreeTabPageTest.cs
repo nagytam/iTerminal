@@ -1,6 +1,8 @@
 using iConsole.Data;
+using iConsole.Test.Core;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs;
 
@@ -111,5 +113,50 @@ public class FolderSelectorFolderTreeTabPageTest
 
         Assert.IsTrue(hints.Any(h => h.Key == "Enter"));
         Assert.IsTrue(hints.Any(h => h.Key == "Esc"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Label_WhileTheWalkHasWorkQueued_SaysItIsIndexing()
+    {
+        var (page, harness) = await CreatePageAsync(@"C:\projects");
+        harness.FolderIndexModel.IsWalking = true;
+        page.OnInitializeLayout();
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "Indexing...");
+        AssertScreenDoesNotContain(again, "Number of folders:");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Label_WhenTheWalkHasCaughtUp_SaysTheNumberOfFolders()
+    {
+        var (page, _) = await CreatePageAsync(@"C:\projects");
+        page.OnInitializeLayout();
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "Number of folders:");
+        AssertScreenDoesNotContain(again, "Indexing...");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Label_ChangesToTheCountWhenTheWalkCatchesUp()
+    {
+        var (page, harness) = await CreatePageAsync(@"C:\projects");
+        harness.FolderIndexModel.IsWalking = true;
+        page.OnInitializeLayout();
+        AssertScreenContains(Render(page), "Indexing...");
+
+        harness.FolderIndexModel.IsWalking = false;
+
+        ScreenBuffer screen = Render(page);
+        AssertScreenContains(screen, "Number of folders:");
+        AssertScreenDoesNotContain(screen, "Indexing...");
     }
 }

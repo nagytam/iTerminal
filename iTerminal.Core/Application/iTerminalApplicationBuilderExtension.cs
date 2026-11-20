@@ -55,6 +55,8 @@ public static class iTerminalApplicationBuilderExtension
         Directory.CreateDirectory(databaseDirectory);
 
         string databasePath = Path.Combine(databaseDirectory, "iTerminal.sqlite");
+        services.AddSingleton(new iTerminal.Core.Services.KeyBindings.KeyMapLocation(
+            Path.Combine(databaseDirectory, iTerminal.Core.Services.KeyBindings.KeyMapFile.FileName)));
 
         // Bind FileInformationRefreshOptions from configuration if available.
         // This is optional; consumers may register configuration under
@@ -149,6 +151,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddHostedService<DatabaseInitializationHostedService>();
         services.AddHostedService<iTerminal.Core.Commands.DialogRefreshHostedService>();
         services.AddHostedService<iTerminal.Core.Services.Plugins.PluginStartupHostedService>();
+        services.AddHostedService<iTerminal.Core.Services.KeyBindings.KeyMapStartupHostedService>();
         services.AddTransient<TerminalMenuBar>();
         services.AddSingleton<Content>();
         services.AddSingleton<iTerminal.Core.Services.RenameUndoService>();
@@ -372,6 +375,9 @@ public static class iTerminalApplicationBuilderExtension
         // deleted files; a test registers one built in a folder of its own.
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinStore>(_ => iTerminal.Core.Services.Recycle.RecycleBinService.CreateStore());
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinService, iTerminal.Core.Services.Recycle.RecycleBinService>();
+
+        // Ctrl+Shift+Q: the evidence notebook as a drive. One instance holds the open notebook folder for the run.
+        services.AddSingleton<iTerminal.Core.Services.Evidence.IEvidenceNotebookService, iTerminal.Core.Services.Evidence.EvidenceNotebookService>();
         // Alt+F7: the full-screen stock browser. Quotes come from Yahoo Finance; a test replaces the
         // provider so no run reaches the network.
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockQuoteProvider, iTerminal.Core.Services.Stocks.YahooStockQuoteProvider>();

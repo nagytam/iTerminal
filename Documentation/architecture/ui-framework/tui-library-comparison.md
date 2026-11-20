@@ -65,7 +65,7 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 #### Suggested order
 
 1. Items 1, 2, 3, 4: terminal fidelity, each small to medium, no API change for consumers.
-2. Items 9, 18, 25: layout, splitter and key maps, which unblock panel ratios and `docs/mc-parity.md` items 9 and 11.
+2. Items 9, 18, 25: layout, splitter and key maps, which unblock panel ratios and `Documentation/mc-parity.md` items 9 and 11.
 3. Items 7, 6, 5: protocol additions that need a capability query at start-up; share one detection step.
 4. Items 17, 19, 20, 22, 23: control upgrades the file manager can use at once.
 5. The rest as needed.
@@ -298,3 +298,23 @@ Still missing, confirmed by grep:
 New item:
 
 128. **`Columns`, `Rows` and `Padder` layout.** Not found (grep for `class Columns`, `class Rows`, `class Padder` and a margin or padding property on `Control` gave nothing; `AlignPanel` and `BoxPanel` exist). A one-line helper that lays children out side by side or stacked with a gap, and padding around a control. Spectre has all three in `Widgets/` (`Columns.cs`, `Rows.cs`, `Padder.cs`). Lip Gloss has the same idea as `JoinHorizontal` and `Place`. The existing `SizeSolver` and `StackPanel` (item 9) can carry it, so it is a small addition.
+
+#### Seventh survey: libraries from languages not yet covered
+
+Compared with V's `term.ui` (the standard module in `vlang/v`), Tuition for Common Lisp (`atgreen/cl-tuition`, MIT), Free Vision (the Turbo Vision port that ships with Free Pascal), Malef for Ada (GPL-3.0, pre-1.0), cui for Haxe (MIT, declarative), QUI for D (MIT) and Selkie for Raku (retained mode on notcurses). Basis: the official docs and READMEs read on 2026-11-20 (docs and README, not run-time behaviour). Release dates were not found for `term.ui`, Tuition, Free Vision or cui. Malef's latest pre-release is dated "23 Dec" with no year shown. QUI 0.7.1 is dated 22 April 2023. Selkie 0.16.0 is dated 21 August 2026 by a summary only, so that date is **unverified**. "Not found" means a grep of `iConsole/` and `iTerminal.Core/` (`--include=*.cs`) on `main` at b5052de3 came back empty. Skipped: Lua's `luui` (both hosts returned 404 at the time of the run), Racket (only terminal access and an experimental window-manager branch), Odin's TermCL (its widgets are reported broken), and nothing usable in Tcl, Elm, Pharo, Vala, Crystal or Clojure. Erlang's Cellium was not added because BEAM is covered through Elixir and Gleam.
+
+**Terminal protocol**
+
+129. **Terminal progress sequence (OSC 9;4).** Not found: `TerminalSequences` has no `9;4`, and the progress bar uses only the Windows taskbar API (`WindowsTaskbarProgress`). `ITerminalNotificationService` avoids `9;4` on purpose, because OSC 9 text must not start a progress sequence. A terminal-level progress sequence would show progress in the title bar or tab of a terminal that supports it, without the Windows-only API. Seen in: cl-tuition (README: "native taskbar progress bar via OSC 9;4"). Grep terms: `9;4`, `Taskbar`, `TaskbarProgress`.
+
+**Controls**
+
+130. **Secret text entry (no echo or masked characters).** Not found: `PasswordChar`, `IsPassword`, `EchoMode` and `PasswordMode` match nothing in the source, and the compress dialog masks its own field. `TextBox` has an input mask (`TextBox.Masking.cs`), which formats the text rather than hides it. `StrengthMeter` exists, so only the echo part is missing. Seen in: cl-tuition (text input echo modes; **unverified**, from a model summary of the quickref manual), Selkie (`PasswordStrength` in the README, which is the meter only).
+
+131. **Named mouse hit zones.** Not found: `Zone`, `HitRegion` and `HitTest` match no control (the `Zone` hits are time zones). A control marks named rectangles in what it draws, and the app asks which zone the pointer is over, for hover and click, without keeping its own rectangles. Lists and tables would gain this from one helper. Seen in: cl-tuition (README: "Zones: named regions for hover and click").
+
+#### Suggested order for the seventh survey
+
+1. Item 129 (OSC 9;4): one sequence behind the capability query of items 35 and 5.
+2. Item 131 (hit zones): removes the per-control hit tests from lists, tables and toolbars.
+3. Item 130 (secret echo): small, for the password fields in the dialogs.

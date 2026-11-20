@@ -609,12 +609,15 @@ public class SmallScreenDialogsTest
     public async Task ThePathAtTheTopOfADialogOn45Columns_KeepsTheFolderItEndsIn(string chord, string title)
     {
         // Cut at the frame, the path ended in "\iTermin": the folder the dialog is about was the part that went.
+        // The path is shortened in the middle only when it is too long to fit; on Linux the temp folder is short,
+        // so the check is that the path line ends in the left panel's folder, whole or shortened.
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
 
         await narrow.PressAsync(chord);
 
         await narrow.WaitForTextAsync(title);
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("║ C:") && l.Contains("...") && l.Contains(@"\left")), "the dialog's own path line, shortened in the middle, still ending in the left panel's folder");
+        string folderEnding = Path.DirectorySeparatorChar + "left";
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => System.Text.RegularExpressions.Regex.IsMatch(l, "║ .*" + System.Text.RegularExpressions.Regex.Escape(folderEnding) + " *║")), "the dialog's own path line, still ending in the left panel's folder");
     }
 
     [Timeout(120_000)]

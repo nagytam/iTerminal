@@ -28,7 +28,7 @@ public class MenuBarMouseTest
     {
         TestThemeService theme = new();
         Mock<ICommand> quitCommand = new();
-        quitCommand.SetupGet(c => c.Key).Returns(new Key(ConsoleKey.Q, false, false, true));
+        quitCommand.SetupGet(c => c.ActiveKey).Returns(new Key(ConsoleKey.Q, false, false, true));
         quitCommand.Setup(c => c.CanExecute()).Returns(true);
         quitCommand.Setup(c => c.RunAsync(null)).ReturnsAsync(true);
 

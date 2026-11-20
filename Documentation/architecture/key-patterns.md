@@ -106,3 +106,14 @@ Set `ITERMINAL_KEY_TRACE=1` to log every key the app receives (chord, char, whet
 **One chord, one feature**: the duplicate finder moved from Ctrl+Shift+F7 to Ctrl+Shift+F6, because the signature dialog already owned Ctrl+Shift+F7 and the two were both bound to it, leaving one of them unreachable. `HotKeyCollisionTest` keeps the two chords apart. A new global command takes a chord nothing else binds (`grep -rho "new Key(ConsoleKey" iTerminal.Core/Commands`).
 
 **A footer button's key is only reached when nothing above it claims the chord**: the editor's footer shows F6 as its read-only toggle, but its wrap command had F6 too, and a control's own commands run before its children's. The editor's text is never focusable, so the focus stays on the footer and the chord belongs to the footer's button; the wrap command on F6 could never run, and wrapping was unreachable from the keyboard. Wrap is Shift+F2 now (F2 is save there). `TextFileEditorHotKeysTest` keeps F6 on read-only. Before giving a footer button a key, grep the dialog's own `AddCommand` calls for the same chord.
+
+## User key map (`keymap.json`)
+
+`keymap.json` in the data folder (next to `iTerminal.sqlite`) rebinds commands. It is read once at start-up by `KeyMapStartupHostedService`, which sets `KeyMap` before the first key is read. Edits take effect at the next start.
+
+- The file is `{ "bindings": { "<command>": "<key>" } }`. A command is named by its type name, or by its full type name when two commands share the short one. A key is written as the help screen prints it (`Ctrl+Shift+F5`, `Alt+F1`, `Esc`, `Ctrl+\`); `"none"` removes the command's key.
+- `Command.ActiveKey` is the key a command answers to now. `HandleKeyEventAsync`, `KeyDisplayText`, the footer, the menus and the palette all read it. Read `ActiveKey`, never the `Key` property, in new code.
+- `KeyBindingRules` refuses the keys that the rules above forbid: keys that type text, Alt+printable, Ctrl+Alt, Esc, Tab, and the terminal's control codes (Ctrl+M/I/H/J/C/Z/O, `Ctrl+\`, `Ctrl+[`). A refused binding is logged with its reason and named in a notification; the rest of the file still applies.
+- A command that overrides `HandleKeyEventAsync` with its own key test is not remapped unless it reads `ActiveKey` (`QuitCommand` does, for F10).
+
+**Known limitation.** A bound key is checked only against the other bindings in the same file. The default key of a command the file does not mention is not checked, because defaults live on instances the DI container builds. A binding to another command's default key is accepted, and the key router then picks one of the two commands. Closing this needs a registry of default keys or a check at dispatch time; it is not built.

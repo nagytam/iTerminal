@@ -10,7 +10,7 @@ disabled test. Four phases run in order, and **every phase ends in a review gate
 the next phase starts, or it fails and the phase is redone with the findings. Nothing moves forward on a
 failed or skipped gate.
 
-Read `CLAUDE.md` and the `docs/architecture/*.md` that cover the failing area before phase 1. Those rules
+Read `CLAUDE.md` and the `Documentation/architecture/*.md` that cover the failing area before phase 1. Those rules
 override anything below.
 
 ## Non-interactive

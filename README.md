@@ -31,7 +31,7 @@ A two-panel, keyboard-driven file manager and developer toolbox for the terminal
 | `musiccatalog://`, `musicplaylist://` | Music library and queue |
 
 ### Archives
-- Compress (Alt+F5): ZIP (AES-256/ZipCrypto), 7z, TAR.GZ, TAR.BZ2, TAR; add to existing archives. GZIP, BZIP2, XZ and TAR.XZ are single compressed streams: GZIP and BZIP2 hold one file, XZ and TAR.XZ need 7-Zip, and all four replace an existing file (see `docs/architecture/file-operations.md`)
+- Compress (Alt+F5): ZIP (AES-256/ZipCrypto), 7z, TAR.GZ, TAR.BZ2, TAR; add to existing archives. GZIP, BZIP2, XZ and TAR.XZ are single compressed streams: GZIP and BZIP2 hold one file, XZ and TAR.XZ need 7-Zip, and all four replace an existing file (see `Documentation/architecture/file-operations.md`)
 - Extract (Shift+F5) with safe path handling and password support
 
 ### Music player

@@ -7036,6 +7036,15 @@
   <data name="FolderSelector.Tab1" xml:space="preserve">
     <value>1-Unità</value>
   </data>
+  <data name="FolderSelector.Drives.Empty" xml:space="preserve">
+    <value> Nessuna unità trovata.</value>
+  </data>
+  <data name="FolderSelector.Drives.Reading" xml:space="preserve">
+    <value> Lettura delle unità…</value>
+  </data>
+  <data name="FolderSelector.Favourites.ConfirmRemove" xml:space="preserve">
+    <value>Rimuovere {0} dai preferiti?  y:sì  n:no</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Recenti</value>
   </data>
@@ -8556,6 +8565,9 @@
   </data>
   <data name="FolderTree.Count" xml:space="preserve">
     <value>Numero di cartelle: {0}</value>
+  </data>
+  <data name="FolderTree.Indexing" xml:space="preserve">
+    <value>Indicizzazione in corso... {0} cartelle finora</value>
   </data>
   <data name="FolderPath.TabCompletes" xml:space="preserve">
     <value>Tab completa. Schemi: </value>
@@ -10424,6 +10436,9 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Esci da un host SMB</value>
   </data>
+  <data name="CmdTitle.550033f7" xml:space="preserve">
+    <value>Elimina un preferito</value>
+  </data>
   <data name="Dep.PowerShellPurpose" xml:space="preserve">
     <value>Esecuzione di PowerShell: Ctrl+O su Windows e sessioni PowerShell remote (Alt+F2)</value>
   </data>
@@ -10900,5 +10915,143 @@
   </data>
   <data name="Disk.Status.FormatCloud" xml:space="preserve">
     <value>Un'unità cloud non può essere formattata: si trova sui server del fornitore.</value>
+  </data>
+  <data name="Evidence.Drive.Title" xml:space="preserve">
+    <value>Taccuino delle prove: {0}</value>
+  </data>
+  <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
+    <value>Taccuino delle prove (nessuno aperto)</value>
+  </data>
+  <data name="Evidence.Drive.Origin" xml:space="preserve">
+    <value>{0} da {1} · {2} · {3}</value>
+  </data>
+  <data name="Evidence.Open.Question" xml:space="preserve">
+    <value>Cartella del taccuino delle prove (creata se non esiste)</value>
+  </data>
+  <data name="Evidence.Open.BadFolder" xml:space="preserve">
+    <value>Inserisci un percorso di cartella, ad esempio ~/casi/caso-42</value>
+  </data>
+  <data name="Evidence.Open.Failed" xml:space="preserve">
+    <value>Il taccuino non si è aperto</value>
+  </data>
+  <data name="Evidence.Open.Opened" xml:space="preserve">
+    <value>Taccuino delle prove aperto</value>
+  </data>
+  <data name="Evidence.Add.Question" xml:space="preserve">
+    <value>Cosa aggiungere al taccuino delle prove?</value>
+  </data>
+  <data name="Evidence.Add.Files" xml:space="preserve">
+    <value>File dall'altro pannello</value>
+  </data>
+  <data name="Evidence.Add.Note" xml:space="preserve">
+    <value>Una nota</value>
+  </data>
+  <data name="Evidence.Add.Voice" xml:space="preserve">
+    <value>Una registrazione vocale</value>
+  </data>
+  <data name="Evidence.Add.Clipboard" xml:space="preserve">
+    <value>Testo degli appunti</value>
+  </data>
+  <data name="Evidence.Add.Link" xml:space="preserve">
+    <value>Un indirizzo web</value>
+  </data>
+  <data name="Evidence.Add.NoSource" xml:space="preserve">
+    <value>Nessun altro pannello da cui prendere file</value>
+  </data>
+  <data name="Evidence.Add.NoFiles" xml:space="preserve">
+    <value>Niente da aggiungere: seleziona dei file o posiziona il cursore su uno</value>
+  </data>
+  <data name="Evidence.Add.Added" xml:space="preserve">
+    <value>{0} aggiunto/i al taccuino</value>
+  </data>
+  <data name="Evidence.Add.Folders" xml:space="preserve">
+    <value>; {0} cartella/e saltata/e: una cartella non è di per sé una prova</value>
+  </data>
+  <data name="Evidence.Add.Failed" xml:space="preserve">
+    <value>La voce non è stata aggiunta</value>
+  </data>
+  <data name="Evidence.Note.Question" xml:space="preserve">
+    <value>Nota</value>
+  </data>
+  <data name="Evidence.Note.Added" xml:space="preserve">
+    <value>Nota aggiunta</value>
+  </data>
+  <data name="Evidence.Link.Question" xml:space="preserve">
+    <value>Indirizzo web</value>
+  </data>
+  <data name="Evidence.Link.Invalid" xml:space="preserve">
+    <value>Inserisci un indirizzo web, ad esempio https://example.com</value>
+  </data>
+  <data name="Evidence.Link.Added" xml:space="preserve">
+    <value>Indirizzo web aggiunto</value>
+  </data>
+  <data name="Evidence.Clipboard.Empty" xml:space="preserve">
+    <value>Gli appunti non contengono testo</value>
+  </data>
+  <data name="Evidence.Clipboard.Added" xml:space="preserve">
+    <value>Testo degli appunti aggiunto</value>
+  </data>
+  <data name="Evidence.Voice.Unavailable" xml:space="preserve">
+    <value>Nessuna registrazione</value>
+  </data>
+  <data name="Evidence.Voice.Question" xml:space="preserve">
+    <value>Registrazione dalle {0}. Invio la conserva, Esc la scarta.</value>
+  </data>
+  <data name="Evidence.Voice.Discarded" xml:space="preserve">
+    <value>Registrazione scartata</value>
+  </data>
+  <data name="Evidence.Voice.TooShort" xml:space="preserve">
+    <value>La registrazione è troppo breve per essere conservata</value>
+  </data>
+  <data name="Evidence.Voice.Added" xml:space="preserve">
+    <value>Registrazione vocale aggiunta</value>
+  </data>
+  <data name="Evidence.Verify.NoNotebook" xml:space="preserve">
+    <value>Nessun taccuino delle prove aperto</value>
+  </data>
+  <data name="Evidence.Verify.Clean" xml:space="preserve">
+    <value>Tutte le {0} voci corrispondono alle loro registrazioni</value>
+  </data>
+  <data name="Evidence.Verify.Problems" xml:space="preserve">
+    <value>{0} voci su {1} non corrispondono</value>
+  </data>
+  <data name="Evidence.Service.ReadOnly" xml:space="preserve">
+    <value>Una prova non si modifica una volta nel taccuino. Aggiungine una nuova.</value>
+  </data>
+  <data name="Evidence.Service.Missing" xml:space="preserve">
+    <value>Il file del contenuto manca.</value>
+  </data>
+  <data name="Evidence.Service.SizeChanged" xml:space="preserve">
+    <value>Il contenuto ha una dimensione diversa da quella registrata.</value>
+  </data>
+  <data name="Evidence.Service.HashChanged" xml:space="preserve">
+    <value>Il contenuto non corrisponde più al suo SHA-256 registrato.</value>
+  </data>
+  <data name="CmdTitle.0c1f9f7d" xml:space="preserve">
+    <value>Taccuino delle prove</value>
+  </data>
+  <data name="CmdTitle.93a5927c" xml:space="preserve">
+    <value>Aggiungi prova</value>
+  </data>
+  <data name="CmdTitle.ee237cac" xml:space="preserve">
+    <value>Verifica taccuino delle prove</value>
+  </data>
+  <data name="CmdDesc.6de8559e" xml:space="preserve">
+    <value>Mostra il taccuino delle prove nel pannello attivo, scegliendo la cartella in cui è conservato. Premere di nuovo per tornare.</value>
+  </data>
+  <data name="CmdDesc.ad28a2e7" xml:space="preserve">
+    <value>Aggiungi al taccuino delle prove: file dall'altro pannello, una nota, una registrazione vocale, testo degli appunti o un indirizzo web.</value>
+  </data>
+  <data name="CmdDesc.45aa5ec6" xml:space="preserve">
+    <value>Verifica che ogni voce del taccuino corrisponda ancora al SHA-256 e alla dimensione registrati.</value>
+  </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Mappa dei tasti</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>Impossibile leggere keymap.json, quindi si usano i tasti predefiniti. Il registro indica il motivo.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} associazione/i di tasti in keymap.json non utilizzata/e: {1}. Il registro indica il motivo.</value>
   </data>
 </root>

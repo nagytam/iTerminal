@@ -7100,6 +7100,15 @@
   <data name="FolderSelector.Tab1" xml:space="preserve">
     <value>1-Laufwerke</value>
   </data>
+  <data name="FolderSelector.Drives.Empty" xml:space="preserve">
+    <value> Keine Laufwerke gefunden.</value>
+  </data>
+  <data name="FolderSelector.Drives.Reading" xml:space="preserve">
+    <value> Laufwerke werden gelesen…</value>
+  </data>
+  <data name="FolderSelector.Favourites.ConfirmRemove" xml:space="preserve">
+    <value>{0} aus den Favoriten entfernen?  y:ja  n:nein</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Zuletzt</value>
   </data>
@@ -8620,6 +8629,9 @@
   </data>
   <data name="FolderTree.Count" xml:space="preserve">
     <value>Anzahl der Ordner: {0}</value>
+  </data>
+  <data name="FolderTree.Indexing" xml:space="preserve">
+    <value>Indexierung läuft ... {0} Ordner bisher</value>
   </data>
   <data name="FolderPath.TabCompletes" xml:space="preserve">
     <value>Tab vervollständigt. Schemata: </value>
@@ -10488,6 +10500,9 @@
   <data name="CmdTitle.9f017f15" xml:space="preserve">
     <value>Von einem SMB-Host abmelden</value>
   </data>
+  <data name="CmdTitle.550033f7" xml:space="preserve">
+    <value>Favorit löschen</value>
+  </data>
   <data name="Dep.PowerShellPurpose" xml:space="preserve">
     <value>PowerShell ausführen: Ctrl+O unter Windows und entfernte PowerShell-Sitzungen (Alt+F2)</value>
   </data>
@@ -10964,5 +10979,143 @@
   </data>
   <data name="Disk.Status.FormatCloud" xml:space="preserve">
     <value>Ein Cloud-Laufwerk kann nicht formatiert werden: es liegt auf den Servern des Anbieters.</value>
+  </data>
+  <data name="Evidence.Drive.Title" xml:space="preserve">
+    <value>Beweissammlung: {0}</value>
+  </data>
+  <data name="Evidence.Drive.NoNotebook" xml:space="preserve">
+    <value>Beweissammlung (keine geöffnet)</value>
+  </data>
+  <data name="Evidence.Drive.Origin" xml:space="preserve">
+    <value>{0} von {1} · {2} · {3}</value>
+  </data>
+  <data name="Evidence.Open.Question" xml:space="preserve">
+    <value>Ordner der Beweissammlung (wird angelegt, falls er fehlt)</value>
+  </data>
+  <data name="Evidence.Open.BadFolder" xml:space="preserve">
+    <value>Geben Sie einen Ordnerpfad ein, etwa ~/faelle/fall-42</value>
+  </data>
+  <data name="Evidence.Open.Failed" xml:space="preserve">
+    <value>Die Beweissammlung wurde nicht geöffnet</value>
+  </data>
+  <data name="Evidence.Open.Opened" xml:space="preserve">
+    <value>Beweissammlung geöffnet</value>
+  </data>
+  <data name="Evidence.Add.Question" xml:space="preserve">
+    <value>Was soll zur Beweissammlung hinzugefügt werden?</value>
+  </data>
+  <data name="Evidence.Add.Files" xml:space="preserve">
+    <value>Dateien aus dem anderen Fenster</value>
+  </data>
+  <data name="Evidence.Add.Note" xml:space="preserve">
+    <value>Eine Notiz</value>
+  </data>
+  <data name="Evidence.Add.Voice" xml:space="preserve">
+    <value>Eine Sprachaufnahme</value>
+  </data>
+  <data name="Evidence.Add.Clipboard" xml:space="preserve">
+    <value>Text aus der Zwischenablage</value>
+  </data>
+  <data name="Evidence.Add.Link" xml:space="preserve">
+    <value>Eine Webadresse</value>
+  </data>
+  <data name="Evidence.Add.NoSource" xml:space="preserve">
+    <value>Kein anderes Fenster, aus dem Dateien übernommen werden können</value>
+  </data>
+  <data name="Evidence.Add.NoFiles" xml:space="preserve">
+    <value>Nichts zum Hinzufügen: Dateien markieren oder den Cursor auf eine Datei setzen</value>
+  </data>
+  <data name="Evidence.Add.Added" xml:space="preserve">
+    <value>{0} zur Beweissammlung hinzugefügt</value>
+  </data>
+  <data name="Evidence.Add.Folders" xml:space="preserve">
+    <value>; {0} Ordner übersprungen: ein Ordner ist allein kein Beweis</value>
+  </data>
+  <data name="Evidence.Add.Failed" xml:space="preserve">
+    <value>Der Eintrag wurde nicht hinzugefügt</value>
+  </data>
+  <data name="Evidence.Note.Question" xml:space="preserve">
+    <value>Notiz</value>
+  </data>
+  <data name="Evidence.Note.Added" xml:space="preserve">
+    <value>Notiz hinzugefügt</value>
+  </data>
+  <data name="Evidence.Link.Question" xml:space="preserve">
+    <value>Webadresse</value>
+  </data>
+  <data name="Evidence.Link.Invalid" xml:space="preserve">
+    <value>Geben Sie eine Webadresse ein, etwa https://example.com</value>
+  </data>
+  <data name="Evidence.Link.Added" xml:space="preserve">
+    <value>Webadresse hinzugefügt</value>
+  </data>
+  <data name="Evidence.Clipboard.Empty" xml:space="preserve">
+    <value>Die Zwischenablage enthält keinen Text</value>
+  </data>
+  <data name="Evidence.Clipboard.Added" xml:space="preserve">
+    <value>Text aus der Zwischenablage hinzugefügt</value>
+  </data>
+  <data name="Evidence.Voice.Unavailable" xml:space="preserve">
+    <value>Keine Aufnahme</value>
+  </data>
+  <data name="Evidence.Voice.Question" xml:space="preserve">
+    <value>Aufnahme seit {0}. Enter behält sie, Esc verwirft sie.</value>
+  </data>
+  <data name="Evidence.Voice.Discarded" xml:space="preserve">
+    <value>Aufnahme verworfen</value>
+  </data>
+  <data name="Evidence.Voice.TooShort" xml:space="preserve">
+    <value>Die Aufnahme ist zu kurz, um sie zu behalten</value>
+  </data>
+  <data name="Evidence.Voice.Added" xml:space="preserve">
+    <value>Sprachaufnahme hinzugefügt</value>
+  </data>
+  <data name="Evidence.Verify.NoNotebook" xml:space="preserve">
+    <value>Keine Beweissammlung geöffnet</value>
+  </data>
+  <data name="Evidence.Verify.Clean" xml:space="preserve">
+    <value>Alle {0} Einträge stimmen mit ihren Aufzeichnungen überein</value>
+  </data>
+  <data name="Evidence.Verify.Problems" xml:space="preserve">
+    <value>{0} von {1} Einträgen stimmen nicht überein</value>
+  </data>
+  <data name="Evidence.Service.ReadOnly" xml:space="preserve">
+    <value>Beweise werden in der Beweissammlung nicht geändert. Fügen Sie stattdessen neue Beweise hinzu.</value>
+  </data>
+  <data name="Evidence.Service.Missing" xml:space="preserve">
+    <value>Die Inhaltsdatei fehlt.</value>
+  </data>
+  <data name="Evidence.Service.SizeChanged" xml:space="preserve">
+    <value>Der Inhalt hat eine andere Größe als die gespeicherte.</value>
+  </data>
+  <data name="Evidence.Service.HashChanged" xml:space="preserve">
+    <value>Der Inhalt stimmt nicht mehr mit seinem gespeicherten SHA-256 überein.</value>
+  </data>
+  <data name="CmdTitle.0c1f9f7d" xml:space="preserve">
+    <value>Beweissammlung</value>
+  </data>
+  <data name="CmdTitle.93a5927c" xml:space="preserve">
+    <value>Beweis hinzufügen</value>
+  </data>
+  <data name="CmdTitle.ee237cac" xml:space="preserve">
+    <value>Beweissammlung prüfen</value>
+  </data>
+  <data name="CmdDesc.6de8559e" xml:space="preserve">
+    <value>Zeigt die Beweissammlung im aktiven Fenster; Sie wählen den Ordner, in dem sie liegt. Erneut drücken, um zurückzukehren.</value>
+  </data>
+  <data name="CmdDesc.ad28a2e7" xml:space="preserve">
+    <value>Zur Beweissammlung hinzufügen: Dateien aus dem anderen Fenster, eine Notiz, eine Sprachaufnahme, Text aus der Zwischenablage oder eine Webadresse.</value>
+  </data>
+  <data name="CmdDesc.45aa5ec6" xml:space="preserve">
+    <value>Prüft, ob jeder Eintrag der Beweissammlung noch seinem gespeicherten SHA-256 und seiner Größe entspricht.</value>
+  </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Tastenbelegung</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>keymap.json konnte nicht gelesen werden, daher gelten die Standardtasten. Das Protokoll nennt den Grund.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} Tastenbelegung(en) in keymap.json wurden nicht verwendet: {1}. Das Protokoll nennt den Grund.</value>
   </data>
 </root>
