@@ -169,6 +169,91 @@ public class RadioStationStoreTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void RecentListKeepsTheLastFiveStartedMostRecentFirst()
+    {
+        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var stations = Enumerable.Range(1, 6).Select(i => Make($"Station {i}")).ToList();
+        stations.ForEach(store.Add);
+
+        foreach (var station in stations)
+        {
+            store.RecordPlayed(station.Id);
+        }
+
+        CollectionAssert.AreEqual(
+            new[] { "Station 6", "Station 5", "Station 4", "Station 3", "Station 2" },
+            store.Recent().Select(s => s.Name).ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void PlayingAStationAgainMovesItToTheTopWithoutDuplicating()
+    {
+        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var first = Make("First");
+        var second = Make("Second");
+        store.Add(first);
+        store.Add(second);
+        store.RecordPlayed(first.Id);
+        store.RecordPlayed(second.Id);
+
+        store.RecordPlayed(first.Id);
+
+        CollectionAssert.AreEqual(new[] { "First", "Second" }, store.Recent().Select(s => s.Name).ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RemovingAStationDropsItFromTheRecentList()
+    {
+        var store = new RadioStationStore(new Mock<ISettingsService>().Object);
+        var station = Make("Gone");
+        store.Add(station);
+        store.RecordPlayed(station.Id);
+
+        store.Remove(station.Id);
+
+        Assert.AreEqual(0, store.Recent().Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RecentListIsSavedUnderItsOwnKeyAndReadBack()
+    {
+        var settings = new Mock<ISettingsService>();
+        var values = new Dictionary<string, string>();
+        settings.Setup(s => s.Set(It.IsAny<string>(), It.IsAny<string>()))
+            .Callback<string, string>((key, value) => values[key] = value);
+        settings.Setup(s => s.Get(It.IsAny<string>()))
+            .Returns<string>(key => values.TryGetValue(key, out var value) ? value : null);
+        var store = new RadioStationStore(settings.Object);
+        var station = Make("Remembered");
+        store.Add(station);
+        store.RecordPlayed(station.Id);
+
+        var reopened = new RadioStationStore(settings.Object);
+
+        Assert.AreEqual("Remembered", reopened.Recent().Single().Name);
+        Assert.IsTrue(values.ContainsKey(RadioStationStore.RecentSettingsKey));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ARecentListThatIsDamagedStartsEmptyAndKeepsTheStations()
+    {
+        var settings = new Mock<ISettingsService>();
+        settings.Setup(s => s.Get(RadioStationStore.SettingsKey))
+            .Returns("[{\"Id\":\"6f1c2b1e-0000-4000-8000-000000000002\",\"Name\":\"Kept\",\"Url\":\"https://example.com/k\",\"Genre\":\"\",\"IsFavourite\":false}]");
+        settings.Setup(s => s.Get(RadioStationStore.RecentSettingsKey)).Returns("{not json");
+
+        var store = new RadioStationStore(settings.Object);
+
+        Assert.AreEqual("Kept", store.Find().Single().Name);
+        Assert.AreEqual(0, store.Recent().Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void AStationNeedsANameAndAStreamAddress()
     {
         Assert.IsFalse(new RadioStation(Guid.NewGuid(), "  ", "https://example.com/s", "", false).Validate(out var noName));

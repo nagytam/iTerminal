@@ -252,4 +252,36 @@ public class OnlineRadioDialogTest
         AssertScreenContains(Render(dialog), "Rock Live");
         AssertScreenContains(Render(dialog), Rock);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task RShowsTheStationsLastPlayedAndVGoesBackToTheFullList()
+    {
+        var (dialog, store, player) = Create();
+        Add(store, "Alpha Jazz", Jazz);
+        var rock = Add(store, "Beta Rock", Rock);
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Char('r'));
+        Assert.IsTrue(dialog.RecentOnlyForTest);
+        AssertScreenContains(Render(dialog), "Nothing played yet");
+        await dialog.HandleKeyEventAsync(Char('r'));
+        Assert.IsFalse(dialog.RecentOnlyForTest);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await EnterAsync(dialog);
+        player.Verify(p => p.PlayIndex(0), Times.Once);
+
+        await dialog.HandleKeyEventAsync(Char('r'));
+        Assert.IsTrue(dialog.RecentOnlyForTest);
+        Assert.AreEqual(rock.Id, dialog.SelectedForTest!.Id);
+        AssertScreenDoesNotContain(Render(dialog), "Alpha Jazz");
+
+        await dialog.HandleKeyEventAsync(Char('v'));
+        Assert.IsTrue(dialog.FavouritesOnlyForTest);
+        Assert.IsFalse(dialog.RecentOnlyForTest);
+        await dialog.HandleKeyEventAsync(Char('v'));
+        Assert.IsFalse(dialog.FavouritesOnlyForTest);
+        AssertScreenContains(Render(dialog), "Alpha Jazz");
+    }
 }
