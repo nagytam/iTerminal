@@ -3,7 +3,7 @@ using iConsole.Dialogs;
 
 namespace iConsole.Commands;
 
-/// <summary>F2 in the CSV viewer: writes the marked rows, or else the rows on screen, to a CSV file the person names.</summary>
+/// <summary>F2 in the CSV viewer: writes the marked rows, or else the rows on screen, to a file the person names, as CSV, JSON or XML.</summary>
 public class CsvExportCommand(CsvViewerDialog viewer) : Command
 {
     public override string Title => iConsole.Localization.UiText.Get("Key.ExportCsv", "F2-Export");

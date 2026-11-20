@@ -2215,7 +2215,10 @@
     <value>Mark the row and move down</value>
   </data>
   <data name="Csv.Hint.Export" xml:space="preserve">
-    <value>Export the marked rows, or the rows on screen, to a CSV file</value>
+    <value>Export the marked rows, or the rows on screen, to a CSV, JSON or XML file</value>
+  </data>
+  <data name="Csv.Export.Format" xml:space="preserve">
+    <value>Export as</value>
   </data>
   <data name="Csv.Export.Ask" xml:space="preserve">
     <value>Save the rows as</value>

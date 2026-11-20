@@ -2199,7 +2199,10 @@
     <value>Segna la riga e scendi di una riga</value>
   </data>
   <data name="Csv.Hint.Export" xml:space="preserve">
-    <value>Esporta le righe segnate, o quelle visibili, in un file CSV</value>
+    <value>Esporta le righe segnate, o quelle visibili, in un file CSV, JSON o XML</value>
+  </data>
+  <data name="Csv.Export.Format" xml:space="preserve">
+    <value>Esporta come</value>
   </data>
   <data name="Csv.Export.Ask" xml:space="preserve">
     <value>Salva le righe come</value>

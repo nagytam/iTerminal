@@ -2199,7 +2199,10 @@
     <value>Zeile markieren und eine Zeile weiter</value>
   </data>
   <data name="Csv.Hint.Export" xml:space="preserve">
-    <value>Markierte oder angezeigte Zeilen in eine CSV-Datei exportieren</value>
+    <value>Markierte oder angezeigte Zeilen als CSV-, JSON- oder XML-Datei exportieren</value>
+  </data>
+  <data name="Csv.Export.Format" xml:space="preserve">
+    <value>Exportieren als</value>
   </data>
   <data name="Csv.Export.Ask" xml:space="preserve">
     <value>Zeilen speichern als</value>
