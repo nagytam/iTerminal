@@ -447,6 +447,9 @@ public static class iTerminalApplicationBuilderExtension
         // Tools > Network tools: ping, traceroute, DNS, whois, a port check and web headers. Each one contacts only the target the user typed.
         services.AddSingleton<iTerminal.Core.Services.NetworkTools.INetworkToolService, iTerminal.Core.Services.NetworkTools.NetworkToolService>();
         services.AddTransient<iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Sharing.IFileShareAddressSource, iTerminal.Core.Services.Sharing.NetworkInterfaceAddressSource>();
+        services.AddSingleton<iTerminal.Core.Services.Sharing.IFileShareService, iTerminal.Core.Services.Sharing.FileShareService>();
+        services.AddTransient<iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog>();
         // Ctrl+Shift+F1: the BitTorrent manager. The engine starts on first use, so a run that never adds a torrent opens no sockets.
         services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
             provider.GetRequiredService<ISettingsService>(), databaseDirectory));

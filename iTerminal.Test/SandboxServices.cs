@@ -861,6 +861,38 @@ public static class SandboxServices
     }
 
     /// <summary>The network tools with fixed answers: the same lines a run prints, but nothing is pinged, resolved or queried.</summary>
+    /// <summary>
+    /// The file transfer share, answered without a socket: a start shows one fixed address and its code, and nothing
+    /// is served, so no run listens on the LAN.
+    /// </summary>
+    public sealed class FileShareStub : Core.Services.Sharing.IFileShareService
+    {
+        public const string Address = "https://192.168.1.20:8080/sandbox/";
+
+        public Core.Services.Sharing.FileShareState State { get; private set; } = Core.Services.Sharing.FileShareState.Stopped;
+
+        public Task<Core.Services.Sharing.FileShareStartResult> StartAsync(IReadOnlyList<string> selectedPaths, CancellationToken cancellationToken = default)
+        {
+            State = new Core.Services.Sharing.FileShareState(
+                Core.Services.Sharing.FileShareStatus.Running,
+                Address,
+                iConsole.Qr.QrEncoder.Encode(System.Text.Encoding.UTF8.GetBytes(Address)),
+                0,
+                null);
+            return Task.FromResult(new Core.Services.Sharing.FileShareStartResult(true, Address, null));
+        }
+
+        public Task StopAsync()
+        {
+            State = Core.Services.Sharing.FileShareState.Stopped;
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
     public sealed class NetworkToolRunner : Core.Services.NetworkTools.INetworkToolService
     {
         public Task RunAsync(Core.Services.NetworkTools.NetworkToolKind kind, string target, Action<string> writeLine, CancellationToken cancellationToken = default)

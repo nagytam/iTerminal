@@ -66,7 +66,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
         iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
         iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
-        iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null)
+        iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null,
+        iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -101,6 +102,7 @@ public class ToolsMenuItem : MenuItem
         if (documentManagerDialog is not null) groups["files"].Add(new DocumentManagerDialogCommand(documentManagerDialog));
         if (networkBrowserDialog is not null) groups["net"].Add(new NetworkBrowserDialogCommand(networkBrowserDialog));
         if (networkToolsDialog is not null) groups["net"].Add(new NetworkToolsDialogCommand(networkToolsDialog));
+        if (fileTransferDialog is not null) groups["net"].Add(new FileTransferDialogCommand(fileTransferDialog, contentModelService));
         if (packageManagerDialog is not null) groups["files"].Add(new PackageManagerDialogCommand(packageManagerDialog));
         if (stockBrowserDialog is not null) groups["office"].Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (marketTerminalDialog is not null) groups["office"].Add(new MarketTerminalDialogCommand(marketTerminalDialog));
