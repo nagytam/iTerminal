@@ -95,17 +95,20 @@ public class ExecuteCommandTaskSessionTest
     [Timeout(60_000)]
     public async Task WhenThePanelStillShowsTheStartFolder_ItFollowsTheSessionsFolder()
     {
-        var sessions = new FakeShellSessions { Answer = (folder, command) => new ShellCommandResult(string.Empty, string.Empty, 0, "/work/sub", ShellRunState.Completed) };
-        var panel = Panel("/work/");
+        // Platform paths: the follow adds Path.DirectorySeparatorChar, so a "/" folder would not match on Windows.
+        string work = Path.Combine(Path.GetTempPath(), "work") + Path.DirectorySeparatorChar;
+        string sub = Path.Combine(work, "sub");
+        var sessions = new FakeShellSessions { Answer = (folder, command) => new ShellCommandResult(string.Empty, string.Empty, 0, sub, ShellRunState.Completed) };
+        var panel = Panel(work);
         var (terminal, service) = Terminal(panel, sessions);
         terminal.Command.Command = "cd sub";
-        terminal.Command.WorkingDirectoryUrl = new Url("/work/");
+        terminal.Command.WorkingDirectoryUrl = new Url(work);
         var task = new ExecuteCommandTask { ContentModel = panel.Object, TerminalModel = terminal };
 
         await task.ExecuteAsync();
         await WaitForAsync(task);
 
-        service.Verify(s => s.SetUrlAsync("LeftPanel", It.Is<Url>(u => (string)u == (string)new Url("/work/sub/"))), Times.Once);
+        service.Verify(s => s.SetUrlAsync("LeftPanel", It.Is<Url>(u => (string)u == (string)new Url(sub + Path.DirectorySeparatorChar))), Times.Once);
     }
 
     [TestMethod]

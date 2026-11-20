@@ -548,7 +548,7 @@ public class CsvViewerDialog : Dialog
             return;
         }
 
-        string folderText = folder.FullUrl.EndsWith('/') ? folder.FullUrl : folder.FullUrl + "/";
+        string folderText = folder.FullUrl.EndsWith(Path.DirectorySeparatorChar) ? folder.FullUrl : folder.FullUrl + Path.DirectorySeparatorChar;
         Url target = new(folderText + name);
         if (fileSystem.ExistsFile(target))
         {
