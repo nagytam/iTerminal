@@ -106,12 +106,28 @@ the user; any other question is decided from the code and docs, or by the review
 
 On `FAIL`, fix the findings in the working tree, then run the gate again. Commit once it passes.
 
-Then, **before any test run starts**, push the branch with `git push -u github <branch>` and open a **draft** pull
-request with `gh pr create --draft --base main`. The body holds the working record so far (plan, implementation
-gate) and an unticked test plan. Record the PR URL in the working record. The draft makes the work visible and lets CI
-start on the pushed commit while the local runs go. Fixes made in phase 3 are committed and pushed to the same branch.
+Then push the branch with `git push -u github <branch>` and open a **draft** pull request, as described in
+*Draft pull request before a long-running test* at the start of phase 3. Phase 2 ends with the draft in place.
 
 ## Phase 3: Test
+
+### Draft pull request before a long-running test
+
+A long-running test is any run the user will wait on for more than a few minutes: the end-to-end suite
+(`iTerminal.Test`), a full unit-test project on a cold build, or any run that is expected to go past a few minutes.
+**Always, before such a run starts**, the draft pull request must exist. Check first, and create it if missing:
+
+1. `git status` must be clean. Commit the change if it is not (phase 2 commit), then `git push -u github <branch>`.
+2. Check for an open PR from the branch: `gh pr view <branch> --json url,isDraft,state`. If one is open, reuse it.
+   If none exists, run `gh pr create --draft --base main` with a body holding the working record so far (plan,
+   implementation gate) and an unticked test plan.
+3. Record the PR URL in the working record. Only then start the long-running test.
+
+The draft makes the work visible and lets CI start on the pushed commit while the local runs go. Fixes made in
+phase 3 are committed and pushed to the same branch, and the PR body's test plan is updated as results arrive.
+
+If the draft cannot be created (no `gh`, no network, push refused), that is a stop: do not start the long-running
+test without the draft. Report the failure to the user, with the command that failed and its output.
 
 Starts only once the draft pull request exists. **Output.** Test results, pasted as summaries, for:
 
@@ -149,6 +165,7 @@ On changes requested, return to the phase they concern and run its gate again, t
 ## Stopping rules
 
 - A gate that cannot be run is a stop, not a pass.
+- A long-running test never starts without the draft pull request (see *Draft pull request before a long-running test*).
 - Two failed gates for the same phase: stop and report to the user with both sets of findings.
 - A review that raises a critical design decision or a clear uncertainty about the feature: stop that gate and ask
   the user. Other review questions are decided and recorded, and do not stop the workflow.
