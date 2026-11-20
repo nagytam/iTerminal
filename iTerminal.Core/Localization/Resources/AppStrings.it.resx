@@ -11045,4 +11045,13 @@
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Verifica che ogni voce del taccuino corrisponda ancora al SHA-256 e alla dimensione registrati.</value>
   </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Mappa dei tasti</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>Impossibile leggere keymap.json, quindi si usano i tasti predefiniti. Il registro indica il motivo.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} associazione/i di tasti in keymap.json non utilizzata/e: {1}. Il registro indica il motivo.</value>
+  </data>
 </root>

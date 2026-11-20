@@ -11045,4 +11045,13 @@
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Vérifie que chaque entrée du carnet correspond encore à son SHA-256 et à sa taille enregistrés.</value>
   </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Raccourcis clavier</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>keymap.json n'a pas pu être lu : les touches par défaut sont utilisées. Le journal indique la cause.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} raccourci(s) de keymap.json non utilisé(s) : {1}. Le journal indique la cause.</value>
+  </data>
 </root>

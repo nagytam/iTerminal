@@ -11045,4 +11045,13 @@
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Ellenőrzi, hogy a bizonyítéknapló minden bejegyzése még megfelel-e a rögzített SHA-256 értékének és méretének.</value>
   </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Billentyűkiosztás</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>A keymap.json nem olvasható, ezért az alapértelmezett billentyűk maradnak érvényben. A napló megadja az okát.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>A keymap.json {0} billentyűkiosztása nem lett használva: {1}. A napló megadja az okát.</value>
+  </data>
 </root>

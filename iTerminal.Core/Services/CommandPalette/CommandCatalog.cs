@@ -54,7 +54,7 @@ public static class CommandCatalog
             var keysTaken = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var command in commandControl.Commands.AsSnapshot())
             {
-                if (exclude?.Invoke(command) == true || string.IsNullOrWhiteSpace(command.Title) || IsNoise(command.Key))
+                if (exclude?.Invoke(command) == true || string.IsNullOrWhiteSpace(command.Title) || IsNoise(command.ActiveKey))
                 {
                     continue;
                 }

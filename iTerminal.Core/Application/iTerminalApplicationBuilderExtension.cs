@@ -55,6 +55,8 @@ public static class iTerminalApplicationBuilderExtension
         Directory.CreateDirectory(databaseDirectory);
 
         string databasePath = Path.Combine(databaseDirectory, "iTerminal.sqlite");
+        services.AddSingleton(new iTerminal.Core.Services.KeyBindings.KeyMapLocation(
+            Path.Combine(databaseDirectory, iTerminal.Core.Services.KeyBindings.KeyMapFile.FileName)));
 
         // Bind FileInformationRefreshOptions from configuration if available.
         // This is optional; consumers may register configuration under
@@ -148,6 +150,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddHostedService<DatabaseInitializationHostedService>();
         services.AddHostedService<iTerminal.Core.Commands.DialogRefreshHostedService>();
         services.AddHostedService<iTerminal.Core.Services.Plugins.PluginStartupHostedService>();
+        services.AddHostedService<iTerminal.Core.Services.KeyBindings.KeyMapStartupHostedService>();
         services.AddTransient<TerminalMenuBar>();
         services.AddSingleton<Content>();
         services.AddSingleton<iTerminal.Core.Services.RenameUndoService>();

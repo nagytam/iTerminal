@@ -11251,4 +11251,13 @@
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Check that every entry in the evidence notebook still matches its recorded SHA-256 and size.</value>
   </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Key map</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>keymap.json could not be read, so the default keys are used. The log says why.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} key binding(s) in keymap.json were not used: {1}. The log says why.</value>
+  </data>
 </root>

@@ -11045,4 +11045,13 @@
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Comprueba que cada entrada del cuaderno sigue coincidiendo con su SHA-256 y tamaño registrados.</value>
   </data>
+  <data name="KeyMap.Title" xml:space="preserve">
+    <value>Mapa de teclas</value>
+  </data>
+  <data name="KeyMap.Notify.Unreadable" xml:space="preserve">
+    <value>No se pudo leer keymap.json, así que se usan las teclas predeterminadas. El registro indica el motivo.</value>
+  </data>
+  <data name="KeyMap.Notify.Problems" xml:space="preserve">
+    <value>{0} asignación(es) de teclas en keymap.json no se usaron: {1}. El registro indica el motivo.</value>
+  </data>
 </root>

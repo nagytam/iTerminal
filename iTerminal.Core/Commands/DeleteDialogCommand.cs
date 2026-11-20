@@ -20,7 +20,7 @@ public class DeleteDialogCommand(
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);
-        if (!isHandled && Key?.IsIdentical(keyEvent) == true)
+        if (!isHandled && ActiveKey?.IsIdentical(keyEvent) == true)
         {
             FileKeyRefusal.Notify(notificationService);
         }
