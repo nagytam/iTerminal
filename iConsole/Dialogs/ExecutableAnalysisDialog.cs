@@ -218,6 +218,15 @@ public class ExecutableAnalysisDialog : Dialog
         _listing.IsVisible = _listingShown;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("F5", UiText.Get("Exe.Key.Disassemble", "Disassemble"));
+        foreach ((string key, string description) in base.GetKeyHints())
+        {
+            yield return (key, description);
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down
@@ -481,6 +490,9 @@ public class ExecutableAnalysisDialog : Dialog
 
     private sealed class ToggleListingCommand(ExecutableAnalysisDialog owner) : Command
     {
+        public override string Title => "Disassemble";
+        public override string Description => "Show the disassembly of the file in place of the grid, and back.";
+
         public override Task ExecuteAsync(object? arg)
         {
             owner.ToggleListing();

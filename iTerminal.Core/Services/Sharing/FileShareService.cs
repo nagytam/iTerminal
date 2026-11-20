@@ -34,6 +34,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     internal static readonly TimeSpan StopWait = TimeSpan.FromSeconds(2);
     internal static readonly TimeSpan CertificateValidity = TimeSpan.FromDays(1);
     private const int MaxConnections = 8;
+    private const int MaxConnectionsPerAddress = 2;
 
     private readonly IFileShareAddressSource _addressSource = addressSource ?? throw new ArgumentNullException(nameof(addressSource));
     private readonly SemaphoreSlim _gate = new(1, 1);
@@ -44,6 +45,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     // Kept as ticks: a 16-byte DateTimeOffset cannot be read atomically from another thread.
     private long _expiresAtTicks = DateTimeOffset.MinValue.UtcTicks;
     private int _requests;
+    private bool _disposed;
     private Task _lastStop = Task.CompletedTask;
 
     private TcpListener? _listener;
@@ -78,6 +80,11 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         await _gate.WaitAsync(cancellationToken);
         try
         {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(FileShareService));
+            }
+
             if (_listener is not null)
             {
                 return FileShareStartResult.Failed("FileTransfer.Busy");
@@ -96,7 +103,16 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
             }
 
             Publish(FileShareStatus.Starting, null, null, "FileTransfer.Starting");
-            IPAddress? address = FileShareAddress.Choose(_addressSource.Candidates());
+            IPAddress? address;
+            try
+            {
+                address = FileShareAddress.Choose(_addressSource.Candidates());
+            }
+            catch (Exception)
+            {
+                address = null;
+            }
+
             if (address is null)
             {
                 Publish(FileShareStatus.Failed, null, null, "FileTransfer.BindFailed");
@@ -193,17 +209,27 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     /// </summary>
     public void Dispose()
     {
-        CancellationTokenSource? cancellation = _cancellation;
-        TcpListener? listener = _listener;
-        X509Certificate2? certificate = _certificate;
-        _cancellation = null;
-        _listener = null;
-        _acceptLoop = null;
-        _certificate = null;
-        cancellation?.Cancel();
-        listener?.Stop();
-        certificate?.Dispose();
-        Publish(FileShareStatus.Stopped, null, null, null);
+        // Waits for a start in progress (it holds the gate for a few milliseconds), so the listener it stores is seen here.
+        _gate.Wait();
+        try
+        {
+            _disposed = true;
+            CancellationTokenSource? cancellation = _cancellation;
+            TcpListener? listener = _listener;
+            X509Certificate2? certificate = _certificate;
+            _cancellation = null;
+            _listener = null;
+            _acceptLoop = null;
+            _certificate = null;
+            cancellation?.Cancel();
+            listener?.Stop();
+            certificate?.Dispose();
+            Publish(FileShareStatus.Stopped, null, null, null);
+        }
+        finally
+        {
+            _gate.Release();
+        }
     }
 
     private void Publish(FileShareStatus status, string? url, bool[,]? qr, string? message) =>
@@ -231,7 +257,8 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     private async Task AcceptLoopAsync(TcpListener listener, X509Certificate2 certificate, FileShareRequestHandler handler, CancellationToken cancellationToken)
     {
         SemaphoreSlim connections = new(MaxConnections, MaxConnections);
-        while (!cancellationToken.IsCancellationRequested)
+        ConnectionLimiter perAddress = new(MaxConnectionsPerAddress);
+        while (!cancellationToken.IsCancellationRequested && DateTimeOffset.UtcNow <= certificate.NotAfter)
         {
             TcpClient client;
             try
@@ -249,14 +276,32 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
                 continue;
             }
 
+            IPAddress? remote = (client.Client.RemoteEndPoint as IPEndPoint)?.Address;
             if (!connections.Wait(0))
             {
                 client.Dispose();
                 continue;
             }
 
+            if (!perAddress.TryAcquire(remote))
+            {
+                connections.Release();
+                client.Dispose();
+                continue;
+            }
+
             _ = Task.Run(() => ServeAsync(client, certificate, handler, cancellationToken))
-                .ContinueWith(_ => connections.Release(), TaskScheduler.Default);
+                .ContinueWith(_ =>
+                {
+                    perAddress.Release(remote);
+                    connections.Release();
+                }, TaskScheduler.Default);
+        }
+
+        // Past the certificate's validity the port is closed, so a phone gets a refused connection, not a silent one.
+        if (DateTimeOffset.UtcNow > certificate.NotAfter)
+        {
+            listener.Stop();
         }
     }
 

@@ -5,6 +5,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Localization;
+using iConsole.Qr;
 using iConsole.Services;
 using iTerminal.Core.Services.Sharing;
 
@@ -15,25 +16,25 @@ namespace iTerminal.Core.Dialogs.FileTransfer;
 /// so a phone can download them. The share runs while the dialog is open; Esc or closing the dialog stops it.
 ///
 /// <para>Starting, stopping and the encoding happen on background tasks. <see cref="OnIdle"/> reads the service's state
-/// snapshot and updates the labels and the code; nothing here waits on the server.</para>
+/// snapshot and updates the labels and the code; nothing here waits on the server. The rows are planned by
+/// <see cref="FileTransferLayout"/>, so a short terminal keeps the code (in a compact form) before it drops it.</para>
 /// </summary>
 public class FileTransferDialog : Dialog
 {
-    /// <summary>The QR code is shown only when the dialog is at least this many rows tall.</summary>
-    internal const int MinimumHeightForCode = 30;
-
-    private const int WarningLines = 3;
+    private const int MaxTextLines = 3;
+    private const int DefaultTextWidth = 76;
 
     private readonly IFileShareService _service;
     private readonly Label _selection;
-    private readonly Label _url;
+    private readonly Label[] _url = new Label[MaxTextLines];
     private readonly QrCodeView _code;
+    private readonly Label[] _warning = new Label[MaxTextLines];
     private readonly Label _status;
-    private readonly Label[] _warning = new Label[WarningLines];
 
     private FileShareState? _shown;
     private string? _failureKey;
     private volatile string? _startFailureKey;
+    private volatile bool _beginning;
     private int _innerWidth;
     private int _innerHeight;
 
@@ -44,13 +45,17 @@ public class FileTransferDialog : Dialog
         Title = UiText.Get("FileTransfer.Title", "File transfer");
 
         _selection = new Label(string.Empty, themeService);
-        _url = new Label(string.Empty, themeService);
         _code = new QrCodeView(themeService);
         _status = new Label(string.Empty, themeService);
         AddControl(_selection);
-        AddControl(_url);
+        for (int i = 0; i < MaxTextLines; i++)
+        {
+            _url[i] = new Label(string.Empty, themeService);
+            AddControl(_url[i]);
+        }
+
         AddControl(_code);
-        for (int i = 0; i < WarningLines; i++)
+        for (int i = 0; i < MaxTextLines; i++)
         {
             _warning[i] = new Label(string.Empty, themeService);
             AddControl(_warning[i]);
@@ -62,7 +67,7 @@ public class FileTransferDialog : Dialog
     #region Test seams
 
     internal string SelectionText => _selection.Text;
-    internal string UrlText => _url.Text;
+    internal string UrlText => string.Concat(_url.Select(label => label.Text));
     internal string StatusText => _status.Text;
     internal bool CodeIsShown => _code.IsVisible;
     internal QrCodeView CodeView => _code;
@@ -93,6 +98,7 @@ public class FileTransferDialog : Dialog
 
         _failureKey = null;
         _startFailureKey = null;
+        _beginning = true;
         _status.Text = UiText.Get("FileTransfer.Starting", "Starting…");
         IReadOnlyList<string> paths = selection.Select(url => url.Path).ToList();
         _ = Task.Run(async () =>
@@ -117,27 +123,14 @@ public class FileTransferDialog : Dialog
     {
         if (Parent is not null)
         {
-            CenterInParent(Parent.ViewSize * 0.8);
+            // A short terminal gives the dialog all of its height: the code needs every row it can get.
+            double share = Parent.ViewSize.Height < 40 ? 1.0 : 0.8;
+            CenterInParent(Parent.ViewSize * share);
         }
 
-        int inner = (int)ViewSize.Width - 2;
-        int height = (int)ViewSize.Height - 2;
-        _innerWidth = inner;
-        _innerHeight = height;
-        if (inner > 0 && height > 0)
-        {
-            int width = Math.Max(1, inner - 2);
-            _selection.Position = new Position(1, 1);
-            _selection.ViewSize = new Size(width, 1);
-            _url.Position = new Position(1, 2);
-            _url.ViewSize = new Size(width, 1);
-            _code.Position = new Position(1, 4);
-            LayOutWarning(width, height);
-            _status.Position = new Position(1, height);
-            _status.ViewSize = new Size(width, 1);
-            UpdateCodeVisibility();
-        }
-
+        _innerWidth = (int)ViewSize.Width - 2;
+        _innerHeight = (int)ViewSize.Height - 2;
+        Relayout();
         base.OnInitializeLayout();
     }
 
@@ -166,24 +159,28 @@ public class FileTransferDialog : Dialog
         }
 
         string? startFailure = _startFailureKey;
-        FileShareState state = _service.State;
+        FileShareState state = _service.State ?? FileShareState.Stopped;
         if (_shown is null || !SameShown(_shown, state))
         {
             _shown = state;
-            _url.Text = state.Url ?? string.Empty;
-            if (state.QrModules is null)
-            {
-                _code.SetModules(null);
-            }
-            else if (!ReferenceEquals(_code.LastModules, state.QrModules))
-            {
-                _code.SetModules(state.QrModules);
-            }
-
-            UpdateCodeVisibility();
+            Relayout();
         }
 
-        _status.Text = startFailure is not null ? Reason(startFailure) : StatusFor(state);
+        if (startFailure is not null)
+        {
+            _beginning = false;
+            _status.Text = Reason(startFailure);
+        }
+        else if (_beginning && state.Status == FileShareStatus.Stopped)
+        {
+            // The service has not published its start yet: keep "Starting…" rather than flash "Stopped".
+            _status.Text = UiText.Get("FileTransfer.Starting", "Starting…");
+        }
+        else
+        {
+            _beginning = false;
+            _status.Text = StatusFor(state);
+        }
     }
 
     public override void Close()
@@ -208,72 +205,68 @@ public class FileTransferDialog : Dialog
     private void ShowFailure(string key, string english)
     {
         _failureKey = key;
-        _url.Text = string.Empty;
-        _code.SetModules(null);
+        _shown = null;
+        foreach (Label label in _url)
+        {
+            label.Text = string.Empty;
+        }
+
+        _code.SetModules(null, QrTextRenderer.DefaultQuietZone);
         _status.Text = UiText.Get(key, english);
+        Relayout();
     }
 
-    /// <summary>The code is shown only when the dialog is tall enough and the code fits its width.</summary>
-    private void UpdateCodeVisibility()
+    /// <summary>Puts every label where the layout plan says, from the current state, the URL, the code and the warning.</summary>
+    private void Relayout()
     {
-        _code.IsVisible = _innerHeight >= MinimumHeightForCode
-            && _code.ViewSize.Width > 0
-            && _code.ViewSize.Width <= _innerWidth - 2;
-    }
+        FileShareState state = _service.State ?? FileShareState.Stopped;
+        string url = state.Url ?? string.Empty;
+        // Before the first layout pass the width is still zero: one column is the least any text can use.
+        // Before the first layout pass there is no width yet: text then gets a standard terminal width, not one column.
+        int textWidth = _innerWidth > 2 ? _innerWidth - 2 : DefaultTextWidth;
+        IReadOnlyList<string> urlLines = FileTransferLayout.WrapText(url, textWidth, MaxTextLines, breakAnywhere: true);
+        IReadOnlyList<string> warningLines = FileTransferLayout.WrapText(UiText.Get("FileTransfer.CertificateWarning", "The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files while this dialog is open."), textWidth, MaxTextLines, breakAnywhere: false);
 
-    private void LayOutWarning(int width, int height)
-    {
-        IReadOnlyList<string> lines = WrapWords(UiText.Get("FileTransfer.CertificateWarning", "The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files while this dialog is open."), width);
-        for (int i = 0; i < WarningLines; i++)
+        if (state.QrModules is null)
+        {
+            _code.SetModules(null, QrTextRenderer.DefaultQuietZone);
+        }
+
+        int codeModules = state.QrModules is { } modules ? modules.GetLength(0) : 0;
+        FileTransferLayoutPlan plan = FileTransferLayout.Plan(_innerHeight, urlLines.Count, codeModules, warningLines.Count);
+
+        _selection.Position = new Position(1, Math.Max(0, plan.SelectionRow) + 1);
+        _selection.ViewSize = new Size(textWidth, 1);
+        _selection.IsVisible = plan.SelectionRow >= 0;
+
+        for (int i = 0; i < MaxTextLines; i++)
+        {
+            Label label = _url[i];
+            label.Text = i < urlLines.Count ? urlLines[i] : string.Empty;
+            label.Position = new Position(1, Math.Max(0, plan.UrlTop + i) + 1);
+            label.ViewSize = new Size(textWidth, 1);
+            label.IsVisible = i < urlLines.Count;
+        }
+
+        if (state.QrModules is { } drawn)
+        {
+            _code.SetModules(drawn, plan.QuietZone);
+        }
+
+        _code.Position = new Position(1, Math.Max(0, plan.CodeTop) + 1);
+        _code.IsVisible = plan.ShowsCode && state.QrModules is not null && _code.ViewSize.Width <= textWidth;
+
+        for (int i = 0; i < MaxTextLines; i++)
         {
             Label label = _warning[i];
-            label.Text = i < lines.Count ? lines[i] : string.Empty;
-            label.Position = new Position(1, Math.Max(1, height - WarningLines + i));
-            label.ViewSize = new Size(width, 1);
-        }
-    }
-
-    /// <summary>Splits text into lines no wider than <paramref name="width"/>, at spaces where it can. A word longer than a line is cut.</summary>
-    internal static IReadOnlyList<string> WrapWords(string text, int width)
-    {
-        ArgumentOutOfRangeException.ThrowIfLessThan(width, 1);
-        List<string> lines = [];
-        StringBuilder line = new();
-        foreach (string word in text.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-        {
-            string piece = word;
-            while (piece.Length > width)
-            {
-                if (line.Length > 0)
-                {
-                    lines.Add(line.ToString());
-                    line.Clear();
-                }
-
-                lines.Add(piece[..width]);
-                piece = piece[width..];
-            }
-
-            if (line.Length > 0 && line.Length + 1 + piece.Length > width)
-            {
-                lines.Add(line.ToString());
-                line.Clear();
-            }
-
-            if (line.Length > 0)
-            {
-                line.Append(' ');
-            }
-
-            line.Append(piece);
+            label.Text = i < plan.WarningRows && i < warningLines.Count ? warningLines[i] : string.Empty;
+            label.Position = new Position(1, Math.Max(0, plan.WarningTop + i) + 1);
+            label.ViewSize = new Size(textWidth, 1);
+            label.IsVisible = i < plan.WarningRows && i < warningLines.Count;
         }
 
-        if (line.Length > 0)
-        {
-            lines.Add(line.ToString());
-        }
-
-        return lines;
+        _status.Position = new Position(1, Math.Max(0, plan.StatusRow) + 1);
+        _status.ViewSize = new Size(textWidth, 1);
     }
 
     private static bool SameShown(FileShareState a, FileShareState b) =>
@@ -289,7 +282,124 @@ public class FileTransferDialog : Dialog
     };
 }
 
-/// <summary>Paints a QR matrix as text in black on white, two module rows to a line, so a dark code reads as dark on any theme.</summary>
+/// <summary>The rows of the dialog inside its border, from 0: where each part goes, and whether the code is shown and with which quiet zone.</summary>
+internal sealed record FileTransferLayoutPlan(int SelectionRow, int UrlTop, int CodeTop, int QuietZone, int WarningTop, int WarningRows, int StatusRow)
+{
+    public bool ShowsCode => QuietZone > 0;
+}
+
+/// <summary>
+/// Plans the rows of the file transfer dialog. The full layout comes first (selection line, a gap, the code with the
+/// standard quiet zone of four modules, then the warning). When the terminal is too short, the layout gives up the
+/// selection line and the gap, then the code's quiet zone (two modules), then warning lines, before it drops the code.
+/// The URL text is always shown.
+/// </summary>
+internal static class FileTransferLayout
+{
+    /// <summary>Rows a code of <paramref name="modules"/> modules takes, two module rows to a line, with the given quiet zone.</summary>
+    internal static int CodeRows(int modules, int quietZone) => (modules + 2 * quietZone + 1) / 2;
+
+    public static FileTransferLayoutPlan Plan(int innerHeight, int urlRows, int codeModules, int warningRows)
+    {
+        int status = Math.Max(0, innerHeight - 1);
+        int warning = Math.Clamp(warningRows, 0, MaxTextLines);
+        urlRows = Math.Clamp(urlRows, 0, MaxTextLines);
+
+        if (codeModules > 0)
+        {
+            foreach (bool compact in new[] { false, true })
+            {
+                for (int rows = warning; rows >= 1; rows--)
+                {
+                    int urlTop = compact ? 0 : 1;
+                    int codeTop = urlTop + urlRows + (compact ? 0 : 1);
+                    int warningTop = status - rows;
+                    foreach (int quiet in new[] { 4, 2 })
+                    {
+                        if (codeTop + CodeRows(codeModules, quiet) <= warningTop)
+                        {
+                            return new FileTransferLayoutPlan(compact ? -1 : 0, urlTop, codeTop, quiet, warningTop, rows, status);
+                        }
+                    }
+                }
+            }
+        }
+
+        // No room for the code: the URL, then as much of the warning as fits, then the status line.
+        int urlTopWithout = Math.Min(1, Math.Max(0, status));
+        int available = Math.Max(0, status - (urlTopWithout + urlRows));
+        int warningRowsWithout = Math.Min(warning, available);
+        return new FileTransferLayoutPlan(0, urlTopWithout, urlTopWithout + urlRows, 0, status - warningRowsWithout, warningRowsWithout, status);
+    }
+
+    private const int MaxTextLines = 3;
+
+    /// <summary>
+    /// Wraps text into at most <paramref name="maxLines"/> lines no wider than <paramref name="width"/>. Words are kept whole
+    /// where they fit; a word longer than a line, or any text when <paramref name="breakAnywhere"/> is set (a URL), is cut.
+    /// </summary>
+    internal static IReadOnlyList<string> WrapText(string text, int width, int maxLines, bool breakAnywhere)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(width, 1);
+        if (string.IsNullOrEmpty(text))
+        {
+            return [];
+        }
+
+        List<string> lines = [];
+        if (breakAnywhere)
+        {
+            for (int start = 0; start < text.Length; start += width)
+            {
+                lines.Add(text.Substring(start, Math.Min(width, text.Length - start)));
+            }
+        }
+        else
+        {
+            StringBuilder line = new();
+            foreach (string word in text.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            {
+                string piece = word;
+                while (piece.Length > width)
+                {
+                    if (line.Length > 0)
+                    {
+                        lines.Add(line.ToString());
+                        line.Clear();
+                    }
+
+                    lines.Add(piece[..width]);
+                    piece = piece[width..];
+                }
+
+                if (line.Length > 0 && line.Length + 1 + piece.Length > width)
+                {
+                    lines.Add(line.ToString());
+                    line.Clear();
+                }
+
+                if (line.Length > 0)
+                {
+                    line.Append(' ');
+                }
+
+                line.Append(piece);
+            }
+
+            if (line.Length > 0)
+            {
+                lines.Add(line.ToString());
+            }
+        }
+
+        return lines.Count <= maxLines ? lines : lines.Take(maxLines).ToList();
+    }
+}
+
+/// <summary>
+/// Paints a QR matrix as text in black on white, two module rows to a line, so a dark code reads as dark on any theme.
+/// The lines are cached per matrix and quiet zone: an idle pass does not encode the same code again.
+/// </summary>
 internal sealed class QrCodeView : Control
 {
     private IReadOnlyList<string> _lines = [];
@@ -298,13 +408,20 @@ internal sealed class QrCodeView : Control
     {
     }
 
-    /// <summary>The matrix the lines were drawn from, so an idle pass does not encode the same code again.</summary>
     public bool[,]? LastModules { get; private set; }
 
-    public void SetModules(bool[,]? modules)
+    public int LastQuietZone { get; private set; } = QrTextRenderer.DefaultQuietZone;
+
+    public void SetModules(bool[,]? modules, int quietZone)
     {
+        if (ReferenceEquals(modules, LastModules) && quietZone == LastQuietZone)
+        {
+            return;
+        }
+
         LastModules = modules;
-        _lines = modules is null ? [] : iConsole.Qr.QrTextRenderer.Render(modules);
+        LastQuietZone = quietZone;
+        _lines = modules is null ? [] : QrTextRenderer.Render(modules, quietZone);
         ViewSize = new Size(_lines.Count == 0 ? 0 : _lines[0].Length, _lines.Count);
     }
 

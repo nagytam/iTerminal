@@ -11413,4 +11413,10 @@
   <data name="FileTransfer.Expired" xml:space="preserve">
     <value>The share has expired. Close the dialog and open File transfer again for a new address.</value>
   </data>
+  <data name="CmdTitle.79976f99" xml:space="preserve">
+    <value>Disassemble</value>
+  </data>
+  <data name="CmdDesc.1300052a" xml:space="preserve">
+    <value>Show the disassembly of the file in place of the grid, and back.</value>
+  </data>
 </root>

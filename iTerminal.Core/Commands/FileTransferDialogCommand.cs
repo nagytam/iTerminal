@@ -11,6 +11,8 @@ namespace iTerminal.Core.Commands;
 public class FileTransferDialogCommand(FileTransferDialog fileTransferDialog, IContentModelService contentModelService)
     : ShowDialogCommand<FileTransferDialog>(fileTransferDialog)
 {
+    public override Key? Key { get; init; } = new Key(ConsoleKey.X, true, false, true);
+
     public override string Title => "File transfer";
     public override string Description => "Share the selected files on this network: a QR code and a link open them in a phone's browser while this dialog is open.";
 

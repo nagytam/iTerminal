@@ -11207,4 +11207,10 @@
   <data name="FileTransfer.Expired" xml:space="preserve">
     <value>Le partage a expiré. Fermez la boîte de dialogue et rouvrez Transfert de fichiers pour une nouvelle adresse.</value>
   </data>
+  <data name="CmdTitle.79976f99" xml:space="preserve">
+    <value>Désassembler</value>
+  </data>
+  <data name="CmdDesc.1300052a" xml:space="preserve">
+    <value>Afficher le désassemblage du fichier à la place de la grille, et inversement.</value>
+  </data>
 </root>
