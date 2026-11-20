@@ -63,6 +63,30 @@ public class HotKeyCollisionTest
     }
 
     /// <summary>
+    /// Ctrl+Shift+X is the password manager's chord that always reaches it (Ctrl+X cuts in a file panel), so Add evidence,
+    /// which a focused file panel runs before the menu bar's commands, must not take it.
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AddEvidenceAndThePasswordManagerHaveDifferentChords()
+    {
+        var passwords = new PasswordManagerDialogCommand(null!);
+        var addEvidence = new iTerminal.Core.Commands.Evidence.AddEvidenceCommand(
+            Mock.Of<iConsole.Interfaces.IContentModelService>(),
+            Mock.Of<iTerminal.Core.Services.Evidence.IEvidenceNotebookService>(),
+            Mock.Of<iConsole.Services.IPromptService>(),
+            Mock.Of<iTerminal.Core.Services.ISettingsService>(),
+            Mock.Of<iConsole.Services.ITextClipboardService>(),
+            Mock.Of<iTerminal.Core.Speech.IMicrophoneCaptureFactory>(),
+            null!);
+
+        Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), passwords.AlternateKey);
+        Assert.AreEqual(new Key(ConsoleKey.Delete, true, false, true), addEvidence.Key);
+        Assert.AreNotEqual(passwords.AlternateKey, addEvidence.Key);
+        Assert.AreNotEqual(passwords.Key, addEvidence.Key);
+    }
+
+    /// <summary>
     /// Copy Path is Ctrl+Shift+Insert: Ctrl+Shift+P is the terminal host's command palette, and Ctrl+Shift+Y sends the same
     /// byte as Ctrl+Y (ToDo list). Ctrl+Insert and Shift+Insert are Copy and Paste, so this chord stays clear of both.
     /// </summary>

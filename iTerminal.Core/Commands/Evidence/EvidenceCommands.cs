@@ -158,7 +158,7 @@ public class OpenEvidenceNotebookCommand(
 }
 
 /// <summary>
-/// Ctrl+Shift+X: adds evidence to the open notebook. The other panel supplies files (the marked ones, or
+/// Ctrl+Shift+Delete: adds evidence to the open notebook. The other panel supplies files (the marked ones, or
 /// the one under the cursor); the rest is typed, spoken or copied. Every entry records its origin as it is
 /// added, so the person says only what the evidence is.
 /// </summary>
@@ -176,7 +176,7 @@ public class AddEvidenceCommand(
 
     public override string Description => "Add to the evidence notebook: files from the other panel, a note, a voice recording, clipboard text or a web address.";
 
-    public override Key? Key { get; init; } = new Key(ConsoleKey.X, true, false, true);
+    public override Key? Key { get; init; } = new Key(ConsoleKey.Delete, true, false, true);
 
     /// <summary>What the add prompt offers.</summary>
     public enum Choice

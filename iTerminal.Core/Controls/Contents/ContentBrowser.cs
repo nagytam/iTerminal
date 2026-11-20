@@ -339,7 +339,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         // Enter on the recycle drive restores; inert anywhere else, and on that drive's ".." row.
         AddCommand(new Commands.Drives.RestoreRecycledCommand(ContentModelService));
 
-        // Ctrl+Shift+Q opens the evidence notebook here; Ctrl+Shift+X adds to it. Both need every service they use.
+        // Ctrl+Shift+Q opens the evidence notebook here; Ctrl+Shift+Delete adds to it. Both need every service they use.
         if (_evidenceNotebookService is not null && _promptService is not null && _evidenceSettingsService is not null)
         {
             AddCommand(new Commands.Evidence.OpenEvidenceNotebookCommand(ContentModelService, _evidenceNotebookService, _promptService, _evidenceSettingsService, _notificationService));

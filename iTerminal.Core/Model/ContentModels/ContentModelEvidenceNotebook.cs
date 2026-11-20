@@ -29,7 +29,7 @@ public record EvidenceRow : VirtualDriveEntry
 /// A panel on the <c>evidence://</c> drive (Ctrl+Shift+Q opens the notebook here): what has been gathered
 /// into the notebook folder, in the order it was added. Enter, F3, quick view and copying out read an
 /// entry where it lies; nothing on the drive can be changed, deleted or renamed. New entries come from
-/// the add command (Ctrl+Shift+X), which records the origin as it goes.
+/// the add command (Ctrl+Shift+Delete), which records the origin as it goes.
 ///
 /// <para>The footer names the origin of the row under the cursor: where it was read from, which machine
 /// and account gathered it, and when.</para>

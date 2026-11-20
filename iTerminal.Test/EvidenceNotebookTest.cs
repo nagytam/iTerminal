@@ -4,7 +4,7 @@ namespace iTerminal.Test;
 
 /// <summary>
 /// The evidence notebook, end to end: Ctrl+Shift+Q asks for the notebook's folder and shows it in the focused
-/// panel; Ctrl+Shift+X adds a file from the other panel, or a voice recording from the sandbox's tone microphone.
+/// panel; Ctrl+Shift+Delete adds a file from the other panel, or a voice recording from the sandbox's tone microphone.
 /// The notebook folder is beside the sandbox panels, so nothing is written outside the sandbox.
 /// </summary>
 [TestClass]
@@ -45,7 +45,7 @@ public class EvidenceNotebookTest
 
         await _app.PressAsync("Tab");
         await _app.SelectEntryAsync("report.txt");
-        await _app.PressAsync("Ctrl+Shift+X");
+        await _app.PressAsync("Ctrl+Shift+Delete");
         await _app.WaitForTextAsync("Add what to the evidence notebook?");
         await _app.PressAsync("Enter");
 
@@ -66,7 +66,7 @@ public class EvidenceNotebookTest
         await StartWithAReportOnTheRightAsync();
         await OpenNotebookAsync();
 
-        await _app.PressAsync("Ctrl+Shift+X");
+        await _app.PressAsync("Ctrl+Shift+Delete");
         await _app.WaitForTextAsync("Add what to the evidence notebook?");
         await _app.PressSequenceAsync("Down", "Down", "Enter");
         await _app.WaitForTextAsync("Recording since");
@@ -74,7 +74,7 @@ public class EvidenceNotebookTest
         await _app.WaitForTextAsync("Recording discarded");
         Assert.AreEqual(0, Directory.GetFiles(ItemsFolder).Length, "a discarded recording is not kept");
 
-        await _app.PressAsync("Ctrl+Shift+X");
+        await _app.PressAsync("Ctrl+Shift+Delete");
         await _app.WaitForTextAsync("Add what to the evidence notebook?");
         await _app.PressSequenceAsync("Down", "Down", "Enter");
         await _app.WaitForTextAsync("Recording since");
@@ -94,7 +94,7 @@ public class EvidenceNotebookTest
         await StartWithAReportOnTheRightAsync();
         await OpenNotebookAsync();
 
-        await _app.PressAsync("Ctrl+Shift+X");
+        await _app.PressAsync("Ctrl+Shift+Delete");
         await _app.WaitForTextAsync("Add what to the evidence notebook?");
         await _app.PressSequenceAsync("Down", "Enter");
         await _app.WaitForTextAsync("Note");
