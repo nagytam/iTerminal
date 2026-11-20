@@ -10910,6 +10910,15 @@
   <data name="DialogHint.FavouritesOnly" xml:space="preserve">
     <value>Mostra solo le preferite</value>
   </data>
+  <data name="Radio.Recent" xml:space="preserve">
+    <value>Recenti</value>
+  </data>
+  <data name="Radio.NoRecent" xml:space="preserve">
+    <value>Nessuna riproduzione finora. Premi Invio su una stazione per ascoltarla.</value>
+  </data>
+  <data name="DialogHint.RecentOnly" xml:space="preserve">
+    <value>Mostra le ultime cinque stazioni ascoltate</value>
+  </data>
   <data name="DialogHint.MoveOverStations" xml:space="preserve">
     <value>Scorri le stazioni</value>
   </data>

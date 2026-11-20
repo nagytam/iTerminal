@@ -4,17 +4,25 @@ using iTerminal.Core.Services;
 namespace iTerminal.Core.Model.Radio;
 
 /// <summary>
-/// The internet radio stations the person keeps, as one JSON list in the settings table under <see cref="SettingsKey"/>.
+/// The internet radio stations the person keeps, as one JSON list in the settings table under <see cref="SettingsKey"/>,
+/// and the last few stations played, as a JSON list of ids under <see cref="RecentSettingsKey"/>.
 /// Kept out of the database for the same reason as the contacts: a new table would change the schema stamp and clear
 /// every cached table at start-up.
 /// </summary>
 public sealed class RadioStationStore(ISettingsService settingsService)
 {
     public const string SettingsKey = "RadioStations";
+    public const string RecentSettingsKey = "RadioRecent";
+
+    /// <summary>How many stations the recently played list keeps.</summary>
+    public const int RecentLimit = 5;
 
     private static readonly JsonSerializerOptions Json = new();
 
     private readonly List<RadioStation> _stations = [];
+
+    /// <summary>The ids of the stations last started, most recent first, at most <see cref="RecentLimit"/>.</summary>
+    private readonly List<Guid> _recent = [];
     private bool _loaded;
 
     /// <summary>
@@ -82,8 +90,38 @@ public sealed class RadioStationStore(ISettingsService settingsService)
         EnsureLoaded();
         if (_stations.RemoveAll(s => s.Id == id) > 0)
         {
+            _recent.Remove(id);
             Save();
         }
+    }
+
+    /// <summary>The last stations started, most recent first, at most <see cref="RecentLimit"/>. A station since removed is skipped.</summary>
+    public IReadOnlyList<RadioStation> Recent()
+    {
+        EnsureLoaded();
+        return _recent
+            .Select(id => _stations.FirstOrDefault(s => s.Id == id))
+            .OfType<RadioStation>()
+            .ToList();
+    }
+
+    /// <summary>Moves the station to the top of the recently played list, dropping the oldest once the list is full.</summary>
+    public void RecordPlayed(Guid id)
+    {
+        EnsureLoaded();
+        if (_stations.All(s => s.Id != id))
+        {
+            return;
+        }
+
+        _recent.Remove(id);
+        _recent.Insert(0, id);
+        if (_recent.Count > RecentLimit)
+        {
+            _recent.RemoveRange(RecentLimit, _recent.Count - RecentLimit);
+        }
+
+        Save();
     }
 
     private void EnsureLoaded()
@@ -115,11 +153,27 @@ public sealed class RadioStationStore(ISettingsService settingsService)
         {
             // A damaged value must not stop the dialog opening; the next save replaces it.
         }
+
+        try
+        {
+            var json = settingsService.Get(RecentSettingsKey);
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                _recent.AddRange((JsonSerializer.Deserialize<List<Guid>>(json, Json) ?? [])
+                    .Distinct()
+                    .Take(RecentLimit));
+            }
+        }
+        catch (JsonException)
+        {
+            // The recent list is only a convenience; a damaged one starts empty and the next play replaces it.
+        }
     }
 
     private void Save()
     {
         settingsService.Set(SettingsKey, JsonSerializer.Serialize(_stations, Json));
+        settingsService.Set(RecentSettingsKey, JsonSerializer.Serialize(_recent, Json));
         settingsService.Write();
     }
 }

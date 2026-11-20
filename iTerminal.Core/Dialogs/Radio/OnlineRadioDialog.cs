@@ -16,8 +16,9 @@ namespace iTerminal.Core.Dialogs.Radio;
 ///
 /// <para>Enter plays the highlighted station. The station replaces the music queue, because a live stream has no
 /// end and "next" on it would only mean switching to another station; Space pauses and resumes, S stops. F marks a
-/// favourite, and favourites are listed first. V shows the favourites alone. / filters by name, genre or address,
-/// as the contact manager does. N adds a station, E changes it and D removes it after a y/n.</para>
+/// favourite, and favourites are listed first. V shows the favourites alone. R shows the last five stations played,
+/// most recent first. / filters by name, genre or address, as the contact manager does. N adds a station, E changes
+/// it and D removes it after a y/n.</para>
 /// </summary>
 public class OnlineRadioDialog : Dialog
 {
@@ -50,6 +51,14 @@ public class OnlineRadioDialog : Dialog
         ConfirmDelete,
     }
 
+    /// <summary>Which stations the list shows. Kept across openings of the dialog.</summary>
+    private enum ListView
+    {
+        All,
+        Favourites,
+        Recent,
+    }
+
     private readonly RadioStationStore _store;
     private readonly IMusicPlayerService _player;
 
@@ -60,8 +69,7 @@ public class OnlineRadioDialog : Dialog
 
     private string _filter = string.Empty;
 
-    /// <summary>When set, only the favourites are listed. Kept across openings of the dialog.</summary>
-    private bool _favouritesOnly;
+    private ListView _view = ListView.All;
 
     /// <summary>The name, genre and address being typed while the form is open.</summary>
     private readonly string[] _values = new string[FieldCount];
@@ -106,7 +114,11 @@ public class OnlineRadioDialog : Dialog
         base.OnInitializeLayout();
     }
 
-    private IReadOnlyList<RadioStation> Visible => _store.Find(_filter, _favouritesOnly);
+    private IReadOnlyList<RadioStation> Visible => _view switch
+    {
+        ListView.Recent => _store.Recent().Where(s => s.Matches(_filter)).ToList(),
+        _ => _store.Find(_filter, _view == ListView.Favourites),
+    };
 
     private RadioStation? Selected
     {
@@ -147,6 +159,7 @@ public class OnlineRadioDialog : Dialog
         yield return ("S", UiText.Get("DialogHint.StopStation", "Stop playing"));
         yield return ("F", UiText.Get("DialogHint.ToggleFavourite", "Mark or unmark the station as a favourite"));
         yield return ("V", UiText.Get("DialogHint.FavouritesOnly", "Show the favourites only"));
+        yield return ("R", UiText.Get("DialogHint.RecentOnly", "Show the last five stations played"));
         yield return ("Up/Down", UiText.Get("DialogHint.MoveOverStations", "Move over the stations"));
         yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
         yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastStation", "Jump to the first or last station"));
@@ -244,7 +257,10 @@ public class OnlineRadioDialog : Dialog
                     ToggleFavourite();
                     return true;
                 case 'v':
-                    ToggleFavouritesOnly();
+                    ToggleView(ListView.Favourites);
+                    return true;
+                case 'r':
+                    ToggleView(ListView.Recent);
                     return true;
                 case 's':
                     _player.Stop();
@@ -454,6 +470,7 @@ public class OnlineRadioDialog : Dialog
 
         _player.ReplacePlaylist([new MusicTrack(station.Url) { Title = station.Name }]);
         _player.PlayIndex(0);
+        _store.RecordPlayed(station.Id);
         _notice = null;
         StateHasChanged();
     }
@@ -501,9 +518,10 @@ public class OnlineRadioDialog : Dialog
         StateHasChanged();
     }
 
-    private void ToggleFavouritesOnly()
+    /// <summary>Shows <paramref name="target"/>, or the whole list when it is already showing.</summary>
+    private void ToggleView(ListView target)
     {
-        _favouritesOnly = !_favouritesOnly;
+        _view = _view == target ? ListView.All : target;
         _notice = null;
         StateHasChanged();
     }
@@ -548,11 +566,12 @@ public class OnlineRadioDialog : Dialog
             _store.Add(station);
         }
 
-        // A new station the filter would hide is shown anyway: the person just typed it and expects to see it.
-        if (!station.Matches(_filter) || (_favouritesOnly && !station.IsFavourite))
+        // A new station the filter or view would hide is shown anyway: the person just typed it and expects to see it.
+        // A new station has never been played, so the recent list would hide it too.
+        if (!station.Matches(_filter) || _view == ListView.Recent || (_view == ListView.Favourites && !station.IsFavourite))
         {
             _filter = string.Empty;
-            _favouritesOnly = false;
+            _view = ListView.All;
         }
 
         _selectedId = id;
@@ -656,12 +675,15 @@ public class OnlineRadioDialog : Dialog
     {
         var total = _store.Count;
         var shown = Visible.Count;
-        var count = _filter.Length > 0 || _favouritesOnly
+        var count = _filter.Length > 0 || _view != ListView.All
             ? string.Format(UiText.Get("Radio.CountFiltered", "{0} of {1} stations"), shown, total)
             : string.Format(UiText.Get("Radio.Count", "{0} stations"), total);
-        if (_favouritesOnly)
+        if (_view != ListView.All)
         {
-            count = $"{UiText.Get("Radio.Favourites", "Favourites")}  {count}";
+            var viewName = _view == ListView.Recent
+                ? UiText.Get("Radio.Recent", "Recent")
+                : UiText.Get("Radio.Favourites", "Favourites");
+            count = $"{viewName}  {count}";
         }
 
         var (nameWidth, genreWidth) = Columns(iw - 2);
@@ -683,9 +705,12 @@ public class OnlineRadioDialog : Dialog
         {
             var empty = _filter.Length > 0
                 ? string.Format(UiText.Get("Radio.NoMatch", "No station matches \"{0}\"."), _filter)
-                : _favouritesOnly
-                    ? UiText.Get("Radio.NoFavourites", "No favourite stations. Press F on a station to mark it.")
-                    : UiText.Get("Radio.Empty", "No stations yet. Press N to add one.");
+                : _view switch
+                {
+                    ListView.Favourites => UiText.Get("Radio.NoFavourites", "No favourite stations. Press F on a station to mark it."),
+                    ListView.Recent => UiText.Get("Radio.NoRecent", "Nothing played yet. Press Enter on a station to play it."),
+                    _ => UiText.Get("Radio.Empty", "No stations yet. Press N to add one."),
+                };
             Put(buffer, 1, 1, iw - 2, empty, colorScheme.DisabledForeground, colorScheme.Background);
             return;
         }
@@ -826,7 +851,8 @@ public class OnlineRadioDialog : Dialog
     internal bool IsFormOpenForTest => _mode == Mode.Form;
     internal bool ConfirmingDeleteForTest => _mode == Mode.ConfirmDelete;
     internal bool IsFilteringForTest => _mode == Mode.Filter;
-    internal bool FavouritesOnlyForTest => _favouritesOnly;
+    internal bool FavouritesOnlyForTest => _view == ListView.Favourites;
+    internal bool RecentOnlyForTest => _view == ListView.Recent;
     internal string? ErrorForTest => _error;
     internal string FilterForTest => _filter;
     internal RadioStation? SelectedForTest => Selected;

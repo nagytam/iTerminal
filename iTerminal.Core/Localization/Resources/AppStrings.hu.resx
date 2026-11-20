@@ -10910,6 +10910,15 @@
   <data name="DialogHint.FavouritesOnly" xml:space="preserve">
     <value>Csak a kedvencek megjelenítése</value>
   </data>
+  <data name="Radio.Recent" xml:space="preserve">
+    <value>Legutóbbiak</value>
+  </data>
+  <data name="Radio.NoRecent" xml:space="preserve">
+    <value>Még nem játszottál le semmit. Nyomj Entert egy állomáson a lejátszáshoz.</value>
+  </data>
+  <data name="DialogHint.RecentOnly" xml:space="preserve">
+    <value>Az utoljára lejátszott öt állomás megjelenítése</value>
+  </data>
   <data name="DialogHint.MoveOverStations" xml:space="preserve">
     <value>Mozgás az állomások között</value>
   </data>
