@@ -7036,6 +7036,12 @@
   <data name="FolderSelector.Tab1" xml:space="preserve">
     <value>1-Lecteurs</value>
   </data>
+  <data name="FolderSelector.Drives.Empty" xml:space="preserve">
+    <value> Aucun lecteur trouvé.</value>
+  </data>
+  <data name="FolderSelector.Drives.Reading" xml:space="preserve">
+    <value> Lecture des lecteurs…</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Récents</value>
   </data>

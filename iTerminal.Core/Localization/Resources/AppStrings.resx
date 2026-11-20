@@ -7241,6 +7241,12 @@
   <data name="FolderSelector.Tab1" xml:space="preserve">
     <value>1-Drives</value>
   </data>
+  <data name="FolderSelector.Drives.Empty" xml:space="preserve">
+    <value> No drives found.</value>
+  </data>
+  <data name="FolderSelector.Drives.Reading" xml:space="preserve">
+    <value> Reading the drives…</value>
+  </data>
   <data name="FolderSelector.Tab2" xml:space="preserve">
     <value>2-Recent</value>
   </data>
