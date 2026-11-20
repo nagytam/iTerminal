@@ -11387,7 +11387,7 @@
     <value>Selected: {0}</value>
   </data>
   <data name="FileTransfer.CertificateWarning" xml:space="preserve">
-    <value>The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files while this dialog is open.</value>
+    <value>The connection is not encrypted. Anyone on this network with this address can read the selected files while this dialog is open.</value>
   </data>
   <data name="FileTransfer.Stop" xml:space="preserve">
     <value>Stop the share and close</value>

@@ -10,7 +10,7 @@ using iTerminal.Core.Services.Sharing;
 namespace iTerminal.Core.Dialogs.FileTransfer;
 
 /// <summary>
-/// File transfer: serves the selected local files over HTTPS on the LAN and shows the address as a QR code and as text,
+/// File transfer: serves the selected local files over plain HTTP on the LAN and shows the address as a QR code and as text,
 /// so a phone can download them. The share runs while the dialog is open; Esc or closing the dialog stops it.
 ///
 /// <para>Starting, stopping and the encoding happen on background tasks. <see cref="OnIdle"/> reads the service's state
@@ -42,7 +42,7 @@ public class FileTransferDialog : Dialog
         _url = new Label(string.Empty, themeService);
         _code = new QrCodeView(themeService);
         _status = new Label(string.Empty, themeService);
-        _warning = new Label(UiText.Get("FileTransfer.CertificateWarning", "The phone shows a certificate warning: accept it to download. Anyone with this address can read the selected files while this dialog is open."), themeService);
+        _warning = new Label(UiText.Get("FileTransfer.CertificateWarning", "The connection is not encrypted. Anyone on this network with this address can read the selected files while this dialog is open."), themeService);
 
         AddControl(_selection);
         AddControl(_url);

@@ -11181,7 +11181,7 @@
     <value>Kijelölve: {0}</value>
   </data>
   <data name="FileTransfer.CertificateWarning" xml:space="preserve">
-    <value>A telefon tanúsítványfigyelmeztetést jelenít meg: fogadja el a letöltéshez. Bárki, aki ismeri ezt a címet, olvashatja a kijelölt fájlokat, amíg ez a párbeszédablak nyitva van.</value>
+    <value>A kapcsolat nincs titkosítva. Bárki ezen a hálózaton, aki ismeri ezt a címet, olvashatja a kijelölt fájlokat, amíg ez a párbeszédablak nyitva van.</value>
   </data>
   <data name="FileTransfer.Stop" xml:space="preserve">
     <value>Megosztás leállítása és bezárás</value>

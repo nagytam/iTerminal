@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Net;
-using System.Net.Security;
 using System.Net.Sockets;
-using System.Security.Authentication;
 using System.Text;
 using iTerminal.Core.Services.Sharing;
 
@@ -17,7 +15,7 @@ public class FileShareServiceTest
 {
     [TestMethod]
     [Timeout(120_000)]
-    public async Task ShareLifecycle_ServesOverTlsStopsAndFreesThePort()
+    public async Task ShareLifecycle_ServesOverHttpStopsAndFreesThePort()
     {
         IPAddress? address = FileShareAddress.Choose(new NetworkInterfaceAddressSource().Candidates());
         if (address is null)
@@ -28,7 +26,7 @@ public class FileShareServiceTest
         string folder = Path.Combine(Path.GetTempPath(), "iTerminal-service-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(folder);
         string file = Path.Combine(folder, "hello.txt");
-        File.WriteAllText(file, "hello over tls");
+        File.WriteAllText(file, "hello over http");
         using FileShareService service = new(new FixedAddressSource(address));
         try
         {
@@ -39,12 +37,12 @@ public class FileShareServiceTest
             Assert.IsNotNull(service.State.QrModules, "the code is encoded on the start");
             Uri uri = new(started.Url!);
             string token = uri.AbsolutePath.Trim('/');
-            Assert.AreEqual("https", uri.Scheme, "scheme");
+            Assert.AreEqual("http", uri.Scheme, "scheme");
 
             // Served: a valid token gets the file, a wrong token gets nothing.
             string ok = await GetAsync(uri.Host, uri.Port, $"/{token}/hello.txt");
             StringAssert.Contains(ok, "200 OK", "a valid token is served");
-            StringAssert.EndsWith(ok, "hello over tls", "the file body is sent");
+            StringAssert.EndsWith(ok, "hello over http", "the file body is sent");
             string wrong = await GetAsync(uri.Host, uri.Port, "/not-the-token/hello.txt");
             StringAssert.Contains(wrong, "404 Not Found", "a wrong token is refused");
 
@@ -76,16 +74,11 @@ public class FileShareServiceTest
     private static async Task<string> GetAsync(string host, int port, string target)
     {
         using TcpClient client = await ConnectAsync(host, port);
-        using SslStream tls = new(client.GetStream(), leaveInnerStreamOpen: false, (_, _, _, _) => true);
-        await tls.AuthenticateAsClientAsync(new SslClientAuthenticationOptions
-        {
-            TargetHost = host,
-            EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13,
-        });
+        NetworkStream stream = client.GetStream();
         byte[] request = Encoding.ASCII.GetBytes($"GET {target} HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\n\r\n");
-        await tls.WriteAsync(request);
+        await stream.WriteAsync(request);
         using MemoryStream response = new();
-        await tls.CopyToAsync(response);
+        await stream.CopyToAsync(response);
         return Encoding.UTF8.GetString(response.ToArray());
     }
 

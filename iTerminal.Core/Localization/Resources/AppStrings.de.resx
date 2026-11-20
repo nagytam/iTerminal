@@ -11245,7 +11245,7 @@
     <value>Ausgewählt: {0}</value>
   </data>
   <data name="FileTransfer.CertificateWarning" xml:space="preserve">
-    <value>Das Telefon zeigt eine Zertifikatwarnung: Bestätigen Sie sie, um herunterzuladen. Wer diese Adresse hat, kann die ausgewählten Dateien lesen, solange dieser Dialog offen ist.</value>
+    <value>Die Verbindung ist nicht verschlüsselt. Wer in diesem Netzwerk diese Adresse hat, kann die ausgewählten Dateien lesen, solange dieser Dialog offen ist.</value>
   </data>
   <data name="FileTransfer.Stop" xml:space="preserve">
     <value>Freigabe beenden und schließen</value>

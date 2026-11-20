@@ -1,10 +1,6 @@
 using System.Net;
-using System.Net.Security;
 using System.Net.Sockets;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using iConsole.Certificates;
 using iConsole.Net;
 using iConsole.Qr;
 
@@ -23,8 +19,9 @@ public interface IFileShareService : IDisposable
 }
 
 /// <summary>
-/// The HTTPS file share. A session binds one port in 8080 to 8089 on all interfaces, serves the selected local paths
-/// under a random token, and ends when stopped. Encoding, binding and the certificate happen on the background start;
+/// The plain HTTP file share. A session binds one port in 8080 to 8089 on all interfaces, serves the selected local paths
+/// under a random token, and ends when stopped. There is no TLS: the traffic is readable on the LAN. Encoding and binding
+/// happen on the background start;
 /// the dialog only reads <see cref="State"/>.
 /// </summary>
 public sealed class FileShareService(IFileShareAddressSource addressSource) : IFileShareService
@@ -32,7 +29,6 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     internal const int FirstPort = 8080;
     internal const int LastPort = 8089;
     internal static readonly TimeSpan StopWait = TimeSpan.FromSeconds(2);
-    internal static readonly TimeSpan CertificateValidity = TimeSpan.FromDays(1);
     private const int MaxConnections = 8;
 
     private readonly IFileShareAddressSource _addressSource = addressSource ?? throw new ArgumentNullException(nameof(addressSource));
@@ -43,7 +39,6 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
     private TcpListener? _listener;
     private CancellationTokenSource? _cancellation;
     private Task? _acceptLoop;
-    private X509Certificate2? _certificate;
 
     public FileShareState State => _state;
 
@@ -87,16 +82,14 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
 
             int port = ((IPEndPoint)listener.LocalEndpoint).Port;
             string token = FileShareToken.Create();
-            X509Certificate2 certificate = TlsCertificateFactory.CreateSelfSigned(address, DateTimeOffset.UtcNow, CertificateValidity);
-            string url = $"https://{address}:{port}/{token}/";
+            string url = $"http://{address}:{port}/{token}/";
             bool[,] qr = QrEncoder.Encode(Encoding.UTF8.GetBytes(url));
 
             CancellationTokenSource cancellation = new();
             FileShareRequestHandler handler = new(selectedPaths, token);
             _listener = listener;
-            _certificate = certificate;
             _cancellation = cancellation;
-            _acceptLoop = Task.Run(() => AcceptLoopAsync(listener, certificate, handler, cancellation.Token));
+            _acceptLoop = Task.Run(() => AcceptLoopAsync(listener, handler, cancellation.Token));
             SetState(FileShareStatus.Running, url, qr, null);
             return new FileShareStartResult(true, url, null);
         }
@@ -111,18 +104,15 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         TcpListener? listener;
         CancellationTokenSource? cancellation;
         Task? acceptLoop;
-        X509Certificate2? certificate;
         await _gate.WaitAsync();
         try
         {
             listener = _listener;
             cancellation = _cancellation;
             acceptLoop = _acceptLoop;
-            certificate = _certificate;
             _listener = null;
             _cancellation = null;
             _acceptLoop = null;
-            _certificate = null;
         }
         finally
         {
@@ -138,7 +128,6 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         }
 
         cancellation?.Dispose();
-        certificate?.Dispose();
         SetState(FileShareStatus.Stopped, null, null, null);
     }
 
@@ -153,7 +142,6 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         _cancellation = null;
         _listener = null;
         _acceptLoop = null;
-        _certificate = null;
         cancellation?.Cancel();
         listener?.Stop();
         cancellation?.Dispose();
@@ -178,7 +166,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         return null;
     }
 
-    private async Task AcceptLoopAsync(TcpListener listener, X509Certificate2 certificate, FileShareRequestHandler handler, CancellationToken cancellationToken)
+    private async Task AcceptLoopAsync(TcpListener listener, FileShareRequestHandler handler, CancellationToken cancellationToken)
     {
         SemaphoreSlim connections = new(MaxConnections, MaxConnections);
         while (!cancellationToken.IsCancellationRequested)
@@ -199,32 +187,18 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
                 continue;
             }
 
-            _ = Task.Run(() => ServeAsync(client, certificate, handler, cancellationToken))
+            _ = Task.Run(() => ServeAsync(client, handler, cancellationToken))
                 .ContinueWith(_ => connections.Release(), TaskScheduler.Default);
         }
     }
 
-    private async Task ServeAsync(TcpClient client, X509Certificate2 certificate, FileShareRequestHandler handler, CancellationToken cancellationToken)
+    private async Task ServeAsync(TcpClient client, FileShareRequestHandler handler, CancellationToken cancellationToken)
     {
         using (client)
         {
             try
             {
-                if (DateTimeOffset.UtcNow > certificate.NotAfter)
-                {
-                    return;
-                }
-
-                await using SslStream stream = new(client.GetStream(), leaveInnerStreamOpen: false);
-                using CancellationTokenSource handshake = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-                handshake.CancelAfter(FileShareHttpTimeouts.Handshake);
-                await stream.AuthenticateAsServerAsync(new SslServerAuthenticationOptions
-                {
-                    ServerCertificate = certificate,
-                    ClientCertificateRequired = false,
-                    EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13,
-                }, handshake.Token);
-
+                await using NetworkStream stream = client.GetStream();
                 HttpReadResult read = await new HttpRequestReader(8192, FileShareHttpTimeouts.Request).ReadAsync(stream, cancellationToken);
                 switch (read.Status)
                 {
@@ -258,6 +232,5 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
 /// <summary>The time limits of one connection, in one place for the share and its tests.</summary>
 internal static class FileShareHttpTimeouts
 {
-    public static readonly TimeSpan Handshake = TimeSpan.FromSeconds(10);
     public static readonly TimeSpan Request = TimeSpan.FromSeconds(10);
 }
