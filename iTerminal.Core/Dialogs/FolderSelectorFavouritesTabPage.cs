@@ -14,7 +14,7 @@ using iConsole.Interfaces;
 
 namespace iTerminal.Core.Dialogs;
 
-public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
+public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransientOverlayHost
 {
     private string _key = "Favourites";
     private ISettingsService _settingsService { get; set; }
@@ -27,6 +27,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
     private readonly Label _confirmLabel;
     private readonly DeleteFavouriteCommand _deleteFavouriteCommand;
     private int? _pendingDeleteIndex;
+    private Url? _pendingDeleteUrl;
     public ScrollableModel ScrollableModel => _listBox.ScrollableModel;
 
     /// <summary>The favourites as they are listed, in list order. Exposed for the select command
@@ -110,10 +111,25 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
         {
             return;
         }
+        var favourite = _favourites.AsSnapshot().ElementAt(index);
         _pendingDeleteIndex = index;
-        _confirmLabel.Text = string.Format(
-            iConsole.Localization.UiText.Get("FolderSelector.Favourites.ConfirmRemove", "Remove {0} from the favourites?  y:yes  n:no"),
-            _favourites.AsSnapshot().ElementAt(index).FullUrl.Shrink(Math.Max(0, (int)ViewSize.Width - 40))!);
+        _pendingDeleteUrl = favourite;
+        // The question has to fit the status line whole, so the name gives up the room the rest of the question needs.
+        var question = iConsole.Localization.UiText.Get("FolderSelector.Favourites.ConfirmRemove", "Remove {0} from the favourites?  y:yes  n:no");
+        var room = Math.Max(10, (int)ViewSize.Width - 2 - (question.Length - "{0}".Length));
+        _confirmLabel.Text = string.Format(question, favourite.FullUrl.Shrink(room));
+    }
+
+    public bool IsOverlayOpen => _pendingDeleteIndex is not null;
+
+    /// <summary>Esc takes the question down and leaves the selector open; it is the first of the two Esc presses.</summary>
+    public void CloseOverlay() => CancelDelete();
+
+    private void CancelDelete()
+    {
+        _pendingDeleteIndex = null;
+        _pendingDeleteUrl = null;
+        _confirmLabel.Text = string.Empty;
     }
 
     /// <summary>The question on the status line, for a test to read.</summary>
@@ -125,11 +141,12 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
     private async Task AnswerDelete(bool yes)
     {
         var pending = _pendingDeleteIndex;
-        _pendingDeleteIndex = null;
-        _confirmLabel.Text = string.Empty;
-        // The cursor cannot have moved since the question went up (a key other than y cancels it first), but the
-        // delete acts on the cursor, so check it has not before running it.
-        if (yes && pending is int index && (int)_listBox.ScrollableModel.CursorPosition.Y == index)
+        var pendingUrl = _pendingDeleteUrl;
+        CancelDelete();
+        // The delete acts on the cursor, so it runs only if the cursor still rests on the favourite the question named.
+        if (yes && pending is int index && pendingUrl is not null
+            && (int)_listBox.ScrollableModel.CursorPosition.Y == index
+            && index < _favourites.Count && _favourites.AsSnapshot().ElementAt(index).FullUrl == pendingUrl.FullUrl)
         {
             await _deleteFavouriteCommand.RunAsync(null);
         }
@@ -139,9 +156,10 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
     {
         if (_pendingDeleteIndex is not null)
         {
-            var plain = !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt;
+            // Shift is allowed so that Y answers yes too; Ctrl and Alt combinations are not answers.
+            var plain = !keyEvent.Control && !keyEvent.Alt;
             var answer = char.ToLowerInvariant(keyEvent.KeyChar);
-            if (plain && (answer is 'y' or 'n' || keyEvent.ConsoleKey == ConsoleKey.Enter))
+            if (plain && (answer is 'y' or 'n' || (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Shift)))
             {
                 await AnswerDelete(answer == 'y');
                 return true;
@@ -154,7 +172,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
 
     private sealed class BeginDeleteFavouriteCommand : Command
     {
-        public override string Title => "Delete a favourite";
+        public override string Title => iConsole.Localization.UiText.Title("Delete a favourite");
 
         public override bool CanExecute() => Control?.Parent is FolderSelectorFavouritesTabPage page && page._favourites.Any();
 

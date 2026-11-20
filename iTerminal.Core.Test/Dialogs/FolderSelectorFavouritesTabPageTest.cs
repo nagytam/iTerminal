@@ -1,3 +1,4 @@
+using iConsole.Controls;
 using iConsole.Data;
 using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iTerminal.Core.Dialogs;
@@ -221,5 +222,51 @@ public class FolderSelectorFavouritesTabPageTest
 
         AssertScreenContains(again, "Remove ");
         AssertScreenContains(again, "from the favourites?");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ALongPath_StillLeavesTheNoAnswerOnTheStatusLine()
+    {
+        var longPath = @"C:\" + string.Concat(Enumerable.Repeat("folder-", 12));
+        var (page, _) = await CreatePageAsync(longPath);
+        page.OnInitializeLayout();
+        page.SetFocus();
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+
+        Render(page);
+        ScreenBuffer again = Render(page);
+
+        AssertScreenContains(again, "n:no");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Esc_DropsTheQuestionAndKeepsTheFavourite()
+    {
+        var (page, _) = await CreatePageAsync(@"C:\one", @"C:\two");
+        page.SetFocus();
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+        ITransientOverlayHost host = page;
+
+        Assert.IsTrue(host.IsOverlayOpen);
+        host.CloseOverlay();
+
+        Assert.IsFalse(host.IsOverlayOpen);
+        Assert.AreEqual(2, page.Favourites.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ShiftY_AlsoAnswersYes()
+    {
+        var (page, _) = await CreatePageAsync(@"C:\one", @"C:\two");
+        page.SetFocus();
+        await page.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D, control: true));
+
+        await page.HandleKeyEventAsync(new KeyEvent('Y', ConsoleKey.Y, true, false, false));
+
+        Assert.AreEqual(1, page.Favourites.Count);
+        Assert.IsFalse(page.IsAskingToDeleteForTest);
     }
 }
