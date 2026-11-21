@@ -44,7 +44,9 @@ The detailed write-ups, one file per subsystem:
   tab is never translated. The footer does the same with `Footer.` + the label of `F5-Copy`. An entry without a key stays English, so
   a new menu entry needs a `Menu.*` row in every `AppStrings*.resx` (the completeness test fails otherwise).
 - **Adding a string:** add the key to the neutral file and to all five language files; `LocalizationResourcesTest` fails when a
-  language lacks a key, has an extra one, or changes the `{n}` placeholders. Strings are extracted in stages: the menu bar, hot key
+  language lacks a key, has an extra one, or changes the `{n}` placeholders. Every `<data>` entry stays sorted by key in every
+  file (ordinal, case-sensitive, as `StringComparer.Ordinal` sorts), so a new key goes at its sorted position, never at the end.
+  Two PRs that append to the same file conflict on every addition; sorted insertion keeps them apart unless they add neighbouring keys. Strings are extracted in stages: the menu bar, hot key
   bar, language dialog, command palette, command titles and many dialog bodies are localized. Continue extracting app-authored feature
   output in focused increments, and pair new keys with output assertions because resource completeness does not detect hard-coded literals.
 

@@ -58,299 +58,179 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Common.Ok" xml:space="preserve">
-    <value>OK</value>
+  <data name="Certificate.Fallback.Failed" xml:space="preserve">
+    <value>A fájl nem nyitható meg</value>
   </data>
-  <data name="Common.Cancel" xml:space="preserve">
-    <value>Mégse</value>
+  <data name="Certificate.Fallback.NoCertificate" xml:space="preserve">
+    <value>Ebben a fájlban nincs tanúsítvány</value>
   </data>
-  <data name="Common.Continue" xml:space="preserve">
-    <value>Folytatás</value>
+  <data name="Certificate.Fallback.TooLarge" xml:space="preserve">
+    <value>A fájl nagyobb 1 MiB-nál</value>
   </data>
-  <data name="Common.Confirm" xml:space="preserve">
-    <value>Megerősítés</value>
+  <data name="Certificate.Fallback.Unreadable" xml:space="preserve">
+    <value>A fájl nem olvasható</value>
   </data>
-  <data name="Common.Help" xml:space="preserve">
-    <value>Súgó</value>
+  <data name="Certificate.Field.CertificateAuthority" xml:space="preserve">
+    <value>Tanúsító hatóság</value>
   </data>
-  <data name="Help.CloseHint" xml:space="preserve">
-    <value>Esc: súgó bezárása   ↑↓ PgUp PgDn: görgetés</value>
+  <data name="Certificate.Field.ExtendedKeyUsage" xml:space="preserve">
+    <value>Bővített kulcshasználat</value>
   </data>
-  <data name="Control.Name.LeftPanel" xml:space="preserve">
-    <value>Bal panel</value>
+  <data name="Certificate.Field.Issuer" xml:space="preserve">
+    <value>Kibocsátó</value>
   </data>
-  <data name="Control.Name.RightPanel" xml:space="preserve">
-    <value>Jobb panel</value>
+  <data name="Certificate.Field.KeyUsage" xml:space="preserve">
+    <value>Kulcshasználat</value>
   </data>
-  <data name="Hint.PromptAccept" xml:space="preserve">
-    <value>Érték elfogadása</value>
+  <data name="Certificate.Field.Names" xml:space="preserve">
+    <value>Alternatív nevek</value>
   </data>
-  <data name="Hint.PromptCancel" xml:space="preserve">
-    <value>Mégse</value>
+  <data name="Certificate.Field.NotAfter" xml:space="preserve">
+    <value>Érvényes eddig</value>
   </data>
-  <data name="Hint.PromptMove" xml:space="preserve">
-    <value>Kijelölés mozgatása</value>
+  <data name="Certificate.Field.NotBefore" xml:space="preserve">
+    <value>Érvényes ettől</value>
   </data>
-  <data name="Hint.PromptYesNo" xml:space="preserve">
-    <value>Válasz igen vagy nem</value>
+  <data name="Certificate.Field.PathLength" xml:space="preserve">
+    <value>Lánchossz</value>
   </data>
-  <data name="Hint.PromptDefault" xml:space="preserve">
-    <value>Alapértelmezett használata</value>
+  <data name="Certificate.Field.PublicKey" xml:space="preserve">
+    <value>Nyilvános kulcs</value>
   </data>
-  <data name="Common.Back" xml:space="preserve">
-    <value>Vissza</value>
+  <data name="Certificate.Field.SelfIssued" xml:space="preserve">
+    <value>Önkiállított</value>
   </data>
-  <data name="Common.Paste" xml:space="preserve">
-    <value>Beillesztés</value>
+  <data name="Certificate.Field.Serial" xml:space="preserve">
+    <value>Sorozatszám</value>
   </data>
-  <data name="Common.Undo" xml:space="preserve">
-    <value>Visszavonás</value>
+  <data name="Certificate.Field.Sha1" xml:space="preserve">
+    <value>SHA-1</value>
   </data>
-  <data name="Common.Save" xml:space="preserve">
-    <value>Mentés</value>
+  <data name="Certificate.Field.Sha256" xml:space="preserve">
+    <value>SHA-256</value>
   </data>
-  <data name="Common.Stop" xml:space="preserve">
-    <value>Leállítás</value>
+  <data name="Certificate.Field.SignatureAlgorithm" xml:space="preserve">
+    <value>Aláírás</value>
   </data>
-  <data name="Common.Close" xml:space="preserve">
-    <value>Bezárás</value>
+  <data name="Certificate.Field.Subject" xml:space="preserve">
+    <value>Tárgy</value>
   </data>
-  <data name="Common.Yes" xml:space="preserve">
-    <value>Igen</value>
+  <data name="Certificate.Hint.Step" xml:space="preserve">
+    <value>Előző vagy következő tanúsítvány megjelenítése</value>
   </data>
-  <data name="Common.No" xml:space="preserve">
-    <value>Nem</value>
+  <data name="Certificate.Picker.Label" xml:space="preserve">
+    <value>Tanúsítvány</value>
+  </data>
+  <data name="Certificate.Status.Count" xml:space="preserve">
+    <value>{0}. tanúsítvány, összesen: {1}</value>
+  </data>
+  <data name="Certificate.Status.Expired" xml:space="preserve">
+    <value>lejárt: {0}</value>
+  </data>
+  <data name="Certificate.Status.Loading" xml:space="preserve">
+    <value>A tanúsítvány olvasása…</value>
+  </data>
+  <data name="Certificate.Status.NotYetValid" xml:space="preserve">
+    <value>érvényes ettől: {0}</value>
+  </data>
+  <data name="Certificate.Status.PrivateKeys" xml:space="preserve">
+    <value> · {0} privát kulcs blokk nincs megjelenítve</value>
+  </data>
+  <data name="Certificate.Status.Valid" xml:space="preserve">
+    <value>érvényes eddig: {0}</value>
+  </data>
+  <data name="Certificate.Title" xml:space="preserve">
+    <value>Tanúsítvány</value>
+  </data>
+  <data name="Certificate.Value.No" xml:space="preserve">
+    <value>nem</value>
+  </data>
+  <data name="Certificate.Value.Yes" xml:space="preserve">
+    <value>igen</value>
+  </data>
+  <data name="CmdDesc.126bd270" xml:space="preserve">
+    <value>Ugrás az első sorra.</value>
+  </data>
+  <data name="CmdDesc.27b25e9c" xml:space="preserve">
+    <value>A jelenlegi párbeszédablak vagy felugró ablak bezárása.</value>
+  </data>
+  <data name="CmdDesc.293229ee" xml:space="preserve">
+    <value>Ugrás az utolsó sorra.</value>
+  </data>
+  <data name="CmdDesc.62d2e829" xml:space="preserve">
+    <value>Az aktuális környezetben elérhető parancsok megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.67104805" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy sorral lefelé.</value>
+  </data>
+  <data name="CmdDesc.73b65037" xml:space="preserve">
+    <value>Kilépés az alkalmazásból.</value>
+  </data>
+  <data name="CmdDesc.751aa6ef" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy oldallal felfelé.</value>
+  </data>
+  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
+    <value>A kurzor vagy a nézet mozgatása egy oszloppal jobbra.</value>
+  </data>
+  <data name="CmdDesc.bbf604eb" xml:space="preserve">
+    <value>Nyomja meg a fókuszált gombot, vagy jelölje be vagy ki a fókuszált jelölőnégyzetet.</value>
+    <comment>Nyomja meg a fókuszált gombot, vagy jelölje be vagy ki a fókuszált jelölőnégyzetet.</comment>
+  </data>
+  <data name="CmdDesc.bca6dd95" xml:space="preserve">
+    <value>Ugrás az aktuális sor végére.</value>
+  </data>
+  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
+    <value>A kurzor vagy a nézet mozgatása egy oszloppal balra.</value>
+  </data>
+  <data name="CmdDesc.db8d76c8" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy oldallal lefelé.</value>
+  </data>
+  <data name="CmdDesc.f55d8933" xml:space="preserve">
+    <value>A naptár felugró ablakának megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.f5dbb885" xml:space="preserve">
+    <value>A fókusz áthelyezése a következő fókuszálható panelre vagy vezérlőre.</value>
+  </data>
+  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy sorral felfelé.</value>
+  </data>
+  <data name="CmdDesc.fa38de03" xml:space="preserve">
+    <value>Ugrás az aktuális sor elejére.</value>
+  </data>
+  <data name="CmdDesc.fc3303d5" xml:space="preserve">
+    <value>A fókusz áthelyezése az előző fókuszálható panelre vagy vezérlőre.</value>
+  </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Dátum-felugró</value>
+    <comment>Date pop-up</comment>
+  </data>
+  <data name="CmdTitle.f1a3511a" xml:space="preserve">
+    <value>Nyomás vagy jelölés</value>
+    <comment>Nyomás vagy jelölés</comment>
   </data>
   <data name="Common.Apply" xml:space="preserve">
     <value>Alkalmaz</value>
   </data>
-  <data name="Editor.GoToLine" xml:space="preserve">
-    <value>Ugrás sorra</value>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Vissza</value>
   </data>
-  <data name="Editor.Line" xml:space="preserve">
-    <value>Sor</value>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Mégse</value>
   </data>
-  <data name="Editor.GoToOffset" xml:space="preserve">
-    <value>Ugrás eltolásra</value>
+  <data name="Common.Close" xml:space="preserve">
+    <value>Bezárás</value>
   </data>
-  <data name="Editor.Offset" xml:space="preserve">
-    <value>Eltolás</value>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Megerősítés</value>
   </data>
-  <data name="Editor.ReplaceText" xml:space="preserve">
-    <value>Szöveg cseréje</value>
+  <data name="Common.Continue" xml:space="preserve">
+    <value>Folytatás</value>
   </data>
-  <data name="Editor.Find" xml:space="preserve">
-    <value>Keresés</value>
+  <data name="Common.Help" xml:space="preserve">
+    <value>Súgó</value>
   </data>
-  <data name="Editor.With" xml:space="preserve">
-    <value>Csere erre</value>
-  </data>
-  <data name="Editor.MatchCase" xml:space="preserve">
-    <value>Kis- és nagybetű</value>
-  </data>
-  <data name="Editor.RegularExpression" xml:space="preserve">
-    <value>Reguláris kifejezés</value>
-  </data>
-  <data name="Editor.Replace" xml:space="preserve">
-    <value>Csere</value>
-  </data>
-  <data name="Editor.ReplaceAll" xml:space="preserve">
-    <value>Összes cseréje</value>
-  </data>
-  <data name="Editor.SearchText" xml:space="preserve">
-    <value>Szöveg keresése</value>
-  </data>
-  <data name="Editor.Search" xml:space="preserve">
-    <value>Keresés</value>
-  </data>
-  <data name="Editor.UnsavedChanges" xml:space="preserve">
-    <value>Nem mentett módosítások</value>
-  </data>
-  <data name="Editor.Discard" xml:space="preserve">
-    <value>Elvetés</value>
-  </data>
-  <data name="Viewer.NothingToShow" xml:space="preserve">
-    <value>Nincs mit megjeleníteni</value>
-  </data>
-  <data name="Viewer.CouldNotRead" xml:space="preserve">
-    <value>A fájl nem olvasható</value>
-  </data>
-  <data name="Viewer.NotValidJson" xml:space="preserve">
-    <value>Érvénytelen JSON: {0}</value>
-  </data>
-  <data name="Viewer.Validating" xml:space="preserve">
-    <value>Ellenőrzés…</value>
-  </data>
-  <data name="Viewer.ValidJson" xml:space="preserve">
-    <value>Érvényes JSON</value>
-  </data>
-  <data name="Viewer.HintJsonValidate" xml:space="preserve">
-    <value>Ellenőrzi, hogy a fájl érvényes JSON-e</value>
-  </data>
-  <data name="Viewer.HintToggleText" xml:space="preserve">
-    <value>A fájl szövegének vagy újra a fának megjelenítése</value>
-  </data>
-  <data name="Viewer.HintExpandAll" xml:space="preserve">
-    <value>Minden csomópont kibontása</value>
-  </data>
-  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
-    <value>Írjon be egy lekérdezést, pl. //book[price &gt; 10]/title</value>
-  </data>
-  <data name="Viewer.NoResults" xml:space="preserve">
-    <value>Nincs találat</value>
-  </data>
-  <data name="Viewer.NotWellFormed" xml:space="preserve">
-    <value>Nem jól formált XML: {0}</value>
-  </data>
-  <data name="Viewer.RunningQuery" xml:space="preserve">
-    <value>Lekérdezés futtatása…</value>
-  </data>
-  <data name="Viewer.XPathError" xml:space="preserve">
-    <value>XPath-hiba: {0}</value>
-  </data>
-  <data name="Viewer.NoMatches" xml:space="preserve">
-    <value>Nincs egyezés</value>
-  </data>
-  <data name="Viewer.Matches" xml:space="preserve">
-    <value>{0:N0} egyezés</value>
-  </data>
-  <data name="Viewer.ShowingMatches" xml:space="preserve">
-    <value>{0:N0} / {1:N0} egyezés megjelenítve</value>
-  </data>
-  <data name="Viewer.Valid" xml:space="preserve">
-    <value>Érvényes</value>
-  </data>
-  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
-    <value>{0:N0} hiba, {1:N0} figyelmeztetés</value>
-  </data>
-  <data name="Viewer.HintXmlValidate" xml:space="preserve">
-    <value>Ellenőrzés a dokumentum által megnevezett sémával vagy DTD-vel</value>
-  </data>
-  <data name="Viewer.HintXPathBox" xml:space="preserve">
-    <value>Ugrás az XPath mezőre</value>
-  </data>
-  <data name="Viewer.HintRunXPath" xml:space="preserve">
-    <value>XPath-lekérdezés futtatása, vagy a kijelölt találat megnyitása a fában</value>
-  </data>
-  <data name="Viewer.NotSaved" xml:space="preserve">
-    <value>Nincs mentve: {0}</value>
-  </data>
-  <data name="Viewer.NowhereToSave" xml:space="preserve">
-    <value>Nincs hová menteni: {0}</value>
-  </data>
-  <data name="Viewer.HintSave" xml:space="preserve">
-    <value>Fájl mentése</value>
-  </data>
-  <data name="Viewer.HintIndent" xml:space="preserve">
-    <value>Behúzás</value>
-  </data>
-  <data name="Viewer.HintCodePage" xml:space="preserve">
-    <value>Következő kódlap (Shift: előző)</value>
-  </data>
-  <data name="Hint.DismissMessage" xml:space="preserve">
-    <value>Az üzenet bezárása</value>
-  </data>
-  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
-    <value>A kiemelés mozgatása az útvonal mentén</value>
-  </data>
-  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
-    <value>Első vagy utolsó szakasz</value>
-  </data>
-  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
-    <value>A kiemelt szakasz megnyitása</value>
-  </data>
-  <data name="Hint.PressButton" xml:space="preserve">
-    <value>A gomb megnyomása</value>
-  </data>
-  <data name="Hint.MoveSelectedDay" xml:space="preserve">
-    <value>A kijelölt nap vagy hét mozgatása</value>
-  </data>
-  <data name="Hint.PreviousNextMonth" xml:space="preserve">
-    <value>Előző vagy következő hónap</value>
-  </data>
-  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
-    <value>A hónap első vagy utolsó napja</value>
-  </data>
-  <data name="Hint.SelectToday" xml:space="preserve">
-    <value>A mai nap kijelölése</value>
-  </data>
-  <data name="Hint.PreviousNextYear" xml:space="preserve">
-    <value>Előző vagy következő év</value>
-  </data>
-  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
-    <value>A kijelölt nap kiválasztása</value>
-  </data>
-  <data name="Hint.CheckOrUncheck" xml:space="preserve">
-    <value>Bejelölés vagy törlés</value>
-  </data>
-  <data name="Hint.MoveCursor" xml:space="preserve">
-    <value>A kurzor mozgatása</value>
-  </data>
-  <data name="Hint.MoveCursorPage" xml:space="preserve">
-    <value>A kurzor mozgatása egy oldallal</value>
-  </data>
-  <data name="Hint.FirstOrLastItem" xml:space="preserve">
-    <value>Első vagy utolsó elem</value>
-  </data>
-  <data name="Hint.ActivateList" xml:space="preserve">
-    <value>A lista aktiválása</value>
-  </data>
-  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
-    <value>A kurzor alatti elem bejelölése vagy törlése</value>
-  </data>
-  <data name="Hint.CheckEveryItem" xml:space="preserve">
-    <value>Minden elem bejelölése vagy törlése</value>
-  </data>
-  <data name="Hint.InvertEveryItem" xml:space="preserve">
-    <value>Minden elem megfordítása</value>
-  </data>
-  <data name="Hint.MoveBetweenChips" xml:space="preserve">
-    <value>Mozgás a chipek között</value>
-  </data>
-  <data name="Hint.FirstOrLastChip" xml:space="preserve">
-    <value>Első vagy utolsó chip</value>
-  </data>
-  <data name="Hint.AddChip" xml:space="preserve">
-    <value>Chip hozzáadása a [+] helyen</value>
-  </data>
-  <data name="Hint.RemoveActiveChip" xml:space="preserve">
-    <value>Az aktív chip eltávolítása</value>
-  </data>
-  <data name="Hint.MoveOverPalette" xml:space="preserve">
-    <value>A kurzor mozgatása a palettán</value>
-  </data>
-  <data name="Hint.FirstOrLastColour" xml:space="preserve">
-    <value>Első vagy utolsó szín</value>
-  </data>
-  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
-    <value>A kurzor alatti szín kiválasztása</value>
-  </data>
-  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
-    <value>Az előző vagy következő elem kiválasztása</value>
-  </data>
-  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
-    <value>Egy oldallal távolabbi elem kiválasztása</value>
-  </data>
-  <data name="Hint.JumpToLetter" xml:space="preserve">
-    <value>Ugrás a következő, ezekkel kezdődő elemre</value>
-  </data>
-  <data name="Hint.OpenList" xml:space="preserve">
-    <value>A lista megnyitása</value>
-  </data>
-  <data name="Hint.MoveOverItems" xml:space="preserve">
-    <value>Mozgás az elemek között</value>
-  </data>
-  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
-    <value>A tétel futtatása vagy almenüjének megnyitása</value>
-  </data>
-  <data name="Hint.OpenSubmenu" xml:space="preserve">
-    <value>Az almenü megnyitása</value>
-  </data>
-  <data name="Hint.CloseSubmenu" xml:space="preserve">
-    <value>Az almenü bezárása</value>
-  </data>
-  <data name="Hint.CloseMenu" xml:space="preserve">
-    <value>A menü bezárása</value>
+  <data name="Common.No" xml:space="preserve">
+    <value>Nem</value>
   </data>
   <data name="Common.NoData" xml:space="preserve">
     <value>Nincs adat</value>
@@ -358,452 +238,125 @@
   <data name="Common.NoRows" xml:space="preserve">
     <value>Nincs sor</value>
   </data>
-  <data name="Hint.ClearField" xml:space="preserve">
-    <value>A mező törlése</value>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>OK</value>
   </data>
-  <data name="Hint.CloseNodeOrParent" xml:space="preserve">
-    <value>A csomópont bezárása vagy ugrás a szülőre</value>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>Beillesztés</value>
   </data>
-  <data name="Hint.CloseSubmenuOrPrevious" xml:space="preserve">
-    <value>Az almenü bezárása vagy ugrás az előző menüre</value>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Mentés</value>
   </data>
-  <data name="Hint.CopySelection" xml:space="preserve">
-    <value>A kijelölés másolása</value>
+  <data name="Common.Stop" xml:space="preserve">
+    <value>Leállítás</value>
   </data>
-  <data name="Hint.CutSelection" xml:space="preserve">
-    <value>A kijelölés kivágása</value>
+  <data name="Common.Undo" xml:space="preserve">
+    <value>Visszavonás</value>
   </data>
-  <data name="Hint.DeleteCharacter" xml:space="preserve">
-    <value>Egy karakter törlése</value>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Igen</value>
   </data>
-  <data name="Hint.FoldAll" xml:space="preserve">
-    <value>Az összes régió összecsukása vagy kinyitása</value>
+  <data name="Conflict.ApplyToAll" xml:space="preserve">
+    <value>Alkalmazás minden további ütközésre</value>
   </data>
-  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
-    <value>Mentés a következő kódolással (Shift: előző)</value>
+  <data name="Conflict.KeepLarger" xml:space="preserve">
+    <value>A nagyobbat megtart</value>
   </data>
-  <data name="Hint.MoveLines" xml:space="preserve">
-    <value>A sor (vagy a kijelölt sorok) feljebb / lejjebb mozgatása</value>
+  <data name="Conflict.KeepNewer" xml:space="preserve">
+    <value>Az újabbat megtart</value>
   </data>
-  <data name="Hint.DuplicateLine" xml:space="preserve">
-    <value>A sor (vagy a kijelölt sorok) duplikálása</value>
+  <data name="Conflict.Message" xml:space="preserve">
+    <value>A(z) {0} már megtalálható a célmappában.</value>
   </data>
-  <data name="Hint.ToggleComment" xml:space="preserve">
-    <value>A sor (vagy a kijelölt sorok) kommentelése / a komment törlése</value>
+  <data name="Conflict.Overwrite" xml:space="preserve">
+    <value>Felülírás</value>
   </data>
-  <data name="Hint.TabsToSpaces" xml:space="preserve">
-    <value>Tabulátorok szóközökre</value>
+  <data name="Conflict.Rename" xml:space="preserve">
+    <value>Átnevezés</value>
   </data>
-  <data name="Hint.TrimTrailing" xml:space="preserve">
-    <value>Sorvégi szóközök törlése</value>
+  <data name="Conflict.Skip" xml:space="preserve">
+    <value>Kihagyás</value>
   </data>
-  <data name="Hint.JoinLines" xml:space="preserve">
-    <value>Sorok összefűzése</value>
+  <data name="Conflict.Title" xml:space="preserve">
+    <value>A fájl már létezik</value>
   </data>
-  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
-    <value>Ismétlődő sorok törlése</value>
+  <data name="Control.Name.LeftPanel" xml:space="preserve">
+    <value>Bal panel</value>
   </data>
-  <data name="Hint.RemoveBlankLines" xml:space="preserve">
-    <value>Üres sorok törlése</value>
+  <data name="Control.Name.RightPanel" xml:space="preserve">
+    <value>Jobb panel</value>
   </data>
-  <data name="Hint.ShowWhitespace" xml:space="preserve">
-    <value>Szóközök, tabulátorok és sorvégek megjelenítése (újra: elrejtés)</value>
+  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
+    <value>a lekérdezés vége</value>
   </data>
-  <data name="Hint.EdgeColumn" xml:space="preserve">
-    <value>A 80. oszlop jelölése (újra: elrejtés)</value>
+  <data name="Csv.Error.Expected" xml:space="preserve">
+    <value>Várt: {0}, ezt találtam: {1}</value>
   </data>
-  <data name="Hint.FollowFile" xml:space="preserve">
-    <value>A fájl követése növekedés közben</value>
+  <data name="Csv.Error.Limit" xml:space="preserve">
+    <value>A LIMIT egész számot vár</value>
   </data>
-  <data name="Hint.StopFollowing" xml:space="preserve">
-    <value>A fájl követésének leállítása</value>
+  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
+    <value>Nincs '{0}' nevű oszlop. Oszlopok: {1}</value>
   </data>
-  <data name="Hint.FindNext" xml:space="preserve">
-    <value>Következő találat keresése</value>
+  <data name="Csv.Error.Unterminated" xml:space="preserve">
+    <value>Egy idézőjel nincs lezárva: hiányzik a {0}</value>
   </data>
-  <data name="Hint.FindPrevious" xml:space="preserve">
-    <value>Előző találat keresése</value>
+  <data name="Csv.Export.Ask" xml:space="preserve">
+    <value>Sorok mentése ide:</value>
   </data>
-  <data name="Hint.DeleteLine" xml:space="preserve">
-    <value>A sor törlése</value>
+  <data name="Csv.Export.Cancelled" xml:space="preserve">
+    <value>Semmi nem íródott</value>
   </data>
-  <data name="Hint.DeleteWordAfter" xml:space="preserve">
-    <value>A kurzor utáni szó törlése</value>
+  <data name="Csv.Export.Done" xml:space="preserve">
+    <value>{0:N0} sor exportálva ide: {1}</value>
   </data>
-  <data name="Hint.DeleteWordBefore" xml:space="preserve">
-    <value>A kurzor előtti szó törlése</value>
+  <data name="Csv.Export.Failed" xml:space="preserve">
+    <value>A fájl nem írható: {0}</value>
   </data>
-  <data name="Hint.DeleteToStart" xml:space="preserve">
-    <value>Törlés a szöveg elejéig</value>
+  <data name="Csv.Export.Format" xml:space="preserve">
+    <value>Exportálás formátuma</value>
   </data>
-  <data name="Hint.ExpandOrCollapseNode" xml:space="preserve">
-    <value>A csomópont kibontása vagy összecsukása</value>
+  <data name="Csv.Export.Invalid" xml:space="preserve">
+    <value>Adjon meg fájlnevet, mappa nélkül</value>
   </data>
-  <data name="Hint.FirstOrLastField" xml:space="preserve">
-    <value>Első vagy utolsó mező</value>
+  <data name="Csv.Export.NoFolder" xml:space="preserve">
+    <value>Ebbe a fájl mellé nem lehet írni</value>
   </data>
-  <data name="Hint.FirstOrLastRow" xml:space="preserve">
-    <value>Első vagy utolsó sor</value>
+  <data name="Csv.Export.Overwrite" xml:space="preserve">
+    <value>A(z) {0} már létezik. Felülírja?</value>
   </data>
-  <data name="Hint.FlipSign" xml:space="preserve">
-    <value>Az előjel megfordítása</value>
+  <data name="Csv.Export.ReadOnly" xml:space="preserve">
+    <value>Ez a mappa csak olvasható: semmi nem íródott</value>
   </data>
-  <data name="Hint.FoldRegion" xml:space="preserve">
-    <value>A kurzornál lévő terület összecsukása vagy kibontása</value>
+  <data name="Csv.Grid.Empty" xml:space="preserve">
+    <value>A lekérdezésnek nincs találata</value>
   </data>
-  <data name="Hint.GoToMatchingBracket" xml:space="preserve">
-    <value>Ugrás a párjául szolgáló zárójelre</value>
+  <data name="Csv.Hint.Ends" xml:space="preserve">
+    <value>Ugrás az első vagy az utolsó sorra</value>
   </data>
-  <data name="Hint.GoToFileStartOrEnd" xml:space="preserve">
-    <value>Ugrás a fájl elejére vagy végére</value>
+  <data name="Csv.Hint.Export" xml:space="preserve">
+    <value>A megjelölt, vagy a képernyőn látható sorok exportálása CSV-, JSON- vagy XML-fájlba</value>
   </data>
-  <data name="Hint.IndentOutdent" xml:space="preserve">
-    <value>Behúzás / kihúzás (a kijelölt sorokra is)</value>
+  <data name="Csv.Hint.Mark" xml:space="preserve">
+    <value>Sor megjelölése, és egy sorral lejjebb lépés</value>
   </data>
-  <data name="Hint.JumpFirstLastItem" xml:space="preserve">
-    <value>Ugrás az első vagy utolsó elemre</value>
+  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
+    <value>Mozgás az oszlopok között</value>
   </data>
-  <data name="Hint.MarkItemUnderCursor" xml:space="preserve">
-    <value>A kurzor alatti elem megjelölése vagy a jelölés törlése</value>
+  <data name="Csv.Hint.MoveRows" xml:space="preserve">
+    <value>Mozgás a sorok között</value>
   </data>
-  <data name="Hint.MoveHourMinuteSecond" xml:space="preserve">
-    <value>Váltás óra, perc és másodperc között</value>
+  <data name="Csv.Hint.Page" xml:space="preserve">
+    <value>Lapozás oldalanként</value>
   </data>
-  <data name="Hint.MoveByWord" xml:space="preserve">
-    <value>Mozgás szavanként</value>
-  </data>
-  <data name="Hint.MoveOverMenuItems" xml:space="preserve">
-    <value>Mozgás a menüelemek között</value>
-  </data>
-  <data name="Hint.MoveCursorByPage" xml:space="preserve">
-    <value>A kurzor mozgatása oldalanként</value>
-  </data>
-  <data name="Hint.NextBookmark" xml:space="preserve">
-    <value>Következő könyvjelző</value>
-  </data>
-  <data name="Hint.NextField" xml:space="preserve">
-    <value>Következő mező</value>
-  </data>
-  <data name="Hint.OpenNodeOrChild" xml:space="preserve">
-    <value>A csomópont megnyitása vagy belépés az első gyerekébe</value>
-  </data>
-  <data name="Hint.OpenSubmenuOrNext" xml:space="preserve">
-    <value>Az almenü megnyitása vagy ugrás a következő menüre</value>
-  </data>
-  <data name="Hint.PreviousBookmark" xml:space="preserve">
-    <value>Előző könyvjelző</value>
-  </data>
-  <data name="Hint.Redo" xml:space="preserve">
-    <value>Ismétlés</value>
-  </data>
-  <data name="Hint.RemoveLastDigit" xml:space="preserve">
-    <value>Az utolsó számjegy törlése</value>
-  </data>
-  <data name="Hint.RunSelectedItem" xml:space="preserve">
-    <value>A kijelölt tétel futtatása</value>
-  </data>
-  <data name="Hint.ScrollLine" xml:space="preserve">
-    <value>Görgetés soronként</value>
-  </data>
-  <data name="Hint.ScrollPage" xml:space="preserve">
-    <value>Görgetés oldalanként</value>
-  </data>
-  <data name="Hint.ScrollSideways" xml:space="preserve">
-    <value>Görgetés oldalra</value>
-  </data>
-  <data name="Hint.SelectAll" xml:space="preserve">
-    <value>Az összes kijelölése</value>
-  </data>
-  <data name="Hint.SelectItemUnderCursor" xml:space="preserve">
-    <value>A kurzor alatti elem kijelölése</value>
-  </data>
-  <data name="Hint.SetMinMax" xml:space="preserve">
-    <value>A minimum vagy maximum beállítása</value>
-  </data>
-  <data name="Hint.SetValueZero" xml:space="preserve">
-    <value>Az érték 0-ra állítása</value>
-  </data>
-  <data name="Hint.SetValueNearestBound" xml:space="preserve">
-    <value>A értéket a legközelebbi határra állítja</value>
-  </data>
-  <data name="Hint.StartOrEndOfText" xml:space="preserve">
-    <value>A szöveg eleje vagy vége</value>
-  </data>
-  <data name="Hint.StepField" xml:space="preserve">
-    <value>A mező léptetése</value>
-  </data>
-  <data name="Hint.StepFieldByTen" xml:space="preserve">
-    <value>A mező léptetése tízesével</value>
-  </data>
-  <data name="Hint.StepValue" xml:space="preserve">
-    <value>Az érték léptetése</value>
-  </data>
-  <data name="Hint.StepValueLarge" xml:space="preserve">
-    <value>Az érték léptetése nagy lépésekkel</value>
-  </data>
-  <data name="Hint.ToggleBookmark" xml:space="preserve">
-    <value>Könyvjelző be/ki</value>
-  </data>
-  <data name="Hint.TypeField" xml:space="preserve">
-    <value>A mező beírása</value>
-  </data>
-  <data name="Hint.TypeValue" xml:space="preserve">
-    <value>Az érték beírása</value>
-  </data>
-  <data name="Hint.BackPreviousMenu" xml:space="preserve">
-    <value>Vissza / előző menü</value>
-  </data>
-  <data name="Hint.CancelKeepEditing" xml:space="preserve">
-    <value>Mégse, a szerkesztés folytatása</value>
-  </data>
-  <data name="Hint.CentreDivider" xml:space="preserve">
-    <value>Az elválasztó középre állítása</value>
-  </data>
-  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
-    <value>Az első vagy utolsó szakasz kiválasztása</value>
-  </data>
-  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
-    <value>A kiemelt elem kiválasztása</value>
-  </data>
-  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
-    <value>Az előző vagy következő beállítás kiválasztása</value>
-  </data>
-  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
-    <value>Az előző vagy következő szakasz kiválasztása</value>
-  </data>
-  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
-    <value>Az értékelés törlése vagy a maximum megadása</value>
-  </data>
-  <data name="Hint.ClearSearch" xml:space="preserve">
-    <value>A keresés törlése</value>
-  </data>
-  <data name="Hint.CloseMenuShort" xml:space="preserve">
-    <value>Menü bezárása</value>
-  </data>
-  <data name="Hint.CloseList" xml:space="preserve">
-    <value>A lista bezárása</value>
-  </data>
-  <data name="Hint.ClosePopup" xml:space="preserve">
-    <value>A felugró ablak bezárása</value>
-  </data>
-  <data name="Hint.CloseViewer" xml:space="preserve">
-    <value>A megjelenítő bezárása</value>
-  </data>
-  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
-    <value>Bezárás ugrás nélkül</value>
-  </data>
-  <data name="Hint.CollapseSection" xml:space="preserve">
-    <value>A szakasz összecsukása</value>
-  </data>
-  <data name="Hint.DiscardChanges" xml:space="preserve">
-    <value>A módosítások elvetése</value>
-  </data>
-  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
-    <value>A szakasz kibontása vagy összecsukása</value>
-  </data>
-  <data name="Hint.ExpandSection" xml:space="preserve">
-    <value>A szakasz kibontása</value>
-  </data>
-  <data name="Hint.FirstOrLastOption" xml:space="preserve">
-    <value>Első vagy utolsó beállítás</value>
-  </data>
-  <data name="Hint.FirstOrLastPage" xml:space="preserve">
-    <value>Első vagy utolsó oldal</value>
-  </data>
-  <data name="Hint.FollowLink" xml:space="preserve">
-    <value>A hivatkozás követése</value>
-  </data>
-  <data name="Hint.GoToTheLine" xml:space="preserve">
-    <value>Ugrás a sorra</value>
-  </data>
-  <data name="Hint.GoToTheOffset" xml:space="preserve">
-    <value>Ugrás az eltolásra</value>
-  </data>
-  <data name="Hint.GoTopOrBottom" xml:space="preserve">
-    <value>Ugrás az elejére vagy a végére</value>
-  </data>
-  <data name="Hint.GoTopOrEnd" xml:space="preserve">
-    <value>Ugrás az elejére vagy a végére</value>
-  </data>
-  <data name="Hint.GoUpFolder" xml:space="preserve">
-    <value>Egy mappával feljebb</value>
-  </data>
-  <data name="Hint.LowerRaiseRating" xml:space="preserve">
-    <value>Az értékelés csökkentése vagy növelése</value>
-  </data>
-  <data name="Hint.LowerRaiseValue" xml:space="preserve">
-    <value>Az érték csökkentése vagy növelése</value>
-  </data>
-  <data name="Hint.MovePageAtATime" xml:space="preserve">
-    <value>Mozgás oldalanként</value>
-  </data>
-  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
-    <value>Mozgás az eszköztáron</value>
-  </data>
-  <data name="Hint.MoveMenuSelection" xml:space="preserve">
-    <value>A menüválasztás mozgatása</value>
-  </data>
-  <data name="Hint.MoveDividerBy8" xml:space="preserve">
-    <value>Az elválasztó mozgatása 8-cal</value>
-  </data>
-  <data name="Hint.MoveHighlight" xml:space="preserve">
-    <value>A kiemelés mozgatása</value>
-  </data>
-  <data name="Hint.NewestLineFollow" xml:space="preserve">
-    <value>Legújabb sor, és az új sorok követése</value>
-  </data>
-  <data name="Hint.OldestLine" xml:space="preserve">
-    <value>Legrégebbi sor</value>
-  </data>
-  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
-    <value>Almenü megnyitása / parancs futtatása</value>
-  </data>
-  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
-    <value>A kiemelt sor megnyitása</value>
-  </data>
-  <data name="Hint.PreviousNextPage" xml:space="preserve">
-    <value>Előző vagy következő oldal</value>
-  </data>
-  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
-    <value>Az érték növelése vagy csökkentése nagy lépésekkel</value>
-  </data>
-  <data name="Hint.ResetClock" xml:space="preserve">
-    <value>Az óra nullázása</value>
-  </data>
-  <data name="Hint.RunTheItem" xml:space="preserve">
-    <value>A tétel futtatása</value>
-  </data>
-  <data name="Hint.SaveChanges" xml:space="preserve">
-    <value>A módosítások mentése</value>
-  </data>
-  <data name="Hint.Scroll" xml:space="preserve">
-    <value>Görgetés</value>
-  </data>
-  <data name="Hint.ScrollRow" xml:space="preserve">
-    <value>Görgetés soronként</value>
-  </data>
-  <data name="Hint.ScrollOneLine" xml:space="preserve">
-    <value>Görgetés egy sorral</value>
-  </data>
-  <data name="Hint.ScrollOnePage" xml:space="preserve">
-    <value>Görgetés egy oldallal</value>
-  </data>
-  <data name="Hint.ScrollOneRow" xml:space="preserve">
-    <value>Görgetés egy sorral</value>
-  </data>
-  <data name="Hint.SelectThisOption" xml:space="preserve">
-    <value>A beállítás kiválasztása</value>
-  </data>
-  <data name="Hint.SetRatingDirectly" xml:space="preserve">
-    <value>Az értékelés közvetlen beállítása</value>
-  </data>
-  <data name="Hint.SwitchTextHex" xml:space="preserve">
-    <value>Váltás a szöveg- és a hexa nézet között</value>
-  </data>
-  <data name="Hint.SwitchSetting" xml:space="preserve">
-    <value>A beállítás be- vagy kikapcsolása</value>
-  </data>
-  <data name="Hint.TypeLineNumber" xml:space="preserve">
-    <value>Írja be a sorszámot (az első billentyű felülírja a jelenlegit)</value>
-  </data>
-  <data name="Hint.TypeOffset" xml:space="preserve">
-    <value>Írja be az eltolást decimálisan vagy hexadecimálisan</value>
-  </data>
-  <data name="Pagination.Caption" xml:space="preserve">
-    <value>{0}. oldal / {1}</value>
-  </data>
-  <data name="Msg.ErrorPrefix" xml:space="preserve">
-    <value>Hiba: {0}</value>
-  </data>
-  <data name="Hint.OpenMenuNamed" xml:space="preserve">
-    <value>A(z) {0} menü megnyitása</value>
-  </data>
-  <data name="Status.Tasks" xml:space="preserve">
-    <value>Feladatok: {0}</value>
-  </data>
-  <data name="Status.Search" xml:space="preserve">
-    <value>Keresés: {0}</value>
-  </data>
-  <data name="Status.Hit" xml:space="preserve">
-    <value>Találat {0}/{1}</value>
-  </data>
-  <data name="Wizard.Step" xml:space="preserve">
-    <value>{0}. lépés / {1}: {2}</value>
-  </data>
-  <data name="Help.FocusedControl" xml:space="preserve">
-    <value>Fókuszban lévő vezérlő: {0}</value>
-  </data>
-  <data name="Help.FocusedControlNone" xml:space="preserve">
-    <value>Fókuszban lévő vezérlő: nincs</value>
-  </data>
-  <data name="Xml.NodeCount" xml:space="preserve">
-    <value>{0} · {1:N0} csomópont</value>
-  </data>
-  <data name="Splash.Motto" xml:space="preserve">
-    <value>Svájci bicska a terminálhoz</value>
-  </data>
-  <data name="Splash.Protocols" xml:space="preserve">
-    <value>Terminálprotokollok</value>
-  </data>
-  <data name="Splash.StateOn" xml:space="preserve">
-    <value>be</value>
-  </data>
-  <data name="Splash.StateOff" xml:space="preserve">
-    <value>ki</value>
-  </data>
-  <data name="Splash.SystemInfo" xml:space="preserve">
-    <value>CPU: {0} mag, memória: {1} GB</value>
-  </data>
-  <data name="Hint.SwitchTabPage" xml:space="preserve">
-    <value>Váltás az előző / következő lapra.</value>
-  </data>
-  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
-    <value>Lapváltás, ha a fókuszban lévő vezérlő nem használja a nyílbillentyűket.</value>
-  </data>
-  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
-    <value>Ugrás közvetlenül arra a lapra, amelynek nevében szerepel a szám.</value>
-  </data>
-  <data name="Json.TopLevelItems" xml:space="preserve">
-    <value>{0:N0} legfelső szintű elem</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
-    <value>Dátum, idő és időzóna</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.Date" xml:space="preserve">
-    <value>Dátum:</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.Time" xml:space="preserve">
-    <value>Idő:</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.TimeZone" xml:space="preserve">
-    <value>Időzóna:</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.DateUtc" xml:space="preserve">
-    <value>Dátum (UTC):</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.TimeUtc" xml:space="preserve">
-    <value>Idő (UTC):</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.UtcOffset" xml:space="preserve">
-    <value>UTC-eltolás: {0} ({1})</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.SummerTime" xml:space="preserve">
-    <value>nyári időszámítás</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.StandardTime" xml:space="preserve">
-    <value>téli időszámítás</value>
-  </data>
-  <data name="Hint.MoveDivider" xml:space="preserve">
-    <value>Elválasztó áthelyezése</value>
+  <data name="Csv.Hint.RunQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása a sorokon</value>
   </data>
   <data name="Csv.Query.Label" xml:space="preserve">
     <value>Lekérdezés</value>
   </data>
   <data name="Csv.Query.Placeholder" xml:space="preserve">
     <value>e.g. SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC LIMIT 20</value>
-  </data>
-  <data name="Csv.Grid.Empty" xml:space="preserve">
-    <value>A lekérdezésnek nincs találata</value>
   </data>
   <data name="Csv.Status.Empty" xml:space="preserve">
     <value>A fájl üres</value>
@@ -814,383 +367,53 @@
   <data name="Csv.Status.Truncated" xml:space="preserve">
     <value>; csak az első {0:N0} sor van beolvasva</value>
   </data>
-  <data name="Csv.Hint.RunQuery" xml:space="preserve">
-    <value>Lekérdezés futtatása a sorokon</value>
+  <data name="Dbf.Deleted" xml:space="preserve">
+    <value>{0:N0} törölt, nincs megjelenítve</value>
   </data>
-  <data name="Csv.Error.Unterminated" xml:space="preserve">
-    <value>Egy idézőjel nincs lezárva: hiányzik a {0}</value>
+  <data name="Dbf.Grid.Empty" xml:space="preserve">
+    <value>A táblázat nem tartalmaz rekordot</value>
   </data>
-  <data name="Csv.Error.Expected" xml:space="preserve">
-    <value>Várt: {0}, ezt találtam: {1}</value>
+  <data name="Dbf.NotDbase" xml:space="preserve">
+    <value>Nem dBase-tábla: {0}</value>
   </data>
-  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
-    <value>a lekérdezés vége</value>
+  <data name="Dbf.Status" xml:space="preserve">
+    <value>{0:N0} rekord, {1:N0} mező, {2}</value>
   </data>
-  <data name="Csv.Error.Limit" xml:space="preserve">
-    <value>A LIMIT egész számot vár</value>
+  <data name="Dbf.Truncated" xml:space="preserve">
+    <value>csak az első {0:N0} rekord látszik</value>
   </data>
-  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
-    <value>Nincs '{0}' nevű oszlop. Oszlopok: {1}</value>
+  <data name="Dbf.Updated" xml:space="preserve">
+    <value>frissítve: {0:yyyy-MM-dd}</value>
   </data>
-  <data name="Csv.Hint.MoveRows" xml:space="preserve">
-    <value>Mozgás a sorok között</value>
+  <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
+    <value>Dátum, idő és időzóna</value>
   </data>
-  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
-    <value>Mozgás az oszlopok között</value>
+  <data name="Dialog.DateTimeTimeZone.Date" xml:space="preserve">
+    <value>Dátum:</value>
   </data>
-  <data name="Csv.Hint.Page" xml:space="preserve">
-    <value>Lapozás oldalanként</value>
+  <data name="Dialog.DateTimeTimeZone.DateUtc" xml:space="preserve">
+    <value>Dátum (UTC):</value>
   </data>
-  <data name="Csv.Hint.Ends" xml:space="preserve">
-    <value>Ugrás az első vagy az utolsó sorra</value>
+  <data name="Dialog.DateTimeTimeZone.StandardTime" xml:space="preserve">
+    <value>téli időszámítás</value>
   </data>
-  <data name="Wizard.Next" xml:space="preserve">
-    <value>Tovább</value>
+  <data name="Dialog.DateTimeTimeZone.SummerTime" xml:space="preserve">
+    <value>nyári időszámítás</value>
   </data>
-  <data name="Wizard.Finish" xml:space="preserve">
-    <value>Befejezés</value>
+  <data name="Dialog.DateTimeTimeZone.Time" xml:space="preserve">
+    <value>Idő:</value>
   </data>
-  <data name="Conflict.Title" xml:space="preserve">
-    <value>A fájl már létezik</value>
+  <data name="Dialog.DateTimeTimeZone.TimeUtc" xml:space="preserve">
+    <value>Idő (UTC):</value>
   </data>
-  <data name="Conflict.Message" xml:space="preserve">
-    <value>A(z) {0} már megtalálható a célmappában.</value>
+  <data name="Dialog.DateTimeTimeZone.TimeZone" xml:space="preserve">
+    <value>Időzóna:</value>
   </data>
-  <data name="Conflict.Overwrite" xml:space="preserve">
-    <value>Felülírás</value>
+  <data name="Dialog.DateTimeTimeZone.UtcOffset" xml:space="preserve">
+    <value>UTC-eltolás: {0} ({1})</value>
   </data>
-  <data name="Conflict.Skip" xml:space="preserve">
-    <value>Kihagyás</value>
-  </data>
-  <data name="Conflict.Rename" xml:space="preserve">
-    <value>Átnevezés</value>
-  </data>
-  <data name="Conflict.KeepNewer" xml:space="preserve">
-    <value>Az újabbat megtart</value>
-  </data>
-  <data name="Conflict.KeepLarger" xml:space="preserve">
-    <value>A nagyobbat megtart</value>
-  </data>
-  <data name="Conflict.ApplyToAll" xml:space="preserve">
-    <value>Alkalmazás minden további ütközésre</value>
-  </data>
-  <data name="Sqlite.Query.Label" xml:space="preserve">
-    <value>Lekérdezés</value>
-  </data>
-  <data name="Sqlite.Query.Placeholder" xml:space="preserve">
-    <value>pl. SELECT * FROM tábla LIMIT 20</value>
-  </data>
-  <data name="Sqlite.Grid.Empty" xml:space="preserve">
-    <value>A lekérdezés nem adott vissza sorokat</value>
-  </data>
-  <data name="Sqlite.Status.Rows" xml:space="preserve">
-    <value>{0:N0} sor, {1} oszlop</value>
-  </data>
-  <data name="Sqlite.Status.Truncated" xml:space="preserve">
-    <value>; csak az első {0:N0} sor látszik</value>
-  </data>
-  <data name="Sqlite.Error.Unexpected" xml:space="preserve">
-    <value>A lekérdezés sikertelen: {0}</value>
-  </data>
-  <data name="Sqlite.Hint.RunQuery" xml:space="preserve">
-    <value>Lekérdezés futtatása</value>
-  </data>
-  <data name="Sqlite.Title" xml:space="preserve">
-    <value>SQLite</value>
-  </data>
-  <data name="Sqlite.Text.Rows" xml:space="preserve">
-    <value>{0:N0} sor</value>
-  </data>
-  <data name="Sqlite.Text.Truncated" xml:space="preserve">
-    <value>, csonkítva</value>
-  </data>
-  <data name="Sqlite.Title.Hint" xml:space="preserve">
-    <value>  F4:Szöveg  Enter:lekérdezés  Tab:rács</value>
-  </data>
-  <data name="Sqlite.Title.TextMode" xml:space="preserve">
-    <value> [SZÖVEG]</value>
-  </data>
-  <data name="Hint.UpperLowerCase" xml:space="preserve">
-    <value>Nagybetű / kisbetű</value>
-  </data>
-  <data name="Hint.SortLines" xml:space="preserve">
-    <value>Sorok rendezése növekvő / csökkenő</value>
-  </data>
-  <data name="Hint.LineEnding" xml:space="preserve">
-    <value>Sorvég (CRLF, LF, CR)</value>
-  </data>
-  <data name="Hint.MarkAll" xml:space="preserve">
-    <value>Minden találat megjelölése (újra: törlés)</value>
-  </data>
-  <data name="Viewer.ChangedOnDisk" xml:space="preserve">
-    <value>lemezen módosult</value>
-  </data>
-  <data name="Hdf.Picker.Label" xml:space="preserve">
-    <value>Adathalmaz</value>
-  </data>
-  <data name="Hdf.Grid.Empty" xml:space="preserve">
-    <value>Ennek az adathalmaznak nincsenek értékei</value>
-  </data>
-  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
-    <value>Ez a fájl nem tartalmaz adathalmazt</value>
-  </data>
-  <data name="Hdf.Error.Unexpected" xml:space="preserve">
-    <value>A fájl nem olvasható: {0}</value>
-  </data>
-  <data name="Hdf.Shape.Scalar" xml:space="preserve">
-    <value>skalár</value>
-  </data>
-  <data name="Hdf.Status.RowsCut" xml:space="preserve">
-    <value>; csak az első {0:N0} sor látható</value>
-  </data>
-  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
-    <value>; csak az első {0:N0} oszlop látható</value>
-  </data>
-  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
-    <value>; a lista csak az első {0:N0} adathalmazt tartalmazza</value>
-  </data>
-  <data name="Hdf.Slice.Line" xml:space="preserve">
-    <value>Szelet [{0}]  {1}. dimenzió ({2}-ből), {3}. index ({4}-ből)   [ ] dimenzió   + - index</value>
-  </data>
-  <data name="Hdf.Title" xml:space="preserve">
-    <value>HDF5</value>
-  </data>
-  <data name="Hdf.Title.Hint" xml:space="preserve">
-    <value>  Tab:rács  [ ]:dimenzió  +/-:index</value>
-  </data>
-  <data name="Hdf.Hint.Index" xml:space="preserve">
-    <value>Az aktív dimenzió indexének léptetése</value>
-  </data>
-  <data name="Hdf.Hint.Dimension" xml:space="preserve">
-    <value>Az aktív dimenzió kiválasztása</value>
-  </data>
-  <data name="Xps.Picker.Label" xml:space="preserve">
-    <value>Oldal</value>
-  </data>
-  <data name="Xps.Page.Label" xml:space="preserve">
-    <value>Oldal {0}</value>
-  </data>
-  <data name="Xps.Page.MultiDocument" xml:space="preserve">
-    <value>Dokumentum {0} · Oldal {1}</value>
-  </data>
-  <data name="Xps.Status.Page" xml:space="preserve">
-    <value>Oldal {0} / {1}</value>
-  </data>
-  <data name="Xps.Status.Size" xml:space="preserve">
-    <value> · {0} × {1}</value>
-  </data>
-  <data name="Xps.Page.NoText" xml:space="preserve">
-    <value>Ennek az oldalnak nincs szövege.</value>
-  </data>
-  <data name="Xps.NoPages" xml:space="preserve">
-    <value>Ennek a dokumentumnak nincsenek oldalai</value>
-  </data>
-  <data name="Xps.Title" xml:space="preserve">
-    <value>XPS</value>
-  </data>
-  <data name="Xps.Title.Hint" xml:space="preserve">
-    <value>  Ctrl+←/→:oldal</value>
-  </data>
-  <data name="Xps.Hint.Page" xml:space="preserve">
-    <value>Az előző vagy a következő oldal megjelenítése</value>
-  </data>
-  <data name="Exe.Title" xml:space="preserve">
-    <value>Futtatható fájl elemzése</value>
-  </data>
-  <data name="Exe.Title.Hint" xml:space="preserve">
-    <value>  Fel/Le:görgetés</value>
-  </data>
-  <data name="Exe.Button.Disassemble" xml:space="preserve">
-    <value>Visszafejtés</value>
-  </data>
-  <data name="Exe.Key.Disassemble" xml:space="preserve">
-    <value>A visszafejtés, illetve újra az elemzés megjelenítése</value>
-  </data>
-  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
-    <value>A fájl nagyobb, mint {0:N0} MB, ezért nincs visszafejtve</value>
-  </data>
-  <data name="Exe.Disassembly.Failed" xml:space="preserve">
-    <value>A visszafejtés sikertelen: {0}</value>
-  </data>
-  <data name="Exe.Disassembly.None" xml:space="preserve">
-    <value>Nincs visszafejthető kód</value>
-  </data>
-  <data name="Exe.Grid.Empty" xml:space="preserve">
-    <value>Nincs mit megjeleníteni</value>
-  </data>
-  <data name="Exe.Col.Item" xml:space="preserve">
-    <value>Tulajdonság</value>
-  </data>
-  <data name="Exe.Col.Value" xml:space="preserve">
-    <value>Érték</value>
-  </data>
-  <data name="Exe.Status.Reading" xml:space="preserve">
-    <value>A fájl olvasása…</value>
-  </data>
-  <data name="Exe.Status.Summary" xml:space="preserve">
-    <value>{0}, {1}, {2:N0} bájt</value>
-  </data>
-  <data name="Exe.Error.Unexpected" xml:space="preserve">
-    <value>A fájlt nem sikerült elemezni: {0}</value>
-  </data>
-  <data name="Exe.Sec.General" xml:space="preserve">
-    <value>Általános</value>
-  </data>
-  <data name="Exe.Sec.Hardening" xml:space="preserve">
-    <value>Védelmi kapcsolók</value>
-  </data>
-  <data name="Exe.Sec.Imports" xml:space="preserve">
-    <value>Importok</value>
-  </data>
-  <data name="Exe.Sec.Exports" xml:space="preserve">
-    <value>Exportok</value>
-  </data>
-  <data name="Exe.Sec.Sections" xml:space="preserve">
-    <value>Szakaszok (méret a fájlban, entrópia, hozzáférés)</value>
-  </data>
-  <data name="Exe.Sec.Signature" xml:space="preserve">
-    <value>Aláírás</value>
-  </data>
-  <data name="Exe.Sec.Hints" xml:space="preserve">
-    <value>Jelzések</value>
-  </data>
-  <data name="Exe.Row.Format" xml:space="preserve">
-    <value>Formátum</value>
-  </data>
-  <data name="Exe.Row.Architecture" xml:space="preserve">
-    <value>Architektúra</value>
-  </data>
-  <data name="Exe.Row.Kind" xml:space="preserve">
-    <value>Típus</value>
-  </data>
-  <data name="Exe.Row.Subsystem" xml:space="preserve">
-    <value>Platform / alrendszer</value>
-  </data>
-  <data name="Exe.Row.Timestamp" xml:space="preserve">
-    <value>Fordítva</value>
-  </data>
-  <data name="Exe.Row.Managed" xml:space="preserve">
-    <value>Felügyelt kód</value>
-  </data>
-  <data name="Exe.Value.Managed" xml:space="preserve">
-    <value>.NET-szerelvény (CLR)</value>
-  </data>
-  <data name="Exe.Row.Entry" xml:space="preserve">
-    <value>Belépési pont</value>
-  </data>
-  <data name="Exe.Row.Size" xml:space="preserve">
-    <value>Fájlméret</value>
-  </data>
-  <data name="Exe.Row.Summary" xml:space="preserve">
-    <value>Összegzés</value>
-  </data>
-  <data name="Exe.Row.Signature" xml:space="preserve">
-    <value>Aláírás</value>
-  </data>
-  <data name="Exe.Value.Yes" xml:space="preserve">
-    <value>igen</value>
-  </data>
-  <data name="Exe.Value.No" xml:space="preserve">
-    <value>nem</value>
-  </data>
-  <data name="Exe.Value.NA" xml:space="preserve">
-    <value>nem releváns vagy ismeretlen</value>
-  </data>
-  <data name="Exe.Imports.Functions" xml:space="preserve">
-    <value>{0} könyvtár, {1:N0} importált szimbólum</value>
-  </data>
-  <data name="Exe.Imports.Libraries" xml:space="preserve">
-    <value>{0} könyvtár</value>
-  </data>
-  <data name="Exe.Imports.FunctionCount" xml:space="preserve">
-    <value>{0:N0} függvény</value>
-  </data>
-  <data name="Exe.Exports.None" xml:space="preserve">
-    <value>nincs</value>
-  </data>
-  <data name="Exe.Exports.Count" xml:space="preserve">
-    <value>{0:N0} exportálva</value>
-  </data>
-  <data name="Exe.Signature.None" xml:space="preserve">
-    <value>nincs aláírva</value>
-  </data>
-  <data name="Exe.Signature.Embedded" xml:space="preserve">
-    <value>beágyazott aláírás, nincs ellenőrizve</value>
-  </data>
-  <data name="Exe.Signature.Code" xml:space="preserve">
-    <value>kódaláírás van, nincs ellenőrizve</value>
-  </data>
-  <data name="Exe.Signature.NoCertificates" xml:space="preserve">
-    <value>egy tanúsítvány sem olvasható</value>
-  </data>
-  <data name="Exe.Cert.Subject" xml:space="preserve">
-    <value>Alany</value>
-  </data>
-  <data name="Exe.Cert.Issuer" xml:space="preserve">
-    <value>Kibocsátó</value>
-  </data>
-  <data name="Exe.Cert.Valid" xml:space="preserve">
-    <value>Érvényes</value>
-  </data>
-  <data name="Exe.Cert.Thumbprint" xml:space="preserve">
-    <value>SHA-1</value>
-  </data>
-  <data name="Exe.Hint.None" xml:space="preserve">
-    <value>nem található semmi gyanús</value>
-  </data>
-  <data name="Exe.Kind.Executable" xml:space="preserve">
-    <value>Futtatható</value>
-  </data>
-  <data name="Exe.Kind.Pie" xml:space="preserve">
-    <value>Pozíciófüggetlen futtatható</value>
-  </data>
-  <data name="Exe.Kind.Library" xml:space="preserve">
-    <value>Megosztott könyvtár</value>
-  </data>
-  <data name="Exe.Kind.Object" xml:space="preserve">
-    <value>Tárgykód</value>
-  </data>
-  <data name="Exe.Kind.Driver" xml:space="preserve">
-    <value>Illesztőprogram</value>
-  </data>
-  <data name="Exe.Kind.Core" xml:space="preserve">
-    <value>Memóriakép (core)</value>
-  </data>
-  <data name="Exe.Kind.Bundle" xml:space="preserve">
-    <value>Csomag (bundle)</value>
-  </data>
-  <data name="Exe.Kind.Other" xml:space="preserve">
-    <value>Egyéb</value>
-  </data>
-  <data name="Exe.Hint.HighEntropy" xml:space="preserve">
-    <value>A(z) {0} szakasz majdnem véletlenszerű (entrópia 7,2 felett): tömörített, csomagolt vagy titkosított</value>
-  </data>
-  <data name="Exe.Hint.PackerSection" xml:space="preserve">
-    <value>A(z) {0} szakasznév csomagoló vagy védelmi program jellemzője</value>
-  </data>
-  <data name="Exe.Hint.Wx" xml:space="preserve">
-    <value>A(z) {0} szakasz írható és futtatható is</value>
-  </data>
-  <data name="Exe.Hint.FewImports" xml:space="preserve">
-    <value>Nagyon kevés import, mint egy csomagolt programnál</value>
-  </data>
-  <data name="Exe.Hint.PackerSignature" xml:space="preserve">
-    <value>{0} csomagoló jele található</value>
-  </data>
-  <data name="Exe.Hint.Sampled" xml:space="preserve">
-    <value>A(z) {0} entrópiája csak az első 32 MB-ból származik</value>
-  </data>
-  <data name="Exe.Hint.Malformed" xml:space="preserve">
-    <value>A fájl sérült vagy szokatlan itt: {0}</value>
-  </data>
-  <data name="Exe.Hint.ListCut" xml:space="preserve">
-    <value>Egy korlát megvágta a listát: {0}</value>
-  </data>
-  <data name="Exe.Hint.Timestamp" xml:space="preserve">
-    <value>Az időbélyeg nulla vagy jövőbeli, ezért nem jelenik meg</value>
-  </data>
-  <data name="Disguise.TypeMismatch" xml:space="preserve">
-    <value>A tartalom {0}, de a név .{1} kiterjesztést mutat</value>
+  <data name="Disguise.Caption" xml:space="preserve">
+    <value>Figyelmeztetés</value>
   </data>
   <data name="Disguise.DoubleExtension" xml:space="preserve">
     <value>Dupla kiterjesztés: .{0}-nak látszik, .{1}-ként fut</value>
@@ -1198,113 +421,461 @@
   <data name="Disguise.HiddenCharacters" xml:space="preserve">
     <value>A név rejtett vagy írásirányt módosító karaktereket tartalmaz</value>
   </data>
-  <data name="Disguise.Caption" xml:space="preserve">
-    <value>Figyelmeztetés</value>
+  <data name="Disguise.TypeMismatch" xml:space="preserve">
+    <value>A tartalom {0}, de a név .{1} kiterjesztést mutat</value>
   </data>
-  <data name="Msg.EnterLineNumber" xml:space="preserve">
-    <value>Adjon meg egy sorszámot.</value>
+  <data name="Editor.Discard" xml:space="preserve">
+    <value>Elvetés</value>
   </data>
-  <data name="Msg.EnterOffset" xml:space="preserve">
-    <value>Adjon meg egy eltolást: számot, vagy hexa számot, például 0x1F vagy 1Fh.</value>
+  <data name="Editor.Find" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="Editor.GoToLine" xml:space="preserve">
+    <value>Ugrás sorra</value>
+  </data>
+  <data name="Editor.GoToOffset" xml:space="preserve">
+    <value>Ugrás eltolásra</value>
+  </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Hexadecimális számjegy beírása</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Kurzor mozgatása</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>A sor eleje vagy vége</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Hex nézet</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Szövegnézet</value>
+  </data>
+  <data name="Editor.Line" xml:space="preserve">
+    <value>Sor</value>
   </data>
   <data name="Editor.LineRange" xml:space="preserve">
     <value>Sor (1-{0})</value>
   </data>
-  <data name="Msg.TypeFindText" xml:space="preserve">
-    <value>Írja be a keresett szöveget.</value>
+  <data name="Editor.MatchCase" xml:space="preserve">
+    <value>Kis- és nagybetű</value>
   </data>
-  <data name="Msg.NothingToReplace" xml:space="preserve">
-    <value>Nincs mit cserélni: a(z) "{0}" nem található.</value>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Nem szöveg: a bájtok {0} kódlapon nem olvasódnak vissza változatlanul, ezért a hex nézet marad.</value>
   </data>
-  <data name="Msg.UnsavedChangesIn" xml:space="preserve">
-    <value>A(z) {0} fájlnak mentetlen módosításai vannak.</value>
+  <data name="Editor.Offset" xml:space="preserve">
+    <value>Eltolás</value>
   </data>
-  <data name="Msg.SaveBeforeClosing" xml:space="preserve">
-    <value>Menti őket bezárás előtt?</value>
+  <data name="Editor.RegularExpression" xml:space="preserve">
+    <value>Reguláris kifejezés</value>
   </data>
-  <data name="Hint.RunTheSearch" xml:space="preserve">
-    <value>A keresés indítása</value>
+  <data name="Editor.Replace" xml:space="preserve">
+    <value>Csere</value>
   </data>
-  <data name="Hint.CloseWithoutSearching" xml:space="preserve">
-    <value>Bezárás keresés nélkül</value>
+  <data name="Editor.ReplaceAll" xml:space="preserve">
+    <value>Összes cseréje</value>
   </data>
-  <data name="Hint.RenameTheEntry" xml:space="preserve">
-    <value>A bejegyzés átnevezése</value>
+  <data name="Editor.ReplaceText" xml:space="preserve">
+    <value>Szöveg cseréje</value>
   </data>
-  <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
-    <value>Bezárás átnevezés nélkül</value>
+  <data name="Editor.Search" xml:space="preserve">
+    <value>Keresés</value>
   </data>
-  <data name="Hint.PreviousField" xml:space="preserve">
-    <value>Előző mező</value>
+  <data name="Editor.SearchText" xml:space="preserve">
+    <value>Szöveg keresése</value>
   </data>
-  <data name="CmdDesc.27b25e9c" xml:space="preserve">
-    <value>A jelenlegi párbeszédablak vagy felugró ablak bezárása.</value>
+  <data name="Editor.UnsavedChanges" xml:space="preserve">
+    <value>Nem mentett módosítások</value>
   </data>
-  <data name="CmdDesc.f55d8933" xml:space="preserve">
-    <value>A naptár felugró ablakának megjelenítése.</value>
+  <data name="Editor.With" xml:space="preserve">
+    <value>Csere erre</value>
   </data>
-  <data name="CmdDesc.62d2e829" xml:space="preserve">
-    <value>Az aktuális környezetben elérhető parancsok megjelenítése.</value>
+  <data name="Exe.Button.Disassemble" xml:space="preserve">
+    <value>Visszafejtés</value>
   </data>
-  <data name="CmdDesc.73b65037" xml:space="preserve">
-    <value>Kilépés az alkalmazásból.</value>
+  <data name="Exe.Cert.Issuer" xml:space="preserve">
+    <value>Kibocsátó</value>
   </data>
-  <data name="CmdDesc.67104805" xml:space="preserve">
-    <value>A kijelölés vagy a nézet mozgatása egy sorral lefelé.</value>
+  <data name="Exe.Cert.Subject" xml:space="preserve">
+    <value>Alany</value>
   </data>
-  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
-    <value>A kurzor vagy a nézet mozgatása egy oszloppal balra.</value>
+  <data name="Exe.Cert.Thumbprint" xml:space="preserve">
+    <value>SHA-1</value>
   </data>
-  <data name="CmdDesc.db8d76c8" xml:space="preserve">
-    <value>A kijelölés vagy a nézet mozgatása egy oldallal lefelé.</value>
+  <data name="Exe.Cert.Valid" xml:space="preserve">
+    <value>Érvényes</value>
   </data>
-  <data name="CmdDesc.751aa6ef" xml:space="preserve">
-    <value>A kijelölés vagy a nézet mozgatása egy oldallal felfelé.</value>
+  <data name="Exe.Col.Item" xml:space="preserve">
+    <value>Tulajdonság</value>
   </data>
-  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
-    <value>A kurzor vagy a nézet mozgatása egy oszloppal jobbra.</value>
+  <data name="Exe.Col.Value" xml:space="preserve">
+    <value>Érték</value>
   </data>
-  <data name="CmdDesc.bca6dd95" xml:space="preserve">
-    <value>Ugrás az aktuális sor végére.</value>
+  <data name="Exe.Disassembly.Failed" xml:space="preserve">
+    <value>A visszafejtés sikertelen: {0}</value>
   </data>
-  <data name="CmdDesc.293229ee" xml:space="preserve">
-    <value>Ugrás az utolsó sorra.</value>
+  <data name="Exe.Disassembly.None" xml:space="preserve">
+    <value>Nincs visszafejthető kód</value>
   </data>
-  <data name="CmdDesc.fa38de03" xml:space="preserve">
-    <value>Ugrás az aktuális sor elejére.</value>
+  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
+    <value>A fájl nagyobb, mint {0:N0} MB, ezért nincs visszafejtve</value>
   </data>
-  <data name="CmdDesc.126bd270" xml:space="preserve">
-    <value>Ugrás az első sorra.</value>
+  <data name="Exe.Error.Unexpected" xml:space="preserve">
+    <value>A fájlt nem sikerült elemezni: {0}</value>
   </data>
-  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
-    <value>A kijelölés vagy a nézet mozgatása egy sorral felfelé.</value>
+  <data name="Exe.Exports.Count" xml:space="preserve">
+    <value>{0:N0} exportálva</value>
   </data>
-  <data name="CmdDesc.fc3303d5" xml:space="preserve">
-    <value>A fókusz áthelyezése az előző fókuszálható panelre vagy vezérlőre.</value>
+  <data name="Exe.Exports.None" xml:space="preserve">
+    <value>nincs</value>
   </data>
-  <data name="CmdDesc.f5dbb885" xml:space="preserve">
-    <value>A fókusz áthelyezése a következő fókuszálható panelre vagy vezérlőre.</value>
+  <data name="Exe.Grid.Empty" xml:space="preserve">
+    <value>Nincs mit megjeleníteni</value>
   </data>
-  <data name="Help.AvailableCommands" xml:space="preserve">
-    <value>Elérhető parancsok:</value>
+  <data name="Exe.Hint.FewImports" xml:space="preserve">
+    <value>Nagyon kevés import, mint egy csomagolt programnál</value>
   </data>
-  <data name="Help.NoCommands" xml:space="preserve">
-    <value>Jelenleg nincs elérhető billentyűparancs.</value>
+  <data name="Exe.Hint.HighEntropy" xml:space="preserve">
+    <value>A(z) {0} szakasz majdnem véletlenszerű (entrópia 7,2 felett): tömörített, csomagolt vagy titkosított</value>
+  </data>
+  <data name="Exe.Hint.ListCut" xml:space="preserve">
+    <value>Egy korlát megvágta a listát: {0}</value>
+  </data>
+  <data name="Exe.Hint.Malformed" xml:space="preserve">
+    <value>A fájl sérült vagy szokatlan itt: {0}</value>
+  </data>
+  <data name="Exe.Hint.None" xml:space="preserve">
+    <value>nem található semmi gyanús</value>
+  </data>
+  <data name="Exe.Hint.PackerSection" xml:space="preserve">
+    <value>A(z) {0} szakasznév csomagoló vagy védelmi program jellemzője</value>
+  </data>
+  <data name="Exe.Hint.PackerSignature" xml:space="preserve">
+    <value>{0} csomagoló jele található</value>
+  </data>
+  <data name="Exe.Hint.Sampled" xml:space="preserve">
+    <value>A(z) {0} entrópiája csak az első 32 MB-ból származik</value>
+  </data>
+  <data name="Exe.Hint.Timestamp" xml:space="preserve">
+    <value>Az időbélyeg nulla vagy jövőbeli, ezért nem jelenik meg</value>
+  </data>
+  <data name="Exe.Hint.Wx" xml:space="preserve">
+    <value>A(z) {0} szakasz írható és futtatható is</value>
+  </data>
+  <data name="Exe.Imports.FunctionCount" xml:space="preserve">
+    <value>{0:N0} függvény</value>
+  </data>
+  <data name="Exe.Imports.Functions" xml:space="preserve">
+    <value>{0} könyvtár, {1:N0} importált szimbólum</value>
+  </data>
+  <data name="Exe.Imports.Libraries" xml:space="preserve">
+    <value>{0} könyvtár</value>
+  </data>
+  <data name="Exe.Key.Disassemble" xml:space="preserve">
+    <value>A visszafejtés, illetve újra az elemzés megjelenítése</value>
+  </data>
+  <data name="Exe.Kind.Bundle" xml:space="preserve">
+    <value>Csomag (bundle)</value>
+  </data>
+  <data name="Exe.Kind.Core" xml:space="preserve">
+    <value>Memóriakép (core)</value>
+  </data>
+  <data name="Exe.Kind.Driver" xml:space="preserve">
+    <value>Illesztőprogram</value>
+  </data>
+  <data name="Exe.Kind.Executable" xml:space="preserve">
+    <value>Futtatható</value>
+  </data>
+  <data name="Exe.Kind.Library" xml:space="preserve">
+    <value>Megosztott könyvtár</value>
+  </data>
+  <data name="Exe.Kind.Object" xml:space="preserve">
+    <value>Tárgykód</value>
+  </data>
+  <data name="Exe.Kind.Other" xml:space="preserve">
+    <value>Egyéb</value>
+  </data>
+  <data name="Exe.Kind.Pie" xml:space="preserve">
+    <value>Pozíciófüggetlen futtatható</value>
+  </data>
+  <data name="Exe.Row.Architecture" xml:space="preserve">
+    <value>Architektúra</value>
+  </data>
+  <data name="Exe.Row.Entry" xml:space="preserve">
+    <value>Belépési pont</value>
+  </data>
+  <data name="Exe.Row.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Exe.Row.Kind" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Exe.Row.Managed" xml:space="preserve">
+    <value>Felügyelt kód</value>
+  </data>
+  <data name="Exe.Row.Signature" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Exe.Row.Size" xml:space="preserve">
+    <value>Fájlméret</value>
+  </data>
+  <data name="Exe.Row.Subsystem" xml:space="preserve">
+    <value>Platform / alrendszer</value>
+  </data>
+  <data name="Exe.Row.Summary" xml:space="preserve">
+    <value>Összegzés</value>
+  </data>
+  <data name="Exe.Row.Timestamp" xml:space="preserve">
+    <value>Fordítva</value>
+  </data>
+  <data name="Exe.Sec.Exports" xml:space="preserve">
+    <value>Exportok</value>
+  </data>
+  <data name="Exe.Sec.General" xml:space="preserve">
+    <value>Általános</value>
+  </data>
+  <data name="Exe.Sec.Hardening" xml:space="preserve">
+    <value>Védelmi kapcsolók</value>
+  </data>
+  <data name="Exe.Sec.Hints" xml:space="preserve">
+    <value>Jelzések</value>
+  </data>
+  <data name="Exe.Sec.Imports" xml:space="preserve">
+    <value>Importok</value>
+  </data>
+  <data name="Exe.Sec.Sections" xml:space="preserve">
+    <value>Szakaszok (méret a fájlban, entrópia, hozzáférés)</value>
+  </data>
+  <data name="Exe.Sec.Signature" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Exe.Signature.Code" xml:space="preserve">
+    <value>kódaláírás van, nincs ellenőrizve</value>
+  </data>
+  <data name="Exe.Signature.Embedded" xml:space="preserve">
+    <value>beágyazott aláírás, nincs ellenőrizve</value>
+  </data>
+  <data name="Exe.Signature.NoCertificates" xml:space="preserve">
+    <value>egy tanúsítvány sem olvasható</value>
+  </data>
+  <data name="Exe.Signature.None" xml:space="preserve">
+    <value>nincs aláírva</value>
+  </data>
+  <data name="Exe.Status.Reading" xml:space="preserve">
+    <value>A fájl olvasása…</value>
+  </data>
+  <data name="Exe.Status.Summary" xml:space="preserve">
+    <value>{0}, {1}, {2:N0} bájt</value>
+  </data>
+  <data name="Exe.Title" xml:space="preserve">
+    <value>Futtatható fájl elemzése</value>
+  </data>
+  <data name="Exe.Title.Hint" xml:space="preserve">
+    <value>  Fel/Le:görgetés</value>
+  </data>
+  <data name="Exe.Value.Managed" xml:space="preserve">
+    <value>.NET-szerelvény (CLR)</value>
+  </data>
+  <data name="Exe.Value.NA" xml:space="preserve">
+    <value>nem releváns vagy ismeretlen</value>
+  </data>
+  <data name="Exe.Value.No" xml:space="preserve">
+    <value>nem</value>
+  </data>
+  <data name="Exe.Value.Yes" xml:space="preserve">
+    <value>igen</value>
+  </data>
+  <data name="Grid.Ai.Asking" xml:space="preserve">
+    <value>A MI-modell kérdezése…</value>
+  </data>
+  <data name="Grid.Ai.NoQuery" xml:space="preserve">
+    <value>Az MI-modell nem küldött lekérdezést</value>
+  </data>
+  <data name="Grid.Ai.NoQuestion" xml:space="preserve">
+    <value>Írjon kérdést a ? után, például ? sorok, ahol az amount nagyobb 10-nél</value>
+  </data>
+  <data name="Grid.Ai.NoTable" xml:space="preserve">
+    <value>Nincs '{0}' nevű tábla</value>
+  </data>
+  <data name="Grid.Ai.NoTables" xml:space="preserve">
+    <value>Nincs lekérdezhető tábla</value>
+  </data>
+  <data name="Grid.Ai.PickTable" xml:space="preserve">
+    <value>Nevezzen meg egy táblát a FROM után: {0}</value>
+  </data>
+  <data name="Grid.Ai.Ready" xml:space="preserve">
+    <value>Javaslat a lekérdezési sorban: Enter a futtatáshoz</value>
+  </data>
+  <data name="Grid.Hint.Ask" xml:space="preserve">
+    <value>MI megkérdezése: írjon ?-et és egy kérdést, majd az Enter javasol egy lekérdezést</value>
+  </data>
+  <data name="Grid.Hint.Complete" xml:space="preserve">
+    <value>Az éppen írt szó kiegészítése: oszlopnév vagy kulcsszó</value>
+  </data>
+  <data name="Grid.Hint.RunQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása a megjelenített sorokon</value>
+  </data>
+  <data name="Grid.Hint.Syntax" xml:space="preserve">
+    <value>Operátorok: = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY; összekötés AND / OR-ral; majd ORDER BY oszlop [DESC] és LIMIT n</value>
+  </data>
+  <data name="Grid.Query.Placeholder" xml:space="preserve">
+    <value>pl. SELECT name WHERE amount &gt; 10, vagy ? és egy kérdés</value>
+  </data>
+  <data name="Grid.Status.Matched" xml:space="preserve">
+    <value>; a megjelenített {1:N0} sorból {0:N0} egyezik</value>
+  </data>
+  <data name="Har.Column.Method" xml:space="preserve">
+    <value>Metódus</value>
+  </data>
+  <data name="Har.Column.Number" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="Har.Column.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Har.Column.Status" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="Har.Column.Time" xml:space="preserve">
+    <value>Idő (ms)</value>
+  </data>
+  <data name="Har.Column.Type" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Har.Column.Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Har.Detail.Binary" xml:space="preserve">
+    <value>(bináris, {0:N0} bájt, nem jelenik meg)</value>
+  </data>
+  <data name="Har.Detail.NoBody" xml:space="preserve">
+    <value>(nincs tartalom)</value>
+  </data>
+  <data name="Har.Detail.QueryString" xml:space="preserve">
+    <value>Lekérdezési paraméterek</value>
+  </data>
+  <data name="Har.Detail.RequestBody" xml:space="preserve">
+    <value>Kérés törzse</value>
+  </data>
+  <data name="Har.Detail.RequestHeaders" xml:space="preserve">
+    <value>Kérésfejlécek</value>
+  </data>
+  <data name="Har.Detail.ResponseBody" xml:space="preserve">
+    <value>Válasz törzse</value>
+  </data>
+  <data name="Har.Detail.ResponseHeaders" xml:space="preserve">
+    <value>Válaszfejlécek</value>
+  </data>
+  <data name="Har.Detail.Server" xml:space="preserve">
+    <value>Kiszolgáló</value>
+  </data>
+  <data name="Har.Detail.Started" xml:space="preserve">
+    <value>Kezdés</value>
+  </data>
+  <data name="Har.Detail.Time" xml:space="preserve">
+    <value>Időtartam</value>
+  </data>
+  <data name="Har.Detail.Timings" xml:space="preserve">
+    <value>Időzítés</value>
+  </data>
+  <data name="Har.Detail.Truncated" xml:space="preserve">
+    <value>({0:N0} karakter után levágva)</value>
+  </data>
+  <data name="Har.Grid.Empty" xml:space="preserve">
+    <value>A fájl nem tartalmaz kéréseket</value>
+  </data>
+  <data name="Har.Hint.Back" xml:space="preserve">
+    <value>Vissza a kérések listájához</value>
+  </data>
+  <data name="Har.Hint.Details" xml:space="preserve">
+    <value>A kérés és a válasz megjelenítése</value>
+  </data>
+  <data name="Har.Status.NotHar" xml:space="preserve">
+    <value>Nem HAR-fájl: {0}</value>
+  </data>
+  <data name="Har.Status.Requests" xml:space="preserve">
+    <value>{0:N0} kérés</value>
+  </data>
+  <data name="Har.Status.Truncated" xml:space="preserve">
+    <value>; csak az első {0:N0} kerül beolvasásra</value>
+  </data>
+  <data name="Har.Title.Details" xml:space="preserve">
+    <value>Kérés {0}</value>
+  </data>
+  <data name="Hdf.Error.Unexpected" xml:space="preserve">
+    <value>A fájl nem olvasható: {0}</value>
+  </data>
+  <data name="Hdf.Grid.Empty" xml:space="preserve">
+    <value>Ennek az adathalmaznak nincsenek értékei</value>
+  </data>
+  <data name="Hdf.Hint.Dimension" xml:space="preserve">
+    <value>Az aktív dimenzió kiválasztása</value>
+  </data>
+  <data name="Hdf.Hint.Index" xml:space="preserve">
+    <value>Az aktív dimenzió indexének léptetése</value>
+  </data>
+  <data name="Hdf.Hint.LongForm" xml:space="preserve">
+    <value>Minden cella lekérdezése, tengelyenként egy oszloppal (axis0, axis1, ...)</value>
+  </data>
+  <data name="Hdf.Hint.Transpose" xml:space="preserve">
+    <value>A sorok és oszlopok felcserélése</value>
+  </data>
+  <data name="Hdf.Picker.Label" xml:space="preserve">
+    <value>Adathalmaz</value>
+  </data>
+  <data name="Hdf.Shape.Scalar" xml:space="preserve">
+    <value>skalár</value>
+  </data>
+  <data name="Hdf.Slice.Line" xml:space="preserve">
+    <value>Szelet [{0}]  {1}. dimenzió ({2}-ből), {3}. index ({4}-ből)   [ ] dimenzió   + - index</value>
+  </data>
+  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} oszlop látható</value>
+  </data>
+  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
+    <value>; a lista csak az első {0:N0} adathalmazt tartalmazza</value>
+  </data>
+  <data name="Hdf.Status.LongFormCut" xml:space="preserve">
+    <value>; csak az első {0:N0} egyező cella marad meg</value>
+  </data>
+  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
+    <value>Ez a fájl nem tartalmaz adathalmazt</value>
+  </data>
+  <data name="Hdf.Status.RowsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} sor látható</value>
+  </data>
+  <data name="Hdf.Title" xml:space="preserve">
+    <value>HDF5</value>
+  </data>
+  <data name="Hdf.Title.Hint" xml:space="preserve">
+    <value>  Tab:rács  [ ]:dimenzió  +/-:index</value>
   </data>
   <data name="Help.AllCommands" xml:space="preserve">
     <value>Az alkalmazás összes parancsa:</value>
   </data>
+  <data name="Help.AvailableCommands" xml:space="preserve">
+    <value>Elérhető parancsok:</value>
+  </data>
+  <data name="Help.CloseHint" xml:space="preserve">
+    <value>Esc: súgó bezárása   ↑↓ PgUp PgDn: görgetés</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Fókuszban lévő vezérlő: {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Fókuszban lévő vezérlő: nincs</value>
+  </data>
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Navigáció a menükben:</value>
   </data>
-  <data name="Help.Started.Heading" xml:space="preserve">
-    <value>Első lépések:</value>
+  <data name="Help.NoCommands" xml:space="preserve">
+    <value>Jelenleg nincs elérhető billentyűparancs.</value>
   </data>
-  <data name="Help.Started.Tab" xml:space="preserve">
-    <value>Fókusz mozgatása panelek és vezérlők között</value>
-  </data>
-  <data name="Help.Started.Tab.Key" xml:space="preserve">
-    <value>Tab / Shift+Tab</value>
+  <data name="Help.Started.AllLists" xml:space="preserve">
+    <value>A második lista minden parancsot felsorol, akkor is, ha ebben a helyzetben nem futtatható.</value>
   </data>
   <data name="Help.Started.Enter" xml:space="preserve">
     <value>Az aktív elem fő parancsának futtatása</value>
@@ -1324,86 +895,539 @@
   <data name="Help.Started.F1.Key" xml:space="preserve">
     <value>F1</value>
   </data>
-  <data name="Help.Started.Palette.Key" xml:space="preserve">
-    <value>Shift+F1</value>
-  </data>
-  <data name="Help.Started.Palette" xml:space="preserve">
-    <value>Bármely parancs keresése névvel a parancspalettán</value>
+  <data name="Help.Started.Heading" xml:space="preserve">
+    <value>Első lépések:</value>
   </data>
   <data name="Help.Started.Lists" xml:space="preserve">
     <value>Az alábbi első lista azt mutatja, ami itt és most működik.</value>
   </data>
-  <data name="Help.Started.AllLists" xml:space="preserve">
-    <value>A második lista minden parancsot felsorol, akkor is, ha ebben a helyzetben nem futtatható.</value>
+  <data name="Help.Started.Palette" xml:space="preserve">
+    <value>Bármely parancs keresése névvel a parancspalettán</value>
   </data>
-  <data name="Viewer.TitleHints" xml:space="preserve">
-    <value>  F2:Sortörés{0}  F4:Hex  F5:Sor  F8:Kódlap  Esc:bezárás</value>
+  <data name="Help.Started.Palette.Key" xml:space="preserve">
+    <value>Shift+F1</value>
   </data>
-  <data name="Viewer.Disassembling" xml:space="preserve">
-    <value>Visszafejtés folyamatban…</value>
+  <data name="Help.Started.Tab" xml:space="preserve">
+    <value>Fókusz mozgatása panelek és vezérlők között</value>
   </data>
-  <data name="Viewer.DisassemblyFailed" xml:space="preserve">
-    <value>A visszafejtés nem sikerült: {0}</value>
+  <data name="Help.Started.Tab.Key" xml:space="preserve">
+    <value>Tab / Shift+Tab</value>
   </data>
-  <data name="Viewer.PdfSignatures" xml:space="preserve">
-    <value>Digitális aláírások</value>
+  <data name="Hint.ActivateList" xml:space="preserve">
+    <value>A lista aktiválása</value>
   </data>
-  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
-    <value>{0}. aláírás</value>
+  <data name="Hint.AddChip" xml:space="preserve">
+    <value>Chip hozzáadása a [+] helyen</value>
   </data>
-  <data name="Viewer.PdfSigner" xml:space="preserve">
-    <value>Aláíró</value>
+  <data name="Hint.BackPreviousMenu" xml:space="preserve">
+    <value>Vissza / előző menü</value>
   </data>
-  <data name="Viewer.PdfSigned" xml:space="preserve">
-    <value>Aláírva</value>
+  <data name="Hint.CancelKeepEditing" xml:space="preserve">
+    <value>Mégse, a szerkesztés folytatása</value>
   </data>
-  <data name="Viewer.PdfFormat" xml:space="preserve">
-    <value>Formátum</value>
+  <data name="Hint.CentreDivider" xml:space="preserve">
+    <value>Az elválasztó középre állítása</value>
   </data>
-  <data name="Viewer.PdfIntegrity" xml:space="preserve">
-    <value>Épség</value>
+  <data name="Hint.CheckEveryItem" xml:space="preserve">
+    <value>Minden elem bejelölése vagy törlése</value>
   </data>
-  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
-    <value>Az aláírt bájtok nem változtak.</value>
+  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti elem bejelölése vagy törlése</value>
   </data>
-  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
-    <value>MEGVÁLTOZOTT: a fájl nem egyezik az aláírással.</value>
+  <data name="Hint.CheckOrUncheck" xml:space="preserve">
+    <value>Bejelölés vagy törlés</value>
   </data>
-  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
-    <value>Nem ellenőrzött: ez az aláírásformátum nem támogatott.</value>
+  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti szín kiválasztása</value>
   </data>
-  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
-    <value>Az aláírás nem olvasható.</value>
+  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
+    <value>A kiemelt elem kiválasztása</value>
   </data>
-  <data name="Viewer.PdfCoverage" xml:space="preserve">
-    <value>Lefedettség</value>
+  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
+    <value>Egy oldallal távolabbi elem kiválasztása</value>
   </data>
-  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
-    <value>A teljes fájl.</value>
+  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
+    <value>Az előző vagy következő elem kiválasztása</value>
   </data>
-  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
-    <value>Az aláírás után módosításokat fűztek hozzá.</value>
+  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
+    <value>Az előző vagy következő beállítás kiválasztása</value>
   </data>
-  <data name="Viewer.PdfTrust" xml:space="preserve">
-    <value>Megbízhatóság</value>
+  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
+    <value>Az előző vagy következő szakasz kiválasztása</value>
   </data>
-  <data name="Viewer.PdfTrustOk" xml:space="preserve">
-    <value>Megbízható: a tanúsítvány olyan főtanúsítványhoz vezet, amelyben ez a gép megbízik.</value>
+  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
+    <value>A kijelölt nap kiválasztása</value>
   </data>
-  <data name="Viewer.PdfTrustNo" xml:space="preserve">
-    <value>Nem megbízható: a tanúsítvány nem vezet olyan főtanúsítványhoz, amelyben ez a gép megbízik.</value>
+  <data name="Hint.ClearField" xml:space="preserve">
+    <value>A mező törlése</value>
   </data>
-  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
-    <value>Nem megbízható: a tanúsítvány lejárt.</value>
+  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
+    <value>Az értékelés törlése vagy a maximum megadása</value>
   </data>
-  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
-    <value>A visszavonást nem ellenőrizték.</value>
+  <data name="Hint.ClearSearch" xml:space="preserve">
+    <value>A keresés törlése</value>
   </data>
-  <data name="Viewer.PdfMore" xml:space="preserve">
-    <value>További {0} aláírás nincs megjelenítve.</value>
+  <data name="Hint.CloseList" xml:space="preserve">
+    <value>A lista bezárása</value>
   </data>
-  <data name="Viewer.PdfTooLarge" xml:space="preserve">
-    <value>Az aláírásokat nem ellenőrizték: a fájl nagyobb, mint {0} MB.</value>
+  <data name="Hint.CloseMenu" xml:space="preserve">
+    <value>A menü bezárása</value>
+  </data>
+  <data name="Hint.CloseMenuShort" xml:space="preserve">
+    <value>Menü bezárása</value>
+  </data>
+  <data name="Hint.CloseNodeOrParent" xml:space="preserve">
+    <value>A csomópont bezárása vagy ugrás a szülőre</value>
+  </data>
+  <data name="Hint.ClosePopup" xml:space="preserve">
+    <value>A felugró ablak bezárása</value>
+  </data>
+  <data name="Hint.CloseSubmenu" xml:space="preserve">
+    <value>Az almenü bezárása</value>
+  </data>
+  <data name="Hint.CloseSubmenuOrPrevious" xml:space="preserve">
+    <value>Az almenü bezárása vagy ugrás az előző menüre</value>
+  </data>
+  <data name="Hint.CloseViewer" xml:space="preserve">
+    <value>A megjelenítő bezárása</value>
+  </data>
+  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
+    <value>Bezárás ugrás nélkül</value>
+  </data>
+  <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
+    <value>Bezárás átnevezés nélkül</value>
+  </data>
+  <data name="Hint.CloseWithoutSearching" xml:space="preserve">
+    <value>Bezárás keresés nélkül</value>
+  </data>
+  <data name="Hint.CollapseSection" xml:space="preserve">
+    <value>A szakasz összecsukása</value>
+  </data>
+  <data name="Hint.CopySelection" xml:space="preserve">
+    <value>A kijelölés másolása</value>
+  </data>
+  <data name="Hint.CutSelection" xml:space="preserve">
+    <value>A kijelölés kivágása</value>
+  </data>
+  <data name="Hint.DeleteCharacter" xml:space="preserve">
+    <value>Egy karakter törlése</value>
+  </data>
+  <data name="Hint.DeleteLine" xml:space="preserve">
+    <value>A sor törlése</value>
+  </data>
+  <data name="Hint.DeleteToStart" xml:space="preserve">
+    <value>Törlés a szöveg elejéig</value>
+  </data>
+  <data name="Hint.DeleteWordAfter" xml:space="preserve">
+    <value>A kurzor utáni szó törlése</value>
+  </data>
+  <data name="Hint.DeleteWordBefore" xml:space="preserve">
+    <value>A kurzor előtti szó törlése</value>
+  </data>
+  <data name="Hint.DiscardChanges" xml:space="preserve">
+    <value>A módosítások elvetése</value>
+  </data>
+  <data name="Hint.DismissMessage" xml:space="preserve">
+    <value>Az üzenet bezárása</value>
+  </data>
+  <data name="Hint.DuplicateLine" xml:space="preserve">
+    <value>A sor (vagy a kijelölt sorok) duplikálása</value>
+  </data>
+  <data name="Hint.EdgeColumn" xml:space="preserve">
+    <value>A 80. oszlop jelölése (újra: elrejtés)</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseNode" xml:space="preserve">
+    <value>A csomópont kibontása vagy összecsukása</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
+    <value>A szakasz kibontása vagy összecsukása</value>
+  </data>
+  <data name="Hint.ExpandSection" xml:space="preserve">
+    <value>A szakasz kibontása</value>
+  </data>
+  <data name="Hint.FindNext" xml:space="preserve">
+    <value>Következő találat keresése</value>
+  </data>
+  <data name="Hint.FindPrevious" xml:space="preserve">
+    <value>Előző találat keresése</value>
+  </data>
+  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
+    <value>A hónap első vagy utolsó napja</value>
+  </data>
+  <data name="Hint.FirstOrLastChip" xml:space="preserve">
+    <value>Első vagy utolsó chip</value>
+  </data>
+  <data name="Hint.FirstOrLastColour" xml:space="preserve">
+    <value>Első vagy utolsó szín</value>
+  </data>
+  <data name="Hint.FirstOrLastField" xml:space="preserve">
+    <value>Első vagy utolsó mező</value>
+  </data>
+  <data name="Hint.FirstOrLastItem" xml:space="preserve">
+    <value>Első vagy utolsó elem</value>
+  </data>
+  <data name="Hint.FirstOrLastOption" xml:space="preserve">
+    <value>Első vagy utolsó beállítás</value>
+  </data>
+  <data name="Hint.FirstOrLastPage" xml:space="preserve">
+    <value>Első vagy utolsó oldal</value>
+  </data>
+  <data name="Hint.FirstOrLastRow" xml:space="preserve">
+    <value>Első vagy utolsó sor</value>
+  </data>
+  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
+    <value>Első vagy utolsó szakasz</value>
+  </data>
+  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
+    <value>Az első vagy utolsó szakasz kiválasztása</value>
+  </data>
+  <data name="Hint.FlipSign" xml:space="preserve">
+    <value>Az előjel megfordítása</value>
+  </data>
+  <data name="Hint.FoldAll" xml:space="preserve">
+    <value>Az összes régió összecsukása vagy kinyitása</value>
+  </data>
+  <data name="Hint.FoldRegion" xml:space="preserve">
+    <value>A kurzornál lévő terület összecsukása vagy kibontása</value>
+  </data>
+  <data name="Hint.FollowFile" xml:space="preserve">
+    <value>A fájl követése növekedés közben</value>
+  </data>
+  <data name="Hint.FollowLink" xml:space="preserve">
+    <value>A hivatkozás követése</value>
+  </data>
+  <data name="Hint.GoToFileStartOrEnd" xml:space="preserve">
+    <value>Ugrás a fájl elejére vagy végére</value>
+  </data>
+  <data name="Hint.GoToMatchingBracket" xml:space="preserve">
+    <value>Ugrás a párjául szolgáló zárójelre</value>
+  </data>
+  <data name="Hint.GoToTheLine" xml:space="preserve">
+    <value>Ugrás a sorra</value>
+  </data>
+  <data name="Hint.GoToTheOffset" xml:space="preserve">
+    <value>Ugrás az eltolásra</value>
+  </data>
+  <data name="Hint.GoTopOrBottom" xml:space="preserve">
+    <value>Ugrás az elejére vagy a végére</value>
+  </data>
+  <data name="Hint.GoTopOrEnd" xml:space="preserve">
+    <value>Ugrás az elejére vagy a végére</value>
+  </data>
+  <data name="Hint.GoUpFolder" xml:space="preserve">
+    <value>Egy mappával feljebb</value>
+  </data>
+  <data name="Hint.IndentOutdent" xml:space="preserve">
+    <value>Behúzás / kihúzás (a kijelölt sorokra is)</value>
+  </data>
+  <data name="Hint.InvertEveryItem" xml:space="preserve">
+    <value>Minden elem megfordítása</value>
+  </data>
+  <data name="Hint.JoinLines" xml:space="preserve">
+    <value>Sorok összefűzése</value>
+  </data>
+  <data name="Hint.JumpFirstLastItem" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó elemre</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Ugrás közvetlenül arra a lapra, amelynek nevében szerepel a szám.</value>
+  </data>
+  <data name="Hint.JumpToLetter" xml:space="preserve">
+    <value>Ugrás a következő, ezekkel kezdődő elemre</value>
+  </data>
+  <data name="Hint.LineEnding" xml:space="preserve">
+    <value>Sorvég (CRLF, LF, CR)</value>
+  </data>
+  <data name="Hint.LowerRaiseRating" xml:space="preserve">
+    <value>Az értékelés csökkentése vagy növelése</value>
+  </data>
+  <data name="Hint.LowerRaiseValue" xml:space="preserve">
+    <value>Az érték csökkentése vagy növelése</value>
+  </data>
+  <data name="Hint.MarkAll" xml:space="preserve">
+    <value>Minden találat megjelölése (újra: törlés)</value>
+  </data>
+  <data name="Hint.MarkItemUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti elem megjelölése vagy a jelölés törlése</value>
+  </data>
+  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
+    <value>Mozgás az eszköztáron</value>
+  </data>
+  <data name="Hint.MoveBetweenChips" xml:space="preserve">
+    <value>Mozgás a chipek között</value>
+  </data>
+  <data name="Hint.MoveByWord" xml:space="preserve">
+    <value>Mozgás szavanként</value>
+  </data>
+  <data name="Hint.MoveCursor" xml:space="preserve">
+    <value>A kurzor mozgatása</value>
+  </data>
+  <data name="Hint.MoveCursorByPage" xml:space="preserve">
+    <value>A kurzor mozgatása oldalanként</value>
+  </data>
+  <data name="Hint.MoveCursorPage" xml:space="preserve">
+    <value>A kurzor mozgatása egy oldallal</value>
+  </data>
+  <data name="Hint.MoveDivider" xml:space="preserve">
+    <value>Elválasztó áthelyezése</value>
+  </data>
+  <data name="Hint.MoveDividerBy8" xml:space="preserve">
+    <value>Az elválasztó mozgatása 8-cal</value>
+  </data>
+  <data name="Hint.MoveHighlight" xml:space="preserve">
+    <value>A kiemelés mozgatása</value>
+  </data>
+  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
+    <value>A kiemelés mozgatása az útvonal mentén</value>
+  </data>
+  <data name="Hint.MoveHourMinuteSecond" xml:space="preserve">
+    <value>Váltás óra, perc és másodperc között</value>
+  </data>
+  <data name="Hint.MoveLines" xml:space="preserve">
+    <value>A sor (vagy a kijelölt sorok) feljebb / lejjebb mozgatása</value>
+  </data>
+  <data name="Hint.MoveMenuSelection" xml:space="preserve">
+    <value>A menüválasztás mozgatása</value>
+  </data>
+  <data name="Hint.MoveOverItems" xml:space="preserve">
+    <value>Mozgás az elemek között</value>
+  </data>
+  <data name="Hint.MoveOverMenuItems" xml:space="preserve">
+    <value>Mozgás a menüelemek között</value>
+  </data>
+  <data name="Hint.MoveOverPalette" xml:space="preserve">
+    <value>A kurzor mozgatása a palettán</value>
+  </data>
+  <data name="Hint.MovePageAtATime" xml:space="preserve">
+    <value>Mozgás oldalanként</value>
+  </data>
+  <data name="Hint.MoveSelectedDay" xml:space="preserve">
+    <value>A kijelölt nap vagy hét mozgatása</value>
+  </data>
+  <data name="Hint.NewestLineFollow" xml:space="preserve">
+    <value>Legújabb sor, és az új sorok követése</value>
+  </data>
+  <data name="Hint.NextBookmark" xml:space="preserve">
+    <value>Következő könyvjelző</value>
+  </data>
+  <data name="Hint.NextField" xml:space="preserve">
+    <value>Következő mező</value>
+  </data>
+  <data name="Hint.OldestLine" xml:space="preserve">
+    <value>Legrégebbi sor</value>
+  </data>
+  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
+    <value>A kiemelt sor megnyitása</value>
+  </data>
+  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
+    <value>A kiemelt szakasz megnyitása</value>
+  </data>
+  <data name="Hint.OpenList" xml:space="preserve">
+    <value>A lista megnyitása</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>A(z) {0} menü megnyitása</value>
+  </data>
+  <data name="Hint.OpenNodeOrChild" xml:space="preserve">
+    <value>A csomópont megnyitása vagy belépés az első gyerekébe</value>
+  </data>
+  <data name="Hint.OpenSubmenu" xml:space="preserve">
+    <value>Az almenü megnyitása</value>
+  </data>
+  <data name="Hint.OpenSubmenuOrNext" xml:space="preserve">
+    <value>Az almenü megnyitása vagy ugrás a következő menüre</value>
+  </data>
+  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
+    <value>Almenü megnyitása / parancs futtatása</value>
+  </data>
+  <data name="Hint.PressButton" xml:space="preserve">
+    <value>A gomb megnyomása</value>
+  </data>
+  <data name="Hint.PreviousBookmark" xml:space="preserve">
+    <value>Előző könyvjelző</value>
+  </data>
+  <data name="Hint.PreviousField" xml:space="preserve">
+    <value>Előző mező</value>
+  </data>
+  <data name="Hint.PreviousNextMonth" xml:space="preserve">
+    <value>Előző vagy következő hónap</value>
+  </data>
+  <data name="Hint.PreviousNextPage" xml:space="preserve">
+    <value>Előző vagy következő oldal</value>
+  </data>
+  <data name="Hint.PreviousNextYear" xml:space="preserve">
+    <value>Előző vagy következő év</value>
+  </data>
+  <data name="Hint.PromptAccept" xml:space="preserve">
+    <value>Érték elfogadása</value>
+  </data>
+  <data name="Hint.PromptCancel" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="Hint.PromptDefault" xml:space="preserve">
+    <value>Alapértelmezett használata</value>
+  </data>
+  <data name="Hint.PromptMove" xml:space="preserve">
+    <value>Kijelölés mozgatása</value>
+  </data>
+  <data name="Hint.PromptYesNo" xml:space="preserve">
+    <value>Válasz igen vagy nem</value>
+  </data>
+  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
+    <value>Az érték növelése vagy csökkentése nagy lépésekkel</value>
+  </data>
+  <data name="Hint.Redo" xml:space="preserve">
+    <value>Ismétlés</value>
+  </data>
+  <data name="Hint.RemoveActiveChip" xml:space="preserve">
+    <value>Az aktív chip eltávolítása</value>
+  </data>
+  <data name="Hint.RemoveBlankLines" xml:space="preserve">
+    <value>Üres sorok törlése</value>
+  </data>
+  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
+    <value>Ismétlődő sorok törlése</value>
+  </data>
+  <data name="Hint.RemoveLastDigit" xml:space="preserve">
+    <value>Az utolsó számjegy törlése</value>
+  </data>
+  <data name="Hint.RenameTheEntry" xml:space="preserve">
+    <value>A bejegyzés átnevezése</value>
+  </data>
+  <data name="Hint.ResetClock" xml:space="preserve">
+    <value>Az óra nullázása</value>
+  </data>
+  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
+    <value>A tétel futtatása vagy almenüjének megnyitása</value>
+  </data>
+  <data name="Hint.RunSelectedItem" xml:space="preserve">
+    <value>A kijelölt tétel futtatása</value>
+  </data>
+  <data name="Hint.RunTheItem" xml:space="preserve">
+    <value>A tétel futtatása</value>
+  </data>
+  <data name="Hint.RunTheSearch" xml:space="preserve">
+    <value>A keresés indítása</value>
+  </data>
+  <data name="Hint.SaveChanges" xml:space="preserve">
+    <value>A módosítások mentése</value>
+  </data>
+  <data name="Hint.Scroll" xml:space="preserve">
+    <value>Görgetés</value>
+  </data>
+  <data name="Hint.ScrollLine" xml:space="preserve">
+    <value>Görgetés soronként</value>
+  </data>
+  <data name="Hint.ScrollOneLine" xml:space="preserve">
+    <value>Görgetés egy sorral</value>
+  </data>
+  <data name="Hint.ScrollOnePage" xml:space="preserve">
+    <value>Görgetés egy oldallal</value>
+  </data>
+  <data name="Hint.ScrollOneRow" xml:space="preserve">
+    <value>Görgetés egy sorral</value>
+  </data>
+  <data name="Hint.ScrollPage" xml:space="preserve">
+    <value>Görgetés oldalanként</value>
+  </data>
+  <data name="Hint.ScrollRow" xml:space="preserve">
+    <value>Görgetés soronként</value>
+  </data>
+  <data name="Hint.ScrollSideways" xml:space="preserve">
+    <value>Görgetés oldalra</value>
+  </data>
+  <data name="Hint.SelectAll" xml:space="preserve">
+    <value>Az összes kijelölése</value>
+  </data>
+  <data name="Hint.SelectItemUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti elem kijelölése</value>
+  </data>
+  <data name="Hint.SelectThisOption" xml:space="preserve">
+    <value>A beállítás kiválasztása</value>
+  </data>
+  <data name="Hint.SelectToday" xml:space="preserve">
+    <value>A mai nap kijelölése</value>
+  </data>
+  <data name="Hint.SetMinMax" xml:space="preserve">
+    <value>A minimum vagy maximum beállítása</value>
+  </data>
+  <data name="Hint.SetRatingDirectly" xml:space="preserve">
+    <value>Az értékelés közvetlen beállítása</value>
+  </data>
+  <data name="Hint.SetValueNearestBound" xml:space="preserve">
+    <value>A értéket a legközelebbi határra állítja</value>
+  </data>
+  <data name="Hint.SetValueZero" xml:space="preserve">
+    <value>Az érték 0-ra állítása</value>
+  </data>
+  <data name="Hint.ShowWhitespace" xml:space="preserve">
+    <value>Szóközök, tabulátorok és sorvégek megjelenítése (újra: elrejtés)</value>
+  </data>
+  <data name="Hint.SortLines" xml:space="preserve">
+    <value>Sorok rendezése növekvő / csökkenő</value>
+  </data>
+  <data name="Hint.StartOrEndOfText" xml:space="preserve">
+    <value>A szöveg eleje vagy vége</value>
+  </data>
+  <data name="Hint.StepField" xml:space="preserve">
+    <value>A mező léptetése</value>
+  </data>
+  <data name="Hint.StepFieldByTen" xml:space="preserve">
+    <value>A mező léptetése tízesével</value>
+  </data>
+  <data name="Hint.StepValue" xml:space="preserve">
+    <value>Az érték léptetése</value>
+  </data>
+  <data name="Hint.StepValueLarge" xml:space="preserve">
+    <value>Az érték léptetése nagy lépésekkel</value>
+  </data>
+  <data name="Hint.StopFollowing" xml:space="preserve">
+    <value>A fájl követésének leállítása</value>
+  </data>
+  <data name="Hint.SwitchSetting" xml:space="preserve">
+    <value>A beállítás be- vagy kikapcsolása</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Váltás az előző / következő lapra.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Lapváltás, ha a fókuszban lévő vezérlő nem használja a nyílbillentyűket.</value>
+  </data>
+  <data name="Hint.SwitchTextHex" xml:space="preserve">
+    <value>Váltás a szöveg- és a hexa nézet között</value>
+  </data>
+  <data name="Hint.TabsToSpaces" xml:space="preserve">
+    <value>Tabulátorok szóközökre</value>
+  </data>
+  <data name="Hint.ToggleBookmark" xml:space="preserve">
+    <value>Könyvjelző be/ki</value>
+  </data>
+  <data name="Hint.ToggleComment" xml:space="preserve">
+    <value>A sor (vagy a kijelölt sorok) kommentelése / a komment törlése</value>
+  </data>
+  <data name="Hint.TrimTrailing" xml:space="preserve">
+    <value>Sorvégi szóközök törlése</value>
+  </data>
+  <data name="Hint.TypeField" xml:space="preserve">
+    <value>A mező beírása</value>
+  </data>
+  <data name="Hint.TypeLineNumber" xml:space="preserve">
+    <value>Írja be a sorszámot (az első billentyű felülírja a jelenlegit)</value>
+  </data>
+  <data name="Hint.TypeOffset" xml:space="preserve">
+    <value>Írja be az eltolást decimálisan vagy hexadecimálisan</value>
+  </data>
+  <data name="Hint.TypeValue" xml:space="preserve">
+    <value>Az érték beírása</value>
+  </data>
+  <data name="Hint.UpperLowerCase" xml:space="preserve">
+    <value>Nagybetű / kisbetű</value>
+  </data>
+  <data name="Json.TopLevelItems" xml:space="preserve">
+    <value>{0:N0} legfelső szintű elem</value>
+  </data>
+  <data name="Key.ExportCsv" xml:space="preserve">
+    <value>F2-Exportálás</value>
   </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Köv.</value>
@@ -1411,41 +1435,74 @@
   <data name="Key.FindPrev" xml:space="preserve">
     <value>Ctrl-F3-Előző</value>
   </data>
-  <data name="Key.Search" xml:space="preserve">
-    <value>F7-Keres</value>
-  </data>
-  <data name="Key.Save" xml:space="preserve">
-    <value>F2-Mentés</value>
-  </data>
-  <data name="Key.Replace" xml:space="preserve">
-    <value>Ctrl-R-Csere</value>
-  </data>
-  <data name="Key.Writable" xml:space="preserve">
-    <value>F6-Írható</value>
-  </data>
-  <data name="Key.ReadOnly" xml:space="preserve">
-    <value>F6-Csakolv.</value>
-  </data>
   <data name="Key.GoToLine" xml:space="preserve">
     <value>F5-Sorra</value>
   </data>
   <data name="Key.GoToOffset" xml:space="preserve">
     <value>F5-Címre</value>
   </data>
-  <data name="Status.Changed" xml:space="preserve">
-    <value>Módosítva</value>
+  <data name="Key.ReadOnly" xml:space="preserve">
+    <value>F6-Csakolv.</value>
   </data>
-  <data name="Status.Unchanged" xml:space="preserve">
-    <value>Változatlan</value>
+  <data name="Key.Replace" xml:space="preserve">
+    <value>Ctrl-R-Csere</value>
   </data>
-  <data name="Status.ReadOnly" xml:space="preserve">
-    <value>Csak olvasható</value>
+  <data name="Key.Save" xml:space="preserve">
+    <value>F2-Mentés</value>
   </data>
-  <data name="Status.Writable" xml:space="preserve">
-    <value>Írható</value>
+  <data name="Key.Search" xml:space="preserve">
+    <value>F7-Keres</value>
+  </data>
+  <data name="Key.Writable" xml:space="preserve">
+    <value>F6-Írható</value>
+  </data>
+  <data name="Msg.EnterLineNumber" xml:space="preserve">
+    <value>Adjon meg egy sorszámot.</value>
+  </data>
+  <data name="Msg.EnterOffset" xml:space="preserve">
+    <value>Adjon meg egy eltolást: számot, vagy hexa számot, például 0x1F vagy 1Fh.</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Hiba: {0}</value>
+  </data>
+  <data name="Msg.NothingToReplace" xml:space="preserve">
+    <value>Nincs mit cserélni: a(z) "{0}" nem található.</value>
+  </data>
+  <data name="Msg.SaveBeforeClosing" xml:space="preserve">
+    <value>Menti őket bezárás előtt?</value>
+  </data>
+  <data name="Msg.TypeFindText" xml:space="preserve">
+    <value>Írja be a keresett szöveget.</value>
+  </data>
+  <data name="Msg.UnsavedChangesIn" xml:space="preserve">
+    <value>A(z) {0} fájlnak mentetlen módosításai vannak.</value>
+  </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>{0}. oldal / {1}</value>
+  </data>
+  <data name="Parquet.Error.Unexpected" xml:space="preserve">
+    <value>A fájl nem olvasható: {0}</value>
+  </data>
+  <data name="Parquet.Grid.Empty" xml:space="preserve">
+    <value>Ez a fájl nem tartalmaz sorokat</value>
+  </data>
+  <data name="Parquet.Status.ColumnsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} oszlop látszik</value>
+  </data>
+  <data name="Parquet.Status.RowsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} sor látszik</value>
+  </data>
+  <data name="Parquet.Status.Summary" xml:space="preserve">
+    <value>{0:N0} sor, {1:N0} oszlop</value>
+  </data>
+  <data name="Parquet.Title" xml:space="preserve">
+    <value>Parquet</value>
   </data>
   <data name="Progress.Elapsed" xml:space="preserve">
     <value>Eltelt idő</value>
+  </data>
+  <data name="Progress.Label" xml:space="preserve">
+    <value>Előrehaladás</value>
   </data>
   <data name="Progress.Remaining" xml:space="preserve">
     <value>Hátralévő idő</value>
@@ -1453,660 +1510,8 @@
   <data name="Progress.Total" xml:space="preserve">
     <value>Teljes idő</value>
   </data>
-  <data name="Progress.Label" xml:space="preserve">
-    <value>Előrehaladás</value>
-  </data>
-  <data name="Viewer.File.CouldNotRead" xml:space="preserve">
-    <value>A fájl nem olvasható.</value>
-  </data>
-  <data name="Viewer.File.AccessLocalOnly" xml:space="preserve">
-    <value>Az Access-adatbázisok csak helyi fájlból olvashatók</value>
-  </data>
-  <data name="Viewer.File.LinkedDocumentOutsideFolder" xml:space="preserve">
-    <value>A hivatkozott dokumentum a fájl mappáján kívül található</value>
-  </data>
-  <data name="Viewer.File.LinkedDocumentMissing" xml:space="preserve">
-    <value>A hivatkozott dokumentum nincs ebben a mappában</value>
-  </data>
-  <data name="Viewer.File.NestedMasterNotExpanded" xml:space="preserve">
-    <value>A beágyazott fődokumentum nincs kibontva</value>
-  </data>
-  <data name="Viewer.File.FileVersionInfoUnavailable" xml:space="preserve">
-    <value>A fájlverzió-információ nem érhető el: {0}</value>
-  </data>
-  <data name="Viewer.File.AssemblyIdentityUnavailable" xml:space="preserve">
-    <value>Az assembly-azonosító nem érhető el: {0}</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.File" xml:space="preserve">
-    <value>Fájl</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Name" xml:space="preserve">
-    <value>Név</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Size" xml:space="preserve">
-    <value>Méret</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Bytes" xml:space="preserve">
-    <value>{0:N0} bájt</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.FileVersionInfo" xml:space="preserve">
-    <value>Fájlverzió-információk</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.FileDescription" xml:space="preserve">
-    <value>Fájl leírása</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.FileVersion" xml:space="preserve">
-    <value>Fájlverzió</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.ProductName" xml:space="preserve">
-    <value>Terméknév</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.ProductVersion" xml:space="preserve">
-    <value>Termékverzió</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.CompanyName" xml:space="preserve">
-    <value>Cégnév</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.LegalCopyright" xml:space="preserve">
-    <value>Szerzői jog</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.LegalTrademarks" xml:space="preserve">
-    <value>Védjegyek</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Comments" xml:space="preserve">
-    <value>Megjegyzések</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.InternalName" xml:space="preserve">
-    <value>Belső név</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.OriginalFilename" xml:space="preserve">
-    <value>Eredeti fájlnév</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Language" xml:space="preserve">
-    <value>Nyelv</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.AssemblyIdentity" xml:space="preserve">
-    <value>Assembly-azonosító</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.AssemblyName" xml:space="preserve">
-    <value>Assembly neve</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Version" xml:space="preserve">
-    <value>Verzió</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Culture" xml:space="preserve">
-    <value>Kultúra</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.PublicKeyToken" xml:space="preserve">
-    <value>Nyilvánoskulcs-token</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.ContentType" xml:space="preserve">
-    <value>Tartalomtípus</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Flags" xml:space="preserve">
-    <value>Jelzők</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.NotManagedAssembly" xml:space="preserve">
-    <value>Megjegyzés: Nem felügyelt .NET-assembly; CLR-azonosító nem érhető el.</value>
-  </data>
-  <data name="Viewer.Disassembly.IlHeading" xml:space="preserve">
-    <value>IL-visszafejtés</value>
-  </data>
-  <data name="Viewer.Disassembly.NativeHeading" xml:space="preserve">
-    <value>Natív visszafejtés</value>
-  </data>
-  <data name="Viewer.Disassembly.NotExecutable" xml:space="preserve">
-    <value>  Nem Windows PE- vagy Linux ELF-fájl; nincs mit visszafejteni.</value>
-  </data>
-  <data name="Viewer.Disassembly.HeadersUnreadable" xml:space="preserve">
-    <value>  A fájl fejlécei nem olvashatók: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.PeImageMachine" xml:space="preserve">
-    <value>  PE-kép, géptípus: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.UnsupportedMachine" xml:space="preserve">
-    <value>  Csak x86 és x86-64 kód fejthető vissza; ez a géptípus nem támogatott.</value>
-  </data>
-  <data name="Viewer.Disassembly.SectionDataOutsideFile" xml:space="preserve">
-    <value>az adatok a fájlon kívül találhatók</value>
-  </data>
-  <data name="Viewer.Disassembly.ElfHeaderShort" xml:space="preserve">
-    <value>  Az ELF-fejléc túl rövid.</value>
-  </data>
-  <data name="Viewer.Disassembly.ElfUnknownClass" xml:space="preserve">
-    <value>  Ismeretlen ELF-osztály.</value>
-  </data>
-  <data name="Viewer.Disassembly.BigEndianNotSupported" xml:space="preserve">
-    <value>  A big-endian ELF-fájlok nem támogatottak.</value>
-  </data>
-  <data name="Viewer.Disassembly.ElfImageMachine" xml:space="preserve">
-    <value>  {0} bites ELF, géptípus: {1}</value>
-  </data>
-  <data name="Viewer.Disassembly.NoSectionHeaders" xml:space="preserve">
-    <value>  A fájlnak nincsenek szakaszfejlécei (lehet, hogy eltávolították belőle a szimbólumokat), ezért a kód nem található.</value>
-  </data>
-  <data name="Viewer.Disassembly.MalformedSectionHeaders" xml:space="preserve">
-    <value>  A szakaszfejlécek hibásak.</value>
-  </data>
-  <data name="Viewer.Disassembly.SectionHeadersPastEnd" xml:space="preserve">
-    <value>  A szakaszfejlécek túlnyúlnak a fájl végén.</value>
-  </data>
-  <data name="Viewer.Disassembly.DecodedCodeLimit" xml:space="preserve">
-    <value>elérte a dekódolt kód {0} MB-os korlátját</value>
-  </data>
-  <data name="Viewer.Disassembly.Stopped" xml:space="preserve">
-    <value>  A visszafejtés leállt: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.MetadataUnreadable" xml:space="preserve">
-    <value>  A metaadatok további olvasása nem sikerült: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.NoMethodBodies" xml:space="preserve">
-    <value>  Az assembly nem tartalmaz metódustörzseket.</value>
-  </data>
-  <data name="Viewer.Disassembly.MethodBodyUnreadable" xml:space="preserve">
-    <value>metódustörzs nem olvasható: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.MethodInstructionLimit" xml:space="preserve">
-    <value>    … a metódus csonkolva: elérte a metódusonkénti utasításkorlátot</value>
-  </data>
-  <data name="Viewer.Disassembly.TruncatedMarker" xml:space="preserve">
-    <value>csonkolva</value>
-  </data>
-  <data name="Viewer.Disassembly.OperandPastMethod" xml:space="preserve">
-    <value>az operandus túlmutat a metódus végén</value>
-  </data>
-  <data name="Viewer.Disassembly.OutputTruncated" xml:space="preserve">
-    <value>  … a kimenet csonkolva: {0}.</value>
-  </data>
-  <data name="Viewer.Disassembly.MethodLimit" xml:space="preserve">
-    <value>elérte a {0:N0} metódusos korlátot</value>
-  </data>
-  <data name="Viewer.Disassembly.LineLimit" xml:space="preserve">
-    <value>elérte a {0:N0} soros korlátot</value>
-  </data>
-  <data name="Viewer.Disassembly.TimeLimit" xml:space="preserve">
-    <value>elérte a {0:0.#} másodperces időkorlátot</value>
-  </data>
-  <data name="Certificate.Title" xml:space="preserve">
-    <value>Tanúsítvány</value>
-  </data>
-  <data name="Certificate.Picker.Label" xml:space="preserve">
-    <value>Tanúsítvány</value>
-  </data>
-  <data name="Certificate.Status.Loading" xml:space="preserve">
-    <value>A tanúsítvány olvasása…</value>
-  </data>
-  <data name="Certificate.Status.Count" xml:space="preserve">
-    <value>{0}. tanúsítvány, összesen: {1}</value>
-  </data>
-  <data name="Certificate.Status.Valid" xml:space="preserve">
-    <value>érvényes eddig: {0}</value>
-  </data>
-  <data name="Certificate.Status.Expired" xml:space="preserve">
-    <value>lejárt: {0}</value>
-  </data>
-  <data name="Certificate.Status.NotYetValid" xml:space="preserve">
-    <value>érvényes ettől: {0}</value>
-  </data>
-  <data name="Certificate.Status.PrivateKeys" xml:space="preserve">
-    <value> · {0} privát kulcs blokk nincs megjelenítve</value>
-  </data>
-  <data name="Certificate.Field.Subject" xml:space="preserve">
-    <value>Tárgy</value>
-  </data>
-  <data name="Certificate.Field.Issuer" xml:space="preserve">
-    <value>Kibocsátó</value>
-  </data>
-  <data name="Certificate.Field.SelfIssued" xml:space="preserve">
-    <value>Önkiállított</value>
-  </data>
-  <data name="Certificate.Field.Serial" xml:space="preserve">
-    <value>Sorozatszám</value>
-  </data>
-  <data name="Certificate.Field.NotBefore" xml:space="preserve">
-    <value>Érvényes ettől</value>
-  </data>
-  <data name="Certificate.Field.NotAfter" xml:space="preserve">
-    <value>Érvényes eddig</value>
-  </data>
-  <data name="Certificate.Field.SignatureAlgorithm" xml:space="preserve">
-    <value>Aláírás</value>
-  </data>
-  <data name="Certificate.Field.PublicKey" xml:space="preserve">
-    <value>Nyilvános kulcs</value>
-  </data>
-  <data name="Certificate.Field.Names" xml:space="preserve">
-    <value>Alternatív nevek</value>
-  </data>
-  <data name="Certificate.Field.CertificateAuthority" xml:space="preserve">
-    <value>Tanúsító hatóság</value>
-  </data>
-  <data name="Certificate.Field.PathLength" xml:space="preserve">
-    <value>Lánchossz</value>
-  </data>
-  <data name="Certificate.Field.KeyUsage" xml:space="preserve">
-    <value>Kulcshasználat</value>
-  </data>
-  <data name="Certificate.Field.ExtendedKeyUsage" xml:space="preserve">
-    <value>Bővített kulcshasználat</value>
-  </data>
-  <data name="Certificate.Field.Sha256" xml:space="preserve">
-    <value>SHA-256</value>
-  </data>
-  <data name="Certificate.Field.Sha1" xml:space="preserve">
-    <value>SHA-1</value>
-  </data>
-  <data name="Certificate.Value.Yes" xml:space="preserve">
-    <value>igen</value>
-  </data>
-  <data name="Certificate.Value.No" xml:space="preserve">
-    <value>nem</value>
-  </data>
-  <data name="Certificate.Fallback.Failed" xml:space="preserve">
-    <value>A fájl nem nyitható meg</value>
-  </data>
-  <data name="Certificate.Hint.Step" xml:space="preserve">
-    <value>Előző vagy következő tanúsítvány megjelenítése</value>
-  </data>
-  <data name="Certificate.Fallback.NoCertificate" xml:space="preserve">
-    <value>Ebben a fájlban nincs tanúsítvány</value>
-  </data>
-  <data name="Certificate.Fallback.TooLarge" xml:space="preserve">
-    <value>A fájl nagyobb 1 MiB-nál</value>
-  </data>
-  <data name="Certificate.Fallback.Unreadable" xml:space="preserve">
-    <value>A fájl nem olvasható</value>
-  </data>
-  <data name="Har.Column.Number" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="Har.Column.Method" xml:space="preserve">
-    <value>Metódus</value>
-  </data>
-  <data name="Har.Column.Status" xml:space="preserve">
-    <value>Állapot</value>
-  </data>
-  <data name="Har.Column.Type" xml:space="preserve">
-    <value>Típus</value>
-  </data>
-  <data name="Har.Column.Size" xml:space="preserve">
-    <value>Méret</value>
-  </data>
-  <data name="Har.Column.Time" xml:space="preserve">
-    <value>Idő (ms)</value>
-  </data>
-  <data name="Har.Column.Url" xml:space="preserve">
-    <value>URL</value>
-  </data>
-  <data name="Har.Grid.Empty" xml:space="preserve">
-    <value>A fájl nem tartalmaz kéréseket</value>
-  </data>
-  <data name="Har.Status.Requests" xml:space="preserve">
-    <value>{0:N0} kérés</value>
-  </data>
-  <data name="Har.Status.Truncated" xml:space="preserve">
-    <value>; csak az első {0:N0} kerül beolvasásra</value>
-  </data>
-  <data name="Har.Status.NotHar" xml:space="preserve">
-    <value>Nem HAR-fájl: {0}</value>
-  </data>
-  <data name="Har.Title.Details" xml:space="preserve">
-    <value>Kérés {0}</value>
-  </data>
-  <data name="Har.Hint.Details" xml:space="preserve">
-    <value>A kérés és a válasz megjelenítése</value>
-  </data>
-  <data name="Har.Hint.Back" xml:space="preserve">
-    <value>Vissza a kérések listájához</value>
-  </data>
-  <data name="Har.Detail.Started" xml:space="preserve">
-    <value>Kezdés</value>
-  </data>
-  <data name="Har.Detail.Time" xml:space="preserve">
-    <value>Időtartam</value>
-  </data>
-  <data name="Har.Detail.Server" xml:space="preserve">
-    <value>Kiszolgáló</value>
-  </data>
-  <data name="Har.Detail.Timings" xml:space="preserve">
-    <value>Időzítés</value>
-  </data>
-  <data name="Har.Detail.QueryString" xml:space="preserve">
-    <value>Lekérdezési paraméterek</value>
-  </data>
-  <data name="Har.Detail.RequestHeaders" xml:space="preserve">
-    <value>Kérésfejlécek</value>
-  </data>
-  <data name="Har.Detail.ResponseHeaders" xml:space="preserve">
-    <value>Válaszfejlécek</value>
-  </data>
-  <data name="Har.Detail.RequestBody" xml:space="preserve">
-    <value>Kérés törzse</value>
-  </data>
-  <data name="Har.Detail.ResponseBody" xml:space="preserve">
-    <value>Válasz törzse</value>
-  </data>
-  <data name="Har.Detail.NoBody" xml:space="preserve">
-    <value>(nincs tartalom)</value>
-  </data>
-  <data name="Har.Detail.Binary" xml:space="preserve">
-    <value>(bináris, {0:N0} bájt, nem jelenik meg)</value>
-  </data>
-  <data name="Har.Detail.Truncated" xml:space="preserve">
-    <value>({0:N0} karakter után levágva)</value>
-  </data>
-  <data name="Parquet.Title" xml:space="preserve">
-    <value>Parquet</value>
-  </data>
-  <data name="Parquet.Grid.Empty" xml:space="preserve">
-    <value>Ez a fájl nem tartalmaz sorokat</value>
-  </data>
-  <data name="Parquet.Status.Summary" xml:space="preserve">
-    <value>{0:N0} sor, {1:N0} oszlop</value>
-  </data>
-  <data name="Parquet.Status.RowsCut" xml:space="preserve">
-    <value>; csak az első {0:N0} sor látszik</value>
-  </data>
-  <data name="Parquet.Status.ColumnsCut" xml:space="preserve">
-    <value>; csak az első {0:N0} oszlop látszik</value>
-  </data>
-  <data name="Parquet.Error.Unexpected" xml:space="preserve">
-    <value>A fájl nem olvasható: {0}</value>
-  </data>
-  <data name="Viewer.NotValidFormat" xml:space="preserve">
-    <value>Érvénytelen {0}: {1}</value>
-  </data>
-  <data name="Dbf.Grid.Empty" xml:space="preserve">
-    <value>A táblázat nem tartalmaz rekordot</value>
-  </data>
-  <data name="Dbf.NotDbase" xml:space="preserve">
-    <value>Nem dBase-tábla: {0}</value>
-  </data>
-  <data name="Dbf.Status" xml:space="preserve">
-    <value>{0:N0} rekord, {1:N0} mező, {2}</value>
-  </data>
-  <data name="Dbf.Updated" xml:space="preserve">
-    <value>frissítve: {0:yyyy-MM-dd}</value>
-  </data>
-  <data name="Dbf.Deleted" xml:space="preserve">
-    <value>{0:N0} törölt, nincs megjelenítve</value>
-  </data>
-  <data name="Dbf.Truncated" xml:space="preserve">
-    <value>csak az első {0:N0} rekord látszik</value>
-  </data>
-  <data name="Viewer.Font.NoPreview" xml:space="preserve">
-    <value>A betűkészletet nem lehetett előnézetként kirajzolni.</value>
-  </data>
-  <data name="Viewer.Font.Preview" xml:space="preserve">
-    <value>Előnézet</value>
-  </data>
-  <data name="Viewer.Font.Names" xml:space="preserve">
-    <value>Nevek</value>
-  </data>
-  <data name="Viewer.Font.Family" xml:space="preserve">
-    <value>Család</value>
-  </data>
-  <data name="Viewer.Font.Style" xml:space="preserve">
-    <value>Stílus</value>
-  </data>
-  <data name="Viewer.Font.FullName" xml:space="preserve">
-    <value>Teljes név</value>
-  </data>
-  <data name="Viewer.Font.PostScript" xml:space="preserve">
-    <value>PostScript-név</value>
-  </data>
-  <data name="Viewer.Font.Version" xml:space="preserve">
-    <value>Verzió</value>
-  </data>
-  <data name="Viewer.Font.Copyright" xml:space="preserve">
-    <value>Szerzői jog</value>
-  </data>
-  <data name="Viewer.Font.Designer" xml:space="preserve">
-    <value>Tervező</value>
-  </data>
-  <data name="Viewer.Font.Manufacturer" xml:space="preserve">
-    <value>Gyártó</value>
-  </data>
-  <data name="Viewer.Font.License" xml:space="preserve">
-    <value>Licenc</value>
-  </data>
-  <data name="Viewer.Font.Design" xml:space="preserve">
-    <value>Kialakítás</value>
-  </data>
-  <data name="Viewer.Font.Format" xml:space="preserve">
-    <value>Körvonalak</value>
-  </data>
-  <data name="Viewer.Font.UnitsPerEm" xml:space="preserve">
-    <value>Egység em-enként</value>
-  </data>
-  <data name="Viewer.Font.Glyphs" xml:space="preserve">
-    <value>Glifek</value>
-  </data>
-  <data name="Viewer.Font.Characters" xml:space="preserve">
-    <value>Karakterek a térképen</value>
-  </data>
-  <data name="Viewer.Font.Weight" xml:space="preserve">
-    <value>Vastagsági osztály</value>
-  </data>
-  <data name="Viewer.Font.WidthClass" xml:space="preserve">
-    <value>Szélességi osztály</value>
-  </data>
-  <data name="Viewer.Font.Created" xml:space="preserve">
-    <value>Létrehozva</value>
-  </data>
-  <data name="Viewer.Font.Modified" xml:space="preserve">
-    <value>Módosítva</value>
-  </data>
-  <data name="Viewer.Font.Embedding" xml:space="preserve">
-    <value>Beágyazás</value>
-  </data>
-  <data name="Viewer.Psd.Heading" xml:space="preserve">
-    <value>Photoshop-fájl</value>
-  </data>
-  <data name="Viewer.Psd.Format" xml:space="preserve">
-    <value>Formátum</value>
-  </data>
-  <data name="Viewer.Psd.Size" xml:space="preserve">
-    <value>Méret</value>
-  </data>
-  <data name="Viewer.Psd.Pixels" xml:space="preserve">
-    <value>{0:N0} × {1:N0} képpont</value>
-  </data>
-  <data name="Viewer.Psd.ColorMode" xml:space="preserve">
-    <value>Színmód</value>
-  </data>
-  <data name="Viewer.Psd.Depth" xml:space="preserve">
-    <value>Mélység</value>
-  </data>
-  <data name="Viewer.Psd.Bits" xml:space="preserve">
-    <value>{0} bit csatornánként</value>
-  </data>
-  <data name="Viewer.Psd.Channels" xml:space="preserve">
-    <value>Csatornák</value>
-  </data>
-  <data name="Viewer.Psd.Layers" xml:space="preserve">
-    <value>Rétegek</value>
-  </data>
-  <data name="Viewer.Psd.NoLayers" xml:space="preserve">
-    <value>nincs</value>
-  </data>
-  <data name="Viewer.Psd.Compression" xml:space="preserve">
-    <value>Tömörítés</value>
-  </data>
-  <data name="Viewer.Psd.Picture" xml:space="preserve">
-    <value>Összevont kép</value>
-  </data>
-  <data name="Viewer.Psd.Compressed" xml:space="preserve">
-    <value>A kép ZIP-tömörítésű, ezt a megjelenítő nem olvassa.</value>
-  </data>
-  <data name="Viewer.Psd.TooLarge" xml:space="preserve">
-    <value>A kép túl nagy a kirajzoláshoz.</value>
-  </data>
-  <data name="Viewer.Psd.Truncated" xml:space="preserve">
-    <value>A kép adatai hamarabb érnek véget, mint maga a kép.</value>
-  </data>
-  <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
-    <value>A kép ezzel a színmóddal vagy mélységgel nem rajzolható ki.</value>
-  </data>
-  <data name="Viewer.Model.Heading" xml:space="preserve">
-    <value>A modell összegzése</value>
-  </data>
-  <data name="Viewer.Model.BinaryDxf" xml:space="preserve">
-    <value>Ez bináris DXF fájl, ezért elemei nincsenek felsorolva.</value>
-  </data>
-  <data name="Viewer.Model.Version" xml:space="preserve">
-    <value>Verzió</value>
-  </data>
-  <data name="Viewer.Model.Extents" xml:space="preserve">
-    <value>Kiterjedés</value>
-  </data>
-  <data name="Viewer.Model.Layers" xml:space="preserve">
-    <value>Rétegek</value>
-  </data>
-  <data name="Viewer.Model.Entities" xml:space="preserve">
-    <value>Elemek</value>
-  </data>
-  <data name="Viewer.Model.Vertices" xml:space="preserve">
-    <value>Csúcsok</value>
-  </data>
-  <data name="Viewer.Model.TextureCoordinates" xml:space="preserve">
-    <value>Textúrakoordináták</value>
-  </data>
-  <data name="Viewer.Model.Normals" xml:space="preserve">
-    <value>Normálvektorok</value>
-  </data>
-  <data name="Viewer.Model.Faces" xml:space="preserve">
-    <value>Lapok</value>
-  </data>
-  <data name="Viewer.Model.Groups" xml:space="preserve">
-    <value>Csoportok</value>
-  </data>
-  <data name="Viewer.Model.Objects" xml:space="preserve">
-    <value>Objektumok</value>
-  </data>
-  <data name="Viewer.Model.Materials" xml:space="preserve">
-    <value>Anyagok</value>
-  </data>
-  <data name="Viewer.Model.MaterialLibraries" xml:space="preserve">
-    <value>Anyagkönyvtárak</value>
-  </data>
-  <data name="Viewer.Model.Bounds" xml:space="preserve">
-    <value>Határok</value>
-  </data>
-  <data name="Viewer.Model.Format" xml:space="preserve">
-    <value>Formátum</value>
-  </data>
-  <data name="Viewer.Model.Ascii" xml:space="preserve">
-    <value>ASCII</value>
-  </data>
-  <data name="Viewer.Model.Binary" xml:space="preserve">
-    <value>bináris</value>
-  </data>
-  <data name="Viewer.Model.Name" xml:space="preserve">
-    <value>Név</value>
-  </data>
-  <data name="Viewer.Model.Triangles" xml:space="preserve">
-    <value>Háromszögek</value>
-  </data>
-  <data name="Viewer.Model.Source" xml:space="preserve">
-    <value>Forrásszöveg</value>
-  </data>
-  <data name="Viewer.Wasm.Heading" xml:space="preserve">
-    <value>WebAssembly-modul</value>
-  </data>
-  <data name="Viewer.Wasm.Version" xml:space="preserve">
-    <value>Verzió</value>
-  </data>
-  <data name="Viewer.Wasm.Sections" xml:space="preserve">
-    <value>Szakaszok</value>
-  </data>
-  <data name="Viewer.Wasm.Types" xml:space="preserve">
-    <value>Típusok</value>
-  </data>
-  <data name="Viewer.Wasm.Imports" xml:space="preserve">
-    <value>Importok</value>
-  </data>
-  <data name="Viewer.Wasm.Functions" xml:space="preserve">
-    <value>Függvények (definiáltak és importáltak)</value>
-  </data>
-  <data name="Viewer.Wasm.Tables" xml:space="preserve">
-    <value>Táblázatok</value>
-  </data>
-  <data name="Viewer.Wasm.Memories" xml:space="preserve">
-    <value>Memóriák</value>
-  </data>
-  <data name="Viewer.Wasm.Globals" xml:space="preserve">
-    <value>Globálisok</value>
-  </data>
-  <data name="Viewer.Wasm.Exports" xml:space="preserve">
-    <value>Exportok</value>
-  </data>
-  <data name="Viewer.Wasm.Start" xml:space="preserve">
-    <value>Indító függvény</value>
-  </data>
-  <data name="Viewer.Wasm.None" xml:space="preserve">
-    <value>nincs</value>
-  </data>
-  <data name="Viewer.Wasm.DataSegments" xml:space="preserve">
-    <value>Adatszegmensek</value>
-  </data>
-  <data name="Viewer.Wasm.Custom" xml:space="preserve">
-    <value>Egyéni szakaszok</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.function" xml:space="preserve">
-    <value>függvény</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.table" xml:space="preserve">
-    <value>tábla</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.memory" xml:space="preserve">
-    <value>memória</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
-    <value>globális</value>
-  </data>
-  <data name="CmdTitle.f1a3511a" xml:space="preserve">
-    <value>Nyomás vagy jelölés</value>
-    <comment>Nyomás vagy jelölés</comment>
-  </data>
-  <data name="CmdDesc.bbf604eb" xml:space="preserve">
-    <value>Nyomja meg a fókuszált gombot, vagy jelölje be vagy ki a fókuszált jelölőnégyzetet.</value>
-    <comment>Nyomja meg a fókuszált gombot, vagy jelölje be vagy ki a fókuszált jelölőnégyzetet.</comment>
-  </data>
-  <data name="CmdTitle.77b9c680" xml:space="preserve">
-    <value>Dátum-felugró</value>
-    <comment>Date pop-up</comment>
-  </data>
-  <data name="Viewer.HexTitleHints" xml:space="preserve">
-    <value> [HEX]  F4:Szöveg  F5:Eltolás  Esc:bezárás</value>
-    <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
-  </data>
-  <data name="Viewer.CloseHint" xml:space="preserve">
-    <value>  Esc:bezár</value>
-  </data>
-  <data name="Status.LineColumn" xml:space="preserve">
-    <value>Sor {0}/{1} Oszl {2}/{3}</value>
-  </data>
-  <data name="Prompt.HintAccept" xml:space="preserve">
-    <value>Enter: elfogad    Esc: mégse</value>
-  </data>
-  <data name="Prompt.HintFilterChoose" xml:space="preserve">
-    <value>Gépelés a szűréshez    Enter: választ    Esc: mégse</value>
-  </data>
-  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
-    <value>Space: jelöl    Enter: megerősít    Esc: mégse</value>
-  </data>
-  <data name="Prompt.HintYes" xml:space="preserve">
-    <value>Enter: igen    Esc: mégse</value>
-  </data>
-  <data name="Prompt.HintNo" xml:space="preserve">
-    <value>Enter: nem    Esc: mégse</value>
-  </data>
-  <data name="Prompt.HintCancel" xml:space="preserve">
-    <value>Esc: mégse</value>
-  </data>
-  <data name="Prompt.Title" xml:space="preserve">
-    <value>Kérdés</value>
+  <data name="Prompt.ConfirmTitle" xml:space="preserve">
+    <value>Megerősítés</value>
   </data>
   <data name="Prompt.EmptyValue" xml:space="preserve">
     <value>Adjon meg egy értéket.</value>
@@ -2114,133 +1519,728 @@
   <data name="Prompt.FilterLabel" xml:space="preserve">
     <value>Szűrő: {0}</value>
   </data>
-  <data name="Prompt.NoMatch" xml:space="preserve">
-    <value>Egyik választás sem felel meg a szűrőnek.</value>
+  <data name="Prompt.HintAccept" xml:space="preserve">
+    <value>Enter: elfogad    Esc: mégse</value>
   </data>
-  <data name="Prompt.SelectTitle" xml:space="preserve">
-    <value>Kiválasztás</value>
+  <data name="Prompt.HintCancel" xml:space="preserve">
+    <value>Esc: mégse</value>
   </data>
-  <data name="Prompt.NothingMatches" xml:space="preserve">
-    <value>Semmi sem felel meg a szűrőnek.</value>
+  <data name="Prompt.HintFilterChoose" xml:space="preserve">
+    <value>Gépelés a szűréshez    Enter: választ    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
+    <value>Space: jelöl    Enter: megerősít    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintNo" xml:space="preserve">
+    <value>Enter: nem    Esc: mégse</value>
+  </data>
+  <data name="Prompt.HintYes" xml:space="preserve">
+    <value>Enter: igen    Esc: mégse</value>
   </data>
   <data name="Prompt.MarkAtLeast" xml:space="preserve">
     <value>Jelöljön ki legalább {0}-t.</value>
   </data>
-  <data name="Prompt.ConfirmTitle" xml:space="preserve">
-    <value>Megerősítés</value>
+  <data name="Prompt.NoMatch" xml:space="preserve">
+    <value>Egyik választás sem felel meg a szűrőnek.</value>
+  </data>
+  <data name="Prompt.NothingMatches" xml:space="preserve">
+    <value>Semmi sem felel meg a szűrőnek.</value>
+  </data>
+  <data name="Prompt.SelectTitle" xml:space="preserve">
+    <value>Kiválasztás</value>
+  </data>
+  <data name="Prompt.Title" xml:space="preserve">
+    <value>Kérdés</value>
   </data>
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[I] Igen    [N] Nem</value>
   </data>
-  <data name="Editor.HexTitle" xml:space="preserve">
-    <value>hex</value>
+  <data name="Splash.Motto" xml:space="preserve">
+    <value>Svájci bicska a terminálhoz</value>
   </data>
-  <data name="Editor.HintHexDigit" xml:space="preserve">
-    <value>Hexadecimális számjegy beírása</value>
+  <data name="Splash.Protocols" xml:space="preserve">
+    <value>Terminálprotokollok</value>
   </data>
-  <data name="Editor.HintTextView" xml:space="preserve">
-    <value>Szövegnézet</value>
+  <data name="Splash.StateOff" xml:space="preserve">
+    <value>ki</value>
   </data>
-  <data name="Editor.HintHexView" xml:space="preserve">
-    <value>Hex nézet</value>
+  <data name="Splash.StateOn" xml:space="preserve">
+    <value>be</value>
   </data>
-  <data name="Editor.NotText" xml:space="preserve">
-    <value>Nem szöveg: a bájtok {0} kódlapon nem olvasódnak vissza változatlanul, ezért a hex nézet marad.</value>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU: {0} mag, memória: {1} GB</value>
   </data>
-  <data name="Editor.HintHexMove" xml:space="preserve">
-    <value>Kurzor mozgatása</value>
+  <data name="Sqlite.Error.Unexpected" xml:space="preserve">
+    <value>A lekérdezés sikertelen: {0}</value>
   </data>
-  <data name="Editor.HintHexRow" xml:space="preserve">
-    <value>A sor eleje vagy vége</value>
-  </data>
-  <data name="Grid.Ai.Asking" xml:space="preserve">
-    <value>A MI-modell kérdezése…</value>
-  </data>
-  <data name="Grid.Ai.Ready" xml:space="preserve">
-    <value>Javaslat a lekérdezési sorban: Enter a futtatáshoz</value>
-  </data>
-  <data name="Grid.Ai.NoQuestion" xml:space="preserve">
-    <value>Írjon kérdést a ? után, például ? sorok, ahol az amount nagyobb 10-nél</value>
-  </data>
-  <data name="Grid.Ai.NoQuery" xml:space="preserve">
-    <value>Az MI-modell nem küldött lekérdezést</value>
-  </data>
-  <data name="Grid.Ai.NoTable" xml:space="preserve">
-    <value>Nincs '{0}' nevű tábla</value>
-  </data>
-  <data name="Grid.Query.Placeholder" xml:space="preserve">
-    <value>pl. SELECT name WHERE amount &gt; 10, vagy ? és egy kérdés</value>
-  </data>
-  <data name="Grid.Hint.RunQuery" xml:space="preserve">
-    <value>Lekérdezés futtatása a megjelenített sorokon</value>
-  </data>
-  <data name="Grid.Hint.Ask" xml:space="preserve">
-    <value>MI megkérdezése: írjon ?-et és egy kérdést, majd az Enter javasol egy lekérdezést</value>
-  </data>
-  <data name="Grid.Hint.Syntax" xml:space="preserve">
-    <value>Operátorok: = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY; összekötés AND / OR-ral; majd ORDER BY oszlop [DESC] és LIMIT n</value>
-  </data>
-  <data name="Grid.Hint.Complete" xml:space="preserve">
-    <value>Az éppen írt szó kiegészítése: oszlopnév vagy kulcsszó</value>
-  </data>
-  <data name="Grid.Status.Matched" xml:space="preserve">
-    <value>; a megjelenített {1:N0} sorból {0:N0} egyezik</value>
-  </data>
-  <data name="Grid.Ai.NoTables" xml:space="preserve">
-    <value>Nincs lekérdezhető tábla</value>
-  </data>
-  <data name="Grid.Ai.PickTable" xml:space="preserve">
-    <value>Nevezzen meg egy táblát a FROM után: {0}</value>
-  </data>
-  <data name="Hdf.Hint.Transpose" xml:space="preserve">
-    <value>A sorok és oszlopok felcserélése</value>
-  </data>
-  <data name="Hdf.Status.LongFormCut" xml:space="preserve">
-    <value>; csak az első {0:N0} egyező cella marad meg</value>
-  </data>
-  <data name="Hdf.Hint.LongForm" xml:space="preserve">
-    <value>Minden cella lekérdezése, tengelyenként egy oszloppal (axis0, axis1, ...)</value>
-  </data>
-  <data name="Sqlite.Status.Matched" xml:space="preserve">
-    <value>{0:N0} egyező sor</value>
+  <data name="Sqlite.Grid.Empty" xml:space="preserve">
+    <value>A lekérdezés nem adott vissza sorokat</value>
   </data>
   <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
     <value>Az eredmény szűrése: a sor : jellel kezdődjön, majd rácslekérdezés</value>
   </data>
-  <data name="Key.ExportCsv" xml:space="preserve">
-    <value>F2-Exportálás</value>
+  <data name="Sqlite.Hint.RunQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása</value>
   </data>
-  <data name="Csv.Hint.Mark" xml:space="preserve">
-    <value>Sor megjelölése, és egy sorral lejjebb lépés</value>
+  <data name="Sqlite.Query.Label" xml:space="preserve">
+    <value>Lekérdezés</value>
   </data>
-  <data name="Csv.Hint.Export" xml:space="preserve">
-    <value>A megjelölt, vagy a képernyőn látható sorok exportálása CSV-, JSON- vagy XML-fájlba</value>
+  <data name="Sqlite.Query.Placeholder" xml:space="preserve">
+    <value>pl. SELECT * FROM tábla LIMIT 20</value>
   </data>
-  <data name="Csv.Export.Format" xml:space="preserve">
-    <value>Exportálás formátuma</value>
+  <data name="Sqlite.Status.Matched" xml:space="preserve">
+    <value>{0:N0} egyező sor</value>
   </data>
-  <data name="Csv.Export.Ask" xml:space="preserve">
-    <value>Sorok mentése ide:</value>
+  <data name="Sqlite.Status.Rows" xml:space="preserve">
+    <value>{0:N0} sor, {1} oszlop</value>
   </data>
-  <data name="Csv.Export.Invalid" xml:space="preserve">
-    <value>Adjon meg fájlnevet, mappa nélkül</value>
+  <data name="Sqlite.Status.Truncated" xml:space="preserve">
+    <value>; csak az első {0:N0} sor látszik</value>
   </data>
-  <data name="Csv.Export.Overwrite" xml:space="preserve">
-    <value>A(z) {0} már létezik. Felülírja?</value>
+  <data name="Sqlite.Text.Rows" xml:space="preserve">
+    <value>{0:N0} sor</value>
   </data>
-  <data name="Csv.Export.Done" xml:space="preserve">
-    <value>{0:N0} sor exportálva ide: {1}</value>
+  <data name="Sqlite.Text.Truncated" xml:space="preserve">
+    <value>, csonkítva</value>
   </data>
-  <data name="Csv.Export.Cancelled" xml:space="preserve">
-    <value>Semmi nem íródott</value>
+  <data name="Sqlite.Title" xml:space="preserve">
+    <value>SQLite</value>
   </data>
-  <data name="Csv.Export.ReadOnly" xml:space="preserve">
-    <value>Ez a mappa csak olvasható: semmi nem íródott</value>
+  <data name="Sqlite.Title.Hint" xml:space="preserve">
+    <value>  F4:Szöveg  Enter:lekérdezés  Tab:rács</value>
   </data>
-  <data name="Csv.Export.NoFolder" xml:space="preserve">
-    <value>Ebbe a fájl mellé nem lehet írni</value>
+  <data name="Sqlite.Title.TextMode" xml:space="preserve">
+    <value> [SZÖVEG]</value>
   </data>
-  <data name="Csv.Export.Failed" xml:space="preserve">
-    <value>A fájl nem írható: {0}</value>
+  <data name="Status.Changed" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Találat {0}/{1}</value>
+  </data>
+  <data name="Status.LineColumn" xml:space="preserve">
+    <value>Sor {0}/{1} Oszl {2}/{3}</value>
+  </data>
+  <data name="Status.ReadOnly" xml:space="preserve">
+    <value>Csak olvasható</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Keresés: {0}</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Feladatok: {0}</value>
+  </data>
+  <data name="Status.Unchanged" xml:space="preserve">
+    <value>Változatlan</value>
+  </data>
+  <data name="Status.Writable" xml:space="preserve">
+    <value>Írható</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.AssemblyIdentity" xml:space="preserve">
+    <value>Assembly-azonosító</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.AssemblyName" xml:space="preserve">
+    <value>Assembly neve</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Bytes" xml:space="preserve">
+    <value>{0:N0} bájt</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Comments" xml:space="preserve">
+    <value>Megjegyzések</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.CompanyName" xml:space="preserve">
+    <value>Cégnév</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ContentType" xml:space="preserve">
+    <value>Tartalomtípus</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Culture" xml:space="preserve">
+    <value>Kultúra</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.File" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileDescription" xml:space="preserve">
+    <value>Fájl leírása</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileVersion" xml:space="preserve">
+    <value>Fájlverzió</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileVersionInfo" xml:space="preserve">
+    <value>Fájlverzió-információk</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Flags" xml:space="preserve">
+    <value>Jelzők</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.InternalName" xml:space="preserve">
+    <value>Belső név</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Language" xml:space="preserve">
+    <value>Nyelv</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.LegalCopyright" xml:space="preserve">
+    <value>Szerzői jog</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.LegalTrademarks" xml:space="preserve">
+    <value>Védjegyek</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.NotManagedAssembly" xml:space="preserve">
+    <value>Megjegyzés: Nem felügyelt .NET-assembly; CLR-azonosító nem érhető el.</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.OriginalFilename" xml:space="preserve">
+    <value>Eredeti fájlnév</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ProductName" xml:space="preserve">
+    <value>Terméknév</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ProductVersion" xml:space="preserve">
+    <value>Termékverzió</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.PublicKeyToken" xml:space="preserve">
+    <value>Nyilvánoskulcs-token</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Version" xml:space="preserve">
+    <value>Verzió</value>
+  </data>
+  <data name="Viewer.ChangedOnDisk" xml:space="preserve">
+    <value>lemezen módosult</value>
+  </data>
+  <data name="Viewer.CloseHint" xml:space="preserve">
+    <value>  Esc:bezár</value>
+  </data>
+  <data name="Viewer.CouldNotRead" xml:space="preserve">
+    <value>A fájl nem olvasható</value>
+  </data>
+  <data name="Viewer.Disassembling" xml:space="preserve">
+    <value>Visszafejtés folyamatban…</value>
+  </data>
+  <data name="Viewer.Disassembly.BigEndianNotSupported" xml:space="preserve">
+    <value>  A big-endian ELF-fájlok nem támogatottak.</value>
+  </data>
+  <data name="Viewer.Disassembly.DecodedCodeLimit" xml:space="preserve">
+    <value>elérte a dekódolt kód {0} MB-os korlátját</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfHeaderShort" xml:space="preserve">
+    <value>  Az ELF-fejléc túl rövid.</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfImageMachine" xml:space="preserve">
+    <value>  {0} bites ELF, géptípus: {1}</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfUnknownClass" xml:space="preserve">
+    <value>  Ismeretlen ELF-osztály.</value>
+  </data>
+  <data name="Viewer.Disassembly.HeadersUnreadable" xml:space="preserve">
+    <value>  A fájl fejlécei nem olvashatók: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.IlHeading" xml:space="preserve">
+    <value>IL-visszafejtés</value>
+  </data>
+  <data name="Viewer.Disassembly.LineLimit" xml:space="preserve">
+    <value>elérte a {0:N0} soros korlátot</value>
+  </data>
+  <data name="Viewer.Disassembly.MalformedSectionHeaders" xml:space="preserve">
+    <value>  A szakaszfejlécek hibásak.</value>
+  </data>
+  <data name="Viewer.Disassembly.MetadataUnreadable" xml:space="preserve">
+    <value>  A metaadatok további olvasása nem sikerült: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodBodyUnreadable" xml:space="preserve">
+    <value>metódustörzs nem olvasható: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodInstructionLimit" xml:space="preserve">
+    <value>    … a metódus csonkolva: elérte a metódusonkénti utasításkorlátot</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodLimit" xml:space="preserve">
+    <value>elérte a {0:N0} metódusos korlátot</value>
+  </data>
+  <data name="Viewer.Disassembly.NativeHeading" xml:space="preserve">
+    <value>Natív visszafejtés</value>
+  </data>
+  <data name="Viewer.Disassembly.NoMethodBodies" xml:space="preserve">
+    <value>  Az assembly nem tartalmaz metódustörzseket.</value>
+  </data>
+  <data name="Viewer.Disassembly.NoSectionHeaders" xml:space="preserve">
+    <value>  A fájlnak nincsenek szakaszfejlécei (lehet, hogy eltávolították belőle a szimbólumokat), ezért a kód nem található.</value>
+  </data>
+  <data name="Viewer.Disassembly.NotExecutable" xml:space="preserve">
+    <value>  Nem Windows PE- vagy Linux ELF-fájl; nincs mit visszafejteni.</value>
+  </data>
+  <data name="Viewer.Disassembly.OperandPastMethod" xml:space="preserve">
+    <value>az operandus túlmutat a metódus végén</value>
+  </data>
+  <data name="Viewer.Disassembly.OutputTruncated" xml:space="preserve">
+    <value>  … a kimenet csonkolva: {0}.</value>
+  </data>
+  <data name="Viewer.Disassembly.PeImageMachine" xml:space="preserve">
+    <value>  PE-kép, géptípus: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.SectionDataOutsideFile" xml:space="preserve">
+    <value>az adatok a fájlon kívül találhatók</value>
+  </data>
+  <data name="Viewer.Disassembly.SectionHeadersPastEnd" xml:space="preserve">
+    <value>  A szakaszfejlécek túlnyúlnak a fájl végén.</value>
+  </data>
+  <data name="Viewer.Disassembly.Stopped" xml:space="preserve">
+    <value>  A visszafejtés leállt: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.TimeLimit" xml:space="preserve">
+    <value>elérte a {0:0.#} másodperces időkorlátot</value>
+  </data>
+  <data name="Viewer.Disassembly.TruncatedMarker" xml:space="preserve">
+    <value>csonkolva</value>
+  </data>
+  <data name="Viewer.Disassembly.UnsupportedMachine" xml:space="preserve">
+    <value>  Csak x86 és x86-64 kód fejthető vissza; ez a géptípus nem támogatott.</value>
+  </data>
+  <data name="Viewer.DisassemblyFailed" xml:space="preserve">
+    <value>A visszafejtés nem sikerült: {0}</value>
+  </data>
+  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
+    <value>{0:N0} hiba, {1:N0} figyelmeztetés</value>
+  </data>
+  <data name="Viewer.File.AccessLocalOnly" xml:space="preserve">
+    <value>Az Access-adatbázisok csak helyi fájlból olvashatók</value>
+  </data>
+  <data name="Viewer.File.AssemblyIdentityUnavailable" xml:space="preserve">
+    <value>Az assembly-azonosító nem érhető el: {0}</value>
+  </data>
+  <data name="Viewer.File.CouldNotRead" xml:space="preserve">
+    <value>A fájl nem olvasható.</value>
+  </data>
+  <data name="Viewer.File.FileVersionInfoUnavailable" xml:space="preserve">
+    <value>A fájlverzió-információ nem érhető el: {0}</value>
+  </data>
+  <data name="Viewer.File.LinkedDocumentMissing" xml:space="preserve">
+    <value>A hivatkozott dokumentum nincs ebben a mappában</value>
+  </data>
+  <data name="Viewer.File.LinkedDocumentOutsideFolder" xml:space="preserve">
+    <value>A hivatkozott dokumentum a fájl mappáján kívül található</value>
+  </data>
+  <data name="Viewer.File.NestedMasterNotExpanded" xml:space="preserve">
+    <value>A beágyazott fődokumentum nincs kibontva</value>
+  </data>
+  <data name="Viewer.Font.Characters" xml:space="preserve">
+    <value>Karakterek a térképen</value>
+  </data>
+  <data name="Viewer.Font.Copyright" xml:space="preserve">
+    <value>Szerzői jog</value>
+  </data>
+  <data name="Viewer.Font.Created" xml:space="preserve">
+    <value>Létrehozva</value>
+  </data>
+  <data name="Viewer.Font.Design" xml:space="preserve">
+    <value>Kialakítás</value>
+  </data>
+  <data name="Viewer.Font.Designer" xml:space="preserve">
+    <value>Tervező</value>
+  </data>
+  <data name="Viewer.Font.Embedding" xml:space="preserve">
+    <value>Beágyazás</value>
+  </data>
+  <data name="Viewer.Font.Family" xml:space="preserve">
+    <value>Család</value>
+  </data>
+  <data name="Viewer.Font.Format" xml:space="preserve">
+    <value>Körvonalak</value>
+  </data>
+  <data name="Viewer.Font.FullName" xml:space="preserve">
+    <value>Teljes név</value>
+  </data>
+  <data name="Viewer.Font.Glyphs" xml:space="preserve">
+    <value>Glifek</value>
+  </data>
+  <data name="Viewer.Font.License" xml:space="preserve">
+    <value>Licenc</value>
+  </data>
+  <data name="Viewer.Font.Manufacturer" xml:space="preserve">
+    <value>Gyártó</value>
+  </data>
+  <data name="Viewer.Font.Modified" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="Viewer.Font.Names" xml:space="preserve">
+    <value>Nevek</value>
+  </data>
+  <data name="Viewer.Font.NoPreview" xml:space="preserve">
+    <value>A betűkészletet nem lehetett előnézetként kirajzolni.</value>
+  </data>
+  <data name="Viewer.Font.PostScript" xml:space="preserve">
+    <value>PostScript-név</value>
+  </data>
+  <data name="Viewer.Font.Preview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Viewer.Font.Style" xml:space="preserve">
+    <value>Stílus</value>
+  </data>
+  <data name="Viewer.Font.UnitsPerEm" xml:space="preserve">
+    <value>Egység em-enként</value>
+  </data>
+  <data name="Viewer.Font.Version" xml:space="preserve">
+    <value>Verzió</value>
+  </data>
+  <data name="Viewer.Font.Weight" xml:space="preserve">
+    <value>Vastagsági osztály</value>
+  </data>
+  <data name="Viewer.Font.WidthClass" xml:space="preserve">
+    <value>Szélességi osztály</value>
+  </data>
+  <data name="Viewer.HexTitleHints" xml:space="preserve">
+    <value> [HEX]  F4:Szöveg  F5:Eltolás  Esc:bezárás</value>
+    <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
+  </data>
+  <data name="Viewer.HintCodePage" xml:space="preserve">
+    <value>Következő kódlap (Shift: előző)</value>
+  </data>
+  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
+    <value>Mentés a következő kódolással (Shift: előző)</value>
+  </data>
+  <data name="Viewer.HintExpandAll" xml:space="preserve">
+    <value>Minden csomópont kibontása</value>
+  </data>
+  <data name="Viewer.HintIndent" xml:space="preserve">
+    <value>Behúzás</value>
+  </data>
+  <data name="Viewer.HintJsonValidate" xml:space="preserve">
+    <value>Ellenőrzi, hogy a fájl érvényes JSON-e</value>
+  </data>
+  <data name="Viewer.HintRunXPath" xml:space="preserve">
+    <value>XPath-lekérdezés futtatása, vagy a kijelölt találat megnyitása a fában</value>
+  </data>
+  <data name="Viewer.HintSave" xml:space="preserve">
+    <value>Fájl mentése</value>
+  </data>
+  <data name="Viewer.HintToggleText" xml:space="preserve">
+    <value>A fájl szövegének vagy újra a fának megjelenítése</value>
+  </data>
+  <data name="Viewer.HintXPathBox" xml:space="preserve">
+    <value>Ugrás az XPath mezőre</value>
+  </data>
+  <data name="Viewer.HintXmlValidate" xml:space="preserve">
+    <value>Ellenőrzés a dokumentum által megnevezett sémával vagy DTD-vel</value>
+  </data>
+  <data name="Viewer.Matches" xml:space="preserve">
+    <value>{0:N0} egyezés</value>
+  </data>
+  <data name="Viewer.Model.Ascii" xml:space="preserve">
+    <value>ASCII</value>
+  </data>
+  <data name="Viewer.Model.Binary" xml:space="preserve">
+    <value>bináris</value>
+  </data>
+  <data name="Viewer.Model.BinaryDxf" xml:space="preserve">
+    <value>Ez bináris DXF fájl, ezért elemei nincsenek felsorolva.</value>
+  </data>
+  <data name="Viewer.Model.Bounds" xml:space="preserve">
+    <value>Határok</value>
+  </data>
+  <data name="Viewer.Model.Entities" xml:space="preserve">
+    <value>Elemek</value>
+  </data>
+  <data name="Viewer.Model.Extents" xml:space="preserve">
+    <value>Kiterjedés</value>
+  </data>
+  <data name="Viewer.Model.Faces" xml:space="preserve">
+    <value>Lapok</value>
+  </data>
+  <data name="Viewer.Model.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Viewer.Model.Groups" xml:space="preserve">
+    <value>Csoportok</value>
+  </data>
+  <data name="Viewer.Model.Heading" xml:space="preserve">
+    <value>A modell összegzése</value>
+  </data>
+  <data name="Viewer.Model.Layers" xml:space="preserve">
+    <value>Rétegek</value>
+  </data>
+  <data name="Viewer.Model.MaterialLibraries" xml:space="preserve">
+    <value>Anyagkönyvtárak</value>
+  </data>
+  <data name="Viewer.Model.Materials" xml:space="preserve">
+    <value>Anyagok</value>
+  </data>
+  <data name="Viewer.Model.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Viewer.Model.Normals" xml:space="preserve">
+    <value>Normálvektorok</value>
+  </data>
+  <data name="Viewer.Model.Objects" xml:space="preserve">
+    <value>Objektumok</value>
+  </data>
+  <data name="Viewer.Model.Source" xml:space="preserve">
+    <value>Forrásszöveg</value>
+  </data>
+  <data name="Viewer.Model.TextureCoordinates" xml:space="preserve">
+    <value>Textúrakoordináták</value>
+  </data>
+  <data name="Viewer.Model.Triangles" xml:space="preserve">
+    <value>Háromszögek</value>
+  </data>
+  <data name="Viewer.Model.Version" xml:space="preserve">
+    <value>Verzió</value>
+  </data>
+  <data name="Viewer.Model.Vertices" xml:space="preserve">
+    <value>Csúcsok</value>
+  </data>
+  <data name="Viewer.NoMatches" xml:space="preserve">
+    <value>Nincs egyezés</value>
+  </data>
+  <data name="Viewer.NoResults" xml:space="preserve">
+    <value>Nincs találat</value>
+  </data>
+  <data name="Viewer.NotSaved" xml:space="preserve">
+    <value>Nincs mentve: {0}</value>
+  </data>
+  <data name="Viewer.NotValidFormat" xml:space="preserve">
+    <value>Érvénytelen {0}: {1}</value>
+  </data>
+  <data name="Viewer.NotValidJson" xml:space="preserve">
+    <value>Érvénytelen JSON: {0}</value>
+  </data>
+  <data name="Viewer.NotWellFormed" xml:space="preserve">
+    <value>Nem jól formált XML: {0}</value>
+  </data>
+  <data name="Viewer.NothingToShow" xml:space="preserve">
+    <value>Nincs mit megjeleníteni</value>
+  </data>
+  <data name="Viewer.NowhereToSave" xml:space="preserve">
+    <value>Nincs hová menteni: {0}</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Lefedettség</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Az aláírás után módosításokat fűztek hozzá.</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>A teljes fájl.</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Épség</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>MEGVÁLTOZOTT: a fájl nem egyezik az aláírással.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>Az aláírt bájtok nem változtak.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>Az aláírás nem olvasható.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>Nem ellenőrzött: ez az aláírásformátum nem támogatott.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>További {0} aláírás nincs megjelenítve.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>A visszavonást nem ellenőrizték.</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>{0}. aláírás</value>
+  </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Digitális aláírások</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Aláírva</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Aláíró</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>Az aláírásokat nem ellenőrizték: a fájl nagyobb, mint {0} MB.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Megbízhatóság</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Nem megbízható: a tanúsítvány lejárt.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Nem megbízható: a tanúsítvány nem vezet olyan főtanúsítványhoz, amelyben ez a gép megbízik.</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>Megbízható: a tanúsítvány olyan főtanúsítványhoz vezet, amelyben ez a gép megbízik.</value>
+  </data>
+  <data name="Viewer.Psd.Bits" xml:space="preserve">
+    <value>{0} bit csatornánként</value>
+  </data>
+  <data name="Viewer.Psd.Channels" xml:space="preserve">
+    <value>Csatornák</value>
+  </data>
+  <data name="Viewer.Psd.ColorMode" xml:space="preserve">
+    <value>Színmód</value>
+  </data>
+  <data name="Viewer.Psd.Compressed" xml:space="preserve">
+    <value>A kép ZIP-tömörítésű, ezt a megjelenítő nem olvassa.</value>
+  </data>
+  <data name="Viewer.Psd.Compression" xml:space="preserve">
+    <value>Tömörítés</value>
+  </data>
+  <data name="Viewer.Psd.Depth" xml:space="preserve">
+    <value>Mélység</value>
+  </data>
+  <data name="Viewer.Psd.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Viewer.Psd.Heading" xml:space="preserve">
+    <value>Photoshop-fájl</value>
+  </data>
+  <data name="Viewer.Psd.Layers" xml:space="preserve">
+    <value>Rétegek</value>
+  </data>
+  <data name="Viewer.Psd.NoLayers" xml:space="preserve">
+    <value>nincs</value>
+  </data>
+  <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
+    <value>A kép ezzel a színmóddal vagy mélységgel nem rajzolható ki.</value>
+  </data>
+  <data name="Viewer.Psd.Picture" xml:space="preserve">
+    <value>Összevont kép</value>
+  </data>
+  <data name="Viewer.Psd.Pixels" xml:space="preserve">
+    <value>{0:N0} × {1:N0} képpont</value>
+  </data>
+  <data name="Viewer.Psd.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Viewer.Psd.TooLarge" xml:space="preserve">
+    <value>A kép túl nagy a kirajzoláshoz.</value>
+  </data>
+  <data name="Viewer.Psd.Truncated" xml:space="preserve">
+    <value>A kép adatai hamarabb érnek véget, mint maga a kép.</value>
+  </data>
+  <data name="Viewer.RunningQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása…</value>
+  </data>
+  <data name="Viewer.ShowingMatches" xml:space="preserve">
+    <value>{0:N0} / {1:N0} egyezés megjelenítve</value>
+  </data>
+  <data name="Viewer.TitleHints" xml:space="preserve">
+    <value>  F2:Sortörés{0}  F4:Hex  F5:Sor  F8:Kódlap  Esc:bezárás</value>
+  </data>
+  <data name="Viewer.Valid" xml:space="preserve">
+    <value>Érvényes</value>
+  </data>
+  <data name="Viewer.ValidJson" xml:space="preserve">
+    <value>Érvényes JSON</value>
+  </data>
+  <data name="Viewer.Validating" xml:space="preserve">
+    <value>Ellenőrzés…</value>
+  </data>
+  <data name="Viewer.Wasm.Custom" xml:space="preserve">
+    <value>Egyéni szakaszok</value>
+  </data>
+  <data name="Viewer.Wasm.DataSegments" xml:space="preserve">
+    <value>Adatszegmensek</value>
+  </data>
+  <data name="Viewer.Wasm.Exports" xml:space="preserve">
+    <value>Exportok</value>
+  </data>
+  <data name="Viewer.Wasm.Functions" xml:space="preserve">
+    <value>Függvények (definiáltak és importáltak)</value>
+  </data>
+  <data name="Viewer.Wasm.Globals" xml:space="preserve">
+    <value>Globálisok</value>
+  </data>
+  <data name="Viewer.Wasm.Heading" xml:space="preserve">
+    <value>WebAssembly-modul</value>
+  </data>
+  <data name="Viewer.Wasm.Imports" xml:space="preserve">
+    <value>Importok</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.function" xml:space="preserve">
+    <value>függvény</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
+    <value>globális</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.memory" xml:space="preserve">
+    <value>memória</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.table" xml:space="preserve">
+    <value>tábla</value>
+  </data>
+  <data name="Viewer.Wasm.Memories" xml:space="preserve">
+    <value>Memóriák</value>
+  </data>
+  <data name="Viewer.Wasm.None" xml:space="preserve">
+    <value>nincs</value>
+  </data>
+  <data name="Viewer.Wasm.Sections" xml:space="preserve">
+    <value>Szakaszok</value>
+  </data>
+  <data name="Viewer.Wasm.Start" xml:space="preserve">
+    <value>Indító függvény</value>
+  </data>
+  <data name="Viewer.Wasm.Tables" xml:space="preserve">
+    <value>Táblázatok</value>
+  </data>
+  <data name="Viewer.Wasm.Types" xml:space="preserve">
+    <value>Típusok</value>
+  </data>
+  <data name="Viewer.Wasm.Version" xml:space="preserve">
+    <value>Verzió</value>
+  </data>
+  <data name="Viewer.XPathError" xml:space="preserve">
+    <value>XPath-hiba: {0}</value>
+  </data>
+  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
+    <value>Írjon be egy lekérdezést, pl. //book[price &gt; 10]/title</value>
+  </data>
+  <data name="Wizard.Finish" xml:space="preserve">
+    <value>Befejezés</value>
+  </data>
+  <data name="Wizard.Next" xml:space="preserve">
+    <value>Tovább</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>{0}. lépés / {1}: {2}</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} csomópont</value>
+  </data>
+  <data name="Xps.Hint.Page" xml:space="preserve">
+    <value>Az előző vagy a következő oldal megjelenítése</value>
+  </data>
+  <data name="Xps.NoPages" xml:space="preserve">
+    <value>Ennek a dokumentumnak nincsenek oldalai</value>
+  </data>
+  <data name="Xps.Page.Label" xml:space="preserve">
+    <value>Oldal {0}</value>
+  </data>
+  <data name="Xps.Page.MultiDocument" xml:space="preserve">
+    <value>Dokumentum {0} · Oldal {1}</value>
+  </data>
+  <data name="Xps.Page.NoText" xml:space="preserve">
+    <value>Ennek az oldalnak nincs szövege.</value>
+  </data>
+  <data name="Xps.Picker.Label" xml:space="preserve">
+    <value>Oldal</value>
+  </data>
+  <data name="Xps.Status.Page" xml:space="preserve">
+    <value>Oldal {0} / {1}</value>
+  </data>
+  <data name="Xps.Status.Size" xml:space="preserve">
+    <value> · {0} × {1}</value>
+  </data>
+  <data name="Xps.Title" xml:space="preserve">
+    <value>XPS</value>
+  </data>
+  <data name="Xps.Title.Hint" xml:space="preserve">
+    <value>  Ctrl+←/→:oldal</value>
   </data>
 </root>

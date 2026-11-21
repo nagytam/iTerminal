@@ -58,299 +58,195 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Common.Ok" xml:space="preserve">
-    <value>OK</value>
+  <data name="Certificate.Fallback.Failed" xml:space="preserve">
+    <value>Could not open the file</value>
   </data>
-  <data name="Common.Cancel" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="Certificate.Fallback.NoCertificate" xml:space="preserve">
+    <value>No certificate in this file</value>
   </data>
-  <data name="Common.Continue" xml:space="preserve">
-    <value>Continue</value>
+  <data name="Certificate.Fallback.TooLarge" xml:space="preserve">
+    <value>The file is larger than 1 MiB</value>
   </data>
-  <data name="Common.Confirm" xml:space="preserve">
-    <value>Confirm</value>
+  <data name="Certificate.Fallback.Unreadable" xml:space="preserve">
+    <value>The file could not be read</value>
   </data>
-  <data name="Common.Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="Certificate.Field.CertificateAuthority" xml:space="preserve">
+    <value>Certificate authority</value>
   </data>
-  <data name="Help.CloseHint" xml:space="preserve">
-    <value>Esc: close this help   ↑↓ PgUp PgDn: scroll it</value>
+  <data name="Certificate.Field.ExtendedKeyUsage" xml:space="preserve">
+    <value>Extended key usage</value>
   </data>
-  <data name="Control.Name.LeftPanel" xml:space="preserve">
-    <value>Left panel</value>
+  <data name="Certificate.Field.Issuer" xml:space="preserve">
+    <value>Issuer</value>
   </data>
-  <data name="Control.Name.RightPanel" xml:space="preserve">
-    <value>Right panel</value>
+  <data name="Certificate.Field.KeyUsage" xml:space="preserve">
+    <value>Key usage</value>
   </data>
-  <data name="Hint.PromptAccept" xml:space="preserve">
-    <value>Accept the value</value>
+  <data name="Certificate.Field.Names" xml:space="preserve">
+    <value>Alternative names</value>
   </data>
-  <data name="Hint.PromptCancel" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="Certificate.Field.NotAfter" xml:space="preserve">
+    <value>Valid to</value>
   </data>
-  <data name="Hint.PromptMove" xml:space="preserve">
-    <value>Move the selection</value>
+  <data name="Certificate.Field.NotBefore" xml:space="preserve">
+    <value>Valid from</value>
   </data>
-  <data name="Hint.PromptYesNo" xml:space="preserve">
-    <value>Answer yes or no</value>
+  <data name="Certificate.Field.PathLength" xml:space="preserve">
+    <value>Path length</value>
   </data>
-  <data name="Hint.PromptDefault" xml:space="preserve">
-    <value>Take the default</value>
+  <data name="Certificate.Field.PublicKey" xml:space="preserve">
+    <value>Public key</value>
   </data>
-  <data name="Common.Back" xml:space="preserve">
-    <value>Back</value>
+  <data name="Certificate.Field.SelfIssued" xml:space="preserve">
+    <value>Self-issued</value>
   </data>
-  <data name="Common.Paste" xml:space="preserve">
-    <value>Paste</value>
+  <data name="Certificate.Field.Serial" xml:space="preserve">
+    <value>Serial number</value>
   </data>
-  <data name="Common.Undo" xml:space="preserve">
-    <value>Undo</value>
+  <data name="Certificate.Field.Sha1" xml:space="preserve">
+    <value>SHA-1</value>
   </data>
-  <data name="Common.Save" xml:space="preserve">
-    <value>Save</value>
+  <data name="Certificate.Field.Sha256" xml:space="preserve">
+    <value>SHA-256</value>
   </data>
-  <data name="Common.Stop" xml:space="preserve">
-    <value>Stop</value>
+  <data name="Certificate.Field.SignatureAlgorithm" xml:space="preserve">
+    <value>Signature</value>
   </data>
-  <data name="Common.Close" xml:space="preserve">
-    <value>Close</value>
+  <data name="Certificate.Field.Subject" xml:space="preserve">
+    <value>Subject</value>
   </data>
-  <data name="Common.Yes" xml:space="preserve">
-    <value>Yes</value>
+  <data name="Certificate.Hint.Step" xml:space="preserve">
+    <value>Show the previous or next certificate</value>
   </data>
-  <data name="Common.No" xml:space="preserve">
-    <value>No</value>
+  <data name="Certificate.Picker.Label" xml:space="preserve">
+    <value>Certificate</value>
+  </data>
+  <data name="Certificate.Status.Count" xml:space="preserve">
+    <value>Certificate {0} of {1}</value>
+  </data>
+  <data name="Certificate.Status.Expired" xml:space="preserve">
+    <value>expired on {0}</value>
+  </data>
+  <data name="Certificate.Status.Loading" xml:space="preserve">
+    <value>Reading the certificate…</value>
+  </data>
+  <data name="Certificate.Status.NotYetValid" xml:space="preserve">
+    <value>not valid before {0}</value>
+  </data>
+  <data name="Certificate.Status.PrivateKeys" xml:space="preserve">
+    <value> · {0} private key block(s) not shown</value>
+  </data>
+  <data name="Certificate.Status.Valid" xml:space="preserve">
+    <value>valid until {0}</value>
+  </data>
+  <data name="Certificate.Title" xml:space="preserve">
+    <value>Certificate</value>
+  </data>
+  <data name="Certificate.Value.No" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="Certificate.Value.Yes" xml:space="preserve">
+    <value>yes</value>
+  </data>
+  <data name="CmdDesc.126bd270" xml:space="preserve">
+    <value>Jump to the first line.</value>
+    <comment>Jump to the first line.</comment>
+  </data>
+  <data name="CmdDesc.27b25e9c" xml:space="preserve">
+    <value>Close the current dialog or popup.</value>
+    <comment>Close the current dialog or popup.</comment>
+  </data>
+  <data name="CmdDesc.293229ee" xml:space="preserve">
+    <value>Jump to the last line.</value>
+    <comment>Jump to the last line.</comment>
+  </data>
+  <data name="CmdDesc.62d2e829" xml:space="preserve">
+    <value>Show the commands available in the current context.</value>
+    <comment>Show the commands available in the current context.</comment>
+  </data>
+  <data name="CmdDesc.67104805" xml:space="preserve">
+    <value>Move the selection or viewport down by one line.</value>
+    <comment>Move the selection or viewport down by one line.</comment>
+  </data>
+  <data name="CmdDesc.73b65037" xml:space="preserve">
+    <value>Exit the application.</value>
+    <comment>Exit the application.</comment>
+  </data>
+  <data name="CmdDesc.751aa6ef" xml:space="preserve">
+    <value>Move the selection or viewport up by one page.</value>
+    <comment>Move the selection or viewport up by one page.</comment>
+  </data>
+  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
+    <value>Move the cursor or viewport right by one column.</value>
+    <comment>Move the cursor or viewport right by one column.</comment>
+  </data>
+  <data name="CmdDesc.bbf604eb" xml:space="preserve">
+    <value>Press the focused button, or tick or untick the focused check box.</value>
+    <comment>Press the focused button, or tick or untick the focused check box.</comment>
+  </data>
+  <data name="CmdDesc.bca6dd95" xml:space="preserve">
+    <value>Jump to the end of the current line.</value>
+    <comment>Jump to the end of the current line.</comment>
+  </data>
+  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
+    <value>Move the cursor or viewport left by one column.</value>
+    <comment>Move the cursor or viewport left by one column.</comment>
+  </data>
+  <data name="CmdDesc.db8d76c8" xml:space="preserve">
+    <value>Move the selection or viewport down by one page.</value>
+    <comment>Move the selection or viewport down by one page.</comment>
+  </data>
+  <data name="CmdDesc.f55d8933" xml:space="preserve">
+    <value>Show the calendar pop-up.</value>
+    <comment>Show the calendar pop-up.</comment>
+  </data>
+  <data name="CmdDesc.f5dbb885" xml:space="preserve">
+    <value>Move focus to the next focusable panel or control.</value>
+    <comment>Move focus to the next focusable panel or control.</comment>
+  </data>
+  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
+    <value>Move the selection or viewport up by one line.</value>
+    <comment>Move the selection or viewport up by one line.</comment>
+  </data>
+  <data name="CmdDesc.fa38de03" xml:space="preserve">
+    <value>Jump to the start of the current line.</value>
+    <comment>Jump to the start of the current line.</comment>
+  </data>
+  <data name="CmdDesc.fc3303d5" xml:space="preserve">
+    <value>Move focus to the previous focusable panel or control.</value>
+    <comment>Move focus to the previous focusable panel or control.</comment>
+  </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Date pop-up</value>
+    <comment>Date pop-up</comment>
+  </data>
+  <data name="CmdTitle.f1a3511a" xml:space="preserve">
+    <value>Press or tick</value>
+    <comment>Press or tick</comment>
   </data>
   <data name="Common.Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
-  <data name="Editor.GoToLine" xml:space="preserve">
-    <value>Go to line</value>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Back</value>
   </data>
-  <data name="Editor.Line" xml:space="preserve">
-    <value>Line</value>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="Editor.GoToOffset" xml:space="preserve">
-    <value>Go to offset</value>
+  <data name="Common.Close" xml:space="preserve">
+    <value>Close</value>
   </data>
-  <data name="Editor.Offset" xml:space="preserve">
-    <value>Offset</value>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Confirm</value>
   </data>
-  <data name="Editor.ReplaceText" xml:space="preserve">
-    <value>Replace text</value>
+  <data name="Common.Continue" xml:space="preserve">
+    <value>Continue</value>
   </data>
-  <data name="Editor.Find" xml:space="preserve">
-    <value>Find</value>
+  <data name="Common.Help" xml:space="preserve">
+    <value>Help</value>
   </data>
-  <data name="Editor.With" xml:space="preserve">
-    <value>With</value>
-  </data>
-  <data name="Editor.MatchCase" xml:space="preserve">
-    <value>Match case</value>
-  </data>
-  <data name="Editor.RegularExpression" xml:space="preserve">
-    <value>Regular expression</value>
-  </data>
-  <data name="Editor.Replace" xml:space="preserve">
-    <value>Replace</value>
-  </data>
-  <data name="Editor.ReplaceAll" xml:space="preserve">
-    <value>Replace all</value>
-  </data>
-  <data name="Editor.SearchText" xml:space="preserve">
-    <value>Search text</value>
-  </data>
-  <data name="Editor.Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="Editor.UnsavedChanges" xml:space="preserve">
-    <value>Unsaved changes</value>
-  </data>
-  <data name="Editor.Discard" xml:space="preserve">
-    <value>Discard</value>
-  </data>
-  <data name="Viewer.NothingToShow" xml:space="preserve">
-    <value>Nothing to show</value>
-  </data>
-  <data name="Viewer.CouldNotRead" xml:space="preserve">
-    <value>Could not read the file</value>
-  </data>
-  <data name="Viewer.NotValidJson" xml:space="preserve">
-    <value>Not valid JSON: {0}</value>
-  </data>
-  <data name="Viewer.Validating" xml:space="preserve">
-    <value>Validating…</value>
-  </data>
-  <data name="Viewer.ValidJson" xml:space="preserve">
-    <value>Valid JSON</value>
-  </data>
-  <data name="Viewer.HintJsonValidate" xml:space="preserve">
-    <value>Check the file is valid JSON</value>
-  </data>
-  <data name="Viewer.HintToggleText" xml:space="preserve">
-    <value>Show the file's text, or the tree again</value>
-  </data>
-  <data name="Viewer.HintExpandAll" xml:space="preserve">
-    <value>Expand every node</value>
-  </data>
-  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
-    <value>Enter a query, e.g. //book[price &gt; 10]/title</value>
-  </data>
-  <data name="Viewer.NoResults" xml:space="preserve">
-    <value>No results</value>
-  </data>
-  <data name="Viewer.NotWellFormed" xml:space="preserve">
-    <value>Not well-formed XML: {0}</value>
-  </data>
-  <data name="Viewer.RunningQuery" xml:space="preserve">
-    <value>Running the query…</value>
-  </data>
-  <data name="Viewer.XPathError" xml:space="preserve">
-    <value>XPath error: {0}</value>
-  </data>
-  <data name="Viewer.NoMatches" xml:space="preserve">
-    <value>No matches</value>
-  </data>
-  <data name="Viewer.Matches" xml:space="preserve">
-    <value>{0:N0} match(es)</value>
-  </data>
-  <data name="Viewer.ShowingMatches" xml:space="preserve">
-    <value>Showing {0:N0} of {1:N0} matches</value>
-  </data>
-  <data name="Viewer.Valid" xml:space="preserve">
-    <value>Valid</value>
-  </data>
-  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
-    <value>{0:N0} error(s), {1:N0} warning(s)</value>
-  </data>
-  <data name="Viewer.HintXmlValidate" xml:space="preserve">
-    <value>Validate against the schema or DTD the document names</value>
-  </data>
-  <data name="Viewer.HintXPathBox" xml:space="preserve">
-    <value>Move to the XPath box</value>
-  </data>
-  <data name="Viewer.HintRunXPath" xml:space="preserve">
-    <value>Run the XPath query, or open the selected result in the tree</value>
-  </data>
-  <data name="Viewer.NotSaved" xml:space="preserve">
-    <value>Not saved: {0}</value>
-  </data>
-  <data name="Viewer.NowhereToSave" xml:space="preserve">
-    <value>Nowhere to save to: {0}</value>
-  </data>
-  <data name="Viewer.HintSave" xml:space="preserve">
-    <value>Save the file</value>
-  </data>
-  <data name="Viewer.HintIndent" xml:space="preserve">
-    <value>Indent</value>
-  </data>
-  <data name="Viewer.HintCodePage" xml:space="preserve">
-    <value>Next code page (Shift: previous)</value>
-  </data>
-  <data name="Hint.DismissMessage" xml:space="preserve">
-    <value>Dismiss the message</value>
-  </data>
-  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
-    <value>Move the highlight along the trail</value>
-  </data>
-  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
-    <value>First or last segment</value>
-  </data>
-  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
-    <value>Open the highlighted segment</value>
-  </data>
-  <data name="Hint.PressButton" xml:space="preserve">
-    <value>Press the button</value>
-  </data>
-  <data name="Hint.MoveSelectedDay" xml:space="preserve">
-    <value>Move the selected day or week</value>
-  </data>
-  <data name="Hint.PreviousNextMonth" xml:space="preserve">
-    <value>Previous or next month</value>
-  </data>
-  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
-    <value>First or last day of the month</value>
-  </data>
-  <data name="Hint.SelectToday" xml:space="preserve">
-    <value>Select today</value>
-  </data>
-  <data name="Hint.PreviousNextYear" xml:space="preserve">
-    <value>Previous or next year</value>
-  </data>
-  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
-    <value>Choose the selected day</value>
-  </data>
-  <data name="Hint.CheckOrUncheck" xml:space="preserve">
-    <value>Check or uncheck</value>
-  </data>
-  <data name="Hint.MoveCursor" xml:space="preserve">
-    <value>Move the cursor</value>
-  </data>
-  <data name="Hint.MoveCursorPage" xml:space="preserve">
-    <value>Move the cursor a page</value>
-  </data>
-  <data name="Hint.FirstOrLastItem" xml:space="preserve">
-    <value>First or last item</value>
-  </data>
-  <data name="Hint.ActivateList" xml:space="preserve">
-    <value>Activate the list</value>
-  </data>
-  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
-    <value>Check or uncheck the item under the cursor</value>
-  </data>
-  <data name="Hint.CheckEveryItem" xml:space="preserve">
-    <value>Check or uncheck every item</value>
-  </data>
-  <data name="Hint.InvertEveryItem" xml:space="preserve">
-    <value>Invert every item</value>
-  </data>
-  <data name="Hint.MoveBetweenChips" xml:space="preserve">
-    <value>Move between the chips</value>
-  </data>
-  <data name="Hint.FirstOrLastChip" xml:space="preserve">
-    <value>First chip or last chip</value>
-  </data>
-  <data name="Hint.AddChip" xml:space="preserve">
-    <value>Add a chip on the [+] slot</value>
-  </data>
-  <data name="Hint.RemoveActiveChip" xml:space="preserve">
-    <value>Remove the active chip</value>
-  </data>
-  <data name="Hint.MoveOverPalette" xml:space="preserve">
-    <value>Move the cursor over the palette</value>
-  </data>
-  <data name="Hint.FirstOrLastColour" xml:space="preserve">
-    <value>First or last colour</value>
-  </data>
-  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
-    <value>Choose the colour under the cursor</value>
-  </data>
-  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
-    <value>Choose the previous or next item</value>
-  </data>
-  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
-    <value>Choose an item a page away</value>
-  </data>
-  <data name="Hint.JumpToLetter" xml:space="preserve">
-    <value>Jump to the next item that starts with them</value>
-  </data>
-  <data name="Hint.OpenList" xml:space="preserve">
-    <value>Open the list</value>
-  </data>
-  <data name="Hint.MoveOverItems" xml:space="preserve">
-    <value>Move over the items</value>
-  </data>
-  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
-    <value>Run the item, or open its submenu</value>
-  </data>
-  <data name="Hint.OpenSubmenu" xml:space="preserve">
-    <value>Open the submenu</value>
-  </data>
-  <data name="Hint.CloseSubmenu" xml:space="preserve">
-    <value>Close the submenu</value>
-  </data>
-  <data name="Hint.CloseMenu" xml:space="preserve">
-    <value>Close the menu</value>
+  <data name="Common.No" xml:space="preserve">
+    <value>No</value>
   </data>
   <data name="Common.NoData" xml:space="preserve">
     <value>No data</value>
@@ -358,452 +254,125 @@
   <data name="Common.NoRows" xml:space="preserve">
     <value>No rows</value>
   </data>
-  <data name="Hint.ClearField" xml:space="preserve">
-    <value>Clear the field</value>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>OK</value>
   </data>
-  <data name="Hint.CloseNodeOrParent" xml:space="preserve">
-    <value>Close the node, or go to its parent</value>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>Paste</value>
   </data>
-  <data name="Hint.CloseSubmenuOrPrevious" xml:space="preserve">
-    <value>Close the submenu or go to the previous menu</value>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Save</value>
   </data>
-  <data name="Hint.CopySelection" xml:space="preserve">
-    <value>Copy the selection</value>
+  <data name="Common.Stop" xml:space="preserve">
+    <value>Stop</value>
   </data>
-  <data name="Hint.CutSelection" xml:space="preserve">
-    <value>Cut the selection</value>
+  <data name="Common.Undo" xml:space="preserve">
+    <value>Undo</value>
   </data>
-  <data name="Hint.DeleteCharacter" xml:space="preserve">
-    <value>Delete a character</value>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
-  <data name="Hint.FoldAll" xml:space="preserve">
-    <value>Fold or open every region</value>
+  <data name="Conflict.ApplyToAll" xml:space="preserve">
+    <value>Apply to all remaining conflicts</value>
   </data>
-  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
-    <value>Save in the next encoding (Shift: previous)</value>
+  <data name="Conflict.KeepLarger" xml:space="preserve">
+    <value>Keep larger</value>
   </data>
-  <data name="Hint.MoveLines" xml:space="preserve">
-    <value>Move the line (or the selected lines) up / down</value>
+  <data name="Conflict.KeepNewer" xml:space="preserve">
+    <value>Keep newer</value>
   </data>
-  <data name="Hint.DuplicateLine" xml:space="preserve">
-    <value>Duplicate the line (or the selected lines)</value>
+  <data name="Conflict.Message" xml:space="preserve">
+    <value>{0} is already in the target folder.</value>
   </data>
-  <data name="Hint.ToggleComment" xml:space="preserve">
-    <value>Comment or uncomment the line (or the selected lines)</value>
+  <data name="Conflict.Overwrite" xml:space="preserve">
+    <value>Overwrite</value>
   </data>
-  <data name="Hint.TabsToSpaces" xml:space="preserve">
-    <value>Tabs to spaces</value>
+  <data name="Conflict.Rename" xml:space="preserve">
+    <value>Rename</value>
   </data>
-  <data name="Hint.TrimTrailing" xml:space="preserve">
-    <value>Trim the trailing spaces</value>
+  <data name="Conflict.Skip" xml:space="preserve">
+    <value>Skip</value>
   </data>
-  <data name="Hint.JoinLines" xml:space="preserve">
-    <value>Join the lines</value>
+  <data name="Conflict.Title" xml:space="preserve">
+    <value>File already exists</value>
   </data>
-  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
-    <value>Remove the duplicate lines</value>
+  <data name="Control.Name.LeftPanel" xml:space="preserve">
+    <value>Left panel</value>
   </data>
-  <data name="Hint.RemoveBlankLines" xml:space="preserve">
-    <value>Remove the blank lines</value>
+  <data name="Control.Name.RightPanel" xml:space="preserve">
+    <value>Right panel</value>
   </data>
-  <data name="Hint.ShowWhitespace" xml:space="preserve">
-    <value>Show the spaces, tabs and line ends (again: hide)</value>
+  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
+    <value>the end of the query</value>
   </data>
-  <data name="Hint.EdgeColumn" xml:space="preserve">
-    <value>Mark the 80th column (again: hide)</value>
+  <data name="Csv.Error.Expected" xml:space="preserve">
+    <value>Expected {0}, found {1}</value>
   </data>
-  <data name="Hint.FollowFile" xml:space="preserve">
-    <value>Follow the file as it grows</value>
+  <data name="Csv.Error.Limit" xml:space="preserve">
+    <value>LIMIT needs a whole number</value>
   </data>
-  <data name="Hint.StopFollowing" xml:space="preserve">
-    <value>Stop following the file</value>
+  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
+    <value>No column called '{0}'. Columns: {1}</value>
   </data>
-  <data name="Hint.FindNext" xml:space="preserve">
-    <value>Find the next match</value>
+  <data name="Csv.Error.Unterminated" xml:space="preserve">
+    <value>A quote is not closed: missing {0}</value>
   </data>
-  <data name="Hint.FindPrevious" xml:space="preserve">
-    <value>Find the previous match</value>
+  <data name="Csv.Export.Ask" xml:space="preserve">
+    <value>Save the rows as</value>
   </data>
-  <data name="Hint.DeleteLine" xml:space="preserve">
-    <value>Delete the line</value>
+  <data name="Csv.Export.Cancelled" xml:space="preserve">
+    <value>Nothing was written</value>
   </data>
-  <data name="Hint.DeleteWordAfter" xml:space="preserve">
-    <value>Delete the word after the cursor</value>
+  <data name="Csv.Export.Done" xml:space="preserve">
+    <value>Exported {0:N0} row(s) to {1}</value>
   </data>
-  <data name="Hint.DeleteWordBefore" xml:space="preserve">
-    <value>Delete the word before the cursor</value>
+  <data name="Csv.Export.Failed" xml:space="preserve">
+    <value>Could not write the file: {0}</value>
   </data>
-  <data name="Hint.DeleteToStart" xml:space="preserve">
-    <value>Delete to the start of the text</value>
+  <data name="Csv.Export.Format" xml:space="preserve">
+    <value>Export as</value>
   </data>
-  <data name="Hint.ExpandOrCollapseNode" xml:space="preserve">
-    <value>Expand or collapse the node</value>
+  <data name="Csv.Export.Invalid" xml:space="preserve">
+    <value>Give a file name, with no folder in it</value>
   </data>
-  <data name="Hint.FirstOrLastField" xml:space="preserve">
-    <value>First or last field</value>
+  <data name="Csv.Export.NoFolder" xml:space="preserve">
+    <value>Nothing can be written next to this file</value>
   </data>
-  <data name="Hint.FirstOrLastRow" xml:space="preserve">
-    <value>First or last row</value>
+  <data name="Csv.Export.Overwrite" xml:space="preserve">
+    <value>{0} already exists. Overwrite it?</value>
   </data>
-  <data name="Hint.FlipSign" xml:space="preserve">
-    <value>Flip the sign</value>
+  <data name="Csv.Export.ReadOnly" xml:space="preserve">
+    <value>This folder is read-only: nothing was written</value>
   </data>
-  <data name="Hint.FoldRegion" xml:space="preserve">
-    <value>Fold or unfold the region at the cursor</value>
+  <data name="Csv.Grid.Empty" xml:space="preserve">
+    <value>No rows match the query</value>
   </data>
-  <data name="Hint.GoToMatchingBracket" xml:space="preserve">
-    <value>Go to the matching bracket</value>
+  <data name="Csv.Hint.Ends" xml:space="preserve">
+    <value>Go to the first or the last row</value>
   </data>
-  <data name="Hint.GoToFileStartOrEnd" xml:space="preserve">
-    <value>Go to the start or the end of the file</value>
+  <data name="Csv.Hint.Export" xml:space="preserve">
+    <value>Export the marked rows, or the rows on screen, to a CSV, JSON or XML file</value>
   </data>
-  <data name="Hint.IndentOutdent" xml:space="preserve">
-    <value>Indent / outdent (the selected lines too)</value>
+  <data name="Csv.Hint.Mark" xml:space="preserve">
+    <value>Mark the row and move down</value>
   </data>
-  <data name="Hint.JumpFirstLastItem" xml:space="preserve">
-    <value>Jump to the first or last item</value>
+  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
+    <value>Move between the columns</value>
   </data>
-  <data name="Hint.MarkItemUnderCursor" xml:space="preserve">
-    <value>Mark or unmark the item under the cursor</value>
+  <data name="Csv.Hint.MoveRows" xml:space="preserve">
+    <value>Move between the rows</value>
   </data>
-  <data name="Hint.MoveHourMinuteSecond" xml:space="preserve">
-    <value>Move between hour, minute and second</value>
-  </data>
-  <data name="Hint.MoveByWord" xml:space="preserve">
-    <value>Move by a word</value>
-  </data>
-  <data name="Hint.MoveOverMenuItems" xml:space="preserve">
-    <value>Move over the menu items</value>
-  </data>
-  <data name="Hint.MoveCursorByPage" xml:space="preserve">
-    <value>Move the cursor by a page</value>
-  </data>
-  <data name="Hint.NextBookmark" xml:space="preserve">
-    <value>Next bookmark</value>
-  </data>
-  <data name="Hint.NextField" xml:space="preserve">
-    <value>Next field</value>
-  </data>
-  <data name="Hint.OpenNodeOrChild" xml:space="preserve">
-    <value>Open the node, or step into its first child</value>
-  </data>
-  <data name="Hint.OpenSubmenuOrNext" xml:space="preserve">
-    <value>Open the submenu or go to the next menu</value>
-  </data>
-  <data name="Hint.PreviousBookmark" xml:space="preserve">
-    <value>Previous bookmark</value>
-  </data>
-  <data name="Hint.Redo" xml:space="preserve">
-    <value>Redo</value>
-  </data>
-  <data name="Hint.RemoveLastDigit" xml:space="preserve">
-    <value>Remove the last digit</value>
-  </data>
-  <data name="Hint.RunSelectedItem" xml:space="preserve">
-    <value>Run the selected item</value>
-  </data>
-  <data name="Hint.ScrollLine" xml:space="preserve">
-    <value>Scroll a line</value>
-  </data>
-  <data name="Hint.ScrollPage" xml:space="preserve">
-    <value>Scroll a page</value>
-  </data>
-  <data name="Hint.ScrollSideways" xml:space="preserve">
-    <value>Scroll sideways</value>
-  </data>
-  <data name="Hint.SelectAll" xml:space="preserve">
-    <value>Select all</value>
-  </data>
-  <data name="Hint.SelectItemUnderCursor" xml:space="preserve">
-    <value>Select the item under the cursor</value>
-  </data>
-  <data name="Hint.SetMinMax" xml:space="preserve">
-    <value>Set the minimum or maximum</value>
-  </data>
-  <data name="Hint.SetValueZero" xml:space="preserve">
-    <value>Set the value to 0</value>
-  </data>
-  <data name="Hint.SetValueNearestBound" xml:space="preserve">
-    <value>Set the value to the nearest bound</value>
-  </data>
-  <data name="Hint.StartOrEndOfText" xml:space="preserve">
-    <value>Start or end of the text</value>
-  </data>
-  <data name="Hint.StepField" xml:space="preserve">
-    <value>Step the field</value>
-  </data>
-  <data name="Hint.StepFieldByTen" xml:space="preserve">
-    <value>Step the field by ten</value>
-  </data>
-  <data name="Hint.StepValue" xml:space="preserve">
-    <value>Step the value</value>
-  </data>
-  <data name="Hint.StepValueLarge" xml:space="preserve">
-    <value>Step the value by a large amount</value>
-  </data>
-  <data name="Hint.ToggleBookmark" xml:space="preserve">
-    <value>Toggle bookmark</value>
-  </data>
-  <data name="Hint.TypeField" xml:space="preserve">
-    <value>Type the field</value>
-  </data>
-  <data name="Hint.TypeValue" xml:space="preserve">
-    <value>Type the value</value>
-  </data>
-  <data name="Hint.BackPreviousMenu" xml:space="preserve">
-    <value>Back / previous menu</value>
-  </data>
-  <data name="Hint.CancelKeepEditing" xml:space="preserve">
-    <value>Cancel and keep editing</value>
-  </data>
-  <data name="Hint.CentreDivider" xml:space="preserve">
-    <value>Centre the divider</value>
-  </data>
-  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
-    <value>Choose the first or last segment</value>
-  </data>
-  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
-    <value>Choose the highlighted item</value>
-  </data>
-  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
-    <value>Choose the previous or next option</value>
-  </data>
-  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
-    <value>Choose the previous or next segment</value>
-  </data>
-  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
-    <value>Clear the rating or give the maximum</value>
-  </data>
-  <data name="Hint.ClearSearch" xml:space="preserve">
-    <value>Clear the search</value>
-  </data>
-  <data name="Hint.CloseMenuShort" xml:space="preserve">
-    <value>Close menu</value>
-  </data>
-  <data name="Hint.CloseList" xml:space="preserve">
-    <value>Close the list</value>
-  </data>
-  <data name="Hint.ClosePopup" xml:space="preserve">
-    <value>Close the popup</value>
-  </data>
-  <data name="Hint.CloseViewer" xml:space="preserve">
-    <value>Close the viewer</value>
-  </data>
-  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
-    <value>Close without moving</value>
-  </data>
-  <data name="Hint.CollapseSection" xml:space="preserve">
-    <value>Collapse the section</value>
-  </data>
-  <data name="Hint.DiscardChanges" xml:space="preserve">
-    <value>Discard the changes</value>
-  </data>
-  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
-    <value>Expand or collapse the section</value>
-  </data>
-  <data name="Hint.ExpandSection" xml:space="preserve">
-    <value>Expand the section</value>
-  </data>
-  <data name="Hint.FirstOrLastOption" xml:space="preserve">
-    <value>First or last option</value>
-  </data>
-  <data name="Hint.FirstOrLastPage" xml:space="preserve">
-    <value>First or last page</value>
-  </data>
-  <data name="Hint.FollowLink" xml:space="preserve">
-    <value>Follow the link</value>
-  </data>
-  <data name="Hint.GoToTheLine" xml:space="preserve">
-    <value>Go to the line</value>
-  </data>
-  <data name="Hint.GoToTheOffset" xml:space="preserve">
-    <value>Go to the offset</value>
-  </data>
-  <data name="Hint.GoTopOrBottom" xml:space="preserve">
-    <value>Go to the top or bottom</value>
-  </data>
-  <data name="Hint.GoTopOrEnd" xml:space="preserve">
-    <value>Go to the top or the end</value>
-  </data>
-  <data name="Hint.GoUpFolder" xml:space="preserve">
-    <value>Go up one folder</value>
-  </data>
-  <data name="Hint.LowerRaiseRating" xml:space="preserve">
-    <value>Lower or raise the rating</value>
-  </data>
-  <data name="Hint.LowerRaiseValue" xml:space="preserve">
-    <value>Lower or raise the value</value>
-  </data>
-  <data name="Hint.MovePageAtATime" xml:space="preserve">
+  <data name="Csv.Hint.Page" xml:space="preserve">
     <value>Move a page at a time</value>
   </data>
-  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
-    <value>Move along the toolbar</value>
-  </data>
-  <data name="Hint.MoveMenuSelection" xml:space="preserve">
-    <value>Move menu selection</value>
-  </data>
-  <data name="Hint.MoveDividerBy8" xml:space="preserve">
-    <value>Move the divider by 8</value>
-  </data>
-  <data name="Hint.MoveHighlight" xml:space="preserve">
-    <value>Move the highlight</value>
-  </data>
-  <data name="Hint.NewestLineFollow" xml:space="preserve">
-    <value>Newest line, and follow new lines</value>
-  </data>
-  <data name="Hint.OldestLine" xml:space="preserve">
-    <value>Oldest line</value>
-  </data>
-  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
-    <value>Open submenu / run command</value>
-  </data>
-  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
-    <value>Open the highlighted row</value>
-  </data>
-  <data name="Hint.PreviousNextPage" xml:space="preserve">
-    <value>Previous or next page</value>
-  </data>
-  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
-    <value>Raise or lower the value by a large step</value>
-  </data>
-  <data name="Hint.ResetClock" xml:space="preserve">
-    <value>Reset the clock to zero</value>
-  </data>
-  <data name="Hint.RunTheItem" xml:space="preserve">
-    <value>Run the item</value>
-  </data>
-  <data name="Hint.SaveChanges" xml:space="preserve">
-    <value>Save the changes</value>
-  </data>
-  <data name="Hint.Scroll" xml:space="preserve">
-    <value>Scroll</value>
-  </data>
-  <data name="Hint.ScrollRow" xml:space="preserve">
-    <value>Scroll a row</value>
-  </data>
-  <data name="Hint.ScrollOneLine" xml:space="preserve">
-    <value>Scroll one line</value>
-  </data>
-  <data name="Hint.ScrollOnePage" xml:space="preserve">
-    <value>Scroll one page</value>
-  </data>
-  <data name="Hint.ScrollOneRow" xml:space="preserve">
-    <value>Scroll one row</value>
-  </data>
-  <data name="Hint.SelectThisOption" xml:space="preserve">
-    <value>Select this option</value>
-  </data>
-  <data name="Hint.SetRatingDirectly" xml:space="preserve">
-    <value>Set the rating directly</value>
-  </data>
-  <data name="Hint.SwitchTextHex" xml:space="preserve">
-    <value>Switch between the text and the hex view</value>
-  </data>
-  <data name="Hint.SwitchSetting" xml:space="preserve">
-    <value>Switch the setting on or off</value>
-  </data>
-  <data name="Hint.TypeLineNumber" xml:space="preserve">
-    <value>Type the line number (the first key replaces the current one)</value>
-  </data>
-  <data name="Hint.TypeOffset" xml:space="preserve">
-    <value>Type the offset in decimal or hexadecimal</value>
-  </data>
-  <data name="Pagination.Caption" xml:space="preserve">
-    <value>Page {0} of {1}</value>
-  </data>
-  <data name="Msg.ErrorPrefix" xml:space="preserve">
-    <value>Error: {0}</value>
-  </data>
-  <data name="Hint.OpenMenuNamed" xml:space="preserve">
-    <value>Open {0} menu</value>
-  </data>
-  <data name="Status.Tasks" xml:space="preserve">
-    <value>Tasks: {0}</value>
-  </data>
-  <data name="Status.Search" xml:space="preserve">
-    <value>Search: {0}</value>
-  </data>
-  <data name="Status.Hit" xml:space="preserve">
-    <value>Hit {0}/{1}</value>
-  </data>
-  <data name="Wizard.Step" xml:space="preserve">
-    <value>Step {0} of {1}: {2}</value>
-  </data>
-  <data name="Help.FocusedControl" xml:space="preserve">
-    <value>Focused control: {0}</value>
-  </data>
-  <data name="Help.FocusedControlNone" xml:space="preserve">
-    <value>Focused control: n/a</value>
-  </data>
-  <data name="Xml.NodeCount" xml:space="preserve">
-    <value>{0} · {1:N0} nodes</value>
-  </data>
-  <data name="Splash.Motto" xml:space="preserve">
-    <value>Swiss Army Terminal Knife</value>
-  </data>
-  <data name="Splash.Protocols" xml:space="preserve">
-    <value>Terminal protocols</value>
-  </data>
-  <data name="Splash.StateOn" xml:space="preserve">
-    <value>on</value>
-  </data>
-  <data name="Splash.StateOff" xml:space="preserve">
-    <value>off</value>
-  </data>
-  <data name="Splash.SystemInfo" xml:space="preserve">
-    <value>CPU: {0} cores, Memory: {1} GBs</value>
-  </data>
-  <data name="Hint.SwitchTabPage" xml:space="preserve">
-    <value>Switch to the previous / next tab page.</value>
-  </data>
-  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
-    <value>Switch tab pages when the focused control does not use the arrow keys.</value>
-  </data>
-  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
-    <value>Jump straight to the tab page carrying that number in its name.</value>
-  </data>
-  <data name="Json.TopLevelItems" xml:space="preserve">
-    <value>{0:N0} top-level item(s)</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
-    <value>Date, Time and TimeZone</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.Date" xml:space="preserve">
-    <value>Date:</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.Time" xml:space="preserve">
-    <value>Time:</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.TimeZone" xml:space="preserve">
-    <value>Time zone:</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.DateUtc" xml:space="preserve">
-    <value>Date (UTC):</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.TimeUtc" xml:space="preserve">
-    <value>Time (UTC):</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.UtcOffset" xml:space="preserve">
-    <value>UTC offset: {0} ({1})</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.SummerTime" xml:space="preserve">
-    <value>summer time</value>
-  </data>
-  <data name="Dialog.DateTimeTimeZone.StandardTime" xml:space="preserve">
-    <value>standard time</value>
-  </data>
-  <data name="Hint.MoveDivider" xml:space="preserve">
-    <value>Move the divider</value>
+  <data name="Csv.Hint.RunQuery" xml:space="preserve">
+    <value>Run the query over the rows</value>
   </data>
   <data name="Csv.Query.Label" xml:space="preserve">
     <value>Query</value>
   </data>
   <data name="Csv.Query.Placeholder" xml:space="preserve">
     <value>e.g. SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC LIMIT 20</value>
-  </data>
-  <data name="Csv.Grid.Empty" xml:space="preserve">
-    <value>No rows match the query</value>
   </data>
   <data name="Csv.Status.Empty" xml:space="preserve">
     <value>The file is empty</value>
@@ -814,383 +383,53 @@
   <data name="Csv.Status.Truncated" xml:space="preserve">
     <value>; only the first {0:N0} rows are read</value>
   </data>
-  <data name="Csv.Hint.RunQuery" xml:space="preserve">
-    <value>Run the query over the rows</value>
+  <data name="Dbf.Deleted" xml:space="preserve">
+    <value>{0:N0} deleted not shown</value>
   </data>
-  <data name="Csv.Error.Unterminated" xml:space="preserve">
-    <value>A quote is not closed: missing {0}</value>
+  <data name="Dbf.Grid.Empty" xml:space="preserve">
+    <value>The table has no records</value>
   </data>
-  <data name="Csv.Error.Expected" xml:space="preserve">
-    <value>Expected {0}, found {1}</value>
+  <data name="Dbf.NotDbase" xml:space="preserve">
+    <value>Not a dBase table: {0}</value>
   </data>
-  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
-    <value>the end of the query</value>
+  <data name="Dbf.Status" xml:space="preserve">
+    <value>{0:N0} record(s), {1:N0} field(s), {2}</value>
   </data>
-  <data name="Csv.Error.Limit" xml:space="preserve">
-    <value>LIMIT needs a whole number</value>
+  <data name="Dbf.Truncated" xml:space="preserve">
+    <value>only the first {0:N0} records are shown</value>
   </data>
-  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
-    <value>No column called '{0}'. Columns: {1}</value>
+  <data name="Dbf.Updated" xml:space="preserve">
+    <value>updated {0:yyyy-MM-dd}</value>
   </data>
-  <data name="Csv.Hint.MoveRows" xml:space="preserve">
-    <value>Move between the rows</value>
+  <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
+    <value>Date, Time and TimeZone</value>
   </data>
-  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
-    <value>Move between the columns</value>
+  <data name="Dialog.DateTimeTimeZone.Date" xml:space="preserve">
+    <value>Date:</value>
   </data>
-  <data name="Csv.Hint.Page" xml:space="preserve">
-    <value>Move a page at a time</value>
+  <data name="Dialog.DateTimeTimeZone.DateUtc" xml:space="preserve">
+    <value>Date (UTC):</value>
   </data>
-  <data name="Csv.Hint.Ends" xml:space="preserve">
-    <value>Go to the first or the last row</value>
+  <data name="Dialog.DateTimeTimeZone.StandardTime" xml:space="preserve">
+    <value>standard time</value>
   </data>
-  <data name="Wizard.Next" xml:space="preserve">
-    <value>Next</value>
+  <data name="Dialog.DateTimeTimeZone.SummerTime" xml:space="preserve">
+    <value>summer time</value>
   </data>
-  <data name="Wizard.Finish" xml:space="preserve">
-    <value>Finish</value>
+  <data name="Dialog.DateTimeTimeZone.Time" xml:space="preserve">
+    <value>Time:</value>
   </data>
-  <data name="Conflict.Title" xml:space="preserve">
-    <value>File already exists</value>
+  <data name="Dialog.DateTimeTimeZone.TimeUtc" xml:space="preserve">
+    <value>Time (UTC):</value>
   </data>
-  <data name="Conflict.Message" xml:space="preserve">
-    <value>{0} is already in the target folder.</value>
+  <data name="Dialog.DateTimeTimeZone.TimeZone" xml:space="preserve">
+    <value>Time zone:</value>
   </data>
-  <data name="Conflict.Overwrite" xml:space="preserve">
-    <value>Overwrite</value>
+  <data name="Dialog.DateTimeTimeZone.UtcOffset" xml:space="preserve">
+    <value>UTC offset: {0} ({1})</value>
   </data>
-  <data name="Conflict.Skip" xml:space="preserve">
-    <value>Skip</value>
-  </data>
-  <data name="Conflict.Rename" xml:space="preserve">
-    <value>Rename</value>
-  </data>
-  <data name="Conflict.KeepNewer" xml:space="preserve">
-    <value>Keep newer</value>
-  </data>
-  <data name="Conflict.KeepLarger" xml:space="preserve">
-    <value>Keep larger</value>
-  </data>
-  <data name="Conflict.ApplyToAll" xml:space="preserve">
-    <value>Apply to all remaining conflicts</value>
-  </data>
-  <data name="Sqlite.Query.Label" xml:space="preserve">
-    <value>Query</value>
-  </data>
-  <data name="Sqlite.Query.Placeholder" xml:space="preserve">
-    <value>e.g. SELECT * FROM table LIMIT 20</value>
-  </data>
-  <data name="Sqlite.Grid.Empty" xml:space="preserve">
-    <value>The query returned no rows</value>
-  </data>
-  <data name="Sqlite.Status.Rows" xml:space="preserve">
-    <value>{0:N0} row(s), {1} column(s)</value>
-  </data>
-  <data name="Sqlite.Status.Truncated" xml:space="preserve">
-    <value>; only the first {0:N0} rows are shown</value>
-  </data>
-  <data name="Sqlite.Error.Unexpected" xml:space="preserve">
-    <value>The query failed: {0}</value>
-  </data>
-  <data name="Sqlite.Hint.RunQuery" xml:space="preserve">
-    <value>Run the query</value>
-  </data>
-  <data name="Sqlite.Title" xml:space="preserve">
-    <value>SQLite</value>
-  </data>
-  <data name="Sqlite.Text.Rows" xml:space="preserve">
-    <value>{0:N0} row(s)</value>
-  </data>
-  <data name="Sqlite.Text.Truncated" xml:space="preserve">
-    <value>, truncated</value>
-  </data>
-  <data name="Sqlite.Title.Hint" xml:space="preserve">
-    <value>  F4:Text  Enter:query  Tab:grid</value>
-  </data>
-  <data name="Sqlite.Title.TextMode" xml:space="preserve">
-    <value> [TEXT]</value>
-  </data>
-  <data name="Hint.UpperLowerCase" xml:space="preserve">
-    <value>Upper / lower case</value>
-  </data>
-  <data name="Hint.SortLines" xml:space="preserve">
-    <value>Sort lines up / down</value>
-  </data>
-  <data name="Hint.LineEnding" xml:space="preserve">
-    <value>Line ending (CRLF, LF, CR)</value>
-  </data>
-  <data name="Hint.MarkAll" xml:space="preserve">
-    <value>Mark all matches (again: clear)</value>
-  </data>
-  <data name="Viewer.ChangedOnDisk" xml:space="preserve">
-    <value>changed on disk</value>
-  </data>
-  <data name="Hdf.Picker.Label" xml:space="preserve">
-    <value>Dataset</value>
-  </data>
-  <data name="Hdf.Grid.Empty" xml:space="preserve">
-    <value>This dataset has no values</value>
-  </data>
-  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
-    <value>This file has no datasets</value>
-  </data>
-  <data name="Hdf.Error.Unexpected" xml:space="preserve">
-    <value>The file could not be read: {0}</value>
-  </data>
-  <data name="Hdf.Shape.Scalar" xml:space="preserve">
-    <value>scalar</value>
-  </data>
-  <data name="Hdf.Status.RowsCut" xml:space="preserve">
-    <value>; only the first {0:N0} rows are shown</value>
-  </data>
-  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
-    <value>; only the first {0:N0} columns are shown</value>
-  </data>
-  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
-    <value>; the list holds only the first {0:N0} datasets</value>
-  </data>
-  <data name="Hdf.Slice.Line" xml:space="preserve">
-    <value>Slice [{0}]  dimension {1} of {2}, index {3} of {4}   [ ] dimension   + - index</value>
-  </data>
-  <data name="Hdf.Title" xml:space="preserve">
-    <value>HDF5</value>
-  </data>
-  <data name="Hdf.Title.Hint" xml:space="preserve">
-    <value>  Tab:grid  [ ]:dimension  +/-:index</value>
-  </data>
-  <data name="Hdf.Hint.Index" xml:space="preserve">
-    <value>Step the index of the active dimension</value>
-  </data>
-  <data name="Hdf.Hint.Dimension" xml:space="preserve">
-    <value>Choose the active dimension</value>
-  </data>
-  <data name="Xps.Picker.Label" xml:space="preserve">
-    <value>Page</value>
-  </data>
-  <data name="Xps.Page.Label" xml:space="preserve">
-    <value>Page {0}</value>
-  </data>
-  <data name="Xps.Page.MultiDocument" xml:space="preserve">
-    <value>Document {0} · Page {1}</value>
-  </data>
-  <data name="Xps.Status.Page" xml:space="preserve">
-    <value>Page {0} of {1}</value>
-  </data>
-  <data name="Xps.Status.Size" xml:space="preserve">
-    <value> · {0} × {1}</value>
-  </data>
-  <data name="Xps.Page.NoText" xml:space="preserve">
-    <value>This page has no text.</value>
-  </data>
-  <data name="Xps.NoPages" xml:space="preserve">
-    <value>This document has no pages</value>
-  </data>
-  <data name="Xps.Title" xml:space="preserve">
-    <value>XPS</value>
-  </data>
-  <data name="Xps.Title.Hint" xml:space="preserve">
-    <value>  Ctrl+←/→:page</value>
-  </data>
-  <data name="Xps.Hint.Page" xml:space="preserve">
-    <value>Show the previous or next page</value>
-  </data>
-  <data name="Exe.Title" xml:space="preserve">
-    <value>Executable analysis</value>
-  </data>
-  <data name="Exe.Title.Hint" xml:space="preserve">
-    <value>  Up/Down:scroll</value>
-  </data>
-  <data name="Exe.Button.Disassemble" xml:space="preserve">
-    <value>Disassemble</value>
-  </data>
-  <data name="Exe.Key.Disassemble" xml:space="preserve">
-    <value>Show the disassembly, or the analysis again</value>
-  </data>
-  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
-    <value>The file is larger than {0:N0} MB and is not disassembled</value>
-  </data>
-  <data name="Exe.Disassembly.Failed" xml:space="preserve">
-    <value>Disassembly failed: {0}</value>
-  </data>
-  <data name="Exe.Disassembly.None" xml:space="preserve">
-    <value>No code found to disassemble</value>
-  </data>
-  <data name="Exe.Grid.Empty" xml:space="preserve">
-    <value>Nothing to show</value>
-  </data>
-  <data name="Exe.Col.Item" xml:space="preserve">
-    <value>Item</value>
-  </data>
-  <data name="Exe.Col.Value" xml:space="preserve">
-    <value>Value</value>
-  </data>
-  <data name="Exe.Status.Reading" xml:space="preserve">
-    <value>Reading the file…</value>
-  </data>
-  <data name="Exe.Status.Summary" xml:space="preserve">
-    <value>{0}, {1}, {2:N0} bytes</value>
-  </data>
-  <data name="Exe.Error.Unexpected" xml:space="preserve">
-    <value>The file could not be analysed: {0}</value>
-  </data>
-  <data name="Exe.Sec.General" xml:space="preserve">
-    <value>General</value>
-  </data>
-  <data name="Exe.Sec.Hardening" xml:space="preserve">
-    <value>Hardening</value>
-  </data>
-  <data name="Exe.Sec.Imports" xml:space="preserve">
-    <value>Imports</value>
-  </data>
-  <data name="Exe.Sec.Exports" xml:space="preserve">
-    <value>Exports</value>
-  </data>
-  <data name="Exe.Sec.Sections" xml:space="preserve">
-    <value>Sections (size in file, entropy, access)</value>
-  </data>
-  <data name="Exe.Sec.Signature" xml:space="preserve">
-    <value>Signature</value>
-  </data>
-  <data name="Exe.Sec.Hints" xml:space="preserve">
-    <value>Hints</value>
-  </data>
-  <data name="Exe.Row.Format" xml:space="preserve">
-    <value>Format</value>
-  </data>
-  <data name="Exe.Row.Architecture" xml:space="preserve">
-    <value>Architecture</value>
-  </data>
-  <data name="Exe.Row.Kind" xml:space="preserve">
-    <value>Kind</value>
-  </data>
-  <data name="Exe.Row.Subsystem" xml:space="preserve">
-    <value>Platform / subsystem</value>
-  </data>
-  <data name="Exe.Row.Timestamp" xml:space="preserve">
-    <value>Built</value>
-  </data>
-  <data name="Exe.Row.Managed" xml:space="preserve">
-    <value>Managed code</value>
-  </data>
-  <data name="Exe.Value.Managed" xml:space="preserve">
-    <value>.NET assembly (CLR)</value>
-  </data>
-  <data name="Exe.Row.Entry" xml:space="preserve">
-    <value>Entry point</value>
-  </data>
-  <data name="Exe.Row.Size" xml:space="preserve">
-    <value>File size</value>
-  </data>
-  <data name="Exe.Row.Summary" xml:space="preserve">
-    <value>Summary</value>
-  </data>
-  <data name="Exe.Row.Signature" xml:space="preserve">
-    <value>Signature</value>
-  </data>
-  <data name="Exe.Value.Yes" xml:space="preserve">
-    <value>yes</value>
-  </data>
-  <data name="Exe.Value.No" xml:space="preserve">
-    <value>no</value>
-  </data>
-  <data name="Exe.Value.NA" xml:space="preserve">
-    <value>n/a or unknown</value>
-  </data>
-  <data name="Exe.Imports.Functions" xml:space="preserve">
-    <value>{0} libraries, {1:N0} imported symbols</value>
-  </data>
-  <data name="Exe.Imports.Libraries" xml:space="preserve">
-    <value>{0} libraries</value>
-  </data>
-  <data name="Exe.Imports.FunctionCount" xml:space="preserve">
-    <value>{0:N0} functions</value>
-  </data>
-  <data name="Exe.Exports.None" xml:space="preserve">
-    <value>none</value>
-  </data>
-  <data name="Exe.Exports.Count" xml:space="preserve">
-    <value>{0:N0} exported</value>
-  </data>
-  <data name="Exe.Signature.None" xml:space="preserve">
-    <value>not signed</value>
-  </data>
-  <data name="Exe.Signature.Embedded" xml:space="preserve">
-    <value>embedded signature, not verified</value>
-  </data>
-  <data name="Exe.Signature.Code" xml:space="preserve">
-    <value>code signature present, not verified</value>
-  </data>
-  <data name="Exe.Signature.NoCertificates" xml:space="preserve">
-    <value>no certificates could be read</value>
-  </data>
-  <data name="Exe.Cert.Subject" xml:space="preserve">
-    <value>Subject</value>
-  </data>
-  <data name="Exe.Cert.Issuer" xml:space="preserve">
-    <value>Issuer</value>
-  </data>
-  <data name="Exe.Cert.Valid" xml:space="preserve">
-    <value>Valid</value>
-  </data>
-  <data name="Exe.Cert.Thumbprint" xml:space="preserve">
-    <value>SHA-1</value>
-  </data>
-  <data name="Exe.Hint.None" xml:space="preserve">
-    <value>nothing suspicious found</value>
-  </data>
-  <data name="Exe.Kind.Executable" xml:space="preserve">
-    <value>Executable</value>
-  </data>
-  <data name="Exe.Kind.Pie" xml:space="preserve">
-    <value>Position-independent executable</value>
-  </data>
-  <data name="Exe.Kind.Library" xml:space="preserve">
-    <value>Shared library</value>
-  </data>
-  <data name="Exe.Kind.Object" xml:space="preserve">
-    <value>Object file</value>
-  </data>
-  <data name="Exe.Kind.Driver" xml:space="preserve">
-    <value>Driver</value>
-  </data>
-  <data name="Exe.Kind.Core" xml:space="preserve">
-    <value>Core dump</value>
-  </data>
-  <data name="Exe.Kind.Bundle" xml:space="preserve">
-    <value>Bundle</value>
-  </data>
-  <data name="Exe.Kind.Other" xml:space="preserve">
-    <value>Other</value>
-  </data>
-  <data name="Exe.Hint.HighEntropy" xml:space="preserve">
-    <value>Section {0} is close to random (entropy above 7.2): packed, compressed or encrypted</value>
-  </data>
-  <data name="Exe.Hint.PackerSection" xml:space="preserve">
-    <value>Section name {0} is one a packer or protector uses</value>
-  </data>
-  <data name="Exe.Hint.Wx" xml:space="preserve">
-    <value>Section {0} is both writable and executable</value>
-  </data>
-  <data name="Exe.Hint.FewImports" xml:space="preserve">
-    <value>Very few imports, as a packed program has</value>
-  </data>
-  <data name="Exe.Hint.PackerSignature" xml:space="preserve">
-    <value>{0} packer signature found</value>
-  </data>
-  <data name="Exe.Hint.Sampled" xml:space="preserve">
-    <value>Entropy of {0} comes from its first 32 MB only</value>
-  </data>
-  <data name="Exe.Hint.Malformed" xml:space="preserve">
-    <value>The file is damaged or unusual in: {0}</value>
-  </data>
-  <data name="Exe.Hint.ListCut" xml:space="preserve">
-    <value>A limit cut the list: {0}</value>
-  </data>
-  <data name="Exe.Hint.Timestamp" xml:space="preserve">
-    <value>The build time stamp is zero or in the future, so it is not shown</value>
-  </data>
-  <data name="Disguise.TypeMismatch" xml:space="preserve">
-    <value>Content is {0}, but the name says .{1}</value>
+  <data name="Disguise.Caption" xml:space="preserve">
+    <value>Warning</value>
   </data>
   <data name="Disguise.DoubleExtension" xml:space="preserve">
     <value>Double extension: shows .{0}, runs as .{1}</value>
@@ -1198,129 +437,461 @@
   <data name="Disguise.HiddenCharacters" xml:space="preserve">
     <value>The name has hidden or direction-changing characters</value>
   </data>
-  <data name="Disguise.Caption" xml:space="preserve">
-    <value>Warning</value>
+  <data name="Disguise.TypeMismatch" xml:space="preserve">
+    <value>Content is {0}, but the name says .{1}</value>
   </data>
-  <data name="Msg.EnterLineNumber" xml:space="preserve">
-    <value>Enter a line number.</value>
+  <data name="Editor.Discard" xml:space="preserve">
+    <value>Discard</value>
   </data>
-  <data name="Msg.EnterOffset" xml:space="preserve">
-    <value>Enter an offset: a number, or a hex number as 0x1F or 1Fh.</value>
+  <data name="Editor.Find" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="Editor.GoToLine" xml:space="preserve">
+    <value>Go to line</value>
+  </data>
+  <data name="Editor.GoToOffset" xml:space="preserve">
+    <value>Go to offset</value>
+  </data>
+  <data name="Editor.HexTitle" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Editor.HintHexDigit" xml:space="preserve">
+    <value>Type a hex digit</value>
+  </data>
+  <data name="Editor.HintHexMove" xml:space="preserve">
+    <value>Move the cursor</value>
+  </data>
+  <data name="Editor.HintHexRow" xml:space="preserve">
+    <value>Start or end of the row</value>
+  </data>
+  <data name="Editor.HintHexView" xml:space="preserve">
+    <value>Hex view</value>
+  </data>
+  <data name="Editor.HintTextView" xml:space="preserve">
+    <value>Text view</value>
+  </data>
+  <data name="Editor.Line" xml:space="preserve">
+    <value>Line</value>
   </data>
   <data name="Editor.LineRange" xml:space="preserve">
     <value>Line (1-{0})</value>
   </data>
-  <data name="Msg.TypeFindText" xml:space="preserve">
-    <value>Type the text to find.</value>
+  <data name="Editor.MatchCase" xml:space="preserve">
+    <value>Match case</value>
   </data>
-  <data name="Msg.NothingToReplace" xml:space="preserve">
-    <value>Nothing to replace: "{0}" was not found.</value>
+  <data name="Editor.NotText" xml:space="preserve">
+    <value>Not text: the bytes do not read back unchanged in {0}, so the hex view stays.</value>
   </data>
-  <data name="Msg.UnsavedChangesIn" xml:space="preserve">
-    <value>{0} has unsaved changes.</value>
+  <data name="Editor.Offset" xml:space="preserve">
+    <value>Offset</value>
   </data>
-  <data name="Msg.SaveBeforeClosing" xml:space="preserve">
-    <value>Save them before closing?</value>
+  <data name="Editor.RegularExpression" xml:space="preserve">
+    <value>Regular expression</value>
   </data>
-  <data name="Hint.RunTheSearch" xml:space="preserve">
-    <value>Run the search</value>
+  <data name="Editor.Replace" xml:space="preserve">
+    <value>Replace</value>
   </data>
-  <data name="Hint.CloseWithoutSearching" xml:space="preserve">
-    <value>Close without searching</value>
+  <data name="Editor.ReplaceAll" xml:space="preserve">
+    <value>Replace all</value>
   </data>
-  <data name="Hint.RenameTheEntry" xml:space="preserve">
-    <value>Rename the entry</value>
+  <data name="Editor.ReplaceText" xml:space="preserve">
+    <value>Replace text</value>
   </data>
-  <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
-    <value>Close without renaming</value>
+  <data name="Editor.Search" xml:space="preserve">
+    <value>Search</value>
   </data>
-  <data name="Hint.PreviousField" xml:space="preserve">
-    <value>Previous field</value>
+  <data name="Editor.SearchText" xml:space="preserve">
+    <value>Search text</value>
   </data>
-  <data name="CmdDesc.27b25e9c" xml:space="preserve">
-    <value>Close the current dialog or popup.</value>
-    <comment>Close the current dialog or popup.</comment>
+  <data name="Editor.UnsavedChanges" xml:space="preserve">
+    <value>Unsaved changes</value>
   </data>
-  <data name="CmdDesc.f55d8933" xml:space="preserve">
-    <value>Show the calendar pop-up.</value>
-    <comment>Show the calendar pop-up.</comment>
+  <data name="Editor.With" xml:space="preserve">
+    <value>With</value>
   </data>
-  <data name="CmdDesc.62d2e829" xml:space="preserve">
-    <value>Show the commands available in the current context.</value>
-    <comment>Show the commands available in the current context.</comment>
+  <data name="Exe.Button.Disassemble" xml:space="preserve">
+    <value>Disassemble</value>
   </data>
-  <data name="CmdDesc.73b65037" xml:space="preserve">
-    <value>Exit the application.</value>
-    <comment>Exit the application.</comment>
+  <data name="Exe.Cert.Issuer" xml:space="preserve">
+    <value>Issuer</value>
   </data>
-  <data name="CmdDesc.67104805" xml:space="preserve">
-    <value>Move the selection or viewport down by one line.</value>
-    <comment>Move the selection or viewport down by one line.</comment>
+  <data name="Exe.Cert.Subject" xml:space="preserve">
+    <value>Subject</value>
   </data>
-  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
-    <value>Move the cursor or viewport left by one column.</value>
-    <comment>Move the cursor or viewport left by one column.</comment>
+  <data name="Exe.Cert.Thumbprint" xml:space="preserve">
+    <value>SHA-1</value>
   </data>
-  <data name="CmdDesc.db8d76c8" xml:space="preserve">
-    <value>Move the selection or viewport down by one page.</value>
-    <comment>Move the selection or viewport down by one page.</comment>
+  <data name="Exe.Cert.Valid" xml:space="preserve">
+    <value>Valid</value>
   </data>
-  <data name="CmdDesc.751aa6ef" xml:space="preserve">
-    <value>Move the selection or viewport up by one page.</value>
-    <comment>Move the selection or viewport up by one page.</comment>
+  <data name="Exe.Col.Item" xml:space="preserve">
+    <value>Item</value>
   </data>
-  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
-    <value>Move the cursor or viewport right by one column.</value>
-    <comment>Move the cursor or viewport right by one column.</comment>
+  <data name="Exe.Col.Value" xml:space="preserve">
+    <value>Value</value>
   </data>
-  <data name="CmdDesc.bca6dd95" xml:space="preserve">
-    <value>Jump to the end of the current line.</value>
-    <comment>Jump to the end of the current line.</comment>
+  <data name="Exe.Disassembly.Failed" xml:space="preserve">
+    <value>Disassembly failed: {0}</value>
   </data>
-  <data name="CmdDesc.293229ee" xml:space="preserve">
-    <value>Jump to the last line.</value>
-    <comment>Jump to the last line.</comment>
+  <data name="Exe.Disassembly.None" xml:space="preserve">
+    <value>No code found to disassemble</value>
   </data>
-  <data name="CmdDesc.fa38de03" xml:space="preserve">
-    <value>Jump to the start of the current line.</value>
-    <comment>Jump to the start of the current line.</comment>
+  <data name="Exe.Disassembly.TooLarge" xml:space="preserve">
+    <value>The file is larger than {0:N0} MB and is not disassembled</value>
   </data>
-  <data name="CmdDesc.126bd270" xml:space="preserve">
-    <value>Jump to the first line.</value>
-    <comment>Jump to the first line.</comment>
+  <data name="Exe.Error.Unexpected" xml:space="preserve">
+    <value>The file could not be analysed: {0}</value>
   </data>
-  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
-    <value>Move the selection or viewport up by one line.</value>
-    <comment>Move the selection or viewport up by one line.</comment>
+  <data name="Exe.Exports.Count" xml:space="preserve">
+    <value>{0:N0} exported</value>
   </data>
-  <data name="CmdDesc.fc3303d5" xml:space="preserve">
-    <value>Move focus to the previous focusable panel or control.</value>
-    <comment>Move focus to the previous focusable panel or control.</comment>
+  <data name="Exe.Exports.None" xml:space="preserve">
+    <value>none</value>
   </data>
-  <data name="CmdDesc.f5dbb885" xml:space="preserve">
-    <value>Move focus to the next focusable panel or control.</value>
-    <comment>Move focus to the next focusable panel or control.</comment>
+  <data name="Exe.Grid.Empty" xml:space="preserve">
+    <value>Nothing to show</value>
   </data>
-  <data name="Help.AvailableCommands" xml:space="preserve">
-    <value>Available commands:</value>
+  <data name="Exe.Hint.FewImports" xml:space="preserve">
+    <value>Very few imports, as a packed program has</value>
   </data>
-  <data name="Help.NoCommands" xml:space="preserve">
-    <value>No keyboard commands are currently available.</value>
+  <data name="Exe.Hint.HighEntropy" xml:space="preserve">
+    <value>Section {0} is close to random (entropy above 7.2): packed, compressed or encrypted</value>
+  </data>
+  <data name="Exe.Hint.ListCut" xml:space="preserve">
+    <value>A limit cut the list: {0}</value>
+  </data>
+  <data name="Exe.Hint.Malformed" xml:space="preserve">
+    <value>The file is damaged or unusual in: {0}</value>
+  </data>
+  <data name="Exe.Hint.None" xml:space="preserve">
+    <value>nothing suspicious found</value>
+  </data>
+  <data name="Exe.Hint.PackerSection" xml:space="preserve">
+    <value>Section name {0} is one a packer or protector uses</value>
+  </data>
+  <data name="Exe.Hint.PackerSignature" xml:space="preserve">
+    <value>{0} packer signature found</value>
+  </data>
+  <data name="Exe.Hint.Sampled" xml:space="preserve">
+    <value>Entropy of {0} comes from its first 32 MB only</value>
+  </data>
+  <data name="Exe.Hint.Timestamp" xml:space="preserve">
+    <value>The build time stamp is zero or in the future, so it is not shown</value>
+  </data>
+  <data name="Exe.Hint.Wx" xml:space="preserve">
+    <value>Section {0} is both writable and executable</value>
+  </data>
+  <data name="Exe.Imports.FunctionCount" xml:space="preserve">
+    <value>{0:N0} functions</value>
+  </data>
+  <data name="Exe.Imports.Functions" xml:space="preserve">
+    <value>{0} libraries, {1:N0} imported symbols</value>
+  </data>
+  <data name="Exe.Imports.Libraries" xml:space="preserve">
+    <value>{0} libraries</value>
+  </data>
+  <data name="Exe.Key.Disassemble" xml:space="preserve">
+    <value>Show the disassembly, or the analysis again</value>
+  </data>
+  <data name="Exe.Kind.Bundle" xml:space="preserve">
+    <value>Bundle</value>
+  </data>
+  <data name="Exe.Kind.Core" xml:space="preserve">
+    <value>Core dump</value>
+  </data>
+  <data name="Exe.Kind.Driver" xml:space="preserve">
+    <value>Driver</value>
+  </data>
+  <data name="Exe.Kind.Executable" xml:space="preserve">
+    <value>Executable</value>
+  </data>
+  <data name="Exe.Kind.Library" xml:space="preserve">
+    <value>Shared library</value>
+  </data>
+  <data name="Exe.Kind.Object" xml:space="preserve">
+    <value>Object file</value>
+  </data>
+  <data name="Exe.Kind.Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Exe.Kind.Pie" xml:space="preserve">
+    <value>Position-independent executable</value>
+  </data>
+  <data name="Exe.Row.Architecture" xml:space="preserve">
+    <value>Architecture</value>
+  </data>
+  <data name="Exe.Row.Entry" xml:space="preserve">
+    <value>Entry point</value>
+  </data>
+  <data name="Exe.Row.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Exe.Row.Kind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="Exe.Row.Managed" xml:space="preserve">
+    <value>Managed code</value>
+  </data>
+  <data name="Exe.Row.Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Exe.Row.Size" xml:space="preserve">
+    <value>File size</value>
+  </data>
+  <data name="Exe.Row.Subsystem" xml:space="preserve">
+    <value>Platform / subsystem</value>
+  </data>
+  <data name="Exe.Row.Summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="Exe.Row.Timestamp" xml:space="preserve">
+    <value>Built</value>
+  </data>
+  <data name="Exe.Sec.Exports" xml:space="preserve">
+    <value>Exports</value>
+  </data>
+  <data name="Exe.Sec.General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Exe.Sec.Hardening" xml:space="preserve">
+    <value>Hardening</value>
+  </data>
+  <data name="Exe.Sec.Hints" xml:space="preserve">
+    <value>Hints</value>
+  </data>
+  <data name="Exe.Sec.Imports" xml:space="preserve">
+    <value>Imports</value>
+  </data>
+  <data name="Exe.Sec.Sections" xml:space="preserve">
+    <value>Sections (size in file, entropy, access)</value>
+  </data>
+  <data name="Exe.Sec.Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Exe.Signature.Code" xml:space="preserve">
+    <value>code signature present, not verified</value>
+  </data>
+  <data name="Exe.Signature.Embedded" xml:space="preserve">
+    <value>embedded signature, not verified</value>
+  </data>
+  <data name="Exe.Signature.NoCertificates" xml:space="preserve">
+    <value>no certificates could be read</value>
+  </data>
+  <data name="Exe.Signature.None" xml:space="preserve">
+    <value>not signed</value>
+  </data>
+  <data name="Exe.Status.Reading" xml:space="preserve">
+    <value>Reading the file…</value>
+  </data>
+  <data name="Exe.Status.Summary" xml:space="preserve">
+    <value>{0}, {1}, {2:N0} bytes</value>
+  </data>
+  <data name="Exe.Title" xml:space="preserve">
+    <value>Executable analysis</value>
+  </data>
+  <data name="Exe.Title.Hint" xml:space="preserve">
+    <value>  Up/Down:scroll</value>
+  </data>
+  <data name="Exe.Value.Managed" xml:space="preserve">
+    <value>.NET assembly (CLR)</value>
+  </data>
+  <data name="Exe.Value.NA" xml:space="preserve">
+    <value>n/a or unknown</value>
+  </data>
+  <data name="Exe.Value.No" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="Exe.Value.Yes" xml:space="preserve">
+    <value>yes</value>
+  </data>
+  <data name="Grid.Ai.Asking" xml:space="preserve">
+    <value>Asking the AI model…</value>
+  </data>
+  <data name="Grid.Ai.NoQuery" xml:space="preserve">
+    <value>The AI model sent no query</value>
+  </data>
+  <data name="Grid.Ai.NoQuestion" xml:space="preserve">
+    <value>Type a question after the ?, for example ? rows where amount is over 10</value>
+  </data>
+  <data name="Grid.Ai.NoTable" xml:space="preserve">
+    <value>There is no table called '{0}'</value>
+  </data>
+  <data name="Grid.Ai.NoTables" xml:space="preserve">
+    <value>There are no tables to query</value>
+  </data>
+  <data name="Grid.Ai.PickTable" xml:space="preserve">
+    <value>Name one of the tables after FROM: {0}</value>
+  </data>
+  <data name="Grid.Ai.Ready" xml:space="preserve">
+    <value>Draft in the query line: press Enter to run it</value>
+  </data>
+  <data name="Grid.Hint.Ask" xml:space="preserve">
+    <value>Ask the AI model: type ? and a question, then Enter drafts the query</value>
+  </data>
+  <data name="Grid.Hint.Complete" xml:space="preserve">
+    <value>Complete the word being typed: a column name or a keyword</value>
+  </data>
+  <data name="Grid.Hint.RunQuery" xml:space="preserve">
+    <value>Run the query over the rows shown</value>
+  </data>
+  <data name="Grid.Hint.Syntax" xml:space="preserve">
+    <value>Operators: = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY; join with AND / OR; then ORDER BY column [DESC] and LIMIT n</value>
+  </data>
+  <data name="Grid.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT name WHERE amount &gt; 10, or ? and a question</value>
+  </data>
+  <data name="Grid.Status.Matched" xml:space="preserve">
+    <value>; {0:N0} of the {1:N0} shown row(s) match</value>
+  </data>
+  <data name="Har.Column.Method" xml:space="preserve">
+    <value>Method</value>
+  </data>
+  <data name="Har.Column.Number" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="Har.Column.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Har.Column.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Har.Column.Time" xml:space="preserve">
+    <value>Time (ms)</value>
+  </data>
+  <data name="Har.Column.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Har.Column.Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Har.Detail.Binary" xml:space="preserve">
+    <value>(binary, {0:N0} bytes, not shown)</value>
+  </data>
+  <data name="Har.Detail.NoBody" xml:space="preserve">
+    <value>(no body)</value>
+  </data>
+  <data name="Har.Detail.QueryString" xml:space="preserve">
+    <value>Query string</value>
+  </data>
+  <data name="Har.Detail.RequestBody" xml:space="preserve">
+    <value>Request body</value>
+  </data>
+  <data name="Har.Detail.RequestHeaders" xml:space="preserve">
+    <value>Request headers</value>
+  </data>
+  <data name="Har.Detail.ResponseBody" xml:space="preserve">
+    <value>Response body</value>
+  </data>
+  <data name="Har.Detail.ResponseHeaders" xml:space="preserve">
+    <value>Response headers</value>
+  </data>
+  <data name="Har.Detail.Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="Har.Detail.Started" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="Har.Detail.Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Har.Detail.Timings" xml:space="preserve">
+    <value>Timings</value>
+  </data>
+  <data name="Har.Detail.Truncated" xml:space="preserve">
+    <value>(cut at {0:N0} characters)</value>
+  </data>
+  <data name="Har.Grid.Empty" xml:space="preserve">
+    <value>The file has no requests</value>
+  </data>
+  <data name="Har.Hint.Back" xml:space="preserve">
+    <value>Back to the list of requests</value>
+  </data>
+  <data name="Har.Hint.Details" xml:space="preserve">
+    <value>Show the request and its response</value>
+  </data>
+  <data name="Har.Status.NotHar" xml:space="preserve">
+    <value>Not a HAR file: {0}</value>
+  </data>
+  <data name="Har.Status.Requests" xml:space="preserve">
+    <value>{0:N0} request(s)</value>
+  </data>
+  <data name="Har.Status.Truncated" xml:space="preserve">
+    <value>; only the first {0:N0} are read</value>
+  </data>
+  <data name="Har.Title.Details" xml:space="preserve">
+    <value>Request {0}</value>
+  </data>
+  <data name="Hdf.Error.Unexpected" xml:space="preserve">
+    <value>The file could not be read: {0}</value>
+  </data>
+  <data name="Hdf.Grid.Empty" xml:space="preserve">
+    <value>This dataset has no values</value>
+  </data>
+  <data name="Hdf.Hint.Dimension" xml:space="preserve">
+    <value>Choose the active dimension</value>
+  </data>
+  <data name="Hdf.Hint.Index" xml:space="preserve">
+    <value>Step the index of the active dimension</value>
+  </data>
+  <data name="Hdf.Hint.LongForm" xml:space="preserve">
+    <value>Query every cell, with a column per axis (axis0, axis1, ...)</value>
+  </data>
+  <data name="Hdf.Hint.Transpose" xml:space="preserve">
+    <value>Swap the rows and the columns</value>
+  </data>
+  <data name="Hdf.Picker.Label" xml:space="preserve">
+    <value>Dataset</value>
+  </data>
+  <data name="Hdf.Shape.Scalar" xml:space="preserve">
+    <value>scalar</value>
+  </data>
+  <data name="Hdf.Slice.Line" xml:space="preserve">
+    <value>Slice [{0}]  dimension {1} of {2}, index {3} of {4}   [ ] dimension   + - index</value>
+  </data>
+  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
+    <value>; only the first {0:N0} columns are shown</value>
+  </data>
+  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
+    <value>; the list holds only the first {0:N0} datasets</value>
+  </data>
+  <data name="Hdf.Status.LongFormCut" xml:space="preserve">
+    <value>; only the first {0:N0} matching cells are kept</value>
+  </data>
+  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
+    <value>This file has no datasets</value>
+  </data>
+  <data name="Hdf.Status.RowsCut" xml:space="preserve">
+    <value>; only the first {0:N0} rows are shown</value>
+  </data>
+  <data name="Hdf.Title" xml:space="preserve">
+    <value>HDF5</value>
+  </data>
+  <data name="Hdf.Title.Hint" xml:space="preserve">
+    <value>  Tab:grid  [ ]:dimension  +/-:index</value>
   </data>
   <data name="Help.AllCommands" xml:space="preserve">
     <value>All commands in the application:</value>
   </data>
+  <data name="Help.AvailableCommands" xml:space="preserve">
+    <value>Available commands:</value>
+  </data>
+  <data name="Help.CloseHint" xml:space="preserve">
+    <value>Esc: close this help   ↑↓ PgUp PgDn: scroll it</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Focused control: {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Focused control: n/a</value>
+  </data>
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Menu navigation:</value>
   </data>
-  <data name="Help.Started.Heading" xml:space="preserve">
-    <value>Getting started:</value>
+  <data name="Help.NoCommands" xml:space="preserve">
+    <value>No keyboard commands are currently available.</value>
   </data>
-  <data name="Help.Started.Tab" xml:space="preserve">
-    <value>Move focus between panels and controls</value>
-  </data>
-  <data name="Help.Started.Tab.Key" xml:space="preserve">
-    <value>Tab / Shift+Tab</value>
+  <data name="Help.Started.AllLists" xml:space="preserve">
+    <value>The second lists every command, even those that cannot run in this context.</value>
   </data>
   <data name="Help.Started.Enter" xml:space="preserve">
     <value>Run the focused item's main command</value>
@@ -1340,86 +911,539 @@
   <data name="Help.Started.F1.Key" xml:space="preserve">
     <value>F1</value>
   </data>
-  <data name="Help.Started.Palette.Key" xml:space="preserve">
-    <value>Shift+F1</value>
-  </data>
-  <data name="Help.Started.Palette" xml:space="preserve">
-    <value>Find any command by name in the command palette</value>
+  <data name="Help.Started.Heading" xml:space="preserve">
+    <value>Getting started:</value>
   </data>
   <data name="Help.Started.Lists" xml:space="preserve">
     <value>The first list below works here and now.</value>
   </data>
-  <data name="Help.Started.AllLists" xml:space="preserve">
-    <value>The second lists every command, even those that cannot run in this context.</value>
+  <data name="Help.Started.Palette" xml:space="preserve">
+    <value>Find any command by name in the command palette</value>
   </data>
-  <data name="Viewer.TitleHints" xml:space="preserve">
-    <value>  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage  Esc:close</value>
+  <data name="Help.Started.Palette.Key" xml:space="preserve">
+    <value>Shift+F1</value>
   </data>
-  <data name="Viewer.Disassembling" xml:space="preserve">
-    <value>Disassembling…</value>
+  <data name="Help.Started.Tab" xml:space="preserve">
+    <value>Move focus between panels and controls</value>
   </data>
-  <data name="Viewer.DisassemblyFailed" xml:space="preserve">
-    <value>Disassembly failed: {0}</value>
+  <data name="Help.Started.Tab.Key" xml:space="preserve">
+    <value>Tab / Shift+Tab</value>
   </data>
-  <data name="Viewer.PdfSignatures" xml:space="preserve">
-    <value>Digital signatures</value>
+  <data name="Hint.ActivateList" xml:space="preserve">
+    <value>Activate the list</value>
   </data>
-  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
-    <value>Signature {0}</value>
+  <data name="Hint.AddChip" xml:space="preserve">
+    <value>Add a chip on the [+] slot</value>
   </data>
-  <data name="Viewer.PdfSigner" xml:space="preserve">
-    <value>Signer</value>
+  <data name="Hint.BackPreviousMenu" xml:space="preserve">
+    <value>Back / previous menu</value>
   </data>
-  <data name="Viewer.PdfSigned" xml:space="preserve">
-    <value>Signed</value>
+  <data name="Hint.CancelKeepEditing" xml:space="preserve">
+    <value>Cancel and keep editing</value>
   </data>
-  <data name="Viewer.PdfFormat" xml:space="preserve">
-    <value>Format</value>
+  <data name="Hint.CentreDivider" xml:space="preserve">
+    <value>Centre the divider</value>
   </data>
-  <data name="Viewer.PdfIntegrity" xml:space="preserve">
-    <value>Integrity</value>
+  <data name="Hint.CheckEveryItem" xml:space="preserve">
+    <value>Check or uncheck every item</value>
   </data>
-  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
-    <value>The signed bytes are unchanged.</value>
+  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
+    <value>Check or uncheck the item under the cursor</value>
   </data>
-  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
-    <value>CHANGED: the file does not match this signature.</value>
+  <data name="Hint.CheckOrUncheck" xml:space="preserve">
+    <value>Check or uncheck</value>
   </data>
-  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
-    <value>Not checked: this signature format is not supported.</value>
+  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
+    <value>Choose the colour under the cursor</value>
   </data>
-  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
-    <value>The signature could not be read.</value>
+  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
+    <value>Choose the highlighted item</value>
   </data>
-  <data name="Viewer.PdfCoverage" xml:space="preserve">
-    <value>Coverage</value>
+  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
+    <value>Choose an item a page away</value>
   </data>
-  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
-    <value>The whole file.</value>
+  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
+    <value>Choose the previous or next item</value>
   </data>
-  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
-    <value>Changes were added after signing.</value>
+  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
+    <value>Choose the previous or next option</value>
   </data>
-  <data name="Viewer.PdfTrust" xml:space="preserve">
-    <value>Trust</value>
+  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
+    <value>Choose the previous or next segment</value>
   </data>
-  <data name="Viewer.PdfTrustOk" xml:space="preserve">
-    <value>Trusted: the certificate chains to a root this machine trusts.</value>
+  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
+    <value>Choose the selected day</value>
   </data>
-  <data name="Viewer.PdfTrustNo" xml:space="preserve">
-    <value>Not trusted: the certificate does not chain to a root this machine trusts.</value>
+  <data name="Hint.ClearField" xml:space="preserve">
+    <value>Clear the field</value>
   </data>
-  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
-    <value>Not trusted: the certificate has expired.</value>
+  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
+    <value>Clear the rating or give the maximum</value>
   </data>
-  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
-    <value>Revocation was not checked.</value>
+  <data name="Hint.ClearSearch" xml:space="preserve">
+    <value>Clear the search</value>
   </data>
-  <data name="Viewer.PdfMore" xml:space="preserve">
-    <value>{0} more signatures are not shown.</value>
+  <data name="Hint.CloseList" xml:space="preserve">
+    <value>Close the list</value>
   </data>
-  <data name="Viewer.PdfTooLarge" xml:space="preserve">
-    <value>Signatures were not checked: the file is larger than {0} MB.</value>
+  <data name="Hint.CloseMenu" xml:space="preserve">
+    <value>Close the menu</value>
+  </data>
+  <data name="Hint.CloseMenuShort" xml:space="preserve">
+    <value>Close menu</value>
+  </data>
+  <data name="Hint.CloseNodeOrParent" xml:space="preserve">
+    <value>Close the node, or go to its parent</value>
+  </data>
+  <data name="Hint.ClosePopup" xml:space="preserve">
+    <value>Close the popup</value>
+  </data>
+  <data name="Hint.CloseSubmenu" xml:space="preserve">
+    <value>Close the submenu</value>
+  </data>
+  <data name="Hint.CloseSubmenuOrPrevious" xml:space="preserve">
+    <value>Close the submenu or go to the previous menu</value>
+  </data>
+  <data name="Hint.CloseViewer" xml:space="preserve">
+    <value>Close the viewer</value>
+  </data>
+  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
+    <value>Close without moving</value>
+  </data>
+  <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
+    <value>Close without renaming</value>
+  </data>
+  <data name="Hint.CloseWithoutSearching" xml:space="preserve">
+    <value>Close without searching</value>
+  </data>
+  <data name="Hint.CollapseSection" xml:space="preserve">
+    <value>Collapse the section</value>
+  </data>
+  <data name="Hint.CopySelection" xml:space="preserve">
+    <value>Copy the selection</value>
+  </data>
+  <data name="Hint.CutSelection" xml:space="preserve">
+    <value>Cut the selection</value>
+  </data>
+  <data name="Hint.DeleteCharacter" xml:space="preserve">
+    <value>Delete a character</value>
+  </data>
+  <data name="Hint.DeleteLine" xml:space="preserve">
+    <value>Delete the line</value>
+  </data>
+  <data name="Hint.DeleteToStart" xml:space="preserve">
+    <value>Delete to the start of the text</value>
+  </data>
+  <data name="Hint.DeleteWordAfter" xml:space="preserve">
+    <value>Delete the word after the cursor</value>
+  </data>
+  <data name="Hint.DeleteWordBefore" xml:space="preserve">
+    <value>Delete the word before the cursor</value>
+  </data>
+  <data name="Hint.DiscardChanges" xml:space="preserve">
+    <value>Discard the changes</value>
+  </data>
+  <data name="Hint.DismissMessage" xml:space="preserve">
+    <value>Dismiss the message</value>
+  </data>
+  <data name="Hint.DuplicateLine" xml:space="preserve">
+    <value>Duplicate the line (or the selected lines)</value>
+  </data>
+  <data name="Hint.EdgeColumn" xml:space="preserve">
+    <value>Mark the 80th column (again: hide)</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseNode" xml:space="preserve">
+    <value>Expand or collapse the node</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
+    <value>Expand or collapse the section</value>
+  </data>
+  <data name="Hint.ExpandSection" xml:space="preserve">
+    <value>Expand the section</value>
+  </data>
+  <data name="Hint.FindNext" xml:space="preserve">
+    <value>Find the next match</value>
+  </data>
+  <data name="Hint.FindPrevious" xml:space="preserve">
+    <value>Find the previous match</value>
+  </data>
+  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
+    <value>First or last day of the month</value>
+  </data>
+  <data name="Hint.FirstOrLastChip" xml:space="preserve">
+    <value>First chip or last chip</value>
+  </data>
+  <data name="Hint.FirstOrLastColour" xml:space="preserve">
+    <value>First or last colour</value>
+  </data>
+  <data name="Hint.FirstOrLastField" xml:space="preserve">
+    <value>First or last field</value>
+  </data>
+  <data name="Hint.FirstOrLastItem" xml:space="preserve">
+    <value>First or last item</value>
+  </data>
+  <data name="Hint.FirstOrLastOption" xml:space="preserve">
+    <value>First or last option</value>
+  </data>
+  <data name="Hint.FirstOrLastPage" xml:space="preserve">
+    <value>First or last page</value>
+  </data>
+  <data name="Hint.FirstOrLastRow" xml:space="preserve">
+    <value>First or last row</value>
+  </data>
+  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
+    <value>First or last segment</value>
+  </data>
+  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
+    <value>Choose the first or last segment</value>
+  </data>
+  <data name="Hint.FlipSign" xml:space="preserve">
+    <value>Flip the sign</value>
+  </data>
+  <data name="Hint.FoldAll" xml:space="preserve">
+    <value>Fold or open every region</value>
+  </data>
+  <data name="Hint.FoldRegion" xml:space="preserve">
+    <value>Fold or unfold the region at the cursor</value>
+  </data>
+  <data name="Hint.FollowFile" xml:space="preserve">
+    <value>Follow the file as it grows</value>
+  </data>
+  <data name="Hint.FollowLink" xml:space="preserve">
+    <value>Follow the link</value>
+  </data>
+  <data name="Hint.GoToFileStartOrEnd" xml:space="preserve">
+    <value>Go to the start or the end of the file</value>
+  </data>
+  <data name="Hint.GoToMatchingBracket" xml:space="preserve">
+    <value>Go to the matching bracket</value>
+  </data>
+  <data name="Hint.GoToTheLine" xml:space="preserve">
+    <value>Go to the line</value>
+  </data>
+  <data name="Hint.GoToTheOffset" xml:space="preserve">
+    <value>Go to the offset</value>
+  </data>
+  <data name="Hint.GoTopOrBottom" xml:space="preserve">
+    <value>Go to the top or bottom</value>
+  </data>
+  <data name="Hint.GoTopOrEnd" xml:space="preserve">
+    <value>Go to the top or the end</value>
+  </data>
+  <data name="Hint.GoUpFolder" xml:space="preserve">
+    <value>Go up one folder</value>
+  </data>
+  <data name="Hint.IndentOutdent" xml:space="preserve">
+    <value>Indent / outdent (the selected lines too)</value>
+  </data>
+  <data name="Hint.InvertEveryItem" xml:space="preserve">
+    <value>Invert every item</value>
+  </data>
+  <data name="Hint.JoinLines" xml:space="preserve">
+    <value>Join the lines</value>
+  </data>
+  <data name="Hint.JumpFirstLastItem" xml:space="preserve">
+    <value>Jump to the first or last item</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Jump straight to the tab page carrying that number in its name.</value>
+  </data>
+  <data name="Hint.JumpToLetter" xml:space="preserve">
+    <value>Jump to the next item that starts with them</value>
+  </data>
+  <data name="Hint.LineEnding" xml:space="preserve">
+    <value>Line ending (CRLF, LF, CR)</value>
+  </data>
+  <data name="Hint.LowerRaiseRating" xml:space="preserve">
+    <value>Lower or raise the rating</value>
+  </data>
+  <data name="Hint.LowerRaiseValue" xml:space="preserve">
+    <value>Lower or raise the value</value>
+  </data>
+  <data name="Hint.MarkAll" xml:space="preserve">
+    <value>Mark all matches (again: clear)</value>
+  </data>
+  <data name="Hint.MarkItemUnderCursor" xml:space="preserve">
+    <value>Mark or unmark the item under the cursor</value>
+  </data>
+  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
+    <value>Move along the toolbar</value>
+  </data>
+  <data name="Hint.MoveBetweenChips" xml:space="preserve">
+    <value>Move between the chips</value>
+  </data>
+  <data name="Hint.MoveByWord" xml:space="preserve">
+    <value>Move by a word</value>
+  </data>
+  <data name="Hint.MoveCursor" xml:space="preserve">
+    <value>Move the cursor</value>
+  </data>
+  <data name="Hint.MoveCursorByPage" xml:space="preserve">
+    <value>Move the cursor by a page</value>
+  </data>
+  <data name="Hint.MoveCursorPage" xml:space="preserve">
+    <value>Move the cursor a page</value>
+  </data>
+  <data name="Hint.MoveDivider" xml:space="preserve">
+    <value>Move the divider</value>
+  </data>
+  <data name="Hint.MoveDividerBy8" xml:space="preserve">
+    <value>Move the divider by 8</value>
+  </data>
+  <data name="Hint.MoveHighlight" xml:space="preserve">
+    <value>Move the highlight</value>
+  </data>
+  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
+    <value>Move the highlight along the trail</value>
+  </data>
+  <data name="Hint.MoveHourMinuteSecond" xml:space="preserve">
+    <value>Move between hour, minute and second</value>
+  </data>
+  <data name="Hint.MoveLines" xml:space="preserve">
+    <value>Move the line (or the selected lines) up / down</value>
+  </data>
+  <data name="Hint.MoveMenuSelection" xml:space="preserve">
+    <value>Move menu selection</value>
+  </data>
+  <data name="Hint.MoveOverItems" xml:space="preserve">
+    <value>Move over the items</value>
+  </data>
+  <data name="Hint.MoveOverMenuItems" xml:space="preserve">
+    <value>Move over the menu items</value>
+  </data>
+  <data name="Hint.MoveOverPalette" xml:space="preserve">
+    <value>Move the cursor over the palette</value>
+  </data>
+  <data name="Hint.MovePageAtATime" xml:space="preserve">
+    <value>Move a page at a time</value>
+  </data>
+  <data name="Hint.MoveSelectedDay" xml:space="preserve">
+    <value>Move the selected day or week</value>
+  </data>
+  <data name="Hint.NewestLineFollow" xml:space="preserve">
+    <value>Newest line, and follow new lines</value>
+  </data>
+  <data name="Hint.NextBookmark" xml:space="preserve">
+    <value>Next bookmark</value>
+  </data>
+  <data name="Hint.NextField" xml:space="preserve">
+    <value>Next field</value>
+  </data>
+  <data name="Hint.OldestLine" xml:space="preserve">
+    <value>Oldest line</value>
+  </data>
+  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
+    <value>Open the highlighted row</value>
+  </data>
+  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
+    <value>Open the highlighted segment</value>
+  </data>
+  <data name="Hint.OpenList" xml:space="preserve">
+    <value>Open the list</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>Open {0} menu</value>
+  </data>
+  <data name="Hint.OpenNodeOrChild" xml:space="preserve">
+    <value>Open the node, or step into its first child</value>
+  </data>
+  <data name="Hint.OpenSubmenu" xml:space="preserve">
+    <value>Open the submenu</value>
+  </data>
+  <data name="Hint.OpenSubmenuOrNext" xml:space="preserve">
+    <value>Open the submenu or go to the next menu</value>
+  </data>
+  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
+    <value>Open submenu / run command</value>
+  </data>
+  <data name="Hint.PressButton" xml:space="preserve">
+    <value>Press the button</value>
+  </data>
+  <data name="Hint.PreviousBookmark" xml:space="preserve">
+    <value>Previous bookmark</value>
+  </data>
+  <data name="Hint.PreviousField" xml:space="preserve">
+    <value>Previous field</value>
+  </data>
+  <data name="Hint.PreviousNextMonth" xml:space="preserve">
+    <value>Previous or next month</value>
+  </data>
+  <data name="Hint.PreviousNextPage" xml:space="preserve">
+    <value>Previous or next page</value>
+  </data>
+  <data name="Hint.PreviousNextYear" xml:space="preserve">
+    <value>Previous or next year</value>
+  </data>
+  <data name="Hint.PromptAccept" xml:space="preserve">
+    <value>Accept the value</value>
+  </data>
+  <data name="Hint.PromptCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Hint.PromptDefault" xml:space="preserve">
+    <value>Take the default</value>
+  </data>
+  <data name="Hint.PromptMove" xml:space="preserve">
+    <value>Move the selection</value>
+  </data>
+  <data name="Hint.PromptYesNo" xml:space="preserve">
+    <value>Answer yes or no</value>
+  </data>
+  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
+    <value>Raise or lower the value by a large step</value>
+  </data>
+  <data name="Hint.Redo" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="Hint.RemoveActiveChip" xml:space="preserve">
+    <value>Remove the active chip</value>
+  </data>
+  <data name="Hint.RemoveBlankLines" xml:space="preserve">
+    <value>Remove the blank lines</value>
+  </data>
+  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
+    <value>Remove the duplicate lines</value>
+  </data>
+  <data name="Hint.RemoveLastDigit" xml:space="preserve">
+    <value>Remove the last digit</value>
+  </data>
+  <data name="Hint.RenameTheEntry" xml:space="preserve">
+    <value>Rename the entry</value>
+  </data>
+  <data name="Hint.ResetClock" xml:space="preserve">
+    <value>Reset the clock to zero</value>
+  </data>
+  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
+    <value>Run the item, or open its submenu</value>
+  </data>
+  <data name="Hint.RunSelectedItem" xml:space="preserve">
+    <value>Run the selected item</value>
+  </data>
+  <data name="Hint.RunTheItem" xml:space="preserve">
+    <value>Run the item</value>
+  </data>
+  <data name="Hint.RunTheSearch" xml:space="preserve">
+    <value>Run the search</value>
+  </data>
+  <data name="Hint.SaveChanges" xml:space="preserve">
+    <value>Save the changes</value>
+  </data>
+  <data name="Hint.Scroll" xml:space="preserve">
+    <value>Scroll</value>
+  </data>
+  <data name="Hint.ScrollLine" xml:space="preserve">
+    <value>Scroll a line</value>
+  </data>
+  <data name="Hint.ScrollOneLine" xml:space="preserve">
+    <value>Scroll one line</value>
+  </data>
+  <data name="Hint.ScrollOnePage" xml:space="preserve">
+    <value>Scroll one page</value>
+  </data>
+  <data name="Hint.ScrollOneRow" xml:space="preserve">
+    <value>Scroll one row</value>
+  </data>
+  <data name="Hint.ScrollPage" xml:space="preserve">
+    <value>Scroll a page</value>
+  </data>
+  <data name="Hint.ScrollRow" xml:space="preserve">
+    <value>Scroll a row</value>
+  </data>
+  <data name="Hint.ScrollSideways" xml:space="preserve">
+    <value>Scroll sideways</value>
+  </data>
+  <data name="Hint.SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="Hint.SelectItemUnderCursor" xml:space="preserve">
+    <value>Select the item under the cursor</value>
+  </data>
+  <data name="Hint.SelectThisOption" xml:space="preserve">
+    <value>Select this option</value>
+  </data>
+  <data name="Hint.SelectToday" xml:space="preserve">
+    <value>Select today</value>
+  </data>
+  <data name="Hint.SetMinMax" xml:space="preserve">
+    <value>Set the minimum or maximum</value>
+  </data>
+  <data name="Hint.SetRatingDirectly" xml:space="preserve">
+    <value>Set the rating directly</value>
+  </data>
+  <data name="Hint.SetValueNearestBound" xml:space="preserve">
+    <value>Set the value to the nearest bound</value>
+  </data>
+  <data name="Hint.SetValueZero" xml:space="preserve">
+    <value>Set the value to 0</value>
+  </data>
+  <data name="Hint.ShowWhitespace" xml:space="preserve">
+    <value>Show the spaces, tabs and line ends (again: hide)</value>
+  </data>
+  <data name="Hint.SortLines" xml:space="preserve">
+    <value>Sort lines up / down</value>
+  </data>
+  <data name="Hint.StartOrEndOfText" xml:space="preserve">
+    <value>Start or end of the text</value>
+  </data>
+  <data name="Hint.StepField" xml:space="preserve">
+    <value>Step the field</value>
+  </data>
+  <data name="Hint.StepFieldByTen" xml:space="preserve">
+    <value>Step the field by ten</value>
+  </data>
+  <data name="Hint.StepValue" xml:space="preserve">
+    <value>Step the value</value>
+  </data>
+  <data name="Hint.StepValueLarge" xml:space="preserve">
+    <value>Step the value by a large amount</value>
+  </data>
+  <data name="Hint.StopFollowing" xml:space="preserve">
+    <value>Stop following the file</value>
+  </data>
+  <data name="Hint.SwitchSetting" xml:space="preserve">
+    <value>Switch the setting on or off</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Switch to the previous / next tab page.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Switch tab pages when the focused control does not use the arrow keys.</value>
+  </data>
+  <data name="Hint.SwitchTextHex" xml:space="preserve">
+    <value>Switch between the text and the hex view</value>
+  </data>
+  <data name="Hint.TabsToSpaces" xml:space="preserve">
+    <value>Tabs to spaces</value>
+  </data>
+  <data name="Hint.ToggleBookmark" xml:space="preserve">
+    <value>Toggle bookmark</value>
+  </data>
+  <data name="Hint.ToggleComment" xml:space="preserve">
+    <value>Comment or uncomment the line (or the selected lines)</value>
+  </data>
+  <data name="Hint.TrimTrailing" xml:space="preserve">
+    <value>Trim the trailing spaces</value>
+  </data>
+  <data name="Hint.TypeField" xml:space="preserve">
+    <value>Type the field</value>
+  </data>
+  <data name="Hint.TypeLineNumber" xml:space="preserve">
+    <value>Type the line number (the first key replaces the current one)</value>
+  </data>
+  <data name="Hint.TypeOffset" xml:space="preserve">
+    <value>Type the offset in decimal or hexadecimal</value>
+  </data>
+  <data name="Hint.TypeValue" xml:space="preserve">
+    <value>Type the value</value>
+  </data>
+  <data name="Hint.UpperLowerCase" xml:space="preserve">
+    <value>Upper / lower case</value>
+  </data>
+  <data name="Json.TopLevelItems" xml:space="preserve">
+    <value>{0:N0} top-level item(s)</value>
+  </data>
+  <data name="Key.ExportCsv" xml:space="preserve">
+    <value>F2-Export</value>
   </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-FindNext</value>
@@ -1427,41 +1451,74 @@
   <data name="Key.FindPrev" xml:space="preserve">
     <value>Ctrl-F3-FindPrev</value>
   </data>
-  <data name="Key.Search" xml:space="preserve">
-    <value>F7-Search</value>
-  </data>
-  <data name="Key.Save" xml:space="preserve">
-    <value>F2-Save</value>
-  </data>
-  <data name="Key.Replace" xml:space="preserve">
-    <value>Ctrl-R-Replace</value>
-  </data>
-  <data name="Key.Writable" xml:space="preserve">
-    <value>F6-Writable</value>
-  </data>
-  <data name="Key.ReadOnly" xml:space="preserve">
-    <value>F6-ReadOnly</value>
-  </data>
   <data name="Key.GoToLine" xml:space="preserve">
     <value>F5-GoToLine</value>
   </data>
   <data name="Key.GoToOffset" xml:space="preserve">
     <value>F5-GoToOffset</value>
   </data>
-  <data name="Status.Changed" xml:space="preserve">
-    <value>Changed</value>
+  <data name="Key.ReadOnly" xml:space="preserve">
+    <value>F6-ReadOnly</value>
   </data>
-  <data name="Status.Unchanged" xml:space="preserve">
-    <value>Unchanged</value>
+  <data name="Key.Replace" xml:space="preserve">
+    <value>Ctrl-R-Replace</value>
   </data>
-  <data name="Status.ReadOnly" xml:space="preserve">
-    <value>Read-Only</value>
+  <data name="Key.Save" xml:space="preserve">
+    <value>F2-Save</value>
   </data>
-  <data name="Status.Writable" xml:space="preserve">
-    <value>Writable</value>
+  <data name="Key.Search" xml:space="preserve">
+    <value>F7-Search</value>
+  </data>
+  <data name="Key.Writable" xml:space="preserve">
+    <value>F6-Writable</value>
+  </data>
+  <data name="Msg.EnterLineNumber" xml:space="preserve">
+    <value>Enter a line number.</value>
+  </data>
+  <data name="Msg.EnterOffset" xml:space="preserve">
+    <value>Enter an offset: a number, or a hex number as 0x1F or 1Fh.</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Msg.NothingToReplace" xml:space="preserve">
+    <value>Nothing to replace: "{0}" was not found.</value>
+  </data>
+  <data name="Msg.SaveBeforeClosing" xml:space="preserve">
+    <value>Save them before closing?</value>
+  </data>
+  <data name="Msg.TypeFindText" xml:space="preserve">
+    <value>Type the text to find.</value>
+  </data>
+  <data name="Msg.UnsavedChangesIn" xml:space="preserve">
+    <value>{0} has unsaved changes.</value>
+  </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>Page {0} of {1}</value>
+  </data>
+  <data name="Parquet.Error.Unexpected" xml:space="preserve">
+    <value>The file could not be read: {0}</value>
+  </data>
+  <data name="Parquet.Grid.Empty" xml:space="preserve">
+    <value>This file has no rows</value>
+  </data>
+  <data name="Parquet.Status.ColumnsCut" xml:space="preserve">
+    <value>; only the first {0:N0} columns are shown</value>
+  </data>
+  <data name="Parquet.Status.RowsCut" xml:space="preserve">
+    <value>; only the first {0:N0} rows are shown</value>
+  </data>
+  <data name="Parquet.Status.Summary" xml:space="preserve">
+    <value>{0:N0} rows, {1:N0} columns</value>
+  </data>
+  <data name="Parquet.Title" xml:space="preserve">
+    <value>Parquet</value>
   </data>
   <data name="Progress.Elapsed" xml:space="preserve">
     <value>Elapsed time</value>
+  </data>
+  <data name="Progress.Label" xml:space="preserve">
+    <value>Progress</value>
   </data>
   <data name="Progress.Remaining" xml:space="preserve">
     <value>Remaining time</value>
@@ -1469,660 +1526,8 @@
   <data name="Progress.Total" xml:space="preserve">
     <value>Total time</value>
   </data>
-  <data name="Progress.Label" xml:space="preserve">
-    <value>Progress</value>
-  </data>
-  <data name="Viewer.File.CouldNotRead" xml:space="preserve">
-    <value>Could not read file.</value>
-  </data>
-  <data name="Viewer.File.AccessLocalOnly" xml:space="preserve">
-    <value>Access databases are read from a local file</value>
-  </data>
-  <data name="Viewer.File.LinkedDocumentOutsideFolder" xml:space="preserve">
-    <value>The linked document is outside this file's folder</value>
-  </data>
-  <data name="Viewer.File.LinkedDocumentMissing" xml:space="preserve">
-    <value>The linked document is not in this folder</value>
-  </data>
-  <data name="Viewer.File.NestedMasterNotExpanded" xml:space="preserve">
-    <value>A master document inside a master is not expanded</value>
-  </data>
-  <data name="Viewer.File.FileVersionInfoUnavailable" xml:space="preserve">
-    <value>File version info unavailable: {0}</value>
-  </data>
-  <data name="Viewer.File.AssemblyIdentityUnavailable" xml:space="preserve">
-    <value>Assembly identity unavailable: {0}</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.File" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Size" xml:space="preserve">
-    <value>Size</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Bytes" xml:space="preserve">
-    <value>{0:N0} bytes</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.FileVersionInfo" xml:space="preserve">
-    <value>File Version Info</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.FileDescription" xml:space="preserve">
-    <value>File Description</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.FileVersion" xml:space="preserve">
-    <value>File Version</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.ProductName" xml:space="preserve">
-    <value>Product Name</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.ProductVersion" xml:space="preserve">
-    <value>Product Version</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.CompanyName" xml:space="preserve">
-    <value>Company Name</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.LegalCopyright" xml:space="preserve">
-    <value>Legal Copyright</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.LegalTrademarks" xml:space="preserve">
-    <value>Legal Trademarks</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Comments" xml:space="preserve">
-    <value>Comments</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.InternalName" xml:space="preserve">
-    <value>Internal Name</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.OriginalFilename" xml:space="preserve">
-    <value>Original Filename</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Language" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.AssemblyIdentity" xml:space="preserve">
-    <value>Assembly Identity</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.AssemblyName" xml:space="preserve">
-    <value>Assembly Name</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Version" xml:space="preserve">
-    <value>Version</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Culture" xml:space="preserve">
-    <value>Culture</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.PublicKeyToken" xml:space="preserve">
-    <value>Public Key Token</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.ContentType" xml:space="preserve">
-    <value>Content Type</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.Flags" xml:space="preserve">
-    <value>Flags</value>
-  </data>
-  <data name="Viewer.BinaryMetadata.NotManagedAssembly" xml:space="preserve">
-    <value>Note: Not a managed .NET assembly — no CLR identity available.</value>
-  </data>
-  <data name="Viewer.Disassembly.IlHeading" xml:space="preserve">
-    <value>Disassembly (IL)</value>
-  </data>
-  <data name="Viewer.Disassembly.NativeHeading" xml:space="preserve">
-    <value>Disassembly (native)</value>
-  </data>
-  <data name="Viewer.Disassembly.NotExecutable" xml:space="preserve">
-    <value>  Not a Windows PE or Linux ELF file; there is nothing to disassemble.</value>
-  </data>
-  <data name="Viewer.Disassembly.HeadersUnreadable" xml:space="preserve">
-    <value>  The file's headers could not be read: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.PeImageMachine" xml:space="preserve">
-    <value>  PE image, machine {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.UnsupportedMachine" xml:space="preserve">
-    <value>  Only x86 and x86-64 code can be disassembled; this machine type is not supported.</value>
-  </data>
-  <data name="Viewer.Disassembly.SectionDataOutsideFile" xml:space="preserve">
-    <value>its data lies outside the file</value>
-  </data>
-  <data name="Viewer.Disassembly.ElfHeaderShort" xml:space="preserve">
-    <value>  The ELF header is cut short.</value>
-  </data>
-  <data name="Viewer.Disassembly.ElfUnknownClass" xml:space="preserve">
-    <value>  Unknown ELF class.</value>
-  </data>
-  <data name="Viewer.Disassembly.BigEndianNotSupported" xml:space="preserve">
-    <value>  Big-endian ELF files are not supported.</value>
-  </data>
-  <data name="Viewer.Disassembly.ElfImageMachine" xml:space="preserve">
-    <value>  ELF {0}-bit, machine {1}</value>
-  </data>
-  <data name="Viewer.Disassembly.NoSectionHeaders" xml:space="preserve">
-    <value>  The file has no section headers (it may be stripped), so its code cannot be located.</value>
-  </data>
-  <data name="Viewer.Disassembly.MalformedSectionHeaders" xml:space="preserve">
-    <value>  The section headers are malformed.</value>
-  </data>
-  <data name="Viewer.Disassembly.SectionHeadersPastEnd" xml:space="preserve">
-    <value>  The section headers run past the end of the file.</value>
-  </data>
-  <data name="Viewer.Disassembly.DecodedCodeLimit" xml:space="preserve">
-    <value>the {0} MB limit on decoded code was reached</value>
-  </data>
-  <data name="Viewer.Disassembly.Stopped" xml:space="preserve">
-    <value>  Disassembly stopped: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.MetadataUnreadable" xml:space="preserve">
-    <value>  Metadata could not be read any further: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.NoMethodBodies" xml:space="preserve">
-    <value>  This assembly has no method bodies.</value>
-  </data>
-  <data name="Viewer.Disassembly.MethodBodyUnreadable" xml:space="preserve">
-    <value>body unreadable: {0}</value>
-  </data>
-  <data name="Viewer.Disassembly.MethodInstructionLimit" xml:space="preserve">
-    <value>    … method truncated: instruction limit per method reached</value>
-  </data>
-  <data name="Viewer.Disassembly.TruncatedMarker" xml:space="preserve">
-    <value>truncated</value>
-  </data>
-  <data name="Viewer.Disassembly.OperandPastMethod" xml:space="preserve">
-    <value>operand runs past the end of the method</value>
-  </data>
-  <data name="Viewer.Disassembly.OutputTruncated" xml:space="preserve">
-    <value>  … output truncated: {0}.</value>
-  </data>
-  <data name="Viewer.Disassembly.MethodLimit" xml:space="preserve">
-    <value>the {0:N0} method limit was reached</value>
-  </data>
-  <data name="Viewer.Disassembly.LineLimit" xml:space="preserve">
-    <value>the {0:N0} line limit was reached</value>
-  </data>
-  <data name="Viewer.Disassembly.TimeLimit" xml:space="preserve">
-    <value>the {0:0.#} second time limit was reached</value>
-  </data>
-  <data name="Certificate.Title" xml:space="preserve">
-    <value>Certificate</value>
-  </data>
-  <data name="Certificate.Picker.Label" xml:space="preserve">
-    <value>Certificate</value>
-  </data>
-  <data name="Certificate.Status.Loading" xml:space="preserve">
-    <value>Reading the certificate…</value>
-  </data>
-  <data name="Certificate.Status.Count" xml:space="preserve">
-    <value>Certificate {0} of {1}</value>
-  </data>
-  <data name="Certificate.Status.Valid" xml:space="preserve">
-    <value>valid until {0}</value>
-  </data>
-  <data name="Certificate.Status.Expired" xml:space="preserve">
-    <value>expired on {0}</value>
-  </data>
-  <data name="Certificate.Status.NotYetValid" xml:space="preserve">
-    <value>not valid before {0}</value>
-  </data>
-  <data name="Certificate.Status.PrivateKeys" xml:space="preserve">
-    <value> · {0} private key block(s) not shown</value>
-  </data>
-  <data name="Certificate.Field.Subject" xml:space="preserve">
-    <value>Subject</value>
-  </data>
-  <data name="Certificate.Field.Issuer" xml:space="preserve">
-    <value>Issuer</value>
-  </data>
-  <data name="Certificate.Field.SelfIssued" xml:space="preserve">
-    <value>Self-issued</value>
-  </data>
-  <data name="Certificate.Field.Serial" xml:space="preserve">
-    <value>Serial number</value>
-  </data>
-  <data name="Certificate.Field.NotBefore" xml:space="preserve">
-    <value>Valid from</value>
-  </data>
-  <data name="Certificate.Field.NotAfter" xml:space="preserve">
-    <value>Valid to</value>
-  </data>
-  <data name="Certificate.Field.SignatureAlgorithm" xml:space="preserve">
-    <value>Signature</value>
-  </data>
-  <data name="Certificate.Field.PublicKey" xml:space="preserve">
-    <value>Public key</value>
-  </data>
-  <data name="Certificate.Field.Names" xml:space="preserve">
-    <value>Alternative names</value>
-  </data>
-  <data name="Certificate.Field.CertificateAuthority" xml:space="preserve">
-    <value>Certificate authority</value>
-  </data>
-  <data name="Certificate.Field.PathLength" xml:space="preserve">
-    <value>Path length</value>
-  </data>
-  <data name="Certificate.Field.KeyUsage" xml:space="preserve">
-    <value>Key usage</value>
-  </data>
-  <data name="Certificate.Field.ExtendedKeyUsage" xml:space="preserve">
-    <value>Extended key usage</value>
-  </data>
-  <data name="Certificate.Field.Sha256" xml:space="preserve">
-    <value>SHA-256</value>
-  </data>
-  <data name="Certificate.Field.Sha1" xml:space="preserve">
-    <value>SHA-1</value>
-  </data>
-  <data name="Certificate.Value.Yes" xml:space="preserve">
-    <value>yes</value>
-  </data>
-  <data name="Certificate.Value.No" xml:space="preserve">
-    <value>no</value>
-  </data>
-  <data name="Certificate.Fallback.Failed" xml:space="preserve">
-    <value>Could not open the file</value>
-  </data>
-  <data name="Certificate.Hint.Step" xml:space="preserve">
-    <value>Show the previous or next certificate</value>
-  </data>
-  <data name="Certificate.Fallback.NoCertificate" xml:space="preserve">
-    <value>No certificate in this file</value>
-  </data>
-  <data name="Certificate.Fallback.TooLarge" xml:space="preserve">
-    <value>The file is larger than 1 MiB</value>
-  </data>
-  <data name="Certificate.Fallback.Unreadable" xml:space="preserve">
-    <value>The file could not be read</value>
-  </data>
-  <data name="Har.Column.Number" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="Har.Column.Method" xml:space="preserve">
-    <value>Method</value>
-  </data>
-  <data name="Har.Column.Status" xml:space="preserve">
-    <value>Status</value>
-  </data>
-  <data name="Har.Column.Type" xml:space="preserve">
-    <value>Type</value>
-  </data>
-  <data name="Har.Column.Size" xml:space="preserve">
-    <value>Size</value>
-  </data>
-  <data name="Har.Column.Time" xml:space="preserve">
-    <value>Time (ms)</value>
-  </data>
-  <data name="Har.Column.Url" xml:space="preserve">
-    <value>URL</value>
-  </data>
-  <data name="Har.Grid.Empty" xml:space="preserve">
-    <value>The file has no requests</value>
-  </data>
-  <data name="Har.Status.Requests" xml:space="preserve">
-    <value>{0:N0} request(s)</value>
-  </data>
-  <data name="Har.Status.Truncated" xml:space="preserve">
-    <value>; only the first {0:N0} are read</value>
-  </data>
-  <data name="Har.Status.NotHar" xml:space="preserve">
-    <value>Not a HAR file: {0}</value>
-  </data>
-  <data name="Har.Title.Details" xml:space="preserve">
-    <value>Request {0}</value>
-  </data>
-  <data name="Har.Hint.Details" xml:space="preserve">
-    <value>Show the request and its response</value>
-  </data>
-  <data name="Har.Hint.Back" xml:space="preserve">
-    <value>Back to the list of requests</value>
-  </data>
-  <data name="Har.Detail.Started" xml:space="preserve">
-    <value>Started</value>
-  </data>
-  <data name="Har.Detail.Time" xml:space="preserve">
-    <value>Time</value>
-  </data>
-  <data name="Har.Detail.Server" xml:space="preserve">
-    <value>Server</value>
-  </data>
-  <data name="Har.Detail.Timings" xml:space="preserve">
-    <value>Timings</value>
-  </data>
-  <data name="Har.Detail.QueryString" xml:space="preserve">
-    <value>Query string</value>
-  </data>
-  <data name="Har.Detail.RequestHeaders" xml:space="preserve">
-    <value>Request headers</value>
-  </data>
-  <data name="Har.Detail.ResponseHeaders" xml:space="preserve">
-    <value>Response headers</value>
-  </data>
-  <data name="Har.Detail.RequestBody" xml:space="preserve">
-    <value>Request body</value>
-  </data>
-  <data name="Har.Detail.ResponseBody" xml:space="preserve">
-    <value>Response body</value>
-  </data>
-  <data name="Har.Detail.NoBody" xml:space="preserve">
-    <value>(no body)</value>
-  </data>
-  <data name="Har.Detail.Binary" xml:space="preserve">
-    <value>(binary, {0:N0} bytes, not shown)</value>
-  </data>
-  <data name="Har.Detail.Truncated" xml:space="preserve">
-    <value>(cut at {0:N0} characters)</value>
-  </data>
-  <data name="Parquet.Title" xml:space="preserve">
-    <value>Parquet</value>
-  </data>
-  <data name="Parquet.Grid.Empty" xml:space="preserve">
-    <value>This file has no rows</value>
-  </data>
-  <data name="Parquet.Status.Summary" xml:space="preserve">
-    <value>{0:N0} rows, {1:N0} columns</value>
-  </data>
-  <data name="Parquet.Status.RowsCut" xml:space="preserve">
-    <value>; only the first {0:N0} rows are shown</value>
-  </data>
-  <data name="Parquet.Status.ColumnsCut" xml:space="preserve">
-    <value>; only the first {0:N0} columns are shown</value>
-  </data>
-  <data name="Parquet.Error.Unexpected" xml:space="preserve">
-    <value>The file could not be read: {0}</value>
-  </data>
-  <data name="Viewer.NotValidFormat" xml:space="preserve">
-    <value>Not valid {0}: {1}</value>
-  </data>
-  <data name="Dbf.Grid.Empty" xml:space="preserve">
-    <value>The table has no records</value>
-  </data>
-  <data name="Dbf.NotDbase" xml:space="preserve">
-    <value>Not a dBase table: {0}</value>
-  </data>
-  <data name="Dbf.Status" xml:space="preserve">
-    <value>{0:N0} record(s), {1:N0} field(s), {2}</value>
-  </data>
-  <data name="Dbf.Updated" xml:space="preserve">
-    <value>updated {0:yyyy-MM-dd}</value>
-  </data>
-  <data name="Dbf.Deleted" xml:space="preserve">
-    <value>{0:N0} deleted not shown</value>
-  </data>
-  <data name="Dbf.Truncated" xml:space="preserve">
-    <value>only the first {0:N0} records are shown</value>
-  </data>
-  <data name="Viewer.Font.NoPreview" xml:space="preserve">
-    <value>The font could not be drawn for a preview.</value>
-  </data>
-  <data name="Viewer.Font.Preview" xml:space="preserve">
-    <value>Preview</value>
-  </data>
-  <data name="Viewer.Font.Names" xml:space="preserve">
-    <value>Names</value>
-  </data>
-  <data name="Viewer.Font.Family" xml:space="preserve">
-    <value>Family</value>
-  </data>
-  <data name="Viewer.Font.Style" xml:space="preserve">
-    <value>Style</value>
-  </data>
-  <data name="Viewer.Font.FullName" xml:space="preserve">
-    <value>Full name</value>
-  </data>
-  <data name="Viewer.Font.PostScript" xml:space="preserve">
-    <value>PostScript name</value>
-  </data>
-  <data name="Viewer.Font.Version" xml:space="preserve">
-    <value>Version</value>
-  </data>
-  <data name="Viewer.Font.Copyright" xml:space="preserve">
-    <value>Copyright</value>
-  </data>
-  <data name="Viewer.Font.Designer" xml:space="preserve">
-    <value>Designer</value>
-  </data>
-  <data name="Viewer.Font.Manufacturer" xml:space="preserve">
-    <value>Manufacturer</value>
-  </data>
-  <data name="Viewer.Font.License" xml:space="preserve">
-    <value>License</value>
-  </data>
-  <data name="Viewer.Font.Design" xml:space="preserve">
-    <value>Design</value>
-  </data>
-  <data name="Viewer.Font.Format" xml:space="preserve">
-    <value>Outlines</value>
-  </data>
-  <data name="Viewer.Font.UnitsPerEm" xml:space="preserve">
-    <value>Units per em</value>
-  </data>
-  <data name="Viewer.Font.Glyphs" xml:space="preserve">
-    <value>Glyphs</value>
-  </data>
-  <data name="Viewer.Font.Characters" xml:space="preserve">
-    <value>Characters in the map</value>
-  </data>
-  <data name="Viewer.Font.Weight" xml:space="preserve">
-    <value>Weight class</value>
-  </data>
-  <data name="Viewer.Font.WidthClass" xml:space="preserve">
-    <value>Width class</value>
-  </data>
-  <data name="Viewer.Font.Created" xml:space="preserve">
-    <value>Created</value>
-  </data>
-  <data name="Viewer.Font.Modified" xml:space="preserve">
-    <value>Modified</value>
-  </data>
-  <data name="Viewer.Font.Embedding" xml:space="preserve">
-    <value>Embedding</value>
-  </data>
-  <data name="Viewer.Psd.Heading" xml:space="preserve">
-    <value>Photoshop file</value>
-  </data>
-  <data name="Viewer.Psd.Format" xml:space="preserve">
-    <value>Format</value>
-  </data>
-  <data name="Viewer.Psd.Size" xml:space="preserve">
-    <value>Size</value>
-  </data>
-  <data name="Viewer.Psd.Pixels" xml:space="preserve">
-    <value>{0:N0} × {1:N0} pixels</value>
-  </data>
-  <data name="Viewer.Psd.ColorMode" xml:space="preserve">
-    <value>Colour mode</value>
-  </data>
-  <data name="Viewer.Psd.Depth" xml:space="preserve">
-    <value>Depth</value>
-  </data>
-  <data name="Viewer.Psd.Bits" xml:space="preserve">
-    <value>{0} bits per channel</value>
-  </data>
-  <data name="Viewer.Psd.Channels" xml:space="preserve">
-    <value>Channels</value>
-  </data>
-  <data name="Viewer.Psd.Layers" xml:space="preserve">
-    <value>Layers</value>
-  </data>
-  <data name="Viewer.Psd.NoLayers" xml:space="preserve">
-    <value>none</value>
-  </data>
-  <data name="Viewer.Psd.Compression" xml:space="preserve">
-    <value>Compression</value>
-  </data>
-  <data name="Viewer.Psd.Picture" xml:space="preserve">
-    <value>Merged picture</value>
-  </data>
-  <data name="Viewer.Psd.Compressed" xml:space="preserve">
-    <value>The picture is ZIP compressed, which this viewer does not read.</value>
-  </data>
-  <data name="Viewer.Psd.TooLarge" xml:space="preserve">
-    <value>The picture is too large to draw.</value>
-  </data>
-  <data name="Viewer.Psd.Truncated" xml:space="preserve">
-    <value>The picture data ends before the picture does.</value>
-  </data>
-  <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
-    <value>The picture is not drawn for this colour mode or depth.</value>
-  </data>
-  <data name="Viewer.Model.Heading" xml:space="preserve">
-    <value>Model summary</value>
-  </data>
-  <data name="Viewer.Model.BinaryDxf" xml:space="preserve">
-    <value>This is a binary DXF file, so its entities are not listed.</value>
-  </data>
-  <data name="Viewer.Model.Version" xml:space="preserve">
-    <value>Version</value>
-  </data>
-  <data name="Viewer.Model.Extents" xml:space="preserve">
-    <value>Extents</value>
-  </data>
-  <data name="Viewer.Model.Layers" xml:space="preserve">
-    <value>Layers</value>
-  </data>
-  <data name="Viewer.Model.Entities" xml:space="preserve">
-    <value>Entities</value>
-  </data>
-  <data name="Viewer.Model.Vertices" xml:space="preserve">
-    <value>Vertices</value>
-  </data>
-  <data name="Viewer.Model.TextureCoordinates" xml:space="preserve">
-    <value>Texture coordinates</value>
-  </data>
-  <data name="Viewer.Model.Normals" xml:space="preserve">
-    <value>Normals</value>
-  </data>
-  <data name="Viewer.Model.Faces" xml:space="preserve">
-    <value>Faces</value>
-  </data>
-  <data name="Viewer.Model.Groups" xml:space="preserve">
-    <value>Groups</value>
-  </data>
-  <data name="Viewer.Model.Objects" xml:space="preserve">
-    <value>Objects</value>
-  </data>
-  <data name="Viewer.Model.Materials" xml:space="preserve">
-    <value>Materials</value>
-  </data>
-  <data name="Viewer.Model.MaterialLibraries" xml:space="preserve">
-    <value>Material libraries</value>
-  </data>
-  <data name="Viewer.Model.Bounds" xml:space="preserve">
-    <value>Bounds</value>
-  </data>
-  <data name="Viewer.Model.Format" xml:space="preserve">
-    <value>Format</value>
-  </data>
-  <data name="Viewer.Model.Ascii" xml:space="preserve">
-    <value>ASCII</value>
-  </data>
-  <data name="Viewer.Model.Binary" xml:space="preserve">
-    <value>binary</value>
-  </data>
-  <data name="Viewer.Model.Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="Viewer.Model.Triangles" xml:space="preserve">
-    <value>Triangles</value>
-  </data>
-  <data name="Viewer.Model.Source" xml:space="preserve">
-    <value>Source text</value>
-  </data>
-  <data name="Viewer.Wasm.Heading" xml:space="preserve">
-    <value>WebAssembly module</value>
-  </data>
-  <data name="Viewer.Wasm.Version" xml:space="preserve">
-    <value>Version</value>
-  </data>
-  <data name="Viewer.Wasm.Sections" xml:space="preserve">
-    <value>Sections</value>
-  </data>
-  <data name="Viewer.Wasm.Types" xml:space="preserve">
-    <value>Types</value>
-  </data>
-  <data name="Viewer.Wasm.Imports" xml:space="preserve">
-    <value>Imports</value>
-  </data>
-  <data name="Viewer.Wasm.Functions" xml:space="preserve">
-    <value>Functions (defined plus imported)</value>
-  </data>
-  <data name="Viewer.Wasm.Tables" xml:space="preserve">
-    <value>Tables</value>
-  </data>
-  <data name="Viewer.Wasm.Memories" xml:space="preserve">
-    <value>Memories</value>
-  </data>
-  <data name="Viewer.Wasm.Globals" xml:space="preserve">
-    <value>Globals</value>
-  </data>
-  <data name="Viewer.Wasm.Exports" xml:space="preserve">
-    <value>Exports</value>
-  </data>
-  <data name="Viewer.Wasm.Start" xml:space="preserve">
-    <value>Start function</value>
-  </data>
-  <data name="Viewer.Wasm.None" xml:space="preserve">
-    <value>none</value>
-  </data>
-  <data name="Viewer.Wasm.DataSegments" xml:space="preserve">
-    <value>Data segments</value>
-  </data>
-  <data name="Viewer.Wasm.Custom" xml:space="preserve">
-    <value>Custom sections</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.function" xml:space="preserve">
-    <value>function</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.table" xml:space="preserve">
-    <value>table</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.memory" xml:space="preserve">
-    <value>memory</value>
-  </data>
-  <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
-    <value>global</value>
-  </data>
-  <data name="CmdTitle.f1a3511a" xml:space="preserve">
-    <value>Press or tick</value>
-    <comment>Press or tick</comment>
-  </data>
-  <data name="CmdDesc.bbf604eb" xml:space="preserve">
-    <value>Press the focused button, or tick or untick the focused check box.</value>
-    <comment>Press the focused button, or tick or untick the focused check box.</comment>
-  </data>
-  <data name="CmdTitle.77b9c680" xml:space="preserve">
-    <value>Date pop-up</value>
-    <comment>Date pop-up</comment>
-  </data>
-  <data name="Viewer.HexTitleHints" xml:space="preserve">
-    <value> [HEX]  F4:Text  F5:Offset  Esc:close</value>
-    <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
-  </data>
-  <data name="Viewer.CloseHint" xml:space="preserve">
-    <value>  Esc:close</value>
-  </data>
-  <data name="Status.LineColumn" xml:space="preserve">
-    <value>Ln {0}/{1} Col {2}/{3}</value>
-  </data>
-  <data name="Prompt.HintAccept" xml:space="preserve">
-    <value>Enter: accept    Esc: cancel</value>
-  </data>
-  <data name="Prompt.HintFilterChoose" xml:space="preserve">
-    <value>Type to filter    Enter: choose    Esc: cancel</value>
-  </data>
-  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
-    <value>Space: mark    Enter: confirm    Esc: cancel</value>
-  </data>
-  <data name="Prompt.HintYes" xml:space="preserve">
-    <value>Enter: yes    Esc: cancel</value>
-  </data>
-  <data name="Prompt.HintNo" xml:space="preserve">
-    <value>Enter: no    Esc: cancel</value>
-  </data>
-  <data name="Prompt.HintCancel" xml:space="preserve">
-    <value>Esc: cancel</value>
-  </data>
-  <data name="Prompt.Title" xml:space="preserve">
-    <value>Prompt</value>
+  <data name="Prompt.ConfirmTitle" xml:space="preserve">
+    <value>Confirm</value>
   </data>
   <data name="Prompt.EmptyValue" xml:space="preserve">
     <value>Enter a value.</value>
@@ -2130,133 +1535,728 @@
   <data name="Prompt.FilterLabel" xml:space="preserve">
     <value>Filter: {0}</value>
   </data>
-  <data name="Prompt.NoMatch" xml:space="preserve">
-    <value>No choices match the filter.</value>
+  <data name="Prompt.HintAccept" xml:space="preserve">
+    <value>Enter: accept    Esc: cancel</value>
   </data>
-  <data name="Prompt.SelectTitle" xml:space="preserve">
-    <value>Select</value>
+  <data name="Prompt.HintCancel" xml:space="preserve">
+    <value>Esc: cancel</value>
   </data>
-  <data name="Prompt.NothingMatches" xml:space="preserve">
-    <value>Nothing matches the filter.</value>
+  <data name="Prompt.HintFilterChoose" xml:space="preserve">
+    <value>Type to filter    Enter: choose    Esc: cancel</value>
+  </data>
+  <data name="Prompt.HintMarkConfirm" xml:space="preserve">
+    <value>Space: mark    Enter: confirm    Esc: cancel</value>
+  </data>
+  <data name="Prompt.HintNo" xml:space="preserve">
+    <value>Enter: no    Esc: cancel</value>
+  </data>
+  <data name="Prompt.HintYes" xml:space="preserve">
+    <value>Enter: yes    Esc: cancel</value>
   </data>
   <data name="Prompt.MarkAtLeast" xml:space="preserve">
     <value>Mark at least {0}.</value>
   </data>
-  <data name="Prompt.ConfirmTitle" xml:space="preserve">
-    <value>Confirm</value>
+  <data name="Prompt.NoMatch" xml:space="preserve">
+    <value>No choices match the filter.</value>
+  </data>
+  <data name="Prompt.NothingMatches" xml:space="preserve">
+    <value>Nothing matches the filter.</value>
+  </data>
+  <data name="Prompt.SelectTitle" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Prompt.Title" xml:space="preserve">
+    <value>Prompt</value>
   </data>
   <data name="Prompt.YesNo" xml:space="preserve">
     <value>[Y] Yes    [N] No</value>
   </data>
-  <data name="Editor.HexTitle" xml:space="preserve">
-    <value>hex</value>
+  <data name="Splash.Motto" xml:space="preserve">
+    <value>Swiss Army Terminal Knife</value>
   </data>
-  <data name="Editor.HintHexDigit" xml:space="preserve">
-    <value>Type a hex digit</value>
+  <data name="Splash.Protocols" xml:space="preserve">
+    <value>Terminal protocols</value>
   </data>
-  <data name="Editor.HintTextView" xml:space="preserve">
-    <value>Text view</value>
+  <data name="Splash.StateOff" xml:space="preserve">
+    <value>off</value>
   </data>
-  <data name="Editor.HintHexView" xml:space="preserve">
-    <value>Hex view</value>
+  <data name="Splash.StateOn" xml:space="preserve">
+    <value>on</value>
   </data>
-  <data name="Editor.NotText" xml:space="preserve">
-    <value>Not text: the bytes do not read back unchanged in {0}, so the hex view stays.</value>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU: {0} cores, Memory: {1} GBs</value>
   </data>
-  <data name="Editor.HintHexMove" xml:space="preserve">
-    <value>Move the cursor</value>
+  <data name="Sqlite.Error.Unexpected" xml:space="preserve">
+    <value>The query failed: {0}</value>
   </data>
-  <data name="Editor.HintHexRow" xml:space="preserve">
-    <value>Start or end of the row</value>
-  </data>
-  <data name="Grid.Ai.Asking" xml:space="preserve">
-    <value>Asking the AI model…</value>
-  </data>
-  <data name="Grid.Ai.Ready" xml:space="preserve">
-    <value>Draft in the query line: press Enter to run it</value>
-  </data>
-  <data name="Grid.Ai.NoQuestion" xml:space="preserve">
-    <value>Type a question after the ?, for example ? rows where amount is over 10</value>
-  </data>
-  <data name="Grid.Ai.NoQuery" xml:space="preserve">
-    <value>The AI model sent no query</value>
-  </data>
-  <data name="Grid.Ai.NoTable" xml:space="preserve">
-    <value>There is no table called '{0}'</value>
-  </data>
-  <data name="Grid.Query.Placeholder" xml:space="preserve">
-    <value>e.g. SELECT name WHERE amount &gt; 10, or ? and a question</value>
-  </data>
-  <data name="Grid.Hint.RunQuery" xml:space="preserve">
-    <value>Run the query over the rows shown</value>
-  </data>
-  <data name="Grid.Hint.Ask" xml:space="preserve">
-    <value>Ask the AI model: type ? and a question, then Enter drafts the query</value>
-  </data>
-  <data name="Grid.Hint.Syntax" xml:space="preserve">
-    <value>Operators: = != &lt; &lt;= &gt; &gt;= LIKE, NOT LIKE, CONTAINS, IS [NOT] EMPTY; join with AND / OR; then ORDER BY column [DESC] and LIMIT n</value>
-  </data>
-  <data name="Grid.Hint.Complete" xml:space="preserve">
-    <value>Complete the word being typed: a column name or a keyword</value>
-  </data>
-  <data name="Grid.Status.Matched" xml:space="preserve">
-    <value>; {0:N0} of the {1:N0} shown row(s) match</value>
-  </data>
-  <data name="Grid.Ai.NoTables" xml:space="preserve">
-    <value>There are no tables to query</value>
-  </data>
-  <data name="Grid.Ai.PickTable" xml:space="preserve">
-    <value>Name one of the tables after FROM: {0}</value>
-  </data>
-  <data name="Hdf.Hint.Transpose" xml:space="preserve">
-    <value>Swap the rows and the columns</value>
-  </data>
-  <data name="Hdf.Status.LongFormCut" xml:space="preserve">
-    <value>; only the first {0:N0} matching cells are kept</value>
-  </data>
-  <data name="Hdf.Hint.LongForm" xml:space="preserve">
-    <value>Query every cell, with a column per axis (axis0, axis1, ...)</value>
-  </data>
-  <data name="Sqlite.Status.Matched" xml:space="preserve">
-    <value>{0:N0} matching row(s)</value>
+  <data name="Sqlite.Grid.Empty" xml:space="preserve">
+    <value>The query returned no rows</value>
   </data>
   <data name="Sqlite.Hint.GridQuery" xml:space="preserve">
     <value>Filter the result: start the line with : and a grid query</value>
   </data>
-  <data name="Key.ExportCsv" xml:space="preserve">
-    <value>F2-Export</value>
+  <data name="Sqlite.Hint.RunQuery" xml:space="preserve">
+    <value>Run the query</value>
   </data>
-  <data name="Csv.Hint.Mark" xml:space="preserve">
-    <value>Mark the row and move down</value>
+  <data name="Sqlite.Query.Label" xml:space="preserve">
+    <value>Query</value>
   </data>
-  <data name="Csv.Hint.Export" xml:space="preserve">
-    <value>Export the marked rows, or the rows on screen, to a CSV, JSON or XML file</value>
+  <data name="Sqlite.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT * FROM table LIMIT 20</value>
   </data>
-  <data name="Csv.Export.Format" xml:space="preserve">
-    <value>Export as</value>
+  <data name="Sqlite.Status.Matched" xml:space="preserve">
+    <value>{0:N0} matching row(s)</value>
   </data>
-  <data name="Csv.Export.Ask" xml:space="preserve">
-    <value>Save the rows as</value>
+  <data name="Sqlite.Status.Rows" xml:space="preserve">
+    <value>{0:N0} row(s), {1} column(s)</value>
   </data>
-  <data name="Csv.Export.Invalid" xml:space="preserve">
-    <value>Give a file name, with no folder in it</value>
+  <data name="Sqlite.Status.Truncated" xml:space="preserve">
+    <value>; only the first {0:N0} rows are shown</value>
   </data>
-  <data name="Csv.Export.Overwrite" xml:space="preserve">
-    <value>{0} already exists. Overwrite it?</value>
+  <data name="Sqlite.Text.Rows" xml:space="preserve">
+    <value>{0:N0} row(s)</value>
   </data>
-  <data name="Csv.Export.Done" xml:space="preserve">
-    <value>Exported {0:N0} row(s) to {1}</value>
+  <data name="Sqlite.Text.Truncated" xml:space="preserve">
+    <value>, truncated</value>
   </data>
-  <data name="Csv.Export.Cancelled" xml:space="preserve">
-    <value>Nothing was written</value>
+  <data name="Sqlite.Title" xml:space="preserve">
+    <value>SQLite</value>
   </data>
-  <data name="Csv.Export.ReadOnly" xml:space="preserve">
-    <value>This folder is read-only: nothing was written</value>
+  <data name="Sqlite.Title.Hint" xml:space="preserve">
+    <value>  F4:Text  Enter:query  Tab:grid</value>
   </data>
-  <data name="Csv.Export.NoFolder" xml:space="preserve">
-    <value>Nothing can be written next to this file</value>
+  <data name="Sqlite.Title.TextMode" xml:space="preserve">
+    <value> [TEXT]</value>
   </data>
-  <data name="Csv.Export.Failed" xml:space="preserve">
-    <value>Could not write the file: {0}</value>
+  <data name="Status.Changed" xml:space="preserve">
+    <value>Changed</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Hit {0}/{1}</value>
+  </data>
+  <data name="Status.LineColumn" xml:space="preserve">
+    <value>Ln {0}/{1} Col {2}/{3}</value>
+  </data>
+  <data name="Status.ReadOnly" xml:space="preserve">
+    <value>Read-Only</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Search: {0}</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Tasks: {0}</value>
+  </data>
+  <data name="Status.Unchanged" xml:space="preserve">
+    <value>Unchanged</value>
+  </data>
+  <data name="Status.Writable" xml:space="preserve">
+    <value>Writable</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.AssemblyIdentity" xml:space="preserve">
+    <value>Assembly Identity</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.AssemblyName" xml:space="preserve">
+    <value>Assembly Name</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Bytes" xml:space="preserve">
+    <value>{0:N0} bytes</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.CompanyName" xml:space="preserve">
+    <value>Company Name</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ContentType" xml:space="preserve">
+    <value>Content Type</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Culture" xml:space="preserve">
+    <value>Culture</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileDescription" xml:space="preserve">
+    <value>File Description</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileVersion" xml:space="preserve">
+    <value>File Version</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileVersionInfo" xml:space="preserve">
+    <value>File Version Info</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Flags" xml:space="preserve">
+    <value>Flags</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.InternalName" xml:space="preserve">
+    <value>Internal Name</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.LegalCopyright" xml:space="preserve">
+    <value>Legal Copyright</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.LegalTrademarks" xml:space="preserve">
+    <value>Legal Trademarks</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.NotManagedAssembly" xml:space="preserve">
+    <value>Note: Not a managed .NET assembly — no CLR identity available.</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.OriginalFilename" xml:space="preserve">
+    <value>Original Filename</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ProductName" xml:space="preserve">
+    <value>Product Name</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ProductVersion" xml:space="preserve">
+    <value>Product Version</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.PublicKeyToken" xml:space="preserve">
+    <value>Public Key Token</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Viewer.ChangedOnDisk" xml:space="preserve">
+    <value>changed on disk</value>
+  </data>
+  <data name="Viewer.CloseHint" xml:space="preserve">
+    <value>  Esc:close</value>
+  </data>
+  <data name="Viewer.CouldNotRead" xml:space="preserve">
+    <value>Could not read the file</value>
+  </data>
+  <data name="Viewer.Disassembling" xml:space="preserve">
+    <value>Disassembling…</value>
+  </data>
+  <data name="Viewer.Disassembly.BigEndianNotSupported" xml:space="preserve">
+    <value>  Big-endian ELF files are not supported.</value>
+  </data>
+  <data name="Viewer.Disassembly.DecodedCodeLimit" xml:space="preserve">
+    <value>the {0} MB limit on decoded code was reached</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfHeaderShort" xml:space="preserve">
+    <value>  The ELF header is cut short.</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfImageMachine" xml:space="preserve">
+    <value>  ELF {0}-bit, machine {1}</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfUnknownClass" xml:space="preserve">
+    <value>  Unknown ELF class.</value>
+  </data>
+  <data name="Viewer.Disassembly.HeadersUnreadable" xml:space="preserve">
+    <value>  The file's headers could not be read: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.IlHeading" xml:space="preserve">
+    <value>Disassembly (IL)</value>
+  </data>
+  <data name="Viewer.Disassembly.LineLimit" xml:space="preserve">
+    <value>the {0:N0} line limit was reached</value>
+  </data>
+  <data name="Viewer.Disassembly.MalformedSectionHeaders" xml:space="preserve">
+    <value>  The section headers are malformed.</value>
+  </data>
+  <data name="Viewer.Disassembly.MetadataUnreadable" xml:space="preserve">
+    <value>  Metadata could not be read any further: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodBodyUnreadable" xml:space="preserve">
+    <value>body unreadable: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodInstructionLimit" xml:space="preserve">
+    <value>    … method truncated: instruction limit per method reached</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodLimit" xml:space="preserve">
+    <value>the {0:N0} method limit was reached</value>
+  </data>
+  <data name="Viewer.Disassembly.NativeHeading" xml:space="preserve">
+    <value>Disassembly (native)</value>
+  </data>
+  <data name="Viewer.Disassembly.NoMethodBodies" xml:space="preserve">
+    <value>  This assembly has no method bodies.</value>
+  </data>
+  <data name="Viewer.Disassembly.NoSectionHeaders" xml:space="preserve">
+    <value>  The file has no section headers (it may be stripped), so its code cannot be located.</value>
+  </data>
+  <data name="Viewer.Disassembly.NotExecutable" xml:space="preserve">
+    <value>  Not a Windows PE or Linux ELF file; there is nothing to disassemble.</value>
+  </data>
+  <data name="Viewer.Disassembly.OperandPastMethod" xml:space="preserve">
+    <value>operand runs past the end of the method</value>
+  </data>
+  <data name="Viewer.Disassembly.OutputTruncated" xml:space="preserve">
+    <value>  … output truncated: {0}.</value>
+  </data>
+  <data name="Viewer.Disassembly.PeImageMachine" xml:space="preserve">
+    <value>  PE image, machine {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.SectionDataOutsideFile" xml:space="preserve">
+    <value>its data lies outside the file</value>
+  </data>
+  <data name="Viewer.Disassembly.SectionHeadersPastEnd" xml:space="preserve">
+    <value>  The section headers run past the end of the file.</value>
+  </data>
+  <data name="Viewer.Disassembly.Stopped" xml:space="preserve">
+    <value>  Disassembly stopped: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.TimeLimit" xml:space="preserve">
+    <value>the {0:0.#} second time limit was reached</value>
+  </data>
+  <data name="Viewer.Disassembly.TruncatedMarker" xml:space="preserve">
+    <value>truncated</value>
+  </data>
+  <data name="Viewer.Disassembly.UnsupportedMachine" xml:space="preserve">
+    <value>  Only x86 and x86-64 code can be disassembled; this machine type is not supported.</value>
+  </data>
+  <data name="Viewer.DisassemblyFailed" xml:space="preserve">
+    <value>Disassembly failed: {0}</value>
+  </data>
+  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
+    <value>{0:N0} error(s), {1:N0} warning(s)</value>
+  </data>
+  <data name="Viewer.File.AccessLocalOnly" xml:space="preserve">
+    <value>Access databases are read from a local file</value>
+  </data>
+  <data name="Viewer.File.AssemblyIdentityUnavailable" xml:space="preserve">
+    <value>Assembly identity unavailable: {0}</value>
+  </data>
+  <data name="Viewer.File.CouldNotRead" xml:space="preserve">
+    <value>Could not read file.</value>
+  </data>
+  <data name="Viewer.File.FileVersionInfoUnavailable" xml:space="preserve">
+    <value>File version info unavailable: {0}</value>
+  </data>
+  <data name="Viewer.File.LinkedDocumentMissing" xml:space="preserve">
+    <value>The linked document is not in this folder</value>
+  </data>
+  <data name="Viewer.File.LinkedDocumentOutsideFolder" xml:space="preserve">
+    <value>The linked document is outside this file's folder</value>
+  </data>
+  <data name="Viewer.File.NestedMasterNotExpanded" xml:space="preserve">
+    <value>A master document inside a master is not expanded</value>
+  </data>
+  <data name="Viewer.Font.Characters" xml:space="preserve">
+    <value>Characters in the map</value>
+  </data>
+  <data name="Viewer.Font.Copyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="Viewer.Font.Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Viewer.Font.Design" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="Viewer.Font.Designer" xml:space="preserve">
+    <value>Designer</value>
+  </data>
+  <data name="Viewer.Font.Embedding" xml:space="preserve">
+    <value>Embedding</value>
+  </data>
+  <data name="Viewer.Font.Family" xml:space="preserve">
+    <value>Family</value>
+  </data>
+  <data name="Viewer.Font.Format" xml:space="preserve">
+    <value>Outlines</value>
+  </data>
+  <data name="Viewer.Font.FullName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="Viewer.Font.Glyphs" xml:space="preserve">
+    <value>Glyphs</value>
+  </data>
+  <data name="Viewer.Font.License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="Viewer.Font.Manufacturer" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="Viewer.Font.Modified" xml:space="preserve">
+    <value>Modified</value>
+  </data>
+  <data name="Viewer.Font.Names" xml:space="preserve">
+    <value>Names</value>
+  </data>
+  <data name="Viewer.Font.NoPreview" xml:space="preserve">
+    <value>The font could not be drawn for a preview.</value>
+  </data>
+  <data name="Viewer.Font.PostScript" xml:space="preserve">
+    <value>PostScript name</value>
+  </data>
+  <data name="Viewer.Font.Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Viewer.Font.Style" xml:space="preserve">
+    <value>Style</value>
+  </data>
+  <data name="Viewer.Font.UnitsPerEm" xml:space="preserve">
+    <value>Units per em</value>
+  </data>
+  <data name="Viewer.Font.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Viewer.Font.Weight" xml:space="preserve">
+    <value>Weight class</value>
+  </data>
+  <data name="Viewer.Font.WidthClass" xml:space="preserve">
+    <value>Width class</value>
+  </data>
+  <data name="Viewer.HexTitleHints" xml:space="preserve">
+    <value> [HEX]  F4:Text  F5:Offset  Esc:close</value>
+    <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
+  </data>
+  <data name="Viewer.HintCodePage" xml:space="preserve">
+    <value>Next code page (Shift: previous)</value>
+  </data>
+  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
+    <value>Save in the next encoding (Shift: previous)</value>
+  </data>
+  <data name="Viewer.HintExpandAll" xml:space="preserve">
+    <value>Expand every node</value>
+  </data>
+  <data name="Viewer.HintIndent" xml:space="preserve">
+    <value>Indent</value>
+  </data>
+  <data name="Viewer.HintJsonValidate" xml:space="preserve">
+    <value>Check the file is valid JSON</value>
+  </data>
+  <data name="Viewer.HintRunXPath" xml:space="preserve">
+    <value>Run the XPath query, or open the selected result in the tree</value>
+  </data>
+  <data name="Viewer.HintSave" xml:space="preserve">
+    <value>Save the file</value>
+  </data>
+  <data name="Viewer.HintToggleText" xml:space="preserve">
+    <value>Show the file's text, or the tree again</value>
+  </data>
+  <data name="Viewer.HintXPathBox" xml:space="preserve">
+    <value>Move to the XPath box</value>
+  </data>
+  <data name="Viewer.HintXmlValidate" xml:space="preserve">
+    <value>Validate against the schema or DTD the document names</value>
+  </data>
+  <data name="Viewer.Matches" xml:space="preserve">
+    <value>{0:N0} match(es)</value>
+  </data>
+  <data name="Viewer.Model.Ascii" xml:space="preserve">
+    <value>ASCII</value>
+  </data>
+  <data name="Viewer.Model.Binary" xml:space="preserve">
+    <value>binary</value>
+  </data>
+  <data name="Viewer.Model.BinaryDxf" xml:space="preserve">
+    <value>This is a binary DXF file, so its entities are not listed.</value>
+  </data>
+  <data name="Viewer.Model.Bounds" xml:space="preserve">
+    <value>Bounds</value>
+  </data>
+  <data name="Viewer.Model.Entities" xml:space="preserve">
+    <value>Entities</value>
+  </data>
+  <data name="Viewer.Model.Extents" xml:space="preserve">
+    <value>Extents</value>
+  </data>
+  <data name="Viewer.Model.Faces" xml:space="preserve">
+    <value>Faces</value>
+  </data>
+  <data name="Viewer.Model.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Viewer.Model.Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="Viewer.Model.Heading" xml:space="preserve">
+    <value>Model summary</value>
+  </data>
+  <data name="Viewer.Model.Layers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="Viewer.Model.MaterialLibraries" xml:space="preserve">
+    <value>Material libraries</value>
+  </data>
+  <data name="Viewer.Model.Materials" xml:space="preserve">
+    <value>Materials</value>
+  </data>
+  <data name="Viewer.Model.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Viewer.Model.Normals" xml:space="preserve">
+    <value>Normals</value>
+  </data>
+  <data name="Viewer.Model.Objects" xml:space="preserve">
+    <value>Objects</value>
+  </data>
+  <data name="Viewer.Model.Source" xml:space="preserve">
+    <value>Source text</value>
+  </data>
+  <data name="Viewer.Model.TextureCoordinates" xml:space="preserve">
+    <value>Texture coordinates</value>
+  </data>
+  <data name="Viewer.Model.Triangles" xml:space="preserve">
+    <value>Triangles</value>
+  </data>
+  <data name="Viewer.Model.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Viewer.Model.Vertices" xml:space="preserve">
+    <value>Vertices</value>
+  </data>
+  <data name="Viewer.NoMatches" xml:space="preserve">
+    <value>No matches</value>
+  </data>
+  <data name="Viewer.NoResults" xml:space="preserve">
+    <value>No results</value>
+  </data>
+  <data name="Viewer.NotSaved" xml:space="preserve">
+    <value>Not saved: {0}</value>
+  </data>
+  <data name="Viewer.NotValidFormat" xml:space="preserve">
+    <value>Not valid {0}: {1}</value>
+  </data>
+  <data name="Viewer.NotValidJson" xml:space="preserve">
+    <value>Not valid JSON: {0}</value>
+  </data>
+  <data name="Viewer.NotWellFormed" xml:space="preserve">
+    <value>Not well-formed XML: {0}</value>
+  </data>
+  <data name="Viewer.NothingToShow" xml:space="preserve">
+    <value>Nothing to show</value>
+  </data>
+  <data name="Viewer.NowhereToSave" xml:space="preserve">
+    <value>Nowhere to save to: {0}</value>
+  </data>
+  <data name="Viewer.PdfCoverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="Viewer.PdfCoverageLater" xml:space="preserve">
+    <value>Changes were added after signing.</value>
+  </data>
+  <data name="Viewer.PdfCoverageWhole" xml:space="preserve">
+    <value>The whole file.</value>
+  </data>
+  <data name="Viewer.PdfFormat" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Viewer.PdfIntegrity" xml:space="preserve">
+    <value>Integrity</value>
+  </data>
+  <data name="Viewer.PdfIntegrityBad" xml:space="preserve">
+    <value>CHANGED: the file does not match this signature.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityOk" xml:space="preserve">
+    <value>The signed bytes are unchanged.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnreadable" xml:space="preserve">
+    <value>The signature could not be read.</value>
+  </data>
+  <data name="Viewer.PdfIntegrityUnsupported" xml:space="preserve">
+    <value>Not checked: this signature format is not supported.</value>
+  </data>
+  <data name="Viewer.PdfMore" xml:space="preserve">
+    <value>{0} more signatures are not shown.</value>
+  </data>
+  <data name="Viewer.PdfNoRevocation" xml:space="preserve">
+    <value>Revocation was not checked.</value>
+  </data>
+  <data name="Viewer.PdfSignatureNumber" xml:space="preserve">
+    <value>Signature {0}</value>
+  </data>
+  <data name="Viewer.PdfSignatures" xml:space="preserve">
+    <value>Digital signatures</value>
+  </data>
+  <data name="Viewer.PdfSigned" xml:space="preserve">
+    <value>Signed</value>
+  </data>
+  <data name="Viewer.PdfSigner" xml:space="preserve">
+    <value>Signer</value>
+  </data>
+  <data name="Viewer.PdfTooLarge" xml:space="preserve">
+    <value>Signatures were not checked: the file is larger than {0} MB.</value>
+  </data>
+  <data name="Viewer.PdfTrust" xml:space="preserve">
+    <value>Trust</value>
+  </data>
+  <data name="Viewer.PdfTrustExpired" xml:space="preserve">
+    <value>Not trusted: the certificate has expired.</value>
+  </data>
+  <data name="Viewer.PdfTrustNo" xml:space="preserve">
+    <value>Not trusted: the certificate does not chain to a root this machine trusts.</value>
+  </data>
+  <data name="Viewer.PdfTrustOk" xml:space="preserve">
+    <value>Trusted: the certificate chains to a root this machine trusts.</value>
+  </data>
+  <data name="Viewer.Psd.Bits" xml:space="preserve">
+    <value>{0} bits per channel</value>
+  </data>
+  <data name="Viewer.Psd.Channels" xml:space="preserve">
+    <value>Channels</value>
+  </data>
+  <data name="Viewer.Psd.ColorMode" xml:space="preserve">
+    <value>Colour mode</value>
+  </data>
+  <data name="Viewer.Psd.Compressed" xml:space="preserve">
+    <value>The picture is ZIP compressed, which this viewer does not read.</value>
+  </data>
+  <data name="Viewer.Psd.Compression" xml:space="preserve">
+    <value>Compression</value>
+  </data>
+  <data name="Viewer.Psd.Depth" xml:space="preserve">
+    <value>Depth</value>
+  </data>
+  <data name="Viewer.Psd.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Viewer.Psd.Heading" xml:space="preserve">
+    <value>Photoshop file</value>
+  </data>
+  <data name="Viewer.Psd.Layers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="Viewer.Psd.NoLayers" xml:space="preserve">
+    <value>none</value>
+  </data>
+  <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
+    <value>The picture is not drawn for this colour mode or depth.</value>
+  </data>
+  <data name="Viewer.Psd.Picture" xml:space="preserve">
+    <value>Merged picture</value>
+  </data>
+  <data name="Viewer.Psd.Pixels" xml:space="preserve">
+    <value>{0:N0} × {1:N0} pixels</value>
+  </data>
+  <data name="Viewer.Psd.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Viewer.Psd.TooLarge" xml:space="preserve">
+    <value>The picture is too large to draw.</value>
+  </data>
+  <data name="Viewer.Psd.Truncated" xml:space="preserve">
+    <value>The picture data ends before the picture does.</value>
+  </data>
+  <data name="Viewer.RunningQuery" xml:space="preserve">
+    <value>Running the query…</value>
+  </data>
+  <data name="Viewer.ShowingMatches" xml:space="preserve">
+    <value>Showing {0:N0} of {1:N0} matches</value>
+  </data>
+  <data name="Viewer.TitleHints" xml:space="preserve">
+    <value>  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage  Esc:close</value>
+  </data>
+  <data name="Viewer.Valid" xml:space="preserve">
+    <value>Valid</value>
+  </data>
+  <data name="Viewer.ValidJson" xml:space="preserve">
+    <value>Valid JSON</value>
+  </data>
+  <data name="Viewer.Validating" xml:space="preserve">
+    <value>Validating…</value>
+  </data>
+  <data name="Viewer.Wasm.Custom" xml:space="preserve">
+    <value>Custom sections</value>
+  </data>
+  <data name="Viewer.Wasm.DataSegments" xml:space="preserve">
+    <value>Data segments</value>
+  </data>
+  <data name="Viewer.Wasm.Exports" xml:space="preserve">
+    <value>Exports</value>
+  </data>
+  <data name="Viewer.Wasm.Functions" xml:space="preserve">
+    <value>Functions (defined plus imported)</value>
+  </data>
+  <data name="Viewer.Wasm.Globals" xml:space="preserve">
+    <value>Globals</value>
+  </data>
+  <data name="Viewer.Wasm.Heading" xml:space="preserve">
+    <value>WebAssembly module</value>
+  </data>
+  <data name="Viewer.Wasm.Imports" xml:space="preserve">
+    <value>Imports</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.function" xml:space="preserve">
+    <value>function</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
+    <value>global</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.memory" xml:space="preserve">
+    <value>memory</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.table" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="Viewer.Wasm.Memories" xml:space="preserve">
+    <value>Memories</value>
+  </data>
+  <data name="Viewer.Wasm.None" xml:space="preserve">
+    <value>none</value>
+  </data>
+  <data name="Viewer.Wasm.Sections" xml:space="preserve">
+    <value>Sections</value>
+  </data>
+  <data name="Viewer.Wasm.Start" xml:space="preserve">
+    <value>Start function</value>
+  </data>
+  <data name="Viewer.Wasm.Tables" xml:space="preserve">
+    <value>Tables</value>
+  </data>
+  <data name="Viewer.Wasm.Types" xml:space="preserve">
+    <value>Types</value>
+  </data>
+  <data name="Viewer.Wasm.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Viewer.XPathError" xml:space="preserve">
+    <value>XPath error: {0}</value>
+  </data>
+  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
+    <value>Enter a query, e.g. //book[price &gt; 10]/title</value>
+  </data>
+  <data name="Wizard.Finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="Wizard.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>Step {0} of {1}: {2}</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} nodes</value>
+  </data>
+  <data name="Xps.Hint.Page" xml:space="preserve">
+    <value>Show the previous or next page</value>
+  </data>
+  <data name="Xps.NoPages" xml:space="preserve">
+    <value>This document has no pages</value>
+  </data>
+  <data name="Xps.Page.Label" xml:space="preserve">
+    <value>Page {0}</value>
+  </data>
+  <data name="Xps.Page.MultiDocument" xml:space="preserve">
+    <value>Document {0} · Page {1}</value>
+  </data>
+  <data name="Xps.Page.NoText" xml:space="preserve">
+    <value>This page has no text.</value>
+  </data>
+  <data name="Xps.Picker.Label" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="Xps.Status.Page" xml:space="preserve">
+    <value>Page {0} of {1}</value>
+  </data>
+  <data name="Xps.Status.Size" xml:space="preserve">
+    <value> · {0} × {1}</value>
+  </data>
+  <data name="Xps.Title" xml:space="preserve">
+    <value>XPS</value>
+  </data>
+  <data name="Xps.Title.Hint" xml:space="preserve">
+    <value>  Ctrl+←/→:page</value>
   </data>
 </root>

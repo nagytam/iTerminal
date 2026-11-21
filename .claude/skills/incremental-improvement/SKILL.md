@@ -99,7 +99,7 @@ explained. The reviewer also checks:
 - The diff matches the plan. Anything extra is removed or justified.
 - No new blocking I/O on a key handler or a render path; background writes are guarded by `IsCurrentUrl()`.
 - No new service acts on the real machine without a sandbox replacement.
-- New user-visible strings are in all six `.resx` files, if the change adds any.
+- New user-visible strings are in all six `.resx` files, if the change adds any, each inserted at its sorted position by key (ordinal), not appended.
 
 Review questions follow *Decisions and questions: when a gate stops*: a critical design decision stops the gate for
 the user; any other question is decided from the code and docs, or by the reviewer's proposed answer, and recorded.
