@@ -6,10 +6,10 @@ author's own site, cross-posted with a canonical link.
 
 **Rules**
 - #showdev is for projects. A moderator's note says tutorial-style posts get moved; this article is a project write-up with design notes, so keep it that way.
-- The tag limit (four tags) is *unverified*. Check the tag guidelines on the tag page on the day.
+- The limit of four tags is **verified** (<https://dev.to/p/editor_guide>, 2026-11-21). The guide does not mention #showdev or self-promotion rules; check the tag page on the day. The editor has an `ai_disclosure_level` front-matter field: set it honestly (the project's development is AI-assisted; the article's own use of AI is the user's call).
 - Do not post the same text on several platforms on the same day; set the canonical URL if the post is cross-published.
 
-**Suggested tags:** showdev, dotnet, csharp, opensource (choose at most four, after checking the limit)
+**Suggested tags:** showdev, dotnet, csharp, opensource (at most four)
 
 **Suggested cover image:** a screenshot of the two-panel view with a `git://` tag on the left and a
 local folder on the right. Make it yourself from the app; do not use a stock image.
@@ -68,7 +68,7 @@ would want next, and where a key is hard to reach on your keyboard layout.
 ### Try it
 
 - Repository and downloads: https://github.com/nagytam/iTerminal
-- Release: <RELEASE URL>
+- Release: https://github.com/nagytam/iTerminal/releases/latest
 - Architecture notes for each subsystem are in the Documentation folder of the repository.
 
 If you want to contribute, the codebase is organised so that a change can be small: a new drive, a

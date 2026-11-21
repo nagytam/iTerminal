@@ -8,8 +8,8 @@ Hacker News (Show HN is in the [marketing kit, section 4.2](iTerminal-Marketing-
 
 | Venue | What is known | Status |
 | --- | --- | --- |
-| Hacker News | Show HN is for something people can try. Landing pages, fundraisers, blog posts, newsletters and sign-up pages do not qualify. Title starts "Show HN". Title style rules were not confirmed on the official page. | Partly verified (news.ycombinator.com/showhn.html, via search) |
-| Lobsters | Invite-only, computing-focused. The official rules page was not retrieved. A blog reports that self-promotion above about a quarter of posts and comments is frowned upon and that moderators do remove it. | Unverified. Read the site's rules page before posting |
+| Hacker News | Show HN is for something people can try. Landing pages, fundraisers, blog posts, newsletters and sign-up pages do not qualify. Title starts "Show HN". Read 2026-11-21: you must have built it; it must be non-trivial and ready to try without sign-up or email; do not ask friends to upvote or comment; be available in the thread. | **Verified** (<https://news.ycombinator.com/showhn.html>) |
+| Lobsters | Invite-only, computing-focused. Read 2026-11-21: self-promotion should be well under a quarter of a member's stories and comments over the past year; accounts under 70 days cannot submit self-promotional content; new users cannot submit links to domains not seen before; every story needs a tag from the list. | **Verified** (<https://lobste.rs/about>) |
 | r/commandline | The sidebar was not retrieved. Mirrors report a moderator rule against largely AI-generated or unreviewed code and projects. Each subreddit sets its own self-promotion rule. Reddit returned HTTP 403 to automated requests for all five subreddits (2026-11-21), so their sidebars were not read. | Unverified. Read the sidebar and wiki first |
 | r/dotnet, r/linux, r/opensource, r/selfhosted | Each subreddit has its own sidebar rules. Assume a self-promotion limit. Reddit returned HTTP 403 to automated requests for all five subreddits (2026-11-21), so their sidebars were not read. | Unverified. Read the sidebar first |
 | .NET newsletters ("This Week in .NET") | No current submission route was found; the search returned only archived 2015–2016 issues. | Not verified; do not submit until a route is confirmed |
@@ -76,7 +76,7 @@ It is beta. The most useful feedback is about terminal emulator behaviour, key h
 packaging on your distribution.
 
 Repository: https://github.com/nagytam/iTerminal
-Release: <RELEASE URL>
+Release: https://github.com/nagytam/iTerminal/releases/latest
 ```
 
 ## 4. Lobsters (only after the rules page has been read and an invite is available)

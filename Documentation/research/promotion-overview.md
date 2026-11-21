@@ -19,7 +19,7 @@ given below).
 | # | Venue | Type | How to submit | Rule status | Content file | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | rothgar/awesome-tuis | Awesome-list (TUI apps) | Pull request to the list | Verified from `.github/pull_request_template.md`: repository at least 6 months old (a workflow checks the first-commit date on README PRs); unique application and interface; no wrappers; interactive or redrawing interface. iTerminal is not eligible before 2027-04-15 | [awesome-lists.md](../Promotion/awesome-lists.md) | blocked until 2027-04-15 |
-| 2 | awesome-dotnet (quozd/awesome-dotnet) | Awesome-list (.NET) | Pull request, one link per PR, title "Add <project>" | Partly verified: one link per pull request and a title of the form "Add <project>" are stated in the guide as seen in search results (not read in full); the `[Free for OSS]` tag requirement is unverified | awesome-lists.md | prepared |
+| 2 | awesome-dotnet (quozd/awesome-dotnet) | Awesome-list (.NET) | Pull request, one link per PR, title "Add <project>" (**submitted: quozd/awesome-dotnet#1606**) | Partly verified: one link per pull request and a title of the form "Add <project>" are stated in the guide as seen in search results (not read in full); the `[Free for OSS]` tag requirement is unverified | awesome-lists.md | prepared |
 | 3 | tuxarch/cli-apps (awesome-cli-apps family) | Awesome-list (CLI and TUI apps) | Pull request editing a CSV file under `data/` in the newer forks | Unverified. The older guide (mirror of agarrharr/awesome-cli-apps) asks for apps older than 90 days with more than 20 stars and one PR per app; whether that still holds is unknown | awesome-lists.md | prepared |
 | 4 | Console.dev | Developer-tool newsletter | Email hello@console.dev (the About page) | Partly verified: selection criteria read on the site (regular-use tool, fits the development flow). The site says it does not do sponsored reviews | [directories-and-newsletters.md](../Promotion/directories-and-newsletters.md) | user to submit |
 | 5 | Terminal Trove | Tool directory | Submit form at terminaltrove.com/submit | Partly verified from the form summary: cross-platform preferred, standalone binaries preferred, image preview required (PNG, GIF or MP4) | directories-and-newsletters.md | user to submit (needs a preview image) |
@@ -118,8 +118,14 @@ given below).
   months old, and iTerminal's first commit is 2026-10-15. The fork was created in error and is to be
   deleted; the token needs the `delete_repo` scope first. Rule recorded in `awesome-lists.md`; venue 1
   blocked until 2027-04-15.
-- Nothing was sent, submitted, posted or signed up for in any pass (the awesome-tuis fork is the one
-  exception; it is not a submission).
+- **2026-11-21, awesome-dotnet submission:** At the user's request, the promoter drafted the entry and
+  pull request text (CLI section, after Gui.cs; title `Add iTerminal to CLI`), and the user approved the
+  text after two revisions: the highlights list, and a daily-use sentence in place of a stability claim,
+  which conflicts with the README's beta banner. The fork `nagytam/awesome-dotnet` was created, the
+  branch `add-iterminal-cli` pushed, and the pull request opened: quozd/awesome-dotnet#1606. The
+  `awesome-bot` check had not reported yet. Row 2 of the venue table is now submitted.
+- Nothing else was sent, submitted, posted or signed up for in any pass. The two exceptions are the
+  awesome-tuis fork, which is not a submission, and the awesome-dotnet pull request above.
 
 **Waiting for the user:**
 - Choose the first wave (see section 5).
@@ -160,3 +166,40 @@ given below).
 - Which languages should the press pitch be written in? German tech press and the Hungarian community are natural fits given the six-language UI; drafts are in English only.
 - Is an email from the author's own address acceptable for press and Console.dev, or should a project address be used?
 - Is AI-assisted development something to state in every announcement? LinuxLinks asks directly, and Changelog judges by audience. `CONTRIBUTING.md` already says so publicly.
+
+## Survey 3: 2026-11-21 (release refresh)
+
+**Release.** `gh release view` shows the latest release is **v0.0.0.750** (published 2026-11-21 18:52 UTC, not a prerelease), not v0.0.0.748 as the request said; assets are the MSI, a portable zip, tar.gz, deb and rpm for x64 and arm64 (Linux), so the three formats the content names exist. The repository <https://github.com/nagytam/iTerminal> is public. Every `<RELEASE URL>` in the content files (except the marketing kit template and the packaging how-to, which keep it as a template) now reads `https://github.com/nagytam/iTerminal/releases/latest`, which stays correct as releases advance. Repository facts at this date: 1 star; first commit 2026-10-15; labels `good first issue` and `help wanted` exist, but no open issues carry them.
+
+**Rules re-read today (pages fetched):**
+- awesome-dotnet: <https://raw.githubusercontent.com/quozd/awesome-dotnet/master/CONTRIBUTING.md> - verified. No PR title format stated; `[Free for OSS]` is for commercial projects with a free OSS edition, so it was removed from the entry; stable, documented, tested and maintained are expected.
+- agarrharr/awesome-cli-apps: <https://raw.githubusercontent.com/agarrharr/awesome-cli-apps/master/contributing.md> - verified. Over three months old, over 20 stars, one PR per app, template required, AI-generated PRs not welcome. iTerminal fails the star rule.
+- toolleeo/awesome-cli-apps-in-a-csv: <https://raw.githubusercontent.com/toolleeo/awesome-cli-apps-in-a-csv/master/CONTRIBUTING.md> - verified. CSV only, no age or star rule. Link to `tuxarch/cli-apps` unverified.
+- Lobsters: <https://lobste.rs/about> - verified (self-promotion under a quarter; 70-day rule for new accounts; invite needed).
+- Show HN: <https://news.ycombinator.com/showhn.html> - verified.
+- Dev.to: <https://dev.to/p/editor_guide> - four-tag limit verified; no #showdev or self-promotion rule on that page.
+- Console.dev: <https://console.dev/about/> - email route and no-sponsored-review policy verified; full criteria page not read.
+- Terminal Trove submit page returned HTTP 403; Reddit still blocks automated reads. Both stay as before.
+
+**Status changes**
+
+| # | Venue | Change |
+| --- | --- | --- |
+| 2 | awesome-dotnet | prepared -> **actionable now** (release link filled; tag fixed; beta is a risk against "stable") |
+| 3 | awesome-cli-apps family | split: agarrharr list **blocked** (1 star, needs over 20; also bans AI-generated PRs); toolleeo CSV list **actionable now** (CSV edit only) |
+| 4 | Console.dev | user to submit -> **actionable now** (email; beta listing fits) |
+| 5 | Terminal Trove | still needs a preview image; rules unverified again (403) |
+| 6 | AlternativeTo | actionable now with a free account (rule unchanged) |
+| 7 | Hacker News | rules now verified; **actionable now** by the author, who must be present in the thread |
+| 8 | Lobsters | rules verified; still needs an invite; a new account cannot self-promote for 70 days, so effectively **blocked** |
+| 10 | Dev.to | prepared -> **actionable now** |
+| 17, 19 | OMG! Ubuntu, Changelog News | release link filled; actionable now (Changelog needs an account) |
+| 16, 15 | Linux Magazine, Full Circle | release link filled; actionable now (Full Circle guide still to read) |
+| 9 | Reddit | release link filled; sidebars still unread |
+| 12 | Product Hunt | release link filled; optional |
+| 1 | awesome-tuis | unchanged, blocked until 2027-04-15 |
+| 18, 20, 21, 22-35 | LinuxLinks, It's FOSS, up-for-grabs, packaging | unchanged: still waiting on AI-disclosure decision, contact form, labelled issues, packagers |
+
+**Activity log, 2026-11-21 (refresh).** Read the overview and index; confirmed the release and repository state with `gh`; fetched seven venue pages (above); replaced the release placeholder in `awesome-lists.md`, `directories-and-newsletters.md`, `forums-and-communities.md`, `dev-to-article.md`, `launch-and-press.md` and `linux-news-and-software-sites.md`; corrected the awesome-dotnet and awesome-cli-apps rules in `awesome-lists.md`; recorded verified rules in `forums-and-communities.md`, `dev-to-article.md` and `directories-and-newsletters.md`. Nothing was sent, posted, submitted or signed up for. Still for the user: submit or send whichever actionable venues they choose; confirm the release notes match the feature claims (the kit warns the README lags); decide the AI-disclosure answer for LinuxLinks; supply a Terminal Trove preview image; label some open issues before up-for-grabs.
+
+**Skipped in this refresh:** agarrharr/awesome-cli-apps (stars rule and no-AI-PR rule), Lobsters as a first venue (invite and 70-day rule).

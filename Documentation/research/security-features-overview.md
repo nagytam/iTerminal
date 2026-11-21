@@ -476,3 +476,90 @@ The RFC 3161 time stamp is on by default, which conflicts with the opt-in rule i
 - `iTerminal.Core/Services/Timestamps/ITimestampAuthority.cs` uses `DefaultAuthority = "https://freetsa.org/tsr"` when the `EvidenceNotebook.TimestampAuthority` setting has never been set. An empty setting turns stamping off, which is the only off switch found. Only the SHA-256 digest is sent, as the code comment says.
 
 The source matches the claim. The registration is in `iTerminal.Core/Application/`, not `iTerminal/`. Nothing in the source, the tests or the dialogs gates the call on opt-in. This section records the finding only; the source and `Documentation/security-tools.md` were not changed.
+
+## Later surveys
+
+### Survey 5: SSH-signed files, installed-file verification, boot state, SPDX, DNSSEC status and Sigstore bundles
+
+Surveyed on 2026-11-21 on branch `fix-application-lifetime` at commit `38ed0b4b`. Topics: SSH signatures, the SPDX document format, installed-file verification, kernel lockdown and Secure Boot, the DNSSEC authenticated-data flag and Sigstore bundles. Basis: official documentation (the OpenSSH `PROTOCOL.sshsig` file, the SPDX specification and releases page, the rpm and debsums manual pages, the kernel lockdown man page, RFC 4035, the Sigstore bundle page and the OpenSCAP project page), not run-time behaviour. "Not found" means a case-insensitive grep of `iConsole/`, `iTerminal.Core/` and `iConsole.Formats/` (the widened scope is needed because commit `84415ff3` moved the format readers into `iConsole.Formats/`). The sections of this survey sit under `## Later surveys` so that the heading levels stay in order.
+
+**Signatures**
+
+33. **SSHSIG signature check (`ssh-keygen -Y`).**
+    - Missing: no verifier reads a file armoured as `-----BEGIN SSH SIGNATURE-----`. `PublisherSignatureService.PickTool` names gpg, minisign and Sigstore, and reads the head of a `.sig` file only to tell this program's own format from the others.
+    - Fits: a new `PublisherTool` value chosen in `PickTool` by the armour line, run through `IExternalProcessRunner` with a fixed argument list, and checked against an allowed-signers file the user names. The key is never taken from beside the signed file, as the keyring rule in file-operations.md already requires. A check that does not identify the signer must say so in its verdict.
+    - Seen in: OpenSSH `PROTOCOL.sshsig`, revision 1.5 as read on GitHub, with the OpenBSD tag dated 10 October 2026 ([PROTOCOL.sshsig](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig)). It defines the armour lines, a blob that starts with the magic `SSHSIG`, a version that a verifier must reject when newer than it supports, the signer's key, a namespace, a reserved field, a hash name (sha256 or sha512 only) and a signature. The signed data is a wrapper of the magic, namespace, reserved field, hash name and message hash.
+    - Not found: `sshsig`, `SSH SIGNATURE`, `allowed_signers`, `ssh-keygen`.
+    - Unverified: the `ssh-keygen -Y verify` arguments and the `check-novalidate` variant (from a search summary; the man page was not read); how a `.sig` in this format is reported today (not run).
+
+34. **SPDX document reader.**
+    - Missing: nothing reads an SPDX document. Item 4 records that SPDX was not checked, and this item is the SPDX side of the same reader.
+    - Fits: a parser in `iConsole.Formats` beside the CycloneDX reader of item 4, giving the component list to the package check in security-tools 3.6. The reader must read the version first, because SPDX 2.x and 3.x are different models.
+    - Seen in: the SPDX 3.0.1 specification introduction, which describes SPDX as a data exchange format and lists the model's profiles (Core, Software, Security, Licensing, Dataset, AI, Build, Lite and Extension) ([SPDX 3.0.1](https://spdx.github.io/spdx-spec/v3.0.1/front/introduction)). The releases page marks 3.0.1 as Latest (17 December, year not shown), lists v3.1-RC1 as a pre-release (24 January, year not shown) and dates 2.3 to 3 November ([releases](https://github.com/spdx/spdx-spec/releases)).
+    - Not found: `spdx`, `SPDXID`, `spdxVersion`.
+    - Unverified: the serialisations (the page names none; JSON-LD comes from a search summary); the years of the 3.0.1 and v3.1-RC1 releases; whether 3.1 is final, since only the pre-release is on the page.
+
+**Hardening**
+
+35. **Kernel lockdown and Secure Boot state (Linux, read-only).**
+    - Missing: nothing reads whether the kernel is in lockdown or whether Secure Boot is on. `lockdown` matches only the iOS device lockdown in `iTerminal.Core/Services/IPhoneDeviceService.cs`.
+    - Fits: a read-only line beside the SELinux and AppArmor status of item 31, stated as the system's state, with "not available" given as a fact. A Secure Boot tool, if one is used, runs through `IExternalProcessRunner` with a fixed argument list and never through a shell.
+    - Seen in: the `kernel_lockdown(7)` man page, man-pages 6.19 ([kernel_lockdown(7)](https://man7.org/linux/man-pages/man7/kernel_lockdown.7.html)). Lockdown was added in Linux 5.4, needs `CONFIG_SECURITY_LOCKDOWN_LSM` and `lockdown` in the `lsm=` parameter, blocks `/dev/mem`, `/dev/kmem`, `/dev/kcore`, BPF and kprobes, and requires modules to be validly signed.
+    - Not found: `lockdown` (the one hit is the iOS device service), `secureboot`, `secure_boot`, `mokutil`.
+    - Unverified: the names of the integrity and confidentiality modes and the sysfs file that shows the active one (a search summary only, since the fetched man page does not describe them); the Secure Boot command (`mokutil` not checked); the Windows Secure Boot and TPM state (not researched).
+
+36. **Installed-file verification against the package record (`rpm --verify`, `debsums`).**
+    - Missing: nothing compares an installed file with the package that owns it. `md5sums` matches only a comment on the hash-manifest file names in `iTerminal.Core/Services/Checksums/HashManifest.cs`.
+    - Fits: a read-only action on a package in `PackageManagerDialog` (Alt+F8), run through `PackageManagerProcess`, and a line in Properties (Ctrl+F12) for a file that a package owns. The output lists each changed attribute as a fact. A changed file is not a verdict of compromise, so the dialog should point to the file-integrity monitor of security-tools 3.7 for that purpose.
+    - Seen in: the debsums manual page, from the Ubuntu 22.04 copy of debsums 3.0.2 ([debsums(1)](https://manpages.ubuntu.com/manpages/jammy/man1/debsums.1.html)). It checks installed files against `/var/lib/dpkg/info/*.md5sums`, has the options `-c`, `-s`, `-l` and `-a`, returns exit codes 0 to 3 and 255, and calls its value as a security tool limited. The rpm manual, rpm 6.1.0 dated 20 August 2026 ([rpm(8)](https://rpm.org/docs/latest/man/rpm.8)), says verify compares size, digest, mode, file type, owner, group, time and capabilities with the database, prints one character per test and prints a question mark when a test could not run.
+    - Not found: `debsums`, `rpm -V`, `rpm --verify`, `dpkg -V`, `md5sums` (the one hit is a comment).
+    - Unverified: the `rpm -Vp` form for a package file (the page does not document it); whether `dpkg --verify` is available to the apt service (not checked).
+
+**Network**
+
+37. **DNSSEC authenticated-data flag in the DNS tool.**
+    - Missing: the DNS lookup uses `Dns.GetHostEntryAsync` (`iTerminal.Core/Services/NetworkTools/NetworkToolService.cs`, lines 144, 165 and 408), which returns addresses and no authenticated-data flag. Nothing reads DNSSEC state.
+    - Fits: a query path in `NetworkToolService` that sends one DNS query, which asks for DNSSEC data, to a resolver the user names, and shows whether that resolver set the flag. The verdict must say that the flag is the resolver's claim, as RFC 4035 requires for a stub. A check of the chain itself is a separate and larger item.
+    - Seen in: RFC 4035 ([RFC 4035](https://www.rfc-editor.org/rfc/rfc4035.html)), sections 3.2.3 and 4.9.3, read in part. A recursive server sets the flag only when it treats the whole answer as authentic, and a non-validating stub must not rely on it unless it got the answer from a trusted recursive server over a secure channel.
+    - Not found: `dnssec`, `authenticated data`, `\bAD bit\b`, `DnsQuery`.
+    - Unverified: the validation procedure in section 5 (not read); the later updates named on the search page (RFC 4470, 6014, 6840, 8198, 9077 and 9520), not read.
+
+**Signatures (Sigstore)**
+
+38. **Sigstore bundle check (offline).**
+    - Missing: a `.bundle` file is routed to `PublisherTool.Sigstore` in `PublisherSignatureService.PickTool`, and `VerifyOneAsync` returns `Unchecked` for that tool. Nothing reads a bundle's certificate, log entry or timestamp. security-tools section 2 lists `.bundle` as checked with gpg or minisign, which the code does not do, so that row needs a correction by the maintainer.
+    - Fits: a verifier in `iTerminal.Core/Services/Checksums` behind the existing Sigstore branch, which compares the bundle's signed digest with the file's SHA-256. The trusted roots and the expected signer identity come from a file the user sets, never from the bundle itself or from a URL, and a verdict names the identity that matched.
+    - Seen in: the Sigstore bundle format page, version 0.3.2 dated 14 January 2025 ([bundle](https://docs.sigstore.dev/about/bundle/)). The verification material holds a certificate or key hint, log entries and RFC 3161 timestamps. The content is a message signature or one DSSE envelope signature. A log entry holds an inclusion promise or an inclusion proof with a checkpoint, and the page describes no offline procedure.
+    - Not found: `rekor`, `fulcio`, `inclusion proof`. The words `sigstore` and `cosign` match only the Unchecked branch and its label in `iTerminal.Core/Services/Checksums/PublisherSignatureService.cs` and `iTerminal.Core/Dialogs/ChecksumDialog.cs`.
+    - Unverified: whether an offline check is possible (the page gives no procedure; the protobuf schema and the checkpoint rules come from search summaries); the Rekor v2 and cosign version notes (search summary only).
+
+**Suggested order**
+
+These are the new items only, ranked by value to iTerminal.
+
+1. SSHSIG check (33): one fixed process call and a file the user already owns, so it is small.
+2. Installed-file verification (36): read-only, and it reuses the package-manager dialog.
+3. Kernel lockdown and Secure Boot state (35): read-only, one status line beside item 31.
+4. SPDX reader (34): a pure parser beside item 4.
+5. DNSSEC flag in the DNS tool (37): needs a DNS query path and an honest label.
+6. Sigstore bundle check (38): needs a trust-root decision, and the source gives no offline procedure.
+
+**Already covered, or considered and not added**
+
+- OpenSCAP: a tool option for the benchmark-style report in security-tools 3.6, so no new item. The project page names the LGPL-2.1 licence, `oscap` subcommands for XCCDF, OVAL and SCAP source streams, and says Windows support has been void since 1 February 2022. It shows no release section; a Debian package name for 1.4.3 comes from a search summary and is unverified.
+- LUKS (Linux) and FileVault (macOS) encryption status: not added. The search did not confirm a read-only status command, and the cryptsetup `luksDump` page was not read in full. Windows BitLocker is read by the disk manager (file-operations.md, drive actions), so the Windows part is present.
+- signify (OpenBSD): not researched. A second `.sig` tool would fit `PublisherTool`, so it is a candidate for a later pass.
+- Lynis: not researched in this pass; security-tools 3.6 covers the audit it does.
+- ML-KEM: item 3. Rekor transparency log lookup: items 19 and 38.
+- gitleaks: security-tools 3.4. YARA (including newer versions), ClamAV: security-tools 3.2. osv-scanner and Trivy: security-tools 3.6 and item 14.
+- Windows Secure Boot and TPM state: not researched; the Windows part of item 35 is unverified.
+
+#### Status after the pull of 2026-11-21
+
+- Item 30 (constant-time comparison): still Partly, but its "Missing" text is out of date. `CryptographicOperations.FixedTimeEquals` is now called once, in `TokenMatches` in `iTerminal.Core/Services/Sharing/FileShareRequestHandler.cs` (line 145, from commit `91d554b4`, #731), to compare a share token. No shared helper exists.
+- Items 11 and 18, and the ElfAnalyzer path in the binary-hardening line of "Already covered": paths moved by commit `84415ff3` (#802). `PdfSignatureReader` is now `iConsole.Formats/Pdf/PdfSignatureReader.cs`, `CertificateReader` is `iConsole.Formats/Certificates/CertificateReader.cs`, and `ElfAnalyzer` is `iConsole.Formats/Executables/ElfAnalyzer.cs`. Status unchanged.
+- Item 13: the `.eml` reader is now `iConsole.Formats/Services/MimeMessageReader.cs`. Status unchanged (Partly); no `Authentication-Results` term matches.
+- Item 7: still Partly. The open issue (default-on RFC 3161 stamping) still matches the source: the registration is in `iTerminal.Core/Application/iTerminalApplicationBuilderExtension.cs` (line 381), the default authority is `https://freetsa.org/tsr` in `ITimestampAuthority.cs`, and `EvidenceNotebookService.cs` stamps at lines 153 and 332, with no opt-in check.
+- Items 10 and 12 were re-checked by term sweep: item 10 (`%G?`, `%GS`, `verify-commit`) still Missing, and item 12 (confusable, homoglyph, mixed-script) still Partly with the mixed-script part missing. Item 12 was not re-checked in the last pull.
+- Items 1, 2, 3, 4, 5, 6, 8, 9, 14, 15, 16, 17, 19, 20, 21, 24, 25, 26, 27, 28, 29, 31 and 32 were re-checked by term sweep and still match: no term of their "Not found" lists is in the source. Item 4 is still a writer only, item 5 still has no shell-link reader, and item 21 still has no Landlock call.
+- Totals after this survey: 38 items. Partly: 11 (7, 11, 12, 13, 16, 18, 20, 21, 23, 27, 30). Built: 1 (22). Missing: 26.

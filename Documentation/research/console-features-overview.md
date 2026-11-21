@@ -1,6 +1,6 @@
 # Console and terminal UI features: survey overview
 
-This document records console and terminal UI libraries from languages the older comparison does not cover, checked against iConsole, and the features they have that iConsole lacks. The older comparison in `Documentation/architecture/ui-framework/tui-library-comparison.md` is a read-only record of earlier surveys. Its highest item is 131, so the items here start at 132. The highest item in this document is 153.
+This document records console and terminal UI libraries from languages the older comparison does not cover, checked against iConsole, and the features they have that iConsole lacks. The older comparison in `Documentation/architecture/ui-framework/tui-library-comparison.md` is a read-only record of earlier surveys. Its highest item is 131, so the items here start at 132. The highest item in this document is 156 (Survey 5).
 
 ## Overview
 
@@ -10,6 +10,7 @@ This document records console and terminal UI libraries from languages the older
 - Localization with a completeness test: HermesConsoleUI has internationalization. The other pages read do not describe one.
 - Dialogs that move and resize with the keyboard (Ctrl+F7, Ctrl+F8) and the mouse: not described in the pages read.
 - Paged data sources with read-ahead, cancellation and a stale-result rule (`PagedDataSource`): SageTUI and Mire have virtual lists and tables, but their pages do not describe paging.
+- Survey 5 (vim-quickui, tui.mbt, Gambas): a popup text viewer with syntax colours, drop shadows, box borders with padding, flexbox-style stacks, Tab focus traversal, a rendering diff, a setup wizard and a command palette are built.
 - Level: tree, table, tabs, splitter, progress group, live table, calendar, spinner, Markdown, toasts, context menus, tooltips, popovers, wizard, form, pie, scatter, histogram and candlestick charts, log view with follow and filters, and a test harness with input injection and virtual time (SageTUI and termr describe the same kind of harness).
 
 ### Missing features
@@ -38,6 +39,9 @@ This document records console and terminal UI libraries from languages the older
 | Circle, ellipse and triangle primitives (item 151) | Red View text UI backend | Missing | `ChartCanvas`, `LineCanvas` |
 | Thumbnail grid for file lists (item 152) | QB64_GJ_LIB | Missing | `FilePicker`, `ListBox<T>`, `VirtualListBox<T>` |
 | ANSI art file viewer (item 153) | ANSI-Print-64 | Missing | `TextViewerControl`, the F3 viewer |
+| Named areas in the grid layout (item 154) | tui.mbt | Missing | `GridPanel`, `BorderedGrid` |
+| Reusable location list, quickfix style (item 155) | vim-quickui | Partly: the search drive and its status bar only | `VirtualListBox<T>`, `VirtualTable<T>`, `TextViewerControl.ShowLine` |
+| User object on each control (item 156) | Gambas gb.term.form | Missing | `Control` |
 
 ### Suggested order
 
@@ -462,3 +466,81 @@ Languages covered before the surveys (from the older comparison and the surveys)
 ## Consolidated
 
 Consolidated on 2026-11-20 from Surveys 1 to 4 into this one document. Each item (132 to 153, 22 in all) appears once, under its group, with its number unchanged. No two surveys described the same item under different numbers, so no "also" notes were needed. The "Status after the pull" block of Survey 1 is applied (item 130 built, and the re-checks of older items) and the dated block is dropped. The survey log, the per-survey narratives and the per-library feature descriptions are removed; their item facts are kept above.
+
+### Later surveys
+
+#### Survey 5: Vim script, MoonBit and Gambas
+
+Survey 5, dated 2026-11-21: vim-quickui (Vim script), tui.mbt (MoonBit, a fork of mizchi/tui) and the terminal form classes of Gambas (gb.term.form). The basis is the docs and README of each library, not run-time behaviour, plus the GitHub record for licence, release and push dates. "Not found" means a grep of `iConsole/` and `iTerminal.Core/` (`--include=*.cs`) on branch `fix-application-lifetime` at commit `38ed0b4b`. The brief asked for six to ten libraries from languages no survey covers; only three had a readable feature list, because the other candidates were archived, unreadable, low-level bindings or had no widget set (see "Considered and skipped"). Vim script, MoonBit and Gambas are new to the document.
+
+Libraries read:
+
+| Library | Language | Licence | Date checked | Release (as found) | Survey | Links |
+| --- | --- | --- | --- | --- | --- | --- |
+| vim-quickui | Vim script | MIT | 2026-11-21 | 1.5.6, released 3 May 2026; last push 30 June 2026 | 5 | [GitHub](https://github.com/skywind3000/vim-quickui), [manual](https://raw.githubusercontent.com/skywind3000/vim-quickui/master/MANUAL.md) |
+| tui.mbt (fork of mizchi/tui) | MoonBit | None shown by GitHub | 2026-11-21 | Tag v0.5.0, commit dated 4 February 2026; no GitHub release; last push 6 April 2026 | 5 | [GitHub](https://github.com/xrr2016/tui.mbt) |
+| gb.term.form (Gambas) | Gambas (BASIC dialect) | Not stated | 2026-11-21 | Not stated on the pages; partial read | 5 | [TermForm](https://gambaswiki.org/wiki/comp/gb.term.form/termform), [TermButton](https://gambaswiki.org/wiki/comp/gb.term.form/termbutton) |
+
+Feature sources: vim-quickui from its manual (the dialog guide, DIALOG.md, was not read); tui.mbt from its README; gb.term.form from the TermForm and TermButton class pages. The Gambas classes TermFrame and TermLabel are named by a search snippet only, so they are **unverified**, and no entry, list or check-box class was confirmed. Its gb.ncurses component was read and is listed under "Considered and skipped".
+
+**Layout**
+
+154. **Named areas in the grid layout.** *Missing.* `GridPanel` places a child by row, column and span numbers (`Add(control, row, column, rowSpan, columnSpan)`), and no track or cell can be given a name and used to place a child. Search terms that found nothing in `iConsole/` and `iTerminal.Core/`: `GridArea`, `NamedArea`, `TemplateArea`, `AreaName`. **Seen in:** tui.mbt (a grid with named areas and spanning cells, from its README). Fits: `GridPanel`, `BorderedGrid`. Priority: low, because numbered spans cover the current dialogs.
+
+**Controls**
+
+155. **Reusable location list (quickfix style).** *Partly.* A list of places, each a file, a line and a text, with next and previous jumps that open the line in a viewer or editor, is not a control. The search drive shows hits in a panel and `SearchResultsIndicator` (`iConsole/Controls/StatusBar/SearchResultsIndicator.cs`) shows the count in the status bar, but no list of hits exists as a reusable control. Search terms that found nothing: `Quickfix`, `QuickFix`, `LocationList`, `ProblemList`, `DiagnosticList`, `ErrorList`. **Seen in:** vim-quickui (a quickfix preview built on its popups). Fits: `VirtualListBox<T>` or `VirtualTable<T>` for the list, `TextViewerControl.ShowLine(line, column)` for the jump. Build, git and search output would share it. Priority: medium.
+
+**Framework**
+
+156. **A user object on each control.** *Missing.* `Control` has a `Name`, but no property holds an application object. Search terms that found nothing in `iConsole/Controls/`: `UserData`, `UserObject`, `object? Tag`. **Seen in:** Gambas gb.term.form (`Tag` on the TermButton class and, by inheritance, on each terminal control, per its class page). Fits: `Control`. Priority: low, because typed fields and `Name` cover most uses.
+
+#### Suggested order for Survey 5
+
+1. Item 155 (location list): one list for search, build and git output, with next and previous jumps.
+2. Item 156 (user object on a control): small; it removes the side tables that dialogs keep for their rows, where they have them.
+3. Item 154 (named grid areas): a convenience over the numbered spans.
+
+#### Already covered (Survey 5 candidates)
+
+- Spacer element (tui.mbt): `SizeRule.Fill(weight)` on an empty child, in `iConsole/Layouts/SizeRule.cs`. No separate type.
+- Toggle switch (tui.mbt): `CheckBox` covers it. `ToggleSwitch` and `OnOffSwitch` found nothing.
+- Signals and reactive state (tui.mbt): item 27 (partly built, `ObservableValue`).
+- Stat and meter displays (tui.mbt): item 139 (metric tile); `Gauge` is built.
+- Terminal popup that runs a TUI program with an exit callback (vim-quickui): item 64, still missing (see the re-checks below).
+- Preview popup that closes when the cursor moves, unless pinned (vim-quickui): item 113 (a list with a preview pane).
+- Data-driven dialog from a definition with seven control types (vim-quickui): item 121 (declarative layout files) and item 119 (typed results).
+- Input box with history (vim-quickui): item 49. Registers are a Vim feature and are not added.
+- Confirm dialog with lettered choices (vim-quickui): item 147 (caption hot keys, partly built) and item 94 (prompt dialogs, built).
+- Colour groups for hot keys, disabled items and help text (vim-quickui): items 98 and 120. `ColorScheme` has disabled, selected and focused-border colours, and no hot-key or help colour.
+- Maximised window (Gambas `Maximized`): item 68 (window management).
+- Buffer switcher (vim-quickui): item 68. Function list (vim-quickui): item 118.
+- Text popup with syntax highlighting (vim-quickui): built (`Popup` with `TextViewerControl` and `ISyntaxHighlightingService`).
+- Rendering that writes only the changes (tui.mbt): built (`ConsoleBufferRendererJob`).
+- Flexbox-style rows and columns with wrap (tui.mbt): built (`StackPanel`, `SizeRule`).
+- Shadow, border, padding and fill (Gambas): built (`Shadow`, `BorderStyle`, `BoxPanel`, `SizeRule`).
+- Focus traversal (Gambas `GetNextFocusedControl`): built (Tab).
+- Setup wizard, command palette, form and Kitty graphics demos (tui.mbt): built (`Wizard`, the command palette, `FormPanel`; items 7 and the Sixel work).
+- Tabs, progress bars, spinners, sparklines and gauges (tui.mbt): built.
+- Reverse video for a whole control (Gambas `Invert`): not added. `Conxel` has reverse video, and a per-control switch is cosmetic.
+
+#### Considered and skipped (Survey 5)
+
+- jtermbox (Janet): a termbox binding with cell drawing, colours, keys and mouse, but no widget layer. Last push 12 March 2021 (GitHub record). Source: [repository](https://github.com/Alligator/jtermbox).
+- jermbox (Janet): known from a search snippet only; described as archived and moving to Sourcehut. Not read.
+- journo (Janet): a question-and-answer prompt library, not a full-screen one (search snippet). Not read.
+- cobcurses (COBOL, LGPL-2.1): last push 5 November 2017. Its page names no widgets, menus, fields, colours or mouse, and the only changelog entry is from 2017. It is the only open-source COBOL curses option read; cobol-ncurses-lib is described as unstable (search snippet, not read). Source: [repository](https://github.com/ve3wwg/cobcurses).
+- libvt (FreeBASIC): the docs site and its API page returned HTTP 404 on two fetches, and no GitHub repository was found under the same name (HTTP 404 from the GitHub API). Its TUI section is known only from a search snippet, so it is **unverified**.
+- fbUI (FreeBASIC): GitHub shows it archived, last push 24 February 2016. Its page names no controls and does not say whether it draws in text mode. Not counted.
+- gb.ncurses (Gambas): read. It offers windows, a screen, borders, colour pairs, attributes, a cursor, keys and input modes, and no widgets or mouse. It is a set of low-level windows.
+- gb.form.terminal (Gambas): a VT-100 terminal emulator control, not a widget set (search snippet, not read).
+- mizchi/tui (upstream of tui.mbt): the GitHub API returned HTTP 404 for the upstream path, so the fork was read instead. The fork's README names the upstream package at version 0.3.0.
+- onebit-tui (labelled MoonBit in search): the snippet describes an OpenTUI project in TypeScript, which is covered. Not counted.
+- Ceylon, Hare, Cangjie and J: the searches found no terminal widget library in these languages; the results named other languages.
+- Smalltalk: searched for Squeak and Pharo terminal widgets. Pharo is covered already; no terminal widget library was found for Squeak.
+- Octave and MATLAB: Octave's UI is graphical. A 2016 mailing-list post suggested CDK for text widgets; no Octave binding was found. Not counted.
+- PureBasic: the console has no gadgets, according to a community forum thread. ConsoleX appears in a search snippet only, with no features. Not counted.
+
+#### Status re-checks (Survey 5)
+
+Items 64, 113, 121, 49, 98 and 147 were checked by search, with no change of status. Item 64 is still missing: `TerminalPanel` runs commands, and no pseudo-terminal or escape-sequence parser was found (`forkpty`, `openpty`, `CreatePseudoConsole`, `VtParser`, `TerminalEmulator` match nothing). Item 113 has no preview control in `iConsole/Controls` or `iConsole/Dialogs`. Item 121 has no layout loader (`LayoutLoader`, `FromJson`, `LoadLayout`). Item 49 has no history type in the text controls (`History` appears only in a comment in `AutoCompletion.cs`). Item 98 has no colour derivation helper. Item 147 still parses `&` only in `ContextMenuItem.cs`. No status change was found, so no dated block was added.

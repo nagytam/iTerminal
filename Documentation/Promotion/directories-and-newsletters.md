@@ -7,7 +7,7 @@ AlternativeTo (software directory).
 
 | Venue | Rule | Status |
 | --- | --- | --- |
-| Console.dev | Suggest a tool by email to hello@console.dev (the site's About page). Selection criteria: a tool a developer would use regularly and that fits the development flow. The site says it does not do sponsored reviews. | Partly verified (site pages read in search results) |
+| Console.dev | Suggest a tool by email to hello@console.dev (the site's About page). Selection criteria: a tool a developer would use regularly and that fits the development flow. The site says it does not do sponsored reviews. | Partly verified (<https://console.dev/about/> read 2026-11-21: suggest by email; looks for tools built for developers with clear documentation; reviews are not sponsored; a separate beta listing covers early releases, which fits a beta; full criteria on another page, not read) |
 | Terminal Trove | Submit form at terminaltrove.com/submit. Cross-platform preferred; standalone binaries preferred but not required; an image preview (PNG, GIF or MP4) is required; the tool must not already be listed. | Partly verified (form summary) |
 | AlternativeTo | Free account; "Suggest new application"; fill in platforms, license, description and tags. One listing per application, no separate free and pro versions. Submissions are reviewed and can be refused. | Verified from the FAQ; approval times vary |
 
@@ -30,7 +30,7 @@ a background task queue.
 It is in beta, so feedback from developers who use it is especially useful.
 
 Repository: https://github.com/nagytam/iTerminal
-Release: <RELEASE URL>
+Release: https://github.com/nagytam/iTerminal/releases/latest
 Documentation: https://github.com/nagytam/iTerminal/tree/main/Documentation
 
 Thank you for considering it.

@@ -14,7 +14,7 @@
 
 ## Before sending
 
-- Replace `<RELEASE URL>` with a published release. A beta without a download is not newsworthy to any of these.
+- Replace `https://github.com/nagytam/iTerminal/releases/latest` with a published release. A beta without a download is not newsworthy to any of these.
 - **AI disclosure.** iTerminal is developed with AI assistance (`CONTRIBUTING.md` and `FUNDING.md` say so). LinuxLinks asks the question directly and wants a public disclosure URL. Answer "Yes" and give `<AI DISCLOSURE URL>`, for example the "Using AI tools" section of `CONTRIBUTING.md` on the repository once it is pushed. Do not answer "No" or "Don't know". Decide whether LinuxLinks's policy would exclude the project; if so, do not submit.
 - Changelog News excludes commercial products. The project is MIT licensed and free, but a sponsor appeal in the same submission could be read as commercial. Leave the sponsor ask out.
 - `<SUBMITTER NAME>` and `<SUBMITTER EMAIL>`: only the forms that need them (LinuxLinks). The user chooses which address to give.
@@ -30,7 +30,7 @@ terminal. Git revisions, Docker containers, SSH hosts, archives and disk images 
 folders, so one set of keys copies between any two of them. It ships as a self-contained deb,
 rpm and tar.gz for Linux (and an MSI for Windows). It is in beta.
 
-Project and downloads: <RELEASE URL>
+Project and downloads: https://github.com/nagytam/iTerminal/releases/latest
 Source: https://github.com/nagytam/iTerminal
 ```
 
@@ -67,7 +67,7 @@ separate reusable library in the same repository. Long operations run as backgro
 key handlers have a 200 ms budget enforced in tests.
 ```
 
-Link: `<RELEASE URL>` or the repository, whichever Changelog prefers; the repository is the safer
+Link: `https://github.com/nagytam/iTerminal/releases/latest` or the repository, whichever Changelog prefers; the repository is the safer
 choice for a "project" item.
 
 ## 4. It's FOSS News

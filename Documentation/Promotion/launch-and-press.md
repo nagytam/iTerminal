@@ -35,7 +35,7 @@ I am the author of the project. The article would include screenshots and would 
 the magazine's guidelines give. Happy to adapt the outline.
 
 Repository: https://github.com/nagytam/iTerminal
-Release: <RELEASE URL>
+Release: https://github.com/nagytam/iTerminal/releases/latest
 
 Best regards,
 <YOUR NAME>
@@ -60,7 +60,7 @@ as a folder, and show how to move files between a local folder and an SSH host w
 It would be aimed at Ubuntu users, with screenshots prepared to the image limits in the current guide.
 
 Repository: https://github.com/nagytam/iTerminal
-Release: <RELEASE URL>
+Release: https://github.com/nagytam/iTerminal/releases/latest
 
 Thank you,
 <YOUR NAME>
@@ -78,7 +78,7 @@ iTerminal is a new beta of an open-source two-panel terminal file manager for Li
 It treats Git revisions, Docker containers, SSH hosts and archives as folders. It is MIT licensed.
 
 Repository: https://github.com/nagytam/iTerminal
-Release: <RELEASE URL>
+Release: https://github.com/nagytam/iTerminal/releases/latest
 ```
 
 ## 4. German tech press and heise Download
@@ -99,7 +99,7 @@ sechs Sprachen, darunter Deutsch.
 Das Projekt ist im Beta-Stadium; Rückmeldungen sind willkommen.
 
 Repository: https://github.com/nagytam/iTerminal
-Download: <RELEASE URL>
+Download: https://github.com/nagytam/iTerminal/releases/latest
 ```
 
 For heise Download: create the developer account, then use the program suggestion link on the Linux
