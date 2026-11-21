@@ -1235,11 +1235,26 @@
   <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
     <value>Basculer entre l'ordinateur et deux joueurs</value>
   </data>
-  <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
-    <value>Mettre le serpent en pause ou le relancer, ou le faire démarrer</value>
-  </data>
   <data name="Games.Snake.Pause" xml:space="preserve">
     <value>pause</value>
+  </data>
+  <data name="Games.Snake.Start" xml:space="preserve">
+    <value>démarrer</value>
+  </data>
+  <data name="Games.Snake.Resume" xml:space="preserve">
+    <value>reprendre</value>
+  </data>
+  <data name="Games.Snake.New" xml:space="preserve">
+    <value>nouveau</value>
+  </data>
+  <data name="DialogHint.StartSnake" xml:space="preserve">
+    <value>Faire démarrer le serpent</value>
+  </data>
+  <data name="DialogHint.PauseSnake" xml:space="preserve">
+    <value>Mettre le serpent en pause</value>
+  </data>
+  <data name="DialogHint.ResumeSnake" xml:space="preserve">
+    <value>Relancer le serpent</value>
   </data>
   <data name="Games.OnePlayer" xml:space="preserve">
     <value>un joueur</value>
@@ -6025,9 +6040,6 @@
   </data>
   <data name="Signature.Footer" xml:space="preserve">
     <value> F2:signer gpg  F3:signer Authenticode  F4:signer fichier de clé  F5:revérifier  Échap:fermer </value>
-  </data>
-  <data name="Wipe.Footer" xml:space="preserve">
-    <value> Entrée:effacer  1/3/7 ou ↑↓:passes  Échap:fermer </value>
   </data>
   <data name="FolderSelector.HintGo" xml:space="preserve">
     <value>Entrée aller</value>
@@ -11224,5 +11236,41 @@
   </data>
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>Partager les fichiers sélectionnés sur ce réseau : un code QR et un lien les ouvrent dans le navigateur d’un téléphone tant que cette boîte de dialogue est ouverte.</value>
+  </data>
+  <data name="Wipe.FooterChoosing" xml:space="preserve">
+    <value> Enter:armer  1/3/7 ou ↑↓:passages  Esc:fermer </value>
+  </data>
+  <data name="Wipe.FooterArmed" xml:space="preserve">
+    <value> Enter:effacer définitivement  autre touche:retour </value>
+  </data>
+  <data name="Wipe.FooterRunning" xml:space="preserve">
+    <value> Échap:arrêter (fichiers déjà effacés restent effacés) </value>
+  </data>
+  <data name="Wipe.FooterFinished" xml:space="preserve">
+    <value> Enter:fermer </value>
+  </data>
+  <data name="Wipe.Counting" xml:space="preserve">
+    <value>Comptage des fichiers…</value>
+  </data>
+  <data name="Wipe.Total" xml:space="preserve">
+    <value>{0} écrits au total, sur tous les passages.</value>
+  </data>
+  <data name="Wipe.Name" xml:space="preserve">
+    <value>Effacer  {0}</value>
+  </data>
+  <data name="Wipe.Names" xml:space="preserve">
+    <value>Effacer  {0} éléments : {1}</value>
+  </data>
+  <data name="Wipe.Stopped" xml:space="preserve">
+    <value>Arrêté : {0} fichier(s) effacé(s).</value>
+  </data>
+  <data name="Wipe.Done" xml:space="preserve">
+    <value>Terminé : {0} fichier(s), {1} dossier(s), {2} écrasés.</value>
+  </data>
+  <data name="Wipe.Failed" xml:space="preserve">
+    <value>Échec : {0}</value>
+  </data>
+  <data name="Wipe.What" xml:space="preserve">
+    <value>{0} fichier(s), {1}</value>
   </data>
 </root>

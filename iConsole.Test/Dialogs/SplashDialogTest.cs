@@ -27,6 +27,18 @@ public class SplashDialogTest
         Assert.IsTrue(dlg.IsVisible);
     }
 
+    [TestMethod]
+    public void Title_ShowsTheAppVersion()
+    {
+        var theme = new iConsole.Test.Core.TestThemeService();
+
+        var withVersion = new SplashDialog(theme, version: "1.2.3");
+        var withoutVersion = new SplashDialog(theme);
+
+        Assert.AreEqual("iTerminal BETA 1.2.3", withVersion.Title);
+        Assert.AreEqual("iTerminal BETA", withoutVersion.Title);
+    }
+
     /// <summary>
     /// Esc closes the splash and its timer closes it again three seconds later. The second close used
     /// to pop the focus entry of whatever dialog had been opened in between.

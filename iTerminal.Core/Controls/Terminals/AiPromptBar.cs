@@ -83,12 +83,8 @@ public class AiPromptBar : Window
         {
             _speech.Changed += (_, _) => StateHasChanged();
             // Only for a bar that can take a question and has the focus; the key is offered to every control otherwise.
+            // Alt+F1 only: Ctrl+F7 is the music player's chord, and with the bar focused this command would take it first.
             AddCommand(new VoiceInputCommand(() => _model.IsAvailable && IsFocused, () => _speech.Toggle()));
-            // Alt+F1 is swallowed by some terminal hosts; Ctrl+F7 (a free Ctrl chord) does the same.
-            AddCommand(new VoiceInputCommand(() => _model.IsAvailable && IsFocused, () => _speech.Toggle())
-            {
-                Key = new Key(ConsoleKey.F7, false, false, true),
-            });
         }
 
         AddCommand(new TabForwardCommand());
@@ -259,7 +255,6 @@ public class AiPromptBar : Window
         if (_speech is not null)
         {
             yield return ("Alt+F1", UiText.Get("DialogHint.VoiceInput", "Speak the question (start and stop)"));
-            yield return ("Ctrl+F7", UiText.Get("DialogHint.VoiceInput", "Speak the question (start and stop)"));
         }
     }
 

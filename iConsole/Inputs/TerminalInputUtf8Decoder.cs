@@ -70,6 +70,11 @@ public sealed class TerminalInputUtf8Decoder
                 return true;
             }
 
+            if (b[2] is ((byte)'[' or (byte)'O') && TryConsumeAltEscapeSequence(b, emitKey))
+            {
+                return true;
+            }
+
             var ch = (char)b[2];
             emitKey(KeyFromChar(ch, alt: true));
             RemovePrefix(3);
@@ -153,6 +158,45 @@ public sealed class TerminalInputUtf8Decoder
             RemovePrefix(2);
             return true;
         }
+    }
+
+    /// <summary>
+    /// "ESC ESC O P" and "ESC ESC [ 1 ; 3 P": a key sent with Alt as an ESC prefix on an escape sequence (VTE-based
+    /// terminals send Alt+F1 this way). The second ESC is the Alt, so the sequence after it is read with Alt set.
+    /// Returns false when it is not a key sequence, so the caller reads the bytes the old way; a CSI still missing its
+    /// final byte waits for more input, as a lone "ESC [" does.
+    /// </summary>
+    private bool TryConsumeAltEscapeSequence(ReadOnlySpan<byte> b, Action<KeyEvent> emitKey)
+    {
+        Action<KeyEvent> withAlt = key => emitKey(new KeyEvent(key.KeyChar, key.ConsoleKey, key.Shift, true, key.Control, key.KeyPressType));
+
+        if (b[2] == (byte)'O')
+        {
+            if (b.Length < 4 || !TryParseSs3Arrow(b[3], withAlt))
+            {
+                return false;
+            }
+
+            RemovePrefix(4);
+            return true;
+        }
+
+        for (var i = 3; i < b.Length; i++)
+        {
+            if (b[i] is >= 0x40 and <= 0x7e)
+            {
+                // b[1..] starts with the ESC of the CSI, which is the shape TryParseCsiKey reads.
+                if (!TryParseCsiKey(b[1..(i + 1)], withAlt))
+                {
+                    return false;
+                }
+
+                RemovePrefix(i + 1);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool TryFindCsiTerminator(ReadOnlySpan<byte> b, out int endInclusive)

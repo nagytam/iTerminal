@@ -26,22 +26,44 @@ public class SaneScannerBackendTest
     }
 
     [TestMethod]
-    public void ParseListing_ReadsNetworkDevicesQuotedWithABacktick()
+    public void ParseListing_ReadsNetworkScannersQuotedWithABacktick()
     {
-        // What scanimage -L printed for an HP over the network: eSCL and AirScan both list it, and the HTML
-        // banner the backend writes to stdout is skipped.
-        const string networkListing =
-            "<!doctype html>\n" +
-            "<title>HP Embedded Web Server</title>\n" +
+        // What scanimage -L prints for a network scanner found by sane-airscan and the eSCL backend.
+        const string network =
             "device `escl:https://192.168.188.125:443' is a HP OfficeJet Pro 9120e Series [DDA47C] platen,adf scanner\n" +
             "device `airscan:e0:HP OfficeJet Pro 9120e Series [DDA47C]' is a eSCL HP OfficeJet Pro 9120e Series [DDA47C] ip=192.168.188.125\n";
 
-        IReadOnlyList<ScannerDevice> devices = SaneScannerBackend.ParseListing(networkListing);
+        IReadOnlyList<ScannerDevice> devices = SaneScannerBackend.ParseListing(network);
 
         Assert.HasCount(2, devices);
         Assert.AreEqual("escl:https://192.168.188.125:443", devices[0].Id);
         Assert.AreEqual("HP OfficeJet Pro 9120e Series [DDA47C] platen,adf scanner", devices[0].Name);
         Assert.AreEqual("airscan:e0:HP OfficeJet Pro 9120e Series [DDA47C]", devices[1].Id);
+    }
+
+    [TestMethod]
+    public void ParseListing_SkipsAnHtmlBannerBeforeTheDevices()
+    {
+        // The HP embedded web server answers the scan client with an HTML page that can appear on stdout before the list.
+        const string withBanner =
+            "<!doctype html>\n" +
+            "<title>HP Embedded Web Server</title>\n" +
+            "device `escl:https://192.168.188.125:443' is a HP OfficeJet Pro 9120e Series [DDA47C] platen,adf scanner\n";
+
+        IReadOnlyList<ScannerDevice> devices = SaneScannerBackend.ParseListing(withBanner);
+
+        Assert.HasCount(1, devices);
+        Assert.AreEqual("escl:https://192.168.188.125:443", devices[0].Id);
+    }
+
+    [TestMethod]
+    public void ParseListing_ReadsLocalAndNetworkScannersTogether()
+    {
+        IReadOnlyList<ScannerDevice> devices = SaneScannerBackend.ParseListing(
+            Listing + "device `airscan:e0:Brother MFC-L2750DW' is a eSCL Brother MFC-L2750DW ip=192.168.1.20\n");
+
+        Assert.HasCount(3, devices);
+        Assert.AreEqual("airscan:e0:Brother MFC-L2750DW", devices[2].Id);
     }
 
     [TestMethod]

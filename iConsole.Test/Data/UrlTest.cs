@@ -250,6 +250,61 @@ public class UrlTest
         }
     }
 
+    /// <summary>
+    /// The parent of a top-level folder is the root, never "" (which opens the working directory): the ".." row and
+    /// Ctrl+PgUp from /home must land on /, and the root is its own parent.
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FileSystemTopLevelFolder_ParentIsRoot()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var home = new Url("/home/");
+        Assert.AreEqual("/", home.ParentPath);
+        Assert.AreEqual("file:///", home.ParentUrl.FullUrl);
+        Assert.AreEqual("/", home.ParentUrl.Path);
+
+        var fromFolderWithoutSlash = new Url("/home");
+        Assert.AreEqual("/", fromFolderWithoutSlash.ParentPath);
+        Assert.AreEqual("/", fromFolderWithoutSlash.ParentUrl.Path);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FileSystemRoot_IsItsOwnParent()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var root = new Url("/");
+        Assert.AreEqual("/", root.ParentPath);
+        Assert.AreEqual("/", root.ParentUrl.Path);
+        Assert.AreEqual("file:///", root.ParentUrl.FullUrl);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FileSystemNestedFolder_ParentIsOneLevelUp()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var child = new Url("/home/tamas/");
+        Assert.AreEqual("/home", child.ParentPath);
+        Assert.AreEqual("file:///home", child.ParentUrl.FullUrl);
+        Assert.AreEqual("/home", child.ParentUrl.Path);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FileSystemDriveRootChild_ParentIsDriveRoot()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var child = new Url(@"c:\windows\");
+        Assert.AreEqual(@"c:\", child.ParentPath);
+        Assert.AreEqual(@"c:\", child.ParentUrl.Path);
+    }
+
     // ── Recursive / multi-embedded archive tests ──────────────────────────────
 
     [Timeout(60_000)]

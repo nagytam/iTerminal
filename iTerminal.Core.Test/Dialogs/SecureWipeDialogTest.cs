@@ -1,5 +1,6 @@
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services.Properties;
 using iTerminal.Core.Services.Wipe;
 using iTerminal.Core.Test.Helper;
 using Moq;
@@ -33,7 +34,11 @@ public class SecureWipeDialogTest
     {
         _wipe = new Mock<ISecureWipeService>();
         _notifications = new NotificationService();
-        _dialog = new SecureWipeDialog(_wipe.Object, _notifications, Models(), UiTestHelper.TestTheme());
+        _dialog = new SecureWipeDialog(_wipe.Object, _notifications, Models(), UiTestHelper.TestTheme())
+        {
+            // The guard has its own test; the flow tests press Enter twice in a row on purpose.
+            ArmGuard = TimeSpan.Zero,
+        };
     }
 
     private async Task OpenAsync(params string[] paths)
@@ -67,6 +72,129 @@ public class SecureWipeDialogTest
         Assert.AreEqual(WipePhase.Armed, _dialog.Phase);
         _wipe.Verify(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()), Times.Never);
         UiTestHelper.AssertScreenContains(Screen(), "Press Enter again");
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task EachPhase_FooterNamesOnlyTheKeysThatWorkInIt()
+    {
+        _wipe.Setup(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WipeResult(1, 0, 10, [], Cancelled: false));
+        await OpenAsync(@"C:\data\a.txt");
+        UiTestHelper.AssertScreenContains(Screen(), "Enter:arm");
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        UiTestHelper.AssertScreenContains(Screen(), "any other key:go back");
+        UiTestHelper.AssertScreenDoesNotContain(Screen(), "Enter:arm");
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        await _dialog.WipeTask;
+        UiTestHelper.AssertScreenContains(Screen(), "Enter:close");
+        UiTestHelper.AssertScreenDoesNotContain(Screen(), "any other key:go back");
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task WhileRunning_FooterSaysEscStopsIt()
+    {
+        var started = new TaskCompletionSource();
+        _wipe.Setup(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()))
+            .Returns<IReadOnlyList<string>, WipePattern, IProgress<WipeProgress>?, CancellationToken>(async (_, _, _, t) =>
+            {
+                started.SetResult();
+                try
+                {
+                    await Task.Delay(Timeout.Infinite, t);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+
+                return new WipeResult(0, 0, 0, [], Cancelled: true);
+            });
+        await OpenAsync(@"C:\data\a.txt");
+        _dialog.Arm();
+        _dialog.Confirm();
+        await started.Task;
+
+        UiTestHelper.AssertScreenContains(Screen(), "Esc:stop");
+        UiTestHelper.AssertScreenDoesNotContain(Screen(), "Enter:wipe");
+
+        _dialog.Close();
+        await _dialog.WipeTask;
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task Armed_CountsWhatWillBeWrittenInTheBackground()
+    {
+        _wipe.Setup(w => w.Measure(It.IsAny<IEnumerable<string>>(), WipePattern.ThreePass)).Returns(3072);
+        await OpenAsync(@"C:\data\a.txt", @"C:\data\b.txt");
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.D3, '3'));
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        await _dialog.CountTask;
+
+        UiTestHelper.AssertScreenContains(Screen(), FilePropertiesService.FormatSize(3072) + " written in total");
+        UiTestHelper.AssertScreenContains(Screen(), "Wipe  2 items:");
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task AnEnterRightAfterArming_IsIgnored_ButASecondLaterOneWipes()
+    {
+        _wipe.Setup(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WipeResult(1, 0, 10, [], Cancelled: false));
+        await OpenAsync(@"C:\data\a.txt");
+        _dialog.ArmGuard = TimeSpan.FromMinutes(1);
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+
+        Assert.AreEqual(WipePhase.Armed, _dialog.Phase);
+        _wipe.Verify(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()), Times.Never);
+
+        _dialog.ArmGuard = TimeSpan.Zero;
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        await _dialog.WipeTask;
+        Assert.AreEqual(WipePhase.Finished, _dialog.Phase);
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task WhileRunning_TheDiskGraphicFillsWithTheProgress()
+    {
+        IProgress<WipeProgress>? progress = null;
+        var started = new TaskCompletionSource();
+        _wipe.Setup(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()))
+            .Returns<IReadOnlyList<string>, WipePattern, IProgress<WipeProgress>?, CancellationToken>(async (_, _, p, t) =>
+            {
+                progress = p;
+                started.SetResult();
+                try
+                {
+                    await Task.Delay(Timeout.Infinite, t);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+
+                return new WipeResult(0, 0, 0, [], Cancelled: true);
+            });
+        await OpenAsync(@"C:\data\a.txt");
+        _dialog.TickSource = () => 0;
+        _dialog.Arm();
+        _dialog.Confirm();
+        await started.Task;
+
+        progress!.Report(new WipeProgress(50, 100, "a.txt"));
+        var screen = Screen();
+
+        UiTestHelper.AssertScreenContains(screen, "50%");
+        UiTestHelper.AssertScreenContains(screen, "[" + new string('█', 30) + "▓");
+
+        _dialog.Close();
+        await _dialog.WipeTask;
     }
 
     [TestMethod]

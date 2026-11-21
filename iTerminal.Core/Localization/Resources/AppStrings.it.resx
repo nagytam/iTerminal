@@ -1235,11 +1235,26 @@
   <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
     <value>Passa tra computer e due giocatori</value>
   </data>
-  <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
-    <value>Metti in pausa o riprendi il serpente, o fallo partire</value>
-  </data>
   <data name="Games.Snake.Pause" xml:space="preserve">
     <value>pausa</value>
+  </data>
+  <data name="Games.Snake.Start" xml:space="preserve">
+    <value>avvia</value>
+  </data>
+  <data name="Games.Snake.Resume" xml:space="preserve">
+    <value>riprendi</value>
+  </data>
+  <data name="Games.Snake.New" xml:space="preserve">
+    <value>nuovo</value>
+  </data>
+  <data name="DialogHint.StartSnake" xml:space="preserve">
+    <value>Avvia il serpente</value>
+  </data>
+  <data name="DialogHint.PauseSnake" xml:space="preserve">
+    <value>Metti in pausa il serpente</value>
+  </data>
+  <data name="DialogHint.ResumeSnake" xml:space="preserve">
+    <value>Riprendi il serpente</value>
   </data>
   <data name="Games.OnePlayer" xml:space="preserve">
     <value>un giocatore</value>
@@ -6025,9 +6040,6 @@
   </data>
   <data name="Signature.Footer" xml:space="preserve">
     <value> F2:firma gpg  F3:firma Authenticode  F4:firma file chiave  F5:ricontrolla  Esc:chiudi </value>
-  </data>
-  <data name="Wipe.Footer" xml:space="preserve">
-    <value> Invio:cancella  1/3/7 o ↑↓:passaggi  Esc:chiudi </value>
   </data>
   <data name="FolderSelector.HintGo" xml:space="preserve">
     <value>Invio vai</value>
@@ -11224,5 +11236,41 @@
   </data>
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>Condividere i file selezionati su questa rete: un codice QR e un link li aprono nel browser di un telefono finché questa finestra è aperta.</value>
+  </data>
+  <data name="Wipe.FooterChoosing" xml:space="preserve">
+    <value> Invio:arma  1/3/7 o ↑↓:passaggi  Esc:chiudi </value>
+  </data>
+  <data name="Wipe.FooterArmed" xml:space="preserve">
+    <value> Invio:cancella per sempre  altro tasto:indietro </value>
+  </data>
+  <data name="Wipe.FooterRunning" xml:space="preserve">
+    <value> Esc:interrompi (i file già cancellati restano tali) </value>
+  </data>
+  <data name="Wipe.FooterFinished" xml:space="preserve">
+    <value> Invio:chiudi </value>
+  </data>
+  <data name="Wipe.Counting" xml:space="preserve">
+    <value>Conteggio dei file…</value>
+  </data>
+  <data name="Wipe.Total" xml:space="preserve">
+    <value>{0} scritti in totale, su tutti i passaggi.</value>
+  </data>
+  <data name="Wipe.Name" xml:space="preserve">
+    <value>Cancella  {0}</value>
+  </data>
+  <data name="Wipe.Names" xml:space="preserve">
+    <value>Cancella  {0} elementi: {1}</value>
+  </data>
+  <data name="Wipe.Stopped" xml:space="preserve">
+    <value>Interrotto: {0} file cancellati.</value>
+  </data>
+  <data name="Wipe.Done" xml:space="preserve">
+    <value>Fatto: {0} file, {1} cartelle, {2} sovrascritti.</value>
+  </data>
+  <data name="Wipe.Failed" xml:space="preserve">
+    <value>Errore: {0}</value>
+  </data>
+  <data name="Wipe.What" xml:space="preserve">
+    <value>{0} file, {1}</value>
   </data>
 </root>

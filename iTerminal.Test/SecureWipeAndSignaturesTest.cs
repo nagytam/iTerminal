@@ -35,6 +35,8 @@ public class SecureWipeAndSignaturesTest
         await _app.WaitForTextAsync("Press Enter again");
         Assert.IsTrue(File.Exists(ReadmePath), "one Enter must not destroy anything");
 
+        // The dialog ignores an Enter that lands right after arming (a held or doubled key); a person reads the warning first.
+        await Task.Delay(TimeSpan.FromMilliseconds(600));
         await _app.PressAsync("Enter");
         await dialog.WipeTask;
 

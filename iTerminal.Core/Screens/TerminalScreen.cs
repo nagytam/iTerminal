@@ -75,7 +75,7 @@ public class TerminalScreen : iConsole.Screens.Screen
         }
         // The Sixel feature flag is a setting, read each time a picture is about to be drawn.
         iConsole.Graphics.TerminalGraphics.EnabledSource = () => settingsService?.GetAsBool(iTerminal.Core.Data.Settings.SixelEnabled, true) ?? true;
-        AddControl(new SplashDialog(themeService, sixelOverlay));
+        AddControl(new SplashDialog(themeService, sixelOverlay, AboutDialog.Version));
         if (toastHost is not null)
         {
             AddControl(toastHost);

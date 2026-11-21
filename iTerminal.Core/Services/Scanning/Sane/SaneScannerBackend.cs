@@ -161,7 +161,11 @@ public sealed partial class SaneScannerBackend(IExternalProcessRunner processRun
         _ => "Color",
     };
 
-    /// <summary>Reads <c>scanimage -L</c> output: one line per device, <c>device 'id' is a Vendor Model</c>.</summary>
+    /// <summary>
+    /// Reads <c>scanimage -L</c> output: one line per device, <c>device 'id' is a Vendor Model</c>. Network devices
+    /// found by sane-airscan (AirScan/eSCL) and by the eSCL backend are quoted with a backtick before the id and a
+    /// straight quote after it, so both quote styles are accepted.
+    /// </summary>
     internal static IReadOnlyList<ScannerDevice> ParseListing(string output)
     {
         var devices = new List<ScannerDevice>();
@@ -177,7 +181,6 @@ public sealed partial class SaneScannerBackend(IExternalProcessRunner processRun
         return devices;
     }
 
-    // The network backends (escl, airscan) quote the id with a backtick and an apostrophe: device `escl:https://…' is a …
     [GeneratedRegex("^device [`'](?<id>.+?)' is an? (?<name>.+)$")]
     private static partial Regex DeviceLine();
 }

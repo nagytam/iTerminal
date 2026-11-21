@@ -770,6 +770,74 @@ public class TabTest
         }
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void OnIdle_ReachesTheFocusedPageAndItsChildren_OnceEach()
+    {
+        var mockThemeService = CreateMockThemeService();
+        var tab = new Tab(mockThemeService.Object) { ViewSize = new Size(30, 10) };
+        var shown = new IdleCountingTabPage("Shown", mockThemeService.Object);
+        var child = new IdleCountingControl(mockThemeService.Object);
+        shown.AddControl(child);
+        tab.AddTabPage(shown);
+
+        tab.OnIdle();
+
+        Assert.AreEqual(1, shown.IdleCount, "the focused page gets its own idle pass");
+        Assert.AreEqual(1, child.IdleCount, "its child is visited once, not once by the tab and again by the page");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void OnIdle_LeavesAHiddenPageAlone()
+    {
+        var mockThemeService = CreateMockThemeService();
+        var tab = new Tab(mockThemeService.Object) { ViewSize = new Size(30, 10) };
+        var shown = new IdleCountingTabPage("Shown", mockThemeService.Object);
+        var hidden = new IdleCountingTabPage("Hidden", mockThemeService.Object);
+        var hiddenChild = new IdleCountingControl(mockThemeService.Object);
+        hidden.AddControl(hiddenChild);
+        tab.AddTabPage(shown);
+        tab.AddTabPage(hidden);
+
+        tab.OnIdle();
+
+        Assert.AreEqual(0, hidden.IdleCount, "a page that is not shown gets no idle pass");
+        Assert.AreEqual(0, hiddenChild.IdleCount, "so its children do not repaint the screen from behind the shown page");
+    }
+
+    /// <summary>A control that counts the idle passes it receives.</summary>
+    private sealed class IdleCountingControl : Control
+    {
+        public IdleCountingControl(IThemeService themeService) : base(themeService)
+        {
+        }
+
+        public int IdleCount { get; private set; }
+
+        public override void OnIdle()
+        {
+            base.OnIdle();
+            IdleCount++;
+        }
+    }
+
+    /// <summary>A page that counts the idle passes it receives.</summary>
+    private sealed class IdleCountingTabPage : TabPage
+    {
+        public IdleCountingTabPage(string name, IThemeService themeService) : base(name, themeService)
+        {
+        }
+
+        public int IdleCount { get; private set; }
+
+        public override void OnIdle()
+        {
+            base.OnIdle();
+            IdleCount++;
+        }
+    }
+
     private static MouseEvent Click(int x, int y) =>
         new() { Position = new Position(x, y), LeftClicked = true };
 
