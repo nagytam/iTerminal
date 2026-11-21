@@ -182,13 +182,6 @@ Reviewed on 2026-11-21 (third pass, replacing the second one of the same day at 
    - **Effort:** S.
    - **Risk of the change:** a transitive package it brought may be needed elsewhere; the build shows a missing type. `BuilderExtensionCoverageTest` covers the flag.
 
-10. **`iTerminal.Core` references the Windows input plug-in and uses none of it** — **Low**, kind: layering.
-    - **Where:** [iTerminal.Core/iTerminal.Core.csproj:54](../../iTerminal.Core/iTerminal.Core.csproj). No file in `iTerminal.Core` uses a type or namespace of `iConsole.Inputs.Windows` (checked again on `70cc25fb`); only [iTerminal/Program.cs:4](../../iTerminal/Program.cs) does, and `iTerminal.csproj` already references the plug-in.
-    - **Problem:** `CLAUDE.md` places the plug-ins beside `iConsole`, selected at start-up by the composition root; the edge lets `iTerminal.Core` (and its tests) use Windows console internals, and puts the plug-in into every project that references `iTerminal.Core`. Principle: dependency direction.
-    - **Improvement:** remove the `ProjectReference`.
-    - **Effort:** S.
-    - **Risk of the change:** none expected; the build shows any hidden use, and `iTerminal.Test` (which references `iTerminal.Core` only) shows whether the end-to-end host relied on it.
-
 14. **The SDK floats, and a compiler feature is switched on for every project without a note in the architecture pages** — **Low**, kind: dependency, documentation.
     - **Where:** no `global.json`; both build workflows install `11.0.x` ([.github/workflows/build.yml:32](../../.github/workflows/build.yml) and `:116`); [Directory.Build.props:8](../../Directory.Build.props) (`runtime-async=on`, added in #505).
     - **Problem:** a new SDK feature band changes analyzers and the compiler under the same commit, so a red build on `main` can come from the runner image, not the code. `runtime-async` changes how every async method runs (stack traces, profiler output, the `Job` and `TaskManager` behaviour the threading rules rely on), yet no page in `Documentation/architecture/` mentions it. Whether SDK 11.0.100 still needs the switch or has made it the default was not checked: **unverified**.
@@ -203,26 +196,12 @@ Reviewed on 2026-11-21 (third pass, replacing the second one of the same day at 
     - **Effort:** S.
     - **Risk of the change:** a local `.deb` without `-p:Version` gets version `0.0.0.0`; dpkg accepts it.
 
-24. **`iTerminal.Core` uses SkiaSharp only through `iConsole.Formats`, but repeats `Svg.Skia` itself** — **Low**, kind: dependency, consistency.
-    - **Where:** `Svg.Skia` 5.2.3 in [iTerminal.Core/iTerminal.Core.csproj:47](../../iTerminal.Core/iTerminal.Core.csproj) and [iConsole.Formats/iConsole.Formats.csproj:25](../../iConsole.Formats/iConsole.Formats.csproj); one user in `iTerminal.Core`, `Video/SvgVideoDecoder.cs`. `SkiaSharp` and its Linux natives are referenced only by `iConsole.Formats` ([iConsole.Formats.csproj:23](../../iConsole.Formats/iConsole.Formats.csproj) and `:24`), yet nine files in `iTerminal.Core` use `SkiaSharp` (`Video/*`, `Model/Map/MapTile.cs`, `Dialogs/Scanning/ScannerDialog.cs`, `Services/Scanning/ScanImageCodec.cs`). #781 added the same pattern for `Microsoft.Data.Sqlite`, but with a comment that says why ([iConsole.Formats.csproj:33](../../iConsole.Formats/iConsole.Formats.csproj)).
-    - **Problem:** the two packages that go together are declared in two different ways, so the next update has to know that one is repeated and the other is not; and if a later move removes `iTerminal.Core`'s need for `iConsole.Formats`, nine files lose SkiaSharp with no reference to say they needed it. Principle: one place per decision.
-    - **Improvement:** pick one rule and write it in `iTerminal.Core.csproj`: either remove the `Svg.Skia` line and add a comment that SkiaSharp and Svg.Skia come through `iConsole.Formats`, which owns their natives, or reference both directly in `iTerminal.Core` with the version from `Directory.Packages.props` (finding 5). The first is the smaller change and keeps the natives in one owner.
-    - **Effort:** S.
-    - **Risk of the change:** none at run time if the version is unchanged; the build shows a missing type, and the image and SVG decoder tests in `iTerminal.Core.Test` cover the use.
-
 25. **`OpenMcdf` is held at 3.3.0 for a known defect that is recorded only in a commit message** — **Low**, kind: dependency, documentation.
     - **Where:** [iConsole.Formats/iConsole.Formats.csproj:21](../../iConsole.Formats/iConsole.Formats.csproj) (no comment, while the three references #781 added beside it each have one); the reason is in the message of `74982a77` (#777): 3.4.0 throws "Commit or revert the changes to a transacted storage before consolidating it" when the `.msg` and legacy Office readers dispose their read-only storage. Users: `Services/OutlookMessageReader.cs` and `Services/LegacyOfficeTextRenderer.cs` in `iConsole.Formats`. `dotnet list --outdated` still reports 3.4.0 as the latest.
     - **Problem:** the next update pass, by hand or by automation (finding 6), sees an outdated package and no reason not to take it, and the defect shows only in the fixture tests or in a user's `.msg` preview. Principle: explicit contracts, a pin says why.
     - **Improvement:** add an XML comment above the reference with the error text, the two readers and the condition for lifting the pin (a release after 3.4.0 that disposes a read-only storage without committing, checked with the `.msg`, `.doc`, `.xls` and `.ppt` fixtures); add the Dependabot `ignore` rule when finding 6 is done.
     - **Effort:** S.
     - **Risk of the change:** none (a comment). The fixture tests in `iConsole.Formats.Test` (`OutlookMessageReader`, legacy Office) are what guard the pin.
-
-26. **`iConsole.Formats.Test` references `ZXing.Net` and uses none of it** — **Low**, kind: dependency.
-    - **Where:** [iConsole.Formats.Test/iConsole.Formats.Test.csproj:22](../../iConsole.Formats.Test/iConsole.Formats.Test.csproj). The only user of the `ZXing` namespace is `iConsole.Test/Qr/QrRoundTripTest.cs`, which stayed in `iConsole.Test`.
-    - **Problem:** the package list of the new test project was copied from `iConsole.Test`; an unused package is restored on every build and is one more line for finding 5 to carry. Principle: no unused dependencies.
-    - **Improvement:** remove the line.
-    - **Effort:** S.
-    - **Risk of the change:** none; the build of `iConsole.Formats.Test` shows a missing type.
 
 **Package table**
 
@@ -301,13 +280,16 @@ Reviewed on 2026-11-21 (third pass, replacing the second one of the same day at 
 
 **Suggested order**
 
-1. Quick wins, no dependencies: finding 26 (unused `ZXing.Net`), finding 9 (remove `Microsoft.FeatureManagement`), finding 10 (remove the unused project edge), finding 25 (comment on the `OpenMcdf` pin), finding 29 (pin and hash `wingetcreate`), finding 3 (stable log sink), finding 14 (`global.json`, runtime-async note), finding 15 (version defaults and the remaining sentences).
-2. Finding 5 (Central Package Management), then finding 24 (one rule for SkiaSharp and Svg.Skia, one line once versions are central), then finding 6 (audit, lock files, source mapping, Dependabot for NuGet and actions with the `OpenMcdf` ignore).
+1. Quick wins, no dependencies: finding 9 (remove `Microsoft.FeatureManagement`), finding 25 (comment on the `OpenMcdf` pin), finding 29 (pin and hash `wingetcreate`), finding 3 (stable log sink), finding 14 (`global.json`, runtime-async note), finding 15 (version defaults and the remaining sentences).
+2. Finding 5 (Central Package Management), then finding 6 (audit, lock files, source mapping, Dependabot for NuGet and actions with the `OpenMcdf` ignore).
 3. Finding 2 is resolved (see Resolved); nothing to do.
 4. Finding 4 (iPhone drive platform contract) and finding 7 (pinned runtime downloads), which need a decision from the maintainer first.
 
 ## Resolved
 
+- **Finding 10 (`iTerminal.Core` references the Windows input plug-in)** — resolved on branch `fix-arch-findings-24-26-10`: the `ProjectReference` to `iConsole.Inputs.Windows` is removed from `iTerminal.Core.csproj`. Nothing in `iTerminal.Core` used it. Verification: `dotnet build iTerminal.slnx` succeeds (0 errors, 12 warnings); the test suites and the end-to-end suite were not run.
+- **Finding 24 (`Svg.Skia` repeated in `iTerminal.Core`)** — resolved on branch `fix-arch-findings-24-26-10`: the rule chosen is the first option. The `Svg.Skia` line is removed from `iTerminal.Core.csproj`, with a comment that SkiaSharp and Svg.Skia arrive through `iConsole.Media.Video` and `iConsole.Formats`, which own their versions and natives. The version stays 5.2.3 in `iConsole.Formats`. Verification: the solution build succeeds; the decoder tests were not run.
+- **Finding 26 (unused `ZXing.Net` in `iConsole.Formats.Test`)** — resolved on branch `fix-arch-findings-24-26-10`: the `PackageReference` is removed from `iConsole.Formats.Test.csproj`. Verification: the solution build succeeds; the tests were not run.
 - **Finding 23 (the host is never disposed, and `--update` ignores Ctrl+C)** — resolved on branch `fix-application-lifetime`: `iConsoleApplication` implements `IAsyncDisposable` and disposes the host without stopping it; `Program.cs` disposes the app on the `--update` path and on the run path (after `RunAsync` has stopped the host, and before `PendingRelaunch` can replace the process). `--update` takes Ctrl+C through `Console.CancelKeyPress`: the first press cancels the check or the download, a second one ends the process. `UpdateCommandLine` reports a cancelled run as a failure (exit code 1, "The update was cancelled") instead of "up to date". Verification: `iConsole.Test` (5073) and `iTerminal.Core.Test` (6341) pass; the end-to-end suite and a real Ctrl+C during a download were not run.
 - **Finding 2 (third-party notices in the releases)** — resolved on branch `third-party-notices-in-packages`: `iTerminal/Build/ThirdPartyNotices.targets` runs after `Publish` and calls `iTerminal.ThirdPartyNotices`, which writes `THIRD-PARTY-NOTICES.txt` for the runtime being published (packages from `project.assets.json`, licences from the nuspecs, `Licenses/Overrides.txt` for two packages that state none), and copies the project `LICENSE` beside it. Every installable form publishes first, so the MSI, the deb, the rpm, the tarballs and the portable archives carry both files. Verification: the notice for linux-x64 was generated and read; the tarball, deb and rpm contents were to be checked on the Linux packaging build (see the PR for what was verified).
 - **Finding 16 (one "stays inside the folder" check for archives)** — resolved on branch `archive-path-check`: `iTerminal.Core/Helper/ArchivePaths.Inside` is the single check. `ArchiveExtractionService` (the former `SafePath`), `ReleaseArchive` and `UpdateService` (which still throws on a refused entry) all call it; both libraries are kept. The rule is the `ArchiveExtractionService` rule: backslashes are separators, leading slashes are dropped (the entry stays inside), and names with a colon are refused; case is ignored on Windows only. Behaviour changes on the two BCL extractors: a case-only folder difference on Linux now counts as a different folder (the update check was looser), and a colon in a release entry name is refused on Linux too. The escape cases are covered by `ArchiveExtractionServiceTest.OnlyPathsInsideTheTargetAreSafe`, which now calls the helper. Run on Linux: the `iTerminal.Core.Test` tests whose names match `Archive`, `ReleaseArchive` or `UpdateService` (256 passed, 0 failed). Not run: the Windows path (the case-insensitive branch), which the Windows CI job covers.
