@@ -17,13 +17,15 @@
       <!-- Build/ is two folders below the repository root, where the generator project lives. -->
       <NoticeTool>$(MSBuildThisFileDirectory)..\..\iTerminal.ThirdPartyNotices\ThirdPartyNotices.csproj</NoticeTool>
       <NoticeLicenses>$(MSBuildThisFileDirectory)..\..\iTerminal.ThirdPartyNotices\Licenses</NoticeLicenses>
+      <!-- NuGetPackageRoot ends in a separator on Windows; a quoted argument ending in \ swallows its closing quote, so the rest of the command line shifts. -->
+      <NoticePackages>$(NuGetPackageRoot.TrimEnd('\').TrimEnd('/'))</NoticePackages>
     </PropertyGroup>
 
     <ItemGroup>
       <NoticeRuntimePack Include="@(ResolvedRuntimePack->'%(PackageDirectory)')" />
     </ItemGroup>
 
-    <Exec Command="dotnet run --project &quot;$(NoticeTool)&quot; -c Release --no-launch-profile -- --assets &quot;$(ProjectAssetsFile)&quot; --target &quot;$(NoticeTargetKey)&quot; --packages &quot;$(NuGetPackageRoot)&quot; --licenses &quot;$(NoticeLicenses)&quot; --output &quot;$(PublishDir)THIRD-PARTY-NOTICES.txt&quot; --product iTerminal --version &quot;$(Version)&quot; @(NoticeRuntimePack->'--runtime-pack &quot;%(Identity)&quot;', ' ')" />
+    <Exec Command="dotnet run --project &quot;$(NoticeTool)&quot; -c Release --no-launch-profile -- --assets &quot;$(ProjectAssetsFile)&quot; --target &quot;$(NoticeTargetKey)&quot; --packages &quot;$(NoticePackages)&quot; --licenses &quot;$(NoticeLicenses)&quot; --output &quot;$(PublishDir)THIRD-PARTY-NOTICES.txt&quot; --product iTerminal --version &quot;$(Version)&quot; @(NoticeRuntimePack->'--runtime-pack &quot;%(Identity)&quot;', ' ')" />
 
     <!-- The project's own licence, next to the third-party one. -->
     <Copy SourceFiles="$(MSBuildProjectDirectory)\..\LICENSE" DestinationFiles="$(PublishDir)LICENSE.txt" />
