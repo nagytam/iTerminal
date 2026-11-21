@@ -134,6 +134,70 @@ public static class SchematicWorldMap
         return rows;
     }
 
+    /// <summary>The dot bit of each Braille cell position, indexed [column, row] within the 2 × 4 dots of a cell.</summary>
+    private static readonly int[,] BrailleBits =
+    {
+        { 0x01, 0x02, 0x04, 0x40 },
+        { 0x08, 0x10, 0x20, 0x80 },
+    };
+
+    /// <summary>
+    /// The same map in Braille patterns: each character is a 2 × 4 grid of dots, so a map of <paramref name="cellWidth"/> by
+    /// <paramref name="cellHeight"/> characters has twice the columns and four times the rows of detail that <see cref="Render"/>
+    /// gives in that space. A dot is set on land and along the meridian of <paramref name="markerLongitude"/>; the character
+    /// holding the marker itself is <c>●</c>.
+    /// </summary>
+    public static string[] RenderBraille(int cellWidth, int cellHeight, double markerLongitude, double markerLatitude)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(cellWidth);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(cellHeight);
+
+        int dotWidth = cellWidth * 2;
+        int dotHeight = cellHeight * 4;
+        bool[,] land = LandCells(dotWidth, dotHeight);
+        int meridian = ColumnOf(markerLongitude, dotWidth);
+        int markerRow = RowOf(markerLatitude, dotHeight);
+
+        var chars = new char[cellHeight, cellWidth];
+        for (int cellRow = 0; cellRow < cellHeight; cellRow++)
+        {
+            for (int cellColumn = 0; cellColumn < cellWidth; cellColumn++)
+            {
+                int pattern = 0;
+                for (int dx = 0; dx < 2; dx++)
+                {
+                    for (int dy = 0; dy < 4; dy++)
+                    {
+                        int dotColumn = cellColumn * 2 + dx;
+                        int dotRow = cellRow * 4 + dy;
+                        if (land[dotRow, dotColumn] || dotColumn == meridian)
+                        {
+                            pattern |= BrailleBits[dx, dy];
+                        }
+                    }
+                }
+
+                chars[cellRow, cellColumn] = (char)(0x2800 + pattern);
+            }
+        }
+
+        chars[markerRow / 4, meridian / 2] = '●';
+
+        var rows = new string[cellHeight];
+        for (int cellRow = 0; cellRow < cellHeight; cellRow++)
+        {
+            var row = new char[cellWidth];
+            for (int cellColumn = 0; cellColumn < cellWidth; cellColumn++)
+            {
+                row[cellColumn] = chars[cellRow, cellColumn];
+            }
+
+            rows[cellRow] = new string(row);
+        }
+
+        return rows;
+    }
+
     /// <summary>The column whose cell holds <paramref name="longitude"/> (degrees east positive).</summary>
     public static int ColumnOf(double longitude, int width) =>
         Math.Clamp((int)Math.Floor((longitude + 180) / 360 * width), 0, width - 1);
