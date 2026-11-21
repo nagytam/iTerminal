@@ -81,6 +81,7 @@
     <Feature Id="Application" Title="iTerminal BETA" Description="The application and its Start menu shortcut." Level="1" AllowAbsent="no">
       <ComponentGroupRef Id="ApplicationFiles" />
       <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="WinGetMarker" />
     </Feature>
 
     <!--
@@ -124,6 +125,15 @@
                 Target="[INSTALLFOLDER]iTerminal.exe"
                 WorkingDirectory="PersonalFolder" />
       <RegistryValue Root="HKCU" Key="Software\iTerminal\Installer" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <!--
+      Written only when WinGet runs the install (its manifest passes MANAGEDBYWINGET=1). The app reads the
+      value and leaves updates to WinGet. A direct install, or an update the app runs itself, does not pass
+      the property, so the value is removed again: that copy is no longer WinGet's.
+    -->
+    <Component Id="WinGetMarker" Directory="INSTALLFOLDER" Guid="44e81d1b-f048-4473-9506-40664d0eae6b" Condition="MANAGEDBYWINGET = &quot;1&quot;">
+      <RegistryValue Root="HKLM" Key="Software\iTerminal" Name="ManagedBy" Type="string" Value="WinGet" KeyPath="yes" />
     </Component>
 
     <!-- Appended to the machine PATH, and taken out again on uninstall. -->

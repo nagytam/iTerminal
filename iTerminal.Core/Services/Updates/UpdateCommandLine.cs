@@ -30,6 +30,12 @@ public static class UpdateCommandLine
             return Success;
         }
 
+        if (updates.InstallKind == UpdateInstallKind.PackageManager)
+        {
+            output.WriteLine($"iTerminal {update.Version} is available. WinGet installed this copy and updates it: run winget upgrade {UpdateService.WinGetPackageId}");
+            return Failed;
+        }
+
         if (!updates.CanInstall)
         {
             output.WriteLine($"iTerminal {update.Version} is available, but this copy cannot update itself. Download it from {updates.ReleasesAddress}");

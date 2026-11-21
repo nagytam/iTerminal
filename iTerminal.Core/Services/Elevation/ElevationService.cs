@@ -121,7 +121,18 @@ public sealed class ElevationService(IInteractiveShellService shellService) : IE
             arguments.Add(commandLine[0]);
         }
 
-        arguments.AddRange(commandLine.Skip(1).Where(a => a != WaitForParentArgument));
+        // Drop the switch together with the process id that follows it: the relaunch adds a new pair.
+        for (int i = 1; i < commandLine.Length; i++)
+        {
+            if (commandLine[i] == WaitForParentArgument)
+            {
+                i++;
+                continue;
+            }
+
+            arguments.Add(commandLine[i]);
+        }
+
         return (program, arguments);
     }
 

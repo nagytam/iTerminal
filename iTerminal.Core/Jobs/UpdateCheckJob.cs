@@ -113,6 +113,9 @@ public class UpdateCheckJob(
             return;
         }
 
-        notifications.Notify(string.Format(UiText.Get("Notify.UpdateAvailable", "iTerminal {0} is available"), update.Version), string.Format(UiText.Get("Notify.UpdateDetail", "You have {0}. Download it from {1}"), updates.CurrentVersion, updates.ReleasesAddress));
+        string detail = updates.InstallKind == UpdateInstallKind.PackageManager
+            ? UiText.Get("Update.WinGetManaged", "Installed with WinGet, which updates it. Run: winget upgrade TamasNagy.iTerminal")
+            : string.Format(UiText.Get("Notify.UpdateDetail", "You have {0}. Download it from {1}"), updates.CurrentVersion, updates.ReleasesAddress);
+        notifications.Notify(string.Format(UiText.Get("Notify.UpdateAvailable", "iTerminal {0} is available"), update.Version), detail);
     }
 }

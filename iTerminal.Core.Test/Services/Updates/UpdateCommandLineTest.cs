@@ -39,6 +39,24 @@ public class UpdateCommandLineTest
     }
 
     [TestMethod]
+    public void AMistypedSwitchIsReportedAndDoesNotStopTheRead()
+    {
+        LaunchOptions options = LaunchOptions.Parse(["--udpate", "--wait-for-parent", "12"]);
+
+        CollectionAssert.AreEqual(new[] { "--udpate" }, options.UnknownSwitches.ToArray());
+        Assert.IsFalse(options.Update);
+        Assert.AreEqual(12, options.ParentProcessId);
+    }
+
+    [TestMethod]
+    public void KnownSwitchesAndWordsAreNotReportedAsUnknown()
+    {
+        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse(["--update", "--help"]).UnknownSwitches.ToArray());
+        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse(["/some/path"]).UnknownSwitches.ToArray());
+        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse([]).UnknownSwitches.ToArray());
+    }
+
+    [TestMethod]
     public void TheWaitForParentIdIsRead()
     {
         Assert.AreEqual(1234, LaunchOptions.Parse(["--wait-for-parent", "1234"]).ParentProcessId);
@@ -59,6 +77,21 @@ public class UpdateCommandLineTest
         updates.Verify(u => u.InstallAsync(It.IsAny<CancellationToken>()), Times.Once);
         StringAssert.Contains(output.ToString(), "Installing iTerminal 1.2.0");
         StringAssert.Contains(output.ToString(), "Starting the update.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AWinGetInstallIsNotUpdatedByThisCopy()
+    {
+        Mock<IUpdateService> updates = Updates(new UpdateInfo("1.2.0", null), canInstall: false);
+        updates.SetupGet(u => u.InstallKind).Returns(UpdateInstallKind.PackageManager);
+        var output = new StringWriter();
+
+        int code = await UpdateCommandLine.RunAsync(updates.Object, output, CancellationToken.None);
+
+        Assert.AreEqual(UpdateCommandLine.Failed, code);
+        updates.Verify(u => u.InstallAsync(It.IsAny<CancellationToken>()), Times.Never);
+        StringAssert.Contains(output.ToString(), "winget upgrade TamasNagy.iTerminal");
     }
 
     [Timeout(60_000)]

@@ -10634,6 +10634,9 @@
   <data name="Update.SkipDescription" xml:space="preserve">
     <value>Non proporre più questa versione.</value>
   </data>
+  <data name="Update.WinGetManaged" xml:space="preserve">
+    <value>Installato con WinGet, che lo aggiorna. Eseguire: winget upgrade TamasNagy.iTerminal</value>
+  </data>
   <data name="UserGroup.Busy" xml:space="preserve">
     <value>Attendere...</value>
   </data>

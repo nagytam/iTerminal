@@ -25,6 +25,17 @@ public sealed class UpdateService : IUpdateService
     /// <summary>The end of the portable archive's name, as in <c>iTerminal-1.2.3-x64-portable.zip</c>.</summary>
     public const string PortableArchiveSuffix = "-x64-portable.zip";
 
+    /// <summary>The WinGet package identifier, as the manifests and <c>winget upgrade</c> name it.</summary>
+    public const string WinGetPackageId = "TamasNagy.iTerminal";
+
+    /// <summary>
+    /// The registry value the MSI writes when it is installed with <c>MANAGEDBYWINGET=1</c>, which the WinGet manifest
+    /// passes. A direct install or an update from the app does not pass it, so the value is removed again.
+    /// </summary>
+    internal const string WinGetRegistryKey = @"HKEY_LOCAL_MACHINE\Software\iTerminal";
+    internal const string WinGetRegistryValue = "ManagedBy";
+    internal const string WinGetRegistryData = "WinGet";
+
     internal const int MaxLogLines = 20;
 
     private const string ExecutableName = "iTerminal.exe";
@@ -58,7 +69,7 @@ public sealed class UpdateService : IUpdateService
             AboutDialog.Version,
             StartWindowsInstaller,
             DefaultDownloadDirectory(OperatingSystem.IsWindows()),
-            KindFor(OperatingSystem.IsWindows(), AppContext.BaseDirectory),
+            KindFor(OperatingSystem.IsWindows(), AppContext.BaseDirectory, OperatingSystem.IsWindows() && IsManagedByWinGet()),
             authenticode,
             OperatingSystem.IsWindows() ? StartPortableScript : StartShellScript,
             AppContext.BaseDirectory,
@@ -111,7 +122,7 @@ public sealed class UpdateService : IUpdateService
 
     public UpdateInstallKind InstallKind => _kind;
 
-    public bool CanInstall => _kind != UpdateInstallKind.Unsupported;
+    public bool CanInstall => _kind is not (UpdateInstallKind.Unsupported or UpdateInstallKind.PackageManager);
 
     public bool IsBusy
     {
@@ -142,15 +153,25 @@ public sealed class UpdateService : IUpdateService
     /// portable one on any system (it updates from its portable archive); on Windows anything else came from the
     /// installer; other systems' packages are only announced.
     /// </summary>
-    internal static UpdateInstallKind KindFor(bool windows, string baseDirectory)
+    internal static UpdateInstallKind KindFor(bool windows, string baseDirectory, bool managedByWinGet = false)
     {
         if (IsPortable(baseDirectory))
         {
             return UpdateInstallKind.PortableArchive;
         }
 
+        if (windows && managedByWinGet)
+        {
+            return UpdateInstallKind.PackageManager;
+        }
+
         return windows ? UpdateInstallKind.Installer : UpdateInstallKind.Unsupported;
     }
+
+    /// <summary>Whether the MSI that installed this copy was run by WinGet (see <see cref="WinGetRegistryKey"/>).</summary>
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+    internal static bool IsManagedByWinGet() =>
+        Microsoft.Win32.Registry.GetValue(WinGetRegistryKey, WinGetRegistryValue, null) as string == WinGetRegistryData;
 
     /// <summary>
     /// The end of the portable archive's name for this system: the zip on Windows, the tar.gz of the matching

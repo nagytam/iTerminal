@@ -7,6 +7,8 @@ Installers:
   - Architecture: x64
     InstallerType: msi
     Scope: machine
+    InstallerSwitches:
+      Custom: MANAGEDBYWINGET=1
     InstallerUrl: https://github.com/nagytam/iTerminal/releases/download/v0.0.0.731/iTerminal-0.0.0.731-x64.msi
     InstallerSha256: 0067106EA5EC7A7D0B7891A2DDE46E825B68B22A57B06AA794279ECC14B56638
     ProductCode: '{D1788722-AD62-4096-A4DE-BDF913CEE292}'
