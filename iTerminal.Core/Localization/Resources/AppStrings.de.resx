@@ -10027,10 +10027,10 @@
     <value>gegen den Computer</value>
   </data>
   <data name="Games.Snake.VersusWon" xml:space="preserve">
-    <value>Du gewinnst: {0} Punkte gegen {1} des Computers. N für ein neues Spiel.</value>
+    <value>Du gewinnst: die Schlange des Computers ist gecrasht. Du hast {0} Punkte, der Computer {1}. N für ein neues Spiel.</value>
   </data>
   <data name="Games.Snake.VersusLost" xml:space="preserve">
-    <value>Der Computer gewinnt: {0} Punkte gegen deine {1}. N für ein neues Spiel.</value>
+    <value>Der Computer gewinnt: deine Schlange ist gecrasht. Du hast {1} Punkte, der Computer {0}. N für ein neues Spiel.</value>
   </data>
   <data name="Games.Snake.VersusDraw" xml:space="preserve">
     <value>Beide sind zusammengestoßen: du {0}, der Computer {1}. N für ein neues Spiel.</value>
@@ -10045,13 +10045,13 @@
     <value>Staple die fallenden Teile zu vollen Reihen. Das Feld des Computers läuft neben deinem: Wer zuerst mit dem Stapel die Oberkante erreicht, verliert.</value>
   </data>
   <data name="Games.Tetris.VersusDraw" xml:space="preserve">
-    <value>Beide Stapel haben die Oberkante erreicht: {0} Punkte gegen {1} des Computers. N für ein neues Spiel.</value>
+    <value>Beide Stapel haben die Oberkante gleichzeitig erreicht: du {0} Punkte, der Computer {1}. N für ein neues Spiel.</value>
   </data>
   <data name="Games.Tetris.VersusLost" xml:space="preserve">
-    <value>Der Computer gewinnt: {0} Punkte gegen deine {1}. N für ein neues Spiel.</value>
+    <value>Der Computer gewinnt: dein Stapel hat die Oberkante zuerst erreicht. Du hast {1} Punkte, der Computer {0}. N für ein neues Spiel.</value>
   </data>
   <data name="Games.Tetris.VersusWon" xml:space="preserve">
-    <value>Du gewinnst: {0} Punkte gegen {1} des Computers. N für ein neues Spiel.</value>
+    <value>Du gewinnst: der Stapel des Computers hat die Oberkante zuerst erreicht. Du hast {0} Punkte, der Computer {1}. N für ein neues Spiel.</value>
   </data>
   <data name="Games.Jass.VsComputer" xml:space="preserve">
     <value>du und die Computerspieler</value>
@@ -10793,6 +10793,12 @@
   </data>
   <data name="Games.Risk.Hint" xml:space="preserve">
     <value>Auswählen, angreifen, ziehen oder setzen</value>
+  </data>
+  <data name="Games.Risk.Rules" xml:space="preserve">
+    <value>Erobere Gebiete, indem du Nachbarn mit Würfeln angreifst. Ein ganzer Kontinent bringt Bonusarmeen. Schalte die andere Seite aus, um zu gewinnen.</value>
+  </data>
+  <data name="Games.Risk.EndPhase" xml:space="preserve">
+    <value>Phase beenden</value>
   </data>
   <data name="CmdTitle.0711a8d6" xml:space="preserve">
     <value>Risiko</value>

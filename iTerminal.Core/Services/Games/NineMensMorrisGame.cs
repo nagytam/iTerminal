@@ -812,7 +812,7 @@ public class NineMensMorrisGame : GameBase
                     cell = stone switch
                     {
                         1 => new GameCell(" ● ", Color.White, point == _last ? Color.DarkRed : wood),
-                        2 => new GameCell(" ● ", Color.Black, point == _last ? Color.DarkRed : wood),
+                        2 => new GameCell(" ◆ ", Color.Black, point == _last ? Color.DarkRed : wood),
                         _ => new GameCell(hints.Contains(point) ? " ○ " : " + ", hints.Contains(point) ? Color.Green : Color.Black, wood),
                     };
                     if (point == _selected)

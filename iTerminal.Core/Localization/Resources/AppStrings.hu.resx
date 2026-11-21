@@ -9963,10 +9963,10 @@
     <value>a számítógép ellen</value>
   </data>
   <data name="Games.Snake.VersusWon" xml:space="preserve">
-    <value>Nyertél: {0} pont a számítógép {1} pontja ellen. N: új játék.</value>
+    <value>Nyertél: a számítógép kígyója nekiütközött. Neked {0} pontod van, a számítógépnek {1}. N: új játék.</value>
   </data>
   <data name="Games.Snake.VersusLost" xml:space="preserve">
-    <value>A számítógép nyert: {0} pont a te {1} pontoddal szemben. N: új játék.</value>
+    <value>A számítógép nyert: a kígyód nekiütközött. Neked {1} pontod van, a számítógépnek {0}. N: új játék.</value>
   </data>
   <data name="Games.Snake.VersusDraw" xml:space="preserve">
     <value>Mindketten nekiütköztetek: te {0}, a számítógép {1}. N: új játék.</value>
@@ -9981,13 +9981,13 @@
     <value>Rakd a lehulló elemeket teli sorokba. A számítógép táblája a tiéd mellett fut: az veszít, akinek a torony előbb éri el a tetejét.</value>
   </data>
   <data name="Games.Tetris.VersusDraw" xml:space="preserve">
-    <value>Mindkét torony elérte a tetejét: {0} pont a számítógép {1} pontja ellen. N: új játék.</value>
+    <value>Mindkét torony egyszerre érte el a tetejét: neked {0} pontod, a számítógépnek {1}. N: új játék.</value>
   </data>
   <data name="Games.Tetris.VersusLost" xml:space="preserve">
-    <value>A számítógép nyert: {0} pont a te {1} pontoddal szemben. N: új játék.</value>
+    <value>A számítógép nyert: a te tornyod érte el előbb a tetejét. Neked {1} pontod van, a számítógépnek {0}. N: új játék.</value>
   </data>
   <data name="Games.Tetris.VersusWon" xml:space="preserve">
-    <value>Nyertél: {0} pont a számítógép {1} pontja ellen. N: új játék.</value>
+    <value>Nyertél: a számítógép tornya érte el előbb a tetejét. Neked {0} pontod van, a számítógépnek {1}. N: új játék.</value>
   </data>
   <data name="Games.Jass.VsComputer" xml:space="preserve">
     <value>te és a számítógépes játékosok</value>
@@ -10729,6 +10729,12 @@
   </data>
   <data name="Games.Risk.Hint" xml:space="preserve">
     <value>Kiválasztás, támadás, mozgatás vagy lerakás</value>
+  </data>
+  <data name="Games.Risk.Rules" xml:space="preserve">
+    <value>Foglalj területeket úgy, hogy kockadobással támadod a szomszédokat. Egy egész kontinens birtoklása bónusz seregeket ad. Győzelemhez számold fel a másik felet.</value>
+  </data>
+  <data name="Games.Risk.EndPhase" xml:space="preserve">
+    <value>Fázis befejezése</value>
   </data>
   <data name="CmdTitle.0711a8d6" xml:space="preserve">
     <value>Risk</value>

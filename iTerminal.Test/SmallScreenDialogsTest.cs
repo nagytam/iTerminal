@@ -266,7 +266,8 @@ public class SmallScreenDialogsTest
         await narrow.PressAsync("Enter");
 
         await narrow.WaitForTextAsync("against the computer");
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Select a piece")) && s.Lines.Any(l => l.Contains('…')), "the rules, with an ellipsis where they go on");
+        // The rules either fit in full (the last sentence is on screen) or end on an ellipsis; never a sentence cut in the air.
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Select a piece")) && (s.Lines.Any(l => l.Contains("promoted")) || s.Lines.Any(l => l.Contains('…'))), "the rules in full, or with an ellipsis where they go on");
     }
 
     [Timeout(120_000)]

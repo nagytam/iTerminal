@@ -137,30 +137,36 @@ public class TicTacToeGame : GameBase
     private static int[]? FindWin(char[] board) =>
         Lines.FirstOrDefault(line => board[line[0]] != ' ' && board[line[0]] == board[line[1]] && board[line[1]] == board[line[2]]);
 
+    /// <summary>Each square is seven columns by three rows, so the cursor and a winning line read as blocks; the mark sits on the middle row.</summary>
     public override IReadOnlyList<GameCell[]> Render()
     {
         List<GameCell[]> rows = [];
         for (int y = 0; y < 3; y++)
         {
-            List<GameCell> row = [];
-            for (int x = 0; x < 3; x++)
+            for (int line = 0; line < 3; line++)
             {
-                int index = y * 3 + x;
-                char mark = _board[index];
-                bool winning = _winningLine?.Contains(index) == true;
-                Color? foreground = mark == 'X' ? Color.Cyan : mark == 'O' ? Color.Yellow : Color.DarkGray;
-                GameCell cell = new($"  {(mark == ' ' ? '·' : mark)}  ", foreground, winning ? Color.DarkGreen : null);
-                row.Add(index == _cursor ? cell.WithCursor() : cell);
-                if (x < 2)
+                List<GameCell> row = [];
+                for (int x = 0; x < 3; x++)
                 {
-                    row.Add(new GameCell("│"));
+                    int index = y * 3 + x;
+                    char mark = _board[index];
+                    bool winning = _winningLine?.Contains(index) == true;
+                    Color? foreground = mark == 'X' ? Color.Cyan : mark == 'O' ? Color.Yellow : Color.DarkGray;
+                    string text = line == 1 ? $"   {(mark == ' ' ? '·' : mark)}   " : "       ";
+                    GameCell cell = new(text, foreground, winning ? Color.DarkGreen : null);
+                    row.Add(index == _cursor ? cell.WithCursor() : cell);
+                    if (x < 2)
+                    {
+                        row.Add(new GameCell("│"));
+                    }
                 }
+
+                rows.Add([.. row]);
             }
 
-            rows.Add([.. row]);
             if (y < 2)
             {
-                rows.Add([new GameCell("─────"), new GameCell("┼"), new GameCell("─────"), new GameCell("┼"), new GameCell("─────")]);
+                rows.Add([new GameCell("───────"), new GameCell("┼"), new GameCell("───────"), new GameCell("┼"), new GameCell("───────")]);
             }
         }
 

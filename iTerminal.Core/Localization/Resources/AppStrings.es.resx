@@ -9963,10 +9963,10 @@
     <value>contra el ordenador</value>
   </data>
   <data name="Games.Snake.VersusWon" xml:space="preserve">
-    <value>Ganas: {0} puntos frente a {1} del ordenador. N para jugar de nuevo.</value>
+    <value>Ganas: la serpiente del ordenador se estrelló. Tienes {0} puntos, el ordenador {1}. N para jugar de nuevo.</value>
   </data>
   <data name="Games.Snake.VersusLost" xml:space="preserve">
-    <value>Gana el ordenador: {0} puntos frente a tus {1}. N para jugar de nuevo.</value>
+    <value>Gana el ordenador: tu serpiente se estrelló. Tienes {1} puntos, el ordenador {0}. N para jugar de nuevo.</value>
   </data>
   <data name="Games.Snake.VersusDraw" xml:space="preserve">
     <value>Ambos chocaron: tú {0}, el ordenador {1}. N para jugar de nuevo.</value>
@@ -9981,13 +9981,13 @@
     <value>Apila las piezas que caen en filas completas. El tablero del ordenador va junto al tuyo: pierde quien llegue primero arriba con su pila.</value>
   </data>
   <data name="Games.Tetris.VersusDraw" xml:space="preserve">
-    <value>Las dos pilas llegaron arriba: {0} puntos frente a {1} del ordenador. N para jugar de nuevo.</value>
+    <value>Las dos pilas llegaron arriba a la vez: tú {0} puntos, el ordenador {1}. N para jugar de nuevo.</value>
   </data>
   <data name="Games.Tetris.VersusLost" xml:space="preserve">
-    <value>Gana el ordenador: {0} puntos frente a tus {1}. N para jugar de nuevo.</value>
+    <value>Gana el ordenador: tu pila llegó arriba primero. Tienes {1} puntos, el ordenador {0}. N para jugar de nuevo.</value>
   </data>
   <data name="Games.Tetris.VersusWon" xml:space="preserve">
-    <value>Ganas: {0} puntos frente a {1} del ordenador. N para jugar de nuevo.</value>
+    <value>Ganas: la pila del ordenador llegó arriba primero. Tienes {0} puntos, el ordenador {1}. N para jugar de nuevo.</value>
   </data>
   <data name="Games.Jass.VsComputer" xml:space="preserve">
     <value>tú y los jugadores del ordenador</value>
@@ -10729,6 +10729,12 @@
   </data>
   <data name="Games.Risk.Hint" xml:space="preserve">
     <value>Seleccionar, atacar, mover o colocar</value>
+  </data>
+  <data name="Games.Risk.Rules" xml:space="preserve">
+    <value>Conquista territorios atacando a los vecinos con dados. Dominar un continente entero da ejércitos extra. Elimina al otro bando para ganar.</value>
+  </data>
+  <data name="Games.Risk.EndPhase" xml:space="preserve">
+    <value>Terminar esta fase</value>
   </data>
   <data name="CmdTitle.0711a8d6" xml:space="preserve">
     <value>Risk</value>

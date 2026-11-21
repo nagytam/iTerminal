@@ -468,8 +468,10 @@ public class GoGame : GameBase
                 if (stone != GoRules.Empty)
                 {
                     bool dead = _dead[index] && IsOver;
+                    // Black stones are filled and white ones hollow, so the sides differ without colour as well.
                     Color color = stone == GoRules.Black ? Color.Black : Color.White;
-                    cell = new GameCell((dead ? "x" : "●") + tail, dead ? Color.Red : color, index == _lastMove ? Color.DarkRed : wood);
+                    string glyph = dead ? "x" : stone == GoRules.Black ? "●" : "○";
+                    cell = new GameCell(glyph + tail, dead ? Color.Red : color, index == _lastMove ? Color.DarkRed : wood);
                 }
                 else if (IsOver && territory[index] != GoRules.Empty)
                 {

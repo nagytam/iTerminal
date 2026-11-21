@@ -451,10 +451,20 @@ public abstract class GamesDialog : SplitPaneDialog
         }
     }
 
-    /// <summary>Ends text that goes on past the room it has on an ellipsis, cutting it to fit max columns first.</summary>
+    /// <summary>
+    /// Ends text that goes on past the room it has on an ellipsis, cutting it to fit max columns first. The cut falls
+    /// between words, so the ellipsis never splits one.
+    /// </summary>
     private static string WithEllipsis(string text, int max)
     {
-        string kept = text.Length > max - 2 ? text[..Math.Max(0, max - 2)] : text;
+        int limit = Math.Max(0, max - 2);
+        string kept = text;
+        if (text.Length > limit)
+        {
+            int space = text.LastIndexOf(' ', Math.Min(limit, text.Length - 1));
+            kept = space > 0 ? text[..space] : text[..limit];
+        }
+
         return kept.TrimEnd() + " …";
     }
 
@@ -567,8 +577,14 @@ public abstract class GamesDialog : SplitPaneDialog
             WriteLine(buffer, x0 + width - 1, iy + boardTop + shownRows / 2, 1, "→", edge, colorScheme.Background);
         }
 
-        int rulesTop = boardTop + shownRows + 1;
         List<string> ruleLines = [.. Wrap(game.Rules, width - 1)];
+        // The blank line above the rules gives way when the rules would otherwise lose a line they need.
+        int rulesTop = boardTop + shownRows + 1;
+        if (ih - 1 - rulesTop < ruleLines.Count && ih - 1 - (rulesTop - 1) >= ruleLines.Count)
+        {
+            rulesTop--;
+        }
+
         int rulesRoom = Math.Max(0, ih - 1 - rulesTop);
         for (int i = 0; i < ruleLines.Count && i < rulesRoom; i++)
         {

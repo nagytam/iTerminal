@@ -16,6 +16,9 @@ public class RiskGame : GameBase
     internal const int ComputerSide = 1;
     internal const int TurnLimit = 300;
 
+    /// <summary>Columns a territory takes on the board: its army count and the blank that sets it apart.</summary>
+    private const int CellWidth = 7;
+
     private const int ArmiesPerSide = 32;
     private const int TerritoriesPerSide = TerritoryCount / 2;
     private const int MinReinforcements = 3;
@@ -55,7 +58,7 @@ public class RiskGame : GameBase
 
     public override string Name => "Risk";
 
-    public override string Rules => "Take territories by attacking neighbours with dice. Hold a whole continent for bonus armies. Eliminate the other side to win.";
+    public override string Rules => UiText.Get("Games.Risk.Rules", "Take territories by attacking neighbours with dice. Hold a whole continent for bonus armies. Eliminate the other side to win.");
 
     public override bool IsOver => _winner >= 0 || _drawn;
 
@@ -73,7 +76,7 @@ public class RiskGame : GameBase
     {
         get
         {
-            yield return ("E", "End this phase");
+            yield return ("E", UiText.Get("Games.Risk.EndPhase", "End this phase"));
         }
     }
 
@@ -234,12 +237,18 @@ public class RiskGame : GameBase
     {
     }
 
+    /// <summary>
+    /// Draws the map with the four continents set apart: a line and a gutter between the quadrants, and each continent's
+    /// bonus above (top) or below (bottom) its quadrant. The territories keep their cells; the lines are extra rows and
+    /// columns that carry no cursor.
+    /// </summary>
     public override IReadOnlyList<GameCell[]> Render()
     {
-        List<GameCell[]> rows = [];
+        const int HalfWidth = Columns / 2 * CellWidth;
+        List<GameCell[]> rows = [BonusRow(ContinentBonus[0], ContinentBonus[1], HalfWidth)];
         for (int row = 0; row < Rows; row++)
         {
-            GameCell[] cells = new GameCell[Columns];
+            List<GameCell> cells = [];
             for (int column = 0; column < Columns; column++)
             {
                 int index = Index(column, row);
@@ -247,13 +256,44 @@ public class RiskGame : GameBase
                 Color background = source ? Color.Yellow : _owner[index] == 0 ? Color.Blue : Color.Red;
                 Color foreground = source ? Color.Black : Color.White;
                 string text = _armies[index].ToString().PadLeft(3) + "    ";
-                cells[column] = new GameCell(text, foreground, background, index == _cursor);
+                cells.Add(new GameCell(text, foreground, background, index == _cursor));
+                if (column == Columns / 2 - 1)
+                {
+                    cells.Add(new GameCell("│", Color.DarkGray));
+                }
             }
 
-            rows.Add(cells);
+            rows.Add([.. cells]);
+            if (row == Rows / 2 - 1)
+            {
+                rows.Add([
+                    new GameCell(new string('─', HalfWidth), Color.DarkGray),
+                    new GameCell("┼", Color.DarkGray),
+                    new GameCell(new string('─', HalfWidth), Color.DarkGray),
+                ]);
+            }
         }
 
+        rows.Add(BonusRow(ContinentBonus[2], ContinentBonus[3], HalfWidth));
         return rows;
+    }
+
+    /// <summary>One row of bonus labels, each centred over the quadrant it belongs to.</summary>
+    private static GameCell[] BonusRow(int left, int right, int halfWidth)
+    {
+        static string Centred(int bonus, int width)
+        {
+            string label = $"+{bonus}";
+            int lead = (width - label.Length) / 2;
+            return new string(' ', lead) + label + new string(' ', width - lead - label.Length);
+        }
+
+        return
+        [
+            new GameCell(Centred(left, halfWidth), Color.Yellow),
+            new GameCell(" "),
+            new GameCell(Centred(right, halfWidth), Color.Yellow),
+        ];
     }
 
     public override Func<CancellationToken, Action?>? PlanComputerMove()
