@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>The recording format Whisper wants and the helpers around it.</summary>
 public static class Pcm

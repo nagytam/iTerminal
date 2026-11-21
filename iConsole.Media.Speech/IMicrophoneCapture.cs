@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>
 /// One recording from the default microphone as 16 kHz mono signed 16-bit little-endian PCM. The constructor does

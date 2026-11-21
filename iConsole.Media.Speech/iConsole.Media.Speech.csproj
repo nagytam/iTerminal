@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    Voice input: the microphone recorders (parecord, arecord, ffmpeg on macOS, waveIn on Windows), the PCM format and
+    Whisper (whisper.cpp through Whisper.net). Whisper ships with the application: the CPU natives are about 2 MB per
+    platform. The speech model is a runtime dependency that iTerminal.Core downloads; the model is reached through
+    IWhisperModelLocator. iTerminal.Core holds the voice-input service and the AI prompt bar.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Whisper.net" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
+    <ProjectReference Include="..\iConsole\iConsole.csproj" />
+  </ItemGroup>
+
+</Project>

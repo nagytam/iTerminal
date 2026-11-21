@@ -9,6 +9,7 @@ using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Evidence;
 using iTerminal.Core.Speech;
+using iConsole.Media.Speech;
 
 namespace iTerminal.Core.Commands.Evidence;
 
@@ -450,7 +451,7 @@ public class AddEvidenceCommand(
         {
             capture = microphoneCaptureFactory.Create();
         }
-        catch (iTerminal.Core.Speech.SpeechException exception)
+        catch (iConsole.Media.Speech.SpeechException exception)
         {
             Notify(UiText.Get("Evidence.Voice.Unavailable", "No recording"), exception.Message, NotificationSeverity.Error);
             return;
@@ -462,7 +463,7 @@ public class AddEvidenceCommand(
             {
                 await Task.Run(capture.Start);
             }
-            catch (iTerminal.Core.Speech.SpeechException exception)
+            catch (iConsole.Media.Speech.SpeechException exception)
             {
                 Notify(UiText.Get("Evidence.Voice.Unavailable", "No recording"), exception.Message, NotificationSeverity.Error);
                 return;

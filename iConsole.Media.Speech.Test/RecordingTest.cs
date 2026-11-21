@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using iTerminal.Core.Speech;
+using iConsole.Media.Speech;
 
-namespace iTerminal.Core.Test.Speech;
+namespace iConsole.Media.Speech.Test;
 
 /// <summary>The recording format, the recorder command lines and the recorder process's life.</summary>
 [TestClass]

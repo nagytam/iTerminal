@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>
 /// Voice input cannot work, and the message says why in words for the user (already localised): no microphone,

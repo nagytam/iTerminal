@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using iConsole.Localization;
 
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>
 /// Windows recording through waveIn in <c>winmm.dll</c>, the counterpart of <c>WinMmAudioSink</c>: the driver signals an

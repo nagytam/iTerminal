@@ -30,7 +30,7 @@ Your output is `Documentation/research/ai-features-overview.md`, called "the doc
 
 For each AI feature, decide one of: present (name the type or file), partly present (say what is missing), missing, or not applicable to a file manager and terminal.
 
-- Search `iConsole/` and `iTerminal.Core/` (including `AI/`, `Speech/`, `Services/Translation/` and `Services/Documents/`) with `Grep` (case-insensitive, `*.cs`). Try at least three terms per item: a class name, a setting or service name, a word from the source's docs.
+- Search `iConsole/`, `iConsole.Media.Speech/` and `iTerminal.Core/` (including `AI/`, `Speech/`, `Services/Translation/` and `Services/Documents/`) with `Grep` (case-insensitive, `*.cs`). Try at least three terms per item: a class name, a setting or service name, a word from the source's docs.
 - A **missing** item records the terms that found nothing, so a later run can repeat the search.
 - An item present under another name is not missing; point to the existing type.
 - A candidate that duplicates an existing item gets a reference to that item number, not a new item.

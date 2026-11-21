@@ -1,13 +1,12 @@
 using iConsole.Localization;
-using iTerminal.Core.Services.RuntimeDependencies;
 
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>
 /// The recorder of this system: waveIn on Windows, <c>parecord</c> (then <c>arecord</c>) on Linux, and the ffmpeg
 /// that is a runtime dependency anyway on macOS. Choosing finds programs on the PATH and opens nothing.
 /// </summary>
-public sealed class MicrophoneCaptureFactory : IMicrophoneCaptureFactory
+public sealed class MicrophoneCaptureFactory(Func<string, string?> findOnPath) : IMicrophoneCaptureFactory
 {
     public IMicrophoneCapture Create()
     {
@@ -16,7 +15,7 @@ public sealed class MicrophoneCaptureFactory : IMicrophoneCaptureFactory
             return new WinMmMicrophoneCapture();
         }
 
-        List<RecorderCommand> commands = OperatingSystem.IsMacOS() ? MacCommands() : LinuxCommands();
+        List<RecorderCommand> commands = OperatingSystem.IsMacOS() ? MacRecorders() : LinuxCommands(findOnPath);
         if (commands.Count == 0)
         {
             throw new SpeechException(OperatingSystem.IsMacOS()
@@ -27,7 +26,9 @@ public sealed class MicrophoneCaptureFactory : IMicrophoneCaptureFactory
         return new ProcessMicrophoneCapture(commands);
     }
 
-    internal static List<RecorderCommand> LinuxCommands() => LinuxCommands(GitRuntimeDependency.FindOnPath);
+    /// <summary>The ffmpeg recorders on macOS. The Homebrew directories are searched after the PATH: an app started from Finder often has a short PATH.</summary>
+    internal List<RecorderCommand> MacRecorders() =>
+        MacCommands(program => findOnPath(program) ?? FindIn(program, "/opt/homebrew/bin", "/usr/local/bin"));
 
     internal static List<RecorderCommand> LinuxCommands(Func<string, string?> find)
     {
@@ -44,8 +45,6 @@ public sealed class MicrophoneCaptureFactory : IMicrophoneCaptureFactory
 
         return commands;
     }
-
-    internal static List<RecorderCommand> MacCommands() => MacCommands(program => GitRuntimeDependency.FindOnPath(program) ?? FindIn(program, "/opt/homebrew/bin", "/usr/local/bin"));
 
     internal static List<RecorderCommand> MacCommands(Func<string, string?> find)
     {

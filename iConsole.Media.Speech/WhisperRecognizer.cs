@@ -1,17 +1,16 @@
 using System.Text;
 using iConsole.Localization;
-using iTerminal.Core.Services.RuntimeDependencies;
 using Whisper.net;
 
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>
 /// Whisper (whisper.cpp through Whisper.net) on the CPU. The model is loaded for each recording and released
 /// afterwards, so the ~300 MB it takes are only held while text is being recognised; the language is detected.
 /// </summary>
-public sealed class WhisperRecognizer(WhisperRuntimeDependency dependency) : ISpeechRecognizer
+public sealed class WhisperRecognizer(IWhisperModelLocator model) : ISpeechRecognizer
 {
-    public bool IsModelInstalled => dependency.ModelPath() is not null;
+    public bool IsModelInstalled => model.ModelPath() is not null;
 
     /// <summary>
     /// Whisper writes a bracketed marker for what is not speech — <c>[BLANK_AUDIO]</c>, <c>[MUSIC]</c>, <c>(silence)</c> — and
@@ -28,7 +27,7 @@ public sealed class WhisperRecognizer(WhisperRuntimeDependency dependency) : ISp
 
     public async Task<string> TranscribeAsync(float[] samples, CancellationToken cancellationToken)
     {
-        string path = dependency.ModelPath()
+        string path = model.ModelPath()
             ?? throw new SpeechException(UiText.Get("Voice.ModelMissing", "Voice input needs the Whisper model. Install it from Tools > Runtime Dependencies."));
 
         try

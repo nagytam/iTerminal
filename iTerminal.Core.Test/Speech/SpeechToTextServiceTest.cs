@@ -1,5 +1,6 @@
 using iConsole.Services;
 using iTerminal.Core.Speech;
+using iConsole.Media.Speech;
 using Moq;
 
 namespace iTerminal.Core.Test.Speech;
