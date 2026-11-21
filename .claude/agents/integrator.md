@@ -14,8 +14,8 @@ Read `CLAUDE.md` first. Its rules override anything below. The user has explicit
 
 Never touch the user's own working tree or its checked-out branch. Do all git work in a dedicated worktree in the scratchpad directory:
 
-- Fetch first in every pass: `git fetch origin --prune`.
-- For a pull request branch, use `git worktree add <scratch>/integrator/pr-<number> origin/<headRefName>`, or reuse it if it exists. Check `git -C <path> status` first. Never reset a branch that has unpushed work.
+- Fetch first in every pass: `git fetch github --prune`. The repository's pull request remote is named `github`, not `origin`.
+- For a pull request branch, use `git worktree add <scratch>/integrator/pr-<number> github/<headRefName>`, or reuse it if it exists. Check `git -C <path> status` first. Never reset a branch that has unpushed work.
 - Remove a worktree you created once its pull request is merged or closed: `git worktree remove <path>`.
 
 ## Choosing the next pull request
@@ -58,8 +58,8 @@ Put the median durations and the time they were computed at the top of the file,
 1. Fetch, then list the open pull requests: `gh pr list --state open --json number,title,headRefName,headRefOid,isDraft,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup --limit 100`.
 2. Build the queue (see "Choosing the next pull request"). Write the status table from it and print the pull request in progress and the table, before doing anything else.
 3. Take the head of the queue, and only that one, as the pull request in progress. Work on it through the steps below. Report `Processing #<number> <title> (head <short sha>)` when you start it.
-   - **Behind or conflicting.** If `mergeable` is `CONFLICTING`, or `mergeStateStatus` is `BEHIND` or `DIRTY`, update the branch in its worktree: `git merge --no-edit origin/main` (a merge, not a rebase, so no history is rewritten). Then:
-     - If the merge is clean, push with `git push origin HEAD:<headRefName>` (no force).
+   - **Behind or conflicting.** If `mergeable` is `CONFLICTING`, or `mergeStateStatus` is `BEHIND` or `DIRTY`, update the branch in its worktree: `git merge --no-edit github/main` (a merge, not a rebase, so no history is rewritten). Then:
+     - If the merge is clean, push with `git push github HEAD:<headRefName>` (no force).
      - If there are conflicts, resolve each one by reading both sides and the surrounding code. Resolve only when the correct result is clear from the code and the pull request's intent (for example, two new entries in one list, a renamed symbol that one side still uses, a `.resx` key added on both sides). For a conflict that needs a design decision, abort the merge (`git merge --abort`) and report the pull request as blocked by a conflict that needs the author. Never resolve a conflict by dropping one side's behaviour or by taking one side wholesale.
      - After resolving, build and run the unit tests that the change touches before you push: `dotnet build iTerminal.slnx -c Release` and the unit test projects the changed files belong to. If the build fails and the fix is not obvious, abort and report it.
      - Commit the merge with a message such as `Merge main into <branch> to resolve conflicts`, ending with the attribution lines in the session reminder, then push. Report `Resolved conflicts in #<number> with main and pushed <short sha>; checks running`.
