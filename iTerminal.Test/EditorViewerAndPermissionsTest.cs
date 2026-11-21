@@ -168,8 +168,24 @@ public class EditorViewerAndPermissionsTest
         // Enter takes the suggested name, hu-export.csv, which the prompt starts with.
         Assert.IsTrue(await _app.PressAsync("Enter"));
         string target = Path.Combine(_app.LeftRoot, "hu-export.csv");
-        await _app.WaitUntilAsync(() => File.Exists(target), "the exported file to be written");
-        Assert.AreEqual("tûrõ,név\r\nalma,3\r\n", System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(target)));
+        // The file exists as soon as it is created, while the app may still hold it open: wait until it can be read whole.
+        const string expected = "tûrõ,név\r\nalma,3\r\n";
+        await _app.WaitUntilAsync(() => ReadSharedOrNull(target) == expected, "the exported file to be written");
+        Assert.AreEqual(expected, ReadSharedOrNull(target));
+    }
+
+    private static string? ReadSharedOrNull(string path)
+    {
+        try
+        {
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            using var reader = new StreamReader(stream, System.Text.Encoding.UTF8);
+            return reader.ReadToEnd();
+        }
+        catch (IOException)
+        {
+            return null;
+        }
     }
 
     [Timeout(120_000)]
