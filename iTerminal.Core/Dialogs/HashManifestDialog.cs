@@ -163,6 +163,7 @@ public class HashManifestDialog : Dialog
             return false;
         }
 
+        _cancellation?.Dispose();
         cancellation = _cancellation = new CancellationTokenSource();
         _progress = null;
         _list.Clear();
@@ -178,6 +179,7 @@ public class HashManifestDialog : Dialog
             return;
         }
 
+        CancellationToken token = cancellation.Token;
         ChecksumAlgorithm algorithm = Algorithm;
         IReadOnlyList<Url> roots = _roots;
         _verb = UiText.Get("Manifest.Verb.Creating", "Creating");
@@ -190,7 +192,7 @@ public class HashManifestDialog : Dialog
             try
             {
                 Helper.SynchronousProgress<ManifestProgress> progress = new(value => { _progress = value; Interlocked.Increment(ref _version); });
-                ManifestCreated created = await HashManifest.CreateAsync(baseFolder!, roots, fileSystem!, algorithm, progress, cancellation.Token);
+                ManifestCreated created = await HashManifest.CreateAsync(baseFolder!, roots, fileSystem!, algorithm, progress, token);
                 Created = created;
                 _list.SetItems(created.Failures);
                 if (created.Failures.Count > 0)
@@ -249,6 +251,7 @@ public class HashManifestDialog : Dialog
             return;
         }
 
+        CancellationToken token = cancellation.Token;
         Url? hint = _manifestHint;
         _verb = UiText.Get("Manifest.Verb.Verifying", "Verifying");
         Created = null;
@@ -267,7 +270,7 @@ public class HashManifestDialog : Dialog
                 }
 
                 Helper.SynchronousProgress<ManifestProgress> progress = new(value => { _progress = value; Interlocked.Increment(ref _version); });
-                ManifestVerified verified = await HashManifest.VerifyAsync(manifest, baseFolder!, fileSystem!, progress, item => _list.Add(item), cancellation.Token);
+                ManifestVerified verified = await HashManifest.VerifyAsync(manifest, baseFolder!, fileSystem!, progress, item => _list.Add(item), token);
                 Verified = verified;
                 SetStatus(
                     Say("Manifest.Summary", "{0}: {1} OK, {2} changed, {3} missing, {4} extra, {5} unreadable.",

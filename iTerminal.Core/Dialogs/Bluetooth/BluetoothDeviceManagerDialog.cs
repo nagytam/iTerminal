@@ -77,6 +77,7 @@ public class BluetoothDeviceManagerDialog : Dialog
         _table.SetFocus();
         if (_cancellation.IsCancellationRequested)
         {
+            _cancellation.Dispose();
             _cancellation = new CancellationTokenSource();
         }
 

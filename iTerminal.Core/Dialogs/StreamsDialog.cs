@@ -87,6 +87,7 @@ public class StreamsDialog : Dialog
         lock (_sync)
         {
             _cancellation.Cancel();
+            _cancellation.Dispose();
             _cancellation = new CancellationTokenSource();
             _items = [];
             _content = null;

@@ -106,6 +106,7 @@ public class PrintDialog : Dialog
             _printersLoaded = false;
             _lastPoll = Environment.TickCount64;
             _cancellation.Cancel();
+            _cancellation.Dispose();
             _cancellation = new CancellationTokenSource();
         }
 

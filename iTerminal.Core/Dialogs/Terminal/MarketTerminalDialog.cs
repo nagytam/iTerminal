@@ -109,7 +109,12 @@ public class MarketTerminalDialog : SplitPaneDialog
         _stockService.Changed -= OnStocksChanged;
         _watch?.Dispose();
         _watch = null;
-        _cancellation.Cancel();
+        if (!_cancellation.IsCancellationRequested)
+        {
+            _cancellation.Cancel();
+        }
+
+        _cancellation.Dispose();
         base.Close();
     }
 
@@ -210,18 +215,19 @@ public class MarketTerminalDialog : SplitPaneDialog
         _isBusy = true;
         var generation = ++_generation;
         SetMessage(string.Format(UiText.Get("Market.Looking", "Looking up {0}…"), query.ToUpperInvariant()));
+        CancellationToken token = _cancellation.Token;
         _ = Task.Run(async () =>
         {
             try
             {
                 // The symbol first; a company name has no quote of its own, so its best search hit is used.
-                var quote = await _stockService.QuoteAsync(query, _cancellation.Token);
+                var quote = await _stockService.QuoteAsync(query, token);
                 if (quote is null)
                 {
-                    var hits = await _stockService.SearchAsync(query, _cancellation.Token);
+                    var hits = await _stockService.SearchAsync(query, token);
                     if (hits.Count > 0)
                     {
-                        quote = await _stockService.QuoteAsync(hits[0].Symbol, _cancellation.Token);
+                        quote = await _stockService.QuoteAsync(hits[0].Symbol, token);
                     }
                 }
 
@@ -254,12 +260,13 @@ public class MarketTerminalDialog : SplitPaneDialog
         var generation = _generation;
         var symbol = _security?.Symbol;
         SetMessage(UiText.Get("Msg.UpdatingQuotes", "Updating quotes…"));
+        CancellationToken token = _cancellation.Token;
         _ = Task.Run(async () =>
         {
             try
             {
-                await _stockService.RefreshAsync(_cancellation.Token);
-                if (symbol is not null && await _stockService.QuoteAsync(symbol, _cancellation.Token) is { } refreshed)
+                await _stockService.RefreshAsync(token);
+                if (symbol is not null && await _stockService.QuoteAsync(symbol, token) is { } refreshed)
                 {
                     Park(new Lookup(generation, refreshed, string.Empty));
                 }
@@ -375,12 +382,13 @@ public class MarketTerminalDialog : SplitPaneDialog
         }
 
         var range = _range;
+        CancellationToken token = _cancellation.Token;
         _ = Task.Run(async () =>
         {
             IReadOnlyList<StockBar> bars = [];
             try
             {
-                bars = await _stockService.HistoryAsync(symbol, range, _cancellation.Token);
+                bars = await _stockService.HistoryAsync(symbol, range, token);
             }
             catch (OperationCanceledException)
             {
@@ -487,11 +495,12 @@ public class MarketTerminalDialog : SplitPaneDialog
         _isBusy = true;
         var symbol = shown.Symbol;
         SetMessage(string.Format(UiText.Get("Msg.AddingSymbol", "Adding {0}…"), symbol));
+        CancellationToken token = _cancellation.Token;
         _ = Task.Run(async () =>
         {
             try
             {
-                await _stockService.AddAsync(symbol, cancellationToken: _cancellation.Token);
+                await _stockService.AddAsync(symbol, cancellationToken: token);
                 SetMessage(string.Format(UiText.Get("Market.Added", "Added {0} to the watchlist"), symbol));
             }
             catch (OperationCanceledException)

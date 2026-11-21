@@ -41,6 +41,8 @@ public sealed class DiskUsageScan
     public const int FilesKeptPerFolder = 40;
 
     private readonly CancellationTokenSource _cancellation = new();
+    private readonly Lock _cancellationGate = new();
+    private bool _cancellationDisposed;
     private long _files;
     private long _bytes;
     private volatile string _current = string.Empty;
@@ -69,7 +71,16 @@ public sealed class DiskUsageScan
     /// <summary>Completes when the scan ends — also when it was cancelled.</summary>
     public Task Completion { get; private set; } = Task.CompletedTask;
 
-    public void Cancel() => _cancellation.Cancel();
+    public void Cancel()
+    {
+        lock (_cancellationGate)
+        {
+            if (!_cancellationDisposed)
+            {
+                _cancellation.Cancel();
+            }
+        }
+    }
 
     internal void Run(Func<string, DiskUsageNode?, Func<string, string>, CancellationToken, DiskUsageNode> walk)
     {
@@ -86,8 +97,19 @@ public sealed class DiskUsageScan
             finally
             {
                 IsComplete = true;
+                DisposeCancellation();
             }
         });
+    }
+
+    /// <summary>The walk is over, so its source is disposed; a later <see cref="Cancel"/> does nothing.</summary>
+    private void DisposeCancellation()
+    {
+        lock (_cancellationGate)
+        {
+            _cancellationDisposed = true;
+            _cancellation.Dispose();
+        }
     }
 
     private string Visit(string folder)

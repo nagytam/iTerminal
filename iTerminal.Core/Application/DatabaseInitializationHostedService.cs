@@ -216,7 +216,9 @@ public class DatabaseInitializationHostedService(
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
+        // StartAsync is the only reader of the token, so the source can be disposed once it is cancelled.
         _stopping.Cancel();
+        _stopping.Dispose();
         return Task.CompletedTask;
     }
 

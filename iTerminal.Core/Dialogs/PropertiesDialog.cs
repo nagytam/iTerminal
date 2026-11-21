@@ -171,6 +171,7 @@ public class PropertiesDialog : FormDialog
     private void StartReadingOrigin()
     {
         _originCancellation?.Cancel();
+        _originCancellation?.Dispose();
         int generation = Interlocked.Increment(ref _originGeneration);
         _origin = null;
         if (!CanHaveOrigin || Properties is not { } properties)
@@ -180,12 +181,13 @@ public class PropertiesDialog : FormDialog
         }
 
         CancellationTokenSource cancellation = _originCancellation = new CancellationTokenSource();
+        CancellationToken token = cancellation.Token;
         OriginTask = Task.Run(async () =>
         {
             try
             {
-                FileOrigin? origin = await _originService!.ReadAsync(properties.Path, cancellation.Token);
-                if (generation == Volatile.Read(ref _originGeneration) && !cancellation.IsCancellationRequested)
+                FileOrigin? origin = await _originService!.ReadAsync(properties.Path, token);
+                if (generation == Volatile.Read(ref _originGeneration) && !token.IsCancellationRequested)
                 {
                     _origin = origin;
                 }
@@ -220,15 +222,17 @@ public class PropertiesDialog : FormDialog
         if (yes && Properties is { } properties && _originService is not null)
         {
             _originCancellation?.Cancel();
+            _originCancellation?.Dispose();
             int generation = Interlocked.Increment(ref _originGeneration);
             CancellationTokenSource cancellation = _originCancellation = new CancellationTokenSource();
+            CancellationToken token = cancellation.Token;
             OriginTask = Task.Run(async () =>
             {
                 try
                 {
-                    bool removed = await _originService.RemoveAsync(properties.Path, cancellation.Token);
-                    FileOrigin? origin = await _originService.ReadAsync(properties.Path, cancellation.Token);
-                    if (generation == Volatile.Read(ref _originGeneration) && !cancellation.IsCancellationRequested)
+                    bool removed = await _originService.RemoveAsync(properties.Path, token);
+                    FileOrigin? origin = await _originService.ReadAsync(properties.Path, token);
+                    if (generation == Volatile.Read(ref _originGeneration) && !token.IsCancellationRequested)
                     {
                         _origin = origin;
                         _removeError = removed ? null : UiText.Get("Msg.RemoveMarkFailed", "Error: the mark could not be removed.");
@@ -377,7 +381,9 @@ public class PropertiesDialog : FormDialog
     private void StartMeasuring()
     {
         _cancellation?.Cancel();
+        _cancellation?.Dispose();
         var cancellation = _cancellation = new CancellationTokenSource();
+        CancellationToken token = cancellation.Token;
 
         // A linked folder is not measured: what is behind it is another folder's.
         if (Properties is not { IsFolder: true, LinkTarget: null } properties)
@@ -390,8 +396,8 @@ public class PropertiesDialog : FormDialog
             try
             {
                 var progress = new InlineProgress(measure => _measure = measure);
-                var measure = await _propertiesService.MeasureAsync(properties.Path, progress, cancellation.Token);
-                if (!cancellation.IsCancellationRequested)
+                var measure = await _propertiesService.MeasureAsync(properties.Path, progress, token);
+                if (!token.IsCancellationRequested)
                 {
                     _measure = measure;
                     _measureComplete = true;

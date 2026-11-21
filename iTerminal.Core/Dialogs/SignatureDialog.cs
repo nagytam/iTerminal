@@ -171,13 +171,15 @@ public class SignatureDialog : Dialog
     private void Run(string busy, Func<CancellationToken, Task> work)
     {
         _cancellation?.Cancel();
+        _cancellation?.Dispose();
         var cancellation = _cancellation = new CancellationTokenSource();
+        CancellationToken token = cancellation.Token;
         _busy = busy;
         WorkTask = Task.Run(async () =>
         {
             try
             {
-                await work(cancellation.Token);
+                await work(token);
             }
             catch (OperationCanceledException)
             {
@@ -188,7 +190,7 @@ public class SignatureDialog : Dialog
             }
             finally
             {
-                if (!cancellation.IsCancellationRequested)
+                if (!token.IsCancellationRequested)
                 {
                     _busy = string.Empty;
                 }

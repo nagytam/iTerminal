@@ -99,6 +99,7 @@ public class ScannerDialog : Dialog
         lock (_sync)
         {
             _cancellation.Cancel();
+            _cancellation.Dispose();
             _cancellation = new CancellationTokenSource();
         }
 
