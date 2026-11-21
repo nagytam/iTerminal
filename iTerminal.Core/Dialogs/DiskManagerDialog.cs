@@ -2,6 +2,7 @@ using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.ScrollBar;
+using iConsole.Controls.Charts;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -34,7 +35,13 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class DiskManagerDialog : Dialog
 {
-    private const int DetailRows = 7;
+    private const int DetailRows = 8;
+
+    /// <summary>Cells of the usage bar in a row and in the details pane.</summary>
+    private const int UsageBarCells = 10;
+
+    /// <summary>The usage bar as it is drawn: the bar, then the percentage in a field of four (" 76%" or "100%").</summary>
+    private const int UsageCellWidth = UsageBarCells + 5;
 
     private TaskManager _taskManager { get; set; }
     private DriveInfoModel _driveInfoModel { get; set; }
@@ -130,11 +137,27 @@ public class DiskManagerDialog : Dialog
     {
         var transformedItem = new ListItem<Drive>(item)
         {
-            Value = item.Name,
+            Value = RowText(item),
             IsEnabled = item.IsEnabled
         };
         return transformedItem;
     }
+
+    /// <summary>
+    /// The drive's name column, then its usage bar, then the rest of the row (label, type, sizes). The bar sits
+    /// before the sizes, where a narrow dialog still shows it; a drive with no known usage gets a blank of the same width.
+    /// </summary>
+    private static string RowText(Drive drive)
+    {
+        var name = drive.Name;
+        var split = Math.Min(Drive.NameColumnWidth, name.Length);
+        var column = name[..split].PadRight(Drive.NameColumnWidth);
+        var usage = drive.UsedFraction is { } used ? UsageBar(used) : new string(' ', UsageCellWidth);
+        return column + "  " + usage + "  " + name[split..].TrimStart();
+    }
+
+    /// <summary>A bar of <see cref="UsageBarCells"/> cells and the percentage it stands for; the pane colours the line by severity.</summary>
+    private static string UsageBar(double used) => Gauge.BuildBar(used, UsageBarCells) + $" {used * 100,3:0}%";
 
     public override void OnInitializeLayout()
     {
@@ -231,6 +254,10 @@ public class DiskManagerDialog : Dialog
             lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", $"{root}   {label}")));
             lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", $"{DriveTypeText.Of(info.DriveType)}   {info.DriveFormat}")));
             lines.Add(new InfoLines.Line(Detail("DiskMgr.Space", "Space", string.Format(UiText.Get("DiskMgr.FreeOf", "{0} free of {1}"), FormatSize(info.AvailableFreeSpace), FormatSize(info.TotalSize)))));
+            if (drive.UsedFraction is { } used)
+            {
+                lines.Add(new InfoLines.Line(Detail("DiskMgr.Used", "Used", UsageBar(used)), Gauge.SeverityColor(used)));
+            }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {

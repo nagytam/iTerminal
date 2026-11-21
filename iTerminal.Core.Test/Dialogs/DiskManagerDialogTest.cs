@@ -82,6 +82,56 @@ public class DiskManagerDialogTest
         AssertScreenDoesNotContain(Render(dialog), "Reading...");
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EachRow_ShowsItsUsageBarAndPercentage()
+    {
+        using var taskManager = new TaskManager();
+        var model = new DriveInfoModel { IsLoaded = true };
+        model.Drives.Add(new Drive { Name = "C:".PadRight(Drive.NameColumnWidth) + " Label: Work", Url = new Url(Path.GetTempPath()), UsedFraction = 0.76 });
+        var dialog = new DiskManagerDialog(taskManager, model, TestTheme());
+        await ShowAsync(dialog);
+
+        await WaitUntilAsync(() =>
+        {
+            dialog.OnIdle();
+            return Render(dialog).Contains(" 76%");
+        }, "the usage bar to be drawn on the row");
+        AssertScreenContains(Render(dialog), "Label: Work");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheDetailsPane_ShowsTheUsedShareOfTheDrive()
+    {
+        using var taskManager = new TaskManager();
+        var model = new DriveInfoModel { IsLoaded = true };
+        var root = Path.GetPathRoot(Path.GetTempPath())!;
+        model.Drives.Add(new Drive { Name = root, Url = new Url(root), DriveInfo = new System.IO.DriveInfo(root), UsedFraction = 0.5 });
+        var dialog = new DiskManagerDialog(taskManager, model, TestTheme());
+        await ShowAsync(dialog);
+
+        await WaitUntilAsync(() =>
+        {
+            dialog.OnIdle();
+            return dialog.DetailsText.Contains("50%");
+        }, "the used share to be shown in the details");
+    }
+
+    [TestMethod]
+    public void UsedFraction_IsNullWithoutAVolume_AndTheUsedShareOtherwise()
+    {
+        Assert.IsNull(Drive.UsedFractionOf(null));
+
+        var root = new System.IO.DriveInfo(Path.GetPathRoot(Path.GetTempPath())!);
+        if (root.IsReady && root.TotalSize > 0)
+        {
+            var fraction = Drive.UsedFractionOf(root);
+            Assert.IsNotNull(fraction);
+            Assert.IsTrue(fraction is >= 0 and <= 1);
+        }
+    }
+
     /// <summary>A cloud row as the job lists it: no DriveInfo, its name carries the "not configured" suffix.</summary>
     private static Drive CloudRow() => new()
     {

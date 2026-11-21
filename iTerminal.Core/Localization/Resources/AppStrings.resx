@@ -6584,6 +6584,9 @@
   <data name="DiskMgr.Space" xml:space="preserve">
     <value>Space</value>
   </data>
+  <data name="DiskMgr.Used" xml:space="preserve">
+    <value>Used</value>
+  </data>
   <data name="DiskMgr.MemoryDrive" xml:space="preserve">
     <value>Memory drive (lives in this program and is saved to its database)</value>
   </data>
