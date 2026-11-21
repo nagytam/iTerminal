@@ -35,7 +35,11 @@ public class CalendarDialog : Dialog
     private int VisibleMeetingRows => Math.Clamp(MessageY - 14, 1, MeetingRows);
     private const int MaxEntryLength = 80;
 
+    /// <summary>The marker sits on the 45th parallel: the system gives the zone's meridian (its UTC offset), not a latitude.</summary>
+    private const double MarkerLatitude = 45;
+
     private readonly IDateTimeProviderService _dateTimeProviderService;
+    private Func<TimeZoneInfo> _localTimeZone = () => TimeZoneInfo.Local;
     private readonly MeetingStore _meetings;
     private readonly CalendarModel _calendar;
     private readonly iConsole.Controls.Calendar _grid;
@@ -84,6 +88,13 @@ public class CalendarDialog : Dialog
     {
         SyncCursorToSelectedDate();
         StateHasChanged();
+    }
+
+    /// <summary>The zone the time-zone line and the map describe. A test sets a fixed one; it defaults to the system's zone.</summary>
+    public Func<TimeZoneInfo> LocalTimeZone
+    {
+        get => _localTimeZone;
+        set => _localTimeZone = value ?? (() => TimeZoneInfo.Local);
     }
 
     private DateOnly Today() => DateOnly.FromDateTime(_dateTimeProviderService.Now);
@@ -473,9 +484,43 @@ public class CalendarDialog : Dialog
             Put(buffer, 0, row, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
         }
 
+        DrawZoneMap(buffer, gridX, gridRows, colorScheme);
         DrawSelectedDay(buffer, iw, colorScheme);
+        DrawTimeZone(buffer, iw, colorScheme);
         DrawMeetings(buffer, iw, colorScheme);
         DrawHints(buffer, iw, ih, colorScheme);
+    }
+
+    /// <summary>
+    /// The schematic world map in the margin left of the month grid, one map row per grid row, with the zone's meridian drawn
+    /// as a line and its marker on it. The margin is blanked by <see cref="Draw"/>; a dialog too narrow for a map leaves it empty.
+    /// </summary>
+    private void DrawZoneMap(IBuffer buffer, int gridX, int gridRows, ColorScheme colorScheme)
+    {
+        // One column of space is kept on each side of the map.
+        int mapWidth = gridX - 2;
+        if (mapWidth < 8 || gridRows <= 0)
+        {
+            return;
+        }
+
+        TimeSpan standardOffset = LocalTimeZone().BaseUtcOffset;
+        string[] map = SchematicWorldMap.RenderBraille(mapWidth, gridRows, standardOffset.TotalHours * 15, MarkerLatitude);
+        for (int row = 0; row < map.Length; row++)
+        {
+            Put(buffer, 1, row, mapWidth, map[row], colorScheme.Foreground, colorScheme.Background);
+        }
+    }
+
+    /// <summary>The zone's name and its UTC offset as it is now, under the week line.</summary>
+    private void DrawTimeZone(IBuffer buffer, int iw, ColorScheme colorScheme)
+    {
+        TimeZoneInfo zone = LocalTimeZone();
+        TimeSpan offset = zone.GetUtcOffset(_dateTimeProviderService.UtcNow);
+        string sign = offset < TimeSpan.Zero ? "-" : "+";
+        TimeSpan magnitude = offset.Duration();
+        string text = $"{iConsole.Localization.UiText.Get("Dialog.DateTimeTimeZone.TimeZone", "Time zone:")} {zone.DisplayName}  UTC{sign}{(int)magnitude.TotalHours:00}:{magnitude.Minutes:00}";
+        Put(buffer, 0, 12, iw, Center(text, iw), colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawSelectedDay(IBuffer buffer, int iw, ColorScheme colorScheme)
