@@ -279,8 +279,10 @@ public sealed class AplayAudioSink : IAudioSink
                 return [];
             }
 
-            var output = process.StandardOutput.ReadToEnd();
-            _ = process.StandardError.ReadToEnd();
+            // Both pipes are drained while the process runs, so the timeout below covers the whole
+            // call. Reading to the end first would leave a hung aplay unbounded.
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(5000))
             {
                 try
@@ -293,7 +295,13 @@ public sealed class AplayAudioSink : IAudioSink
                 return [];
             }
 
-            return output.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            // A child of aplay can keep the pipes open after it exits; do not wait on them for long.
+            if (!Task.WaitAll([outputTask, errorTask], TimeSpan.FromSeconds(1)))
+            {
+                return [];
+            }
+
+            return outputTask.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         }
         catch
         {

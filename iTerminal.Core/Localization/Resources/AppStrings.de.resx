@@ -7511,6 +7511,9 @@
   <data name="Music.Previous" xml:space="preserve">
     <value>Vorheriger Titel</value>
   </data>
+  <data name="Music.Probing" xml:space="preserve">
+    <value>Suche nach Ausgaben…</value>
+  </data>
   <data name="Music.Prog.Discovering" xml:space="preserve">
     <value>Suche… {0} Audiodateien</value>
   </data>

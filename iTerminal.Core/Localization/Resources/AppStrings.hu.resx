@@ -7447,6 +7447,9 @@
   <data name="Music.Previous" xml:space="preserve">
     <value>Előző szám</value>
   </data>
+  <data name="Music.Probing" xml:space="preserve">
+    <value>Kimenetek keresése…</value>
+  </data>
   <data name="Music.Prog.Discovering" xml:space="preserve">
     <value>Keresés… {0} hangfájl</value>
   </data>

@@ -122,7 +122,17 @@ internal sealed class FakeAudioDeviceService : IAudioDeviceService
 
     public bool HasAudioOutput { get; }
 
+    /// <summary>The fake probes synchronously, so it is never busy.</summary>
+    public bool IsProbing => false;
+
     public int RefreshCount { get; private set; }
+
+    /// <summary>Never raised: the fake's list is fixed, so there is nothing to land.</summary>
+    public event EventHandler? DevicesChanged
+    {
+        add { }
+        remove { }
+    }
 
     /// <summary>Every sink handed to the engine, oldest first — one per track start.</summary>
     public IReadOnlyList<FakeAudioSink> CreatedSinks

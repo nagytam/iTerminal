@@ -7447,6 +7447,9 @@
   <data name="Music.Previous" xml:space="preserve">
     <value>Piste précédente</value>
   </data>
+  <data name="Music.Probing" xml:space="preserve">
+    <value>Recherche des sorties…</value>
+  </data>
   <data name="Music.Prog.Discovering" xml:space="preserve">
     <value>Recherche… {0} fichiers audio</value>
   </data>

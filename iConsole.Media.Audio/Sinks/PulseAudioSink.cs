@@ -326,8 +326,10 @@ public sealed class PulseAudioSink : IAudioSink
                 return [];
             }
 
-            var output = process.StandardOutput.ReadToEnd();
-            _ = process.StandardError.ReadToEnd();
+            // Both pipes are drained while the process runs, so the timeout below covers the whole
+            // call. Reading to the end first would leave a hung pactl unbounded.
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(5000))
             {
                 try
@@ -340,9 +342,13 @@ public sealed class PulseAudioSink : IAudioSink
                 return [];
             }
 
-            return process.ExitCode == 0
-                ? output.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                : [];
+            // A child of pactl can keep the pipes open after it exits; do not wait on them for long.
+            if (!Task.WaitAll([outputTask, errorTask], TimeSpan.FromSeconds(1)) || process.ExitCode != 0)
+            {
+                return [];
+            }
+
+            return outputTask.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
         catch
         {
