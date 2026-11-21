@@ -30,6 +30,8 @@ public sealed class UpdateService : IUpdateService
     private const string ExecutableName = "iTerminal.exe";
     private const string LinuxExecutableName = "iTerminal";
     private const string StagingFolder = "staging";
+    private const string BackupFolder = "backup";
+    private const string UpdateLogName = "apply-update.log";
     private const string UpdateScriptName = "apply-update.cmd";
     private const string ShellUpdateScriptName = "apply-update.sh";
 
@@ -55,7 +57,7 @@ public sealed class UpdateService : IUpdateService
             new GitHubReleaseFeed(new HttpClient { Timeout = Timeout.InfiniteTimeSpan }),
             AboutDialog.Version,
             StartWindowsInstaller,
-            Path.Combine(Path.GetTempPath(), "iTerminal-update"),
+            DefaultDownloadDirectory(OperatingSystem.IsWindows()),
             KindFor(OperatingSystem.IsWindows(), AppContext.BaseDirectory),
             authenticode,
             OperatingSystem.IsWindows() ? StartPortableScript : StartShellScript,
@@ -301,8 +303,9 @@ public sealed class UpdateService : IUpdateService
 
     /// <summary>
     /// Unpacks the portable archive beside the download, checks the program in it, and starts a script that
-    /// copies it over the install folder once iTerminal has closed. The script restarts iTerminal and removes
-    /// its own files; nothing else in the install folder is removed, so the person's own files stay.
+    /// copies it over the install folder once iTerminal has closed. The install folder is backed up first and
+    /// restored if the copy fails. Windows then starts iTerminal again; Linux does not. Nothing else in the install
+    /// folder is removed, so the person's own files stay.
     /// </summary>
     private bool ApplyPortableArchive(string archive)
     {
@@ -310,7 +313,7 @@ public sealed class UpdateService : IUpdateService
         bool started = false;
         try
         {
-            if (_installDirectory.Length == 0 || _installDirectory.Contains('%'))
+            if (_installDirectory.Length == 0)
             {
                 AddLog("This copy of iTerminal sits in a folder the update cannot be applied to automatically. Download the archive and unzip it by hand.");
                 return false;
@@ -339,23 +342,34 @@ public sealed class UpdateService : IUpdateService
                 AddLog("Linux releases are not Authenticode-signed; the archive matches the SHA-256 digest GitHub publishes.");
             }
 
+            // iTerminal closes before the script runs, so a folder it cannot write to is refused here, while it is still open.
             string installDirectory = Path.TrimEndingDirectorySeparator(_installDirectory);
+            if (!CanWriteEverywhere(root, installDirectory))
+            {
+                AddLog($"iTerminal cannot write to {installDirectory}, so the update was not started and nothing was changed. Download the archive and unzip it there by hand, or run iTerminal with the rights to write to that folder.");
+                return false;
+            }
+
+            string log = Path.Combine(_downloadDirectory, UpdateLogName);
+            string backup = Path.Combine(_downloadDirectory, BackupFolder);
+            DeleteDirectory(backup);
+
             string script;
             string text;
             if (_windows)
             {
                 script = Path.Combine(_downloadDirectory, UpdateScriptName);
-                text = UpdateScript(Environment.ProcessId, root, installDirectory, archive);
+                text = UpdateScript(Environment.ProcessId, root, installDirectory, archive, backup, log);
             }
             else
             {
                 script = Path.Combine(_downloadDirectory, ShellUpdateScriptName);
-                text = ShellUpdateScript(Environment.ProcessId, root, installDirectory, archive, staging);
+                text = ShellUpdateScript(Environment.ProcessId, root, installDirectory, archive, staging, backup, log);
             }
 
             File.WriteAllText(script, text, new UTF8Encoding(false));
 
-            AddLog("Starting the update. iTerminal closes so its files can be replaced.");
+            AddLog($"Starting the update. iTerminal closes so its files can be replaced. The script writes its progress to {log}");
             if (!_startPortableScript(script))
             {
                 AddLog("The installer was not started.");
@@ -377,13 +391,15 @@ public sealed class UpdateService : IUpdateService
 
     /// <summary>
     /// The batch file that finishes a portable update. It waits until iTerminal has exited (its files are locked
-    /// while it runs), copies the new files over the install folder, starts iTerminal from there and deletes
-    /// the staged files and itself. <c>robocopy</c> exits with 8 or more only on a failure; then the staged
-    /// files are kept and iTerminal starts the copy that is there.
+    /// while it runs), copies the install folder to <paramref name="backup"/>, copies the new files over it and
+    /// starts iTerminal from there. If the copy fails, the backup is copied back, so the previous version is what
+    /// starts. Only a finished update deletes the staged files, the archive and the backup. Progress goes to
+    /// <paramref name="log"/>. Each path is quoted for the batch file, and a <c>%</c> is doubled so it is not read as a variable.
     /// </summary>
-    internal static string UpdateScript(int processId, string staging, string installDirectory, string archive)
+    internal static string UpdateScript(int processId, string staging, string installDirectory, string archive, string backup, string log)
     {
         string executable = Path.Combine(installDirectory, ExecutableName);
+        string logPath = BatchPath(log);
         return string.Join("\r\n",
         [
             "@echo off",
@@ -392,32 +408,56 @@ public sealed class UpdateService : IUpdateService
             ":wait",
             "tasklist /FI \"PID eq %PID%\" 2>nul | find \"%PID%\" >nul",
             "if not errorlevel 1 (ping -n 2 127.0.0.1 >nul & goto wait)",
-            $"robocopy \"{staging}\" \"{installDirectory}\" /E /R:10 /W:1 /NFL /NDL /NJH /NJS /NP >nul",
-            "set \"RESULT=%ERRORLEVEL%\"",
-            $"if %RESULT% LSS 8 rd /s /q \"{staging}\"",
-            $"if %RESULT% LSS 8 del \"{archive}\"",
-            $"start \"\" \"{executable}\"",
+            $"echo iTerminal has closed; backing up the install folder> {logPath}",
+            $"robocopy {BatchPath(installDirectory)} {BatchPath(backup)} /E /R:10 /W:1 /NP >> {logPath} 2>&1",
+            $"if errorlevel 8 (echo The install folder could not be backed up; nothing was changed.>> {logPath} & goto start)",
+            $"echo Copying the new files>> {logPath}",
+            $"robocopy {BatchPath(staging)} {BatchPath(installDirectory)} /E /R:10 /W:1 /NP >> {logPath} 2>&1",
+            "if errorlevel 8 goto restore",
+            $"rd /s /q {BatchPath(staging)}",
+            $"del {BatchPath(archive)}",
+            $"rd /s /q {BatchPath(backup)}",
+            "goto start",
+            ":restore",
+            $"echo The new files could not be copied; restoring the previous ones.>> {logPath}",
+            $"robocopy {BatchPath(backup)} {BatchPath(installDirectory)} /E /R:10 /W:1 /NP >> {logPath} 2>&1",
+            ":start",
+            $"start \"\" {BatchPath(executable)}",
             "(goto) 2>nul & del \"%~f0\"",
             string.Empty,
         ]);
     }
 
     /// <summary>
-    /// The batch-free counterpart for Linux: waits for iTerminal to exit, copies the new files over the install
-    /// folder with <c>cp -a</c> (which keeps the executable bit), and deletes the staged files and itself. Nothing
-    /// is restarted: iTerminal is a terminal program, and there is no terminal for a script to reopen it in. Output
-    /// is discarded, because the script outlives the terminal it was started from.
+    /// The shell counterpart for Linux: waits for iTerminal to exit, backs up the install folder, copies the new
+    /// files over it with <c>cp -a</c> (which keeps the executable bit), and restores the backup if that copy fails.
+    /// Only a finished update removes the staged files, the archive and the backup; the script then deletes itself.
+    /// Nothing is restarted: iTerminal is a terminal program, and there is no terminal for a script to reopen it in.
+    /// Output goes to <paramref name="log"/>, because the script outlives the terminal it was started from.
     /// </summary>
-    internal static string ShellUpdateScript(int processId, string source, string installDirectory, string archive, string staging) =>
+    internal static string ShellUpdateScript(int processId, string source, string installDirectory, string archive, string staging, string backup, string log) =>
         string.Join("\n",
         [
             "#!/bin/sh",
-            "exec >/dev/null 2>&1 </dev/null",
+            $"exec >{ShellQuote(log)} 2>&1 </dev/null",
             $"PID={processId}",
             "while kill -0 \"$PID\" 2>/dev/null; do sleep 1; done",
-            $"if cp -a {ShellQuote(source + "/.")} {ShellQuote(installDirectory + "/")}; then",
-            $"  rm -rf {ShellQuote(staging)}",
-            $"  rm -f {ShellQuote(archive)}",
+            $"if mkdir -p {ShellQuote(backup)} && cp -a {ShellQuote(installDirectory + "/.")} {ShellQuote(backup + "/")}; then",
+            $"  if cp -a {ShellQuote(source + "/.")} {ShellQuote(installDirectory + "/")}; then",
+            $"    rm -rf {ShellQuote(staging)}",
+            $"    rm -f {ShellQuote(archive)}",
+            $"    rm -rf {ShellQuote(backup)}",
+            "    echo \"The update is in place.\"",
+            "  else",
+            "    echo \"Copying the new files failed; restoring the previous ones.\"",
+            $"    if cp -a {ShellQuote(backup + "/.")} {ShellQuote(installDirectory + "/")}; then",
+            "      echo \"The previous files are back in place.\"",
+            "    else",
+            $"      echo \"Restoring failed; the backup of the previous files is kept in the update folder.\"",
+            "    fi",
+            "  fi",
+            "else",
+            "  echo \"The install folder could not be backed up; nothing was changed.\"",
             "fi",
             "rm -f \"$0\"",
             string.Empty,
@@ -425,6 +465,55 @@ public sealed class UpdateService : IUpdateService
 
     /// <summary>Quotes a value for a POSIX shell: single quotes, with any single quote written as <c>'\''</c>.</summary>
     internal static string ShellQuote(string value) => "'" + value.Replace("'", "'\\''", StringComparison.Ordinal) + "'";
+
+    /// <summary>Quotes a path for a batch file. A path cannot hold a double quote on Windows; a percent sign is doubled, so the batch file reads it literally.</summary>
+    internal static string BatchPath(string path) => "\"" + path.Replace("%", "%%", StringComparison.Ordinal) + "\"";
+
+    /// <summary>
+    /// Whether the install folder, and every folder of the new release inside it, can take a file. The copy is
+    /// refused up front when it cannot, so the app does not close for an update that then fails.
+    /// </summary>
+    private static bool CanWriteEverywhere(string root, string installDirectory)
+    {
+        try
+        {
+            IEnumerable<string> folders = new[] { root }.Concat(Directory.GetDirectories(root, "*", SearchOption.AllDirectories));
+            foreach (string folder in folders)
+            {
+                string target = Path.Combine(installDirectory, Path.GetRelativePath(root, folder));
+                Directory.CreateDirectory(target);
+                string probe = Path.Combine(target, $".write-test-{Guid.NewGuid():N}");
+                using (File.Create(probe))
+                {
+                }
+
+                File.Delete(probe);
+            }
+
+            return true;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// The folder the update downloads and stages into. On Windows it is the per-user temp folder. On Linux the temp
+    /// folder is shared between users, so the update goes under the person's local data folder instead.
+    /// </summary>
+    internal static string DefaultDownloadDirectory(bool windows)
+    {
+        if (windows)
+        {
+            return Path.Combine(Path.GetTempPath(), "iTerminal-update");
+        }
+
+        string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return local.Length > 0
+            ? Path.Combine(local, "iTerminal", "update")
+            : Path.Combine(Path.GetTempPath(), $"iTerminal-update-{Environment.UserName}");
+    }
 
     /// <summary>
     /// Decides what to do with an Authenticode verdict. A valid signature is reported (with the signer when the

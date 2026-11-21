@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Formats.Tar;
 using System.IO.Compression;
 using System.Net;
@@ -513,24 +514,61 @@ public class UpdateServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task AnInstallFolderThatCannotGoIntoTheScriptIsRefused()
+    public async Task AnInstallFolderWithAPercentSignIsEscapedForTheScript()
     {
         string directory = NewDirectory();
+        string install = Path.Combine(directory, "100%app");
         string? script = null;
         try
         {
-            // A percent sign would be read as a variable by the batch file, so the copy is not attempted.
-            UpdateService service = NewPortable(directory, Path.Combine(directory, "100%app"), path => { script = path; return true; });
+            // The batch file reads a bare percent sign as a variable, so it is doubled in the script.
+            UpdateService service = NewPortable(directory, install, path => { script = path; return true; });
             await service.CheckAsync(CancellationToken.None);
 
-            Assert.IsFalse(await service.InstallAsync(CancellationToken.None));
-            Assert.IsNull(script);
-            Assert.IsTrue(service.Log.Any(line => line.Contains("cannot be applied")));
+            Assert.IsTrue(await service.InstallAsync(CancellationToken.None));
+            string text = File.ReadAllText(script!);
+            StringAssert.Contains(text, $"\"{Path.Combine(directory, "backup")}\" /E", "The install folder is backed up first.");
+            StringAssert.Contains(text, $"start \"\" \"{Path.Combine(install.Replace("%", "%%"), "iTerminal.exe")}\"");
         }
         finally
         {
             DeleteQuietly(directory);
         }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnInstallFolderThatCannotTakeTheFilesIsRefusedBeforeITerminalCloses()
+    {
+        string directory = NewDirectory();
+        string? script = null;
+        try
+        {
+            // A file where the install folder's parent should be: no folder can be created inside it, on any system.
+            Directory.CreateDirectory(directory);
+            File.WriteAllText(Path.Combine(directory, "blocked"), string.Empty);
+            UpdateService service = NewPortable(directory, Path.Combine(directory, "blocked", "app"), path => { script = path; return true; });
+            await service.CheckAsync(CancellationToken.None);
+
+            Assert.IsFalse(await service.InstallAsync(CancellationToken.None));
+            Assert.IsNull(script, "The script is not started, so iTerminal does not close.");
+            Assert.IsTrue(service.Log.Any(line => line.Contains("cannot write to")));
+            Assert.IsFalse(Directory.Exists(Path.Combine(directory, "staging")), "The unpacked files are removed.");
+        }
+        finally
+        {
+            DeleteQuietly(directory);
+        }
+    }
+
+    [TestMethod]
+    public void TheLinuxUpdateFolderIsInThePersonsDataFolderNotTheSharedTemp()
+    {
+        Assert.AreEqual(Path.Combine(Path.GetTempPath(), "iTerminal-update"), UpdateService.DefaultDownloadDirectory(windows: true));
+        Assert.AreEqual(
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "iTerminal", "update"),
+            UpdateService.DefaultDownloadDirectory(windows: false),
+            "The shared temp folder is not used, so another user cannot pre-create the update folder.");
     }
 
     [Timeout(60_000)]
@@ -585,27 +623,137 @@ public class UpdateServiceTest
     }
 
     [TestMethod]
-    public void TheShellScriptQuotesItsPathsAndRemovesOnlyTheStagedFiles()
+    public void TheShellScriptQuotesItsPathsBacksUpAndRestoresTheInstallFolder()
     {
-        string script = UpdateService.ShellUpdateScript(4242, "/home/me/stage/app", "/home/me/it's here", "/home/me/stage.tar.gz", "/home/me/stage");
+        string script = UpdateService.ShellUpdateScript(4242, "/home/me/stage/app", "/home/me/it's here", "/home/me/stage.tar.gz", "/home/me/stage", "/home/me/backup", "/home/me/update.log");
 
         StringAssert.Contains(script, "PID=4242");
+        StringAssert.Contains(script, "exec >'/home/me/update.log' 2>&1", "The output goes to the log, not to /dev/null.");
+        StringAssert.Contains(script, "cp -a '/home/me/it'\\''s here/.' '/home/me/backup/'", "The install folder is backed up first.");
         StringAssert.Contains(script, "cp -a '/home/me/stage/app/.' '/home/me/it'\\''s here/'");
+        StringAssert.Contains(script, "cp -a '/home/me/backup/.' '/home/me/it'\\''s here/'", "A failed copy is restored from the backup.");
         StringAssert.Contains(script, "rm -rf '/home/me/stage'");
         StringAssert.Contains(script, "rm -f '/home/me/stage.tar.gz'");
+        StringAssert.Contains(script, "rm -rf '/home/me/backup'");
     }
 
     [TestMethod]
-    public void TheScriptRemovesOnlyTheStagedFilesAndItself()
+    public void TheScriptBacksUpRestoresAndRemovesOnlyTheStagedFilesAndItself()
     {
-        string script = UpdateService.UpdateScript(4242, @"C:\Temp\staging", @"C:\Tools\iTerminal", @"C:\Temp\iTerminal.zip");
+        string script = UpdateService.UpdateScript(4242, @"C:\Temp\staging", @"C:\Tools\iTerminal", @"C:\Temp\iTerminal.zip", @"C:\Temp\backup", @"C:\Temp\apply-update.log");
 
         StringAssert.Contains(script, "set \"PID=4242\"");
+        StringAssert.Contains(script, "robocopy \"C:\\Tools\\iTerminal\" \"C:\\Temp\\backup\" /E", "The install folder is backed up first.");
         StringAssert.Contains(script, "robocopy \"C:\\Temp\\staging\" \"C:\\Tools\\iTerminal\" /E");
+        StringAssert.Contains(script, "robocopy \"C:\\Temp\\backup\" \"C:\\Tools\\iTerminal\" /E", "A failed copy is restored from the backup.");
         StringAssert.Contains(script, "rd /s /q \"C:\\Temp\\staging\"");
         StringAssert.Contains(script, "del \"C:\\Temp\\iTerminal.zip\"");
+        StringAssert.Contains(script, "rd /s /q \"C:\\Temp\\backup\"");
+        StringAssert.Contains(script, ">> \"C:\\Temp\\apply-update.log\"", "Progress is written to the log.");
         StringAssert.Contains(script, $"start \"\" \"{Path.Combine(@"C:\Tools\iTerminal", "iTerminal.exe")}\"");
         StringAssert.Contains(script, "del \"%~f0\"");
         Assert.IsFalse(script.Contains("/MIR", StringComparison.Ordinal), "Mirroring would delete the person's own files in the install folder.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheLinuxScriptRunsAndReplacesTheInstallFolderThenCleansUp()
+    {
+        if (!OperatingSystem.IsLinux())
+        {
+            return;
+        }
+
+        // The script runs for real with /bin/sh: a process id that does not exist means iTerminal has already closed.
+        string directory = NewDirectory();
+        try
+        {
+            string install = Path.Combine(directory, "app");
+            string staging = Path.Combine(directory, "staging");
+            string root = Path.Combine(staging, "iTerminal-1.2.0-linux-x64-portable");
+            string backup = Path.Combine(directory, "backup");
+            string archive = Path.Combine(directory, "iTerminal-1.2.0-linux-x64-portable.tar.gz");
+            string log = Path.Combine(directory, "apply-update.log");
+            string script = Path.Combine(directory, "apply-update.sh");
+            Directory.CreateDirectory(install);
+            File.WriteAllText(Path.Combine(install, "iTerminal"), "old");
+            File.WriteAllText(Path.Combine(install, "Local.txt"), "the person's own file");
+            Directory.CreateDirectory(root);
+            File.WriteAllText(Path.Combine(root, "iTerminal"), "new");
+            File.WriteAllText(archive, "archive");
+            File.WriteAllText(script, UpdateService.ShellUpdateScript(int.MaxValue, root, install, archive, staging, backup, log));
+
+            using (Process process = Process.Start(new ProcessStartInfo("/bin/sh") { UseShellExecute = false, ArgumentList = { script } })!)
+            {
+                process.WaitForExit();
+            }
+
+            Assert.AreEqual("new", File.ReadAllText(Path.Combine(install, "iTerminal")));
+            Assert.AreEqual("the person's own file", File.ReadAllText(Path.Combine(install, "Local.txt")), "Files the release does not replace are kept.");
+            Assert.IsFalse(Directory.Exists(staging), "The staged files are removed.");
+            Assert.IsFalse(File.Exists(archive), "The archive is removed.");
+            Assert.IsFalse(Directory.Exists(backup), "The backup is removed after a finished update.");
+            Assert.IsFalse(File.Exists(script), "The script removes itself.");
+            StringAssert.Contains(File.ReadAllText(log), "The update is in place.");
+        }
+        finally
+        {
+            DeleteQuietly(directory);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheLinuxScriptRestoresThePreviousFilesWhenTheCopyFails()
+    {
+        if (!OperatingSystem.IsLinux())
+        {
+            return;
+        }
+
+        // A folder in the new release where the install folder has a file: cp cannot copy over it, so the copy fails
+        // after the other files were already replaced. The backup must put every previous file back.
+        string directory = NewDirectory();
+        try
+        {
+            string install = Path.Combine(directory, "app");
+            string staging = Path.Combine(directory, "staging");
+            string root = Path.Combine(staging, "iTerminal-1.2.0-linux-x64-portable");
+            string backup = Path.Combine(directory, "backup");
+            string archive = Path.Combine(directory, "archive.tar.gz");
+            string log = Path.Combine(directory, "apply-update.log");
+            string script = Path.Combine(directory, "apply-update.sh");
+            Directory.CreateDirectory(install);
+            File.WriteAllText(Path.Combine(install, "iTerminal"), "old");
+            File.WriteAllText(Path.Combine(install, "Assets"), "a file, not a folder");
+            Directory.CreateDirectory(Path.Combine(root, "Assets"));
+            File.WriteAllText(Path.Combine(root, "Assets", "readme.txt"), "a file inside the folder, so cp really fails on it");
+            File.WriteAllText(Path.Combine(root, "iTerminal"), "new");
+            File.WriteAllText(archive, "archive");
+            File.WriteAllText(script, UpdateService.ShellUpdateScript(int.MaxValue, root, install, archive, staging, backup, log));
+
+            using (Process process = Process.Start(new ProcessStartInfo("/bin/sh") { UseShellExecute = false, ArgumentList = { script } })!)
+            {
+                process.WaitForExit();
+            }
+
+            Assert.AreEqual("old", File.ReadAllText(Path.Combine(install, "iTerminal")), "The previous program is back in place.");
+            Assert.AreEqual("a file, not a folder", File.ReadAllText(Path.Combine(install, "Assets")));
+            Assert.IsTrue(File.Exists(archive), "A failed update keeps the archive for inspection.");
+            Assert.IsTrue(Directory.Exists(staging), "A failed update keeps the staged files.");
+            StringAssert.Contains(File.ReadAllText(log), "The previous files are back in place.");
+        }
+        finally
+        {
+            DeleteQuietly(directory);
+        }
+    }
+
+    [TestMethod]
+    public void TheScriptDoublesPercentSignsSoTheBatchFileReadsThemLiterally()
+    {
+        string script = UpdateService.UpdateScript(4242, @"C:\Temp\staging", @"C:\Apps\100%", @"C:\Temp\iTerminal.zip", @"C:\Temp\backup", @"C:\Temp\apply-update.log");
+
+        StringAssert.Contains(script, "robocopy \"C:\\Temp\\staging\" \"C:\\Apps\\100%%\" /E");
     }
 }
