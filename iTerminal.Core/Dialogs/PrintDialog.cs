@@ -1,3 +1,4 @@
+using iConsole.Controls;
 using iConsole.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -46,7 +47,6 @@ public class PrintDialog : Dialog
     private IReadOnlyList<Printer> _printers = [];
     private IReadOnlyList<PrintJob> _jobs = [];
     private int _printerIndex;
-    private int _cursor;
     private int _copies = 1;
     private bool _confirmCancel;
     private bool _printersLoaded;
@@ -57,12 +57,24 @@ public class PrintDialog : Dialog
     private int _inFlight;
     private long _lastPoll;
 
+    // The queue the table shows. Only the UI thread writes it, from ApplyPendingJobs; _jobs is what a read left for it.
+    private readonly ConcurrentObservableCollection<PrintJob> _queue = [];
+    private readonly Table<PrintJob> _table;
+    private IReadOnlyList<PrintJob> _appliedJobs = [];
+
     public PrintDialog(IPrintService printService, ISettingsService settingsService, IThemeService themeService)
         : base(nameof(PrintDialog), themeService)
     {
         Title = UiText.Get("Menu.Print", "Print");
         _printService = printService;
         _settingsService = settingsService;
+        _table = new Table<PrintJob>(_queue, themeService)
+        {
+            EmptyText = UiText.Get("Print.Reading", "Reading the printers…"),
+            RowForeground = job => job.State == PrintJobState.Error ? ThemeService.CurrentColorScheme.Error : null,
+        };
+        ConfigureColumns();
+        AddControl(_table);
     }
 
     /// <summary>The file to print, or null when the dialog was opened for the queue alone.</summary>
@@ -90,7 +102,6 @@ public class PrintDialog : Dialog
         lock (_sync)
         {
             _confirmCancel = false;
-            _cursor = 0;
             _jobs = [];
             _printersLoaded = false;
             _lastPoll = Environment.TickCount64;
@@ -98,6 +109,7 @@ public class PrintDialog : Dialog
             _cancellation = new CancellationTokenSource();
         }
 
+        ApplyPendingJobs();
         StartLoadingPrinters(_cancellation.Token);
         await base.ShowAsync();
     }
@@ -119,12 +131,23 @@ public class PrintDialog : Dialog
             CenterInParent(new Size(Math.Min(DialogWidth, Math.Max(40, (int)Parent.ViewSize.Width - 2)), DialogHeight));
         }
 
+        // The header row is the first row of the table; the queue shows ListRows rows under it.
+        _table.Position = new Position(1, 4);
+        _table.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), ListRows + 1);
+        _table.ScrollableModel.ViewSize = new Size(_table.ViewSize.Width, ListRows);
+        ConfigureColumns();
+        MoveCursor(0);
+
         base.OnInitializeLayout();
     }
 
     public override void OnIdle()
     {
         base.OnIdle();
+        ApplyPendingJobs();
+        _table.EmptyText = _printersLoaded
+            ? UiText.Get("Print.QueueEmpty", "The queue is empty.")
+            : UiText.Get("Print.Reading", "Reading the printers…");
         bool due;
         lock (_sync)
         {
@@ -218,7 +241,6 @@ public class PrintDialog : Dialog
                     }
 
                     _jobs = queue.Jobs;
-                    _cursor = Math.Clamp(_cursor, 0, Math.Max(0, _jobs.Count - 1));
                     if (queue.Failure is not null)
                     {
                         SetStatus(queue.Failure, true);
@@ -250,7 +272,44 @@ public class PrintDialog : Dialog
 
     private Printer? CurrentPrinter => _printerIndex >= 0 && _printerIndex < _printers.Count ? _printers[_printerIndex] : null;
 
-    private PrintJob? SelectedJob => _cursor >= 0 && _cursor < _jobs.Count ? _jobs[_cursor] : null;
+    private PrintJob? SelectedJob => _table.SelectedRow;
+
+    /// <summary>The highlighted row, which is the table's cursor.</summary>
+    private int Cursor => (int)_table.ScrollableModel.CursorPosition.Y;
+
+    /// <summary>Takes the queue a read left, on the UI thread, and keeps the cursor on a row that is still there.</summary>
+    private void ApplyPendingJobs()
+    {
+        IReadOnlyList<PrintJob> jobs;
+        lock (_sync)
+        {
+            if (ReferenceEquals(_jobs, _appliedJobs))
+            {
+                return;
+            }
+
+            jobs = _jobs;
+            _appliedJobs = jobs;
+        }
+
+        _queue.ReplaceAll(jobs.ToList());
+        MoveCursor(0);
+    }
+
+    /// <summary>Moves the highlight by <paramref name="step"/> rows within the queue, and scrolls it into view.</summary>
+    private void MoveCursor(int step)
+    {
+        var model = _table.ScrollableModel;
+        model.CursorPosition.Y = Math.Clamp(model.CursorPosition.Y + step, 0, Math.Max(0, _queue.Count - 1));
+
+        // Before the first layout the table has no height, and scrolling to a cursor in an empty view would hide row 0.
+        if (model.ViewSize.Height > 0)
+        {
+            model.ScrollToVisible();
+        }
+
+        model.Update();
+    }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
@@ -278,6 +337,8 @@ public class PrintDialog : Dialog
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // A key acts on the queue as it is read, not as it was drawn the last time the dialog was idle.
+        ApplyPendingJobs();
         if (HandleKey(keyEvent))
         {
             StateHasChanged();
@@ -330,10 +391,10 @@ public class PrintDialog : Dialog
                 case ConsoleKey.RightArrow:
                     return ChoosePrinter(1);
                 case ConsoleKey.UpArrow:
-                    _cursor = Math.Max(0, _cursor - 1);
+                    MoveCursor(-1);
                     return true;
                 case ConsoleKey.DownArrow:
-                    _cursor = Math.Clamp(_cursor + 1, 0, Math.Max(0, _jobs.Count - 1));
+                    MoveCursor(1);
                     return true;
                 case ConsoleKey.Delete:
                     return AskCancel();
@@ -364,7 +425,7 @@ public class PrintDialog : Dialog
 
         _printerIndex = (_printerIndex + step + _printers.Count) % _printers.Count;
         _jobs = [];
-        _cursor = 0;
+        ApplyPendingJobs();
         _settingsService.Set(PrinterSetting, _printers[_printerIndex].Name);
         StartRefresh(force: true);
         return true;
@@ -468,6 +529,21 @@ public class PrintDialog : Dialog
 
     #region Drawing
 
+    private const int IdWidth = 5;
+    private const int OwnerWidth = 10;
+    private const int StateWidth = 8;
+
+    /// <summary>Id, Document, Owner and State. The document takes the width that is left, so a long name is cut at the edge of the table.</summary>
+    private void ConfigureColumns()
+    {
+        int documentWidth = Math.Max(8, (int)_table.ViewSize.Width - IdWidth - OwnerWidth - StateWidth - 3);
+        _table.Columns.Clear();
+        _table.Columns.Add(new ColumnDefinition<PrintJob>(UiText.Get("Print.Col.Id", "Id"), IdWidth, job => job.Id.ToString(), TextAlignment.Right));
+        _table.Columns.Add(new ColumnDefinition<PrintJob>(UiText.Get("Print.Col.Document", "Document"), documentWidth, job => job.Document));
+        _table.Columns.Add(new ColumnDefinition<PrintJob>(UiText.Get("Print.Col.Owner", "Owner"), OwnerWidth, job => job.Owner));
+        _table.Columns.Add(new ColumnDefinition<PrintJob>(UiText.Get("Print.Col.State", "State"), StateWidth, job => StateLabel(job.State)));
+    }
+
     internal static string StateLabel(PrintJobState state) => state switch
     {
         PrintJobState.Printing => UiText.Get("Print.State.Printing", "Printing"),
@@ -507,34 +583,6 @@ public class PrintDialog : Dialog
             Put(buffer, 1, 0, iw - 2, UiText.Get("Print.File", "File").PadRight(LabelWidth) + file, colors.Foreground, colors.Background);
             Put(buffer, 1, 1, iw - 2, UiText.Get("Print.Printer", "Printer").PadRight(LabelWidth) + PrinterLine(valueWidth), Color.Cyan, colors.Background);
             Put(buffer, 1, 2, iw - 2, UiText.Get("Print.Copies", "Copies").PadRight(11) + _copies, colors.Foreground, colors.Background);
-
-            int nameWidth = Math.Max(8, iw - 2 - 2 - 31);
-            Put(buffer, 1, 4, iw - 2, "  " + UiText.Get("Print.Col.Id", "Id").PadLeft(5) + " " + UiText.Get("Print.Col.Document", "Document").PadRight(nameWidth) + " "
-                + UiText.Get("Print.Col.Owner", "Owner").PadRight(10) + " " + UiText.Get("Print.Col.State", "State").PadRight(8), colors.DisabledForeground, colors.Background);
-            if (_jobs.Count == 0)
-            {
-                Put(buffer, 1, 5, iw - 2, _printersLoaded
-                    ? UiText.Get("Print.QueueEmpty", "The queue is empty.")
-                    : UiText.Get("Print.Reading", "Reading the printers…"), colors.DisabledForeground, colors.Background);
-            }
-
-            int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
-            for (int i = 0; i < ListRows; i++)
-            {
-                int index = first + i;
-                if (index >= _jobs.Count)
-                {
-                    continue;
-                }
-
-                var job = _jobs[index];
-                bool highlighted = index == _cursor;
-                Put(buffer, 1, 5 + i, iw - 2,
-                    (highlighted ? "> " : "  ") + job.Id.ToString().PadLeft(5) + " " + Clip(job.Document, nameWidth).PadRight(nameWidth) + " "
-                    + Clip(job.Owner, 10).PadRight(10) + " " + StateLabel(job.State).PadRight(8),
-                    highlighted ? colors.SelectedFocusedForeground : (job.State == PrintJobState.Error ? colors.Error : colors.Foreground),
-                    highlighted ? colors.SelectedFocusedBackground : colors.Background);
-            }
 
             Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : colors.Foreground, colors.Background);
             // Whole hints only: cut at the edge, the row ended in "Del can" on a narrow terminal.
@@ -596,7 +644,7 @@ public class PrintDialog : Dialog
     internal string StatusForTest { get { lock (_sync) return _status; } }
     internal int CopiesForTest { get { lock (_sync) return _copies; } }
     internal int JobCountForTest { get { lock (_sync) return _jobs.Count; } }
-    internal int CursorForTest { get { lock (_sync) return _cursor; } }
+    internal int CursorForTest => Cursor;
     internal string? PrinterForTest { get { lock (_sync) return CurrentPrinter?.Name; } }
 
     #endregion

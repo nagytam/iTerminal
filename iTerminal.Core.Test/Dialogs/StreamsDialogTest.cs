@@ -52,7 +52,12 @@ public class StreamsDialogTest
         await _dialog.PendingOperation;
     }
 
-    private iConsole.Test.Core.ScreenBuffer Screen() => UiTestHelper.Render(_dialog);
+    // The app runs OnIdle between frames, which is where a list read in the background is put on the table.
+    private iConsole.Test.Core.ScreenBuffer Screen()
+    {
+        _dialog.OnIdle();
+        return UiTestHelper.Render(_dialog);
+    }
 
     private async Task PressAsync(ConsoleKey key, char keyChar = '\0')
     {
@@ -70,9 +75,10 @@ public class StreamsDialogTest
         UiTestHelper.AssertScreenContains(screen, "report.docx");
         UiTestHelper.AssertScreenContains(screen, "Zone.Identifier");
         UiTestHelper.AssertScreenContains(screen, "blob");
-        UiTestHelper.AssertScreenContains(screen, "(text)");
-        UiTestHelper.AssertScreenContains(screen, "ZoneId=3");
-        Screen();
+
+        // The first entry's preview is read in the background once the list is on the table.
+        await UiTestHelper.WaitUntilAsync(() => Screen().ToString()!.Contains("ZoneId=3"), "the preview of the first entry");
+        UiTestHelper.AssertScreenContains(Screen(), "(text)");
     }
 
     [TestMethod]

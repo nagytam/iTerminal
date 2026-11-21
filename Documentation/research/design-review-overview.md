@@ -11,8 +11,9 @@ UI/UX review of the iConsole controls and the iTerminal dialogs and panels. This
 | [Feedback controls, dialog shell, and the Git, remote, palette and file panel screens](#feedback-controls-dialog-shell-and-the-git-remote-palette-and-file-panel-screens) | 29 to 43 | none |
 | [File-operation dialogs: copy and move, delete, rename, multi-rename, conflict prompt, secure wipe](#file-operation-dialogs-copy-and-move-delete-rename-multi-rename-conflict-prompt-secure-wipe) | 44 to 54 | none |
 | [Music player: F3 music viewer, playlist and catalog panels, audio output](#music-player-f3-music-viewer-playlist-and-catalog-panels-audio-output) | 55 to 64 | none |
+| [Dialog set: tables, live data and labels across the dialogs](#dialog-set-tables-live-data-and-labels-across-the-dialogs) | 68 to 70 | 65 to 67 |
 
-Totals: 64 findings, 60 open and 4 resolved.
+Totals: 70 findings, 63 open and 7 resolved.
 
 ## Earlier finding numbers
 
@@ -663,6 +664,55 @@ Scope: the music player, the fifth review pass. It was picked as one area becaus
 3. Medium: finding 56 (direct transport keys), finding 58 (move, save, load), finding 61 (catalog index), finding 60 (track number).
 4. Low: finding 64.
 
+## Dialog set: tables, live data and labels across the dialogs
+
+Scope: all 128 dialog classes under `iTerminal.Core/Dialogs` and `iConsole/Dialogs`, read for how their tables are built, whether they refresh, and whether their text is localized. Reviewed on 2026-11-21 at commit 7a0b4b3a, with changes in the working tree. Method: a signal pass over all 128 (hand-padded columns with `PadRight`/`PadLeft`, `OnIdle` refresh, own `GetKeyHints`, `UiText` use, hard-coded English), then a close read of the dialogs the signals flagged. Form dialogs get their key hints from their fields (`FormDialog`), so "no hints" alone is not a finding. Not done: no run-time check, no render dump, and not every dialog was read in full. The status of each finding is from reading code, not from a run, except where a test is named.
+
+### Summary
+
+- Most of the set follows the rules: `ListBox`, `Table<T>` and `VirtualTable<T>` are bound to collections, and the live dialogs refresh from `OnIdle`. The weak spot is a family of dialogs that paint a table by hand: a `Put` per row, a `PadRight` per column and a fixed width, with no header that sorts and no binding.
+- Biggest problem: the Network manager and the Bluetooth devices were text rows formatted once when a device arrived, so a status went stale (finding 65) or had no column headers at all (finding 66). Both are now bound tables (Resolved).
+- Open: the hand-painted tables in the live and the static dialogs (finding 68), the Torrent manager's layout (finding 69) and the System information text (finding 70).
+
+### Findings
+
+68. **Tables are painted by hand in nine dialogs, most of them without a sort or a binding** - Severity: **Medium**. Kind: consistency, maintainability.
+   - Where: [PrintDialog.cs:507](../../iTerminal.Core/Dialogs/PrintDialog.cs) to `:513` and `:533` (the print queue; refreshed in `OnIdle`), [TorrentManagerDialog.cs:564](../../iTerminal.Core/Dialogs/Torrents/TorrentManagerDialog.cs) (`Row`) and `:618` (the header), [StreamsDialog.cs:535](../../iTerminal.Core/Dialogs/StreamsDialog.cs) to `:561` (no `OnIdle`), [MailDialog.cs:1056](../../iTerminal.Core/Dialogs/Mail/MailDialog.cs) to `:1059` (the message headers), [ToDoListDialog.cs:31](../../iTerminal.Core/Dialogs/ToDo/ToDoListDialog.cs) to `:34` and `:607` (no `OnIdle`), [StockBrowserDialog.cs:50](../../iTerminal.Core/Dialogs/Stocks/StockBrowserDialog.cs) and `:155` (the search hits), [PerformanceBenchmarkDialog.cs:240](../../iTerminal.Core/Dialogs/Benchmark/PerformanceBenchmarkDialog.cs) and `:258` (results), [PasswordManagerDialog.cs:555](../../iTerminal.Core/Dialogs/PasswordManager/PasswordManagerDialog.cs) (the header; no `OnIdle`).
+   - Problem: each dialog measures its own columns and pads text to them. A column cannot be sorted by a header click, a row that changes is repainted only because the whole dialog is redrawn, and a value that is longer than its column is cut by hand each time. Dialogs that do refresh (Print, Torrent) still rebuild the text on every pass. Heuristic: Consistency, Data binding. The same job is done by `Table<T>`, which binds to a `ConcurrentObservableCollection`, redraws on `CollectionChanged`, and already has `SortColumn`/`SortRequested`, which `ProcessManagerDialog` uses.
+   - Improvement: convert in this order, one dialog per change, each with its own tests: Print queue (live; `Table<PrintJob>`), Torrent list (live; see finding 69), Stock search and Streams (lists of plain records), then Mail headers, the ToDo list, the Benchmark results and the Password list. Keep the sensitive values (passwords) out of the row text, as they are now. Each conversion needs its localized column headers in all six `.resx` files, inserted in sorted order.
+   - Effort: M per dialog. **Unverified**: the Print and Torrent conversions have no test that reads a row back from the table yet.
+   - Status: open, partly fixed. Converted so far: the network manager and the Bluetooth devices (findings 65 and 66, Resolved), and in this pass the print queue, the torrent list, the streams list and the ToDo list. Still hand-painted: mail headers, the stock search, the benchmark results and the password list.
+   - What the conversions cost, and how it was won back: a table row had one colour, so `Table` gained an optional `RowForeground` (an errored print job, an interface that is not up and an overdue or finished task keep their colour), and its empty text now wraps over as many rows as it needs (the torrent hint keeps its wrapped form on a narrow terminal).
+
+69. **The Torrent manager lays its list out with a magic width and has no sort** - Severity: **Low**. Kind: maintainability, usability.
+   - Where: [TorrentManagerDialog.cs:617](../../iTerminal.Core/Dialogs/Torrents/TorrentManagerDialog.cs) (`int nameWidth = Math.Max(10, iw - 2 - 2 - 53);`), `:31` (`ListRows = 14`), and the footer: `Hints()` draws the list keys inside `Draw` (`:600`), while `GetKeyHints` (`:114`) lists the same keys for the shared footer.
+   - Problem: the 53 is the sum of the other columns and the gaps, so changing a column means changing this number. The list cannot be sorted, which matters once a dozen torrents are in it (the list is fixed at 14 rows and scrolls). The two key lists can drift, and nothing checks that they agree. Heuristic: Consistency, Maintainability.
+   - Improvement: the list is now a `Table<TorrentItem>`, so the width comes from its columns. Still to do: wire a sort on Name, State and Done through `Table.SortRequested`, and keep one key source (`GetKeyHints`) instead of `Hints()`. Test: the footer names the same keys `Hints()` names, until `Hints()` is removed.
+   - Effort: S. **Unverified**: whether `Draw` and the base footer both paint the key line today; a render dump of the Torrent dialog would settle it.
+   - Status: open, partly fixed. The magic width and the hand-painted rows are gone (this pass); the sort and the second key source remain.
+
+70. **The System information dialog is a key/value list written as text, with no key hints of its own** - Severity: **Low**. Kind: consistency, accessibility.
+   - Where: [SystemInfoDialog.cs:191](../../iTerminal.Core/Dialogs/SystemInfoDialog.cs) (`Label` pads to a width that grows with the longest label), `:198` (`Header`), `:244` to `:273` (each row is one `AppendLine`), and the class has no `GetKeyHints` override.
+   - Problem: the rows are key/value pairs, which `KeyValueList` already draws in its own key column (`KeyWidth`), so the dialog could leave the alignment to the control. The text version guesses a label width instead, and a German label longer than the guess moves the values out of line (the comment at `:189` records one such case). The dialog lists no keys at all, so a user does not learn that Esc closes it or that the text scrolls. Heuristic: Consistency, Discoverability.
+   - Improvement: build the rows as `KeyValueList` items with `KeyWidth` set to the widest label, and add the Esc and scroll hints through `GetKeyHints`. The gauge and the trend stay as they are.
+   - Effort: S to M. **Unverified**: the scroll keys' hint text needs a check against the text viewer's own hints.
+   - Status: open.
+
+### What works well
+
+- The Network manager and the Bluetooth dialog keep their state through a refresh: Bluetooth puts the cursor back on the same device by address after a re-read (`ApplyPendingDevices`), and both use the collection's `ReplaceAll`, which raises one change.
+- The dialogs that refresh do so from `OnIdle`, and the workers only write a field that the UI thread takes in. No dialog in the set mutates the control tree from a worker, as far as the signal pass and the reads show.
+- Hard-coded labels are rare. The only ones found in the set are the brand titles ("BitTorrent", "Git") and the placeholder examples, which are meant to be literal.
+
+### Research cross-reference
+
+No research overview covers dialog tables. The console overview's table entries (the sortable grid and the virtual table) are the reference for finding 68: the `Table<T>` binding is what those entries describe, and the remaining dialogs are the ones that do not use it.
+
+### Suggested order
+
+1. Quick wins (S): finding 70 (key hints and `KeyValueList`), and finding 69 once finding 68 has converted the Torrent list.
+2. Medium: finding 68, Print queue first, since it is live and the queue is what a user watches.
+
 ## Resolved
 
 Findings that a status check found fixed. Each keeps its number from the table above.
@@ -671,3 +721,6 @@ Findings that a status check found fixed. Each keeps its number from the table a
 - **15. Every query line stops at 256 characters, and a pasted query is cut silently** - Scope: Recent UI changes: key map, grid queries, evidence notebook, tab progress, folder selector. Fixed: `GridQueryCompletionModel.Attach` sets `MaxLength = 8192` ([GridQueryCompletionModel.cs:26](../../iConsole/Tabular/GridQueryCompletionModel.cs), `:34`) and all four viewers call it ([CsvViewerDialog.cs:75](../../iConsole/Dialogs/CsvViewerDialog.cs), [ParquetViewerDialog.cs:68](../../iConsole/Dialogs/ParquetViewerDialog.cs), [HdfViewerDialog.cs:95](../../iConsole/Dialogs/HdfViewerDialog.cs), [SqliteViewerDialog.cs:76](../../iConsole/Dialogs/SqliteViewerDialog.cs)). The bracketed-paste part is finding 5, which stays open.
 - **21. The shared grid still cuts and pads by characters, so CJK and emoji data misalign** - Scope: Recent UI changes: key map, grid queries, evidence notebook, tab progress, folder selector. Fixed in `CsvGrid`, which now uses `TextWidth.Of` and `TextWidth.Fit` (`CsvGrid.cs:75`, `:281`, `:300`). The other controls stay open under finding 4, and the folder selector rows under finding 25.
 - **22. Enter runs the query whatever has focus (CSV, Parquet, SQLite); HDF5 checks focus** - Scope: Recent UI changes: key map, grid queries, evidence notebook, tab progress, folder selector. Fixed for CSV, Parquet and SQLite, which now test `_queryBox.IsFocused` (`CsvViewerDialog.cs:433`, `ParquetViewerDialog.cs:383`, `SqliteViewerDialog.cs:425`); HDF5 already did.
+- **65. The network interfaces are text rows, and a status goes stale until the dialog is reopened** - Scope: Dialog set: tables, live data and labels across the dialogs. Fixed: `NetworkManagerDialog` is a `Table<NetworkInfo>` bound to `NetworkInfoModel.Networks`, so a status is read on each draw ([NetworkManagerDialog.cs](../../iTerminal.Core/Dialogs/NetworkManagerDialog.cs)). Columns Name, Status and Description carry headers. Tests: [NetworkManagerDialogTest.cs](../../iTerminal.Core.Test/Dialogs/NetworkManagerDialogTest.cs) (an interface added while the dialog is open is drawn without reopening; the columns fit the width at 60 and 120). Open remark: non-Up interfaces used to be dimmed; `Table` has no per-row disabled state, so they are not dimmed now.
+- **66. The Bluetooth device list has no column headers, and its rows are formatted once** - Scope: Dialog set: tables, live data and labels across the dialogs. Fixed: the list is a `Table<BluetoothDevice>` bound to the device collection, with Name, Address and State headers ([BluetoothDeviceManagerDialog.cs](../../iTerminal.Core/Dialogs/Bluetooth/BluetoothDeviceManagerDialog.cs)). The state is read per draw. The tests that asserted on the formatted row text now render the dialog and compare the header column with the value column. The highlight still follows the device across a refresh.
+- **67. The link target line says "to" in English** - Scope: Dialog set: tables, live data and labels across the dialogs. Fixed: [CreateLinkDialog.cs:138](../../iTerminal.Core/Dialogs/CreateLinkDialog.cs) reads "to" from the existing `Task.To` key, so the German, French, Spanish, Italian and Hungarian builds show the translated word.

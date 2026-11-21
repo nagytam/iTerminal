@@ -23,7 +23,7 @@ public class BluetoothDeviceManagerDialog : Dialog
 
     private readonly IBluetoothService _bluetooth;
     private readonly ConcurrentObservableCollection<BluetoothDevice> _devices = [];
-    private readonly ListBox<BluetoothDevice> _listBox;
+    private readonly Table<BluetoothDevice> _table;
     private readonly Label _status;
     private readonly CloseButton _closeButton;
 
@@ -50,18 +50,15 @@ public class BluetoothDeviceManagerDialog : Dialog
         _bluetooth = bluetooth;
         Title = UiText.Get("Dialog.BluetoothDeviceManager", "Bluetooth devices");
 
-        var listModel = new ListBoxModel<BluetoothDevice>(_devices)
-        {
-            TransformItem = TransformItem,
-        };
-        _listBox = new ListBox<BluetoothDevice>(listModel, themeService)
+        _table = new Table<BluetoothDevice>(_devices, themeService)
         {
             EmptyText = UiText.Get("Status.Bluetooth.Reading", "Reading the Bluetooth devices…"),
         };
+        ConfigureColumns();
         _status = new Label(string.Empty, themeService);
         _closeButton = new CloseButton(themeService);
 
-        AddControl(_listBox);
+        AddControl(_table);
         AddControl(_status);
         AddControl(_closeButton);
 
@@ -77,7 +74,7 @@ public class BluetoothDeviceManagerDialog : Dialog
         await base.ShowAsync();
 
         // The dialog takes focus itself, and a dialog with focus passes arrow keys to no child: the list gets it.
-        _listBox.SetFocus();
+        _table.SetFocus();
         if (_cancellation.IsCancellationRequested)
         {
             _cancellation = new CancellationTokenSource();
@@ -99,7 +96,7 @@ public class BluetoothDeviceManagerDialog : Dialog
     {
         ApplyPendingDevices();
         _status.Text = _statusText;
-        _listBox.EmptyText = !_loaded && _bluetooth.IsSupported
+        _table.EmptyText = !_loaded && _bluetooth.IsSupported
             ? UiText.Get("Status.Bluetooth.Reading", "Reading the Bluetooth devices…")
             : _bluetooth.CanChange
                 ? UiText.Get("Empty.BluetoothDevices", "No Bluetooth devices known. Press S to scan for nearby ones.")
@@ -114,21 +111,22 @@ public class BluetoothDeviceManagerDialog : Dialog
             CenterInParent(Parent.ViewSize * 0.8);
         }
 
-        _listBox.Position = new Position(1, 1);
-        _listBox.ViewSize = new Size(ViewSize.Width - 2, ViewSize.Height - 5);
-        _listBox.ScrollableModel.ViewSize = _listBox.ViewSize;
+        _table.Position = new Position(1, 1);
+        _table.ViewSize = new Size(ViewSize.Width - 2, ViewSize.Height - 5);
+        // The table's own layout gives the body one row less than the header.
+        _table.ScrollableModel.ViewSize = new Size(_table.ViewSize.Width, Math.Max(1, _table.ViewSize.Height - 1));
 
         // The state ends the row and is the part to read, so what comes before it gives way: first the name column, and when even that
         // would leave the name too short, the address shows only its last three bytes (enough to tell two devices apart).
         int inner = (int)ViewSize.Width - 2;
         bool shortAddress = inner - 1 - 17 - 2 - StateColumnWidth < MinimumFullAddressNameWidth;
         int addressWidth = shortAddress ? ShortAddressLength : 17;
-        int nameWidth = Math.Clamp(inner - 1 - addressWidth - 2 - StateColumnWidth, MinimumNameWidth, NameColumnWidth);
+        int nameWidth = Math.Clamp(inner - 1 - addressWidth - 1 - StateColumnWidth, MinimumNameWidth, NameColumnWidth);
         if (nameWidth != _nameWidth || shortAddress != _shortAddress)
         {
             _nameWidth = nameWidth;
             _shortAddress = shortAddress;
-            _listBox.UpdateModel();
+            ConfigureColumns();
         }
 
         _status.Position = new Position(1, ViewSize.Height - 3);
@@ -138,14 +136,6 @@ public class BluetoothDeviceManagerDialog : Dialog
         _closeButton.ViewSize = new Size(ViewSize.Width - 2, 1);
 
         base.OnInitializeLayout();
-    }
-
-    /// <summary>One device as a row: name in a fixed column, then the address, then its state.</summary>
-    internal static string FormatRow(BluetoothDevice device, string stateText, int nameWidth = NameColumnWidth, bool shortAddress = false)
-    {
-        var name = (device.Name ?? string.Empty).Trim().Shrink(nameWidth - 1) ?? string.Empty;
-        var address = shortAddress && device.Address.Length > ShortAddressLength ? device.Address[^ShortAddressLength..] : device.Address.PadRight(17);
-        return name.PadRight(nameWidth) + " " + address + "  " + stateText;
     }
 
     /// <summary>The room the state needs at the end of a row ("connected" is the longest).</summary>
@@ -163,19 +153,26 @@ public class BluetoothDeviceManagerDialog : Dialog
     /// <summary>The name column as wide as the dialog allows: at the full 30 a 60-column terminal cut the address after 15 characters.</summary>
     private int _nameWidth = NameColumnWidth;
 
-    private ListItem<BluetoothDevice> TransformItem(BluetoothDevice device, CancellationToken cancellationToken)
+    /// <summary>
+    /// The three columns: the name, the address and the state. The state ends the row and is the part to read, so the name
+    /// gives way first; when even that would leave it too short, the address shows only its last three bytes.
+    /// </summary>
+    private void ConfigureColumns()
     {
-        var state = device.IsConnected
-            ? UiText.Get("State.Bluetooth.Connected", "connected")
-            : device.IsPaired
-                ? UiText.Get("State.Bluetooth.Paired", "paired")
-                : UiText.Get("State.Bluetooth.Nearby", "nearby");
-        return new ListItem<BluetoothDevice>(device)
-        {
-            Value = FormatRow(device, state, _nameWidth, _shortAddress),
-            IsEnabled = true,
-        };
+        _table.Columns.Clear();
+        _table.Columns.Add(new ColumnDefinition<BluetoothDevice>(UiText.Get("Bluetooth.Column.Name", "Name"), _nameWidth,
+            device => (device.Name ?? string.Empty).Trim()));
+        _table.Columns.Add(new ColumnDefinition<BluetoothDevice>(UiText.Get("Bluetooth.Column.Address", "Address"), _shortAddress ? ShortAddressLength : 17,
+            device => _shortAddress && device.Address.Length > ShortAddressLength ? device.Address[^ShortAddressLength..] : device.Address));
+        _table.Columns.Add(new ColumnDefinition<BluetoothDevice>(UiText.Get("Bluetooth.Column.State", "State"), StateColumnWidth,
+            StateText));
     }
+
+    private static string StateText(BluetoothDevice device) => device.IsConnected
+        ? UiText.Get("State.Bluetooth.Connected", "connected")
+        : device.IsPaired
+            ? UiText.Get("State.Bluetooth.Paired", "paired")
+            : UiText.Get("State.Bluetooth.Nearby", "nearby");
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
@@ -254,7 +251,6 @@ public class BluetoothDeviceManagerDialog : Dialog
     /// </summary>
     private BluetoothDevice? SelectedDevice()
     {
-        _listBox.UpdateModel();
         var before = HighlightedDevice();
         if (_pendingDevices is null)
         {
@@ -267,9 +263,7 @@ public class BluetoothDeviceManagerDialog : Dialog
 
     private BluetoothDevice? HighlightedDevice()
     {
-        var items = _listBox.ListModel.ListItems;
-        var cursor = (int)_listBox.ScrollableModel.CursorPosition.Y;
-        var device = cursor >= 0 && cursor < items.Count ? items[cursor].Item : null;
+        var device = _table.SelectedRow;
         if (device is not null)
         {
             _selectedAddress = device.Address;
@@ -297,10 +291,9 @@ public class BluetoothDeviceManagerDialog : Dialog
 
         _devices.ReplaceAll(pending.ToList());
 
-        // UpdateModel, not the model alone: it also sizes the scroll range, which the cursor is clamped to.
-        _listBox.UpdateModel();
-        var index = _listBox.ListModel.ListItems.ToList().FindIndex(item => item.Item.Address == _selectedAddress);
-        _listBox.ScrollableModel.CursorPosition.Y = Math.Max(index, 0);
+        // The table resizes its scroll range when its rows change, so the cursor can be put back straight away.
+        var index = _devices.AsSnapshot().ToList().FindIndex(device => device.Address == _selectedAddress);
+        _table.ScrollableModel.CursorPosition.Y = Math.Max(index, 0);
     }
 
     private void Read()
@@ -470,7 +463,7 @@ public class BluetoothDeviceManagerDialog : Dialog
 
     internal Task OperationForTest => _operation;
 
-    internal ListBox<BluetoothDevice> ListBoxForTest => _listBox;
+    internal Table<BluetoothDevice> TableForTest => _table;
 
     internal string StatusForTest => _statusText;
 

@@ -47,6 +47,30 @@ public class TableTest
         CollectionAssert.Contains(keys, "Home/End");
     }
 
+    /// <summary>The host can colour a row that is not under the cursor; the cursor row keeps the selection colours.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RowForeground_ColoursOnlyRowsThatAreNotUnderTheCursor()
+    {
+        var colors = new ColorScheme();
+        var table = CreateTable([Alice, Bob]);
+        table.RowForeground = person => person.Name == "Bob" ? colors.DisabledForeground : null;
+        table.ScrollableModel.CursorPosition.Y = 1; // Bob is under the cursor
+
+        var screen = new ScreenBuffer(40, 5);
+        table.Draw(screen);
+
+        // Row 1 is Alice (the header is row 0), row 2 is Bob.
+        Assert.AreEqual(colors.Foreground, screen.ForegroundAt(1, 1));
+        Assert.AreNotEqual(colors.DisabledForeground, screen.ForegroundAt(1, 2));
+
+        table.ScrollableModel.CursorPosition.Y = 0; // now Alice is under the cursor and Bob is not
+        var moved = new ScreenBuffer(40, 5);
+        table.Draw(moved);
+
+        Assert.AreEqual(colors.DisabledForeground, moved.ForegroundAt(1, 2));
+    }
+
     private static readonly Person Alice = new("Alice", 30, "New York");
     private static readonly Person Bob   = new("Bob",   25, "London");
     private static readonly Person Carol = new("Carol", 35, "Paris");

@@ -135,7 +135,7 @@ public class CreateLinkDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        _labelTarget.Text = "to   " + TargetPath;
+        _labelTarget.Text = iConsole.Localization.UiText.Get("Task.To", "to").PadRight(5) + TargetPath;
         var length = LinkPath.Length;
         _textBoxLink.ScrollableModel.Reset();
         _textBoxLink.ScrollableModel.ScrollableSize = new Size(length, 1);
