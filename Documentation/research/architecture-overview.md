@@ -9,19 +9,12 @@ Reviewed on 2026-11-21, scope "Layering and dependencies", branch `docs/architec
 **Summary**
 
 - The dependency direction holds: no file in `iConsole`, `iConsole.Formats` or the input plug-ins uses an `iTerminal` namespace, `iConsole` does not reference `iConsole.Formats`, and `iConsole.Formats` references only `iConsole` and uses none of its UI namespaces. The move in #779 is placed correctly.
-- The move is half done as a rule: four readers that implement `iConsole` interfaces (Parquet, HDF5, SQLite, the executable analyzer) and their packages are still in `iTerminal.Core`, so `CLAUDE.md`'s "`iConsole.Formats` holds the file-format readers and their third-party packages" is not yet true (finding 17).
+- The move is complete: the four readers that implement `iConsole` interfaces (Parquet, HDF5, SQLite, the executable analyzer) moved to `iConsole.Formats` in #781 (finding 17, resolved), so `CLAUDE.md`'s rule holds.
 - The container itself is never validated by a test, and the `InstantiateAllTypesTest` contract that `CLAUDE.md` describes is not what the test checks; #779 removed a registration from `AddiConsoleCore`, which is the kind of change only the end-to-end suite would catch (finding 18).
 - #778 repeats the "worker parks a result, the UI thread takes it" hand-off by hand in five more dialogs, with two different synchronisation styles (finding 19).
 - Strong parts: the format seams are small interfaces owned by `iConsole`; registration has one entry point (`AddFileFormats`, called from `AddiTerminal`, so the app and the end-to-end host get the same set); `--help` returns before any service is built; and the dialogs that #778 converted no longer touch the control tree from a worker.
 
 **Findings**
-
-17. **Format implementations have two homes: `iConsole.Formats` and `iTerminal.Core`** — **Medium**, kind: layering, consistency.
-    - **Where:** [iTerminal.Core/Services/ParquetFiles/ParquetFileReader.cs:21](../../iTerminal.Core/Services/ParquetFiles/ParquetFileReader.cs), [iTerminal.Core/Services/Hdf/Hdf5FileReader.cs:20](../../iTerminal.Core/Services/Hdf/Hdf5FileReader.cs), [iTerminal.Core/Services/Sqlite/SqliteDatabaseReader.cs:12](../../iTerminal.Core/Services/Sqlite/SqliteDatabaseReader.cs), [iTerminal.Core/Services/Executables/ExecutableAnalyzer.cs:10](../../iTerminal.Core/Services/Executables/ExecutableAnalyzer.cs), registered at [iTerminalApplicationBuilderExtension.cs:278](../../iTerminal.Core/Application/iTerminalApplicationBuilderExtension.cs), `:281`, `:286` and `:294`, beside `AddFileFormats()` at `:54`; the packages `Parquet.Net` and `PureHDF` in [iTerminal.Core/iTerminal.Core.csproj:35](../../iTerminal.Core/iTerminal.Core.csproj) and `:37`; the rule in [CLAUDE.md:46](../../CLAUDE.md). The `ExecutableAnalysisDialog` takes its analyzer from `iTerminal.Core` and its disassembler from `iConsole.Formats` ([iConsole/Dialogs/ExecutableAnalysisDialog.cs:45](../../iConsole/Dialogs/ExecutableAnalysisDialog.cs)).
-    - **Problem:** the four readers implement `iConsole` interfaces (`IParquetFileReader`, `IHdfFileReader`, `ISqliteDatabaseReader`, `IExecutableAnalyzer`) and use no `iTerminal.Core` type (their only `using` lines are `System.*`, the `iConsole` interface namespace and the package), so they are format readers by every measure #779 used. A developer adding a format now has two precedents, and a second host of `iConsole` that wants the Parquet or HDF5 viewer must reference all of `iTerminal.Core`. The layering page and `CLAUDE.md` describe a rule the code does not follow yet. Principle: one home per responsibility, consistency with the framework.
-    - **Improvement:** move the four classes to `iConsole.Formats` (`Services/ParquetFiles`, `Services/Hdf`, `Services/Sqlite`, `Services/Executables`, namespaces as they are or as finding 21 decides), move `Parquet.Net` and `PureHDF` to `iConsole.Formats.csproj`, and register the four in `FileFormatsServiceCollectionExtension.AddFileFormats` instead of `AddiTerminal`. `Microsoft.Data.Sqlite` stays referenced by `iTerminal.Core` too, because six other files there use it; with finding 5 that is one version line. Move their tests from `iTerminal.Core.Test` to `iConsole.Formats.Test`.
-    - **Effort:** M.
-    - **Risk of the change:** a missed registration shows only when a viewer opens (finding 18 closes that gap, so do it first). The Parquet, HDF5 and SQLite viewer tests and `ExecutableAnalysisDialogTest` catch a behaviour change; the end-to-end viewer tests catch a wiring gap.
 
 18. **No test builds the real container, and `InstantiateAllTypesTest` does not check what `CLAUDE.md` says it checks** — **Medium**, kind: testability, documentation.
     - **Where:** [iTerminal.Core.Test/Generated/InstantiateAllTypesTest.cs:140](../../iTerminal.Core.Test/Generated/InstantiateAllTypesTest.cs) (any type no constructor can build is allocated with `GetUninitializedObject` and counts as a success), [iConsole.Test/Generated/InstantiateIConsoleTypesTest.cs:41](../../iConsole.Test/Generated/InstantiateIConsoleTypesTest.cs) (never runs a constructor), [iTerminal.Core.Test/Application/iTerminalApplicationBuilderExtensionTest.cs:22](../../iTerminal.Core.Test/Application/iTerminalApplicationBuilderExtensionTest.cs) (checks seven registrations by type, builds nothing); the contract in [CLAUDE.md:114](../../CLAUDE.md) and [testing.md:9](../architecture/testing.md). No test passes `ValidateOnBuild`; the host builder in [iConsoleApplicationBuilder.cs:19](../../iConsole/Application/iConsoleApplicationBuilder.cs) does not either.
@@ -115,8 +108,8 @@ Reviewed on 2026-11-21, scope "Layering and dependencies", branch `docs/architec
 **Suggested order**
 
 1. Quick wins: finding 22 (relaunch argument and unknown switches), finding 23 (dispose the host, cancel `--update`), finding 21 (write the namespace decision down).
-2. Finding 18 (a validated container test), before finding 17, so the move of four registrations is checked.
-3. Finding 17 (move the remaining four readers and their packages), then finding 20 (routing out of the converter interface, `iConsole.Test` without `iConsole.Formats`).
+2. Finding 18 (a validated container test): it now also checks the four reader registrations that moved in #781.
+3. Finding 20 (routing out of the converter interface, `iConsole.Test` without `iConsole.Formats`).
 4. Finding 19 (one hand-off primitive), on its own branch; convert the five #778 dialogs in the same pull request.
 
 ## Dependencies and packages
@@ -257,7 +250,7 @@ Reviewed on 2026-11-21 (second pass, replacing the first one of the same day), s
 | Microsoft.AspNetCore.DataProtection.Extensions | iTerminal.Core | 11.0.0 | 11.0.0 | No | 1 / 1 | Keep |
 | Microsoft.EntityFrameworkCore | iTerminal.Core | 11.0.0 | 11.0.0 | No | 16 / 19 | Keep |
 | Microsoft.EntityFrameworkCore.Sqlite | iTerminal.Core | 11.0.0 | 11.0.0 | No | provider of EF | Keep |
-| Microsoft.Data.Sqlite | iTerminal.Core | 11.0.0 | 11.0.0 | No | 6 / 6 | Keep (used directly; also the SQLite viewer, finding 17) |
+| Microsoft.Data.Sqlite | iTerminal.Core, iConsole.Formats | 11.0.0 | 11.0.0 | No | 6 / 6 in Core, 1 / 3 in Formats | Keep in both (the SQLite viewer reader is in iConsole.Formats, finding 17) |
 | Microsoft.Extensions.AI | iTerminal.Core | 11.0.1 | 11.0.1 | No | 8 / 6 | Keep (updated in #777) |
 | Microsoft.Extensions.AI.OpenAI | iTerminal.Core | 11.0.1 | 11.0.1 | No | 6 / 2 | Keep (updated in #777) |
 | imobiledevice-net | iTerminal.Core | 1.3.17 | 1.3.17 (deprecated) | No | 2 / 0 | Decide platform contract (finding 4) |
@@ -265,8 +258,8 @@ Reviewed on 2026-11-21 (second pass, replacing the first one of the same day), s
 | Microsoft.Playwright | iTerminal.Core | 1.65.1 | 1.65.1 | No | 2 / 3 | Keep (updated in #777) |
 | MonoTorrent | iTerminal.Core | 3.0.2 | 3.0.2 | No | 1 / 0 | Keep |
 | NLayer | iTerminal.Core | 3.0.1 | 3.0.1 | No | 1 / 0 | Keep |
-| PureHDF | iTerminal.Core | 2.2.0 | 2.2.0 (3.0.0-beta.1 out) | No | 1 / 1 | Move to iConsole.Formats (finding 17); watch 3.0 |
-| Parquet.Net | iTerminal.Core | 6.1.0 | 6.1.0 | No | 1 / 2 | Move to iConsole.Formats (finding 17) |
+| PureHDF | iConsole.Formats | 2.2.0 | 2.2.0 (3.0.0-beta.1 out) | No | 1 / 1 | Moved from iTerminal.Core in #781 (finding 17); watch 3.0 |
+| Parquet.Net | iConsole.Formats | 6.1.0 | 6.1.0 | No | 1 / 2 | Moved from iTerminal.Core in #781 (finding 17) |
 | Serilog | iTerminal.Core | 4.4.0 | 4.4.0 | No | 39 / 22 | Keep |
 | Serilog.Sinks.File | iTerminal.Core | 8.0.0-dev-02318 | stable 7.x (unverified) | Yes (to stable) | 1 / 0 | Move to stable (finding 3) |
 | SharpZipLib | iTerminal.Core | 1.4.2 | 1.4.2 | No | 3 / 7 | Keep (finding 16) |
@@ -315,6 +308,7 @@ Reviewed on 2026-11-21 (second pass, replacing the first one of the same day), s
 
 ## Resolved
 
+- **Finding 17 (format implementations in two homes)** — resolved in #781: the Parquet, HDF5 and SQLite readers, the executable analyzer with its PE, ELF and Mach-O parsers, and their packages (`Parquet.Net`, `PureHDF`) moved from `iTerminal.Core` to `iConsole.Formats`, keeping their `iConsole.*` namespaces. Their tests moved to `iConsole.Formats.Test`. The four registrations moved from `AddiTerminal` into `AddFileFormats`. `Microsoft.Data.Sqlite` is referenced by both projects. The counts in findings 20 and 21 were taken before this move.
 - **Finding 1 (`Svg.Skia` at two major versions)** — resolved by finding 8: `Svg.Skia` is now 5.2.3 everywhere. Correction from the second pass: it is one version in two project files (`iConsole.Formats` and `iTerminal.Core`), not one reference; see finding 24.
 - **Finding 8 (`iConsole` carries the file-format packages)** — resolved in #779: the format readers, renderers, converter and their packages (HtmlAgilityPack, Iced, JetDatabaseReader, DocumentFormat.OpenXml, OpenMcdf, PdfPig, SkiaSharp, Svg.Skia, System.Security.Cryptography.Pkcs, Tomlyn, YamlDotNet) moved to `iConsole.Formats`, and their unit tests to `iConsole.Formats.Test`. `iConsole` keeps only the interfaces its dialogs use (`IFileToTextConverterService`, `IStructuredDocumentParser`, `IExecutableDisassembler`). The move kept the namespaces (finding 21). Not moved, because the viewer dialogs in `iConsole` read those formats directly: Csv, Dbf, Har, Json, Xml, Markdown and the XPS document model, which have no third-party package; and not moved although they are format readers behind `iConsole` interfaces: the Parquet, HDF5, SQLite and executable readers in `iTerminal.Core` (finding 17).
 - **Finding 11 (patch and minor updates waiting)** — resolved in #777: `coverlet.collector` 10.1.1, `Microsoft.Extensions.AI` and `.OpenAI` 11.0.1, `SSH.NET` 2026.0.1, `SkiaSharp` and its Linux natives 4.157.0, `Tomlyn` 2.11.1. `OpenMcdf` stays at 3.3.0 on purpose (finding 25).
