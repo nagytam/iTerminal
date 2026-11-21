@@ -263,6 +263,48 @@ public class PasswordManagerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheListIsATable_WithItsHeadingsAndNoPassword()
+    {
+        var manager = NewManager();
+        manager.Unlock();
+        manager.Save(new PasswordEntry { Id = "p0", Title = "Mail", Username = "ann", Password = "secret-pw-123" });
+        var dialog = new PasswordManagerDialog(manager, TestTheme());
+        await ShowAsync(dialog);
+
+        var screen = Render(dialog);
+
+        AssertScreenContains(screen, "Category");
+        AssertScreenContains(screen, "Title");
+        AssertScreenContains(screen, "Username");
+        AssertScreenContains(screen, "Mail");
+        AssertScreenContains(screen, "ann");
+        Assert.IsFalse(screen.ToString()!.Contains("secret-pw-123"), "the password must not be drawn until V shows it");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnEmptyListSaysWhyItIsEmpty()
+    {
+        var (dialog, _) = await OpenWithAsync(0);
+
+        AssertScreenContains(Render(dialog), "Nothing saved yet");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AClickThenEnter_EditsTheEntryThatWasClicked()
+    {
+        var (dialog, _) = await OpenWithAsync(5);
+
+        await dialog.HandleMouseEventAsync(At(dialog, 3));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, (char)13));
+
+        Assert.AreEqual("Edit", dialog.ModeForTest);
+        Assert.AreEqual("Entry 03", dialog.FieldForTest("Title"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task TheMouseLeavesTheListAloneWhileDeletionIsAsked()
     {
         var (dialog, manager) = await OpenWithAsync(5);
@@ -314,10 +356,10 @@ public class PasswordManagerDialogTest
         var dialog = new PasswordManagerDialog(NewManager(), TestTheme());
         await ShowAsync(dialog);
 
-        // The message was drawn and then blanked by the empty rows that follow it, so it never showed.
+        // The table wraps the message to its width, so the second sentence breaks over two lines; its first words stay on one line.
         var screen = Render(dialog);
         AssertScreenContains(screen, "Nothing saved yet. N adds a password;");
-        AssertScreenContains(screen, "network and mail passwords appear here as they are saved.");
+        AssertScreenContains(screen, "network and mail passwords appear here");
     }
 
 }
