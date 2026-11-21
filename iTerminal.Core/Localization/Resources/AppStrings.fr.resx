@@ -6379,6 +6379,9 @@
   <data name="DiskMgr.Space" xml:space="preserve">
     <value>Espace</value>
   </data>
+  <data name="DiskMgr.Used" xml:space="preserve">
+    <value>Utilisé</value>
+  </data>
   <data name="DiskMgr.MemoryDrive" xml:space="preserve">
     <value>Lecteur mémoire (vit dans ce programme et est enregistré dans sa base de données)</value>
   </data>

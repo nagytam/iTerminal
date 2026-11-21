@@ -6443,6 +6443,9 @@
   <data name="DiskMgr.Space" xml:space="preserve">
     <value>Platz</value>
   </data>
+  <data name="DiskMgr.Used" xml:space="preserve">
+    <value>Belegt</value>
+  </data>
   <data name="DiskMgr.MemoryDrive" xml:space="preserve">
     <value>Speicherlaufwerk (lebt in diesem Programm und wird in dessen Datenbank gespeichert)</value>
   </data>

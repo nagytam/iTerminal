@@ -6379,6 +6379,9 @@
   <data name="DiskMgr.Space" xml:space="preserve">
     <value>Spazio</value>
   </data>
+  <data name="DiskMgr.Used" xml:space="preserve">
+    <value>Usato</value>
+  </data>
   <data name="DiskMgr.MemoryDrive" xml:space="preserve">
     <value>Unità di memoria (vive in questo programma ed è salvata nel suo database)</value>
   </data>

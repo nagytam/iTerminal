@@ -6379,6 +6379,9 @@
   <data name="DiskMgr.Space" xml:space="preserve">
     <value>Hely</value>
   </data>
+  <data name="DiskMgr.Used" xml:space="preserve">
+    <value>Foglalt</value>
+  </data>
   <data name="DiskMgr.MemoryDrive" xml:space="preserve">
     <value>Memóriameghajtó (ebben a programban él, és az adatbázisába mentődik)</value>
   </data>

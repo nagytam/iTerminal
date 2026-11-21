@@ -102,7 +102,7 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
 
     // The list shows the drive as one string, so each column has a fixed width: a long mount point or
     // label is cut with an ellipsis instead of pushing the type and the sizes out of line.
-    private const int NameWidth = 20;
+    private const int NameWidth = Drive.NameColumnWidth;
     private const int LabelWidth = 16;
     private const int TypeWidth = 10;
 
@@ -141,6 +141,8 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
     {
         try
         {
+            // Read here, on the drive's own task: the list draws the bar from it and must not touch the volume.
+            drive.UsedFraction = Drive.UsedFractionOf(drive.DriveInfo);
             if (drive.IsEnabled)
             {
                 drive.Name += " " + iConsole.Localization.UiText.Get("DriveList.Label", "Label:") + " " + Fit(drive.DriveInfo?.VolumeLabel, LabelWidth);
@@ -183,7 +185,8 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
         if (oldDrive is not null)
         {
             var index = _driveInfoModel.Drives.IndexOf(oldDrive);
-            if (oldDrive.Name != drive.Name)
+            // The bar moves with the free space even where the rounded text does not, so a change in either replaces the row.
+            if (oldDrive.Name != drive.Name || oldDrive.UsedFraction != drive.UsedFraction)
             {
                 _driveInfoModel.Drives.ReplaceAt(index, drive);
             }
