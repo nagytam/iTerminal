@@ -36,14 +36,14 @@
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SMBLibrary" Version="1.5.8.1" />
     <PackageReference Include="SSH.NET" Version="2026.0.1" />
-    <PackageReference Include="Svg.Skia" Version="5.2.3" />
+    <!-- SkiaSharp and Svg.Skia (the SVG and picture decoders) arrive through iConsole.Media.Video and iConsole.Formats,
+         which own their versions and natives; do not repeat them here. -->
     <!-- The zstd decoder for the Ollama release, which Linux ships as .tar.zst (.NET has none in its BCL). -->
     <PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\iConsole.Formats\iConsole.Formats.csproj" />
-    <ProjectReference Include="..\iConsole.Inputs.Windows\iConsole.Inputs.Windows.csproj" />
     <ProjectReference Include="..\iConsole.Media.Audio\iConsole.Media.Audio.csproj" />
     <ProjectReference Include="..\iConsole.Media.Speech\iConsole.Media.Speech.csproj" />
     <ProjectReference Include="..\iConsole.Media.Video\iConsole.Media.Video.csproj" />
