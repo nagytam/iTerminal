@@ -90,6 +90,23 @@ public class FolderSelectorDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task CtrlLeftAndCtrlRight_StepThroughThePagesLikeCtrlUpAndCtrlDown()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var dialog = CreateDialog(harness);
+        await dialog.OnInitializeAsync();
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.D2, control: true)));
+        Assert.IsTrue(dialog.TabPages[2].IsFocused, "Setup: Ctrl+2 should focus the Recent page.");
+
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.RightArrow, control: true)));
+        Assert.IsTrue(dialog.TabPages[3].IsFocused, "Ctrl+Right should go to the next page.");
+
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(FolderSelectorTestHarness.Key(ConsoleKey.LeftArrow, control: true)));
+        Assert.IsTrue(dialog.TabPages[2].IsFocused, "Ctrl+Left should go to the previous page.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task AltDigit_ShowsEveryPageAndPutsTheCursorOnItsFirstControl()
     {
         // Alt+<digit> is the page jump a legacy terminal can send (Ctrl+1, Ctrl+5 and friends never reach

@@ -169,6 +169,17 @@ public class FolderSelectorDialog : Dialog
         {
             keyEvent = new KeyEvent(keyEvent.KeyChar, keyEvent.ConsoleKey, shift: false, alt: false, control: true);
         }
+
+        // The tab strip is vertical, so its page keys are Ctrl+Up / Ctrl+Down. Ctrl+Left / Ctrl+Right are
+        // the same two steps, read as previous / next. The dialog maps them here rather than in Tab, which
+        // would take Ctrl+Left / Ctrl+Right from every vertical tab control in the app, word jumps included.
+        // Only the Path page's text box loses the word jump here, because the key now switches pages first.
+        if (keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift
+            && (keyEvent.ConsoleKey is ConsoleKey.LeftArrow or ConsoleKey.RightArrow))
+        {
+            var arrow = keyEvent.ConsoleKey is ConsoleKey.LeftArrow ? ConsoleKey.UpArrow : ConsoleKey.DownArrow;
+            keyEvent = new KeyEvent(keyEvent.KeyChar, arrow, shift: false, alt: false, control: true);
+        }
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
@@ -176,7 +187,7 @@ public class FolderSelectorDialog : Dialog
     {
         yield return ("Enter", iConsole.Localization.UiText.Get("FolderSelector.Hint.Enter", "Go to the folder the focused page has under its cursor, and close."));
         yield return ("Esc", iConsole.Localization.UiText.Get("FolderSelector.Hint.Esc", "Dismiss the suggestion list if one is up, otherwise close without navigating."));
-        yield return ("Ctrl+Up / Ctrl+Down", iConsole.Localization.UiText.Get("FolderSelector.Hint.PageSwitch", "Move to the previous / next page of the selector."));
+        yield return ("Ctrl+Up / Ctrl+Down / Ctrl+Left / Ctrl+Right",iConsole.Localization.UiText.Get("FolderSelector.Hint.PageSwitch", "Move to the previous / next page of the selector."));
         yield return ("Alt+0 … Alt+8 / Ctrl+0 … Ctrl+8", iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
         yield return ("Tab / Shift+Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.TabFocusedPage", "Move between the focused page's list and its buttons."));
     }
