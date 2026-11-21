@@ -5,13 +5,19 @@ using iConsole.Inputs.Windows.Extensions;
 using iTerminal.Core.Application;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Elevation;
+using iTerminal.Core.Services.Updates;
 using iTerminal.Core.Screens;
 using Microsoft.Extensions.DependencyInjection;
 
 // A copy restarted with elevated rights is started while the one it replaces is still shutting down.
 // The settings are written back whole when that one exits, so wait for it before touching them.
-var waitForParent = Array.IndexOf(args, ElevationService.WaitForParentArgument);
-if (waitForParent >= 0 && waitForParent + 1 < args.Length && int.TryParse(args[waitForParent + 1], out var parentId))
+var launch = LaunchOptions.Parse(args);
+if (launch.HelpRequested)
+{
+    return launch.ShowHelp();
+}
+
+if (launch.ParentProcessId is { } parentId)
 {
     try
     {
@@ -48,6 +54,12 @@ iConsole.Diagnostics.StartupTrace.Mark("services-registered");
 var app = builder.Build();
 iConsole.Diagnostics.StartupTrace.Mark("built");
 
+// --update installs the newest release without the interface, and returns so that the installer or update script can replace the files.
+if (launch.Update)
+{
+    return await UpdateCommandLine.RunAsync(app.Services.GetRequiredService<IUpdateService>(), Console.Out, CancellationToken.None);
+}
+
 // The saved passwords open with the key the app generated for them, before any panel restores a remote folder.
 app.Services.GetRequiredService<IPasswordManager>().Unlock();
 
@@ -77,3 +89,4 @@ await app.RunAsync();
 
 // Restarting as root on Unix replaces this process once the host has stopped and given the terminal back.
 PendingRelaunch.TryExecute();
+return 0;

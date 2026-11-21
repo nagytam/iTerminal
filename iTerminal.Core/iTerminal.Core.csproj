@@ -13,14 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="3.0.0" />
     <PackageReference Include="FluentFTP" Version="55.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="11.0.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="11.0.0" />
-    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="11.0.1" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="11.0.1" />
     <PackageReference Include="imobiledevice-net" Version="1.3.17" />
     <PackageReference Include="Microsoft.Mxc.Sdk" Version="1.1.0" />
     <!--
@@ -28,7 +29,7 @@
       the JavaScript package) into every output and package. The driver is downloaded into the data folder
       by the setup dialog instead (see RuntimeDependencyService), so the build must not carry it.
     -->
-    <PackageReference Include="Microsoft.Playwright" Version="1.64.1" ExcludeAssets="build;buildTransitive" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.65.1" ExcludeAssets="build;buildTransitive" />
     <PackageReference Include="MonoTorrent" Version="3.0.2" />
     <PackageReference Include="NLayer" Version="3.0.1" />
     <PackageReference Include="PureHDF" Version="2.2.0" />
@@ -38,7 +39,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="8.0.0-dev-02318" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SMBLibrary" Version="1.5.8.1" />
-    <PackageReference Include="SSH.NET" Version="2026.0.0" />
+    <PackageReference Include="SSH.NET" Version="2026.0.1" />
     <!--
       Voice input in the AI bar: whisper.cpp through Whisper.net. Unlike the Playwright driver these ship with the
       application: the CPU natives are about 2 MB per platform. Only the speech model (148 MB) is downloaded, as the
