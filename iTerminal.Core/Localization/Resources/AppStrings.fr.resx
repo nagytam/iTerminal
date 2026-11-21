@@ -9975,10 +9975,10 @@
     <value>contre l'ordinateur</value>
   </data>
   <data name="Games.Snake.VersusWon" xml:space="preserve">
-    <value>Vous gagnez : {0} points contre {1} pour l'ordinateur. N pour rejouer.</value>
+    <value>Vous gagnez : le serpent de l'ordinateur s'est écrasé. Vous avez {0} points, l'ordinateur {1}. N pour rejouer.</value>
   </data>
   <data name="Games.Snake.VersusLost" xml:space="preserve">
-    <value>L'ordinateur gagne : {0} points contre vos {1}. N pour rejouer.</value>
+    <value>L'ordinateur gagne : votre serpent s'est écrasé. Vous avez {1} points, l'ordinateur {0}. N pour rejouer.</value>
   </data>
   <data name="Games.Snake.VersusDraw" xml:space="preserve">
     <value>Les deux se sont écrasés : vous {0}, l'ordinateur {1}. N pour rejouer.</value>
@@ -9993,13 +9993,13 @@
     <value>Empilez les pièces qui tombent en lignes pleines. Le plateau de l'ordinateur tourne à côté du vôtre : celui dont la pile atteint le haut en premier perd.</value>
   </data>
   <data name="Games.Tetris.VersusDraw" xml:space="preserve">
-    <value>Les deux piles ont atteint le haut : {0} points contre {1} pour l'ordinateur. N pour rejouer.</value>
+    <value>Les deux piles ont atteint le haut ensemble : vous {0} points, l'ordinateur {1}. N pour rejouer.</value>
   </data>
   <data name="Games.Tetris.VersusLost" xml:space="preserve">
-    <value>L'ordinateur gagne : {0} points contre vos {1}. N pour rejouer.</value>
+    <value>L'ordinateur gagne : votre pile a atteint le haut en premier. Vous avez {1} points, l'ordinateur {0}. N pour rejouer.</value>
   </data>
   <data name="Games.Tetris.VersusWon" xml:space="preserve">
-    <value>Vous gagnez : {0} points contre {1} pour l'ordinateur. N pour rejouer.</value>
+    <value>Vous gagnez : la pile de l'ordinateur a atteint le haut en premier. Vous avez {0} points, l'ordinateur {1}. N pour rejouer.</value>
   </data>
   <data name="Games.Jass.VsComputer" xml:space="preserve">
     <value>vous et les joueurs de l'ordinateur</value>
@@ -10741,6 +10741,12 @@
   </data>
   <data name="Games.Risk.Hint" xml:space="preserve">
     <value>Choisir, attaquer, déplacer ou placer</value>
+  </data>
+  <data name="Games.Risk.Rules" xml:space="preserve">
+    <value>Conquérez des territoires en attaquant les voisins aux dés. Tenir un continent entier rapporte des armées bonus. Éliminez l'autre camp pour gagner.</value>
+  </data>
+  <data name="Games.Risk.EndPhase" xml:space="preserve">
+    <value>Terminer cette phase</value>
   </data>
   <data name="CmdTitle.0711a8d6" xml:space="preserve">
     <value>Risk</value>

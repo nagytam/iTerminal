@@ -9975,10 +9975,10 @@
     <value>contro il computer</value>
   </data>
   <data name="Games.Snake.VersusWon" xml:space="preserve">
-    <value>Hai vinto: {0} punti contro {1} del computer. N per giocare di nuovo.</value>
+    <value>Hai vinto: il serpente del computer si è schiantato. Hai {0} punti, il computer {1}. N per giocare di nuovo.</value>
   </data>
   <data name="Games.Snake.VersusLost" xml:space="preserve">
-    <value>Vince il computer: {0} punti contro i tuoi {1}. N per giocare di nuovo.</value>
+    <value>Vince il computer: il tuo serpente si è schiantato. Hai {1} punti, il computer {0}. N per giocare di nuovo.</value>
   </data>
   <data name="Games.Snake.VersusDraw" xml:space="preserve">
     <value>Si sono schiantati entrambi: tu {0}, il computer {1}. N per giocare di nuovo.</value>
@@ -9993,13 +9993,13 @@
     <value>Impila i pezzi che cadono in righe piene. La griglia del computer scorre accanto alla tua: perde chi per primo fa arrivare la pila in cima.</value>
   </data>
   <data name="Games.Tetris.VersusDraw" xml:space="preserve">
-    <value>Entrambe le pile sono arrivate in cima: {0} punti contro {1} del computer. N per giocare di nuovo.</value>
+    <value>Entrambe le pile sono arrivate in cima insieme: tu {0} punti, il computer {1}. N per giocare di nuovo.</value>
   </data>
   <data name="Games.Tetris.VersusLost" xml:space="preserve">
-    <value>Vince il computer: {0} punti contro i tuoi {1}. N per giocare di nuovo.</value>
+    <value>Vince il computer: la tua pila ha raggiunto la cima per prima. Hai {1} punti, il computer {0}. N per giocare di nuovo.</value>
   </data>
   <data name="Games.Tetris.VersusWon" xml:space="preserve">
-    <value>Hai vinto: {0} punti contro {1} del computer. N per giocare di nuovo.</value>
+    <value>Hai vinto: la pila del computer ha raggiunto la cima per prima. Hai {0} punti, il computer {1}. N per giocare di nuovo.</value>
   </data>
   <data name="Games.Jass.VsComputer" xml:space="preserve">
     <value>tu e i giocatori del computer</value>
@@ -10741,6 +10741,12 @@
   </data>
   <data name="Games.Risk.Hint" xml:space="preserve">
     <value>Seleziona, attacca, muovi o piazza</value>
+  </data>
+  <data name="Games.Risk.Rules" xml:space="preserve">
+    <value>Conquista territori attaccando i vicini con i dadi. Tenere un intero continente dà armate bonus. Elimina l'altra parte per vincere.</value>
+  </data>
+  <data name="Games.Risk.EndPhase" xml:space="preserve">
+    <value>Termina questa fase</value>
   </data>
   <data name="CmdTitle.0711a8d6" xml:space="preserve">
     <value>Risiko</value>

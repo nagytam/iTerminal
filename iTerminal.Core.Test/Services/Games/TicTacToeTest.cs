@@ -156,13 +156,16 @@ public class TicTacToeTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void TheBoardDrawsFiveRowsWithTheCursorOnTheCentre()
+    public void TheBoardDrawsThreeRowsPerSquareWithTheCursorOnTheCentre()
     {
         TicTacToeGame game = new();
 
         IReadOnlyList<GameCell[]> rows = game.Render();
 
-        Assert.AreEqual(5, rows.Count);
-        Assert.IsTrue(rows[2][2].Cursor);
+        // Three rows for each of three squares, with a line between the rows of squares.
+        Assert.AreEqual(11, rows.Count);
+        Assert.IsTrue(rows.All(r => r.Sum(c => c.Text.Length) == 23), "every row is as wide as the board");
+        Assert.IsTrue(rows[5][2].Cursor, "the mark of the centre square carries the cursor");
+        Assert.AreEqual("   ·   ", rows[5][0].Text, "an empty square shows its dot on the middle row");
     }
 }

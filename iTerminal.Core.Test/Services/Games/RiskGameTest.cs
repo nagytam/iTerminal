@@ -331,19 +331,23 @@ public class RiskGameTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void TheBoardDrawsFourRowsOfSixCellsFortyTwoColumnsWide()
+    public void TheBoardDrawsTheContinentsSetApartWithTheirBonuses()
     {
         RiskGame game = Load(SplitOwners(), Armies((0, 7)), 0, RiskPhase.Reinforce, 1);
 
         IReadOnlyList<GameCell[]> rows = game.Render();
 
-        Assert.AreEqual(Rows, rows.Count);
-        Assert.IsTrue(rows.All(r => r.Length == Columns));
-        Assert.AreEqual(42, rows[0].Sum(c => c.Text.Length));
-        Assert.AreEqual("  7    ", rows[0][0].Text);
-        Assert.AreEqual(Color.Blue, rows[0][0].Background);
-        Assert.AreEqual(Color.Red, rows[2][0].Background);
-        Assert.IsTrue(rows[0][0].Cursor, "the cursor starts on the first own territory");
+        // A bonus row, the four territory rows with a line between the two halves, and a bonus row at the bottom.
+        Assert.AreEqual(Rows + 3, rows.Count);
+        Assert.IsTrue(rows.All(r => r.Sum(c => c.Text.Length) == 43), "every row is as wide as the board");
+        Assert.IsTrue(string.Concat(rows[0].Select(c => c.Text)).Contains("+2"), "the top bonus row shows the top continents");
+        Assert.IsTrue(string.Concat(rows[^1].Select(c => c.Text)).Contains("+4"), "the bottom bonus row shows the bottom continents");
+        Assert.AreEqual("┼", rows[3][1].Text, "the line between the halves crosses at the gutter");
+        Assert.AreEqual("  7    ", rows[1][0].Text);
+        Assert.AreEqual(Color.Blue, rows[1][0].Background);
+        Assert.AreEqual(Color.Red, rows[4][0].Background);
+        Assert.IsTrue(rows[1][0].Cursor, "the cursor starts on the first own territory");
+        Assert.IsFalse(rows.Where((_, i) => i != 1).SelectMany(r => r).Any(c => c.Cursor), "only the territory under the cursor carries it");
     }
 
     [Timeout(60_000)]
@@ -353,7 +357,8 @@ public class RiskGameTest
         RiskGame game = Load(SplitOwners(), Armies((6, 5)), 0, RiskPhase.Attack, 0);
         Press(game, 6);
 
-        GameCell source = game.Render()[1][0];
+        // Territory 6 starts the second territory row, the third row drawn: the bonus row comes first.
+        GameCell source = game.Render()[2][0];
 
         Assert.AreEqual(Color.Yellow, source.Background);
     }

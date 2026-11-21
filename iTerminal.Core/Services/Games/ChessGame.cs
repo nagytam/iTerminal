@@ -268,7 +268,9 @@ public class ChessGame : GameBase
             {
                 int square = rank * 8 + file;
                 int piece = _state.Board[square];
-                Color background = (file + rank) % 2 == 1 ? Color.DarkYellow : Color.DarkGray;
+                // Light squares are olive and dark ones teal: white pieces read on both, black ones on both, and the highlights
+                // (green targets, red check) stay apart from the squares.
+                Color background = (file + rank) % 2 == 1 ? Color.DarkYellow : Color.DarkCyan;
                 string text = piece == 0 ? "   " : $" {Piece.Letter(piece)} ";
                 Color foreground = piece > 0 ? Color.White : Color.Black;
                 if (square == _selected)

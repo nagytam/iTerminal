@@ -241,5 +241,10 @@ public class GoTest
         Assert.AreEqual("A ", rows[0][1].Text);
         Assert.AreEqual("●─", rows[5][5].Text);
         Assert.AreEqual(1, rows.SelectMany(r => r).Count(c => c.Cursor));
+
+        game.TryPlay(At(3, 4));
+        rows = game.Render();
+
+        Assert.AreEqual("○─", rows[5][4].Text, "a white stone is hollow, so the sides differ without colour");
     }
 }

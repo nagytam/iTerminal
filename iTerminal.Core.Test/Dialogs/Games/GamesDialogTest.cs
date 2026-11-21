@@ -594,11 +594,11 @@ public class GamesDialogTest
         await ShowAsync(dialog, new Size(120, 40));
 
         ScreenBuffer before = DrawnBuffer(dialog);
-        Assert.AreEqual(5, CellsWithBackground(before, Color.Cyan), "the middle square, five cells wide, is the cursor");
+        Assert.AreEqual(21, CellsWithBackground(before, Color.Cyan), "the middle square, seven cells wide and three rows deep, is the cursor");
 
         await Press(dialog, ConsoleKey.LeftArrow);
         ScreenBuffer after = DrawnBuffer(dialog);
-        Assert.AreEqual(5, CellsWithBackground(after, Color.Cyan));
+        Assert.AreEqual(21, CellsWithBackground(after, Color.Cyan));
         Assert.AreNotEqual(FirstCyanCell(before), FirstCyanCell(after), "the cursor moved left");
     }
 

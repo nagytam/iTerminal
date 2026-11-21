@@ -684,16 +684,25 @@ public class JassGame : GameBase
         }
         else if (!_handComplete)
         {
+            // Each card is a block the cursor can sit on, like the cells of the other boards, so the one to play stands out.
             for (int group = 0; group < 3; group++)
             {
-                string handRow = string.Join("  ", Enumerable.Range(group * 3, 3)
-                    .Where(index => index < _hands[ShownSeat].Count)
-                    .Select(index =>
+                List<GameCell> handRow = [];
+                foreach (int index in Enumerable.Range(group * 3, 3).Where(index => index < _hands[ShownSeat].Count))
+                {
+                    if (handRow.Count > 0)
                     {
-                        string card = $"{index + 1}:{_hands[ShownSeat][index].ShortName}";
-                        return index == _cursor ? $"[{card}]" : card;
-                    }));
-                rows.Add([new GameCell(handRow)]);
+                        handRow.Add(new GameCell("  "));
+                    }
+
+                    JassCard held = _hands[ShownSeat][index];
+                    // Hearts and Diamonds are the red suits; the cursor block takes its own colours.
+                    Color? suitColour = held.Suit is JassSuit.Hearts or JassSuit.Diamonds ? Color.Red : null;
+                    GameCell card = new($" {index + 1}:{held.ShortName} ", suitColour);
+                    handRow.Add(index == _cursor ? card.WithCursor() : card);
+                }
+
+                rows.Add([.. handRow]);
             }
         }
 
