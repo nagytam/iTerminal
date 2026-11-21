@@ -61,9 +61,33 @@ var app = builder.Build();
 iConsole.Diagnostics.StartupTrace.Mark("built");
 
 // --update installs the newest release without the interface, and returns so that the installer or update script can replace the files.
+// Ctrl+C cancels the check or the download instead of ending the process mid-step; a second Ctrl+C ends it at once.
 if (launch.Update)
 {
-    return await UpdateCommandLine.RunAsync(app.Services.GetRequiredService<IUpdateService>(), Console.Out, CancellationToken.None);
+    await using (app)
+    {
+        using var cancel = new CancellationTokenSource();
+        ConsoleCancelEventHandler onCancel = (_, e) =>
+        {
+            if (cancel.IsCancellationRequested)
+            {
+                return;
+            }
+
+            e.Cancel = true;
+            cancel.Cancel();
+        };
+
+        Console.CancelKeyPress += onCancel;
+        try
+        {
+            return await UpdateCommandLine.RunAsync(app.Services.GetRequiredService<IUpdateService>(), Console.Out, cancel.Token);
+        }
+        finally
+        {
+            Console.CancelKeyPress -= onCancel;
+        }
+    }
 }
 
 // The saved passwords open with the key the app generated for them, before any panel restores a remote folder.
@@ -91,7 +115,11 @@ if (elevation.IsElevated)
 }
 
 iConsole.Diagnostics.StartupTrace.Mark("run");
-await app.RunAsync();
+// Disposed before the relaunch below: an exec replaces the process and would skip the dispose.
+await using (app)
+{
+    await app.RunAsync();
+}
 
 // Restarting as root on Unix replaces this process once the host has stopped and given the terminal back.
 PendingRelaunch.TryExecute();
