@@ -1,3 +1,4 @@
+using iConsole.Formats.Markdown;
 using iConsole.Markdown;
 
 namespace iConsole.Test.Markdown;
@@ -6,7 +7,7 @@ namespace iConsole.Test.Markdown;
 public class MarkdownLayoutTest
 {
     private static List<string> Rows(string markdown, int width) =>
-        MarkdownLayout.Wrap(MarkdownParser.Parse(markdown), width)
+        MarkdownLayout.Wrap(new MarkdownParser().Parse(markdown), width)
             .Select(line => string.Concat(line.Spans.Select(s => s.Text)))
             .ToList();
 

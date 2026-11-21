@@ -25,6 +25,8 @@ public class XmlViewerDialog : Dialog
 
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly IXmlDocumentParser _xmlDocumentParser;
+    private readonly IXmlValidator _xmlValidator;
     private readonly TextBox _xpathBox;
     private readonly TreeView _treeView;
     private readonly ListBox<XmlXPathResult> _resultsBox;
@@ -41,6 +43,8 @@ public class XmlViewerDialog : Dialog
     public XmlViewerDialog(
         IContentModelService contentModelService,
         IFileToTextConverterService fileToTextConverterService,
+        IXmlDocumentParser xmlDocumentParser,
+        IXmlValidator xmlValidator,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
@@ -48,6 +52,8 @@ public class XmlViewerDialog : Dialog
     {
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
+        _xmlDocumentParser = xmlDocumentParser;
+        _xmlValidator = xmlValidator;
         _xpathBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
             Label = "XPath",
@@ -102,7 +108,7 @@ public class XmlViewerDialog : Dialog
 
         try
         {
-            XmlTree tree = await Task.Run(() => XmlTree.Build(XmlTree.Parse(content)));
+            XmlTree tree = await Task.Run(() => XmlTree.Build(_xmlDocumentParser.Parse(content)));
             Attach(tree);
         }
         catch (XmlException exception)
@@ -233,7 +239,7 @@ public class XmlViewerDialog : Dialog
 
         byte[] content = _content;
         string? path = Url?.Path;
-        _validation = Task.Run(() => XmlValidator.Validate(content, path));
+        _validation = Task.Run(() => _xmlValidator.Validate(content, path));
         _statusLabel.Text = UiText.Get("Viewer.Validating", "Validating…");
         return _validation;
     }

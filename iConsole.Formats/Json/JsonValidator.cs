@@ -1,21 +1,16 @@
 using System.Text.Json;
+using iConsole.Json;
 
-namespace iConsole.Json;
-
-/// <summary>Where a document stops being valid JSON, and why.</summary>
-public sealed record JsonValidationIssue(int Line, int Column, string Message)
-{
-    public override string ToString() => $"line {Line}, column {Column}: {Message}";
-}
+namespace iConsole.Formats.Json;
 
 /// <summary>
 /// Checks that a document is valid JSON (RFC 8259), as <see cref="System.Text.Json"/> reads it: comments and trailing
 /// commas are not accepted. A document is not checked against a JSON Schema; that needs a schema library.
 /// </summary>
-public static class JsonValidator
+public sealed class JsonValidator : IJsonValidator
 {
-    /// <summary>The first place the document is not valid JSON, or null when it is valid.</summary>
-    public static JsonValidationIssue? Validate(byte[] content)
+    /// <inheritdoc/>
+    public JsonValidationIssue? Validate(byte[] content)
     {
         try
         {

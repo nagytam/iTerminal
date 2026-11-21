@@ -77,7 +77,7 @@ public class PsdDocumentTest
     {
         var textModel = new iConsole.Model.TextModel();
 
-        await new FileToTextConverterService().ReadFileAsync(
+        await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadFileAsync(
             new iConsole.Data.Url(SampleFiles.Path("example.psd")), new LocalFileSystemAdapter(), textModel);
 
         List<string> lines = textModel.Lines.ToList();

@@ -1,3 +1,4 @@
+using iConsole.Formats.Markdown;
 using iConsole.Controls;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
@@ -18,7 +19,7 @@ public class MarkdownViewerControlTest
         var root = new Control(_theme) { ViewSize = new Size(30, height) };
         var viewer = new MarkdownViewerControl(_theme) { Position = new Position(0, 0), ViewSize = new Size(30, height) };
         root.AddControl(viewer);
-        viewer.Markdown = markdown;
+        viewer.SetDocument(markdown, new MarkdownParser().Parse(markdown));
         viewer.SetFocus();
         return (root, viewer);
     }
@@ -54,7 +55,7 @@ public class MarkdownViewerControlTest
         var keys = viewer.GetKeyHints().Select(h => h.Key).ToList();
         CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End" }, keys);
 
-        viewer.Markdown = string.Empty;
+        viewer.SetDocument(string.Empty, new MarkdownParser().Parse(string.Empty));
         Assert.AreEqual(0, viewer.GetKeyHints().Count());
     }
 
@@ -63,7 +64,7 @@ public class MarkdownViewerControlTest
     public async Task Click_TakesTheFocusSoTheArrowKeysScroll()
     {
         var viewer = new MarkdownViewerControl(_theme) { Position = new Position(0, 0), ViewSize = new Size(30, 5) };
-        viewer.Markdown = Document(20);
+        viewer.SetDocument(Document(20), new MarkdownParser().Parse(Document(20)));
         Assert.IsFalse(viewer.IsFocused);
 
         await viewer.HandleMouseEventAsync(new MouseEvent { Position = new Position(3, 2), LeftClicked = true });
@@ -133,7 +134,7 @@ public class MarkdownViewerControlTest
         var (_, viewer) = Create(5, Document(20));
         viewer.ScrollBy(5);
 
-        viewer.Markdown = Document(20);
+        viewer.SetDocument(Document(20), new MarkdownParser().Parse(Document(20)));
 
         Assert.AreEqual(0, viewer.ScrollOffset);
     }

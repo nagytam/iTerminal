@@ -1,14 +1,15 @@
 using System.Text;
 using System.Text.RegularExpressions;
+using iConsole.Markdown;
 
-namespace iConsole.Markdown;
+namespace iConsole.Formats.Markdown;
 
 /// <summary>
 /// Reads the common subset of Markdown into <see cref="MarkdownBlock"/>s: ATX headings, paragraphs, bullet and numbered
 /// lists (nested by indentation), block quotes, fenced code, horizontal rules, and the inline emphasis, code and link
 /// forms. Anything else is kept as plain text rather than rejected, so a document always shows.
 /// </summary>
-public static partial class MarkdownParser
+public sealed partial class MarkdownParser : IMarkdownParser
 {
     [GeneratedRegex(@"^(#{1,6})\s+(.*)$")]
     private static partial Regex HeadingPattern();
@@ -16,7 +17,8 @@ public static partial class MarkdownParser
     [GeneratedRegex(@"^(\s*)([-*+]|\d+[.)])\s+(.*)$")]
     private static partial Regex ListPattern();
 
-    public static IReadOnlyList<MarkdownBlock> Parse(string? markdown)
+    /// <inheritdoc/>
+    public IReadOnlyList<MarkdownBlock> Parse(string? markdown)
     {
         var blocks = new List<MarkdownBlock>();
         var paragraph = new List<string>();

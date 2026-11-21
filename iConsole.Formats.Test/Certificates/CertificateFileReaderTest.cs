@@ -1,6 +1,7 @@
+using iConsole.Formats.Certificates;
 using iConsole.Certificates;
 
-namespace iConsole.Test.Certificates;
+namespace iConsole.Formats.Test.Certificates;
 
 [TestClass]
 public class CertificateFileReaderTest
@@ -24,7 +25,7 @@ public class CertificateFileReaderTest
     {
         File.WriteAllText(_path, "abc");
 
-        CertificateFileRead read = CertificateFileReader.ReadCapped(_path);
+        CertificateFileRead read = new CertificateReader().ReadFile(_path);
 
         Assert.AreEqual(CertificateFileStatus.Ok, read.Status);
         CollectionAssert.AreEqual("abc"u8.ToArray(), read.Bytes);
@@ -35,7 +36,7 @@ public class CertificateFileReaderTest
     {
         File.WriteAllBytes(_path, new byte[CertificateLimits.MaxFileBytes]);
 
-        CertificateFileRead read = CertificateFileReader.ReadCapped(_path);
+        CertificateFileRead read = new CertificateReader().ReadFile(_path);
 
         Assert.AreEqual(CertificateFileStatus.Ok, read.Status);
         Assert.AreEqual(CertificateLimits.MaxFileBytes, read.Bytes.Length);
@@ -46,7 +47,7 @@ public class CertificateFileReaderTest
     {
         File.WriteAllBytes(_path, new byte[CertificateLimits.MaxFileBytes + 1]);
 
-        CertificateFileRead read = CertificateFileReader.ReadCapped(_path);
+        CertificateFileRead read = new CertificateReader().ReadFile(_path);
 
         Assert.AreEqual(CertificateFileStatus.Overflow, read.Status);
         Assert.AreEqual(0, read.Bytes.Length);
@@ -55,7 +56,7 @@ public class CertificateFileReaderTest
     [TestMethod]
     public void MissingFile_IsAFailureNotAnException()
     {
-        CertificateFileRead read = CertificateFileReader.ReadCapped(_path);
+        CertificateFileRead read = new CertificateReader().ReadFile(_path);
 
         Assert.AreEqual(CertificateFileStatus.Failure, read.Status);
         Assert.IsNotNull(read.Error);

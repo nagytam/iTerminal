@@ -32,6 +32,7 @@ public class CsvViewerDialog : Dialog
 
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly ICsvDocumentParser _csvDocumentParser;
     private readonly IPromptService _promptService;
     private readonly GridQueryDrafter _drafter;
     private readonly TextBox _queryBox;
@@ -59,6 +60,7 @@ public class CsvViewerDialog : Dialog
     public CsvViewerDialog(
         IContentModelService contentModelService,
         IFileToTextConverterService fileToTextConverterService,
+        ICsvDocumentParser csvDocumentParser,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
@@ -69,6 +71,7 @@ public class CsvViewerDialog : Dialog
         _drafter = new GridQueryDrafter(queryAssistant ?? new UnavailableGridQueryAssistant());
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
+        _csvDocumentParser = csvDocumentParser;
         _promptService = promptService;
         // The query line is added first: a dialog gives the keyboard to its first focusable control, and the query is where a person starts.
         _queryBox = new TextBox(beepService, dateTimeProviderService, themeService)
@@ -143,7 +146,7 @@ public class CsvViewerDialog : Dialog
         int generation = ++_documentGeneration;
         _pendingDocumentGeneration = generation;
         char? delimiter = DelimiterFor(Url);
-        CsvDocument document = await Task.Run(() => CsvDocument.Parse(text, delimiter));
+        CsvDocument document = await Task.Run(() => _csvDocumentParser.Parse(text, delimiter));
         if (generation != _documentGeneration)
         {
             // An F8 came in while the file parsed; its re-read lands the document.
@@ -213,7 +216,7 @@ public class CsvViewerDialog : Dialog
         _query = null;
         int generation = ++_documentGeneration;
         _pendingDocumentGeneration = generation;
-        _switch = Task.Run(() => CsvDocument.Parse(encoding.GetString(bytes, bomLength, bytes.Length - bomLength), delimiter));
+        _switch = Task.Run(() => _csvDocumentParser.Parse(encoding.GetString(bytes, bomLength, bytes.Length - bomLength), delimiter));
         Title = TitleText();
         StateHasChanged();
     }

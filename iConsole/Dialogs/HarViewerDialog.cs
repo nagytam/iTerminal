@@ -35,6 +35,7 @@ public class HarViewerDialog : Dialog
 
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly IHarDocumentParser _harDocumentParser;
     private readonly CsvGrid _grid;
     private readonly TextViewerControl _detailsControl;
     private readonly TextViewerControl _textControl;
@@ -46,11 +47,13 @@ public class HarViewerDialog : Dialog
     public HarViewerDialog(
         IContentModelService contentModelService,
         IFileToTextConverterService fileToTextConverterService,
+        IHarDocumentParser harDocumentParser,
         IThemeService themeService)
         : base(nameof(HarViewerDialog), themeService)
     {
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
+        _harDocumentParser = harDocumentParser;
         _grid = new CsvGrid(themeService) { EmptyText = UiText.Get("Har.Grid.Empty", "The file has no requests") };
         _detailsControl = new TextViewerControl(false, themeService) { IsVisible = false };
         _textControl = new TextViewerControl(false, themeService) { IsVisible = false };
@@ -102,7 +105,7 @@ public class HarViewerDialog : Dialog
         Title = TitleText();
         try
         {
-            HarDocument document = await Task.Run(() => HarDocument.Parse(TextEncodings.Decode(content, out _)));
+            HarDocument document = await Task.Run(() => _harDocumentParser.Parse(TextEncodings.Decode(content, out _)));
             _document = document;
             _grid.SetData(Headers(), document.Entries.Select(Cells).ToList());
         }

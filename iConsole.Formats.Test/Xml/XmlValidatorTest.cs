@@ -1,7 +1,8 @@
+using iConsole.Formats.Xml;
 using System.Text;
 using iConsole.Xml;
 
-namespace iConsole.Test.Xml;
+namespace iConsole.Formats.Test.Xml;
 
 /// <summary>Validating a document against the schema or DTD it names, with schema files read from the disk next to it.</summary>
 [TestClass]
@@ -59,7 +60,7 @@ public class XmlValidatorTest
             </book>
             """);
 
-        IReadOnlyList<XmlValidationIssue> issues = XmlValidator.Validate(File.ReadAllBytes(path), path);
+        IReadOnlyList<XmlValidationIssue> issues = new XmlValidator().Validate(File.ReadAllBytes(path), path);
 
         CollectionAssert.AreEqual(Array.Empty<XmlValidationIssue>(), issues.ToList());
     }
@@ -74,7 +75,7 @@ public class XmlValidatorTest
             </book>
             """);
 
-        XmlValidationIssue issue = XmlValidator.Validate(File.ReadAllBytes(path), path).Single(i => i.IsError);
+        XmlValidationIssue issue = new XmlValidator().Validate(File.ReadAllBytes(path), path).Single(i => i.IsError);
 
         Assert.AreEqual(2, issue.Line);
         Assert.IsTrue(issue.Message.Contains("author"), issue.Message);
@@ -90,7 +91,7 @@ public class XmlValidatorTest
             </book>
             """);
 
-        IReadOnlyList<XmlValidationIssue> issues = XmlValidator.Validate(File.ReadAllBytes(path), path);
+        IReadOnlyList<XmlValidationIssue> issues = new XmlValidator().Validate(File.ReadAllBytes(path), path);
 
         Assert.IsTrue(issues.Any(i => i.IsError && i.Message.Contains("id")), string.Join("\n", issues.Select(i => i.Message)));
     }
@@ -103,7 +104,7 @@ public class XmlValidatorTest
             <book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="gone.xsd" id="1"/>
             """);
 
-        IReadOnlyList<XmlValidationIssue> issues = XmlValidator.Validate(File.ReadAllBytes(path), path);
+        IReadOnlyList<XmlValidationIssue> issues = new XmlValidator().Validate(File.ReadAllBytes(path), path);
 
         // The framework reports a schema it cannot find as a warning: the element then has no schema to check against.
         Assert.IsTrue(issues.Count > 0, "a schema that cannot be read is reported, not skipped");
@@ -119,7 +120,7 @@ public class XmlValidatorTest
             <note><from>Ann</from></note>
             """);
 
-        IReadOnlyList<XmlValidationIssue> issues = XmlValidator.Validate(File.ReadAllBytes(path), path);
+        IReadOnlyList<XmlValidationIssue> issues = new XmlValidator().Validate(File.ReadAllBytes(path), path);
 
         Assert.IsTrue(issues.Any(i => i.IsError && i.Message.Contains("from")), string.Join("\n", issues.Select(i => i.Message)));
     }
@@ -130,7 +131,7 @@ public class XmlValidatorTest
     {
         string path = Document("broken.xml", "<a>\n<b></a>");
 
-        IReadOnlyList<XmlValidationIssue> issues = XmlValidator.Validate(File.ReadAllBytes(path), path);
+        IReadOnlyList<XmlValidationIssue> issues = new XmlValidator().Validate(File.ReadAllBytes(path), path);
 
         Assert.AreEqual(1, issues.Count);
         XmlValidationIssue issue = issues[0];
@@ -142,7 +143,7 @@ public class XmlValidatorTest
     [TestMethod]
     public void ADocumentThatNamesNoSchema_IsANoteNotAnError()
     {
-        IReadOnlyList<XmlValidationIssue> issues = XmlValidator.Validate(Utf8("<plain/>"), null);
+        IReadOnlyList<XmlValidationIssue> issues = new XmlValidator().Validate(Utf8("<plain/>"), null);
 
         XmlValidationIssue issue = issues.Single();
         Assert.IsFalse(issue.IsError);

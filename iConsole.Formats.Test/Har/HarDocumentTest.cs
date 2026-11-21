@@ -1,7 +1,8 @@
+using iConsole.Formats.Har;
 using System.Text.Json;
 using iConsole.Har;
 
-namespace iConsole.Test.Har;
+namespace iConsole.Formats.Test.Har;
 
 [TestClass]
 public class HarDocumentTest
@@ -39,7 +40,7 @@ public class HarDocumentTest
     [Timeout(60_000)]
     public void Parse_ReadsEveryEntryInOrderWithItsFields()
     {
-        HarDocument document = HarDocument.Parse(TwoEntries);
+        HarDocument document = new HarDocumentParser().Parse(TwoEntries);
 
         Assert.AreEqual(2, document.Entries.Count);
         Assert.IsFalse(document.Truncated);
@@ -70,7 +71,7 @@ public class HarDocumentTest
             ]}}
             """;
 
-        HarDocument document = HarDocument.Parse(json);
+        HarDocument document = new HarDocumentParser().Parse(json);
 
         Assert.AreEqual(9, document.Entries[0].Size, "the body's own size is missing, so the transfer size is used");
         Assert.IsNull(document.Entries[1].Size, "HAR's -1 means unknown");
@@ -82,7 +83,7 @@ public class HarDocumentTest
     [Timeout(60_000)]
     public void Parse_SkipsEntriesThatAreNotObjects()
     {
-        HarDocument document = HarDocument.Parse("""{"log":{"entries":[1,"x",{"request":{"method":"GET"}}]}}""");
+        HarDocument document = new HarDocumentParser().Parse("""{"log":{"entries":[1,"x",{"request":{"method":"GET"}}]}}""");
 
         Assert.AreEqual(1, document.Entries.Count);
         Assert.AreEqual("GET", document.Entries[0].Method);
@@ -92,22 +93,22 @@ public class HarDocumentTest
     [Timeout(60_000)]
     public void Parse_AJsonFileWithoutALogEntriesListIsNotHar()
     {
-        Assert.ThrowsExactly<InvalidDataException>(() => HarDocument.Parse("""{"name":"not a log"}"""));
-        Assert.ThrowsExactly<InvalidDataException>(() => HarDocument.Parse("""{"log":{"entries":{}}}"""));
+        Assert.ThrowsExactly<InvalidDataException>(() => new HarDocumentParser().Parse("""{"name":"not a log"}"""));
+        Assert.ThrowsExactly<InvalidDataException>(() => new HarDocumentParser().Parse("""{"log":{"entries":{}}}"""));
     }
 
     [TestMethod]
     [Timeout(60_000)]
     public void Parse_TextThatIsNotJsonThrowsJsonException()
     {
-        Assert.Throws<JsonException>(() => HarDocument.Parse("GET / HTTP/1.1"));
+        Assert.Throws<JsonException>(() => new HarDocumentParser().Parse("GET / HTTP/1.1"));
     }
 
     [TestMethod]
     [Timeout(60_000)]
     public void Parse_AnEmptyLogHasNoEntries()
     {
-        HarDocument document = HarDocument.Parse("""{"log":{"entries":[]}}""");
+        HarDocument document = new HarDocumentParser().Parse("""{"log":{"entries":[]}}""");
 
         Assert.AreEqual(0, document.Entries.Count);
     }

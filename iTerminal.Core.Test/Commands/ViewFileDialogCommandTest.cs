@@ -553,6 +553,8 @@ public class ViewFileDialogCommandTest
         var xmlDialog = new XmlViewerDialog(
             Mock.Of<IContentModelService>(),
             Mock.Of<IFileToTextConverterService>(),
+            new iConsole.Formats.Xml.XmlDocumentParser(),
+            new iConsole.Formats.Xml.XmlValidator(),
             Mock.Of<IBeepService>(),
             new DateTimeProviderService(),
             themeService);
@@ -585,6 +587,7 @@ public class ViewFileDialogCommandTest
         var jsonDialog = new JsonViewerDialog(
             Mock.Of<IContentModelService>(),
             Mock.Of<IFileToTextConverterService>(),
+            new iConsole.Formats.Json.JsonValidator(),
             themeService);
         var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.json");
         File.WriteAllText(path, "{}");
@@ -617,6 +620,7 @@ public class ViewFileDialogCommandTest
         var csvDialog = new CsvViewerDialog(
             Mock.Of<IContentModelService>(),
             Mock.Of<IFileToTextConverterService>(),
+            new iConsole.Formats.Csv.CsvDocumentParser(),
             Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(),
             themeService,
@@ -801,7 +805,7 @@ public class ViewFileDialogCommandTest
     public void ExecuteAsync_WithAHarFile_PointsTheHarViewerAtIt()
     {
         var themeService = CreateThemeService();
-        var harDialog = new iConsole.Dialogs.HarViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var harDialog = new iConsole.Dialogs.HarViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.Har.HarDocumentParser(), themeService);
         var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.har");
         File.WriteAllText(path, """{"log":{"entries":[]}}""");
 
@@ -966,7 +970,7 @@ public class ViewFileDialogCommandTest
     public void ExecuteAsync_WithAnXpsPackage_PointsTheXpsViewerAtIt(string extension)
     {
         var themeService = CreateThemeService();
-        var xpsDialog = new iConsole.Dialogs.XpsViewerDialog(Mock.Of<IContentModelService>(), themeService);
+        var xpsDialog = new iConsole.Dialogs.XpsViewerDialog(Mock.Of<IContentModelService>(), new iConsole.Formats.Xps.XpsDocumentReader(), themeService);
         var fileViewer = CreateDialog(themeService);
         var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
         File.WriteAllBytes(path, [0x50, 0x4B, 0x03, 0x04]);
@@ -1115,7 +1119,7 @@ public class ViewFileDialogCommandTest
     }
 
     private static iConsole.Dialogs.CertificateViewerDialog CreateCertificateDialog(IThemeService themeService) =>
-        new(themeService, Mock.Of<INotificationService>());
+        new(themeService, Mock.Of<INotificationService>(), new iConsole.Formats.Certificates.CertificateReader());
 
     /// <summary>A temp file holding a generated self-signed certificate, PEM or DER by the extension.</summary>
     private static string WriteCertificateFile(string extension)
@@ -1344,7 +1348,7 @@ public class ViewFileDialogCommandTest
     public void ExecuteAsync_WithAMarkdownFile_PointsTheMarkdownViewerAtIt(string extension)
     {
         var themeService = CreateThemeService();
-        var markdownDialog = new iConsole.Dialogs.MarkdownViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var markdownDialog = new iConsole.Dialogs.MarkdownViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.Markdown.MarkdownParser(), themeService);
         var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.{extension}");
         File.WriteAllText(path, "# Title\n");
 

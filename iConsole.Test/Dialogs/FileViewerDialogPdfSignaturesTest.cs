@@ -17,7 +17,7 @@ public class FileViewerDialogPdfSignaturesTest
     private sealed class Converter : IFileToTextConverterService
     {
         /// <summary>The routing answers come from the real converter, so the viewer shows what it shows in the app.</summary>
-        private static readonly FileToTextConverterService Routing = new();
+        private static readonly FileToTextConverterService Routing = new(new iConsole.Formats.Xps.XpsDocumentReader());
 
         public bool IsEncodingRelevant(Url? url) => Routing.IsEncodingRelevant(url);
 

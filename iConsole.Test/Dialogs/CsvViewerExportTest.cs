@@ -40,7 +40,7 @@ public class CsvViewerExportTest
         // CSV is the first choice, so the existing export tests keep writing CSV.
         prompts.Setup(p => p.SelectAsync(It.IsAny<SelectionPrompt<TableExportChoice>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new TableExportChoice(TableExportFormat.Csv));
-        var dialog = new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
+        var dialog = new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.Csv.CsvDocumentParser(), Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(), new ThemeService(), prompts.Object) { Url = document };
         return new Fixture { Dialog = dialog, FileSystem = fileSystem, Prompts = prompts };
     }

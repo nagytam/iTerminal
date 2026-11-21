@@ -32,7 +32,7 @@ public class HarViewerDialogTest
         fileSystem.Setup(f => f.ReadFileAsync(document)).ReturnsAsync(file.Object);
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(fileSystem.Object);
-        return new HarViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), new ThemeService()) { Url = document };
+        return new HarViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.Har.HarDocumentParser(), new ThemeService()) { Url = document };
     }
 
     private static KeyEvent Key(ConsoleKey key) => new('\0', key, false, false, false);

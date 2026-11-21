@@ -1,3 +1,4 @@
+using iConsole.Formats.Csv;
 using iConsole.Csv;
 using iConsole.Tabular;
 
@@ -6,7 +7,7 @@ namespace iConsole.Test.Csv;
 [TestClass]
 public class CsvQueryTest
 {
-    private static readonly CsvDocument Sample = CsvDocument.Parse(
+    private static readonly CsvDocument Sample = new CsvDocumentParser().Parse(
         "name,amount,city\n" +
         "Apples,3,Pécs\n" +
         "Pears,12,Budapest\n" +
@@ -104,7 +105,7 @@ public class CsvQueryTest
     [TestMethod]
     public void AColumnNameWithSpacesGoesInQuotesOrBrackets()
     {
-        var document = CsvDocument.Parse("First name,Total\nAda,4\n");
+        var document = new CsvDocumentParser().Parse("First name,Total\nAda,4\n");
 
         CollectionAssert.AreEqual(new[] { "Ada" }, GridQuery.Run(document.Headers, document.Rows, "SELECT [First name] WHERE \"Total\" = 4").Rows[0]);
     }

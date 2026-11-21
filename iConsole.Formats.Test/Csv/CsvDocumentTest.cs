@@ -1,6 +1,7 @@
+using iConsole.Formats.Csv;
 using iConsole.Csv;
 
-namespace iConsole.Test.Csv;
+namespace iConsole.Formats.Test.Csv;
 
 [TestClass]
 public class CsvDocumentTest
@@ -9,7 +10,7 @@ public class CsvDocumentTest
     [TestMethod]
     public void ReadsTheHeaderAndTheRows()
     {
-        CsvDocument document = CsvDocument.Parse("name,amount\nApples,3\nPears,5\n");
+        CsvDocument document = new CsvDocumentParser().Parse("name,amount\nApples,3\nPears,5\n");
 
         CollectionAssert.AreEqual(new[] { "name", "amount" }, document.Headers.ToArray());
         Assert.AreEqual(2, document.Rows.Count);
@@ -20,7 +21,7 @@ public class CsvDocumentTest
     [TestMethod]
     public void QuotedFieldsMayHoldTheDelimiterLineBreaksAndDoubledQuotes()
     {
-        CsvDocument document = CsvDocument.Parse("a,b\r\n\"x, y\",\"line 1\nline \"\"2\"\"\"\r\n");
+        CsvDocument document = new CsvDocumentParser().Parse("a,b\r\n\"x, y\",\"line 1\nline \"\"2\"\"\"\r\n");
 
         CollectionAssert.AreEqual(new[] { "x, y", "line 1\nline \"2\"" }, document.Rows[0]);
     }
@@ -29,7 +30,7 @@ public class CsvDocumentTest
     [TestMethod]
     public void ATabSeparatedFileIsReadWithTheTabWhateverItsCommas()
     {
-        CsvDocument document = CsvDocument.Parse("name\tnote\nA\tone, two, three\n", '\t');
+        CsvDocument document = new CsvDocumentParser().Parse("name\tnote\nA\tone, two, three\n", '\t');
 
         Assert.AreEqual('\t', document.Delimiter);
         CollectionAssert.AreEqual(new[] { "name", "note" }, document.Headers.ToArray());
@@ -40,16 +41,16 @@ public class CsvDocumentTest
     [TestMethod]
     public void TheDelimiterIsTheCandidateThatSplitsTheFirstLineMost()
     {
-        Assert.AreEqual(';', CsvDocument.DetectDelimiter("a;b;c\n1;2;3\n"));
-        Assert.AreEqual('\t', CsvDocument.DetectDelimiter("a\tb\n"));
-        Assert.AreEqual(',', CsvDocument.DetectDelimiter("just one column\n"));
+        Assert.AreEqual(';', new CsvDocumentParser().DetectDelimiter("a;b;c\n1;2;3\n"));
+        Assert.AreEqual('\t', new CsvDocumentParser().DetectDelimiter("a\tb\n"));
+        Assert.AreEqual(',', new CsvDocumentParser().DetectDelimiter("just one column\n"));
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void BlankHeaderAndRepeatedNamesGetUniqueColumnNames()
     {
-        CsvDocument document = CsvDocument.Parse(",name,name\n1,2,3\n");
+        CsvDocument document = new CsvDocumentParser().Parse(",name,name\n1,2,3\n");
 
         CollectionAssert.AreEqual(new[] { "Column1", "name", "name_2" }, document.Headers.ToArray());
     }
@@ -58,7 +59,7 @@ public class CsvDocumentTest
     [TestMethod]
     public void AShortRowIsKeptAndAByteOrderMarkIsIgnored()
     {
-        CsvDocument document = CsvDocument.Parse("﻿a,b\n1\n\n2,3\n");
+        CsvDocument document = new CsvDocumentParser().Parse("﻿a,b\n1\n\n2,3\n");
 
         CollectionAssert.AreEqual(new[] { "a", "b" }, document.Headers.ToArray());
         Assert.AreEqual(2, document.Rows.Count, "the blank line is skipped");
@@ -69,7 +70,7 @@ public class CsvDocumentTest
     [TestMethod]
     public void WithoutAHeaderTheColumnsAreNumbered()
     {
-        CsvDocument document = CsvDocument.Parse("1,2\n3,4\n", hasHeader: false);
+        CsvDocument document = new CsvDocumentParser().Parse("1,2\n3,4\n", hasHeader: false);
 
         CollectionAssert.AreEqual(new[] { "Column1", "Column2" }, document.Headers.ToArray());
         Assert.AreEqual(2, document.Rows.Count);
@@ -79,7 +80,7 @@ public class CsvDocumentTest
     [TestMethod]
     public void AnEmptyFileHasNoColumns()
     {
-        CsvDocument document = CsvDocument.Parse(string.Empty);
+        CsvDocument document = new CsvDocumentParser().Parse(string.Empty);
 
         Assert.AreEqual(0, document.Headers.Count);
         Assert.AreEqual(0, document.Rows.Count);

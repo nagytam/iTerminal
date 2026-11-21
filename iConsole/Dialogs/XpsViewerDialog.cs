@@ -26,15 +26,17 @@ public class XpsViewerDialog : Dialog
     private const string CloseActionView = " [X]";
 
     private readonly IContentModelService _contentModelService;
+    private readonly IXpsDocumentReader _xpsDocumentReader;
     private readonly ComboBox<XpsPage> _pagePicker;
     private readonly TextViewerControl _textViewerControl;
     private readonly Label _statusLabel;
     private XpsDocument? _document;
 
-    public XpsViewerDialog(IContentModelService contentModelService, IThemeService themeService)
+    public XpsViewerDialog(IContentModelService contentModelService, IXpsDocumentReader xpsDocumentReader, IThemeService themeService)
         : base(nameof(XpsViewerDialog), themeService)
     {
         _contentModelService = contentModelService;
+        _xpsDocumentReader = xpsDocumentReader;
         // The picker is added first: a dialog gives the keyboard to its first focusable child, and choosing a page is where a reader starts.
         _pagePicker = new ComboBox<XpsPage>(themeService)
         {
@@ -96,7 +98,7 @@ public class XpsViewerDialog : Dialog
         }
 
         // Parsing a package is CPU and zip work with nothing to await, so it stays off the thread that owns the controls.
-        XpsDocument document = await Task.Run(() => XpsDocument.Read(content));
+        XpsDocument document = await Task.Run(() => _xpsDocumentReader.Read(content));
         _document = document;
         if (document.Error is not null)
         {

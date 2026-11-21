@@ -1,6 +1,7 @@
+using iConsole.Formats.Markdown;
 using iConsole.Markdown;
 
-namespace iConsole.Test.Markdown;
+namespace iConsole.Formats.Test.Markdown;
 
 [TestClass]
 public class MarkdownParserTest
@@ -9,7 +10,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void Heading_TakesItsLevelAndText()
     {
-        var blocks = MarkdownParser.Parse("## Getting started");
+        var blocks = new MarkdownParser().Parse("## Getting started");
 
         Assert.AreEqual(1, blocks.Count);
         Assert.AreEqual(MarkdownBlockKind.Heading, blocks[0].Kind);
@@ -21,7 +22,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void ConsecutiveLines_FormOneParagraph()
     {
-        var blocks = MarkdownParser.Parse("first line\nsecond line\n\nnext");
+        var blocks = new MarkdownParser().Parse("first line\nsecond line\n\nnext");
 
         Assert.AreEqual(2, blocks.Count);
         Assert.AreEqual("first line second line", Text(blocks[0]));
@@ -32,7 +33,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void BulletsAndNumbers_BecomeListItems_NestedByIndentation()
     {
-        var blocks = MarkdownParser.Parse("- one\n  - nested\n1) first");
+        var blocks = new MarkdownParser().Parse("- one\n  - nested\n1) first");
 
         Assert.AreEqual(3, blocks.Count);
         Assert.IsTrue(blocks.All(b => b.Kind == MarkdownBlockKind.ListItem));
@@ -46,7 +47,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void Quote_IsOneBlockPerLine()
     {
-        var blocks = MarkdownParser.Parse("> quoted **text**");
+        var blocks = new MarkdownParser().Parse("> quoted **text**");
 
         Assert.AreEqual(MarkdownBlockKind.Quote, blocks[0].Kind);
         Assert.AreEqual("quoted text", Text(blocks[0]));
@@ -56,7 +57,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void FencedCode_KeepsEachLineAsWritten()
     {
-        var blocks = MarkdownParser.Parse("```\n  var x = 1;\n  return x;\n```");
+        var blocks = new MarkdownParser().Parse("```\n  var x = 1;\n  return x;\n```");
 
         Assert.AreEqual(2, blocks.Count);
         Assert.IsTrue(blocks.All(b => b.Kind == MarkdownBlockKind.Code));
@@ -68,7 +69,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void TildeFence_IsCode()
     {
-        var blocks = MarkdownParser.Parse("~~~\nline\n~~~");
+        var blocks = new MarkdownParser().Parse("~~~\nline\n~~~");
 
         Assert.AreEqual(1, blocks.Count);
         Assert.AreEqual(MarkdownBlockKind.Code, blocks[0].Kind);
@@ -79,7 +80,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void Fence_ClosesOnlyWithItsOwnMarker()
     {
-        var blocks = MarkdownParser.Parse("```\n~~~\nstill code\n```\n\nafter");
+        var blocks = new MarkdownParser().Parse("```\n~~~\nstill code\n```\n\nafter");
 
         Assert.AreEqual(3, blocks.Count);
         Assert.AreEqual("~~~", Text(blocks[0]));
@@ -91,7 +92,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void FencedCode_TabsBecomeSpaces()
     {
-        var blocks = MarkdownParser.Parse("```\n\tif (x)\n```");
+        var blocks = new MarkdownParser().Parse("```\n\tif (x)\n```");
 
         Assert.AreEqual("    if (x)", Text(blocks[0]));
     }
@@ -100,7 +101,7 @@ public class MarkdownParserTest
     [TestMethod]
     public void UnclosedFence_RunsToTheEnd()
     {
-        var blocks = MarkdownParser.Parse("```\nline one\nline two");
+        var blocks = new MarkdownParser().Parse("```\nline one\nline two");
 
         Assert.AreEqual(2, blocks.Count);
         Assert.IsTrue(blocks.All(b => b.Kind == MarkdownBlockKind.Code));
@@ -110,17 +111,17 @@ public class MarkdownParserTest
     [TestMethod]
     public void HorizontalRule_IsAnyRunOfThreeOrMoreRuleCharacters()
     {
-        Assert.AreEqual(MarkdownBlockKind.Rule, MarkdownParser.Parse("---")[0].Kind);
-        Assert.AreEqual(MarkdownBlockKind.Rule, MarkdownParser.Parse("* * *")[0].Kind);
-        Assert.AreEqual(MarkdownBlockKind.Rule, MarkdownParser.Parse("___")[0].Kind);
+        Assert.AreEqual(MarkdownBlockKind.Rule, new MarkdownParser().Parse("---")[0].Kind);
+        Assert.AreEqual(MarkdownBlockKind.Rule, new MarkdownParser().Parse("* * *")[0].Kind);
+        Assert.AreEqual(MarkdownBlockKind.Rule, new MarkdownParser().Parse("___")[0].Kind);
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void EmptyOrNullInput_HasNoBlocks()
     {
-        Assert.AreEqual(0, MarkdownParser.Parse(string.Empty).Count);
-        Assert.AreEqual(0, MarkdownParser.Parse(null).Count);
+        Assert.AreEqual(0, new MarkdownParser().Parse(string.Empty).Count);
+        Assert.AreEqual(0, new MarkdownParser().Parse(null).Count);
     }
 
     [Timeout(60_000)]
@@ -169,4 +170,21 @@ public class MarkdownParserTest
 
     private static MarkdownStyle Style(IEnumerable<MarkdownSpan> spans, string text) =>
         spans.First(s => s.Text == text).Style;
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void MarkdownInline_Parse_OfNull_IsNoSpans()
+    {
+        Assert.AreEqual(0, MarkdownInline.Parse(null).Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void MarkdownParser_KeepsTheFenceLanguage()
+    {
+        IReadOnlyList<MarkdownBlock> blocks = new MarkdownParser().Parse("```csharp title=x\nvar a = 1;\n```\n~~~\nplain\n~~~");
+
+        Assert.AreEqual("csharp", blocks[0].Language);
+        Assert.AreEqual(string.Empty, blocks[1].Language);
+    }
 }

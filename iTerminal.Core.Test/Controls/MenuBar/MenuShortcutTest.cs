@@ -76,7 +76,7 @@ public class MenuShortcutTest
             var contentModelService = new Mock<IContentModelService>();
             contentModelService.Setup(s => s.FocusedFileUrl).Returns(new Url(path));
             contentModelService.Setup(s => s.GetFocusedModel()).Returns(contentModel.Object);
-            var certificateDialog = new iConsole.Dialogs.CertificateViewerDialog(theme, Mock.Of<iConsole.Services.INotificationService>());
+            var certificateDialog = new iConsole.Dialogs.CertificateViewerDialog(theme, Mock.Of<iConsole.Services.INotificationService>(), new iConsole.Formats.Certificates.CertificateReader());
             var fileMenu = new FileMenuItem(contentModelService.Object, null!, null!, null!, null!, null!, theme,
                 certificateViewerDialog: certificateDialog);
             var control = new Mock<iConsole.Controls.IControl>();

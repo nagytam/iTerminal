@@ -1,8 +1,9 @@
+using iConsole.Formats.Xps;
 using System.IO.Compression;
 using System.Text;
 using iConsole.Xps;
 
-namespace iConsole.Test.Xps;
+namespace iConsole.Formats.Test.Xps;
 
 /// <summary>
 /// Reading an XPS or OpenXPS package: the sequence named by the package's root relationship, its documents, their
@@ -82,7 +83,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_ReturnsThePagesInReferenceOrder_WithTheirSizeAndText()
     {
-        XpsDocument document = XpsDocument.Read(Package());
+        XpsDocument document = new XpsDocumentReader().Read(Package());
 
         Assert.IsTrue(document.IsValid, document.Error);
         Assert.AreEqual(2, document.Pages.Count);
@@ -99,7 +100,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_NumberPagesInsideTheirOwnDocument()
     {
-        XpsDocument document = XpsDocument.Read(MakePackage(
+        XpsDocument document = new XpsDocumentReader().Read(MakePackage(
             ("_rels/.rels", $"""
                 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
                   <Relationship Id="R1" Type="http://schemas.microsoft.com/xps/2005/06/fixedrepresentation" Target="/FixedDocSeq.fdseq"/>
@@ -136,7 +137,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_FindsTheSequenceThroughTheRootRelationship_WhateverItIsNamed()
     {
-        XpsDocument document = XpsDocument.Read(Package(sequence: "FixedDocSeq.fdseq"));
+        XpsDocument document = new XpsDocumentReader().Read(Package(sequence: "FixedDocSeq.fdseq"));
 
         Assert.IsTrue(document.IsValid, document.Error);
         Assert.AreEqual(2, document.Pages.Count);
@@ -146,7 +147,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_WithoutARootRelationship_FallsBackToTheSequencePart()
     {
-        XpsDocument document = XpsDocument.Read(Package(relationship: false));
+        XpsDocument document = new XpsDocumentReader().Read(Package(relationship: false));
 
         Assert.IsTrue(document.IsValid, document.Error);
         Assert.AreEqual(2, document.Pages.Count);
@@ -156,7 +157,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_AnOpenXpsPackage_ReadsTheSameAsAnXpsOne()
     {
-        XpsDocument document = XpsDocument.Read(Package(@namespace: OpenXpsNamespace));
+        XpsDocument document = new XpsDocumentReader().Read(Package(@namespace: OpenXpsNamespace));
 
         Assert.IsTrue(document.IsValid, document.Error);
         Assert.AreEqual(2, document.Pages.Count);
@@ -167,7 +168,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_ReturnsTheCoreProperties()
     {
-        XpsDocument document = XpsDocument.Read(Package());
+        XpsDocument document = new XpsDocumentReader().Read(Package());
 
         Assert.AreEqual("Quarterly report", document.Title);
         Assert.AreEqual("Ada Lovelace", document.Creator);
@@ -177,7 +178,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_WithoutASequence_ReturnsAnErrorInsteadOfThrowing()
     {
-        XpsDocument document = XpsDocument.Read(MakePackage(("Other.xml", "<x/>")));
+        XpsDocument document = new XpsDocumentReader().Read(MakePackage(("Other.xml", "<x/>")));
 
         Assert.IsFalse(document.IsValid);
         Assert.AreEqual(0, document.Pages.Count);
@@ -188,7 +189,7 @@ public class XpsDocumentTest
     [TestMethod]
     public void Read_OfBytesThatAreNotAPackage_ReturnsAnErrorInsteadOfThrowing()
     {
-        XpsDocument document = XpsDocument.Read("not a zip"u8.ToArray());
+        XpsDocument document = new XpsDocumentReader().Read("not a zip"u8.ToArray());
 
         Assert.IsFalse(document.IsValid);
         Assert.IsNotNull(document.Error);

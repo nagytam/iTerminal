@@ -29,7 +29,7 @@ public class OfficeVariantFixtureTest
     private static async Task<IReadOnlyList<string>> ConvertFileAsync(string fileName)
     {
         var textModel = new TextModel();
-        await new FileToTextConverterService().ReadFileAsync(
+        await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadFileAsync(
             new Url(Path.Combine(TestFilesDir, fileName)), new LocalFileSystemAdapter(), textModel);
         return [.. textModel.Lines];
     }
@@ -176,7 +176,7 @@ public class OfficeVariantFixtureTest
         remote.Setup(f => f.ReadFileAsync(It.IsAny<Url>())).ReturnsAsync(memoryFile.Object);
 
         var textModel = new TextModel();
-        await new FileToTextConverterService().ReadFileAsync(
+        await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadFileAsync(
             new Url($"/not/on/this/disk/{file}"), remote.Object, textModel);
 
         IReadOnlyList<string> local = await ConvertFileAsync(file);
@@ -200,7 +200,7 @@ public class OfficeVariantFixtureTest
         {
             string file = Path.Combine(examples, "example." + extension);
             var textModel = new TextModel();
-            await new FileToTextConverterService().ReadFileAsync(new Url(file), new LocalFileSystemAdapter(), textModel);
+            await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadFileAsync(new Url(file), new LocalFileSystemAdapter(), textModel);
 
             AssertReadWithoutError(textModel.Lines.ToList(), "iTerminal example " + extension, "example." + extension);
         }

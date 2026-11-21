@@ -21,7 +21,7 @@ public class MarkdownViewerDialogTest
         fileSystem.Setup(f => f.ReadFileAsync(document)).ReturnsAsync(file.Object);
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(fileSystem.Object);
-        return new MarkdownViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), new ThemeService()) { Url = document };
+        return new MarkdownViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.Markdown.MarkdownParser(), new ThemeService()) { Url = document };
     }
 
     [Timeout(60_000)]
