@@ -563,8 +563,22 @@ public class PasswordManagerDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         lock (_sync)
         {
+            // The table's rectangle, in the interior's own coordinates (the interior starts one row and one column inside the border).
+            var tableTop = (int)_table.Position.Y - 1;
+            var tableLeft = (int)_table.Position.X - 1;
+            var tableRight = tableLeft + (int)_table.ViewSize.Width;
             for (var row = 0; row < ih; row++)
             {
+                // The table paints its own rectangle. Its layer is this dialog's layer, and the renderer does not promise the
+                // order: a blank here drawn after the table erased the list in the app. So the cells it covers are left alone,
+                // and only the cells beside it are blanked.
+                if (_mode == Mode.List && _table.IsVisible && row >= tableTop && row < tableTop + (int)_table.ViewSize.Height)
+                {
+                    Put(buffer, 0, row, tableLeft, string.Empty, colorScheme.Foreground, colorScheme.Background);
+                    Put(buffer, tableRight, row, iw - tableRight, string.Empty, colorScheme.Foreground, colorScheme.Background);
+                    continue;
+                }
+
                 Put(buffer, 0, row, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
             }
 
