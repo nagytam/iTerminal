@@ -1,6 +1,6 @@
-using iTerminal.Core.Speech;
+using iConsole.Media.Speech;
 
-namespace iTerminal.Core.Test.Speech;
+namespace iConsole.Media.Speech.Test;
 
 [TestClass]
 public class WhisperRecognizerTest

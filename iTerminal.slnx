@@ -6,6 +6,8 @@
   <Project Path="iConsole.Formats\iConsole.Formats.csproj" />
   <Project Path="iConsole.Media.Audio\iConsole.Media.Audio.csproj" />
   <Project Path="iConsole.Media.Audio.Test\iConsole.Media.Audio.Test.csproj" />
+  <Project Path="iConsole.Media.Speech\iConsole.Media.Speech.csproj" />
+  <Project Path="iConsole.Media.Speech.Test\iConsole.Media.Speech.Test.csproj" />
   <Project Path="iConsole.Media.Video\iConsole.Media.Video.csproj" />
   <Project Path="iConsole.Media.Video.Test\iConsole.Media.Video.Test.csproj" />
   <Project Path="iConsole.Inputs.Posix.Test/iConsole.Inputs.Posix.Test.csproj">

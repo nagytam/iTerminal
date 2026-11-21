@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using iConsole.Localization;
 
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>One way of starting a recorder program: it writes raw 16 kHz mono s16le to its standard output.</summary>
 internal sealed record RecorderCommand(string Program, string Arguments);

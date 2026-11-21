@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Speech;
+namespace iConsole.Media.Speech;
 
 /// <summary>Turns a recording into text, offline.</summary>
 public interface ISpeechRecognizer

@@ -77,7 +77,7 @@ public class FilePanelFactory(
     iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null,
     iConsole.Services.IPromptService? promptService = null,
     iConsole.Services.ITextClipboardService? textClipboard = null,
-    iTerminal.Core.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
+    iConsole.Media.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 

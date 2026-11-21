@@ -88,7 +88,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iTerminal.Core.Services.ISettingsService? _evidenceSettingsService { get; set; }
     private iConsole.Services.IPromptService? _promptService { get; set; }
     private iConsole.Services.ITextClipboardService? _textClipboard { get; set; }
-    private iTerminal.Core.Speech.IMicrophoneCaptureFactory? _microphoneCaptureFactory { get; set; }
+    private iConsole.Media.Speech.IMicrophoneCaptureFactory? _microphoneCaptureFactory { get; set; }
     private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
     private iTerminal.Core.Dialogs.Git.GitSyncDialog? _gitSyncDialog { get; set; }
     private readonly iConsole.Viewers.FileViewerRegistry? _fileViewers;
@@ -161,7 +161,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Services.ISettingsService? evidenceSettingsService = null,
         iConsole.Services.IPromptService? promptService = null,
         iConsole.Services.ITextClipboardService? textClipboard = null,
-        iTerminal.Core.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
+        iConsole.Media.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
         : base(themeService)
     {
         _evidenceNotebookService = evidenceNotebookService;
