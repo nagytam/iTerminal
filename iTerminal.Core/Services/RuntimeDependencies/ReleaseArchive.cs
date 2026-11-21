@@ -1,5 +1,6 @@
 using System.Formats.Tar;
 using System.IO.Compression;
+using iTerminal.Core.Helper;
 using ZstdSharp;
 
 namespace iTerminal.Core.Services.RuntimeDependencies;
@@ -30,7 +31,7 @@ internal static class ReleaseArchive
                     continue;
                 }
 
-                string? target = Inside(destination, destinationRoot, entry.FullName);
+                string? target = ArchivePaths.Inside(destination,entry.FullName);
                 if (target is null)
                 {
                     continue;
@@ -50,7 +51,7 @@ internal static class ReleaseArchive
         using var tar = new TarReader(archiveStream);
         while (tar.GetNextEntry() is { } tarEntry)
         {
-            string? target = Inside(destination, destinationRoot, tarEntry.Name);
+            string? target = ArchivePaths.Inside(destination,tarEntry.Name);
             if (target is null)
             {
                 continue;
@@ -91,13 +92,6 @@ internal static class ReleaseArchive
                     break;
             }
         }
-    }
-
-    /// <summary>The full path of an archive entry under <paramref name="destination"/>, or null when it would land outside it.</summary>
-    private static string? Inside(string destination, string destinationRoot, string entryName)
-    {
-        string target = Path.GetFullPath(Path.Combine(destination, entryName.Replace('/', Path.DirectorySeparatorChar)));
-        return target.StartsWith(destinationRoot, StringComparison.Ordinal) ? target : null;
     }
 
     private static void TryDeleteFile(string path)

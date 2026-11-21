@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Text;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Services.RuntimeDependencies;
 
 namespace iTerminal.Core.Services.Updates;
@@ -621,13 +622,8 @@ public sealed class UpdateService : IUpdateService
     /// <summary>The full path of an archive entry under <paramref name="root"/>; throws when it would land outside.</summary>
     private static string TargetInside(string root, string entryName)
     {
-        string target = Path.GetFullPath(Path.Combine(root, entryName));
-        if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new InvalidDataException($"{entryName} would be unpacked outside the update folder.");
-        }
-
-        return target;
+        return ArchivePaths.Inside(root, entryName)
+            ?? throw new InvalidDataException($"{entryName} would be unpacked outside the update folder.");
     }
 
     /// <summary>
