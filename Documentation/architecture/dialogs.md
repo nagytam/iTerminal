@@ -81,7 +81,8 @@ keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
   `FolderSelectorDialogTest` page by page, because it is the promise the dialog makes on its own
   border.
 - **Selecting a page puts the cursor on that page's first control**, by every route — Ctrl+Up/Down,
-  Ctrl+&lt;number&gt;, a click on the strip. A `TabPage` cannot hold focus itself, so
+  Ctrl+Left/Right (the dialog maps them to Ctrl+Up/Down before the tab sees them), Ctrl+&lt;number&gt;,
+  a click on the strip. A `TabPage` cannot hold focus itself, so
   `Tab.SwitchToPage` focusing the page hands the cursor to the first *focusable* control inside; that
   is the whole reason every page adds its list or its text box before its buttons. Ctrl+&lt;number&gt;
   goes through `SwitchToPage` even for the page already showing, which makes it the keyboard's way
