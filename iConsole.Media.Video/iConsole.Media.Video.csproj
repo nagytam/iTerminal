@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The video and picture decoders behind the F3 viewers: ffmpeg (run as a process), the in-process picture decoders
+    (Photoshop, camera raw, SVG, icons) and VideoPlayer. They use SkiaSharp and Svg.Skia, which arrive through
+    iConsole.Formats; the reference is for those packages only, since no code here uses an iConsole.Formats namespace.
+    iConsole.Media.Audio is for FfmpegAudioDecoder.IsAvailable. iTerminal.Core holds the viewer dialogs.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\iConsole.Formats\iConsole.Formats.csproj" />
+    <ProjectReference Include="..\iConsole.Media.Audio\iConsole.Media.Audio.csproj" />
+    <ProjectReference Include="..\iConsole\iConsole.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iConsole\iConsole.csproj" />
+    <ProjectReference Include="..\iConsole.Media.Video\iConsole.Media.Video.csproj" />
   </ItemGroup>
 
 </Project>

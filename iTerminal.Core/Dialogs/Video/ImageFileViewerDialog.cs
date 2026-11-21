@@ -8,7 +8,7 @@ using iConsole.Display;
 using iConsole.Graphics;
 using iConsole.Services;
 using iTerminal.Core.Services.Images;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 
 namespace iTerminal.Core.Dialogs.Video;
 

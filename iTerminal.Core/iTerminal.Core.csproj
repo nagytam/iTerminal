@@ -52,6 +52,7 @@
     <ProjectReference Include="..\iConsole.Formats\iConsole.Formats.csproj" />
     <ProjectReference Include="..\iConsole.Inputs.Windows\iConsole.Inputs.Windows.csproj" />
     <ProjectReference Include="..\iConsole.Media.Audio\iConsole.Media.Audio.csproj" />
+    <ProjectReference Include="..\iConsole.Media.Video\iConsole.Media.Video.csproj" />
     <ProjectReference Include="..\iTerminal.Core.Games\iTerminal.Core.Games.csproj" />
     <ProjectReference Include="..\iConsole\iConsole.csproj" />
   </ItemGroup>
