@@ -1,6 +1,6 @@
 using iConsole.Display;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>
 /// Tic-Tac-Toe on the 3x3 board. X moves first. The computer searches the whole game tree, so it never loses; it picks

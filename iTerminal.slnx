@@ -15,6 +15,8 @@
     <BuildDependency Project="iConsole\iConsole.csproj" />
   </Project>
   <Project Path="iConsole\iConsole.csproj" />
+  <Project Path="iTerminal.Core.Games\iTerminal.Core.Games.csproj" />
+  <Project Path="iTerminal.Core.Games.Test\iTerminal.Core.Games.Test.csproj" />
   <Project Path="iTerminal.Core.Test\iTerminal.Core.Test.csproj">
     <BuildDependency Project="iConsole\iConsole.csproj" />
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />

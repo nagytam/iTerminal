@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>
 /// The computer's seats at the Jass table. It chooses trump from the points its hand would score in each suit, and plays

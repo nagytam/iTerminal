@@ -1,6 +1,6 @@
-using iTerminal.Core.Services.Games;
+using iTerminal.Core.Games;
 
-namespace iTerminal.Core.Test.Services.Games;
+namespace iTerminal.Core.Games.Test;
 
 [TestClass]
 public class GoTest

@@ -1,7 +1,7 @@
 using iConsole.Display;
 using iConsole.Localization;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>The words the games say, in the language the user chose.</summary>
 internal static class GameText

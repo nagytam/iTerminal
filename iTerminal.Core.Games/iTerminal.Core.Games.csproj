@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The board and card game engines behind the Tools menu games (IGame, the rules, the computer opponents and the
+    drawing as GameCell rows). They reference only the UI framework, so a change to a game rebuilds this project and
+    its own tests, not the whole of iTerminal.Core. The dialogs that host them stay in iTerminal.Core/Dialogs/Games.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\iConsole\iConsole.csproj" />
+  </ItemGroup>
+
+</Project>

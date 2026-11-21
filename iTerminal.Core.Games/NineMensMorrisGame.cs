@@ -1,6 +1,6 @@
 using iConsole.Display;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>The board of Nine Men's Morris: 24 points on three nested squares, with their neighbours and the 16 mills.</summary>
 internal static class MorrisBoard
