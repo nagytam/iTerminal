@@ -88,8 +88,9 @@ public class PasswordManagerDialog : Dialog
         _strengthMeter = new StrengthMeter(themeService);
         _table = new Table<PasswordEntry>(_rows, themeService)
         {
-            // Two sentences, wrapped by the table to its width, as the empty list used to show them on two lines.
-            EmptyText = iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;") + " "
+            // Two sentences on two paragraphs, each wrapped by the table to its width. A joined sentence broke the
+            // second one across a line in German, so the phrase the end-to-end test looks for was split.
+            EmptyText = iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;") + "\n"
                 + iConsole.Localization.UiText.Get("Passwords.NothingSaved2", "network and mail passwords appear here as they are saved."),
         };
         _table.Columns.Add(new ColumnDefinition<PasswordEntry>(iConsole.Localization.UiText.Get("Passwords.ColCategory", "Category"), 10, entry => Clip(entry.Category.ToString(), 10)));
