@@ -10,8 +10,8 @@ Hacker News (Show HN is in the [marketing kit, section 4.2](iTerminal-Marketing-
 | --- | --- | --- |
 | Hacker News | Show HN is for something people can try. Landing pages, fundraisers, blog posts, newsletters and sign-up pages do not qualify. Title starts "Show HN". Title style rules were not confirmed on the official page. | Partly verified (news.ycombinator.com/showhn.html, via search) |
 | Lobsters | Invite-only, computing-focused. The official rules page was not retrieved. A blog reports that self-promotion above about a quarter of posts and comments is frowned upon and that moderators do remove it. | Unverified. Read the site's rules page before posting |
-| r/commandline | The sidebar was not retrieved. Mirrors report a moderator rule against largely AI-generated or unreviewed code and projects. Each subreddit sets its own self-promotion rule. | Unverified. Read the sidebar and wiki first |
-| r/dotnet, r/linux, r/opensource | Each subreddit has its own sidebar rules. Assume a self-promotion limit. | Unverified. Read the sidebar first |
+| r/commandline | The sidebar was not retrieved. Mirrors report a moderator rule against largely AI-generated or unreviewed code and projects. Each subreddit sets its own self-promotion rule. Reddit returned HTTP 403 to automated requests for all five subreddits (2026-11-21), so their sidebars were not read. | Unverified. Read the sidebar and wiki first |
+| r/dotnet, r/linux, r/opensource, r/selfhosted | Each subreddit has its own sidebar rules. Assume a self-promotion limit. Reddit returned HTTP 403 to automated requests for all five subreddits (2026-11-21), so their sidebars were not read. | Unverified. Read the sidebar first |
 | .NET newsletters ("This Week in .NET") | No current submission route was found; the search returned only archived 2015–2016 issues. | Not verified; do not submit until a route is confirmed |
 
 **Before any post:** read the sidebar and the wiki of that subreddit or site the same day; check the
@@ -98,3 +98,8 @@ at news.ycombinator.com/newsguidelines.html before posting.
 
 None of these have been posted. Each needs the user's account, the subreddit or site rules read on the
 day, and the release link.
+
+**Reddit status (2026-11-21):** nothing has been posted to r/commandline, r/dotnet, r/linux, r/opensource or
+r/selfhosted. The subreddit rules are still unverified: Reddit blocked the automated reads with HTTP 403. The
+marketing kit's Reddit post (section 4.3) is ready, but each subreddit's sidebar and wiki must be read by the user
+on the day of posting, and only one venue is posted per day.
