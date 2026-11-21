@@ -9941,6 +9941,33 @@
   <data name="Scan.Empty" xml:space="preserve">
     <value>Choose a scanner and press Enter to scan.</value>
   </data>
+  <data name="Scan.AlreadyRunning" xml:space="preserve">
+    <value>A scan is running. Esc cancels it.</value>
+  </data>
+  <data name="Scan.FeederWait" xml:space="preserve">
+    <value>The feeder's pages arrive when it is empty.</value>
+  </data>
+  <data name="Scan.SavingPage" xml:space="preserve">
+    <value>Saving page {0} of {1}…</value>
+  </data>
+  <data name="Scan.Saved" xml:space="preserve">
+    <value>Saved to {0}.</value>
+  </data>
+  <data name="Scan.SaveFailed" xml:space="preserve">
+    <value>Page {0} of {1} was not saved: {2}</value>
+  </data>
+  <data name="Scan.NoFileYet" xml:space="preserve">
+    <value>File: none yet</value>
+  </data>
+  <data name="Scan.FileLabel" xml:space="preserve">
+    <value>File:</value>
+  </data>
+  <data name="Scan.SavedLabel" xml:space="preserve">
+    <value>Saved:</value>
+  </data>
+  <data name="Scan.PixelSize" xml:space="preserve">
+    <value>{0} × {1} px</value>
+  </data>
   <data name="CmdTitle.ea1c510d" xml:space="preserve">
     <value>Scan</value>
   </data>

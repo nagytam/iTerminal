@@ -9736,6 +9736,33 @@
   <data name="Scan.Empty" xml:space="preserve">
     <value>Válasszon szkennert, majd nyomja meg az Entert.</value>
   </data>
+  <data name="Scan.AlreadyRunning" xml:space="preserve">
+    <value>Beolvasás fut. Az Esc megszakítja.</value>
+  </data>
+  <data name="Scan.FeederWait" xml:space="preserve">
+    <value>Az adagoló lapjai akkor érkeznek meg, amikor kiürült.</value>
+  </data>
+  <data name="Scan.SavingPage" xml:space="preserve">
+    <value>{0}/{1}. oldal mentése…</value>
+  </data>
+  <data name="Scan.Saved" xml:space="preserve">
+    <value>Mentve ide: {0}.</value>
+  </data>
+  <data name="Scan.SaveFailed" xml:space="preserve">
+    <value>A(z) {0}/{1}. oldal nem lett elmentve: {2}</value>
+  </data>
+  <data name="Scan.NoFileYet" xml:space="preserve">
+    <value>Fájl: még nincs</value>
+  </data>
+  <data name="Scan.FileLabel" xml:space="preserve">
+    <value>Fájl:</value>
+  </data>
+  <data name="Scan.SavedLabel" xml:space="preserve">
+    <value>Mentve:</value>
+  </data>
+  <data name="Scan.PixelSize" xml:space="preserve">
+    <value>{0} × {1} px</value>
+  </data>
   <data name="CmdTitle.ea1c510d" xml:space="preserve">
     <value>Beolvasás</value>
   </data>
