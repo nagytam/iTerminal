@@ -86,9 +86,22 @@ public class SnakeGame : GameBase
         ? GameText.Get("Games.Snake.VsComputer", "against the computer")
         : UiText.Get("Games.OnePlayer", "one player");
 
-    public override string ActivateLabel => UiText.Get("Games.Snake.Pause", "pause");
+    // Enter does what the footer says: starts a stopped snake, pauses a moving one, resumes a paused one and starts over after a crash.
+    public override string ActivateLabel => _state switch
+    {
+        SnakeState.Moving => UiText.Get("Games.Snake.Pause", "pause"),
+        SnakeState.Paused => UiText.Get("Games.Snake.Resume", "resume"),
+        SnakeState.Over => UiText.Get("Games.Snake.New", "new"),
+        _ => UiText.Get("Games.Snake.Start", "start"),
+    };
 
-    public override string ActivateHint => UiText.Get("DialogHint.PauseOrResumeSnake", "Pause or resume the snake, or start it moving");
+    public override string ActivateHint => _state switch
+    {
+        SnakeState.Moving => UiText.Get("DialogHint.PauseSnake", "Pause the snake"),
+        SnakeState.Paused => UiText.Get("DialogHint.ResumeSnake", "Resume the snake"),
+        SnakeState.Over => UiText.Get("DialogHint.StartGameAgain", "Start the game again"),
+        _ => UiText.Get("DialogHint.StartSnake", "Start the snake moving"),
+    };
 
     private int Score => _body.Count - StartLength;
 
@@ -168,6 +181,9 @@ public class SnakeGame : GameBase
                 break;
             case SnakeState.Paused:
                 _state = SnakeState.Moving;
+                break;
+            case SnakeState.Over:
+                NewGame();
                 break;
         }
     }

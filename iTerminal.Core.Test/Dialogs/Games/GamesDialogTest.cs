@@ -353,7 +353,7 @@ public class GamesDialogTest
 
         Assert.AreEqual("Snake", dialog.Current.Name);
         StringAssert.Contains(screen, "Snake — against the computer");
-        StringAssert.Contains(screen, "Enter:pause");
+        StringAssert.Contains(screen, "Enter:start");
         StringAssert.Contains(screen, "Esc:close");
         Assert.IsFalse(screen.Contains("U:undo"), "no undo in the footer");
         Assert.IsTrue(screen.Contains("M:mode"), "the mode switches to one player");
@@ -361,7 +361,7 @@ public class GamesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task SnakeHelpSaysEnterPausesAndHasNoUndoKey()
+    public async Task SnakeHelpSaysEnterStartsAStoppedSnakeAndHasNoUndoKey()
     {
         GamesDialog dialog = Create();
         await ShowAsync(dialog);
@@ -369,7 +369,7 @@ public class GamesDialogTest
 
         List<(string Key, string Description)> hints = [.. dialog.GetKeyHints()];
 
-        StringAssert.Contains(hints.Single(h => h.Key == "Enter").Description, "Pause");
+        StringAssert.Contains(hints.Single(h => h.Key == "Enter").Description, "Start the snake");
         Assert.IsFalse(hints.Any(h => h.Key == "U"));
         Assert.IsTrue(hints.Any(h => h.Key == "M"));
     }
