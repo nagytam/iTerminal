@@ -131,4 +131,74 @@ public class ScannerDialogTest
         StringAssert.Contains(_dialog.StatusForTest, "local folder");
         _service.Verify(s => s.SaveAsync(It.IsAny<ScanPage>(), It.IsAny<string>(), It.IsAny<ScanFileFormat>(), It.IsAny<CancellationToken>()), Times.Never);
     }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task Screen_NamesTheFilesAndTheFolderBeforeTheSave()
+    {
+        await OpenAsync();
+        await PressAsync(ConsoleKey.D, 'd');
+        await PressAsync(ConsoleKey.S, 's');
+        await UiTestHelper.WaitUntilAsync(() => _dialog.PageCountForTest == 2, "both sheets to arrive");
+
+        _dialog.OnIdle();
+        iConsole.Test.Core.ScreenBuffer screen = UiTestHelper.Render(_dialog);
+
+        UiTestHelper.AssertScreenContains(screen, "File: scan-");
+        UiTestHelper.AssertScreenContains(screen, "-001.png");
+        UiTestHelper.AssertScreenContains(screen, "-002.png");
+        UiTestHelper.AssertScreenContains(screen, "Save to:");
+        UiTestHelper.AssertScreenContains(screen, "D Feeder (all pages)");
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task W_DoesNotOverwriteAFileAlreadyInTheFolder()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), "scanner-test-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        try
+        {
+            _dialog.Load(folder);
+            var written = new List<string>();
+            _service.Setup(s => s.SaveAsync(It.IsAny<ScanPage>(), It.IsAny<string>(), It.IsAny<ScanFileFormat>(), It.IsAny<CancellationToken>()))
+                .Callback((ScanPage _, string path, ScanFileFormat _, CancellationToken _) => written.Add(path))
+                .ReturnsAsync(new SaveResult(true, "saved"));
+            await OpenAsync();
+            await PressAsync(ConsoleKey.Enter);
+            await UiTestHelper.WaitUntilAsync(() => _dialog.PageCountForTest == 1, "the page to arrive");
+            string stem = _dialog.FileStemForTest;
+            File.WriteAllBytes(Path.Combine(folder, stem + ".png"), []);
+
+            await PressAsync(ConsoleKey.W, 'w');
+            await _dialog.PendingOperation;
+
+            Assert.AreEqual(1, written.Count);
+            Assert.AreEqual(Path.Combine(folder, stem + "-2.png"), written[0]);
+            StringAssert.Contains(_dialog.StatusForTest, "Saved to");
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task Save_StopsAtAFailedPageAndSaysWhichOne()
+    {
+        _dialog.Load(Path.GetTempPath());
+        int calls = 0;
+        _service.Setup(s => s.SaveAsync(It.IsAny<ScanPage>(), It.IsAny<string>(), It.IsAny<ScanFileFormat>(), It.IsAny<CancellationToken>()))
+            .Returns(() => Task.FromResult(++calls == 1 ? new SaveResult(true, "saved") : new SaveResult(false, "disk full")));
+        await OpenAsync();
+        await PressAsync(ConsoleKey.D, 'd');
+        await PressAsync(ConsoleKey.S, 's');
+        await UiTestHelper.WaitUntilAsync(() => _dialog.PageCountForTest == 2, "both sheets to arrive");
+
+        await PressAsync(ConsoleKey.W, 'w');
+        await _dialog.PendingOperation;
+
+        StringAssert.Contains(_dialog.StatusForTest, "Page 2 of 2 was not saved: disk full");
+    }
 }

@@ -6379,6 +6379,9 @@
   <data name="DiskMgr.Space" xml:space="preserve">
     <value>Hely</value>
   </data>
+  <data name="DiskMgr.Used" xml:space="preserve">
+    <value>Foglalt</value>
+  </data>
   <data name="DiskMgr.MemoryDrive" xml:space="preserve">
     <value>Memóriameghajtó (ebben a programban él, és az adatbázisába mentődik)</value>
   </data>
@@ -9736,6 +9739,33 @@
   <data name="Scan.Empty" xml:space="preserve">
     <value>Válasszon szkennert, majd nyomja meg az Entert.</value>
   </data>
+  <data name="Scan.AlreadyRunning" xml:space="preserve">
+    <value>Beolvasás fut. Az Esc megszakítja.</value>
+  </data>
+  <data name="Scan.FeederWait" xml:space="preserve">
+    <value>Az adagoló lapjai akkor érkeznek meg, amikor kiürült.</value>
+  </data>
+  <data name="Scan.SavingPage" xml:space="preserve">
+    <value>{0}/{1}. oldal mentése…</value>
+  </data>
+  <data name="Scan.Saved" xml:space="preserve">
+    <value>Mentve ide: {0}.</value>
+  </data>
+  <data name="Scan.SaveFailed" xml:space="preserve">
+    <value>A(z) {0}/{1}. oldal nem lett elmentve: {2}</value>
+  </data>
+  <data name="Scan.NoFileYet" xml:space="preserve">
+    <value>Fájl: még nincs</value>
+  </data>
+  <data name="Scan.FileLabel" xml:space="preserve">
+    <value>Fájl:</value>
+  </data>
+  <data name="Scan.SavedLabel" xml:space="preserve">
+    <value>Mentve:</value>
+  </data>
+  <data name="Scan.PixelSize" xml:space="preserve">
+    <value>{0} × {1} px</value>
+  </data>
   <data name="CmdTitle.ea1c510d" xml:space="preserve">
     <value>Beolvasás</value>
   </data>
@@ -11350,5 +11380,26 @@
   </data>
   <data name="CmdDesc.2489e3b7" xml:space="preserve">
     <value>A kiszolgáló mentése és megnyitása a panelben.</value>
+  </data>
+  <data name="Process.Column.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Process.Column.Pid" xml:space="preserve">
+    <value>PID</value>
+  </data>
+  <data name="Process.Column.Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Process.Column.Memory" xml:space="preserve">
+    <value>Memória</value>
+  </data>
+  <data name="Process.Shown" xml:space="preserve">
+    <value>{0} / {1} folyamat</value>
+  </data>
+  <data name="DialogHint.ProcessSortColumn" xml:space="preserve">
+    <value>Rendezési oszlop választása (a táblázat aktív)</value>
+  </data>
+  <data name="DialogHint.ProcessSortDirection" xml:space="preserve">
+    <value>Rendezési sorrend megfordítása</value>
   </data>
 </root>

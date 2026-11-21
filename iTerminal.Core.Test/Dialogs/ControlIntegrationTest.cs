@@ -14,7 +14,7 @@ public class ControlIntegrationTest
     [TestMethod]
     public async Task ProcessManager_EmptyFilter_ShowsItsPlaceholder()
     {
-        var dialog = new ProcessManagerDialog(Mock.Of<IBeepService>(), new ProcessService(), new DateTimeProviderService(), TestTheme());
+        var dialog = new ProcessManagerDialog(Mock.Of<IBeepService>(), new ProcessService(), new DateTimeProviderService(), TestTheme(), new SystemTimeProvider());
         await ShowAsync(dialog);
 
         AssertScreenContains(Render(dialog), "process name or id");
@@ -24,7 +24,7 @@ public class ControlIntegrationTest
     [TestMethod]
     public async Task ProcessManager_TypedFilter_HidesItsPlaceholder()
     {
-        var dialog = new ProcessManagerDialog(Mock.Of<IBeepService>(), new ProcessService(), new DateTimeProviderService(), TestTheme());
+        var dialog = new ProcessManagerDialog(Mock.Of<IBeepService>(), new ProcessService(), new DateTimeProviderService(), TestTheme(), new SystemTimeProvider());
         await ShowAsync(dialog);
 
         dialog.FilterBoxForTest.Text = "x";

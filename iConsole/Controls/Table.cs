@@ -11,11 +11,14 @@ using System.Collections.Specialized;
 namespace iConsole.Controls;
 
 /// <summary>Defines one column in a <see cref="Table{T}"/>.</summary>
-public sealed class ColumnDefinition<T>(string header, int width, Func<T, string> valueSelector)
+public sealed class ColumnDefinition<T>(string header, int width, Func<T, string> valueSelector, TextAlignment alignment = TextAlignment.Left)
 {
     public string Header { get; } = header;
     public int Width { get; } = width;
     public Func<T, string> ValueSelector { get; } = valueSelector;
+
+    /// <summary>How the header and the values sit in the column; numbers read best right-aligned.</summary>
+    public TextAlignment Alignment { get; } = alignment;
 }
 
 /// <summary>
@@ -105,7 +108,7 @@ public class Table<T> : Control
         }
 
         int room = Columns[index].Width - 1;
-        return header.Cut(room).PadRight(room) + (SortDescending ? "▼" : "▲");
+        return Fit(header, room, Columns[index].Alignment) + (SortDescending ? "▼" : "▲");
     }
 
     /// <summary>Raised when the user presses Enter on a row.</summary>
@@ -226,7 +229,7 @@ public class Table<T> : Control
         var colorScheme = ThemeService.CurrentColorScheme;
 
         // Header row
-        var header = BuildRow(Columns.Select((c, i) => HeaderText(i)), Columns.Select(c => c.Width));
+        var header = BuildRow(Columns.Select((c, i) => HeaderText(i)));
         buffer.Write(ZOrder, AbsolutePosition, ViewSize,
             new ConxelString(header, colorScheme.SelectedForeground, colorScheme.SelectedBackground));
 
@@ -251,7 +254,7 @@ public class Table<T> : Control
             }
 
             var row = snapshot[rowIndex];
-            var text = BuildRow(Columns.Select(c => c.ValueSelector(row)), Columns.Select(c => c.Width));
+            var text = BuildRow(Columns.Select(c => c.ValueSelector(row)));
 
             var visualState = rowIndex == CursorRow
                 ? (IsFocused ? VisualState.Focused : VisualState.Selected)
@@ -285,10 +288,21 @@ public class Table<T> : Control
         }
     }
 
-    private string BuildRow(IEnumerable<string> values, IEnumerable<int> widths)
+    private string BuildRow(IEnumerable<string> values)
     {
-        var parts = values.Zip(widths, (v, w) => v.Cut(w).PadRight(w));
+        var parts = values.Select((v, i) => Fit(v, Columns[i].Width, Columns[i].Alignment));
         var row = string.Join(" ", parts);
         return row.PadRight((int)ViewSize.Width);
+    }
+
+    private static string Fit(string text, int width, TextAlignment alignment)
+    {
+        string cut = text.Cut(width);
+        return alignment switch
+        {
+            TextAlignment.Right => cut.PadLeft(width),
+            TextAlignment.Center => cut.PadLeft((width + cut.Length) / 2).PadRight(width),
+            _ => cut.PadRight(width),
+        };
     }
 }
