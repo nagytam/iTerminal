@@ -6383,9 +6383,6 @@
   <data name="Games.Jass.TrumpTricks" xml:space="preserve">
     <value>Trump: {0}   Tricks: {1}/9   Hand points: {2}</value>
   </data>
-  <data name="Games.Jass.PassToReveal" xml:space="preserve">
-    <value>Pass device to Player {0}; press Enter to reveal.</value>
-  </data>
   <data name="Games.Jass.HiddenHand" xml:space="preserve">
     <value>Player {0}'s cards are hidden.</value>
   </data>

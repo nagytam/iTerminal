@@ -6220,7 +6220,6 @@
   <data name="Games.Jass.DealerForehandScore" xml:space="preserve"><value>Repartidor: jugador {0}   Mano: jugador {1}   Puntuación: {2} – {3}</value></data>
   <data name="Games.Jass.NoTrump" xml:space="preserve"><value>Triunfo sin elegir</value></data>
   <data name="Games.Jass.TrumpTricks" xml:space="preserve"><value>Triunfo: {0}   Bazas: {1}/9   Puntos de mano: {2}</value></data>
-  <data name="Games.Jass.PassToReveal" xml:space="preserve"><value>Pasa el dispositivo al jugador {0}; pulsa Enter para revelar.</value></data>
   <data name="Games.Jass.HiddenHand" xml:space="preserve"><value>Las cartas del jugador {0} están ocultas.</value></data>
   <data name="Games.Jass.PlayerHand" xml:space="preserve"><value>Mano del jugador {0} (1–9 para jugar una carta):</value></data>
   <data name="Games.Jass.FaceDown" xml:space="preserve"><value>{0}. [boca abajo]</value></data>

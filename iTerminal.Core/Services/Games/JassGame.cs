@@ -667,8 +667,9 @@ public class JassGame : GameBase
                     SuitName(_trump.Value),
                     _tricksPlayed,
                     _trickPoints))],
+            // The status line already asks for the reveal, so the body says only whose cards are hidden.
             [new GameCell(NeedsReveal
-                ? string.Format(GameText.Get("Games.Jass.PassToReveal", "Pass device to Player {0}; press Enter to reveal."), _currentPlayer + 1)
+                ? string.Format(GameText.Get("Games.Jass.HiddenHand", "Player {0}'s cards are hidden."), _currentPlayer + 1)
                 : _handComplete
                     ? string.Empty
                 : IsComputerTurn
@@ -676,13 +677,7 @@ public class JassGame : GameBase
                     : string.Format(GameText.Get("Games.Jass.PlayerHand", "Player {0}'s hand (press 1–9 to play a card):"), ShownSeat + 1))],
         ];
 
-        if (NeedsReveal)
-        {
-            rows.Add([new GameCell(string.Format(
-                GameText.Get("Games.Jass.HiddenHand", "Player {0}'s cards are hidden."),
-                _currentPlayer + 1))]);
-        }
-        else if (!_handComplete)
+        if (!NeedsReveal && !_handComplete)
         {
             // Each card is a block the cursor can sit on, like the cells of the other boards, so the one to play stands out.
             for (int group = 0; group < 3; group++)

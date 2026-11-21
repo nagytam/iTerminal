@@ -6220,7 +6220,6 @@
   <data name="Games.Jass.DealerForehandScore" xml:space="preserve"><value> mazziere: giocatore {0}   Mano: giocatore {1}   Punteggio: {2} – {3}</value></data>
   <data name="Games.Jass.NoTrump" xml:space="preserve"><value>Briscola non scelta</value></data>
   <data name="Games.Jass.TrumpTricks" xml:space="preserve"><value>Briscola: {0}   Prese: {1}/9   Punti mano: {2}</value></data>
-  <data name="Games.Jass.PassToReveal" xml:space="preserve"><value>Passa il dispositivo al giocatore {0}; premi Invio per rivelare.</value></data>
   <data name="Games.Jass.HiddenHand" xml:space="preserve"><value>Le carte del giocatore {0} sono coperte.</value></data>
   <data name="Games.Jass.PlayerHand" xml:space="preserve"><value>Mano del giocatore {0} (1–9 per giocare una carta):</value></data>
   <data name="Games.Jass.FaceDown" xml:space="preserve"><value>{0}. [coperta]</value></data>
