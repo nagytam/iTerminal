@@ -41,7 +41,8 @@ jobs:
       # The WiX installer project only builds on Windows.
       - name: Build
         run: >-
-          dotnet build iConsole.Test/iConsole.Test.csproj -c Release --no-restore
+          dotnet build iConsole.Formats.Test/iConsole.Formats.Test.csproj -c Release --no-restore
+          && dotnet build iConsole.Test/iConsole.Test.csproj -c Release --no-restore
           && dotnet build iConsole.Inputs.Posix.Test/iConsole.Inputs.Posix.Test.csproj -c Release --no-restore
           && dotnet build iTerminal.Core.Test/iTerminal.Core.Test.csproj -c Release --no-restore
           && dotnet build iTerminal/iTerminal.csproj -c Release --no-restore
@@ -52,7 +53,12 @@ jobs:
       - name: Tests (including end-to-end suite)
         timeout-minutes: 20
         run: >-
-          dotnet test iConsole.Test/iConsole.Test.csproj
+          dotnet test iConsole.Formats.Test/iConsole.Formats.Test.csproj
+          -c Release --no-build
+          --logger "trx;LogFileName=iconsole-formats.trx"
+          --settings coverage.runsettings --collect:"XPlat Code Coverage"
+          --results-directory TestResults
+          && dotnet test iConsole.Test/iConsole.Test.csproj
           -c Release --no-build
           --logger "trx;LogFileName=iconsole.trx"
           --settings coverage.runsettings --collect:"XPlat Code Coverage"

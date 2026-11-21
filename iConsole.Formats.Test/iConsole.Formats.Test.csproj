@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+
+    <!-- Same as iConsole.Test: dynamic PGO costs more than it gains on tests that run each path once. -->
+    <TieredPGO>false</TieredPGO>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
+    <PackageReference Include="Moq" Version="4.21.0" />
+    <PackageReference Include="ZXing.Net" Version="0.16.11" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.5.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\iConsole.Test.Core\iConsole.Test.Core.csproj" />
+    <ProjectReference Include="..\iConsole.Formats\iConsole.Formats.csproj" />
+    <ProjectReference Include="..\iConsole\iConsole.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Services\TestFiles\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- The drawing and model examples in Test/FileTypes, copied beside the tests so they read the same files a user does. -->
+  <ItemGroup>
+    <None Include="..\Test\FileTypes\example.dxf" Link="FileTypes\example.dxf" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.obj" Link="FileTypes\example.obj" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.stl" Link="FileTypes\example.stl" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example-binary.stl" Link="FileTypes\example-binary.stl" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -7,7 +7,7 @@ namespace iConsole.Test.Services;
 /// Minimal IFileSystem implementation that reads files from the real local file system.
 /// Used by fixture-based tests that need to load actual sample files.
 /// </summary>
-internal sealed class LocalFileSystemAdapter : IFileSystem
+public sealed class LocalFileSystemAdapter : IFileSystem
 {
     public bool IsReadOnly => true;
 

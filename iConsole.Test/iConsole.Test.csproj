@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\iConsole.Test.Core\iConsole.Test.Core.csproj" />
     <ProjectReference Include="..\iConsole.Inputs.Posix\iConsole.Inputs.Posix.csproj" />
+    <ProjectReference Include="..\iConsole.Formats\iConsole.Formats.csproj" />
     <ProjectReference Include="..\iConsole\iConsole.csproj" />
   </ItemGroup>
 
@@ -35,7 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Services\TestFiles\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The fixtures of the format readers live in iConsole.Formats.Test; the viewer tests read two of them. -->
+    <None Include="..\iConsole.Formats.Test\Services\TestFiles\**\*" Link="Services\TestFiles\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- The drawing and model examples in Test/FileTypes, copied beside the tests so they read the same files a user does. -->

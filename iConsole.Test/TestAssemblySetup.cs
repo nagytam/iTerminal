@@ -17,8 +17,12 @@ public static class TestAssemblySetup
     private const int MinimumThreads = 64;
 
     [AssemblyInitialize]
-    public static void AssemblyInitialize(TestContext _)
+    public static void AssemblyInitialize(TestContext testContext)
     {
+        // The legacy code pages (Windows-1250 and the rest) are registered by TextEncodings' static initialiser, as in the
+        // app. Before the format readers moved to iConsole.Formats, another test's conversion happened to run it first.
+        _ = iConsole.Helper.TextEncodings.Available;
+
         ThreadPool.GetMinThreads(out int workerThreads, out int completionPortThreads);
         ThreadPool.SetMinThreads(
             Math.Max(workerThreads, MinimumThreads),

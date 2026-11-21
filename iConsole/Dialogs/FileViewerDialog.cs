@@ -302,7 +302,7 @@ public class FileViewerDialog : Dialog
     /// </summary>
     public void SwitchEncoding(bool backwards = false)
     {
-        if (_hexMode || !FileToTextConverterService.IsEncodingRelevant(Url))
+        if (_hexMode || !_fileToTextConverterService.IsEncodingRelevant(Url))
         {
             return;
         }
@@ -450,7 +450,7 @@ public class FileViewerDialog : Dialog
         // The length is taken before the text is read: anything appended after this is followed, so nothing is missed.
         _followBytes = LocalPath is { } path && File.Exists(path) ? new FileInfo(path).Length : -1;
         // A debug symbol file (.pdb) is summarised here only; the preview and the editor read plain text.
-        if (Url is not null && FileToTextConverterService.HasPdbSummary(Url) && fileSystem is not null)
+        if (Url is not null && _fileToTextConverterService.HasPdbSummary(Url) && fileSystem is not null)
         {
             await _fileToTextConverterService.ReadPdbForViewerAsync(Url, fileSystem, _textViewerControl.TextModel);
         }
@@ -470,7 +470,7 @@ public class FileViewerDialog : Dialog
     private void StartPdfSignatures(IFileSystem? fileSystem)
     {
         CancelPdfSignatures();
-        if (Url is null || fileSystem is null || !FileToTextConverterService.HasPdfSignatures(Url))
+        if (Url is null || fileSystem is null || !_fileToTextConverterService.HasPdfSignatures(Url))
         {
             return;
         }
@@ -550,7 +550,7 @@ public class FileViewerDialog : Dialog
     /// <summary>Starts the disassembly of a binary in the background and marks the end of the metadata page as in progress.</summary>
     private void StartDisassembly(IFileSystem? fileSystem)
     {
-        if (Url is null || fileSystem is null || !FileToTextConverterService.HasDisassembly(Url))
+        if (Url is null || fileSystem is null || !_fileToTextConverterService.HasDisassembly(Url))
         {
             return;
         }

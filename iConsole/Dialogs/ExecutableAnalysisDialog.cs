@@ -10,7 +10,6 @@ using iConsole.Layouts;
 using iConsole.Localization;
 using iConsole.Model;
 using iConsole.Services;
-using iConsole.Services.Disassembly;
 
 namespace iConsole.Dialogs;
 
@@ -43,12 +42,12 @@ public class ExecutableAnalysisDialog : Dialog
     private bool _listingReady;
     private bool _listingShown;
 
-    public ExecutableAnalysisDialog(IExecutableAnalyzer analyzer, IThemeService themeService)
-        : this(analyzer, ExecutableDisassembly.Build, themeService)
+    public ExecutableAnalysisDialog(IExecutableAnalyzer analyzer, IExecutableDisassembler disassembler, IThemeService themeService)
+        : this(analyzer, disassembler.Build, themeService)
     {
     }
 
-    /// <param name="disassemble">Builds the listing of a file; the default reads the file and disassembles it. A seam for tests.</param>
+    /// <param name="disassemble">Builds the listing of a file. The viewer passes the <see cref="IExecutableDisassembler"/> one; a test passes its own.</param>
     public ExecutableAnalysisDialog(
         IExecutableAnalyzer analyzer,
         Func<string, CancellationToken, IReadOnlyList<string>> disassemble,

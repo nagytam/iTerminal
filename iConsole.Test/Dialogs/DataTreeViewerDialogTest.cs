@@ -1,4 +1,5 @@
 using iConsole.Data;
+using iConsole.Formats;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
 using iConsole.Model;
@@ -25,13 +26,13 @@ public class DataTreeViewerDialogTest
     private static YamlViewerDialog YamlFor(string path, string text)
     {
         var document = new Url(path);
-        return new YamlViewerDialog(ModelsFor(document, System.Text.Encoding.UTF8.GetBytes(text)).Object, Mock.Of<IFileToTextConverterService>(), new ThemeService()) { Url = document };
+        return new YamlViewerDialog(ModelsFor(document, System.Text.Encoding.UTF8.GetBytes(text)).Object, Mock.Of<IFileToTextConverterService>(), new StructuredDocumentParser(), new ThemeService()) { Url = document };
     }
 
     private static TomlViewerDialog TomlFor(string path, string text)
     {
         var document = new Url(path);
-        return new TomlViewerDialog(ModelsFor(document, System.Text.Encoding.UTF8.GetBytes(text)).Object, Mock.Of<IFileToTextConverterService>(), new ThemeService()) { Url = document };
+        return new TomlViewerDialog(ModelsFor(document, System.Text.Encoding.UTF8.GetBytes(text)).Object, Mock.Of<IFileToTextConverterService>(), new StructuredDocumentParser(), new ThemeService()) { Url = document };
     }
 
     [Timeout(60_000)]
@@ -106,9 +107,9 @@ public class DataTreeViewerDialogTest
     public async Task TheExampleFilesOpenAsTrees()
     {
         var yaml = new Url(SampleFiles.Path("example.yaml"));
-        var yamlDialog = new YamlViewerDialog(ModelsFor(yaml, SampleFiles.Bytes("example.yaml")).Object, Mock.Of<IFileToTextConverterService>(), new ThemeService()) { Url = yaml };
+        var yamlDialog = new YamlViewerDialog(ModelsFor(yaml, SampleFiles.Bytes("example.yaml")).Object, Mock.Of<IFileToTextConverterService>(), new StructuredDocumentParser(), new ThemeService()) { Url = yaml };
         var toml = new Url(SampleFiles.Path("example.toml"));
-        var tomlDialog = new TomlViewerDialog(ModelsFor(toml, SampleFiles.Bytes("example.toml")).Object, Mock.Of<IFileToTextConverterService>(), new ThemeService()) { Url = toml };
+        var tomlDialog = new TomlViewerDialog(ModelsFor(toml, SampleFiles.Bytes("example.toml")).Object, Mock.Of<IFileToTextConverterService>(), new StructuredDocumentParser(), new ThemeService()) { Url = toml };
 
         await yamlDialog.OnInitializeAsync();
         await tomlDialog.OnInitializeAsync();

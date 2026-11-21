@@ -638,7 +638,7 @@ public class TextFileEditorDialog : Dialog
     /// </summary>
     public void SwitchEncoding(bool backwards = false)
     {
-        if (_hexMode || !FileToTextConverterService.IsEncodingRelevant(Url))
+        if (_hexMode || !_fileToTextConverterService.IsEncodingRelevant(Url))
         {
             return;
         }

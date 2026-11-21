@@ -15,6 +15,17 @@ public class FileViewerDialogPdfSignaturesTest
 
     private sealed class Converter : IFileToTextConverterService
     {
+        /// <summary>The routing answers come from the real converter, so the viewer shows what it shows in the app.</summary>
+        private static readonly FileToTextConverterService Routing = new();
+
+        public bool IsEncodingRelevant(Url? url) => Routing.IsEncodingRelevant(url);
+
+        public bool HasDisassembly(Url? url) => Routing.HasDisassembly(url);
+
+        public bool HasPdbSummary(Url? url) => Routing.HasPdbSummary(url);
+
+        public bool HasPdfSignatures(Url? url) => Routing.HasPdfSignatures(url);
+
         public TaskCompletionSource<IReadOnlyList<string>> Gate { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public TaskCompletionSource<bool> Started { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);

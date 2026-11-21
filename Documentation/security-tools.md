@@ -61,7 +61,7 @@ how the existing VirusTotal lookup already works (see `Documentation/architectur
 | **Have** Host identity | SSH host keys (SHA-256) and FTPS certificates are trusted on first use and refused when they change | `known_hosts.json` in the data folder | `Services/TrustedHostStore.cs` |
 | **Have** Network tools | Ping, traceroute, DNS and reverse DNS, whois, TCP port check, HTTP headers, subnet scan | Network tools dialog | `Services/NetworkTools/` |
 | **Have** Executable analysis | PE, ELF and Mach-O headers, section entropy and packer hints, Authenticode certificates | Viewer on a binary (F3) | `Services/Executables/` |
-| **Have** Disassembly | Native x86/x64 linear sweep (Iced) and managed IL | Viewer on a binary or assembly | `iConsole/Services/Disassembly/` |
+| **Have** Disassembly | Native x86/x64 linear sweep (Iced) and managed IL | Viewer on a binary or assembly | `iConsole.Formats/Services/Disassembly/` |
 | **Have** Hex view | Hex mode in the F3 viewer, toggled with F4, with go-to offset | F3, then F4 | `iConsole/Controls/HexViewer.cs` |
 | **Have** Binary diff | Byte comparison of two files | Compare dialogs | `Dialogs/BinaryDiffView.cs` |
 | **Have** File disguise check | Magic bytes compared with the extension | Automatic note | `Services/Security/FileDisguiseChecker.cs` |

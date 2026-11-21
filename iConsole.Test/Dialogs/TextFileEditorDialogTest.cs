@@ -32,15 +32,16 @@ public class TextFileEditorDialogTest
         Assert.IsTrue(dlg.Title.Contains("(*)") || dlg.Title.Contains("Text file editor"));
     }
 
-    private static TextFileEditorDialog NewDialog() =>
-        new(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
+    private static TextFileEditorDialog NewDialog(IFileToTextConverterService? converter = null) =>
+        new(Mock.Of<IContentModelService>(), converter ?? Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(), new ThemeService());
 
     [Timeout(60_000)]
     [TestMethod]
     public void SwitchEncoding_RereadsTheTextAndMarksItChanged()
     {
-        var dlg = NewDialog();
+        // The switch asks the converter whether the encoding matters for the file; a mock would answer no, so the real one answers.
+        var dlg = NewDialog(new iConsole.Services.FileToTextConverterService());
         dlg.Url = new iConsole.Data.Url("file://C:/x/note.txt");
         var model = dlg.TextEditorControl.TextModel;
         model.Encoding = System.Text.Encoding.Latin1;
