@@ -71,7 +71,7 @@ public class FolderSelectorDialog : Dialog
             new FolderSelectorRemoteShellTabPage(contentModelService, beepService, dateTimeProviderService, settingsService, frequentExecutionGuardService, themeService),
             new FolderSelectorPathTabPage(contentModelService, folderHistoryService, beepService, dateTimeProviderService, settingsService, themeService),
             new FolderSelectorSmbTabPage(networkDiscoveryService, networkProfileService, contentModelService, passwordManager, promptService, themeService),
-            new FolderSelectorRemoteFilesTabPage(networkProfileService, remoteConnectionService, contentModelService, themeService),
+            new FolderSelectorRemoteFilesTabPage(networkProfileService, remoteConnectionService, contentModelService, beepService, dateTimeProviderService, themeService),
         ];
 
         foreach (var tabPage in TabPages)

@@ -3,6 +3,7 @@ using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.ScrollBar;
 using iConsole.Data;
+using iConsole.Dialogs;
 using iConsole.Interfaces;
 using iConsole.Localization;
 using iConsole.Model;
@@ -21,9 +22,9 @@ namespace iTerminal.Core.Dialogs;
 /// profile, the key of an SFTP one). An FTP entry from the Remote connections dialog opens at the folder it
 /// was saved with. Enter goes to the connection under the cursor and closes the selector.
 ///
-/// The SSH entries of the Remote connections dialog are listed too, as SFTP. Nothing is typed here and nothing is
-/// scanned: a new connection is made in the Remote connections dialog (Alt+F2), and an SSH login is kept by the
-/// Network Browser (Ctrl+N).
+/// The SSH entries of the Remote connections dialog are listed too, as SFTP. Nothing is scanned here. N adds a server
+/// through <see cref="FolderSelectorAddServerDialog"/>, which saves it and opens it; the other connections are edited
+/// in the Remote connections dialog (Alt+F2), and an SSH login is kept by the Network Browser (Ctrl+N).
 /// </summary>
 public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
 {
@@ -32,10 +33,15 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
 
     private readonly INetworkProfileService _networkProfileService;
     private readonly IRemoteConnectionService _remoteConnectionService;
+    private readonly IBeepService _beepService;
+    private readonly IDateTimeProviderService _dateTimeProviderService;
+    private readonly IThemeService _themeService;
+    private readonly IContentModelService _contentModelService;
     private readonly ConcurrentObservableCollection<RemoteFilesEntry> _items = new();
     private readonly ListBox<RemoteFilesEntry> _listBox;
     private readonly ScrollBar _scrollBar;
     private readonly Button _selectButton;
+    private readonly Button _addServerButton;
 
     private readonly ICommand _selectCommand;
     protected override ICommand? SelectCommand => _selectCommand;
@@ -45,17 +51,23 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
         INetworkProfileService networkProfileService,
         IRemoteConnectionService remoteConnectionService,
         IContentModelService contentModelService,
+        IBeepService beepService,
+        IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
         : base(UiText.Get("FolderSelector.Tab8", "8-FTP/SFTP"), ConsoleKey.D8, themeService)
     {
         _networkProfileService = networkProfileService;
         _remoteConnectionService = remoteConnectionService;
+        _beepService = beepService;
+        _dateTimeProviderService = dateTimeProviderService;
+        _themeService = themeService;
+        _contentModelService = contentModelService;
 
         _listBox = new ListBox<RemoteFilesEntry>(
             new ListBoxModel<RemoteFilesEntry>(_items) { TransformItem = TransformEntry },
             themeService)
         {
-            EmptyText = UiText.Get("FolderSelector.Remote.Empty", " No FTP or SFTP connections are saved. Add one in Remote connections (Alt+F2)."),
+            EmptyText = UiText.Get("FolderSelector.Remote.Empty", " No FTP or SFTP servers are saved. Press N to add one."),
         };
         _scrollBar = new ScrollBar(themeService)
         {
@@ -66,10 +78,72 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
         {
             HotKeyChar = 'S'
         };
+        // No HotKeyChar: a button's hot key is Ctrl+letter, and Ctrl+N is the Network Browser's. N on the page is the key.
+        _addServerButton = new Button(UiText.Get("FolderSelector.Remote.New", "New server…"), new AddServerCommand(), themeService);
 
         AddControl(_listBox);
         AddControl(_scrollBar);
         AddControl(_selectButton);
+        AddControl(_addServerButton);
+    }
+
+    /// <summary>
+    /// N, on the list or on the page's own buttons: adds a server. Claimed here, ahead of the children, for the same
+    /// reason Enter is (see <see cref="FolderSelectorTabPage"/>): the list would otherwise have the key first.
+    /// </summary>
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (keyEvent is { Control: false, Alt: false } && char.ToLowerInvariant(keyEvent.KeyChar) == 'n')
+        {
+            await AddServerAsync();
+            return true;
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    private sealed class AddServerCommand : Command
+    {
+        public override string Title => "New server";
+        public override string Description => "Add an FTP or SFTP server and open it.";
+
+        public override async Task ExecuteAsync(object? arg)
+        {
+            if (Control?.Parent is FolderSelectorRemoteFilesTabPage page)
+            {
+                await page.AddServerAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Shows the add-a-server form over the selector. Once the server is saved the panel goes to it, and the selector
+    /// closes with the form, as it does after any other choice.
+    /// </summary>
+    internal async Task AddServerAsync()
+    {
+        var selector = FindFolderSelector();
+        var dialog = new FolderSelectorAddServerDialog(_remoteConnectionService, _beepService, _dateTimeProviderService, _themeService)
+        {
+            OpenInPanelAsync = async url =>
+            {
+                await _contentModelService.SetUrlAsync(new Url(url));
+                selector?.Close();
+            },
+        };
+        await ShowDialogAsync(dialog);
+    }
+
+    /// <summary>The selector this page is on: the nearest dialog above it.</summary>
+    private FolderSelectorDialog? FindFolderSelector()
+    {
+        IControl? control = this;
+        while (control is not null && control is not Dialog)
+        {
+            control = control.Parent;
+        }
+
+        return control as FolderSelectorDialog;
     }
 
     private sealed class SelectRemoteFilesCommand(IContentModelService contentModelService) : Command
@@ -112,8 +186,12 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
         _scrollBar.Position = new Position(Math.Max(0, ViewSize.Width - 1), 1);
         _scrollBar.ViewSize = new Size(1, Math.Max(0, ViewSize.Height - 3));
 
+        // The two buttons share the bottom row: Select folder takes the left half, New server the right.
+        var half = Math.Max(0, (ViewSize.Width - 3) / 2);
         _selectButton.Position = new Position(1, Math.Max(0, ViewSize.Height - 1));
-        _selectButton.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), 1);
+        _selectButton.ViewSize = new Size(half, 1);
+        _addServerButton.Position = new Position(1 + half + 1, Math.Max(0, ViewSize.Height - 1));
+        _addServerButton.ViewSize = new Size(Math.Max(0, ViewSize.Width - half - 3), 1);
 
         base.OnInitializeLayout();
     }
@@ -163,6 +241,7 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
         {
             yield return hint;
         }
+        yield return ("N", UiText.Get("AddServer.Hint.Page", "Add an FTP or SFTP server, and open it."));
         yield return ("Alt+F2", UiText.Get("FolderSelector.Hint.RemoteConnections", "Add and edit the connections listed here, in Remote connections."));
     }
 }

@@ -10509,7 +10509,7 @@
     <value>Abrir la conexión FTP o SFTP guardada bajo el cursor, en su carpeta.</value>
   </data>
   <data name="FolderSelector.Remote.Empty" xml:space="preserve">
-    <value> No hay conexiones FTP o SFTP guardadas. Añada una en Conexiones remotas (Alt+F2).</value>
+    <value> No hay servidores FTP o SFTP guardados. Pulse N para añadir uno.</value>
   </data>
   <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
     <value>Añadir y editar las conexiones de esta lista en Conexiones remotas.</value>
@@ -11290,5 +11290,65 @@
   </data>
   <data name="Wipe.What" xml:space="preserve">
     <value>{0} archivo(s), {1}</value>
+  </data>
+  <data name="Dialog.AddServer" xml:space="preserve">
+    <value>Añadir un servidor</value>
+  </data>
+  <data name="AddServer.Type.Ftp" xml:space="preserve">
+    <value>FTP</value>
+  </data>
+  <data name="AddServer.Type.Sftp" xml:space="preserve">
+    <value>SFTP (SSH)</value>
+  </data>
+  <data name="AddServer.Host" xml:space="preserve">
+    <value>Host: </value>
+  </data>
+  <data name="AddServer.Port" xml:space="preserve">
+    <value>Puerto: </value>
+  </data>
+  <data name="AddServer.User" xml:space="preserve">
+    <value>Usuario: </value>
+  </data>
+  <data name="AddServer.Password" xml:space="preserve">
+    <value>Contraseña: </value>
+  </data>
+  <data name="AddServer.Folder" xml:space="preserve">
+    <value>Carpeta: </value>
+  </data>
+  <data name="AddServer.Name" xml:space="preserve">
+    <value>Nombre: </value>
+  </data>
+  <data name="AddServer.PortDefault" xml:space="preserve">
+    <value>predeterminado {0}</value>
+  </data>
+  <data name="AddServer.Hint.Ftp" xml:space="preserve">
+    <value>FTP: sin contraseña se entra como anónimo; la contraseña se guarda en la caja de contraseñas.</value>
+  </data>
+  <data name="AddServer.Hint.Sftp" xml:space="preserve">
+    <value>SFTP: puerto 22; sin contraseña se usa la clave o el agente SSH; la contraseña se guarda en la caja de contraseñas.</value>
+  </data>
+  <data name="AddServer.HostNeeded" xml:space="preserve">
+    <value>Escriba primero el nombre de host o la dirección IP.</value>
+  </data>
+  <data name="AddServer.Button.Add" xml:space="preserve">
+    <value>Añadir y abrir</value>
+  </data>
+  <data name="AddServer.Hint.Page" xml:space="preserve">
+    <value>Añadir un servidor FTP o SFTP y abrirlo.</value>
+  </data>
+  <data name="FolderSelector.Remote.New" xml:space="preserve">
+    <value>Nuevo servidor…</value>
+  </data>
+  <data name="CmdTitle.c2ee50f7" xml:space="preserve">
+    <value>Nuevo servidor</value>
+  </data>
+  <data name="CmdTitle.b37158e7" xml:space="preserve">
+    <value>Añadir y abrir</value>
+  </data>
+  <data name="CmdDesc.bd936c94" xml:space="preserve">
+    <value>Añadir un servidor FTP o SFTP y abrirlo.</value>
+  </data>
+  <data name="CmdDesc.2489e3b7" xml:space="preserve">
+    <value>Guardar el servidor y abrirlo en el panel.</value>
   </data>
 </root>

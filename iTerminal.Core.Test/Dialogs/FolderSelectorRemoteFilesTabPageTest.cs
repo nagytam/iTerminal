@@ -219,6 +219,174 @@ public class FolderSelectorRemoteFilesTabPageTest
         Assert.IsTrue(dialog.IsVisible, "With nothing listed there is nowhere to go, so the selector stays up.");
     }
 
+    #region Adding a server
+
+    private static FolderSelectorAddServerDialog FindForm(FolderSelectorTestHarness.TestRoot root) =>
+        root.Controls.OfType<FolderSelectorAddServerDialog>().Single();
+
+    /// <summary>Selector up on the 8-FTP/SFTP page, with N pressed: the add-a-server form is over it.</summary>
+    private static async Task<(FolderSelectorTestHarness.TestRoot Root, FolderSelectorDialog Dialog, FolderSelectorAddServerDialog Form)> OpenForm(FolderSelectorTestHarness harness)
+    {
+        var root = new FolderSelectorTestHarness.TestRoot(harness.ThemeService);
+        var dialog = CreateDialog(harness);
+        await root.ShowDialogAsync(dialog);
+        await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.D8, control: true));
+        await FolderSelectorTestHarness.PressAsync(root, new KeyEvent('n', ConsoleKey.N, false, false, false));
+        return (root, dialog, FindForm(root));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task N_OnTheRemoteFilesPage_OpensTheAddServerForm()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+
+        Assert.IsTrue(form.IsVisible);
+        Assert.IsTrue(dialog.IsVisible, "The form is over the selector; the selector stays up behind it.");
+        Assert.AreEqual(0, harness.Navigations.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AddingAnSftpServer_SavesItWithItsPasswordAndOpensItsRoot()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+        form.ProtocolForTest.SelectedIndex = 1;
+        form.HostForTest.Text = "files.example.com";
+        form.UserForTest.Text = "tamas";
+        form.PasswordForTest.Text = "s3cret";
+
+        var added = await form.AddAsync();
+
+        Assert.IsTrue(added);
+        harness.RemoteConnectionServiceMock.Verify(
+            s => s.Save(
+                It.Is<RemoteConnection>(c => c.Protocol == RemoteProtocol.Ssh && c.Host == "files.example.com" && c.Username == "tamas" && c.Name == "files.example.com"),
+                "s3cret"),
+            Moq.Times.Once);
+        harness.RemoteConnectionServiceMock.Verify(s => s.MarkConnected(It.IsAny<string>()), Moq.Times.Once);
+        CollectionAssert.AreEqual(new[] { new Url(Container.SSH + "tamas@files.example.com:/").FullUrl }, harness.Navigations);
+        Assert.IsFalse(dialog.IsVisible, "The selector closes once the panel is on the new server.");
+        Assert.IsFalse(form.IsVisible);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AddingAnFtpServer_SavesItAndOpensTheFolderTyped()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+        form.HostForTest.Text = "ftp.example.com";
+        form.PortForTest.Text = "2121";
+        form.UserForTest.Text = "ann";
+        form.FolderForTest.Text = "pub/files";
+
+        await form.AddAsync();
+
+        harness.RemoteConnectionServiceMock.Verify(
+            s => s.Save(It.Is<RemoteConnection>(c => c.Protocol == RemoteProtocol.Ftp && c.Port == 2121 && c.RemotePath == "pub/files"), null),
+            Moq.Times.Once);
+        CollectionAssert.AreEqual(new[] { new Url(Container.FTP + "ann@ftp.example.com:2121/pub/files").FullUrl }, harness.Navigations);
+        Assert.IsFalse(dialog.IsVisible);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnSftpServer_HasNoPortOrFolderToType()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+        Assert.IsTrue(form.PortForTest.IsEnabled, "FTP is the default type, so its port is open.");
+
+        form.ProtocolForTest.SelectedIndex = 1;
+
+        Assert.IsFalse(form.PortForTest.IsEnabled, "The SSH drive connects on port 22 only.");
+        Assert.IsFalse(form.FolderForTest.IsEnabled, "An SFTP server opens at its root.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AddingWithoutAHost_StaysOpenWithAMessage()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+
+        var added = await form.AddAsync();
+
+        Assert.IsFalse(added);
+        Assert.IsFalse(string.IsNullOrEmpty(form.ErrorForTest));
+        Assert.IsTrue(form.IsVisible);
+        harness.RemoteConnectionServiceMock.Verify(s => s.Save(It.IsAny<RemoteConnection>(), It.IsAny<string?>()), Moq.Times.Never);
+        Assert.AreEqual(0, harness.Navigations.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnInvalidPort_IsRefusedAndNothingIsSaved()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+        form.HostForTest.Text = "ftp.example.com";
+        form.PortForTest.Text = "70000";
+
+        Assert.IsFalse(await form.AddAsync());
+
+        Assert.IsTrue(form.ErrorForTest.Contains("65535"), form.ErrorForTest);
+        harness.RemoteConnectionServiceMock.Verify(s => s.Save(It.IsAny<RemoteConnection>(), It.IsAny<string?>()), Moq.Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ALockedPasswordManager_KeepsTheFormOpenWithTheReason()
+    {
+        var harness = new FolderSelectorTestHarness();
+        harness.RemoteConnectionServiceMock
+            .Setup(s => s.Save(It.IsAny<RemoteConnection>(), It.IsAny<string?>()))
+            .Throws(new InvalidOperationException("The password manager could not be opened, so the password was not saved."));
+        var (root, dialog, form) = await OpenForm(harness);
+        form.HostForTest.Text = "ftp.example.com";
+        form.PasswordForTest.Text = "s3cret";
+
+        Assert.IsFalse(await form.AddAsync());
+
+        Assert.IsTrue(form.ErrorForTest.Contains("password manager"), form.ErrorForTest);
+        Assert.IsTrue(form.IsVisible);
+        Assert.AreEqual(0, harness.Navigations.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EnterInTheForm_AddsTheServer()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+        form.HostForTest.Text = "files.example.com";
+
+        // Enter is the form's own key, whichever control holds the cursor. FTP is the type the form starts on.
+        await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.Enter));
+
+        Assert.IsFalse(form.IsVisible);
+        CollectionAssert.AreEqual(new[] { new Url(Container.FTP + "files.example.com/").FullUrl }, harness.Navigations);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Esc_ClosesOnlyTheForm()
+    {
+        var harness = new FolderSelectorTestHarness();
+        var (root, dialog, form) = await OpenForm(harness);
+
+        await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.Escape));
+
+        Assert.IsFalse(form.IsVisible);
+        Assert.IsTrue(dialog.IsVisible, "One Esc closes one layer: the selector is still up.");
+        Assert.AreEqual(0, harness.Navigations.Count);
+    }
+
+    #endregion
+
     private static FolderSelectorDialog CreateDialog(FolderSelectorTestHarness harness) =>
         new(
             harness.ContentModelService, harness.FolderHistoryService, harness.DriveInfoModel,

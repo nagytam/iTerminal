@@ -106,7 +106,7 @@ public class RemoteConnectionServiceTest
         var changed = service.Get(entry.Id)!;
         changed.Protocol = RemoteProtocol.Ssh;
         changed.Port = null; // SSH on its default port: the FTP port does not carry over.
-        service.Save(changed, "ignored");
+        service.Save(changed);
 
         // The FTP login is gone; what is left is the SSH profile the entry now needs for SFTP.
         var profile = profiles.Get(entry.Id);
@@ -148,6 +148,65 @@ public class RemoteConnectionServiceTest
         service.Save(entry);
 
         Assert.IsNull(profiles.Get(entry.Id), "The SSH drive cannot connect on a port, so the entry is not an SFTP connection.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnSshEntrySavedWithAPasswordLogsInWithIt()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(true);
+        var service = new RemoteConnectionService(settings, profiles, passwords.Object);
+        var entry = new RemoteConnection { Name = "web", Protocol = RemoteProtocol.Ssh, Host = "files.example.com", Username = "tamas" };
+
+        service.Save(entry, "s3cret");
+
+        // The SFTP drive looks the profile up by host and user and asks for the password under its id.
+        var profile = profiles.Get(entry.Id)!;
+        Assert.AreEqual(SshAuthMethod.Password, profile.SshAuthMethod);
+        Assert.IsTrue(profile.HasSavedCredential);
+        Assert.IsTrue(service.Get(entry.Id)!.HasSavedCredential);
+        passwords.Verify(p => p.Save(Moq.It.Is<iTerminal.Core.Model.Passwords.PasswordEntry>(e => e.Id == entry.Id && e.Password == "s3cret")), Moq.Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ReSavingAnSshEntryWithoutAPasswordKeepsTheSavedOne()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(true);
+        var service = new RemoteConnectionService(settings, profiles, passwords.Object);
+        var entry = new RemoteConnection { Name = "web", Protocol = RemoteProtocol.Ssh, Host = "files.example.com", Username = "tamas" };
+        service.Save(entry, "s3cret");
+
+        var edited = service.Get(entry.Id)!;
+        edited.Notes = "renamed";
+        service.Save(edited, null);
+
+        Assert.AreEqual(SshAuthMethod.Password, profiles.Get(entry.Id)!.SshAuthMethod);
+        Assert.IsTrue(service.Get(entry.Id)!.HasSavedCredential);
+        passwords.Verify(p => p.DeleteSecret(Moq.It.IsAny<string>()), Moq.Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ALockedPasswordManagerRefusesAnSshPasswordAndNothingIsRecorded()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(false);
+        passwords.Setup(p => p.Unlock()).Returns(false);
+        var service = new RemoteConnectionService(settings, profiles, passwords.Object);
+
+        Assert.ThrowsExactly<InvalidOperationException>(() => service.Save(new RemoteConnection { Name = "web", Protocol = RemoteProtocol.Ssh, Host = "files.example.com", Username = "tamas" }, "s3cret"));
+
+        Assert.AreEqual(0, service.GetAll().Count);
+        Assert.AreEqual(0, profiles.GetAll().Count);
     }
 
     [Timeout(60_000)]
