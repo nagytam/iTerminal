@@ -5380,7 +5380,7 @@
     <value>{0} posent un pion. {1}</value>
   </data>
   <data name="Games.Nmm.Rules" xml:space="preserve">
-    <value>Posez vos neuf pions, puis faites-les glisser le long des lignes. Trois alignés forment un moulin : prenez un pion adverse. Avec trois pions, vous pouvez voler.</value>
+    <value>Posez puis glissez. Trois alignés prennent un pion ; à trois, on vole.</value>
   </data>
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Un pion glisse vers un point voisin libre.</value>

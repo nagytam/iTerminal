@@ -5586,7 +5586,7 @@
     <value>{0} to place a man. {1}</value>
   </data>
   <data name="Games.Nmm.Rules" xml:space="preserve">
-    <value>Place your nine men, then slide them along the lines. Three in a row is a mill: take an opposing man. With three men left you may fly.</value>
+    <value>Place, then slide. Three in a row takes a man; with three left, fly.</value>
   </data>
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>A man slides to a neighbouring empty point.</value>

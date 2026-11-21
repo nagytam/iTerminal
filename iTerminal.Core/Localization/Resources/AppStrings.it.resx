@@ -5380,7 +5380,7 @@
     <value>{0} piazza una pedina. {1}</value>
   </data>
   <data name="Games.Nmm.Rules" xml:space="preserve">
-    <value>Posiziona le tue nove pedine, poi fale scorrere lungo le linee. Tre in fila sono un mulino: prendi una pedina avversaria. Con tre pedine puoi volare.</value>
+    <value>Posiziona, poi fai scorrere. Tre in fila ne tolgono una; con tre, voli.</value>
   </data>
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Una pedina scivola su un punto vicino libero.</value>

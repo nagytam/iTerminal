@@ -5380,7 +5380,7 @@
     <value>{0} korongot tesz le. {1}</value>
   </data>
   <data name="Games.Nmm.Rules" xml:space="preserve">
-    <value>Tedd le kilenc korongodat, majd told őket a vonalak mentén. Három egy sorban malom: vegyél el egy ellenfél-korongot. Három koronggal repülhetsz.</value>
+    <value>Rakj, majd csúsztass. Három sorban elvehetsz egyet; hárommal repülsz.</value>
   </data>
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Egy korong a szomszédos üres pontra csúszik.</value>
