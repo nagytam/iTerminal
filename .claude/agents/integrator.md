@@ -63,7 +63,14 @@ Put the median durations and the time they were computed at the top of the file,
 
 ## Waiting
 
-When a pass finishes with pull requests still waiting on checks, wait before the next pass with a bounded sleep: `sleep 240` (under the Bash timeout). Re-check the checks at each pass, not by polling inside one command. If a single check stays `IN_PROGRESS` for more than 60 minutes, report it as stuck and stop waiting on that pull request.
+When a pass finishes with pull requests still waiting on checks, wait before the next pass with a bounded sleep: `sleep 240` as its own Bash call, on its own. Re-check the checks at each pass, not by polling inside one command. If a single check stays `IN_PROGRESS` for more than 60 minutes, report it as stuck and stop waiting on that pull request.
+
+**Hard rule: no waiting loops.** Every Bash call must return on its own within a few seconds. Never wait for a condition inside a command. This is forbidden, in any form:
+- `until`, `while`, or `for` loops that poll `gh`, `git` or a status value;
+- `gh run watch`, `gh pr checks --watch`, or `gh run view` inside a `sleep` or `timeout` loop;
+- any `timeout` or `sleep` wrapped around a status query, and any `sleep` longer than 240 seconds.
+
+A pull request that is not yet green is recorded as `Waiting for checks` and the pass moves on. The pass itself never waits for checks to finish, not even the last pull request in the list. The only sleep is the standalone `sleep 240` (or `sleep 600`) between passes.
 
 If there is nothing open, or everything open is blocked or draft, sleep for 600 seconds between passes and keep looping.
 
