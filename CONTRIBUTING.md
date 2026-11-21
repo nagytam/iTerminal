@@ -12,7 +12,7 @@ By contributing you agree that your work is released under the project's [MIT Li
 | --- | --- | --- |
 | Report a bug | GitHub Issues | Include OS, terminal emulator, iTerminal version and steps. `ITERMINAL_KEY_TRACE=1` logs every key received, which helps with keyboard problems. |
 | Fix a bug | Any project | Add a test that fails without your fix. |
-| Translate | `iConsole/Localization/Resources/Strings.*.resx` | A new string needs a key in all six files (neutral English, de, fr, es, it, hu). |
+| Translate | `iConsole/Localization/Resources/Strings.*.resx` | A new string needs a key in all six files (neutral English, de, fr, es, it, hu), inserted at its sorted position (by key, ordinal) rather than at the end of the file. |
 | Add a file reader to the F3 viewer | `iConsole/Services/`, `iTerminal.Core` | Readers take bytes rather than a path, so they are small and easy to unit-test. |
 | Add a drive (URL scheme) | `iTerminal.Core` | See "A new URL scheme" in [CLAUDE.md](CLAUDE.md) for the full checklist. |
 | Improve terminal support | `iConsole.Inputs.Windows`, `iConsole.Inputs.Posix` | Try WezTerm, Kitty, tmux, Windows Terminal and SSH sessions. |
