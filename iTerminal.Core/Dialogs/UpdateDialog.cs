@@ -160,6 +160,12 @@ public partial class UpdateDialog : FormDialog
         }
     }
 
+    /// <summary>What to do instead of an in-app install: WinGet updates its own installs; any other copy is downloaded by hand.</summary>
+    private string ManualUpdateText() =>
+        _service.InstallKind == UpdateInstallKind.PackageManager
+            ? iConsole.Localization.UiText.Get("Update.WinGetManaged", "Installed with WinGet, which updates it. Run: winget upgrade TamasNagy.iTerminal")
+            : string.Format(iConsole.Localization.UiText.Get("Update.DownloadFrom", "Download it from {0}"), _service.ReleasesAddress);
+
     internal List<(string Text, Color Color)> TextRows(int innerWidth, ColorScheme scheme)
     {
         string latest = _service.Available?.Version ?? "?";
@@ -168,7 +174,7 @@ public partial class UpdateDialog : FormDialog
             (string.Format(iConsole.Localization.UiText.Get("Update.Available", "iTerminal {0} is available. You have {1}."), latest, _service.CurrentVersion), scheme.Foreground),
             (_service.CanInstall
                 ? _service.Available?.Installer is null ? NoDownloadText() : ClosesDuringText()
-                : string.Format(iConsole.Localization.UiText.Get("Update.DownloadFrom", "Download it from {0}"), _service.ReleasesAddress), scheme.DisabledForeground),
+                : ManualUpdateText(), scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
         ];
 

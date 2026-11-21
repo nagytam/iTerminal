@@ -6,8 +6,9 @@ using iTerminal.Core.Services.Updates;
 namespace iTerminal.Core.Application;
 
 /// <summary>
-/// The switches iTerminal reads at start-up, parsed with System.CommandLine. Unknown tokens are not an error: the
-/// console framework and the elevation relaunch pass their own arguments through the same list.
+/// The switches iTerminal reads at start-up, parsed with System.CommandLine. An unknown switch is not fatal, so the
+/// interface still starts, but it is reported (see <see cref="UnknownSwitches"/>) so that a mistyped switch such as
+/// <c>--udpate</c> is not silently ignored. Words that are not switches are ignored.
 /// </summary>
 public sealed class LaunchOptions
 {
@@ -51,6 +52,10 @@ public sealed class LaunchOptions
 
     /// <summary>Writes the help (the introduction and the switches) to the console and returns the exit code.</summary>
     public int ShowHelp() => _result.Invoke();
+
+    /// <summary>The tokens that start with <c>-</c> and match no switch, in the order given.</summary>
+    public IReadOnlyList<string> UnknownSwitches =>
+        _result.UnmatchedTokens.Where(token => token.StartsWith('-')).ToList();
 
     /// <summary>The process id given to <c>--wait-for-parent</c>, when it was given with a valid number.</summary>
     public int? ParentProcessId => int.TryParse(_result.GetValue(_waitForParent), out int id) ? id : null;
