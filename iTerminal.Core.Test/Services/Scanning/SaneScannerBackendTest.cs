@@ -26,6 +26,25 @@ public class SaneScannerBackendTest
     }
 
     [TestMethod]
+    public void ParseListing_ReadsNetworkDevicesQuotedWithABacktick()
+    {
+        // What scanimage -L printed for an HP over the network: eSCL and AirScan both list it, and the HTML
+        // banner the backend writes to stdout is skipped.
+        const string networkListing =
+            "<!doctype html>\n" +
+            "<title>HP Embedded Web Server</title>\n" +
+            "device `escl:https://192.168.188.125:443' is a HP OfficeJet Pro 9120e Series [DDA47C] platen,adf scanner\n" +
+            "device `airscan:e0:HP OfficeJet Pro 9120e Series [DDA47C]' is a eSCL HP OfficeJet Pro 9120e Series [DDA47C] ip=192.168.188.125\n";
+
+        IReadOnlyList<ScannerDevice> devices = SaneScannerBackend.ParseListing(networkListing);
+
+        Assert.HasCount(2, devices);
+        Assert.AreEqual("escl:https://192.168.188.125:443", devices[0].Id);
+        Assert.AreEqual("HP OfficeJet Pro 9120e Series [DDA47C] platen,adf scanner", devices[0].Name);
+        Assert.AreEqual("airscan:e0:HP OfficeJet Pro 9120e Series [DDA47C]", devices[1].Id);
+    }
+
+    [TestMethod]
     public void ParseListing_OfNoScannersIsEmpty()
     {
         Assert.IsEmpty(SaneScannerBackend.ParseListing("No scanners were identified. If you were expecting something different,\n"));

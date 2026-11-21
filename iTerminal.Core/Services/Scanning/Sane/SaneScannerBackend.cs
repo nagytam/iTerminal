@@ -177,6 +177,7 @@ public sealed partial class SaneScannerBackend(IExternalProcessRunner processRun
         return devices;
     }
 
-    [GeneratedRegex("^device '(?<id>[^']+)' is an? (?<name>.+)$")]
+    // The network backends (escl, airscan) quote the id with a backtick and an apostrophe: device `escl:https://…' is a …
+    [GeneratedRegex("^device [`'](?<id>.+?)' is an? (?<name>.+)$")]
     private static partial Regex DeviceLine();
 }
