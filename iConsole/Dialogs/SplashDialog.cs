@@ -30,8 +30,9 @@ public class SplashDialog : Dialog
     private string? _logoSixel;
     private int _logoColumns;
 
-    public SplashDialog(IThemeService themeService, SixelOverlay? sixelOverlay = null)
-        : base("iTerminal BETA", themeService)
+    /// <param name="version">The app version, shown in the title bar. Left out, the title is the bare product name.</param>
+    public SplashDialog(IThemeService themeService, SixelOverlay? sixelOverlay = null, string? version = null)
+        : base(string.IsNullOrWhiteSpace(version) ? "iTerminal BETA" : $"iTerminal BETA {version}", themeService)
     {
         _sixelOverlay = sixelOverlay;
         _welcomeLabel = new Label(string.Empty, themeService);
