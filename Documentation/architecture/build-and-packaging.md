@@ -18,6 +18,8 @@ A WiX Toolset 5 project (`WixToolset.Sdk` from NuGet — nothing to install on t
 - **To check an MSI without installing it**, extract it: `msiexec /a <msi> /qn TARGETDIR=<short path>` — a short path, since Windows Installer refuses paths over 260 characters and the Playwright files are deep. The ICE60 warnings in the build are about four font-like files without a language and are harmless.
 
 ### The WinGet installer releases (`nagytam/iTerminal-WinGet`)
+The whole process, step by step, is in [Distributions/winget.md](../Distributions/winget.md).
+
 Releases of `nagytam/iTerminal` are not immutable, on purpose: every merge into `main` publishes one, and they can be deleted. GitHub only makes releases immutable for a whole repository, so the MSIs that are submitted to WinGet live in a second public repository, `nagytam/iTerminal-WinGet`, which has immutable releases switched on (Settings, General). A WinGet manifest's `InstallerSha256` must stay true for as long as the version exists, and a published immutable release can never lose or change its assets or its tag; a mistake is fixed by a new version.
 
 - A release there is the same MSI, byte for byte, as the one in `nagytam/iTerminal` (same SHA-256, same ProductCode), tagged `v<version>`; the manifest's `InstallerUrl` points at `https://github.com/nagytam/iTerminal-WinGet/releases/download/v<version>/iTerminal-<version>-x64.msi`. Everything else in the manifest (`PackageUrl`, `LicenseUrl`, `ReleaseNotesUrl`) keeps pointing at `nagytam/iTerminal`.
