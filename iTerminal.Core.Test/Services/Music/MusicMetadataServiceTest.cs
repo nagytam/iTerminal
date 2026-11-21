@@ -1,6 +1,6 @@
 using iTerminal.Core.Data.Music;
 using iTerminal.Core.Services.Music;
-using iTerminal.Core.Test.Audio;
+using iConsole.Test.Core.Audio;
 
 namespace iTerminal.Core.Test.Services.Music;
 

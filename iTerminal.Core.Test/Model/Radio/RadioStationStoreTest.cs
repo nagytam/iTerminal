@@ -1,4 +1,4 @@
-using iTerminal.Core.Audio;
+using iConsole.Media.Audio;
 using iTerminal.Core.Model.Radio;
 using iTerminal.Core.Services;
 using Moq;

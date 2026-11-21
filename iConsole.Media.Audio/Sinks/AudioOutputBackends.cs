@@ -1,6 +1,4 @@
-using iTerminal.Core.Data.Music;
-
-namespace iTerminal.Core.Audio.Sinks;
+namespace iConsole.Media.Audio.Sinks;
 
 /// <summary>Windows waveOut backend. See <see cref="WinMmAudioSink"/> for why waveOut over WASAPI.</summary>
 public sealed class WinMmAudioOutputBackend : IAudioOutputBackend

@@ -4,6 +4,8 @@
   </Folder>
   <Project Path="iConsole.Formats.Test\iConsole.Formats.Test.csproj" />
   <Project Path="iConsole.Formats\iConsole.Formats.csproj" />
+  <Project Path="iConsole.Media.Audio\iConsole.Media.Audio.csproj" />
+  <Project Path="iConsole.Media.Audio.Test\iConsole.Media.Audio.Test.csproj" />
   <Project Path="iConsole.Inputs.Posix.Test/iConsole.Inputs.Posix.Test.csproj">
     <Build Project="false" />
   </Project>

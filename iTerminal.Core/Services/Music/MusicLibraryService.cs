@@ -1,6 +1,6 @@
 using iConsole.Localization;
-using iTerminal.Core.Audio;
-using iTerminal.Core.Audio.Decoders;
+using iConsole.Media.Audio;
+using iConsole.Media.Audio.Decoders;
 using iTerminal.Core.Data;
 using iTerminal.Core.Data.Music;
 using Microsoft.EntityFrameworkCore;

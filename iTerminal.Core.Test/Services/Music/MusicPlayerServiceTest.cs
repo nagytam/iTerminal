@@ -1,6 +1,6 @@
 using iTerminal.Core.Data.Music;
 using iTerminal.Core.Services.Music;
-using iTerminal.Core.Test.Audio;
+using iConsole.Test.Core.Audio;
 using System.Buffers.Binary;
 using System.Diagnostics;
 

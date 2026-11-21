@@ -1,7 +1,8 @@
-using iTerminal.Core.Audio;
-using iTerminal.Core.Audio.Decoders;
+using iConsole.Test.Core.Audio;
+using iConsole.Media.Audio;
+using iConsole.Media.Audio.Decoders;
 
-namespace iTerminal.Core.Test.Audio;
+namespace iConsole.Media.Audio.Test;
 
 [TestClass]
 [DoNotParallelize]

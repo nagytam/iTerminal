@@ -1,8 +1,9 @@
-using iTerminal.Core.Audio;
-using iTerminal.Core.Audio.Decoders;
+using iConsole.Test.Core.Audio;
+using iConsole.Media.Audio;
+using iConsole.Media.Audio.Decoders;
 using System.Buffers.Binary;
 
-namespace iTerminal.Core.Test.Audio;
+namespace iConsole.Media.Audio.Test.Decoders;
 
 [TestClass]
 public class WaveAudioDecoderTest

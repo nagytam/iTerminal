@@ -1,7 +1,7 @@
 using iConsole.Localization;
-using iTerminal.Core.Audio.Decoders;
+using iConsole.Media.Audio.Decoders;
 
-namespace iTerminal.Core.Audio;
+namespace iConsole.Media.Audio;
 
 /// <summary>
 /// Picks a decoder for a file. Two tiers: formats decoded in managed code with no external

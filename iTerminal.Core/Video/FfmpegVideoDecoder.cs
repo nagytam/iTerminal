@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
-using iTerminal.Core.Audio.Decoders;
+using iConsole.Media.Audio.Decoders;
 
 namespace iTerminal.Core.Video;
 

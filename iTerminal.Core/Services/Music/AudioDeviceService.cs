@@ -1,4 +1,4 @@
-using iTerminal.Core.Audio;
+using iConsole.Media.Audio;
 using iTerminal.Core.Data.Music;
 
 namespace iTerminal.Core.Services.Music;

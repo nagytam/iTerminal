@@ -1,7 +1,7 @@
 using iConsole.Localization;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using iTerminal.Core.Audio.Decoders;
+using iConsole.Media.Audio.Decoders;
 using iTerminal.Core.Services.PackageManager;
 using iTerminal.Core.Video;
 

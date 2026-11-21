@@ -1,6 +1,4 @@
-using iTerminal.Core.Data.Music;
-
-namespace iTerminal.Core.Audio;
+namespace iConsole.Media.Audio;
 
 /// <summary>
 /// A live connection to one output device, fed signed 16-bit PCM. <see cref="Write"/> blocks while

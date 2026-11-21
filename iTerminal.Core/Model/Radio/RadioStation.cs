@@ -1,4 +1,4 @@
-using iTerminal.Core.Audio;
+using iConsole.Media.Audio;
 
 namespace iTerminal.Core.Model.Radio;
 

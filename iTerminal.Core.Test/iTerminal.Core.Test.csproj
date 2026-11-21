@@ -39,9 +39,6 @@
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Audio\TestFiles\**\*" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
 
   <!-- The archive examples in Test/FileTypes, copied beside the tests so they read the same files a user does. -->
   <ItemGroup>

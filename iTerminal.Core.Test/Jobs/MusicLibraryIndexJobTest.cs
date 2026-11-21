@@ -5,7 +5,7 @@ using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Music;
-using iTerminal.Core.Test.Audio;
+using iConsole.Test.Core.Audio;
 
 namespace iTerminal.Core.Test.Jobs;
 

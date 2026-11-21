@@ -1,8 +1,7 @@
-using iTerminal.Core.Data.Music;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace iTerminal.Core.Audio.Sinks;
+namespace iConsole.Media.Audio.Sinks;
 
 /// <summary>
 /// Windows output through the waveOut API in <c>winmm.dll</c>. waveOut is chosen over WASAPI

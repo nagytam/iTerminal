@@ -1,6 +1,6 @@
 using NLayer;
 
-namespace iTerminal.Core.Audio.Decoders;
+namespace iConsole.Media.Audio.Decoders;
 
 /// <summary>
 /// MP3 decoding through NLayer, a fully managed MPEG-1/2 Layer I–III decoder. Managed decoding is
