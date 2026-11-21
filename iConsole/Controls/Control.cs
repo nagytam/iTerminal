@@ -1000,11 +1000,14 @@ public class Control : INotifyPropertyChanged, IControl
         }
 
         GetColor(colorScheme, visualState, out var foreground, out var background);
-        var frame = highlightFocus && visualState == VisualState.Focused ? colorScheme.FocusedBorder : foreground;
+        var highlighted = highlightFocus && visualState == VisualState.Focused;
+        var frame = highlighted ? colorScheme.FocusedBorder : foreground;
+        // A focused window's own text colour sits on the background, not on the highlighted frame, so the text is the plain foreground.
+        var text = highlighted ? colorScheme.Foreground : foreground;
         var topLine = Border.TopLeft +
                       Border.Horizontal.Repeat((int)size.Width - 2) +
                       Border.TopRight;
-        var lineString = BorderLine(topLine, header, frame, foreground, background);
+        var lineString = BorderLine(topLine, header, frame, text, background);
         buffer.Write(zOrder, position, size, lineString);
         var vertical = new ConxelString(Border.Vertical, frame, background);
         for (uint y = 1; y < size.Height - 1; y++)
@@ -1015,7 +1018,7 @@ public class Control : INotifyPropertyChanged, IControl
         var bottomLine = Border.BottomLeft +
                          Border.Horizontal.Repeat((int)size.Width - 2) +
                          Border.BottomRight;
-        lineString = BorderLine(bottomLine, footer, frame, foreground, colorScheme.Background);
+        lineString = BorderLine(bottomLine, footer, frame, text, colorScheme.Background);
         buffer.Write(zOrder,
             new Position(position.X, position.Y + size.Height - 1),
             new Size(lineString.Count, 1),
