@@ -1,6 +1,7 @@
 using System.Text;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Zip;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Services.Archives;
 using iTerminal.Core.Services.Processes;
 using iTerminal.Core.Test.Helper;
@@ -146,7 +147,7 @@ public class ArchiveExtractionServiceTest
     [DataRow("docs/b.md", true)]
     public void OnlyPathsInsideTheTargetAreSafe(string entry, bool safe)
     {
-        var path = ArchiveExtractionService.SafePath(Out(), entry);
+        var path = ArchivePaths.Inside(Out(), entry);
 
         Assert.AreEqual(safe, path is not null, path);
         if (path is not null)

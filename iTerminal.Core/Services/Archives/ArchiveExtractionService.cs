@@ -3,6 +3,7 @@ using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Services.Processes;
 using System.Text;
 using ZstdSharp;
@@ -139,25 +140,6 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         };
     }
 
-    /// <summary>
-    /// Where <paramref name="entryName"/> lands under <paramref name="targetFolder"/>, or null when
-    /// it would land outside it.
-    /// </summary>
-    internal static string? SafePath(string targetFolder, string entryName)
-    {
-        var root = Path.GetFullPath(targetFolder).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
-        var relative = entryName.Replace('\\', '/').TrimStart('/');
-        if (relative.Length == 0 || Path.IsPathRooted(relative) || relative.Contains(':'))
-        {
-            return null;
-        }
-
-        var full = Path.GetFullPath(Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar)));
-        return full.StartsWith(root, OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal)
-            ? full
-            : null;
-    }
-
     #region ZIP
     private static ExtractionResult ExtractZip(
         string archivePath, string targetFolder, ExtractionOptions options, IProgress<ArchiveProgress>? progress, CancellationToken cancellationToken)
@@ -178,7 +160,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         foreach (var entry in entries)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var path = SafePath(targetFolder, entry.Name);
+            var path = ArchivePaths.Inside(targetFolder,entry.Name);
             if (path is null)
             {
                 unsafePaths++;
@@ -249,7 +231,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         {
             cancellationToken.ThrowIfCancellationRequested();
             Report(entry.Name);
-            var path = SafePath(targetFolder, entry.Name);
+            var path = ArchivePaths.Inside(targetFolder,entry.Name);
             if (path is null)
             {
                 unsafePaths++;
@@ -303,7 +285,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         string archivePath, string ending, string targetFolder, ExtractionOptions options, IProgress<ArchiveProgress>? progress, CancellationToken cancellationToken)
     {
         var name = Path.GetFileName(archivePath)[..^ending.Length];
-        var path = SafePath(targetFolder, string.IsNullOrEmpty(name) ? "extracted" : name)!;
+        var path = ArchivePaths.Inside(targetFolder,string.IsNullOrEmpty(name) ? "extracted" : name)!;
         if (File.Exists(path) && !options.Overwrite)
         {
             return new ExtractionResult(0, 1);
@@ -400,7 +382,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         string archivePath, string targetFolder, ExtractionOptions options, IProgress<ArchiveProgress>? progress, CancellationToken cancellationToken)
     {
         var listed = await _unrar.ListAsync(archivePath, cancellationToken);
-        if (listed.FirstOrDefault(entry => SafePath(targetFolder, entry.RawPath) is null) is { } unsafeEntry)
+        if (listed.FirstOrDefault(entry => ArchivePaths.Inside(targetFolder,entry.RawPath) is null) is { } unsafeEntry)
         {
             throw new IOException($"{Path.GetFileName(archivePath)} holds {unsafeEntry.RawPath}, which would be written outside the folder: refused.");
         }
