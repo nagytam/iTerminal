@@ -19,7 +19,7 @@ public class FileToTextConverterServiceFixtureTest
     private static readonly string TestFilesDir = Path.Combine(
         AppDomain.CurrentDomain.BaseDirectory, "Services", "TestFiles");
 
-    private static FileToTextConverterService CreateService() => new(new iConsole.Formats.Xps.XpsDocumentReader());
+    private static FileToTextConverterService CreateService() => new(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
     private static LocalFileSystemAdapter CreateFileSystem() => new();
 
     // ── helpers ─────────────────────────────────────────────────────────────

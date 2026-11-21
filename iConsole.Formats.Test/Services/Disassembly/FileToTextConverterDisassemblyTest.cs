@@ -16,12 +16,12 @@ public class FileToTextConverterDisassemblyTest
     [TestMethod]
     public void HasDisassembly_IsTrueForTheBinaryExtensionsOnly()
     {
-        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).HasDisassembly(new Url("file://C:/x/a.dll")));
-        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).HasDisassembly(new Url("file://C:/x/a.EXE")));
-        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).HasDisassembly(new Url("file://C:/x/liba.so")));
-        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).HasDisassembly(new Url("file://C:/x/a.txt")));
-        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).HasDisassembly(new Url("file://C:/x/liba.so.1")));
-        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).HasDisassembly(null));
+        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasDisassembly(new Url("file://C:/x/a.dll")));
+        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasDisassembly(new Url("file://C:/x/a.EXE")));
+        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasDisassembly(new Url("file://C:/x/liba.so")));
+        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasDisassembly(new Url("file://C:/x/a.txt")));
+        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasDisassembly(new Url("file://C:/x/liba.so.1")));
+        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasDisassembly(null));
     }
 
     [Timeout(60_000)]
@@ -31,7 +31,7 @@ public class FileToTextConverterDisassemblyTest
         // The preview and the editor read through ReadFileAsync, so the disassembly must not be part of it.
         TextModel model = new();
 
-        await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadFileAsync(SampleUrl("sample.dll"), new LocalFileSystemAdapter(), model);
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadFileAsync(SampleUrl("sample.dll"), new LocalFileSystemAdapter(), model);
 
         Assert.IsTrue(model.Lines.Any(l => l.Contains("Assembly Identity")));
         Assert.IsFalse(model.Lines.Any(l => l.Contains("Disassembly")));
@@ -41,7 +41,7 @@ public class FileToTextConverterDisassemblyTest
     [TestMethod]
     public async Task BuildDisassemblyAsync_ForAManagedDll_ListsIl()
     {
-        IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader())
+        IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
             .BuildDisassemblyAsync(SampleUrl("sample.dll"), new LocalFileSystemAdapter(), CancellationToken.None);
 
         Assert.IsTrue(lines.Any(l => l.Contains("Disassembly (IL)")), string.Join('\n', lines.Take(5)));
@@ -52,7 +52,7 @@ public class FileToTextConverterDisassemblyTest
     [TestMethod]
     public async Task BuildDisassemblyAsync_ForTheNativeApphostStub_ListsX64Code()
     {
-        IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader())
+        IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
             .BuildDisassemblyAsync(SampleUrl("sample.exe"), new LocalFileSystemAdapter(), CancellationToken.None);
 
         Assert.IsTrue(lines.Any(l => l.Contains("Disassembly (native)")), string.Join('\n', lines.Take(5)));
@@ -63,7 +63,7 @@ public class FileToTextConverterDisassemblyTest
     [TestMethod]
     public async Task BuildDisassemblyAsync_ForOtherExtensions_ReturnsNothing()
     {
-        IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader())
+        IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
             .BuildDisassemblyAsync(new Url("file://C:/x/a.txt"), new LocalFileSystemAdapter(), CancellationToken.None);
 
         Assert.AreEqual(0, lines.Count);
@@ -79,7 +79,7 @@ public class FileToTextConverterDisassemblyTest
             await File.WriteAllBytesAsync(path, "definitely not an ELF file"u8.ToArray());
             Url url = new(path);
             TextModel model = new();
-            FileToTextConverterService service = new(new iConsole.Formats.Xps.XpsDocumentReader());
+            FileToTextConverterService service = new(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
 
             await service.ReadFileAsync(url, new LocalFileSystemAdapter(), model);
             IReadOnlyList<string> lines = await service.BuildDisassemblyAsync(url, new LocalFileSystemAdapter(), CancellationToken.None);

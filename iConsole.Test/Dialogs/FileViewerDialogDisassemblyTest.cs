@@ -17,7 +17,7 @@ public class FileViewerDialogDisassemblyTest
     private sealed class GatedConverter : IFileToTextConverterService
     {
         /// <summary>The routing answers come from the real converter, so the viewer shows what it shows in the app.</summary>
-        private static readonly FileToTextConverterService Routing = new(new iConsole.Formats.Xps.XpsDocumentReader());
+        private static readonly FileToTextConverterService Routing = new(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
 
         public bool IsEncodingRelevant(Url? url) => Routing.IsEncodingRelevant(url);
 

@@ -80,7 +80,7 @@ public class PdbFileSummaryTest
         fileSystem.Setup(f => f.ReadFileAsync(url)).ReturnsAsync(file.Object);
         var textModel = new TextModel();
 
-        await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadPdbForViewerAsync(url, fileSystem.Object, textModel);
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadPdbForViewerAsync(url, fileSystem.Object, textModel);
 
         Assert.AreEqual("Windows debug symbols (PDB, MSF 7.00)", textModel.Lines[0]);
         CollectionAssert.DoesNotContain(textModel.Lines.ToList(), "Source text");
@@ -98,7 +98,7 @@ public class PdbFileSummaryTest
         fileSystem.Setup(f => f.ReadFileAsync(url)).ReturnsAsync(file.Object);
         var textModel = new TextModel();
 
-        await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadPdbForViewerAsync(url, fileSystem.Object, textModel);
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadPdbForViewerAsync(url, fileSystem.Object, textModel);
 
         Assert.AreEqual("Debug symbols (portable PDB)", textModel.Lines[0]);
         Assert.IsTrue(textModel.Lines.Any(line => line.StartsWith("Entry point: method token 0x06", StringComparison.Ordinal)));
@@ -115,7 +115,7 @@ public class PdbFileSummaryTest
         fileSystem.Setup(f => f.ReadFileAsync(url)).ReturnsAsync(file.Object);
         var textModel = new TextModel();
 
-        await new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()).ReadPdbForViewerAsync(url, fileSystem.Object, textModel);
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadPdbForViewerAsync(url, fileSystem.Object, textModel);
 
         Assert.AreEqual("plain text in a file named pdb", textModel.Lines[0]);
     }

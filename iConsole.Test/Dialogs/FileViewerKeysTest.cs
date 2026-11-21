@@ -30,7 +30,7 @@ public class FileViewerKeysTest
         model.Setup(m => m.ReadFileAsync(url)).ReturnsAsync(file.Object);
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(model.Object);
-        FileViewerDialog dialog = new(models.Object, new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()), Mock.Of<IBeepService>(),
+        FileViewerDialog dialog = new(models.Object, new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())), Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(), Theme()) { Url = url };
         Control root = new Window(Theme()) { ViewSize = new Size(100, 30) };
         await root.ShowDialogAsync(dialog);

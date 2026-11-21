@@ -48,6 +48,7 @@ public static class FileFormatsServiceCollectionExtension
         services.AddSingleton<IXmlDocumentParser, XmlDocumentParser>();
         services.AddSingleton<IXmlValidator, XmlValidator>();
         services.AddSingleton<IXpsDocumentReader, XpsDocumentReader>();
+        services.AddSingleton<XpsTextReader>();
         services.AddSingleton<IMarkdownParser, MarkdownParser>();
         services.AddSingleton<IExecutableDisassembler, ExecutableDisassembler>();
         // The viewers and the analysis view read a file through these readers; they hold no state, so each use gets a new one.

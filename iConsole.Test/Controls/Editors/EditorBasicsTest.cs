@@ -264,7 +264,7 @@ public class EditorBasicsTest
             Mock<IContentModelService> models = new();
             models.Setup(m => m.GetFocusedModel()).Returns(model.Object);
             models.Setup(m => m.GetLastContentModel()).Returns(model.Object);
-            TextFileEditorDialog dialog = new(models.Object, new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()), Mock.Of<IBeepService>(),
+            TextFileEditorDialog dialog = new(models.Object, new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())), Mock.Of<IBeepService>(),
                 Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = url };
 
             await dialog.OnInitializeAsync();
@@ -297,7 +297,7 @@ public class EditorBasicsTest
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(model.Object);
         models.Setup(m => m.GetLastContentModel()).Returns(model.Object);
-        TextFileEditorDialog dialog = new(models.Object, new FileToTextConverterService(new iConsole.Formats.Xps.XpsDocumentReader()), Mock.Of<IBeepService>(),
+        TextFileEditorDialog dialog = new(models.Object, new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())), Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(), Theme()) { Url = url };
         Control root = new Window(Theme()) { ViewSize = new Size(100, 30) };
         await root.ShowDialogAsync(dialog);

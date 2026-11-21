@@ -31,10 +31,10 @@ public class FileToTextConverterService : IFileToTextConverterService
 {
     private readonly XpsTextReader _xpsTextReader;
 
-    /// <summary>Takes the XPS package reader, which the XPS text path reads through.</summary>
-    public FileToTextConverterService(IXpsDocumentReader xpsDocumentReader)
+    /// <summary>Takes the XPS text reader, which the XPS text path reads through.</summary>
+    public FileToTextConverterService(XpsTextReader xpsTextReader)
     {
-        _xpsTextReader = new XpsTextReader(xpsDocumentReader);
+        _xpsTextReader = xpsTextReader;
     }
 
     // Block characters ordered from light to dark, used for luminance mapping.
