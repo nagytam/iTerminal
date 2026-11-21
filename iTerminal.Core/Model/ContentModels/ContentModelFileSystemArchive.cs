@@ -77,6 +77,7 @@ public class ContentModelFileSystemArchive(
         Entries.ReplaceAll([ParentRow(archivePath, inside)]);
 
         _listingCancellation?.Cancel();
+        _listingCancellation?.Dispose();
         var cancellation = _listingCancellation = new CancellationTokenSource();
         ListingTask = Task.Run(() =>
         {

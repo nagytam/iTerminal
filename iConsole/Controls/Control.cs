@@ -771,15 +771,16 @@ public class Control : INotifyPropertyChanged, IControl
     {
         StopAutoRefresh();
         var cancellation = _autoRefresh = new CancellationTokenSource();
+        CancellationToken token = cancellation.Token;
         AutoRefreshTask = Task.Run(async () =>
         {
             try
             {
-                while (!cancellation.IsCancellationRequested)
+                while (!token.IsCancellationRequested)
                 {
-                    await Task.Delay(100, cancellation.Token);
+                    await Task.Delay(100, token);
                     // A window in the background repaints nothing: the frame is drawn when focus comes back.
-                    await TerminalFocus.Current.WaitForFocusAsync(cancellation.Token);
+                    await TerminalFocus.Current.WaitForFocusAsync(token);
                     Refresh();
                 }
             }
@@ -793,8 +794,10 @@ public class Control : INotifyPropertyChanged, IControl
     /// <summary>Ends the repaint started by <see cref="StartAutoRefresh"/>. Safe to call when none is running.</summary>
     public void StopAutoRefresh()
     {
-        _autoRefresh?.Cancel();
+        CancellationTokenSource? previous = _autoRefresh;
         _autoRefresh = null;
+        previous?.Cancel();
+        previous?.Dispose();
     }
 
     public virtual void Refresh()

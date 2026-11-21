@@ -123,15 +123,17 @@ public sealed class ContentModelPreview : ContentModelBase, IDisposable
             _shownKey = key;
             generation = ++_generation;
             _buildCancellation?.Cancel();
+            _buildCancellation?.Dispose();
             cancellation = _buildCancellation = new CancellationTokenSource();
         }
 
+        CancellationToken token = cancellation.Token;
         BuildTask = Task.Run(async () =>
         {
             try
             {
-                await Task.Delay(Debounce, cancellation.Token);
-                var preview = await _previewService.BuildAsync(entry, source, width, cancellation.Token);
+                await Task.Delay(Debounce, token);
+                var preview = await _previewService.BuildAsync(entry, source, width, token);
                 if (generation != Volatile.Read(ref _generation) || _isDisposed)
                 {
                     return;

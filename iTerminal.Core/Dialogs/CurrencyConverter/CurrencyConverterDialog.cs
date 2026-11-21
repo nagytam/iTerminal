@@ -216,6 +216,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
     {
         // A download still running is replaced: cancelled, and its outcome dropped by the new generation.
         _cancellation?.Cancel();
+        _cancellation?.Dispose();
         _cancellation = new CancellationTokenSource();
         CancellationToken token = _cancellation.Token;
         int generation = NextGeneration();

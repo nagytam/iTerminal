@@ -218,6 +218,7 @@ public class NetworkToolsDialog : Dialog
         _status.Text = UiText.Get("NetworkTools.Status.Running", "Running…");
         ShowDescription();
 
+        _cancellation?.Dispose();
         CancellationTokenSource cancellation = _cancellation = new CancellationTokenSource();
         CancellationToken token = cancellation.Token;
         NetworkToolKind kind = choice.Kind;

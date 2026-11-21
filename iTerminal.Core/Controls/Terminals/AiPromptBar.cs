@@ -398,6 +398,7 @@ public class AiPromptBar : Window
     private async Task SendAsync()
     {
         _cts?.Cancel();
+        _cts?.Dispose();
         _cts = new CancellationTokenSource();
         await _chatService.SendMessageAsync(_model, _cts.Token);
     }

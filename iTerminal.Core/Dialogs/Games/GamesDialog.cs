@@ -311,6 +311,7 @@ public abstract class GamesDialog : SplitPaneDialog
         }
 
         _cancellation?.Cancel();
+        _cancellation?.Dispose();
         _cancellation = new CancellationTokenSource();
         CancellationToken token = _cancellation.Token;
         int generation = NextGeneration();

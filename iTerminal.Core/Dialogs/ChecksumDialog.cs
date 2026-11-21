@@ -162,7 +162,9 @@ public class ChecksumDialog : Dialog
     private void StartComputing()
     {
         _cancellation?.Cancel();
+        _cancellation?.Dispose();
         var cancellation = _cancellation = new CancellationTokenSource();
+        CancellationToken token = cancellation.Token;
         var url = Url;
         if (url is null)
         {
@@ -179,12 +181,12 @@ public class ChecksumDialog : Dialog
                 if (url.ContainerType == ContainerType.FileSystem)
                 {
                     Written = ChecksumService.FindWrittenChecksum(url.FullName);
-                    signatureTask = VerifySignaturesAsync(url.FullName, Written?.Source, cancellation.Token);
+                    signatureTask = VerifySignaturesAsync(url.FullName, Written?.Source, token);
                 }
 
                 var progress = new InlineProgress(bytes => Interlocked.Exchange(ref _bytesRead, bytes));
-                var result = await _checksumService.ComputeAsync(url, _fileSystem!, progress, cancellation.Token);
-                if (!cancellation.IsCancellationRequested)
+                var result = await _checksumService.ComputeAsync(url, _fileSystem!, progress, token);
+                if (!token.IsCancellationRequested)
                 {
                     Result = result;
                 }
@@ -196,7 +198,7 @@ public class ChecksumDialog : Dialog
             }
             catch (Exception exception)
             {
-                if (!cancellation.IsCancellationRequested)
+                if (!token.IsCancellationRequested)
                 {
                     Error = exception.Message;
                 }
@@ -461,6 +463,7 @@ public class ChecksumDialog : Dialog
         // dropped by the generation as well as by the token.
         Interlocked.Increment(ref _lookupGeneration);
         _lookupCancellation?.Cancel();
+        _lookupCancellation?.Dispose();
         _lookupCancellation = null;
     }
 
@@ -482,6 +485,7 @@ public class ChecksumDialog : Dialog
         {
             CancelLookup();
             var cancellation = _lookupCancellation = new CancellationTokenSource();
+            CancellationToken lookupToken = cancellation.Token;
             var generation = Volatile.Read(ref _lookupGeneration);
             var hash = result.Hashes[ChecksumAlgorithm.Sha256];
             SetReputationNote(UiText.Get("Reputation.Asking", "Asking VirusTotal about the SHA-256 (only the hash is sent)…"), false);
@@ -490,7 +494,7 @@ public class ChecksumDialog : Dialog
                 ReputationResult answer;
                 try
                 {
-                    answer = await _reputationService.LookUpAsync(hash, key, cancellation.Token);
+                    answer = await _reputationService.LookUpAsync(hash, key, lookupToken);
                 }
                 catch (OperationCanceledException)
                 {
@@ -501,7 +505,7 @@ public class ChecksumDialog : Dialog
                     answer = new ReputationResult(ReputationStatus.Error, Message: exception.Message);
                 }
 
-                if (!cancellation.IsCancellationRequested && generation == Volatile.Read(ref _lookupGeneration))
+                if (!lookupToken.IsCancellationRequested && generation == Volatile.Read(ref _lookupGeneration))
                 {
                     _reputation = answer;
                 }

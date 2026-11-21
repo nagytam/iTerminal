@@ -18,6 +18,7 @@ public class BouncingLabel : Label, IDisposable
     private readonly Random _random = new();
     private readonly Lock _lock = new();
     private readonly CancellationTokenSource _stop = new();
+    private bool _disposed;
     private bool _positionChanged = false;
 
     public BouncingLabel(Position position, string text, IThemeService themeService, bool autoStart = true)
@@ -38,9 +39,16 @@ public class BouncingLabel : Label, IDisposable
 
     private void Bounce()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
+        // Taken once: the source is disposed by Dispose, and its Token cannot be read after that.
+        CancellationToken stop = _stop.Token;
         while (Parent == null)
         {
-            if (_stop.Token.WaitHandle.WaitOne(10))
+            if (stop.WaitHandle.WaitOne(10))
             {
                 return;
             }
@@ -49,7 +57,7 @@ public class BouncingLabel : Label, IDisposable
         BounceX = _random.Next(2) == 0 ? -1 : 1;
         BounceY = _random.Next(2) == 0 ? -1 : 1;
 
-        while (!_stop.IsCancellationRequested)
+        while (!stop.IsCancellationRequested)
         {
             var parent = Parent;
             if (parent is not null)
@@ -57,7 +65,7 @@ public class BouncingLabel : Label, IDisposable
                 Step((long)parent.ViewSize.Width, (long)parent.ViewSize.Height);
             }
 
-            if (_stop.Token.WaitHandle.WaitOne(StepInterval))
+            if (stop.WaitHandle.WaitOne(StepInterval))
             {
                 return;
             }
@@ -124,7 +132,14 @@ public class BouncingLabel : Label, IDisposable
 
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
         _stop.Cancel();
+        _stop.Dispose();
         GC.SuppressFinalize(this);
     }
 

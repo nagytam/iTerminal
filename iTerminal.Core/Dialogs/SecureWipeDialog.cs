@@ -187,7 +187,9 @@ public class SecureWipeDialog : Dialog
         }
 
         Phase = WipePhase.Running;
+        _cancellation?.Dispose();
         var cancellation = _cancellation = new CancellationTokenSource();
+        CancellationToken token = cancellation.Token;
         var paths = Paths;
         var pattern = Pattern;
         var progress = new InlineProgress(p =>
@@ -201,7 +203,7 @@ public class SecureWipeDialog : Dialog
             WipeResult result;
             try
             {
-                result = await _wipeService.WipeAsync(paths, pattern, progress, cancellation.Token);
+                result = await _wipeService.WipeAsync(paths, pattern, progress, token);
             }
             catch (Exception exception)
             {

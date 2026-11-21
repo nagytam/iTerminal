@@ -42,6 +42,8 @@ public enum DuplicateScanPhase
 public sealed class DuplicateScan
 {
     private readonly CancellationTokenSource _cancellation = new();
+    private readonly Lock _cancellationGate = new();
+    private bool _cancellationDisposed;
     private long _files;
     private long _hashedBytes;
     private long _bytesToHash;
@@ -77,7 +79,16 @@ public sealed class DuplicateScan
     /// <summary>Completes when the scan ends — also when it was cancelled.</summary>
     public Task Completion { get; private set; } = Task.CompletedTask;
 
-    public void Cancel() => _cancellation.Cancel();
+    public void Cancel()
+    {
+        lock (_cancellationGate)
+        {
+            if (!_cancellationDisposed)
+            {
+                _cancellation.Cancel();
+            }
+        }
+    }
 
     internal void Run(Func<DuplicateScan, CancellationToken, IReadOnlyList<DuplicateGroup>> work)
     {
@@ -95,8 +106,19 @@ public sealed class DuplicateScan
             {
                 _phase = DuplicateScanPhase.Done;
                 IsComplete = true;
+                DisposeCancellation();
             }
         });
+    }
+
+    /// <summary>The scan is over, so its source is disposed; a later <see cref="Cancel"/> does nothing.</summary>
+    private void DisposeCancellation()
+    {
+        lock (_cancellationGate)
+        {
+            _cancellationDisposed = true;
+            _cancellation.Dispose();
+        }
     }
 
     internal void SetPhase(DuplicateScanPhase phase) => _phase = phase;

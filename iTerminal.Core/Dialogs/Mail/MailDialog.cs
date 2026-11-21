@@ -126,7 +126,13 @@ public class MailDialog : Dialog
 
     public override void Close()
     {
-        _cancellation.Cancel();
+        // Every request takes its own token when it starts, so the source is not read after this point.
+        if (!_cancellation.IsCancellationRequested)
+        {
+            _cancellation.Cancel();
+        }
+
+        _cancellation.Dispose();
         base.Close();
     }
 

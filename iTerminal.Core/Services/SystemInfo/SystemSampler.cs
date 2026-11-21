@@ -190,6 +190,7 @@ public sealed class SystemSampler : ISystemSampler
             }
 
             _loopCancellation?.Cancel();
+            _loopCancellation?.Dispose();
             _loopCancellation = null;
         }
     }

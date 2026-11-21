@@ -370,6 +370,7 @@ public class EncyclopediaDialog : SplitPaneDialog
     {
         // A request still running is replaced: cancelled, and its outcome dropped by the new generation.
         _cancellation?.Cancel();
+        _cancellation?.Dispose();
         _cancellation = new CancellationTokenSource();
         SetStatus(status, isError: false);
         return NextGeneration();

@@ -90,7 +90,6 @@ public class PerformanceBenchmarkDialog : Dialog
     /// <summary>Starts a run unless one is going. The previous scores are cleared when the new run starts.</summary>
     public void StartRun()
     {
-        CancellationTokenSource cancellation;
         lock (_gate)
         {
             if (_state == RunState.Running)
@@ -101,15 +100,17 @@ public class PerformanceBenchmarkDialog : Dialog
             _results.Clear();
             _running = null;
             _state = RunState.Running;
-            _cancellation = cancellation = new CancellationTokenSource();
+            _cancellation?.Dispose();
+            _cancellation = new CancellationTokenSource();
         }
 
+        CancellationToken token = _cancellation.Token;
         _run = Task.Run(async () =>
         {
             bool complete = false;
             try
             {
-                complete = (await _service.RunAsync(new InlineProgress<BenchmarkProgress>(Apply), cancellation.Token)).IsComplete;
+                complete = (await _service.RunAsync(new InlineProgress<BenchmarkProgress>(Apply), token)).IsComplete;
             }
             catch (OperationCanceledException)
             {
