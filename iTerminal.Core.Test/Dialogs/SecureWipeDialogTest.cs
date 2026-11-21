@@ -182,7 +182,7 @@ public class SecureWipeDialogTest
                 return new WipeResult(0, 0, 0, [], Cancelled: true);
             });
         await OpenAsync(@"C:\data\a.txt");
-        _dialog.TickSource = () => 0;
+        _dialog.DiskTickSource = () => 0;
         _dialog.Arm();
         _dialog.Confirm();
         await started.Task;
