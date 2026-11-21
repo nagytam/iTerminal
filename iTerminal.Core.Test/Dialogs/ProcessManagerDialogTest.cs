@@ -51,7 +51,9 @@ public class ProcessManagerDialogTest
         var screen = Render(dialog);
         AssertScreenContains(screen, "CPU");
         AssertScreenContains(screen, "Memory");
-        AssertScreenContains(screen, Process.GetCurrentProcess().ProcessName);
+        // The list is sorted by processor use, so on a busy machine the test host is not on the first screen; check the rows.
+        string own = Process.GetCurrentProcess().ProcessName;
+        Assert.IsTrue(dialog.RowsForTest.Any(p => p.Name == own), $"expected the process list to contain '{own}'.");
         Assert.IsTrue(root.Controls.AsSnapshot().Contains(dialog));
     }
 
