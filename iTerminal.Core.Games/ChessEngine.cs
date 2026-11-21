@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>Piece types; a white piece is stored as the positive number, a black one as the negative.</summary>
 internal static class Piece

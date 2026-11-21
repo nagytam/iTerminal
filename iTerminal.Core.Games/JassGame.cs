@@ -1,7 +1,7 @@
 using iConsole.Display;
 using iConsole.Localization;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 internal enum JassSuit
 {

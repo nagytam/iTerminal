@@ -1,6 +1,6 @@
 using iConsole.Display;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>The rules of Go that need no game state: groups, liberties, captures and area scoring.</summary>
 internal static class GoRules

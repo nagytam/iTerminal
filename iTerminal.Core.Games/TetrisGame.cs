@@ -1,7 +1,7 @@
 using iConsole.Display;
 using iConsole.Localization;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>
 /// Tetris on a 10 x 20 board. The pieces fall on the clock the dialog passes to <see cref="Tick"/>; the

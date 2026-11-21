@@ -1,8 +1,8 @@
 using iConsole.Display;
-using iTerminal.Core.Services.Games;
-using static iTerminal.Core.Services.Games.RiskGame;
+using iTerminal.Core.Games;
+using static iTerminal.Core.Games.RiskGame;
 
-namespace iTerminal.Core.Test.Services.Games;
+namespace iTerminal.Core.Games.Test;
 
 [TestClass]
 public class RiskGameTest
