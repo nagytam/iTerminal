@@ -154,7 +154,7 @@ public class AiPromptBar : Window
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);
         if (!isHandled && _speech is not null && _model.IsAvailable && _micWidth > 0
             && mouseEvent.LeftClicked && mouseEvent.WheelDelta == 0
-            && mouseEvent.Position.Y == AbsolutePosition.Y
+            && mouseEvent.Position.Y == ContentOrigin.Y
             && mouseEvent.Position.X >= _micLeft && mouseEvent.Position.X < _micLeft + _micWidth)
         {
             SetFocus();
@@ -175,11 +175,11 @@ public class AiPromptBar : Window
         }
     }
 
+    protected override bool HighlightFocusedBorder => true;
+
     public override void OnInitializeLayout()
     {
-        _aiLabel.Position = new Position(0, 0);
         _aiLabel.ViewSize = new Size(AiLabelWidth, 1);
-        _spinner.Position = new Position(SpinnerColumn, 0);
         _spinner.ViewSize = new Size(1, 1);
         base.OnInitializeLayout();
     }
@@ -374,12 +374,19 @@ public class AiPromptBar : Window
         }
     }
 
-    private int ResponseRows => Math.Max(0, (int)ViewSize.Height - 1);
+    /// <summary>The rows and columns inside the frame, where the prompt and the responses are drawn.</summary>
+    private int InnerWidth => (int)ViewSize.Width - 2 * FrameInset;
+    private int InnerHeight => (int)ViewSize.Height - 2 * FrameInset;
+
+    /// <summary>Top-left cell of the content, inside the frame.</summary>
+    private Position ContentOrigin => new(AbsolutePosition.X + FrameInset, AbsolutePosition.Y + FrameInset);
+
+    private int ResponseRows => Math.Max(0, InnerHeight - 1);
 
     /// <summary>Index of the first response line on screen.</summary>
     internal int ResponseScroll => _responseScroll;
 
-    private List<string> ResponseLines() => _model.LastResponse.WrapWords((int)ViewSize.Width);
+    private List<string> ResponseLines() => _model.LastResponse.WrapWords(InnerWidth);
 
     private void ScrollResponse(int delta)
     {
@@ -417,9 +424,16 @@ public class AiPromptBar : Window
     {
         if (ViewSize.IsEmpty) return;
 
+        // The frame goes down first; everything below is drawn inside it. The composed pieces are placed
+        // relative to the control, so their offsets start at the frame's inset.
+        DrawChrome(buffer);
+        var inset = FrameInset;
         var focused = IsFocused;
         var bg = focused ? Color.Black : Color.Gray;
-        var width = (int)ViewSize.Width;
+        var width = InnerWidth;
+        var height = InnerHeight;
+        _aiLabel.Position = new Position(inset, inset);
+        _spinner.Position = new Position(inset + SpinnerColumn, inset);
 
         if (!_model.IsAvailable)
         {
@@ -445,7 +459,7 @@ public class AiPromptBar : Window
             _modelLabel.Text = warning.Shrink(warningModelWidth)?.ExpandRight(warningModelWidth) ?? string.Empty;
             _modelLabel.ForegroundColor = warningFg;
             _modelLabel.BackgroundColor = bg;
-            _modelLabel.Position = new Position(ModelLabelColumn, 0);
+            _modelLabel.Position = new Position(inset + ModelLabelColumn, inset);
             _modelLabel.ViewSize = new Size(warningModelWidth, 1);
 
             _aiLabel.Draw(buffer);
@@ -473,7 +487,7 @@ public class AiPromptBar : Window
         _modelLabel.Text = modelText.Shrink(modelWidth) ?? string.Empty;
         _modelLabel.ForegroundColor = inputFg;
         _modelLabel.BackgroundColor = bg;
-        _modelLabel.Position = new Position(ModelLabelColumn, 0);
+        _modelLabel.Position = new Position(inset + ModelLabelColumn, inset);
         _modelLabel.ViewSize = new Size(modelWidth, 1);
 
         // Prompt label: whatever the user has typed so far, filling the rest of the row — its *end*
@@ -484,7 +498,7 @@ public class AiPromptBar : Window
         _promptLabel.Text = PromptLine.Format(" ", _model.Input, promptWidth);
         _promptLabel.ForegroundColor = inputFg;
         _promptLabel.BackgroundColor = bg;
-        _promptLabel.Position = new Position(promptColumn, 0);
+        _promptLabel.Position = new Position(inset + promptColumn, inset);
         _promptLabel.ViewSize = new Size(promptWidth, 1);
 
         _aiLabel.Draw(buffer);
@@ -494,16 +508,16 @@ public class AiPromptBar : Window
 
         // The mic button at the right end of the first row: red while recording.
         _micWidth = micText.Length;
-        _micLeft = (int)AbsolutePosition.X + promptColumn + promptWidth;
+        _micLeft = (int)ContentOrigin.X + promptColumn + promptWidth;
         if (micText.Length > 0)
         {
             var micFg = _speech!.State == SpeechState.Recording ? Color.Red : inputFg;
-            buffer.Write(ZOrder, new Position(_micLeft, AbsolutePosition.Y), new Size(micText.Length, 1),
+            buffer.Write(ZOrder, new Position(_micLeft, ContentOrigin.Y), new Size(micText.Length, 1),
                 new ConxelString(micText, micFg, bg));
         }
 
-        // Response rows (remaining height)
-        if (ViewSize.Height > 1)
+        // Response rows (remaining inner height)
+        if (height > 1)
         {
             if (!ReferenceEquals(_lastResponseSeen, _model.LastResponse)
                 && !_model.LastResponse.StartsWith(_lastResponseSeen, StringComparison.Ordinal))
@@ -518,12 +532,12 @@ public class AiPromptBar : Window
             _responseScroll = Math.Clamp(_responseScroll, 0, Math.Max(0, responseLines.Count - rows));
             var hiddenBelow = responseLines.Count - _responseScroll - rows;
 
-            for (var row = 1; row < ViewSize.Height; row++)
+            for (var row = 1; row < height; row++)
             {
                 var lineIdx = _responseScroll + row - 1;
                 var line = (lineIdx < responseLines.Count ? responseLines[lineIdx] : string.Empty)
                     .ExpandRight(width);
-                if (row == ViewSize.Height - 1 && hiddenBelow > 0)
+                if (row == height - 1 && hiddenBelow > 0)
                 {
                     line = MoreIndicator(line, width, hiddenBelow);
                 }
@@ -532,24 +546,24 @@ public class AiPromptBar : Window
                     line = MoreIndicator(line, width, -_responseScroll);
                 }
                 buffer.Write(ZOrder,
-                    new Position(AbsolutePosition.X, AbsolutePosition.Y + row),
-                    new Size(ViewSize.Width, 1),
+                    new Position(ContentOrigin.X, ContentOrigin.Y + row),
+                    new Size(width, 1),
                     new ConxelString(line, responseFg, bg));
             }
         }
     }
 
     /// <summary>
-    /// Blanks every row of the control in <paramref name="foreground"/>/<paramref name="background"/>
+    /// Blanks every inner row of the control (the frame stays) in <paramref name="foreground"/>/<paramref name="background"/>
     /// so the composed Label/Spinner pieces (which don't clear their own background when their text
     /// shrinks) never leave stale characters behind from a previous, longer render.
     /// </summary>
     private void BlankRows(IBuffer buffer, Color foreground, Color background, int width)
     {
         var blank = new ConxelString(string.Empty.ExpandRight(width), foreground, background);
-        for (var row = 0; row < ViewSize.Height; row++)
+        for (var row = 0; row < InnerHeight; row++)
         {
-            buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + row), new Size(ViewSize.Width, 1), blank);
+            buffer.Write(ZOrder, new Position(ContentOrigin.X, ContentOrigin.Y + row), new Size(width, 1), blank);
         }
     }
 

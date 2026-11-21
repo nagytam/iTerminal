@@ -20,7 +20,7 @@ public class TerminalPanelTest
         var terminalModel = new TerminalModel(new TaskManager(), Mock.Of<IContentModelService>());
         var panel = new TerminalPanel(terminalModel, Mock.Of<IContentModelService>(), new TestThemeService())
         {
-            ViewSize = new Size(width, height),
+            ViewSize = new Size(width + 2, height + 2), // the frame takes a cell on each side
         };
         return (panel, terminalModel);
     }
@@ -33,6 +33,17 @@ public class TerminalPanelTest
         panel.Draw(buffer);
         return buffer;
     }
+
+    /// <summary>The content of row <paramref name="y"/> inside the frame, which the screen's first and last column hold.</summary>
+    private static string Row(ScreenBuffer screen, int y)
+    {
+        var line = screen.Line(y + 1);
+        return line.Length >= 2 ? line[1..^1] : string.Empty;
+    }
+
+    /// <summary>Every row inside the frame, trailing blanks removed.</summary>
+    private static string[] InnerLines(ScreenBuffer screen) =>
+        Enumerable.Range(0, screen.Height - 2).Select(y => Row(screen, y).TrimEnd()).ToArray();
 
     private static void AddHistory(TerminalModel model, string command, string output, string? error = null) =>
         model.History.Add(new TerminalCommand { Command = command, Output = output, Error = error });
@@ -90,9 +101,36 @@ public class TerminalPanelTest
 
         CollectionAssert.AreEqual(
             new[] { "> echo hi", "hi", "ERR: warning", "", "Terminal>next" },
-            screen.Lines);
-        Assert.AreEqual(Color.Red, screen.ForegroundAt(0, 2), "errors are red");
-        Assert.AreEqual(Color.Cyan, screen.ForegroundAt(0, 0), "commands are cyan");
+            InnerLines(screen));
+        // Cells are addressed on the whole screen, so the inner rows start one row and one column in.
+        Assert.AreEqual(Color.Red, screen.ForegroundAt(1, 3), "errors are red");
+        Assert.AreEqual(Color.Cyan, screen.ForegroundAt(1, 1), "commands are cyan");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheFrameTakesTheFocusHighlightWhileThePanelHasFocus()
+    {
+        var (panel, _) = Create();
+        var highlight = new TestThemeService().CurrentColorScheme.FocusedBorder;
+        panel.SetFocus();
+
+        var screen = Render(panel);
+
+        Assert.AreEqual(highlight, screen.ForegroundAt(0, 0), "top-left corner");
+        Assert.AreEqual(highlight, screen.ForegroundAt(0, 2), "left side");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheFrameIsNotHighlightedWithoutFocus()
+    {
+        var (panel, _) = Create();
+        var highlight = new TestThemeService().CurrentColorScheme.FocusedBorder;
+
+        var screen = Render(panel);
+
+        Assert.AreNotEqual(highlight, screen.ForegroundAt(0, 0));
     }
 
     [Timeout(60_000)]
@@ -106,7 +144,7 @@ public class TerminalPanelTest
 
         var screen = Render(panel);
 
-        CollectionAssert.AreEqual(new[] { "> tool", "one", "two", "three", "", "Terminal>" }, screen.Lines);
+        CollectionAssert.AreEqual(new[] { "> tool", "one", "two", "three", "", "Terminal>" }, InnerLines(screen));
     }
 
     [Timeout(60_000)]
@@ -124,7 +162,7 @@ public class TerminalPanelTest
         // The old limit let the offset run on to one short of the line count, scrolling the output
         // off the top and leaving blank rows.
         Assert.AreEqual(2, panel.ScrollOffset);
-        CollectionAssert.AreEqual(new[] { "> a", "1", "Terminal>" }, Render(panel).Lines);
+        CollectionAssert.AreEqual(new[] { "> a", "1", "Terminal>" }, InnerLines(Render(panel)));
     }
 
     [Timeout(60_000)]
@@ -179,7 +217,7 @@ public class TerminalPanelTest
         var (panel, terminalModel) = Create(width: 20, height: 2);
         terminalModel.Command.Command = "dotnet test --filter Something";
 
-        var prompt = Render(panel).Line(1);
+        var prompt = Row(Render(panel), 1);
 
         Assert.IsTrue(prompt.StartsWith("Terminal>…", StringComparison.Ordinal), prompt);
         Assert.IsTrue(prompt.EndsWith("Something", StringComparison.Ordinal), prompt);

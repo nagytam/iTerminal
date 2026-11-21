@@ -16,6 +16,9 @@ public class ColorScheme
     public Color ButtonBackground { get; set; }
     public Color DisabledButtonBackground { get; set; }
     public Color Error { get; set; }
+
+    /// <summary>The border of the focused window, where a window opts in to the focus highlight (see <c>Control.DrawBorder</c>).</summary>
+    public Color FocusedBorder { get; set; }
     public Theme Theme { get; set; } = Theme.Default;
 
     public ColorScheme()
@@ -32,5 +35,6 @@ public class ColorScheme
         ButtonBackground = Color.DarkBlue;
         DisabledButtonBackground = Color.DarkGray;
         Error = Color.Red;
+        FocusedBorder = Color.Yellow;
     }
 }
