@@ -17,7 +17,7 @@ using iConsole.Xml;
 using iConsole.Xps;
 using iConsole.Interfaces;
 using iConsole.Viewers;
-using iTerminal.Core.Audio;
+using iConsole.Media.Audio;
 using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.Music;
 using iTerminal.Core.Dialogs.Video;

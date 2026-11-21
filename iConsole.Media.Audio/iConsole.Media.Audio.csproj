@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The audio decoders (WAVE, MP3 through NLayer, ffmpeg), the output sinks (PulseAudio, aplay, WinMM) and the factory
+    that picks a decoder for a file. They reference only the UI framework: ffmpeg is run as a process and the sinks
+    call the platform's audio API. iTerminal.Core holds the music services, the library and the player.
+  -->
+  <ItemGroup>
+    <PackageReference Include="NLayer" Version="3.0.1" />
+    <ProjectReference Include="..\iConsole\iConsole.csproj" />
+  </ItemGroup>
+
+</Project>

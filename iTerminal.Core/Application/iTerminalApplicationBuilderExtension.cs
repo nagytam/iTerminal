@@ -4,7 +4,7 @@ using iConsole.Interfaces;
 using iConsole.Jobs;
 using iConsole.Services;
 using iTerminal.Core.AI;
-using iTerminal.Core.Audio;
+using iConsole.Media.Audio;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Controls.Lenses;
 using iTerminal.Core.Controls.MenuBar;
@@ -242,9 +242,9 @@ public static class iTerminalApplicationBuilderExtension
 
         // Music player. Every output backend is registered; AudioDeviceService probes them at
         // runtime and keeps the first that works on this machine (see IAudioOutputBackend).
-        services.AddSingleton<IAudioOutputBackend, iTerminal.Core.Audio.Sinks.WinMmAudioOutputBackend>();
-        services.AddSingleton<IAudioOutputBackend, iTerminal.Core.Audio.Sinks.PulseAudioOutputBackend>();
-        services.AddSingleton<IAudioOutputBackend, iTerminal.Core.Audio.Sinks.AplayAudioOutputBackend>();
+        services.AddSingleton<IAudioOutputBackend, iConsole.Media.Audio.Sinks.WinMmAudioOutputBackend>();
+        services.AddSingleton<IAudioOutputBackend, iConsole.Media.Audio.Sinks.PulseAudioOutputBackend>();
+        services.AddSingleton<IAudioOutputBackend, iConsole.Media.Audio.Sinks.AplayAudioOutputBackend>();
         services.AddSingleton<iTerminal.Core.Services.Music.IAudioDeviceService, iTerminal.Core.Services.Music.AudioDeviceService>();
         services.AddSingleton<iTerminal.Core.Services.Music.IPlaylistService>(_ =>
             new iTerminal.Core.Services.Music.PlaylistService(Path.Combine(databaseDirectory, "playlists")));

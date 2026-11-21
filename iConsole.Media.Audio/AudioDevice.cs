@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Data.Music;
+namespace iConsole.Media.Audio;
 
 /// <summary>
 /// An output endpoint the engine can render to. <see cref="Id"/> is backend-specific and opaque to

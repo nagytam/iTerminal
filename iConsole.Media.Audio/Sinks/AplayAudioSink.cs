@@ -1,9 +1,8 @@
-using iTerminal.Core.Data.Music;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Versioning;
 
-namespace iTerminal.Core.Audio.Sinks;
+namespace iConsole.Media.Audio.Sinks;
 
 /// <summary>
 /// Last-resort Linux output: raw PCM piped into <c>aplay</c>, the ALSA command-line player that is

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 
-namespace iTerminal.Core.Audio.Decoders;
+namespace iConsole.Media.Audio.Decoders;
 
 /// <summary>
 /// Decodes anything ffmpeg understands (FLAC, OGG/Vorbis, Opus, M4A/AAC, WMA, AIFF, …) by piping
@@ -80,7 +80,7 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
     }
 
     /// <summary>Forgets the cached probe, so the next <see cref="IsAvailable"/> looks again. Called after ffmpeg is installed.</summary>
-    internal static void ResetAvailability() => _isAvailable = null;
+    public static void ResetAvailability() => _isAvailable = null;
 
     /// <summary>Test seam: forces the cached availability result.</summary>
     internal static void SetAvailabilityForTest(bool? available) => _isAvailable = available;

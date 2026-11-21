@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Audio;
+namespace iConsole.Media.Audio;
 
 /// <summary>
 /// Turns an encoded audio file into a stream of signed 16-bit little-endian PCM. Every decoder

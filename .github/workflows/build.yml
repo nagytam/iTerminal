@@ -44,6 +44,7 @@ jobs:
           dotnet build iConsole.Formats.Test/iConsole.Formats.Test.csproj -c Release --no-restore
           && dotnet build iConsole.Test/iConsole.Test.csproj -c Release --no-restore
           && dotnet build iConsole.Inputs.Posix.Test/iConsole.Inputs.Posix.Test.csproj -c Release --no-restore
+          && dotnet build iConsole.Media.Audio.Test/iConsole.Media.Audio.Test.csproj -c Release --no-restore
           && dotnet build iTerminal.Core.Games.Test/iTerminal.Core.Games.Test.csproj -c Release --no-restore
           && dotnet build iTerminal.Core.Test/iTerminal.Core.Test.csproj -c Release --no-restore
           && dotnet build iTerminal/iTerminal.csproj -c Release --no-restore
@@ -67,6 +68,11 @@ jobs:
           && dotnet test iConsole.Inputs.Posix.Test/iConsole.Inputs.Posix.Test.csproj
           -c Release --no-build
           --logger "trx;LogFileName=iconsole-posix.trx"
+          --results-directory TestResults
+          && dotnet test iConsole.Media.Audio.Test/iConsole.Media.Audio.Test.csproj
+          -c Release --no-build
+          --logger "trx;LogFileName=iconsole-media-audio.trx"
+          --settings coverage.runsettings --collect:"XPlat Code Coverage"
           --results-directory TestResults
           && dotnet test iTerminal.Core.Games.Test/iTerminal.Core.Games.Test.csproj
           -c Release --no-build

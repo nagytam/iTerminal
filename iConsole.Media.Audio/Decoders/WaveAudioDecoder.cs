@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 
-namespace iTerminal.Core.Audio.Decoders;
+namespace iConsole.Media.Audio.Decoders;
 
 /// <summary>
 /// RIFF/WAVE reader covering the uncompressed cases that actually show up on disk: integer PCM at

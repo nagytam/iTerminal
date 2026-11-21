@@ -1,19 +1,19 @@
 using System.Buffers.Binary;
 using System.Text;
 
-namespace iTerminal.Core.Test.Audio;
+namespace iConsole.Test.Core.Audio;
 
 /// <summary>
 /// Builds real audio files on disk for the decoder tests. Synthesising the bytes here (rather than
 /// checking in binary fixtures) keeps the expected sample values visible in the assertions.
 /// </summary>
-internal static class TestAudioFiles
+public static class TestAudioFiles
 {
-    internal const int FormatPcm = 1;
-    internal const int FormatIeeeFloat = 3;
+    public const int FormatPcm = 1;
+    public const int FormatIeeeFloat = 3;
 
     /// <summary>Writes a WAVE file and returns its path.</summary>
-    internal static string WriteWave(
+    public static string WriteWave(
         string directory,
         string fileName,
         byte[] sampleData,
@@ -27,7 +27,7 @@ internal static class TestAudioFiles
         return path;
     }
 
-    internal static byte[] BuildWave(
+    public static byte[] BuildWave(
         byte[] sampleData,
         int sampleRate = 44100,
         int channels = 2,
@@ -60,7 +60,7 @@ internal static class TestAudioFiles
     }
 
     /// <summary>Interleaved 16-bit samples as raw little-endian bytes.</summary>
-    internal static byte[] Pcm16(params short[] samples)
+    public static byte[] Pcm16(params short[] samples)
     {
         var bytes = new byte[samples.Length * 2];
         for (int i = 0; i < samples.Length; i++)
@@ -71,7 +71,7 @@ internal static class TestAudioFiles
     }
 
     /// <summary>A silent 16-bit stereo WAVE of the requested length, for timing assertions.</summary>
-    internal static string WriteSilence(string directory, string fileName, TimeSpan duration, int sampleRate = 8000)
+    public static string WriteSilence(string directory, string fileName, TimeSpan duration, int sampleRate = 8000)
     {
         var frames = (int)(duration.TotalSeconds * sampleRate);
         return WriteWave(directory, fileName, new byte[frames * 4], sampleRate, channels: 2, bitsPerSample: 16);
@@ -81,7 +81,7 @@ internal static class TestAudioFiles
     /// Writes a file carrying an ID3v2.3 tag followed by junk. Only the tag is parsed by
     /// <c>MusicTagReader</c>, so the payload does not need to be real MPEG audio.
     /// </summary>
-    internal static string WriteId3V2File(string directory, string fileName, string title, string artist, string album)
+    public static string WriteId3V2File(string directory, string fileName, string title, string artist, string album)
     {
         var frames = new List<byte>();
         AppendTextFrame(frames, "TIT2", title);
@@ -95,7 +95,7 @@ internal static class TestAudioFiles
     /// Writes a file carrying an ID3v2.3 tag built from arbitrary text frames, for the cases where
     /// the three well-known ones are not the point (genre codes, comments, exotic frame ids).
     /// </summary>
-    internal static string WriteId3V2FileWithFrames(
+    public static string WriteId3V2FileWithFrames(
         string directory,
         string fileName,
         params (string FrameId, string Value)[] textFrames)
@@ -110,7 +110,7 @@ internal static class TestAudioFiles
     }
 
     /// <summary>Writes a file whose ID3v2.3 tag holds one comment frame (encoding, language, description, text).</summary>
-    internal static string WriteId3V2FileWithComment(string directory, string fileName, string description, string comment)
+    public static string WriteId3V2FileWithComment(string directory, string fileName, string description, string comment)
     {
         var payload = new List<byte> { 0 }; // ISO-8859-1
         payload.AddRange("eng"u8.ToArray());
@@ -130,7 +130,7 @@ internal static class TestAudioFiles
     }
 
     /// <summary>Writes a file whose final 128 bytes are an ID3v1 tag.</summary>
-    internal static string WriteId3V1File(
+    public static string WriteId3V1File(
         string directory,
         string fileName,
         string title,
@@ -170,7 +170,7 @@ internal static class TestAudioFiles
     /// comment. <c>FlacTagReader</c> never looks at the audio frames, so there is no need to
     /// synthesise any.
     /// </summary>
-    internal static string WriteFlac(
+    public static string WriteFlac(
         string directory,
         string fileName,
         int sampleRate = 44100,

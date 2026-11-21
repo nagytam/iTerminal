@@ -1,9 +1,8 @@
-using iTerminal.Core.Data.Music;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace iTerminal.Core.Audio.Sinks;
+namespace iConsole.Media.Audio.Sinks;
 
 /// <summary>
 /// Linux output through <c>libpulse-simple</c>, which also covers PipeWire (its pulse shim is what

@@ -6,7 +6,7 @@ using iTerminal.Core.Data.Music;
 using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Music;
-using iTerminal.Core.Test.Audio;
+using iConsole.Test.Core.Audio;
 using iTerminal.Core.Test.Services.Music;
 using Microsoft.EntityFrameworkCore;
 using Moq;

@@ -1,4 +1,4 @@
-namespace iTerminal.Core.Audio;
+namespace iConsole.Media.Audio;
 
 /// <summary>
 /// The interchange format between decoders and sinks: signed 16-bit little-endian interleaved PCM.

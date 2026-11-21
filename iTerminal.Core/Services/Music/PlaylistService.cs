@@ -1,4 +1,4 @@
-using iTerminal.Core.Audio;
+using iConsole.Media.Audio;
 using iTerminal.Core.Data.Music;
 using System.Globalization;
 using System.Text;

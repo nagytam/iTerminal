@@ -4,7 +4,7 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
-using iTerminal.Core.Audio;
+using iConsole.Media.Audio;
 using iTerminal.Core.Services.Music;
 using System.Text;
 
