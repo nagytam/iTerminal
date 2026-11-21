@@ -237,3 +237,179 @@ grep -rE 'Assert\.Inconclusive' --include=*.cs <test project>
 ```
 
 The untested-type pairing was a script: for each `<source>` and `<source>.Test` pair it lists the `.cs` files of the source whose file name has no `<name>Test.cs` or `<name>.cs` in the test project and whose type name is not mentioned in any test file there. The scratch files of this run are not committed.
+
+## Q2 2026-11-21: warnings
+
+Scope `warnings`. Branch `docs/qa-warnings`, from commit `fd0c0d13` on `main`. The build was `dotnet build iTerminal.slnx -c Release --no-incremental` on Linux 7.3.0-11, with the log in the scratchpad (`build.log` and `warnings-unique.txt` in the same folder). This is the first warnings run, so the SonarAnalyzer total of this run is the baseline for later runs. Not measured: the Windows build (warnings from Windows-only code paths in `iConsole.Inputs.Windows` and the Windows branches of the other projects are not covered), the `#pragma` and `SuppressMessage` count (Phase 3 step 6), and the `.editorconfig` severity changes. The build's only error is the known `MSB4057` in `iTerminal.Installer.wixproj` (no `Rebuild` target), not counted as a warning.
+
+### Summary
+
+- The Release build has 1,838 unique warnings. 1,824 (99.3%) come from SonarAnalyzer (`S####`), 5 from the compiler (`CS`), 7 from the .NET and MSTest analyzers (`CA`, `MSTEST`), and 2 have no rule code.
+- The 1,827 warnings in the non-test projects are almost all Sonar. The 9 in the test projects are `iTerminal.Core.Test` (8) and `iConsole.Media.Audio.Test` (1); none of them is from Sonar.
+- Most warnings are style rules: `S3358` (nested ternary), `S108` (empty block), `S8949` (cancellation token not passed on), `S927` (parameter name differs from base) and `S1905` (redundant cast). These five codes make up 904 of the 1,824 Sonar warnings.
+- The warnings that read as defects are the disposal rule `S2930` (34), the swallowed-exception rule `S2486` (68), and the compiler warnings `CS0108` (1) and `CS8604` (1). They are listed as issues below.
+- No `CS8602` (possible null dereference) warning is in the build. The `S2245` (random number) and `S2068` (`password`) hits were read as false positives: the random numbers are in game code, and the `password` hits are property names.
+
+### Measurements
+
+Build warnings by project, unique warnings per project, with the split by analyzer. "Other" is the two entries with no rule code (one NuGet `NU1503`, one entry for the solution and the specification project).
+
+| Project | Unique warnings | Sonar (`S####`) | Compiler (`CS####`) | .NET and MSTest analyzers (`CA`, `MSTEST`) | Other |
+| --- | --- | --- | --- | --- | --- |
+| `iTerminal.Core` | 1,050 | 1,048 | 2 | 0 | 0 |
+| `iConsole` | 579 | 579 | 0 | 0 | 0 |
+| `iConsole.Formats` | 67 | 66 | 1 | 0 | 0 |
+| `iTerminal.Core.Games` | 45 | 45 | 0 | 0 | 0 |
+| `iConsole.Media.Audio` | 38 | 38 | 0 | 0 | 0 |
+| `iConsole.Media.Video` | 16 | 16 | 0 | 0 | 0 |
+| `iConsole.Inputs.Windows` | 15 | 15 | 0 | 0 | 0 |
+| `iConsole.Inputs.Posix` | 9 | 9 | 0 | 0 | 0 |
+| `iConsole.Media.Speech` | 7 | 7 | 0 | 0 | 0 |
+| `iTerminal` | 1 | 1 | 0 | 0 | 0 |
+| `iTerminal.Core.Test` | 8 | 0 | 2 | 6 | 0 |
+| `iConsole.Media.Audio.Test` | 1 | 0 | 0 | 1 | 0 |
+| Solution and `iTerminal.Specifications.Test` | 2 | 0 | 0 | 0 | 2 |
+| Total | 1,838 | 1,824 | 5 | 7 | 2 |
+
+Top warning codes (Sonar unless marked):
+
+| Code | Analyzer | Count | Projects | Class |
+| --- | --- | --- | --- | --- |
+| `S3358` | SonarAnalyzer.CSharp | 347 | not split by project | Low (nested ternary) |
+| `S108` | SonarAnalyzer.CSharp | 163 | not split by project | Low (empty block) |
+| `S8949` | SonarAnalyzer.CSharp | 153 | not split by project | Low (cancellation token not passed on) |
+| `S927` | SonarAnalyzer.CSharp | 127 | not split by project | Low (parameter name differs from base) |
+| `S1905` | SonarAnalyzer.CSharp | 114 | not split by project | Low (redundant cast) |
+| `S3267` | SonarAnalyzer.CSharp | 70 | not split by project | Low (loop could be LINQ) |
+| `S2486` | SonarAnalyzer.CSharp | 68 | `iConsole` (sampled) | High (exception swallowed) |
+| `S1075` | SonarAnalyzer.CSharp | 50 | not split by project | Low (hard-coded URI or path) |
+| `S2325` | SonarAnalyzer.CSharp | 49 | not split by project | Low (could be static) |
+| `S1144` | SonarAnalyzer.CSharp | 45 | not split by project | Low (unused private member) |
+| `S2930` | SonarAnalyzer.CSharp | 34 | `iConsole`, `iTerminal.Core` (sampled) | High (not disposed) |
+| `S5332` | SonarAnalyzer.CSharp | 28 | not split by project | Medium (plain `http` or `ftp`) |
+| `S1172` | SonarAnalyzer.CSharp | 13 | `iConsole` (sampled) | Medium (unused parameter) |
+| `S2068`, `S2245` | SonarAnalyzer.CSharp | 5 and 7 | `iTerminal.Core`, `iTerminal.Core.Games` | Low (read: no real secret, game randomness) |
+| `CS0108` | compiler | 1 | `iTerminal.Core` | High (member hides base member) |
+| `CS8604` | compiler | 1 | `iConsole.Formats` | High (possible null argument) |
+| `CA1416` | .NET analyzer | 2 | test projects | Medium (Unix-only API in tests) |
+
+The 1,824 Sonar warnings are 99.3% of the total. The five largest codes (S3358, S108, S8949, S927, S1905) make up 904 of them.
+
+### Quality issues
+
+1. **QA-14 Undisposed `CancellationTokenSource` fields (S2930, 34 warnings)**
+   - **Severity**: Medium
+   - **Category**: defect
+   - **Area**: `iConsole/Controls/Control.cs`, `iConsole/Controls/Experimental/BouncingLabel.cs`, `iTerminal.Core/Application/DatabaseInitializationHostedService.cs`
+   - **Evidence**: `iConsole/Controls/Control.cs:773` assigns `_autoRefresh = new CancellationTokenSource()` in `StartAutoRefresh`, which replaces the previous source with `StopAutoRefresh()` just before it. The analyzer reports `_autoRefresh` as "Dispose … when it is no longer needed". `BouncingLabel.cs:20` (`_stop`) and `DatabaseInitializationHostedService.cs:113` (`_stopping`) are the same pattern. Build warnings are from the Release build of this run.
+   - **Impact**: a cancellation source has a small unmanaged handle, so a leak is minor per control, but controls are created and destroyed in a loop when dialogs open and close.
+   - **Suggested fix**: dispose the previous source in `StopAutoRefresh` (or in `Dispose`) and set the field to null; for the `Control.cs` case check that no task still holds the token before disposing.
+   - **Test that would catch it**: none; a test that starts and stops auto-refresh many times would not fail today.
+   - **unverified** as to whether any path leaves a source undisposed; the warning is from the analyzer's reading.
+
+2. **QA-15 Exceptions swallowed in the idle loop and elsewhere (S2486, 68 warnings)**
+   - **Severity**: Medium
+   - **Category**: error-handling
+   - **Area**: `iConsole/Controls/Control.cs:949`, `iConsole/Desktops/Desktop.cs:101`, `iConsole/Controls/StatusBar/Date.cs:43`
+   - **Evidence**: `Control.cs:949` is `try { control.OnIdle(); } catch { }` with no comment, so any exception thrown by any control's idle handler is discarded. The same pattern appears in `Desktop.cs:101` and `Date.cs:43`. The analyzer reports each as "Handle the exception or explain in a comment why it can be ignored".
+   - **Impact**: a control that throws during idle stops working silently, and nothing is logged, so a developer finds it only when the screen does not update.
+   - **Suggested fix**: record the exception through the framework's existing diagnostics and keep the loop running; add a comment where swallowing is intended.
+   - **Test that would catch it**: none; a unit test with a control whose `OnIdle` throws, asserting that the failure is recorded.
+   - **unverified** as to which of the 68 places hide a real failure; only `Control.cs:949` was read, and `Desktop.cs:101` and `Date.cs:43` were taken from the analyzer output.
+
+3. **QA-16 `TickSource` in `SecureWipeDialog` hides the base member (CS0108)**
+   - **Severity**: Low
+   - **Category**: defect
+   - **Area**: `iTerminal.Core/Dialogs/SecureWipeDialog.cs:69`, `iConsole/Controls/PopUpWindows/PopUpWindow.cs:27`
+   - **Evidence**: `SecureWipeDialog` declares `internal Func<long> TickSource { get; set; }` and the base `PopUpWindow` declares a public `TickSource` (`PopUpWindow.cs:27`), used by its title marquee (`PopUpWindow.cs:333`). The compiler warns that the derived property hides the base one. The derived property is set by the wipe dialog's tests, so a test that fixes the disk graphic's frame does not change the base title marquee.
+   - **Impact**: a test that tries to fix the dialog's animation may see the title and the disk graphic on different clocks; a developer reading the code may take one `TickSource` for the other.
+   - **Suggested fix**: rename the wipe dialog's property (for example `DiskTickSource`) or make it override the base member, and check the test that sets it.
+   - **Test that would catch it**: none.
+   - **unverified** as to a visible effect; read from the code.
+
+4. **QA-17 Possible null argument in the PDF signature reader (CS8604)**
+   - **Severity**: Low
+   - **Category**: defect
+   - **Area**: `iConsole.Formats/Pdf/PdfSignatureReader.cs:119`
+   - **Evidence**: the compiler reports a possible null for argument `range` of `Check(...)`, called at `iConsole.Formats/Pdf/PdfSignatureReader.cs:119` (`found.Add(Check(pdf, keyStart, range, number, configureChain, cancellationToken));`). The loop above the call has a `continue` path (line 116), so the code before the call was read, but the source of `range` was not traced.
+   - **Impact**: if a path reaches the call with `range` null, the reader may throw a `NullReferenceException` on a malformed PDF instead of reporting it as unreadable.
+   - **Suggested fix**: check `range` for null before the call, or make `Check` reject a null range explicitly; add a test with a malformed signature range.
+   - **Test that would catch it**: none; the reader's test set was not read in this run.
+   - **unverified** as to whether the null path is reachable.
+
+### What is in good shape
+
+- No `CS8602` (possible dereference of null) warning in the build.
+- The test projects have no Sonar warning: the analyzer is not referenced there, as intended.
+- The only build error is the known WiX `MSB4057`.
+- Of the security-tagged Sonar rules read in this run, the open question is the plain `http` and `ftp` URLs (`S5332`, 28 warnings, for example `iTerminal.Core/Jobs/WeatherJob.cs:81`); the `S2068` (`password`) and `S2245` (game randomness) hits are false positives.
+
+### Suggested order
+
+1. QA-15 (exceptions swallowed in the idle loop; the rest are the same pattern).
+2. QA-14 (undisposed sources).
+3. QA-17 and QA-16 (compiler warnings, one-line fixes).
+4. The style codes (`S3358`, `S108`, `S8949`) only when a file is touched for another reason; they are not worth a dedicated change.
+5. The `S5332` URLs need a decision: each `http` URL is either fixed or documented as intentional.
+
+### Status of earlier issues
+
+Not applicable: Q1 did not measure warnings, so none of its issues is re-checked here.
+
+### How to reproduce
+
+```bash
+# Build (about 5 minutes); the WiX project is expected to fail with MSB4057
+dotnet build iTerminal.slnx -c Release --no-incremental -nologo -v:n > <scratch>/build.log 2>&1
+
+# Unique warnings, grouped by code
+grep -E ": warning " <scratch>/build.log | sed -E 's/^ *[0-9]+>//' | sed -E 's/^\s+//' | sort -u > <scratch>/warnings-unique.txt
+grep -oE "warning [A-Z]+[0-9]+" <scratch>/warnings-unique.txt | sort | uniq -c | sort -rn
+
+# Per project
+grep -oE "\[[^]]*\.(csproj|slnx|props)\]" <scratch>/warnings-unique.txt | sort | uniq -c | sort -rn
+```
+
+## Q3 2026-11-21: warnings (S2930 fix)
+
+Scope: the S2930 warnings of Q2, fixed on branch `fix/s2930-dispose-cancellation`, cut from `main` at `fd0c0d13`. The change is not committed. The build is `dotnet build iTerminal.slnx -c Release --no-incremental` on Linux, with its log in the scratchpad (`build5.log` and `warnings-final.txt`). Tests run: `iConsole.Test` (5 073 passed, 0 failed) and `iTerminal.Core.Test` (6 365 passed, 0 failed, 54 skipped, the same skips as Q1). Not run: the end-to-end suite `iTerminal.Test`, and the Windows build.
+
+### Summary
+
+- S2930 (undisposed `IDisposable`): 34 warnings before, 0 after. The change touches 27 files and no test was changed.
+- Unique warnings across the solution: 1 838 in Q2, 1 804 now (a drop of 34). Sonar: 1 824 in Q2, 1 790 now.
+- No new warning code appeared. Two `S9422` warnings that my first version introduced (lock objects typed as `object`) were fixed to `Lock` before the final build, so `S9422` is back at its Q2 count of 39.
+- The two sides of each fix are one rule: a source is cancelled and disposed when it is replaced or when its owner ends, and no code reads a source's `Token` after it has been disposed. A token from a disposed source still works (`IsCancellationRequested`, `Register`, linked sources), but `Cancel()` and the `Token` getter throw on a disposed source. This was checked with a small program before the change was made.
+
+### Measurements
+
+| Build | Unique warnings | Sonar (`S####`) | S2930 | S9422 |
+| --- | --- | --- | --- | --- |
+| Q2, `main` at `fd0c0d13` | 1 838 | 1 824 | 34 | 39 |
+| Q3, `fix/s2930-dispose-cancellation` (uncommitted) | 1 804 | 1 790 | 0 | 39 |
+
+### Quality issues
+
+No new issues. The change touches several points that a reviewer should read, recorded here as notes, not as issues:
+
+- Some sources are disposed when the owner closes (`Close()`), so a later call that reads the source's `Token` would throw. The reads were moved to the start of each background task (for example `MarketTerminalDialog`, `MailDialog`, `PropertiesDialog`, `HashManifestDialog`). A new read of the field inside a task would bring the exception back.
+- A `Cancel()` that races with a `Dispose()` on another thread can throw `ObjectDisposedException`. For the scan classes (`DiskUsageScan`, `DuplicateScan`) this is guarded by a lock. For the dialogs it is not, because they cancel and dispose on the UI thread.
+- `BouncingLabel.Dispose` and `DatabaseInitializationHostedService.StopAsync` now dispose their source. A second call to `BouncingLabel.Dispose` returns early.
+
+### Status of earlier issues
+
+- QA-14 (undisposed `CancellationTokenSource` fields, S2930, 34 warnings): fixed on the branch, not committed. The build has 0 S2930 warnings. The unit tests pass. The end-to-end suite is not run.
+- QA-15 (exceptions swallowed in the idle loop, S2486): open, unchanged, 68 warnings in this build.
+- QA-16 (`SecureWipeDialog.TickSource` hides base member, CS0108): open, unchanged.
+- QA-17 (possible null argument in the PDF signature reader, CS8604): open, unchanged.
+
+### How to reproduce
+
+```bash
+dotnet build iTerminal.slnx -c Release --no-incremental -nologo -v:n > <scratch>/build5.log 2>&1
+grep -E ": warning " <scratch>/build5.log | sed -E 's/^ *[0-9]+>//' | sed -E 's/^\s+//' | sort -u > <scratch>/warnings-final.txt
+grep -c "" <scratch>/warnings-final.txt
+grep -c "warning S2930" <scratch>/warnings-final.txt
+dotnet test iConsole.Test/iConsole.Test.csproj -c Release
+dotnet test iTerminal.Core.Test/iTerminal.Core.Test.csproj -c Release
+```
