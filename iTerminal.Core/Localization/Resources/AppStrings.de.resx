@@ -9803,6 +9803,33 @@
   <data name="Scan.Empty" xml:space="preserve">
     <value>Scanner wählen und Enter drücken.</value>
   </data>
+  <data name="Scan.AlreadyRunning" xml:space="preserve">
+    <value>Ein Scan läuft. Esc bricht ihn ab.</value>
+  </data>
+  <data name="Scan.FeederWait" xml:space="preserve">
+    <value>Die Seiten des Einzugs kommen, wenn er leer ist.</value>
+  </data>
+  <data name="Scan.SavingPage" xml:space="preserve">
+    <value>Seite {0} von {1} wird gespeichert…</value>
+  </data>
+  <data name="Scan.Saved" xml:space="preserve">
+    <value>Gespeichert in {0}.</value>
+  </data>
+  <data name="Scan.SaveFailed" xml:space="preserve">
+    <value>Seite {0} von {1} wurde nicht gespeichert: {2}</value>
+  </data>
+  <data name="Scan.NoFileYet" xml:space="preserve">
+    <value>Datei: noch keine</value>
+  </data>
+  <data name="Scan.FileLabel" xml:space="preserve">
+    <value>Datei:</value>
+  </data>
+  <data name="Scan.SavedLabel" xml:space="preserve">
+    <value>Gespeichert:</value>
+  </data>
+  <data name="Scan.PixelSize" xml:space="preserve">
+    <value>{0} × {1} px</value>
+  </data>
   <data name="CmdTitle.ea1c510d" xml:space="preserve">
     <value>Scannen</value>
   </data>

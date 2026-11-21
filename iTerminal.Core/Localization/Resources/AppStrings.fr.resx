@@ -9739,6 +9739,33 @@
   <data name="Scan.Empty" xml:space="preserve">
     <value>Choisissez un scanner puis appuyez sur Entrée.</value>
   </data>
+  <data name="Scan.AlreadyRunning" xml:space="preserve">
+    <value>Un scan est en cours. Échap l’annule.</value>
+  </data>
+  <data name="Scan.FeederWait" xml:space="preserve">
+    <value>Les pages du chargeur arrivent quand il est vide.</value>
+  </data>
+  <data name="Scan.SavingPage" xml:space="preserve">
+    <value>Enregistrement de la page {0} sur {1}…</value>
+  </data>
+  <data name="Scan.Saved" xml:space="preserve">
+    <value>Enregistré dans {0}.</value>
+  </data>
+  <data name="Scan.SaveFailed" xml:space="preserve">
+    <value>La page {0} sur {1} n’a pas été enregistrée : {2}</value>
+  </data>
+  <data name="Scan.NoFileYet" xml:space="preserve">
+    <value>Fichier : aucun pour l’instant</value>
+  </data>
+  <data name="Scan.FileLabel" xml:space="preserve">
+    <value>Fichier :</value>
+  </data>
+  <data name="Scan.SavedLabel" xml:space="preserve">
+    <value>Enregistré :</value>
+  </data>
+  <data name="Scan.PixelSize" xml:space="preserve">
+    <value>{0} × {1} px</value>
+  </data>
   <data name="CmdTitle.ea1c510d" xml:space="preserve">
     <value>Numériser</value>
   </data>
