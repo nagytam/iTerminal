@@ -1,0 +1,83 @@
+name: Publish to WinGet
+
+# Opens a pull request against microsoft/winget-pkgs for one published GitHub Release. It never runs by itself: start it
+# from the Actions tab (or `gh workflow run winget.yml -f version=0.0.0.728`) for a release you want on WinGet.
+# The package must already exist in winget-pkgs: the first version is submitted by hand (`wingetcreate new`),
+# because `wingetcreate update` copies the existing manifests and only changes the version, URL, hash and ProductCode.
+# Needs the repository secret WINGET_PAT: a personal access token with the public_repo scope, owned by an account that
+# has a fork of microsoft/winget-pkgs.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release to publish, without the leading v (for example 0.0.0.728)'
+        required: true
+        type: string
+      submit:
+        description: 'Open the pull request on microsoft/winget-pkgs (off: only generate the manifests and attach them to the run)'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: winget
+  cancel-in-progress: false
+
+jobs:
+  winget:
+    name: Update the WinGet manifests
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      VERSION: ${{ inputs.version }}
+      PACKAGE_ID: TamasNagy.iTerminal
+    steps:
+      - name: Check the version and the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ($env:VERSION -notmatch '^\d+(\.\d+){3}$') { throw "Version '$env:VERSION' is not of the form 0.0.0.N." }
+          gh release view "v$env:VERSION" --repo $env:GITHUB_REPOSITORY --json isDraft,isPrerelease,assets --jq '.' | Tee-Object release.json
+          $release = Get-Content release.json | ConvertFrom-Json
+          if ($release.isDraft) { throw "Release v$env:VERSION is a draft." }
+          if (-not ($release.assets.name -contains "iTerminal-$env:VERSION-x64.msi")) { throw "Release v$env:VERSION has no iTerminal-$env:VERSION-x64.msi." }
+
+      - name: Get wingetcreate
+        shell: pwsh
+        run: Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+
+      - name: Generate the manifests
+        shell: pwsh
+        run: |
+          # Without --submit it writes the manifests to the output folder and stops, so the run can be inspected first.
+          $url = "https://github.com/$env:GITHUB_REPOSITORY/releases/download/v$env:VERSION/iTerminal-$env:VERSION-x64.msi|x64"
+          ./wingetcreate.exe update $env:PACKAGE_ID --version $env:VERSION --urls $url --out manifests
+          if ($LASTEXITCODE -ne 0) { throw "wingetcreate update failed ($LASTEXITCODE)." }
+
+      - name: Validate the manifests
+        shell: pwsh
+        run: |
+          winget validate --manifest "manifests/manifests/t/TamasNagy/iTerminal/$env:VERSION"
+          if ($LASTEXITCODE -ne 0) { throw "winget validate failed ($LASTEXITCODE)." }
+
+      - name: Upload the manifests
+        uses: actions/upload-artifact@v7
+        with:
+          name: winget-manifests-${{ env.VERSION }}
+          path: manifests
+
+      - name: Open the pull request on winget-pkgs
+        if: ${{ inputs.submit }}
+        shell: pwsh
+        env:
+          WINGET_PAT: ${{ secrets.WINGET_PAT }}
+        run: |
+          if (-not $env:WINGET_PAT) { throw 'The repository secret WINGET_PAT is not set.' }
+          $url = "https://github.com/$env:GITHUB_REPOSITORY/releases/download/v$env:VERSION/iTerminal-$env:VERSION-x64.msi|x64"
+          ./wingetcreate.exe update $env:PACKAGE_ID --version $env:VERSION --urls $url --submit --token $env:WINGET_PAT
+          if ($LASTEXITCODE -ne 0) { throw "wingetcreate submit failed ($LASTEXITCODE)." }
