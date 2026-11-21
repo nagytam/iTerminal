@@ -4,6 +4,7 @@
 awesome-cli-apps family (tuxarch/cli-apps, whose newer forks keep the data in CSV files under `data/`).
 
 **Rules to check before opening a pull request**
+- **rothgar/awesome-tuis (verified from its `.github/pull_request_template.md`, 2026-11-21):** the repository must be at least 6 months old; the application must be unique; the interface must be unique (no wrappers such as `fzf`); the interface must be interactive or redraw its output (output formatters do not count as TUIs). A workflow, `readme_pr_repo_first_commit.yml`, checks the repository's first-commit date on every PR that changes `README.md`. iTerminal's first commit is 2026-10-15, so it is **not eligible before 2027-04-15**.
 - One link per pull request, with the title `Add iTerminal` (awesome-dotnet asks for this; the other lists use the same norm). *Partly verified* from the repository guide as seen in search results; check each `CONTRIBUTING.md` before sending.
 - awesome-dotnet may ask for a pricing tag. iTerminal is free and MIT licensed, so use the free-for-open-source tag if the list has one. *Unverified.*
 - awesome-cli-apps (older guide): the app should be easy to install, documented, older than 90 days, and have more than 20 stars if it is on GitHub. *Unverified for the current repository.* Check the current rules and the CSV format in `tuxarch/cli-apps` before opening the pull request; the forks differ.
@@ -11,6 +12,8 @@ awesome-cli-apps family (tuxarch/cli-apps, whose newer forks keep the data in CS
 - Do not open the pull request until the release link exists, because a list entry should point to something people can install.
 
 ## 1. rothgar/awesome-tuis
+
+**Status: blocked until 2027-04-15** by the six-month age rule above. Do not open the pull request before then.
 
 Category: File managers (or the closest category in the list's current table of contents).
 
