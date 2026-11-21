@@ -215,6 +215,49 @@ public class TerminalInputUtf8DecoderCoverageTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void Drain_AltF1AsEscapedSs3_IsOneAltF1()
+    {
+        // VTE-style Alt+F1: the ESC prefix is the Alt, not a separate key and not a typed "P".
+        (List<KeyEvent> keys, _) = Decode("\x1b\x1bOP");
+        Assert.HasCount(1, keys);
+        Assert.AreEqual(ConsoleKey.F1, keys[0].ConsoleKey);
+        Assert.IsTrue(keys[0].Alt);
+        Assert.IsFalse(keys[0].Shift);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Drain_AltF1AsEscapedCsi_IsOneAltF1()
+    {
+        (List<KeyEvent> keys, _) = Decode("\x1b\x1b[1;3P");
+        Assert.HasCount(1, keys);
+        Assert.AreEqual(ConsoleKey.F1, keys[0].ConsoleKey);
+        Assert.IsTrue(keys[0].Alt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Drain_AltUpArrowAsEscapedCsi_IsAltUp()
+    {
+        (List<KeyEvent> keys, _) = Decode("\x1b\x1b[A");
+        Assert.HasCount(1, keys);
+        Assert.AreEqual(ConsoleKey.UpArrow, keys[0].ConsoleKey);
+        Assert.IsTrue(keys[0].Alt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Drain_AltF1ThenText_KeepsTheTextAfterTheKey()
+    {
+        (List<KeyEvent> keys, _) = Decode("\x1b\x1bOPq");
+        Assert.HasCount(2, keys);
+        Assert.AreEqual(ConsoleKey.F1, keys[0].ConsoleKey);
+        Assert.AreEqual('q', keys[1].KeyChar);
+        Assert.IsFalse(keys[1].Alt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void Drain_EscapeThenControlByte_DropsTheEscape()
     {
         (List<KeyEvent> keys, _) = Decode("\x1b\x01");
