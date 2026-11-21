@@ -6041,9 +6041,6 @@
   <data name="Signature.Footer" xml:space="preserve">
     <value> F2:firmar gpg  F3:firmar Authenticode  F4:firmar archivo de clave  F5:comprobar de nuevo  Esc:cerrar </value>
   </data>
-  <data name="Wipe.Footer" xml:space="preserve">
-    <value> Intro:borrar  1/3/7 o ↑↓:pasadas  Esc:cerrar </value>
-  </data>
   <data name="FolderSelector.HintGo" xml:space="preserve">
     <value>Intro ir</value>
   </data>
@@ -11239,5 +11236,41 @@
   </data>
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>Compartir los archivos seleccionados en esta red: un código QR y un enlace los abren en el navegador de un teléfono mientras este diálogo esté abierto.</value>
+  </data>
+  <data name="Wipe.FooterChoosing" xml:space="preserve">
+    <value> Enter:armar  1/3/7 o ↑↓:pasadas  Esc:cerrar </value>
+  </data>
+  <data name="Wipe.FooterArmed" xml:space="preserve">
+    <value> Enter:borrar para siempre  otra tecla:volver </value>
+  </data>
+  <data name="Wipe.FooterRunning" xml:space="preserve">
+    <value> Esc:detener (lo borrado ya no vuelve) </value>
+  </data>
+  <data name="Wipe.FooterFinished" xml:space="preserve">
+    <value> Enter:cerrar </value>
+  </data>
+  <data name="Wipe.Counting" xml:space="preserve">
+    <value>Contando los archivos…</value>
+  </data>
+  <data name="Wipe.Total" xml:space="preserve">
+    <value>{0} escritos en total, en todas las pasadas.</value>
+  </data>
+  <data name="Wipe.Name" xml:space="preserve">
+    <value>Borrar  {0}</value>
+  </data>
+  <data name="Wipe.Names" xml:space="preserve">
+    <value>Borrar  {0} elementos: {1}</value>
+  </data>
+  <data name="Wipe.Stopped" xml:space="preserve">
+    <value>Detenido: {0} archivo(s) borrado(s).</value>
+  </data>
+  <data name="Wipe.Done" xml:space="preserve">
+    <value>Listo: {0} archivo(s), {1} carpeta(s), {2} sobrescritos.</value>
+  </data>
+  <data name="Wipe.Failed" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Wipe.What" xml:space="preserve">
+    <value>{0} archivo(s), {1}</value>
   </data>
 </root>

@@ -50,6 +50,24 @@ public class SecureWipeDialog : Dialog
     private long _bytesTotal;
     private string _current = string.Empty;
 
+    /// <summary>The first line, built once in <see cref="Load"/> rather than on every idle pass.</summary>
+    private string _heading = string.Empty;
+
+    /// <summary>What a wipe writes over every pass, counted off the UI thread; -1 while it is still counting.</summary>
+    private long _totalWrite = -1;
+
+    /// <summary>When the dialog was armed (<see cref="Environment.TickCount64"/>), for the Enter guard.</summary>
+    private long _armedAt;
+
+    /// <summary>How long after arming an Enter is ignored. A held or doubled Enter must not arm and confirm in one go.</summary>
+    public TimeSpan ArmGuard { get; set; } = TimeSpan.FromMilliseconds(400);
+
+    /// <summary>The count started by <see cref="Arm"/>; nothing waits on it, it exists so a test can.</summary>
+    public Task CountTask { get; private set; } = Task.CompletedTask;
+
+    /// <summary>Milliseconds for the disk graphic's animation; replaceable so a test can fix a frame.</summary>
+    internal Func<long> TickSource { get; set; } = () => Environment.TickCount64;
+
     public SecureWipeDialog(
         ISecureWipeService wipeService,
         INotificationService notifications,
@@ -90,7 +108,25 @@ public class SecureWipeDialog : Dialog
         Result = null;
         Interlocked.Exchange(ref _bytesDone, 0);
         Interlocked.Exchange(ref _bytesTotal, 0);
+        Interlocked.Exchange(ref _totalWrite, -1);
         _current = string.Empty;
+        _heading = BuildHeading(Paths);
+    }
+
+    /// <summary>The names of up to ten items; the rest are counted, so a folder of twenty thousand rows costs nothing here.</summary>
+    private static string BuildHeading(IReadOnlyList<string> paths)
+    {
+        const int MaxNames = 10;
+        var names = paths.Take(MaxNames)
+            .Select(path => Path.GetFileName(path.TrimEnd('/', '\\')) is { Length: > 0 } name ? name : path)
+            .ToList();
+        if (paths.Count == 1)
+        {
+            return string.Format(iConsole.Localization.UiText.Get("Wipe.Name", "Wipe  {0}"), names[0]);
+        }
+
+        var list = string.Join(", ", names) + (paths.Count > names.Count ? ", …" : string.Empty);
+        return string.Format(iConsole.Localization.UiText.Get("Wipe.Names", "Wipe  {0} items: {1}"), paths.Count, list);
     }
 
     private static readonly WipePattern[] Methods = [WipePattern.Random, WipePattern.ThreePass, WipePattern.SevenPass];
@@ -118,9 +154,29 @@ public class SecureWipeDialog : Dialog
         if (Phase == WipePhase.Choosing && Paths.Count > 0)
         {
             Phase = WipePhase.Armed;
+            _armedAt = Environment.TickCount64;
+            Interlocked.Exchange(ref _totalWrite, -1);
+            CountTask = CountWrite(Paths, Pattern);
             UpdateLines();
         }
     }
+
+    /// <summary>Walks the tree for the armed screen's total, on a background task; the result is picked up on the next idle pass.</summary>
+    private Task CountWrite(IReadOnlyList<string> paths, WipePattern pattern) => Task.Run(() =>
+    {
+        long total;
+        try
+        {
+            total = _wipeService.Measure(paths, pattern);
+        }
+        catch (Exception)
+        {
+            // Shown as nothing rather than a wrong total; the wipe reports its own failures.
+            total = 0;
+        }
+
+        Interlocked.Exchange(ref _totalWrite, total);
+    });
 
     /// <summary>The second Enter: starts the wipe.</summary>
     public void Confirm()
@@ -162,7 +218,7 @@ public class SecureWipeDialog : Dialog
 
     private void Announce(WipeResult result)
     {
-        var what = $"{result.Files} file{(result.Files == 1 ? string.Empty : "s")}, {FilePropertiesService.FormatSize(result.Bytes)}";
+        var what = string.Format(UiText.Get("Wipe.What", "{0} file(s), {1}"), result.Files, FilePropertiesService.FormatSize(result.Bytes));
         if (result.Cancelled)
         {
             _notifications.Notify(UiText.Get("Notify.WipeStopped", "Secure wipe stopped"), string.Format(UiText.Get("Notify.WipeStoppedBody", "{0} wiped before it was cancelled."), what), NotificationSeverity.Warning);
@@ -218,18 +274,24 @@ public class SecureWipeDialog : Dialog
     public override void OnIdle()
     {
         base.OnIdle();
-        UpdateLines();
+
+        // Rebuild while a run moves its progress or the armed count lands, and once when the run ends on its worker thread.
+        if (Phase is WipePhase.Running or WipePhase.Armed || Phase != _shownPhase)
+        {
+            UpdateLines();
+        }
     }
+
+    /// <summary>The phase the lines were last built for; <see cref="OnIdle"/> rebuilds when it changes.</summary>
+    private WipePhase _shownPhase = WipePhase.Choosing;
 
     private void UpdateLines()
     {
+        _shownPhase = Phase;
         var colors = ThemeService.CurrentColorScheme;
         var width = Math.Max(16, (int)_info.ViewSize.Width);
         var lines = new List<InfoLines.Line>();
-        var names = Paths.Select(path => Path.GetFileName(path.TrimEnd('/', '\\')) is { Length: > 0 } name ? name : path).ToList();
-        lines.Add(new(names.Count == 1
-            ? ("Wipe  " + names[0]).Shrink(width) ?? string.Empty
-            : $"Wipe  {names.Count} items: {string.Join(", ", names)}".Shrink(width) ?? string.Empty));
+        lines.Add(new(_heading.Shrink(width) ?? string.Empty));
 
         switch (Phase)
         {
@@ -247,12 +309,19 @@ public class SecureWipeDialog : Dialog
                 lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Continue", "Enter:continue"), colors.DisabledForeground));
                 break;
             case WipePhase.Armed:
-                lines.Add(default);
-                lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Wipe.Method", "Method  {0}"), PatternName(Pattern))));
-                lines.Add(default);
-                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Armed1", "This destroys the data for good. Press Enter again to wipe,"), colors.Error));
-                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Armed2", "any other key to go back."), colors.Error));
-                break;
+                {
+                    lines.Add(default);
+                    lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Wipe.Method", "Method  {0}"), PatternName(Pattern))));
+                    lines.Add(default);
+                    lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Armed1", "This destroys the data for good. Press Enter again to wipe,"), colors.Error));
+                    lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Armed2", "any other key to go back."), colors.Error));
+                    lines.Add(default);
+                    var total = Interlocked.Read(ref _totalWrite);
+                    lines.Add(total < 0
+                        ? new(iConsole.Localization.UiText.Get("Wipe.Counting", "Counting the files…"), colors.DisabledForeground)
+                        : new(string.Format(iConsole.Localization.UiText.Get("Wipe.Total", "{0} written in total, over every pass."), FilePropertiesService.FormatSize(total)), colors.DisabledForeground));
+                    break;
+                }
             case WipePhase.Running:
                 {
                     var done = Interlocked.Read(ref _bytesDone);
@@ -260,6 +329,8 @@ public class SecureWipeDialog : Dialog
                     var percent = total > 0 ? $" {Math.Min(100, done * 100 / total)}%" : string.Empty;
                     lines.Add(default);
                     lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Wipe.Overwriting", "Overwriting…{0}  {1} of {2}"), percent, FilePropertiesService.FormatSize(done), FilePropertiesService.FormatSize(total))));
+                    var fraction = total > 0 ? (double)done / total : 0;
+                    lines.Add(new(WipeDiskGraphic.Render(fraction, Math.Clamp(width - 12, 8, 60), TickSource()), colors.Error));
                     lines.Add(new(Path.GetFileName(_current).Shrink(width) ?? string.Empty, colors.DisabledForeground));
                     lines.Add(default);
                     lines.Add(new(iConsole.Localization.UiText.Get("Wipe.EscStops", "Esc stops it; files already wiped stay wiped."), colors.DisabledForeground));
@@ -275,12 +346,13 @@ public class SecureWipeDialog : Dialog
                     }
 
                     lines.Add(new(result.Cancelled
-                        ? $"Stopped: {result.Files} file(s) wiped."
-                        : $"Done: {result.Files} file(s), {result.Folders} folder(s), {FilePropertiesService.FormatSize(result.Bytes)} overwritten.",
+                        ? string.Format(UiText.Get("Wipe.Stopped", "Stopped: {0} file(s) wiped."), result.Files)
+                        : string.Format(UiText.Get("Wipe.Done", "Done: {0} file(s), {1} folder(s), {2} overwritten."), result.Files, result.Folders, FilePropertiesService.FormatSize(result.Bytes)),
                         result.Success ? Color.Green : colors.Error));
+                    var failedLabel = UiText.Get("Wipe.Failed", "Failed: {0}");
                     foreach (var failure in result.Failures.Take(Math.Max(0, (int)_info.ViewSize.Height - 4)))
                     {
-                        lines.Add(new(("Failed: " + failure).Shrink(width) ?? string.Empty, colors.Error));
+                        lines.Add(new((string.Format(failedLabel, failure)).Shrink(width) ?? string.Empty, colors.Error));
                     }
 
                     break;
@@ -317,7 +389,12 @@ public class SecureWipeDialog : Dialog
             // Esc is the dialog's ahead of anything; every other key but Enter withdraws.
             if (keyEvent.ConsoleKey == ConsoleKey.Enter && plain)
             {
-                Confirm();
+                // An Enter that lands right after arming is a held or doubled key, not a second decision: ignore it.
+                if (Environment.TickCount64 - _armedAt >= ArmGuard.TotalMilliseconds)
+                {
+                    Confirm();
+                }
+
                 return true;
             }
 
@@ -393,7 +470,15 @@ public class SecureWipeDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
-        var footer = iConsole.Localization.UiText.Get("Wipe.Footer", " Enter:wipe  1/3/7 or ↑↓:passes  Esc:close ").FitHints(Math.Max(0, width - 4));
+        // The footer names only the keys that work in the current phase.
+        var footer = Phase switch
+        {
+            WipePhase.Choosing => iConsole.Localization.UiText.Get("Wipe.FooterChoosing", " Enter:arm  1/3/7 or ↑↓:passes  Esc:close "),
+            WipePhase.Armed => iConsole.Localization.UiText.Get("Wipe.FooterArmed", " Enter:wipe for good  any other key:go back "),
+            WipePhase.Running => iConsole.Localization.UiText.Get("Wipe.FooterRunning", " Esc:stop (wiped files stay wiped) "),
+            _ => iConsole.Localization.UiText.Get("Wipe.FooterFinished", " Enter:close "),
+        };
+        footer = footer.FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

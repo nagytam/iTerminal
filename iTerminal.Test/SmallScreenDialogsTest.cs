@@ -998,7 +998,7 @@ public class SmallScreenDialogsTest
     [TestMethod]
     [DataRow("Alt+F6", "Enter:anwenden")]
     [DataRow("Ctrl+Shift+F7", "signieren")]
-    [DataRow("Ctrl+Shift+F8", "Enter:löschen")]
+    [DataRow("Ctrl+Shift+F8", "Enter:scharfschalten")]
     [DataRow("Ctrl+F1", "Enter öffnen")]
     [DataRow("Alt+F3", "Noch nichts indiziert")]
     [DataRow("Alt+F11", "Keine iOS-Geräte")]

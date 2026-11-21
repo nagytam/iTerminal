@@ -6182,9 +6182,6 @@
   <data name="Signature.Footer" xml:space="preserve">
     <value> F2:sign gpg  F3:sign Authenticode  F4:sign key file  F5:check again  Esc:close </value>
   </data>
-  <data name="Wipe.Footer" xml:space="preserve">
-    <value> Enter:wipe  1/3/7 or ↑↓:passes  Esc:close </value>
-  </data>
   <data name="FolderSelector.HintGo" xml:space="preserve">
     <value>Enter go</value>
   </data>
@@ -11445,5 +11442,41 @@
   </data>
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>Share the selected files on this network: a QR code and a link open them in a phone's browser while this dialog is open.</value>
+  </data>
+  <data name="Wipe.FooterChoosing" xml:space="preserve">
+    <value> Enter:arm  1/3/7 or ↑↓:passes  Esc:close </value>
+  </data>
+  <data name="Wipe.FooterArmed" xml:space="preserve">
+    <value> Enter:wipe for good  any other key:go back </value>
+  </data>
+  <data name="Wipe.FooterRunning" xml:space="preserve">
+    <value> Esc:stop (wiped files stay wiped) </value>
+  </data>
+  <data name="Wipe.FooterFinished" xml:space="preserve">
+    <value> Enter:close </value>
+  </data>
+  <data name="Wipe.Counting" xml:space="preserve">
+    <value>Counting the files…</value>
+  </data>
+  <data name="Wipe.Total" xml:space="preserve">
+    <value>{0} written in total, over every pass.</value>
+  </data>
+  <data name="Wipe.Name" xml:space="preserve">
+    <value>Wipe  {0}</value>
+  </data>
+  <data name="Wipe.Names" xml:space="preserve">
+    <value>Wipe  {0} items: {1}</value>
+  </data>
+  <data name="Wipe.Stopped" xml:space="preserve">
+    <value>Stopped: {0} file(s) wiped.</value>
+  </data>
+  <data name="Wipe.Done" xml:space="preserve">
+    <value>Done: {0} file(s), {1} folder(s), {2} overwritten.</value>
+  </data>
+  <data name="Wipe.Failed" xml:space="preserve">
+    <value>Failed: {0}</value>
+  </data>
+  <data name="Wipe.What" xml:space="preserve">
+    <value>{0} file(s), {1}</value>
   </data>
 </root>
