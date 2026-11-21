@@ -1,4 +1,5 @@
 using System.Globalization;
+using iConsole.Controls;
 using iConsole.Helper;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
@@ -28,13 +29,19 @@ public class ToDoListDialog : Dialog
     /// <summary>16 rows when the dialog is tall; fewer on a short terminal, so the prompt, the error line and the hints stay inside the frame.</summary>
     private int ListRows => Math.Clamp((int)ViewSize.Height - 2 - 6, 3, MaxListRows);
     private const int MaxEntryLength = 120;
-    private static string DoneColumn => iConsole.Localization.UiText.Get("ToDo.Done", "Done").PadRight(6);
-    private static string PriorityColumn => iConsole.Localization.UiText.Get("ToDo.Priority", "Priority").PadRight(9);
-    private static string DueColumn => iConsole.Localization.UiText.Get("ToDo.Due", "Due").PadRight(11);
-    private static string RemindColumn => iConsole.Localization.UiText.Get("ToDo.Remind", "Remind").PadRight(12);
+    // The four fixed columns and their gaps take the same 38 cells the list always did, so the subject keeps its room.
+    private const int DoneWidth = 4;
+    private const int PriorityWidth = 8;
+    private const int DueWidth = 10;
+    private const int RemindWidth = 12;
 
     private readonly IDateTimeProviderService _dateTimeProviderService;
     private readonly ToDoStore _store;
+
+    // The visible tasks as the table shows them. The store is read on the UI thread only; SyncRows copies it across on each key, mouse and idle pass.
+    private readonly ConcurrentObservableCollection<ToDoTask> _queue = [];
+    private readonly Table<ToDoTask> _table;
+    private IReadOnlyList<ToDoTask> _appliedRows = [];
 
     private DateOnly _today;
     private bool _showCompleted = true;
@@ -62,7 +69,62 @@ public class ToDoListDialog : Dialog
         _dateTimeProviderService = dateTimeProviderService;
         _store = store;
         _today = Today();
+        _table = new Table<ToDoTask>(_queue, themeService)
+        {
+            RowForeground = task =>
+            {
+                var colors = ThemeService.CurrentColorScheme;
+                return task.IsComplete ? colors.DisabledForeground : IsOverdue(task) ? colors.Error : null;
+            },
+        };
+        ConfigureColumns();
+        AddControl(_table);
     }
+
+    private bool IsOverdue(ToDoTask task) => !task.IsComplete && task.DueDate is { } due && due < _today;
+
+    /// <summary>Puts the visible tasks on the table, and the cursor on the selected one.</summary>
+    private void SyncRows()
+    {
+        var visible = Visible.ToList();
+        if (!visible.SequenceEqual(_appliedRows))
+        {
+            _appliedRows = visible;
+            _queue.ReplaceAll(visible);
+        }
+
+        var selected = visible.FirstOrDefault(t => t.Id == _selectedId) ?? visible.FirstOrDefault();
+        var model = _table.ScrollableModel;
+        model.CursorPosition.Y = selected is null ? 0 : visible.IndexOf(selected);
+
+        // Before the first layout the table has no height, and scrolling to a cursor in an empty view would hide row 0.
+        if (model.ViewSize.Height > 0)
+        {
+            model.ScrollToVisible();
+        }
+
+        model.Update();
+        _table.EmptyText = iConsole.Localization.UiText.Get("ToDo.NoTasks", "No tasks. Press N to add one, e.g. !Renew passport @2026-11-01");
+    }
+
+    private void ConfigureColumns()
+    {
+        int subjectWidth = Math.Max(10, (int)_table.ViewSize.Width - DoneWidth - PriorityWidth - DueWidth - RemindWidth - 4);
+        _table.Columns.Clear();
+        _table.Columns.Add(new ColumnDefinition<ToDoTask>(iConsole.Localization.UiText.Get("ToDo.Done", "Done"), DoneWidth, t => t.IsComplete ? "[x]" : "[ ]"));
+        _table.Columns.Add(new ColumnDefinition<ToDoTask>(iConsole.Localization.UiText.Get("ToDo.Priority", "Priority"), PriorityWidth, PriorityText));
+        _table.Columns.Add(new ColumnDefinition<ToDoTask>(iConsole.Localization.UiText.Get("ToDo.Due", "Due"), DueWidth,
+            t => t.DueDate?.ToString("yyyy-MM-dd") ?? string.Empty));
+        _table.Columns.Add(new ColumnDefinition<ToDoTask>(iConsole.Localization.UiText.Get("ToDo.Remind", "Remind"), RemindWidth, ReminderText));
+        _table.Columns.Add(new ColumnDefinition<ToDoTask>(iConsole.Localization.UiText.Get("ToDo.Subject", "Subject"), subjectWidth, t => t.Subject));
+    }
+
+    private static string PriorityText(ToDoTask task) => task.Priority switch
+    {
+        ToDoPriority.High => iConsole.Localization.UiText.Get("ToDo.PriorityHigh", "High"),
+        ToDoPriority.Low => iConsole.Localization.UiText.Get("ToDo.PriorityLow", "Low"),
+        _ => string.Empty,
+    };
 
     private DateOnly Today() => DateOnly.FromDateTime(_dateTimeProviderService.Now);
 
@@ -75,6 +137,7 @@ public class ToDoListDialog : Dialog
         _editing = null;
         _reminding = null;
         _confirmingDelete = false;
+        SyncRows();
         await base.ShowAsync();
     }
 
@@ -85,7 +148,20 @@ public class ToDoListDialog : Dialog
             CenterInParent(new Size(DialogWidth, DialogHeight));
         }
 
+        // The column titles are the first row of the table, under the counts line; the tasks follow them.
+        _table.Position = new Position(1, 1);
+        _table.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), ListRows + 1);
+        _table.ScrollableModel.ViewSize = new Size(_table.ViewSize.Width, ListRows);
+        ConfigureColumns();
+        SyncRows();
+
         base.OnInitializeLayout();
+    }
+
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        SyncRows();
     }
 
     private IReadOnlyList<ToDoTask> Visible => _store.Visible(_showCompleted);
@@ -129,6 +205,8 @@ public class ToDoListDialog : Dialog
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // A key acts on the tasks as they are now, not as the table drew them at the last idle pass.
+        SyncRows();
         if (_entry is not null)
         {
             return HandleEntryKey(keyEvent);
@@ -279,6 +357,7 @@ public class ToDoListDialog : Dialog
     /// </summary>
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
+        SyncRows();
         if (_entry is null && !_confirmingDelete)
         {
             if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
@@ -305,18 +384,11 @@ public class ToDoListDialog : Dialog
         return await base.HandleMouseEventAsync(mouseEvent);
     }
 
-    /// <summary>The first listed task, which the list scrolls to keep the highlight in view.</summary>
-    private int FirstVisibleIndex(IReadOnlyList<ToDoTask> visible)
-    {
-        var selectedIndex = visible.ToList().FindIndex(t => t.Id == Selected?.Id);
-        return selectedIndex >= ListRows ? selectedIndex - ListRows + 1 : 0;
-    }
-
     private bool TaskAt(Position position, out ToDoTask? task, out bool onBox)
     {
         task = null;
         onBox = false;
-        long row = position.Y - (AbsolutePosition.Y + 2);
+        long row = position.Y - (AbsolutePosition.Y + 3);
         long column = position.X - (AbsolutePosition.X + 2);
         var visible = Visible;
         if (row < 0 || row >= ListRows || column < 0 || column >= ViewSize.Width - 4)
@@ -324,7 +396,7 @@ public class ToDoListDialog : Dialog
             return false;
         }
 
-        int index = FirstVisibleIndex(visible) + (int)row;
+        int index = (int)_table.ScrollableModel.ScrollPosition.Y + (int)row;
         if (index >= visible.Count)
         {
             return false;
@@ -546,77 +618,26 @@ public class ToDoListDialog : Dialog
         }
 
         DrawHeader(buffer, iw, colorScheme);
-        DrawRows(buffer, iw, colorScheme);
         DrawEntry(buffer, iw, colorScheme);
         Put(buffer, 1, ih - 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.Hint", "Space done  N new  E edit  R remind  P priority  D delete  H done  Esc close").FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
+        // The counts sit at the right edge of the first row, where the table's titles are not.
         var open = _store.Visible(false).Count;
-        var heading = DoneColumn + PriorityColumn + DueColumn + RemindColumn + iConsole.Localization.UiText.Get("ToDo.Subject", "Subject");
-        Put(buffer, 1, 0, iw - 2, heading, colorScheme.Foreground, colorScheme.Background);
-
-        // The counts sit at the right edge; where the full text would run into the heading, only the open count, else none.
         var title = $"{open} open  ·  {_store.Visible(true).Count - open} done";
-        if (heading.Length + 2 + title.Length > iw - 2)
+        if (title.Length > iw - 2)
         {
             title = $"{open} open";
         }
 
-        if (heading.Length + 2 + title.Length <= iw - 2)
-        {
-            Put(buffer, iw - title.Length - 1, 0, title.Length, title, colorScheme.DisabledForeground, colorScheme.Background);
-        }
-    }
-
-    private void DrawRows(IBuffer buffer, int iw, ColorScheme colorScheme)
-    {
-        var visible = Visible;
-        var selectedId = Selected?.Id;
-        if (visible.Count == 0)
-        {
-            Put(buffer, 1, 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.NoTasks", "No tasks. Press N to add one, e.g. !Renew passport @2026-11-01"), colorScheme.DisabledForeground, colorScheme.Background);
-            return;
-        }
-
-        var first = FirstVisibleIndex(visible);
-
-        for (var i = 0; i < ListRows; i++)
-        {
-            var y = 1 + i;
-            var index = first + i;
-            if (index >= visible.Count)
-            {
-                Put(buffer, 1, y, iw - 2, string.Empty, colorScheme.Foreground, colorScheme.Background);
-                continue;
-            }
-
-            var task = visible[index];
-            var highlighted = task.Id == selectedId;
-            var overdue = !task.IsComplete && task.DueDate is { } due && due < _today;
-            var foreground = highlighted ? colorScheme.SelectedFocusedForeground
-                : task.IsComplete ? colorScheme.DisabledForeground
-                : overdue ? colorScheme.Error
-                : colorScheme.Foreground;
-            var background = highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
-
-            var done = task.IsComplete ? "[x]   " : "[ ]   ";
-            var priority = task.Priority switch
-            {
-                ToDoPriority.High => iConsole.Localization.UiText.Get("ToDo.PriorityHigh", "High").PadRight(9),
-                ToDoPriority.Low => iConsole.Localization.UiText.Get("ToDo.PriorityLow", "Low").PadRight(9),
-                _ => "         ",
-            };
-            var dueText = task.DueDate?.ToString("yyyy-MM-dd") ?? string.Empty;
-            var line = done + priority + dueText.PadRight(DueColumn.Length) + ReminderText(task).PadRight(RemindColumn.Length) + task.Subject;
-            Put(buffer, 1, y, iw - 2, line, foreground, background);
-        }
+        Put(buffer, iw - title.Length - 1, 0, title.Length, title, colorScheme.DisabledForeground, colorScheme.Background);
     }
 
     private void DrawEntry(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        var y = 1 + ListRows + 1;
+        var y = 2 + ListRows + 1;
         if (_confirmingDelete && Selected is { } doomed)
         {
             Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Prompt.DeleteNamed", "Delete \"{0}\"? (y/n)"), doomed.Subject), colorScheme.Error, colorScheme.Background);

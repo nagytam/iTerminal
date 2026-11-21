@@ -1,3 +1,4 @@
+using iConsole.Data;
 using iTerminal.Core.Dialogs.Bluetooth;
 using iTerminal.Core.Services.Bluetooth;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -136,7 +137,7 @@ public class BluetoothDeviceManagerDialogTest
         await dialog.OperationForTest;
 
         dialog.OnIdle(); // the rows are shown, as they are in the app between two keys
-        dialog.ListBoxForTest.ScrollableModel.CursorPosition.Y = 1; // the keyboard, the second row
+        dialog.TableForTest.ScrollableModel.CursorPosition.Y = 1; // the keyboard, the second row
 
         // The next listing puts the keyboard first; the cursor must follow the keyboard, not stay on row two.
         bluetooth.Devices = [keyboard, headphones];
@@ -284,12 +285,21 @@ public class BluetoothDeviceManagerDialogTest
 
     [TestMethod]
     [Timeout(60_000)]
-    public void TheRowKeepsItsColumnsWhenTheNameIsLong()
+    public async Task ALongNameKeepsTheAddressAndTheStateInTheirColumns()
     {
-        var row = BluetoothDeviceManagerDialog.FormatRow(new BluetoothDevice(Keyboard, new string('x', 80), false, false), "nearby");
+        var keyboard = new BluetoothDevice(Keyboard, new string('x', 80), false, false);
+        var dialog = new BluetoothDeviceManagerDialog(new RecordingBluetooth(keyboard), TestTheme());
+        await ShowAsync(dialog);
+        await dialog.OperationForTest;
+        dialog.OnIdle();
 
-        Assert.AreEqual(Keyboard, row.Substring(31, 17));
-        Assert.IsTrue(row.EndsWith("nearby"));
+        var lines = Render(dialog).Lines;
+        var header = lines.Single(line => line.Contains("Address", StringComparison.Ordinal));
+        var row = lines.Single(line => line.Contains(Keyboard, StringComparison.Ordinal));
+
+        // The header names each column above the value it holds, however long the name is.
+        Assert.AreEqual(header.IndexOf("Address", StringComparison.Ordinal), row.IndexOf(Keyboard, StringComparison.Ordinal), row);
+        Assert.AreEqual(header.IndexOf("State", StringComparison.Ordinal), row.IndexOf("nearby", StringComparison.Ordinal), row);
     }
 
     /// <summary>A Bluetooth service that records what the dialog asks for and answers from fields.</summary>
@@ -400,12 +410,19 @@ public class BluetoothDeviceManagerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void FormatRow_WithAShortAddress_KeepsTheLastThreeBytesAndTheWholeState()
+    public async Task ANarrowDialogShowsTheLastThreeBytesOfTheAddressAndTheWholeState()
     {
-        var row = BluetoothDeviceManagerDialog.FormatRow(new BluetoothDevice("00:11:22:33:44:55", "Sandbox Headphones", false, false), "connected", nameWidth: 12, shortAddress: true);
+        var device = new BluetoothDevice("00:11:22:33:44:55", "Sandbox Headphones", IsPaired: false, IsConnected: true);
+        var dialog = new BluetoothDeviceManagerDialog(new RecordingBluetooth(device), TestTheme());
+        var size = new Size(40, 20);
+        await ShowAsync(dialog, size);
+        await dialog.OperationForTest;
+        dialog.OnIdle();
 
-        Assert.AreEqual("Sand...ones  33:44:55  connected", row);
-        Assert.IsTrue(row.EndsWith("connected", StringComparison.Ordinal));
-        Assert.IsFalse(row.Contains("00:11", StringComparison.Ordinal), row);
+        var screen = Render(dialog, size);
+
+        AssertScreenContains(screen, "33:44:55");
+        AssertScreenContains(screen, "connected");
+        AssertScreenDoesNotContain(screen, "00:11:22");
     }
 }

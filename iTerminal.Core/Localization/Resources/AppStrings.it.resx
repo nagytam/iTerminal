@@ -502,6 +502,15 @@
   <data name="BgService.UpdateCheck" xml:space="preserve">
     <value>Controllo aggiornamenti (Informazioni)</value>
   </data>
+  <data name="Bluetooth.Column.Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="Bluetooth.Column.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Bluetooth.Column.State" xml:space="preserve">
+    <value>Stato</value>
+  </data>
   <data name="Button.AddToFavourites" xml:space="preserve">
     <value>Aggiungi ai preferiti</value>
   </data>
@@ -7563,6 +7572,15 @@
   </data>
   <data name="Net.ShareRequired" xml:space="preserve">
     <value>Serve il nome di una condivisione.</value>
+  </data>
+  <data name="Network.Column.Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="Network.Column.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Network.Column.Status" xml:space="preserve">
+    <value>Stato</value>
   </data>
   <data name="Network.ConnectOver" xml:space="preserve">
     <value>Connetti a {0} tramite {1}</value>

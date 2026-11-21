@@ -1,3 +1,4 @@
+using iConsole.Controls;
 using System.Text;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -46,8 +47,12 @@ public class StreamsDialog : Dialog
     private string? _contentName;
     private bool _contentIsBinary;
     private bool? _forceHex;
-    private int _cursor;
     private bool _loaded;
+    // The list the table shows. The worker parks its result in _items; ApplyPendingItems takes it on the UI thread.
+    private readonly ConcurrentObservableCollection<StreamItem> _queue = [];
+    private readonly Table<StreamItem> _table;
+    private IReadOnlyList<StreamItem> _appliedItems = [];
+    private string? _previewName;
     private string? _listFailure;
     private bool _confirmDelete;
     private string _status = string.Empty;
@@ -60,6 +65,12 @@ public class StreamsDialog : Dialog
     {
         Title = UiText.Get("Dialog.Streams", "Streams and attributes");
         _service = service;
+        _table = new Table<StreamItem>(_queue, themeService)
+        {
+            EmptyText = UiText.Get("Streams.Reading", "Reading…"),
+        };
+        ConfigureColumns();
+        AddControl(_table);
     }
 
     /// <summary>The file or folder whose streams are shown.</summary>
@@ -81,7 +92,6 @@ public class StreamsDialog : Dialog
             _content = null;
             _contentName = null;
             _forceHex = null;
-            _cursor = 0;
             _loaded = false;
             _listFailure = null;
             _confirmDelete = false;
@@ -90,6 +100,7 @@ public class StreamsDialog : Dialog
             Title = UiText.Get("Dialog.Streams", "Streams and attributes") + " — " + _service.Kind;
         }
 
+        ApplyPendingItems();
         StartList();
         await base.ShowAsync();
     }
@@ -110,6 +121,13 @@ public class StreamsDialog : Dialog
         {
             CenterInParent(new Size(Math.Min(DialogWidth, Math.Max(40, (int)Parent.ViewSize.Width - 2)), DialogHeight));
         }
+
+        // The header is the first row of the table; the entries follow it, ListRows of them.
+        _table.Position = new Position(1, 2);
+        _table.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), ListRows + 1);
+        _table.ScrollableModel.ViewSize = new Size(_table.ViewSize.Width, ListRows);
+        ConfigureColumns();
+        MoveCursor(0);
 
         base.OnInitializeLayout();
     }
@@ -143,7 +161,6 @@ public class StreamsDialog : Dialog
             try
             {
                 StreamListing listing = await _service.ListAsync(path, token);
-                string? wanted;
                 lock (_sync)
                 {
                     if (generation != Volatile.Read(ref _generation) || token.IsCancellationRequested)
@@ -154,18 +171,6 @@ public class StreamsDialog : Dialog
                     _items = listing.Items;
                     _listFailure = listing.Failure;
                     _loaded = true;
-                    _cursor = Math.Clamp(_cursor, 0, Math.Max(0, _items.Count - 1));
-                    wanted = Selected?.Name;
-                    if (wanted != _contentName)
-                    {
-                        _content = null;
-                        _contentName = null;
-                    }
-                }
-
-                if (wanted is not null)
-                {
-                    await ReadPreviewAsync(path, wanted, token);
                 }
             }
             catch (OperationCanceledException)
@@ -194,11 +199,19 @@ public class StreamsDialog : Dialog
             return;
         }
 
+        // The entry the cursor is on, written here on the UI thread: the read below runs in the background and must not read the table.
+        // The number is taken here too: a read started earlier must not be able to take a later one, and then win.
+        int generation = Interlocked.Increment(ref _previewGeneration);
+        lock (_sync)
+        {
+            _previewName = selected.Name;
+        }
+
         PendingOperation = Task.Run(async () =>
         {
             try
             {
-                await ReadPreviewAsync(path, selected.Name, token);
+                await ReadPreviewAsync(path, selected.Name, generation, token);
             }
             catch (OperationCanceledException)
             {
@@ -208,9 +221,8 @@ public class StreamsDialog : Dialog
         });
     }
 
-    private async Task ReadPreviewAsync(string path, string name, CancellationToken token)
+    private async Task ReadPreviewAsync(string path, string name, int generation, CancellationToken token)
     {
-        int generation = Interlocked.Increment(ref _previewGeneration);
         StreamData content;
         try
         {
@@ -228,7 +240,7 @@ public class StreamsDialog : Dialog
         lock (_sync)
         {
             // The cursor moved on to another entry, or the dialog closed: this answer is old news.
-            if (generation != Volatile.Read(ref _previewGeneration) || token.IsCancellationRequested || Selected?.Name != name)
+            if (generation != Volatile.Read(ref _previewGeneration) || token.IsCancellationRequested || _previewName != name)
             {
                 return;
             }
@@ -243,7 +255,74 @@ public class StreamsDialog : Dialog
 
     #region Keys
 
-    private StreamItem? Selected => _cursor >= 0 && _cursor < _items.Count ? _items[_cursor] : null;
+    private StreamItem? Selected => _table.SelectedRow;
+
+    /// <summary>The highlighted entry's row, which is the table's cursor.</summary>
+    private int Cursor => (int)_table.ScrollableModel.CursorPosition.Y;
+
+    /// <summary>
+    /// Takes the list a read left, on the UI thread. The preview follows the entry the cursor is on, and a preview of an
+    /// entry that is no longer there is dropped.
+    /// </summary>
+    private void ApplyPendingItems()
+    {
+        IReadOnlyList<StreamItem> items;
+        lock (_sync)
+        {
+            if (ReferenceEquals(_items, _appliedItems))
+            {
+                return;
+            }
+
+            items = _items;
+            _appliedItems = items;
+        }
+
+        _queue.ReplaceAll(items.ToList());
+        MoveCursor(0);
+
+        string? wanted = Selected?.Name;
+        lock (_sync)
+        {
+            if (wanted != _contentName)
+            {
+                _content = null;
+                _contentName = null;
+            }
+        }
+
+        if (Selected is not null)
+        {
+            StartPreview();
+        }
+    }
+
+    /// <summary>Moves the highlight to <paramref name="index"/> (clamped to the list) and scrolls it into view.</summary>
+    private void MoveCursor(int index)
+    {
+        var model = _table.ScrollableModel;
+        model.CursorPosition.Y = Math.Clamp(index, 0, Math.Max(0, _queue.Count - 1));
+
+        // Before the first layout the table has no height, and scrolling to a cursor in an empty view would hide row 0.
+        if (model.ViewSize.Height > 0)
+        {
+            model.ScrollToVisible();
+        }
+
+        model.Update();
+    }
+
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        ApplyPendingItems();
+        lock (_sync)
+        {
+            _table.EmptyText = !_loaded
+                ? UiText.Get("Streams.Reading", "Reading…")
+                : _listFailure ?? string.Format(UiText.Get("Streams.None", "This entry has no {0}."), _service.Kind.ToLowerInvariant());
+        }
+    }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
@@ -268,6 +347,8 @@ public class StreamsDialog : Dialog
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // A key acts on the list as it is read, not as it was drawn the last time the dialog was idle.
+        ApplyPendingItems();
         if (HandleKey(keyEvent))
         {
             StateHasChanged();
@@ -308,22 +389,22 @@ public class StreamsDialog : Dialog
             handled = true;
             switch (keyEvent.ConsoleKey)
             {
-                case ConsoleKey.UpArrow when _cursor > 0:
-                    _cursor--;
+                case ConsoleKey.UpArrow when Cursor > 0:
+                    MoveCursor(Cursor - 1);
                     moved = true;
                     break;
-                case ConsoleKey.DownArrow when _cursor < _items.Count - 1:
-                    _cursor++;
+                case ConsoleKey.DownArrow when Cursor < _queue.Count - 1:
+                    MoveCursor(Cursor + 1);
                     moved = true;
                     break;
                 case ConsoleKey.UpArrow or ConsoleKey.DownArrow:
                     break;
-                case ConsoleKey.Home when _cursor != 0:
-                    _cursor = 0;
+                case ConsoleKey.Home when Cursor != 0:
+                    MoveCursor(0);
                     moved = true;
                     break;
-                case ConsoleKey.End when _cursor != _items.Count - 1 && _items.Count > 0:
-                    _cursor = _items.Count - 1;
+                case ConsoleKey.End when Cursor != _queue.Count - 1 && _queue.Count > 0:
+                    MoveCursor(_queue.Count - 1);
                     moved = true;
                     break;
                 case ConsoleKey.F5:
@@ -422,6 +503,17 @@ public class StreamsDialog : Dialog
     #endregion
 
     #region Drawing
+
+    private const int SizeWidth = 12;
+
+    /// <summary>Name takes the width that is left; the size keeps its column on the right.</summary>
+    private void ConfigureColumns()
+    {
+        int nameWidth = Math.Max(8, (int)_table.ViewSize.Width - SizeWidth - 1);
+        _table.Columns.Clear();
+        _table.Columns.Add(new ColumnDefinition<StreamItem>(UiText.Get("Streams.Col.Name", "Name"), nameWidth, item => item.Name));
+        _table.Columns.Add(new ColumnDefinition<StreamItem>(UiText.Get("Streams.Col.Size", "Size"), SizeWidth, item => Compact(item.Size), TextAlignment.Right));
+    }
 
     /// <summary>Whether the bytes are not text: invalid UTF-8, or a control character other than tab, CR and LF.</summary>
     internal static bool LooksLikeBinary(StreamData? content)
@@ -534,35 +626,6 @@ public class StreamsDialog : Dialog
             string target = TargetPath ?? string.Empty;
             Put(buffer, 1, 0, iw - 2, UiText.Get("Streams.Target", "File").PadRight(9) + target, colors.Foreground, colors.Background);
 
-            int sizeWidth = 12;
-            int nameWidth = Math.Max(8, iw - 2 - 2 - sizeWidth - 1);
-            Put(buffer, 1, 2, iw - 2, "  " + UiText.Get("Streams.Col.Name", "Name").PadRight(nameWidth) + " " + UiText.Get("Streams.Col.Size", "Size").PadLeft(sizeWidth), colors.DisabledForeground, colors.Background);
-
-            if (_items.Count == 0)
-            {
-                string empty = !_loaded
-                    ? UiText.Get("Streams.Reading", "Reading…")
-                    : _listFailure ?? string.Format(UiText.Get("Streams.None", "This entry has no {0}."), _service.Kind.ToLowerInvariant());
-                Put(buffer, 1, 3, iw - 2, empty, _listFailure is not null && _loaded ? colors.Error : colors.DisabledForeground, colors.Background);
-            }
-
-            int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
-            for (int i = 0; i < ListRows; i++)
-            {
-                int index = first + i;
-                if (index >= _items.Count)
-                {
-                    continue;
-                }
-
-                StreamItem item = _items[index];
-                bool highlighted = index == _cursor;
-                Put(buffer, 1, 3 + i, iw - 2,
-                    (highlighted ? "> " : "  ") + Clip(item.Name, nameWidth).PadRight(nameWidth) + " " + Compact(item.Size).PadLeft(sizeWidth),
-                    highlighted ? colors.SelectedFocusedForeground : colors.Foreground,
-                    highlighted ? colors.SelectedFocusedBackground : colors.Background);
-            }
-
             DrawPreview(buffer, iw, ih, colors);
 
             Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : colors.Foreground, colors.Background);
@@ -645,7 +708,7 @@ public class StreamsDialog : Dialog
 
     internal string StatusForTest { get { lock (_sync) return _status; } }
     internal int CountForTest { get { lock (_sync) return _items.Count; } }
-    internal int CursorForTest { get { lock (_sync) return _cursor; } }
+    internal int CursorForTest => Cursor;
 
     #endregion
 }

@@ -111,6 +111,12 @@ public class Table<T> : Control
         return Fit(header, room, Columns[index].Alignment) + (SortDescending ? "▼" : "▲");
     }
 
+    /// <summary>
+    /// The text colour of a row that is not under the cursor, when the host wants one: an overdue task in red, a finished one in grey,
+    /// a failed job in red. Null, or a null result, keeps the colour the table uses for every row.
+    /// </summary>
+    public Func<T, Color?>? RowForeground { get; set; }
+
     /// <summary>Raised when the user presses Enter on a row.</summary>
     public event EventHandler<T?>? RowActivated;
 
@@ -238,6 +244,11 @@ public class Table<T> : Control
         var scrollOffset = (int)ScrollableModel.ScrollPosition.Y;
         var snapshot = _rows.AsSnapshot();
 
+        // An empty table says why it is empty in as many rows as the words need, so a narrow table does not cut the hint.
+        var emptyLines = snapshot.Count == 0 && !string.IsNullOrEmpty(EmptyText)
+            ? EmptyText.WrapWords((int)ViewSize.Width)
+            : new List<string>();
+
         for (int y = 0; y < bodyHeight; y++)
         {
             var rowIndex = scrollOffset + y;
@@ -246,7 +257,7 @@ public class Table<T> : Control
             {
                 // Paint the rows below the data too: a table that loses rows must not keep
                 // showing them, and nothing else clears the layer between frames.
-                var filler = snapshot.Count == 0 && y == 0 ? EmptyText : string.Empty;
+                var filler = y < emptyLines.Count ? emptyLines[y] : string.Empty;
                 var fillerForeground = filler.Length > 0 ? colorScheme.DisabledForeground : colorScheme.Foreground;
                 buffer.Write(ZOrder, rowPosition, ViewSize,
                     new ConxelString(filler.PadRight((int)ViewSize.Width), fillerForeground, colorScheme.Background));
@@ -260,6 +271,10 @@ public class Table<T> : Control
                 ? (IsFocused ? VisualState.Focused : VisualState.Selected)
                 : VisualState.Normal;
             GetColor(colorScheme, visualState, out var fg, out var bg);
+            if (visualState == VisualState.Normal && RowForeground?.Invoke(row) is { } rowColor)
+            {
+                fg = rowColor;
+            }
 
             buffer.Write(ZOrder, rowPosition, ViewSize, new ConxelString(text, fg, bg));
         }

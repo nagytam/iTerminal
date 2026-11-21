@@ -175,7 +175,7 @@ public class ToDoListDialogTest
     // The list starts after the border, the header and one blank line of padding; columns after the border and a space.
     private static MouseEvent AtTask(ToDoListDialog dialog, int row, int column = 20, bool click = true, int wheel = 0) => new()
     {
-        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 2 + column, dialog.AbsolutePosition.Y + 2 + row),
+        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 2 + column, dialog.AbsolutePosition.Y + 3 + row), // the titles are the row above the first task
         LeftClicked = click && wheel == 0,
         WheelDelta = wheel,
     };
@@ -457,6 +457,7 @@ public class ToDoListDialogTest
         await fixture.Dialog.HandleKeyEventAsync(Char('r'));
         await TypeAsync(fixture.Dialog, "15:30");
         await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+        fixture.Dialog.OnIdle(); // the app idles between keys, and the table takes the new reminder then
 
         Assert.AreEqual(new DateTime(2026, 10, 14, 15, 30, 0), fixture.Store.Visible(true).Single().RemindAt);
         Assert.IsNull(fixture.Dialog.EntryForTest);

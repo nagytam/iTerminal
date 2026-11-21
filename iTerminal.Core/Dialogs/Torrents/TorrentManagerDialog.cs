@@ -1,3 +1,4 @@
+using iConsole.Controls;
 ﻿using iConsole.Helper;
 using iConsole.Localization;
 using iConsole.Buffers;
@@ -39,6 +40,10 @@ public class TorrentManagerDialog : Dialog
     private Mode _mode = Mode.List;
     private IReadOnlyList<TorrentItem> _list = [];
     private int _cursor;
+
+    // The list the table shows. Reload is the only writer, and it runs on the UI thread.
+    private readonly ConcurrentObservableCollection<TorrentItem> _queue = [];
+    private readonly Table<TorrentItem> _table;
     private string? _selectedId;
     private bool _confirmDelete;
     private DateTime _lastRefresh = DateTime.MinValue;
@@ -56,6 +61,12 @@ public class TorrentManagerDialog : Dialog
         Title = "BitTorrent";
         _torrents = torrents;
         _contentModelService = contentModelService;
+        _table = new Table<TorrentItem>(_queue, themeService)
+        {
+            EmptyText = UiText.Get("Torrents.Empty", "No torrents yet. A adds a magnet link, a .torrent file or its URL."),
+        };
+        ConfigureColumns();
+        AddControl(_table);
     }
 
     /// <summary>The action the last key started. Nothing waits on it; it exists so a test can.</summary>
@@ -92,6 +103,13 @@ public class TorrentManagerDialog : Dialog
         {
             CenterInParent(new Size(DialogWidth, DialogHeight));
         }
+
+        // The header is the first row of the table, under the totals line; the torrents follow it.
+        _table.Position = new Position(1, 1);
+        _table.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), ListRows + 1);
+        _table.ScrollableModel.ViewSize = new Size(_table.ViewSize.Width, ListRows);
+        ConfigureColumns();
+        SyncTable();
 
         base.OnInitializeLayout();
     }
@@ -334,6 +352,39 @@ public class TorrentManagerDialog : Dialog
         int index = _selectedId is null ? -1 : _list.ToList().FindIndex(t => t.Id == _selectedId);
         _cursor = index >= 0 ? index : Math.Clamp(_cursor, 0, Math.Max(0, _list.Count - 1));
         _selectedId = _list.ElementAtOrDefault(_cursor)?.Id;
+        _queue.ReplaceAll(_list.ToList());
+        SyncTable();
+    }
+
+    /// <summary>Puts the table's highlight on the cursor and scrolls it into view. The cursor stays the dialog's own.</summary>
+    private void SyncTable()
+    {
+        var model = _table.ScrollableModel;
+        model.CursorPosition.Y = _cursor;
+
+        // Before the first layout the table has no height, and scrolling to a cursor in an empty view would hide row 0.
+        if (model.ViewSize.Height > 0)
+        {
+            model.ScrollToVisible();
+        }
+
+        model.Update();
+    }
+
+    /// <summary>
+    /// Name takes the width that is left; the six figures after it keep their widths, so each one sits under its title.
+    /// </summary>
+    private void ConfigureColumns()
+    {
+        int nameWidth = Math.Max(10, (int)_table.ViewSize.Width - 53);
+        _table.Columns.Clear();
+        _table.Columns.Add(new ColumnDefinition<TorrentItem>(UiText.Get("Torrent.Col.Name", "Name"), nameWidth, item => item.Name));
+        _table.Columns.Add(new ColumnDefinition<TorrentItem>(UiText.Get("Torrent.Col.State", "State"), 8, item => StatusLabel(item.Status)));
+        _table.Columns.Add(new ColumnDefinition<TorrentItem>(UiText.Get("Torrent.Col.Done", "Done"), 6, item => $"{item.Progress:0.0}%", TextAlignment.Right));
+        _table.Columns.Add(new ColumnDefinition<TorrentItem>(UiText.Get("Torrent.Col.Size", "Size"), 9, item => FormatSize(item.Size), TextAlignment.Right));
+        _table.Columns.Add(new ColumnDefinition<TorrentItem>(UiText.Get("Torrent.Col.Down", "Down"), 10, item => FormatRate(item.DownloadRate), TextAlignment.Right));
+        _table.Columns.Add(new ColumnDefinition<TorrentItem>(UiText.Get("Torrent.Col.Up", "Up"), 10, item => FormatRate(item.UploadRate), TextAlignment.Right));
+        _table.Columns.Add(new ColumnDefinition<TorrentItem>(UiText.Get("Torrent.Col.Peer", "Peer"), 4, item => item.Peers.ToString(), TextAlignment.Right));
     }
 
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
@@ -354,7 +405,7 @@ public class TorrentManagerDialog : Dialog
                 long column = mouseEvent.Position.X - (AbsolutePosition.X + 2);
                 lock (_sync)
                 {
-                    int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
+                    int first = (int)_table.ScrollableModel.ScrollPosition.Y;
                     if (row >= 0 && row < ListRows && column >= 0 && column < ViewSize.Width - 4 && first + (int)row < _list.Count)
                     {
                         return MoveCursor(first + (int)row - _cursor);
@@ -372,6 +423,7 @@ public class TorrentManagerDialog : Dialog
         {
             _cursor = Math.Clamp(_cursor + delta, 0, _list.Count - 1);
             _selectedId = _list[_cursor].Id;
+            SyncTable();
         }
 
         StateHasChanged();
@@ -560,9 +612,6 @@ public class TorrentManagerDialog : Dialog
         _ => UiText.Get("Torrent.State.Error", "Error"),
     };
 
-    internal static string Row(TorrentItem item, int nameWidth) =>
-        $"{Clip(item.Name, nameWidth).PadRight(nameWidth)} {StatusLabel(item.Status),-8} {item.Progress,5:0.0}% {FormatSize(item.Size),9} {FormatRate(item.DownloadRate),10} {FormatRate(item.UploadRate),10} {item.Peers,4}";
-
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
@@ -613,35 +662,6 @@ public class TorrentManagerDialog : Dialog
         long down = _list.Sum(t => t.DownloadRate);
         long up = _list.Sum(t => t.UploadRate);
         Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Torrents.Header", "{0} torrents  ·  down {1}  ·  up {2}"), _list.Count, FormatRate(down), FormatRate(up)), colorScheme.Foreground, colorScheme.Background);
-
-        int nameWidth = Math.Max(10, iw - 2 - 2 - 53);
-        Put(buffer, 1, 1, iw - 2, "  " + UiText.Get("Torrent.Col.Name", "Name").PadRight(nameWidth) + " " + UiText.Get("Torrent.Col.State", "State").PadRight(8) + " "
-            + UiText.Get("Torrent.Col.Done", "Done").PadLeft(6) + " " + UiText.Get("Torrent.Col.Size", "Size").PadLeft(9) + " " + UiText.Get("Torrent.Col.Down", "Down").PadLeft(10) + " "
-            + UiText.Get("Torrent.Col.Up", "Up").PadLeft(10) + " " + UiText.Get("Torrent.Col.Peer", "Peer").PadLeft(4), colorScheme.DisabledForeground, colorScheme.Background);
-        if (_list.Count == 0)
-        {
-            // The only guidance on an empty list: wrapped over the free rows, so a narrow terminal does not cut it off.
-            int emptyRow = 2;
-            foreach (string part in iConsole.Localization.UiText.Get("Torrents.Empty", "No torrents yet. A adds a magnet link, a .torrent file or its URL.").WrapWords(iw - 2).Take(ListRows))
-            {
-                Put(buffer, 1, emptyRow++, iw - 2, part, colorScheme.DisabledForeground, colorScheme.Background);
-            }
-        }
-
-        int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
-        for (int i = 0; i < ListRows; i++)
-        {
-            int index = first + i;
-            if (index >= _list.Count)
-            {
-                continue;
-            }
-
-            bool highlighted = index == _cursor;
-            Put(buffer, 1, 2 + i, iw - 2, (highlighted ? "> " : "  ") + Row(_list[index], nameWidth),
-                highlighted ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground,
-                highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background);
-        }
 
         if (Selected is { } selected)
         {

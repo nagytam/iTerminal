@@ -267,11 +267,9 @@ public class TorrentManagerDialogTest
         await ShowAsync(dialog);
         await dialog.PendingOperation;
 
-        // "Peer" was clipped to "Pe" because the header was two cells wider than the room.
+        // "Peer" was clipped to "Pe" when the header was two cells wider than the room. The table lays its own columns out, so
+        // the titles and the figures under them can no longer drift apart; what is left to check is that the last title fits.
         AssertScreenContains(Render(dialog), "Up Peer");
-        Assert.AreEqual(TorrentManagerDialog.Row(Item("x", TorrentStatus.Downloading), 10).Length + 1 + 2,
-            ("  " + "Name".PadRight(10) + " " + "State".PadRight(8) + " " + "Done".PadLeft(6) + " " + "Size".PadLeft(9) + " " + "Down".PadLeft(10) + " " + "Up".PadLeft(10) + " " + "Peer".PadLeft(4)).Length + 1,
-            "the title row is as wide as a data row");
     }
 
 }
