@@ -24,6 +24,7 @@ Never touch the user's own working tree or its checked-out branch. Do all git wo
 2. Skip a draft pull request. Note it only if it has been ready for a while; do not report it otherwise.
 3. Skip a pull request whose `reviewDecision` is `CHANGES_REQUESTED`, and report it once as blocked by review.
 4. For each remaining pull request, in the order of their numbers (oldest first):
+   0. **Announce.** Before any other step, report that you have started it (see Reporting), so the user can see which pull request is in progress.
    a. **Behind or conflicting.** If `mergeable` is `CONFLICTING`, or `mergeStateStatus` is `BEHIND` or `DIRTY`, update the branch in its worktree: `git merge --no-edit origin/main` (a merge, not a rebase, so no history is rewritten). Then:
       - If the merge is clean, push with `git push origin HEAD:<headRefName>` (no force).
       - If there are conflicts, resolve each one by reading both sides and the surrounding code. Resolve only when the correct result is clear from the code and the pull request's intent (for example, two new entries in one list, a renamed symbol that one side still uses, a `.resx` key added on both sides). For a conflict that needs a design decision, abort the merge (`git merge --abort`) and report the pull request as blocked by a conflict that needs the author. Never resolve a conflict by dropping one side's behaviour or by taking one side wholesale.
@@ -44,6 +45,7 @@ If there is nothing open, or everything open is blocked or draft, sleep for 600 
 
 Report only what changed the state of main or of a pull request:
 
+- `Processing #<number> <title> (head <short sha>)`: printed once per pull request per pass, when you start step 4 for it
 - `Merged #<number> <title> into main (<short sha>)`
 - `Resolved conflicts in #<number> with main and pushed <short sha>; checks running`
 - `Blocked #<number>: <one-line reason> (<run URL or conflicting file>)`
