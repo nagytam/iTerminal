@@ -258,6 +258,16 @@ Tools > Online radio: a list of internet radio stations, played through the shar
 - **Storage is the `CalendarMeetings` setting**, one JSON list, as for contacts and tasks (see the contact manager above and the Settings rule in CLAUDE.md).
 - **Identities for a list saved before they existed are given at load, in memory, and written off the render thread.** Loading never saves, since a save is a blocking settings write and the calendar is read while drawing. `CalendarIdentityJob` writes the pending list every few seconds on its own thread; a failed write is logged and tried again on the next tick, so an identity is not lost to one failure. Until that write succeeds, a restart before it would give those meetings new identities.
 
+### The watch (`WatchDialog`, Ctrl+Shift+T, Tools > Watch, `Model/Watch/`, `Services/Watch/`, `Jobs/WatchAlarmJob.cs`)
+A horizontal `Tab` with four pages: the **World clock** (the computer's zone first, then the zones the person adds by their system id; the zone under the cursor is shown large, digital or analog, and V switches), the **Alarm** (daily, on or off with Space, the next one counted above the list), the **Stopwatch** (Space, L for laps, R when stopped) and the **Timers** (N starts one at once, Space pauses, R restarts).
+
+- **Alarms and zones are kept in the settings table** (`WatchAlarms`, `WatchWorldClocks`), one JSON list each, read on first use, like `MeetingStore`. Timers and the stopwatch live for the session only.
+- **Ringing is not the dialog's job.** `WatchAlarmJob` checks once a second and posts a notification, so an alarm rings and a timer is announced whether or not the dialog is open. An alarm is a notification that stays until dismissed. The day it rang is recorded before the save (`WatchStore.MarkRung`), so a failed save cannot ring it twice in the same minute. An alarm does not ring while iTerminal is closed.
+- **Every page writes its own rows.** A page is focusable through a surface that fills it, and the digits and the clock face are drawn by the page (`Digits.Render`, `AnalogClock.Render`), not by child controls: children share their parent's layer and the renderer does not promise their draw order, so a surface drawn after them would paint over the face.
+- **Time is passed in, never read.** `WatchRun` takes `now` on every call, and the dialog, the stopwatch and the job all read `IDateTimeProviderService`, so the tests drive a fake clock.
+- **Esc and the arrows belong to the open entry.** While an entry or a y/n question is open, Esc cancels it and Left/Right do not switch tabs under the text being typed (`WatchDialog.HandleKeyEventAsync`). A single entry error takes the whole message line, since a prompt plus the typed text would cut it off at the dialog's width.
+- The analog face is the `AnalogClock` control in `iConsole/Controls/`; its `Render` is static, so a page can place it without a child control.
+
 ### The task list (`ToDoListDialog`, Ctrl+Y, `Model/ToDo/`, `Services/ToDo/`, `Jobs/ToDoReminderJob.cs`)
 Add (N or Enter), edit (E or F2), delete (D or Delete, asks first), mark done (Space), priority (P), hide done (H) and
 **remind me (R)**. The entry line reads `!Subject @yyyy-MM-dd ~time`: `~15:30` is the next time that clock reading comes round,

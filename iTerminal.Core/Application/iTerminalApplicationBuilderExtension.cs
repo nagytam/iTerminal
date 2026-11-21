@@ -173,6 +173,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
         services.AddSingleton<iTerminal.Core.Model.Calendar.MeetingStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Calendar.CalendarDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Watch.WatchStore>();
+        services.AddSingleton<iTerminal.Core.Services.Watch.WatchTimers>();
+        services.AddSingleton<iTerminal.Core.Model.Watch.WatchStopwatch>();
+        services.AddTransient<iTerminal.Core.Dialogs.Watch.WatchDialog>();
         services.AddSingleton<iTerminal.Core.Model.ToDo.ToDoStore>();
         services.AddSingleton<iTerminal.Core.Services.ToDo.ToDoReminderService>();
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
@@ -535,6 +539,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, iTerminal.Core.Jobs.InternetConnectivityJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.CalendarIdentityJob>();
+        services.AddSingleton<IJob, iTerminal.Core.Jobs.WatchAlarmJob>();
         services.AddSingleton<DriveInfoModel>();
         services.AddTransient<CopyDialog>();
         services.AddTransient<MoveDialog>();
