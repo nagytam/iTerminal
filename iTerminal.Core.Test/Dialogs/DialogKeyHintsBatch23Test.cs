@@ -34,7 +34,7 @@ public class DialogKeyHintsBatch23Test
     [TestMethod]
     public void ProcessManager_KeyHints_NameFilterAndMovement()
     {
-        ProcessManagerDialog dialog = new(Mock.Of<IBeepService>(), new ProcessService(), new DateTimeProviderService(), TestTheme());
+        ProcessManagerDialog dialog = new(Mock.Of<IBeepService>(), new ProcessService(), new DateTimeProviderService(), TestTheme(), new SystemTimeProvider());
 
         CollectionAssert.IsSubsetOf(new[] { "Type", "Up/Down", "Ctrl+Home/End" }, Keys(dialog.GetKeyHints()));
     }

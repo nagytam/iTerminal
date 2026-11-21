@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using iConsole.Services;
 
 namespace iConsole.Test.Services;
@@ -7,61 +8,68 @@ public class ProcessServiceTest
 {
     [Timeout(60_000)]
     [TestMethod]
-    public void ProcessServiceConstructor()
+    public void SampleListsTheProcessesOrderedById()
     {
-        var service = new ProcessService();
-        Assert.IsNotNull(service);
-        Assert.IsNotNull(service.Processes);
-    }
+        var samples = new ProcessService().Sample();
 
-    [Timeout(60_000)]
-    [TestMethod]
-    public void ProcessServiceProcessesNotEmpty()
-    {
-        var service = new ProcessService();
-        Assert.IsTrue(service.Processes.Count > 0);
-    }
-
-    [Timeout(60_000)]
-    [TestMethod]
-    public void ProcessServiceProcessesSorted()
-    {
-        var service = new ProcessService();
-        for (int i = 0; i < service.Processes.Count - 1; i++)
+        Assert.IsTrue(samples.Count > 0);
+        for (int i = 0; i < samples.Count - 1; i++)
         {
-            var current = service.Processes[i];
-            var next = service.Processes[i + 1];
-            Assert.IsTrue(current.Id <= next.Id);
+            Assert.IsTrue(samples[i].Id < samples[i + 1].Id);
         }
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void ProcessServiceContainsCurrentProcess()
+    public void SampleContainsTheCurrentProcessWithItsNameAndMemory()
     {
-        var service = new ProcessService();
-        var currentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
+        var samples = new ProcessService().Sample();
 
-        var found = false;
-        foreach (var process in service.Processes)
-        {
-            if (process.Id == currentProcessId)
-            {
-                found = true;
-                break;
-            }
-        }
-        Assert.IsTrue(found);
+        var current = samples.Single(s => s.Id == Environment.ProcessId);
+        Assert.AreEqual(Process.GetCurrentProcess().ProcessName, current.Name);
+        Assert.IsTrue(current.WorkingSetBytes > 0, "the process holds some memory");
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void ProcessServiceProcessesAreValid()
+    public void TheFirstSampleReportsNoProcessorUse()
+    {
+        var samples = new ProcessService().Sample();
+
+        Assert.IsTrue(samples.All(s => s.CpuPercent is null));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ProcessorUseIsMeasuredBetweenSamplesAndStaysWithinRange()
     {
         var service = new ProcessService();
-        foreach (var process in service.Processes)
+        service.Sample();
+
+        var samples = service.Sample();
+
+        var values = samples.Where(s => s.CpuPercent is not null).Select(s => s.CpuPercent!.Value).ToList();
+        Assert.IsTrue(values.Count > 0);
+        Assert.IsTrue(values.All(v => v is >= 0 and <= 100));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ProcessorUseShowsWorkDoneBetweenSamples()
+    {
+        var service = new ProcessService();
+        service.Sample();
+
+        // Keep one thread busy for a while, so this process has used processor time between the two samples.
+        var watch = Stopwatch.StartNew();
+        long spin = 0;
+        while (watch.ElapsedMilliseconds < 300)
         {
-            Assert.IsTrue(process.Id >= 0);
+            spin++;
         }
+
+        var current = service.Sample().Single(s => s.Id == Environment.ProcessId);
+        Assert.IsNotNull(current.CpuPercent);
+        Assert.IsTrue(current.CpuPercent > 0, $"processor use {current.CpuPercent} after {spin} iterations");
     }
 }
