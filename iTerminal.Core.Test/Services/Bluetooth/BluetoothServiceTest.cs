@@ -113,4 +113,83 @@ public class BluetoothServiceTest
         Assert.IsTrue(outcome.Succeeded);
         Assert.AreEqual("bluetoothctl --timeout 8 scan on", runner.Calls.Single().CommandLine);
     }
+
+    // The Windows backend is chosen explicitly, so these run on any machine and CI on Linux exercises them too.
+    private const string WindowsJson = """[{"InstanceId":"BTHENUM\\DEV_AABBCCDDEE01\\7","Name":"Speaker","Present":true,"Connected":false},{"InstanceId":"BTHENUM\\DEV_112233445566\\7","Name":"Phone","Present":true,"Connected":true}]""";
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task Windows_ListAsync_RunsOnePowerShellAndOrdersConnectedFirst()
+    {
+        var runner = new FakeProcessRunner().Answer("powershell", WindowsJson);
+        var service = new BluetoothService(runner, BluetoothBackend.Windows);
+
+        var listing = await service.ListAsync();
+
+        Assert.IsTrue(service.IsSupported);
+        Assert.IsFalse(service.CanChange);
+        Assert.IsNull(listing.Error);
+        CollectionAssert.AreEqual(new[] { "Phone", "Speaker" }, listing.Devices.Select(device => device.Name).ToArray());
+        var call = runner.Calls.Single();
+        Assert.AreEqual("powershell", call.FileName);
+        CollectionAssert.AreEqual(new[] { "-NoProfile", "-NonInteractive", "-Command", WindowsBluetoothParser.ListScript }, call.Arguments.ToArray());
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task Windows_ListAsync_ReportsWhyPowerShellFailed()
+    {
+        var runner = new FakeProcessRunner().Answer("powershell", string.Empty, exitCode: 1, stderr: "Get-PnpDevice : access denied");
+
+        var listing = await new BluetoothService(runner, BluetoothBackend.Windows).ListAsync();
+
+        Assert.AreEqual(0, listing.Devices.Count);
+        StringAssert.Contains(listing.Error, "access denied");
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task Windows_ListAsync_ReportsOutputThatIsNotTheListing()
+    {
+        var runner = new FakeProcessRunner().Answer("powershell", "not json");
+
+        var listing = await new BluetoothService(runner, BluetoothBackend.Windows).ListAsync();
+
+        Assert.AreEqual(0, listing.Devices.Count);
+        Assert.IsNotNull(listing.Error);
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task Windows_ChangesAreRefusedWithoutReachingPowerShell()
+    {
+        var runner = new FakeProcessRunner();
+        var service = new BluetoothService(runner, BluetoothBackend.Windows);
+
+        var outcomes = new[]
+        {
+            await service.ScanAsync(),
+            await service.ConnectAsync(Headphones),
+            await service.DisconnectAsync(Headphones),
+            await service.PairAsync(Headphones),
+            await service.RemoveAsync(Headphones),
+        };
+
+        Assert.IsTrue(outcomes.All(outcome => !outcome.Succeeded && outcome.Message.Contains("can only list")));
+        Assert.AreEqual(0, runner.Calls.Count);
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task NoBackend_EverythingReportsWhy()
+    {
+        var runner = new FakeProcessRunner();
+        var service = new BluetoothService(runner, BluetoothBackend.None);
+
+        Assert.IsFalse(service.IsSupported);
+        Assert.IsFalse(service.CanChange);
+        StringAssert.Contains((await service.ListAsync()).Error, "no Bluetooth backend");
+        Assert.IsFalse((await service.ConnectAsync(Headphones)).Succeeded);
+        Assert.AreEqual(0, runner.Calls.Count);
+    }
 }

@@ -3510,7 +3510,13 @@
     <value>Lettura dei dispositivi Bluetooth…</value>
   </data>
   <data name="Status.Bluetooth.Unsupported" xml:space="preserve">
-    <value>I dispositivi Bluetooth sono gestiti tramite BlueZ su Linux; questo sistema non ha un backend Bluetooth.</value>
+    <value>I dispositivi Bluetooth sono letti tramite BlueZ su Linux e tramite i nodi dei dispositivi su Windows; questo sistema non ha un backend Bluetooth.</value>
+  </data>
+  <data name="Status.Bluetooth.ReadOnly" xml:space="preserve">
+    <value>Su Windows i dispositivi Bluetooth possono solo essere elencati qui; ricerca, connessione, associazione e rimozione non sono ancora disponibili.</value>
+  </data>
+  <data name="Empty.BluetoothDevices.ReadOnly" xml:space="preserve">
+    <value>Nessun dispositivo Bluetooth associato trovato.</value>
   </data>
   <data name="Status.Bluetooth.Scanning" xml:space="preserve">
     <value>Ricerca dei dispositivi vicini…</value>

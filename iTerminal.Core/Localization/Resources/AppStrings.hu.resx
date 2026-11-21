@@ -3510,7 +3510,13 @@
     <value>Bluetooth-eszközök olvasása…</value>
   </data>
   <data name="Status.Bluetooth.Unsupported" xml:space="preserve">
-    <value>A Bluetooth-eszközöket Linuxon a BlueZ kezeli; ez a rendszer nem rendelkezik Bluetooth-háttérrel.</value>
+    <value>A Bluetooth-eszközöket Linuxon a BlueZ, Windowson az eszközcsomópontok adják; ez a rendszer nem rendelkezik Bluetooth-háttérrel.</value>
+  </data>
+  <data name="Status.Bluetooth.ReadOnly" xml:space="preserve">
+    <value>Windowson a Bluetooth-eszközök itt csak listázhatók; a keresés, csatlakozás, párosítás és elfelejtés még nem érhető el.</value>
+  </data>
+  <data name="Empty.BluetoothDevices.ReadOnly" xml:space="preserve">
+    <value>Nem található párosított Bluetooth-eszköz.</value>
   </data>
   <data name="Status.Bluetooth.Scanning" xml:space="preserve">
     <value>Közeli eszközök keresése…</value>

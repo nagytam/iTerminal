@@ -11,7 +11,8 @@ using iTerminal.Core.Services.Bluetooth;
 namespace iTerminal.Core.Dialogs.Bluetooth;
 
 /// <summary>
-/// Lists the Bluetooth devices BlueZ knows and changes them: scan, connect or disconnect, pair, forget.
+/// Lists the Bluetooth devices the host knows and, where the backend allows it (BlueZ on Linux), changes them: scan,
+/// connect or disconnect, pair, forget. On Windows the list is read-only and the changing keys say so.
 /// Every change runs on one background operation at a time. A worker never touches the control tree: it
 /// leaves its result (the new rows, the status text) for the UI thread, which takes them in <see cref="OnIdle"/>
 /// or on the next key.
@@ -66,7 +67,7 @@ public class BluetoothDeviceManagerDialog : Dialog
 
         if (!_bluetooth.IsSupported)
         {
-            _statusText = UiText.Get("Status.Bluetooth.Unsupported", "Bluetooth devices are managed through BlueZ on Linux; this system has no Bluetooth backend.");
+            _statusText = UiText.Get("Status.Bluetooth.Unsupported", "Bluetooth devices are read through BlueZ on Linux and Windows device nodes on Windows; this system has no Bluetooth backend.");
             _loaded = true;
         }
     }
@@ -98,9 +99,11 @@ public class BluetoothDeviceManagerDialog : Dialog
     {
         ApplyPendingDevices();
         _status.Text = _statusText;
-        _listBox.EmptyText = _loaded || !_bluetooth.IsSupported
-            ? UiText.Get("Empty.BluetoothDevices", "No Bluetooth devices known. Press S to scan for nearby ones.")
-            : UiText.Get("Status.Bluetooth.Reading", "Reading the Bluetooth devices…");
+        _listBox.EmptyText = !_loaded && _bluetooth.IsSupported
+            ? UiText.Get("Status.Bluetooth.Reading", "Reading the Bluetooth devices…")
+            : _bluetooth.CanChange
+                ? UiText.Get("Empty.BluetoothDevices", "No Bluetooth devices known. Press S to scan for nearby ones.")
+                : UiText.Get("Empty.BluetoothDevices.ReadOnly", "No paired Bluetooth devices found.");
         base.OnIdle();
     }
 
@@ -176,11 +179,19 @@ public class BluetoothDeviceManagerDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("C", UiText.Get("DialogHint.Bluetooth.ConnectDisconnect", "Connect or disconnect the device"));
-        yield return ("P", UiText.Get("DialogHint.Bluetooth.Pair", "Pair with the device"));
-        yield return ("S", UiText.Get("DialogHint.Bluetooth.Scan", "Scan for nearby devices"));
+        // Where nothing can be changed only the refresh key is offered.
+        if (_bluetooth.CanChange)
+        {
+            yield return ("C", UiText.Get("DialogHint.Bluetooth.ConnectDisconnect", "Connect or disconnect the device"));
+            yield return ("P", UiText.Get("DialogHint.Bluetooth.Pair", "Pair with the device"));
+            yield return ("S", UiText.Get("DialogHint.Bluetooth.Scan", "Scan for nearby devices"));
+        }
+
         yield return ("R", UiText.Get("DialogHint.Bluetooth.Refresh", "Read the devices again"));
-        yield return ("Delete", UiText.Get("DialogHint.Bluetooth.Remove", "Forget the device"));
+        if (_bluetooth.CanChange)
+        {
+            yield return ("Delete", UiText.Get("DialogHint.Bluetooth.Remove", "Forget the device"));
+        }
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -205,6 +216,14 @@ public class BluetoothDeviceManagerDialog : Dialog
         if (!keyEvent.Control && !keyEvent.Alt)
         {
             // Keys the dialog answers itself. Arrow keys never reach here: the focused list runs them as commands.
+            if (_bluetooth.IsSupported && !_bluetooth.CanChange
+                && keyEvent.ConsoleKey is ConsoleKey.C or ConsoleKey.P or ConsoleKey.S or ConsoleKey.Delete)
+            {
+                // A read-only backend: say so at once, and never ask "remove?" about something that cannot be removed.
+                _statusText = UiText.Get("Status.Bluetooth.ReadOnly", "Windows can only list Bluetooth devices here; scanning, connecting, pairing and forgetting are not available yet.");
+                return true;
+            }
+
             switch (keyEvent.ConsoleKey)
             {
                 case ConsoleKey.C:

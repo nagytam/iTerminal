@@ -3510,7 +3510,13 @@
     <value>Lecture des périphériques Bluetooth…</value>
   </data>
   <data name="Status.Bluetooth.Unsupported" xml:space="preserve">
-    <value>Les périphériques Bluetooth sont gérés par BlueZ sous Linux ; ce système n'a pas de pile Bluetooth prise en charge.</value>
+    <value>Les périphériques Bluetooth sont lus via BlueZ sous Linux et via les nœuds de périphériques sous Windows ; ce système n'a pas de pile Bluetooth prise en charge.</value>
+  </data>
+  <data name="Status.Bluetooth.ReadOnly" xml:space="preserve">
+    <value>Sous Windows, les périphériques Bluetooth ne peuvent qu'être listés ici ; la recherche, la connexion, l'appairage et l'oubli ne sont pas encore disponibles.</value>
+  </data>
+  <data name="Empty.BluetoothDevices.ReadOnly" xml:space="preserve">
+    <value>Aucun périphérique Bluetooth appairé.</value>
   </data>
   <data name="Status.Bluetooth.Scanning" xml:space="preserve">
     <value>Recherche des périphériques à proximité…</value>

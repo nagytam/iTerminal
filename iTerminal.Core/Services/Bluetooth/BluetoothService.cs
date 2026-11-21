@@ -2,13 +2,26 @@ using iTerminal.Core.Services.Processes;
 
 namespace iTerminal.Core.Services.Bluetooth;
 
+/// <summary>Which Bluetooth stack a <see cref="BluetoothService"/> talks to.</summary>
+internal enum BluetoothBackend
+{
+    /// <summary>None: every call reports why.</summary>
+    None,
+
+    /// <summary>BlueZ through <c>bluetoothctl</c>; lists and changes devices.</summary>
+    BlueZ,
+
+    /// <summary>Windows device nodes through PowerShell; lists paired devices only.</summary>
+    Windows,
+}
+
 /// <summary>
-/// <see cref="IBluetoothService"/> over BlueZ's <c>bluetoothctl</c>, run one command at a time through
-/// <see cref="IExternalProcessRunner"/>. Every call is a short process with its own timeout, so none of them
-/// holds a key handler: the dialog runs them on its background operation and writes the result back in
-/// <c>OnIdle</c>.
+/// <see cref="IBluetoothService"/> over BlueZ's <c>bluetoothctl</c> on Linux (list and change) and over
+/// <c>Get-PnpDevice</c> on Windows (list only), run through <see cref="IExternalProcessRunner"/>. Every call is a
+/// short process with its own timeout, so none of them holds a key handler: the dialog runs them on its background
+/// operation and writes the result back in <c>OnIdle</c>.
 /// </summary>
-public sealed class BluetoothService(IExternalProcessRunner processRunner) : IBluetoothService
+public sealed class BluetoothService : IBluetoothService
 {
     private const string Tool = "bluetoothctl";
 
@@ -18,12 +31,36 @@ public sealed class BluetoothService(IExternalProcessRunner processRunner) : IBl
     /// <summary>How many <c>info</c> calls run at once while a listing is read.</summary>
     private const int InfoParallelism = 4;
 
-    private const string UnsupportedReason = "Bluetooth devices are managed through BlueZ on Linux; this system has no Bluetooth backend.";
+    private const string UnsupportedReason = "Bluetooth devices are read through BlueZ on Linux and Windows device nodes on Windows; this system has no Bluetooth backend.";
 
-    public bool IsSupported => OperatingSystem.IsLinux();
+    private const string ReadOnlyReason = "Windows can only list Bluetooth devices here; scanning, connecting, pairing and forgetting are not available yet.";
+
+    private readonly IExternalProcessRunner processRunner;
+    private readonly BluetoothBackend backend;
+
+    public BluetoothService(IExternalProcessRunner processRunner)
+        : this(processRunner, OperatingSystem.IsLinux() ? BluetoothBackend.BlueZ : OperatingSystem.IsWindows() ? BluetoothBackend.Windows : BluetoothBackend.None)
+    {
+    }
+
+    /// <summary>For tests: picks the backend instead of reading the operating system, so both run on any machine.</summary>
+    internal BluetoothService(IExternalProcessRunner processRunner, BluetoothBackend backend)
+    {
+        this.processRunner = processRunner;
+        this.backend = backend;
+    }
+
+    public bool IsSupported => backend != BluetoothBackend.None;
+
+    public bool CanChange => backend == BluetoothBackend.BlueZ;
 
     public async Task<BluetoothListing> ListAsync(CancellationToken cancellationToken = default)
     {
+        if (backend == BluetoothBackend.Windows)
+        {
+            return await ListWindowsAsync(cancellationToken);
+        }
+
         if (!IsSupported)
         {
             return new BluetoothListing([], UnsupportedReason);
@@ -62,11 +99,33 @@ public sealed class BluetoothService(IExternalProcessRunner processRunner) : IBl
         return new BluetoothListing(ordered, null);
     }
 
+    /// <summary>One PowerShell run lists every paired device; the Windows start-up cost is paid once, not per device.</summary>
+    private async Task<BluetoothListing> ListWindowsAsync(CancellationToken cancellationToken)
+    {
+        var output = await processRunner.RunAsync("powershell", ["-NoProfile", "-NonInteractive", "-Command", WindowsBluetoothParser.ListScript], null, cancellationToken);
+        if (!output.Success)
+        {
+            return new BluetoothListing([], output.FirstErrorLine);
+        }
+
+        if (!WindowsBluetoothParser.TryParseDevices(output.StandardOutput, out var parsed))
+        {
+            return new BluetoothListing([], "The Bluetooth listing was not in the expected format.");
+        }
+
+        // The connected ones first, then by name.
+        var ordered = parsed
+            .OrderByDescending(device => device.IsConnected)
+            .ThenBy(device => device.Name, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+        return new BluetoothListing(ordered, null);
+    }
+
     public async Task<BluetoothOutcome> ScanAsync(CancellationToken cancellationToken = default)
     {
-        if (!IsSupported)
+        if (!CanChange)
         {
-            return new BluetoothOutcome(false, UnsupportedReason);
+            return new BluetoothOutcome(false, ChangeRefusal());
         }
 
         var scan = await processRunner.RunAsync(Tool, ["--timeout", ScanSeconds.ToString(), "scan", "on"], null, cancellationToken);
@@ -87,9 +146,9 @@ public sealed class BluetoothService(IExternalProcessRunner processRunner) : IBl
 
     private async Task<BluetoothOutcome> RunOnDeviceAsync(string command, string address, CancellationToken cancellationToken)
     {
-        if (!IsSupported)
+        if (!CanChange)
         {
-            return new BluetoothOutcome(false, UnsupportedReason);
+            return new BluetoothOutcome(false, ChangeRefusal());
         }
 
         // The address is checked before it reaches the tool, so nothing but a MAC address can be passed on.
@@ -101,6 +160,8 @@ public sealed class BluetoothService(IExternalProcessRunner processRunner) : IBl
         var output = await processRunner.RunAsync(Tool, [command, address], null, cancellationToken);
         return Outcome(output);
     }
+
+    private string ChangeRefusal() => backend == BluetoothBackend.Windows ? ReadOnlyReason : UnsupportedReason;
 
     private static BluetoothOutcome Outcome(ProcessOutput output) =>
         BluetoothctlParser.Failed(output)
