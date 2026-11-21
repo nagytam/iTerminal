@@ -6026,9 +6026,6 @@
   <data name="Signature.Footer" xml:space="preserve">
     <value> F2:aláír gpg  F3:aláír Authenticode  F4:aláír kulcsfájllal  F5:újraellenőriz  Esc:bezár </value>
   </data>
-  <data name="Wipe.Footer" xml:space="preserve">
-    <value> Enter:töröl  1/3/7 vagy ↑↓:menet  Esc:bezár </value>
-  </data>
   <data name="FolderSelector.HintGo" xml:space="preserve">
     <value>Enter ugrás</value>
   </data>
@@ -11224,5 +11221,41 @@
   </data>
   <data name="CmdDesc.4fc7d3cd" xml:space="preserve">
     <value>A kijelölt fájlok megosztása ezen a hálózaton: egy QR-kód és egy hivatkozás nyitja meg őket a telefon böngészőjében, amíg ez a párbeszédablak nyitva van.</value>
+  </data>
+  <data name="Wipe.FooterChoosing" xml:space="preserve">
+    <value> Enter:élesítés  1/3/7 vagy ↑↓:menetek  Esc:bezárás </value>
+  </data>
+  <data name="Wipe.FooterArmed" xml:space="preserve">
+    <value> Enter:végleges törlés  más billentyű:vissza </value>
+  </data>
+  <data name="Wipe.FooterRunning" xml:space="preserve">
+    <value> Esc:leállítás (a már törölt fájlok törölve maradnak) </value>
+  </data>
+  <data name="Wipe.FooterFinished" xml:space="preserve">
+    <value> Enter:bezárás </value>
+  </data>
+  <data name="Wipe.Counting" xml:space="preserve">
+    <value>Fájlok számolása…</value>
+  </data>
+  <data name="Wipe.Total" xml:space="preserve">
+    <value>Összesen {0} íródik át, minden menetben.</value>
+  </data>
+  <data name="Wipe.Name" xml:space="preserve">
+    <value>Törlés  {0}</value>
+  </data>
+  <data name="Wipe.Names" xml:space="preserve">
+    <value>Törlés  {0} elem: {1}</value>
+  </data>
+  <data name="Wipe.Stopped" xml:space="preserve">
+    <value>Leállítva: {0} fájl törölve.</value>
+  </data>
+  <data name="Wipe.Done" xml:space="preserve">
+    <value>Kész: {0} fájl, {1} mappa, {2} felülírva.</value>
+  </data>
+  <data name="Wipe.Failed" xml:space="preserve">
+    <value>Hiba: {0}</value>
+  </data>
+  <data name="Wipe.What" xml:space="preserve">
+    <value>{0} fájl, {1}</value>
   </data>
 </root>
