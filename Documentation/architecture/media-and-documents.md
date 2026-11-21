@@ -242,9 +242,8 @@ extracts text from every file an extractor understands, and stores both the meta
   folder. Progress carries the current file name — the counts alone cannot show which document is
   taking the seconds. Build output, VCS internals, dot-files and Office `~$` lock files are skipped.
 - The **documents folder** comes from the `DocumentsFolder` setting (`SettingsDocumentsTabPage`, tab 5
-  of the settings dialog), defaulting to `\users\tamas\nata\documents` — anchored to the system drive
-  on Windows by `DocumentLibraryService.ResolveDocumentsFolder`, because a path that starts with a
-  separator but names no drive resolves against whichever drive the process happens to be running on.
+  of the settings dialog), defaulting to the user's Documents folder: the Documents known folder on
+  Windows, `Documents` under the home folder elsewhere (`DocumentLibraryService.ResolveDocumentsFolder`).
 - **Meaning search (Shift+Alt+F6 in the document manager; Ctrl+Q is not used, because the terminal driver takes it for XON flow control) is a second index beside the FTS table, not a replacement for
   it.** `DocumentVectorIndex` keeps one float32 vector per passage in two raw SQL tables, `DocumentEmbeddings` and
   `DocumentEmbeddingState`, created on demand like the FTS table so the EF model and its stamp are untouched. The
