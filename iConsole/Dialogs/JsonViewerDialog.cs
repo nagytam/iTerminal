@@ -25,6 +25,7 @@ public class JsonViewerDialog : Dialog
 
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly IJsonValidator _jsonValidator;
     private readonly TreeView _treeView;
     private readonly TextViewerControl _textViewerControl;
     private readonly Label _statusLabel;
@@ -36,11 +37,13 @@ public class JsonViewerDialog : Dialog
     public JsonViewerDialog(
         IContentModelService contentModelService,
         IFileToTextConverterService fileToTextConverterService,
+        IJsonValidator jsonValidator,
         IThemeService themeService)
         : base(nameof(JsonViewerDialog), themeService)
     {
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
+        _jsonValidator = jsonValidator;
         // The tree is added first: a dialog gives the keyboard to its first focusable control, and the tree is where it starts.
         _treeView = new TreeView(new HierarchicalItemModel(null, string.Empty), themeService);
         _textViewerControl = new TextViewerControl(false, themeService);
@@ -80,7 +83,7 @@ public class JsonViewerDialog : Dialog
         }
 
         _content = content;
-        JsonValidationIssue? issue = await Task.Run(() => JsonValidator.Validate(content));
+        JsonValidationIssue? issue = await Task.Run(() => _jsonValidator.Validate(content));
         if (issue is not null)
         {
             _statusLabel.Text = string.Format(UiText.Get("Viewer.NotValidJson", "Not valid JSON: {0}"), issue);
@@ -187,7 +190,7 @@ public class JsonViewerDialog : Dialog
         }
 
         byte[] content = _content;
-        _validation = Task.Run(() => JsonValidator.Validate(content));
+        _validation = Task.Run(() => _jsonValidator.Validate(content));
         _statusLabel.Text = UiText.Get("Viewer.Validating", "Validating…");
         return _validation;
     }

@@ -94,7 +94,7 @@ Compared with Terminal.Gui 2.5.0 (its public API and XML docs, not its runtime b
 6. **Popover service.** *Built* (see above): `IPopoverService`, `PopoverPlacement` and `ContextMenu`. The Ctrl+O hint and `ToolTipHost` still place themselves.
 7. **Percent and fill sizing in `Layout`.** Layout is manual, so resizing needs per-control code. `Dim.Percent` / `Dim.Fill` equivalents would make panel ratios (item 9 in `Documentation/mc-parity.md`) cheap.
 8. **Table upgrades.** Multi-select regions, per-column styles and cell colour getters would make the file list and search results more flexible.
-9. **Markdown and image controls.** *Markdown built:* `MarkdownViewerControl` (parser in `iConsole/Markdown/`). The image control is not built: it would use the Kitty graphics protocol, with a cell-based fallback, for the image viewer's ASCII-art gap.
+9. **Markdown and image controls.** *Markdown built:* `MarkdownViewerControl` (parser in `iConsole.Formats/Markdown/`, behind `IMarkdownParser`). The image control is not built: it would use the Kitty graphics protocol, with a cell-based fallback, for the image viewer's ASCII-art gap.
 10. **Mouse hold and diagnostics.** Mouse hold-to-repeat for scroll buttons, and an overlay that shows control bounds and focus, alongside `ITERMINAL_RENDER_DUMPS` and `ITERMINAL_KEY_TRACE`. Not built.
 
 **Lower priority**

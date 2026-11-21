@@ -1,11 +1,10 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using iConsole.Test.Core.Certificates;
 
-namespace iConsole.Test.Certificates;
+namespace iConsole.Test.Core.Certificates;
 
 /// <summary>The fixed clock and the chain helper for the reader tests; the certificates themselves come from the shared helper.</summary>
-internal static class CertificateTestData
+public static class CertificateTestData
 {
     public static readonly DateTimeOffset Now = new(2026, 6, 1, 12, 0, 0, TimeSpan.Zero);
 

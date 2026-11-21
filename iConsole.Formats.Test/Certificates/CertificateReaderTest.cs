@@ -1,15 +1,17 @@
+using iConsole.Formats.Certificates;
+using iConsole.Test.Core.Certificates;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using iConsole.Certificates;
 
-namespace iConsole.Test.Certificates;
+namespace iConsole.Formats.Test.Certificates;
 
 [TestClass]
 public class CertificateReaderTest
 {
     private static CertificateReadResult ReadText(string text) =>
-        CertificateReader.Read(Encoding.UTF8.GetBytes(text));
+        new CertificateReader().Read(Encoding.UTF8.GetBytes(text));
 
     [TestMethod]
     public void SinglePem_ReadsEveryFieldOfTheCertificate()
@@ -71,7 +73,7 @@ public class CertificateReaderTest
     {
         using var certificate = CertificateTestData.SelfSignedRsa("der.test");
 
-        CertificateReadResult result = CertificateReader.Read(certificate.RawData);
+        CertificateReadResult result = new CertificateReader().Read(certificate.RawData);
 
         Assert.IsNull(result.Error);
         Assert.AreEqual("CN=der.test", result.Certificates.Single().Subject);
@@ -89,7 +91,7 @@ public class CertificateReaderTest
     [TestMethod]
     public void EmptyInput_GivesNoCertificate()
     {
-        CertificateReadResult result = CertificateReader.Read(ReadOnlyMemory<byte>.Empty);
+        CertificateReadResult result = new CertificateReader().Read(ReadOnlyMemory<byte>.Empty);
 
         Assert.AreEqual(0, result.Certificates.Count);
         Assert.IsNotNull(result.Error);
@@ -163,7 +165,7 @@ public class CertificateReaderTest
         using RSA key = RSA.Create(2048);
         byte[] der = key.ExportPkcs8PrivateKey();
 
-        CertificateReadResult result = CertificateReader.Read(der);
+        CertificateReadResult result = new CertificateReader().Read(der);
 
         Assert.AreEqual(0, result.Certificates.Count);
         Assert.IsNotNull(result.Error);
@@ -186,9 +188,9 @@ public class CertificateReaderTest
         using var expired = CertificateTestData.SelfSignedRsa(daysBefore: 60, daysAfter: -1);
         using var future = CertificateTestData.SelfSignedRsa(daysBefore: -1, daysAfter: 60);
 
-        CertificateInfo validInfo = CertificateReader.Read(valid.RawData).Certificates.Single();
-        CertificateInfo expiredInfo = CertificateReader.Read(expired.RawData).Certificates.Single();
-        CertificateInfo futureInfo = CertificateReader.Read(future.RawData).Certificates.Single();
+        CertificateInfo validInfo = new CertificateReader().Read(valid.RawData).Certificates.Single();
+        CertificateInfo expiredInfo = new CertificateReader().Read(expired.RawData).Certificates.Single();
+        CertificateInfo futureInfo = new CertificateReader().Read(future.RawData).Certificates.Single();
 
         Assert.AreEqual(CertificateValidity.Valid, validInfo.ValidityAt(CertificateTestData.Now));
         Assert.AreEqual(CertificateValidity.Expired, expiredInfo.ValidityAt(CertificateTestData.Now));

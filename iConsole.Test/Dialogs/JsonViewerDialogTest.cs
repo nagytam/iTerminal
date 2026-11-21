@@ -23,7 +23,7 @@ public class JsonViewerDialogTest
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns(fileSystem.Object);
         converter = new Mock<IFileToTextConverterService>();
-        return new JsonViewerDialog(models.Object, converter.Object, new ThemeService()) { Url = Document };
+        return new JsonViewerDialog(models.Object, converter.Object, new iConsole.Formats.Json.JsonValidator(), new ThemeService()) { Url = Document };
     }
 
     [Timeout(60_000)]

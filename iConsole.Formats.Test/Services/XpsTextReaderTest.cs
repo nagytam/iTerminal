@@ -1,9 +1,10 @@
+using iConsole.Formats.Xps;
 using System.IO.Compression;
 using System.Text;
 using iConsole.Services;
 using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an XPS package: the sequence's documents, their pages in order, and each page's glyph runs as lines.</summary>
 [TestClass]
@@ -55,7 +56,7 @@ public class XpsTextReaderTest
     [TestMethod]
     public void Pages_FollowTheDocumentsOrder_NotTheirFileNames()
     {
-        List<string> lines = [.. XpsTextReader.Read(Package())];
+        List<string> lines = [.. new XpsTextReader(new XpsDocumentReader()).Read(Package())];
 
         int first = lines.IndexOf("Referenced first");
         int second = lines.FindIndex(l => l.StartsWith("Hello"));
@@ -67,7 +68,7 @@ public class XpsTextReaderTest
     [TestMethod]
     public void GlyphRuns_OnOneLine_ReadLeftToRight_AndLinesFollowTheirOrigin()
     {
-        List<string> lines = [.. XpsTextReader.Read(Package())];
+        List<string> lines = [.. new XpsTextReader(new XpsDocumentReader()).Read(Package())];
 
         CollectionAssert.Contains(lines, "Hello World");
         CollectionAssert.Contains(lines, "Next line");
@@ -77,7 +78,7 @@ public class XpsTextReaderTest
     [TestMethod]
     public void APackageWithoutASequence_TheReaderSaysSo()
     {
-        List<string> lines = [.. XpsTextReader.Read(MakeXps(("Other.xml", "<x/>")))];
+        List<string> lines = [.. new XpsTextReader(new XpsDocumentReader()).Read(MakeXps(("Other.xml", "<x/>")))];
 
         Assert.IsTrue(lines.Single().StartsWith("[Could not read the document:"), string.Join("\n", lines));
     }
@@ -108,7 +109,7 @@ public class XpsTextReaderTest
                 </FixedPage>
                 """));
 
-        List<string> lines = [.. XpsTextReader.Read(content)];
+        List<string> lines = [.. new XpsTextReader(new XpsDocumentReader()).Read(content)];
 
         CollectionAssert.Contains(lines, "From the relationship");
         Assert.IsFalse(lines.Any(l => l.StartsWith("[Could not read the document:")), string.Join("\n", lines));
@@ -141,7 +142,7 @@ public class XpsTextReaderTest
                 </FixedPage>
                 """));
 
-        List<string> lines = [.. XpsTextReader.Read(content)];
+        List<string> lines = [.. new XpsTextReader(new XpsDocumentReader()).Read(content)];
 
         CollectionAssert.Contains(lines, "OpenXPS page");
         Assert.IsTrue(lines.Any(l => l.StartsWith("── Page 1")), string.Join("\n", lines));

@@ -1,10 +1,8 @@
 using System.Xml;
 using System.Xml.Schema;
+using iConsole.Xml;
 
-namespace iConsole.Xml;
-
-/// <summary>One problem a validation found: where it is, whether it is an error or a warning, and what it says.</summary>
-public sealed record XmlValidationIssue(int Line, int Column, bool IsError, string Message);
+namespace iConsole.Formats.Xml;
 
 /// <summary>
 /// Validates an XML document against the schema or DTD it names: a DOCTYPE is checked against its DTD, and the
@@ -12,14 +10,14 @@ public sealed record XmlValidationIssue(int Line, int Column, bool IsError, stri
 /// are read from the local disk only, relative to the document, so a document is never validated against something
 /// fetched over the network. A document that is not well-formed reports where it breaks.
 /// </summary>
-public static class XmlValidator
+public sealed class XmlValidator : IXmlValidator
 {
     private const string SchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
 
-    /// <summary>The issues found, errors and warnings both; an empty list means the document is valid.</summary>
+    /// <inheritdoc/>
     /// <param name="content">The document's bytes.</param>
     /// <param name="filePath">The document's local path, which relative schema locations are resolved against; null when it is not local.</param>
-    public static IReadOnlyList<XmlValidationIssue> Validate(byte[] content, string? filePath)
+    public IReadOnlyList<XmlValidationIssue> Validate(byte[] content, string? filePath)
     {
         string? baseUri = filePath is not null && File.Exists(filePath) ? new Uri(Path.GetFullPath(filePath)).AbsoluteUri : null;
         (bool hasDoctype, bool hasSchemaLocation, List<XmlValidationIssue> issues) = Probe(content, baseUri);

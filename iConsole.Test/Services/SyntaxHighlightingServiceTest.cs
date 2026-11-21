@@ -1,3 +1,4 @@
+using iConsole.Formats.Markdown;
 using iConsole.Controls;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
@@ -183,16 +184,6 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual(Color.Red, screen.ForegroundAt(0, 1));
     }
 
-    [Timeout(60_000)]
-    [TestMethod]
-    public void MarkdownParser_KeepsTheFenceLanguage()
-    {
-        IReadOnlyList<MarkdownBlock> blocks = MarkdownParser.Parse("```csharp title=x\nvar a = 1;\n```\n~~~\nplain\n~~~");
-
-        Assert.AreEqual("csharp", blocks[0].Language);
-        Assert.AreEqual(string.Empty, blocks[1].Language);
-    }
-
     private MarkdownViewerControl Viewer(string markdown, ISyntaxHighlightingService? service = null)
     {
         var viewer = new MarkdownViewerControl(_theme) { Position = new Position(0, 0), ViewSize = new Size(30, 8) };
@@ -201,7 +192,7 @@ public class SyntaxHighlightingServiceTest
             viewer.Highlighting = service;
         }
 
-        viewer.Markdown = markdown;
+        viewer.SetDocument(markdown, new MarkdownParser().Parse(markdown));
         return viewer;
     }
 

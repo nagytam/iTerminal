@@ -38,7 +38,7 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **EPUB** (`EpubTextReader`): `container.xml` names the OPF, the spine orders the XHTML chapters. The markup goes
   through `HtmlTextExtractor`, shared with the e-mail and Kindle readers.
 - **OpenDocument drawings** (`.odg`, `.otg`): one section per page, as presentations are.
-- **XPS and OpenXPS** (`XpsTextReader`, `iConsole/Xps/XpsDocument.cs`, `.xps`, `.oxps`): the package's
+- **XPS and OpenXPS** (`XpsTextReader` and `XpsDocumentReader` in `iConsole.Formats`, the models in `iConsole/Xps/XpsDocument.cs`, `.xps`, `.oxps`): the package's
   `fixedrepresentation` relationship names the `FixedDocumentSequence`, which gives the documents, each
   `FixedDocument` its pages, and a page's `Glyphs` runs are grouped into lines by their origin. Parts are matched by
   local name, so an OpenXPS package reads the same as an XPS one. F3 opens these files in the page-aware

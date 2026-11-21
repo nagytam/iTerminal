@@ -1,3 +1,4 @@
+using iConsole.Test.Core.Certificates;
 using System.Text;
 using iConsole.Certificates;
 using iConsole.Data;
@@ -40,7 +41,7 @@ public class CertificateViewerDialogTest
     private static (CertificateViewerDialog Dialog, Mock<INotificationService> Notifications) Create()
     {
         Mock<INotificationService> notifications = new();
-        CertificateViewerDialog dialog = new(new ThemeService(), notifications.Object) { Clock = () => CertificateTestData.Now };
+        CertificateViewerDialog dialog = new(new ThemeService(), notifications.Object, new iConsole.Formats.Certificates.CertificateReader()) { Clock = () => CertificateTestData.Now };
         return (dialog, notifications);
     }
 

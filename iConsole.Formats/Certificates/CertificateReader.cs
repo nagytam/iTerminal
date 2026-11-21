@@ -5,14 +5,16 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace iConsole.Certificates;
+using iConsole.Certificates;
+
+namespace iConsole.Formats.Certificates;
 
 /// <summary>
 /// Reads the certificates in a PEM bundle or a single DER certificate. PEM is split here, block by block: the BCL reads one
 /// certificate at a time. A private-key block is counted and never decoded. Bad input gives an empty list and an error
 /// text; nothing is thrown.
 /// </summary>
-public static partial class CertificateReader
+public sealed partial class CertificateReader : ICertificateReader
 {
     private const string BeginCertificate = "-----BEGIN CERTIFICATE-----";
     private const string EndCertificate = "-----END CERTIFICATE-----";
@@ -24,7 +26,7 @@ public static partial class CertificateReader
     /// Reads the certificates in <paramref name="bytes"/>. Any failure, whatever its type, comes back as an empty list and an
     /// error text, so the caller always has a result to act on.
     /// </summary>
-    public static CertificateReadResult Read(ReadOnlyMemory<byte> bytes)
+    public CertificateReadResult Read(ReadOnlyMemory<byte> bytes)
     {
         try
         {
@@ -282,5 +284,37 @@ public static partial class CertificateReader
         }
 
         return new string(chars);
+    }
+
+    /// <summary>Reads a local certificate file with a hard size limit. It never throws and never reads more than the limit.</summary>
+    public CertificateFileRead ReadFile(string path)
+    {
+        try
+        {
+            using FileStream stream = new(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, FileOptions.SequentialScan);
+            using MemoryStream buffer = new();
+            byte[] chunk = new byte[8192];
+            // Never ask for more than the bytes left under the limit plus one, so the buffer cannot grow past that.
+            while (true)
+            {
+                long room = CertificateLimits.MaxFileBytes + 1 - buffer.Length;
+                if (room <= 0)
+                {
+                    return new CertificateFileRead(CertificateFileStatus.Overflow, []);
+                }
+
+                int read = stream.Read(chunk, 0, (int)Math.Min(chunk.Length, room));
+                if (read == 0)
+                {
+                    return new CertificateFileRead(CertificateFileStatus.Ok, buffer.ToArray());
+                }
+
+                buffer.Write(chunk, 0, read);
+            }
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            return new CertificateFileRead(CertificateFileStatus.Failure, [], exception.Message);
+        }
     }
 }

@@ -1,7 +1,8 @@
+using iConsole.Formats.Json;
 using System.Text;
 using iConsole.Json;
 
-namespace iConsole.Test.Json;
+namespace iConsole.Formats.Test.Json;
 
 [TestClass]
 public class JsonValidatorTest
@@ -12,14 +13,14 @@ public class JsonValidatorTest
     [TestMethod]
     public void ValidJson_HasNoIssue()
     {
-        Assert.IsNull(JsonValidator.Validate(Utf8("""{"a":[1,2,{"b":null}],"c":"d"}""")));
+        Assert.IsNull(new JsonValidator().Validate(Utf8("""{"a":[1,2,{"b":null}],"c":"d"}""")));
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void AMissingComma_IsReportedAtItsLineAndColumn()
     {
-        JsonValidationIssue? issue = JsonValidator.Validate(Utf8("{\n  \"a\": 1\n  \"b\": 2\n}"));
+        JsonValidationIssue? issue = new JsonValidator().Validate(Utf8("{\n  \"a\": 1\n  \"b\": 2\n}"));
 
         Assert.IsNotNull(issue);
         Assert.AreEqual(3, issue.Line);
@@ -30,21 +31,21 @@ public class JsonValidatorTest
     [TestMethod]
     public void TrailingComma_IsNotValidJson()
     {
-        Assert.IsNotNull(JsonValidator.Validate(Utf8("[1, 2,]")));
+        Assert.IsNotNull(new JsonValidator().Validate(Utf8("[1, 2,]")));
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void Comments_AreNotValidJson()
     {
-        Assert.IsNotNull(JsonValidator.Validate(Utf8("// settings\n{}")));
+        Assert.IsNotNull(new JsonValidator().Validate(Utf8("// settings\n{}")));
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyFile_IsNotValidJson()
     {
-        Assert.IsNotNull(JsonValidator.Validate([]));
+        Assert.IsNotNull(new JsonValidator().Validate([]));
     }
 
     [Timeout(60_000)]
@@ -53,6 +54,6 @@ public class JsonValidatorTest
     {
         string deep = new string('[', JsonTree.MaxDepth + 1) + new string(']', JsonTree.MaxDepth + 1);
 
-        Assert.IsNotNull(JsonValidator.Validate(Utf8(deep)));
+        Assert.IsNotNull(new JsonValidator().Validate(Utf8(deep)));
     }
 }

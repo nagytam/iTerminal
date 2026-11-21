@@ -1,3 +1,5 @@
+using iConsole.Test.Core.Certificates;
+using iConsole.Formats.Certificates;
 using iConsole.Certificates;
 
 namespace iConsole.Test.Certificates;
@@ -8,7 +10,7 @@ public class CertificateFormatterTest
     [TestMethod]
     public void Lines_ShowTheSubjectTheFingerprintsAndTheKeySize()
     {
-        CertificateInfo info = CertificateReader.Read(CertificateTestData.SelfSignedRsa().RawData).Certificates.Single();
+        CertificateInfo info = new CertificateReader().Read(CertificateTestData.SelfSignedRsa().RawData).Certificates.Single();
 
         IReadOnlyList<string> lines = CertificateFormatter.Lines(info);
 
@@ -20,7 +22,7 @@ public class CertificateFormatterTest
     [TestMethod]
     public void Validity_NamesTheStateAndItsDate()
     {
-        CertificateInfo expired = CertificateReader.Read(CertificateTestData.SelfSignedRsa(daysBefore: 60, daysAfter: -1).RawData).Certificates.Single();
+        CertificateInfo expired = new CertificateReader().Read(CertificateTestData.SelfSignedRsa(daysBefore: 60, daysAfter: -1).RawData).Certificates.Single();
 
         StringAssert.StartsWith(CertificateFormatter.Validity(expired, CertificateTestData.Now), "expired on ");
     }

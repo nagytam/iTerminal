@@ -33,7 +33,7 @@ public class FileToTextConverterRoutingTest
     {
         Directory.CreateDirectory(_folder);
         var model = new TextModel();
-        await new FileToTextConverterService().ReadFileAsync(new Url(Path.Combine(_folder, name)), new LocalFileSystemAdapter(), model);
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadFileAsync(new Url(Path.Combine(_folder, name)), new LocalFileSystemAdapter(), model);
         return [.. model.Lines];
     }
 

@@ -75,7 +75,7 @@ public class FontFileReaderTest
     {
         var textModel = new iConsole.Model.TextModel();
 
-        await new FileToTextConverterService().ReadFileAsync(
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadFileAsync(
             new iConsole.Data.Url(SampleFiles.Path("example.ttf")), new LocalFileSystemAdapter(), textModel);
 
         List<string> lines = textModel.Lines.ToList();

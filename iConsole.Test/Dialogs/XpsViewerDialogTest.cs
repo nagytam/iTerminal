@@ -93,7 +93,7 @@ public class XpsViewerDialogTest
     {
         models = new Mock<IContentModelService>();
         models.Setup(m => m.GetFocusedModel()).Returns(FileSystemWith(content).Object);
-        return new XpsViewerDialog(models.Object, new ThemeService()) { Url = Document };
+        return new XpsViewerDialog(models.Object, new iConsole.Formats.Xps.XpsDocumentReader(), new ThemeService()) { Url = Document };
     }
 
     private static XpsViewerDialog CreateDialog(byte[]? content) => CreateDialog(content, out _);

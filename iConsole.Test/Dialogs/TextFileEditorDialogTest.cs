@@ -42,7 +42,7 @@ public class TextFileEditorDialogTest
     public void SwitchEncoding_RereadsTheTextAndMarksItChanged()
     {
         // The switch asks the converter whether the encoding matters for the file; a mock would answer no, so the real one answers.
-        var dlg = NewDialog(new iConsole.Formats.Services.FileToTextConverterService());
+        var dlg = NewDialog(new iConsole.Formats.Services.FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())));
         dlg.Url = new iConsole.Data.Url("file://C:/x/note.txt");
         var model = dlg.TextEditorControl.TextModel;
         model.Encoding = System.Text.Encoding.Latin1;

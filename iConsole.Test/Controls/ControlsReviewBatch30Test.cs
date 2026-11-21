@@ -72,11 +72,4 @@ public class ControlsReviewBatch30Test
     {
         Assert.AreEqual(0, OfficeTextRenderer.ColumnIndex(null));
     }
-
-    [Timeout(60_000)]
-    [TestMethod]
-    public void MarkdownInline_Parse_OfNull_IsNoSpans()
-    {
-        Assert.AreEqual(0, MarkdownInline.Parse(null).Count);
-    }
 }

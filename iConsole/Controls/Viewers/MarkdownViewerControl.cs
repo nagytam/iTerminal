@@ -27,18 +27,20 @@ public class MarkdownViewerControl : Control
         CanFocus = true;
     }
 
-    /// <summary>The Markdown source. Setting it parses the text and returns the view to the top.</summary>
-    public string Markdown
+    /// <summary>The Markdown source last set with <see cref="SetDocument"/>.</summary>
+    public string Markdown => _markdown;
+
+    /// <summary>
+    /// Shows a document: its source and the blocks already parsed from it, read by the caller through
+    /// <c>IMarkdownParser</c>. The control itself parses nothing, and the view returns to the top.
+    /// </summary>
+    public void SetDocument(string source, IReadOnlyList<MarkdownBlock> blocks)
     {
-        get => _markdown;
-        set
-        {
-            _markdown = value ?? string.Empty;
-            _blocks = MarkdownParser.Parse(_markdown);
-            _linesWidth = -1;
-            ScrollOffset = 0;
-            StateHasChanged();
-        }
+        _markdown = source ?? string.Empty;
+        _blocks = blocks;
+        _linesWidth = -1;
+        ScrollOffset = 0;
+        StateHasChanged();
     }
 
     /// <summary>The first laid-out row that is on screen.</summary>
