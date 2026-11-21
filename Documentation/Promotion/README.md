@@ -1,0 +1,31 @@
+# Promotion
+
+Content for promoting iTerminal, prepared for the user to review and send. Nothing here has been
+sent, submitted, posted or published. The research behind the venues, with the rules and their
+verification status, is in [promotion-overview.md](../research/promotion-overview.md).
+
+## Files
+
+- [iTerminal-Marketing-Kit.md](iTerminal-Marketing-Kit.md): the base kit. Facts, taglines, pitches, the feature catalogue, announcement texts, the presentation outline, the demo script, the contributor and sponsor texts, the FAQ and the launch checklist.
+- [awesome-lists.md](awesome-lists.md): pull request entries for rothgar/awesome-tuis, awesome-dotnet and the awesome-cli-apps family.
+- [directories-and-newsletters.md](directories-and-newsletters.md): the Console.dev suggestion email, the Terminal Trove submission checklist, the AlternativeTo entry.
+- [forums-and-communities.md](forums-and-communities.md): posts for r/commandline, r/dotnet, r/linux, Lobsters, plus the Show HN pointer.
+- [dev-to-article.md](dev-to-article.md): a long-form article draft for Dev.to (#showdev).
+- [launch-and-press.md](launch-and-press.md): Linux Magazine proposal, Full Circle article pitch, Phoronix tip (if a contact is found), German press pitch and heise Download, Product Hunt launch copy, and a five-minute lightning talk outline.
+
+## Before anything is sent
+
+1. A downloadable release exists. Replace every `<RELEASE URL>`. Most venues require it, and Show HN requires that outsiders can run the app.
+2. Check each venue's current rules on the day you post. The overview marks which rules were verified and which were not.
+3. Confirm every feature claim against the release. The kit notes that the README is behind the feature set; the release notes are the reference.
+4. Fill the `<YOUR NAME>` and other placeholders. Do not add contact details you do not want public.
+5. Post one venue per day, stay to answer comments, and do not ask friends to vote or comment.
+
+## Suggested first wave
+
+1. Awesome-list pull requests (tuxarch/cli-apps, rothgar/awesome-tuis, awesome-dotnet).
+2. AlternativeTo and Terminal Trove (Terminal Trove needs a preview recording).
+3. Console.dev, by email.
+4. Community posts, one per day, after reading each community's sidebar: Show HN, r/commandline, r/dotnet, Dev.to.
+5. Press and magazines: Linux Magazine proposal, then the Full Circle article once its current guide is read.
+6. Product Hunt only if a launch day is planned.
