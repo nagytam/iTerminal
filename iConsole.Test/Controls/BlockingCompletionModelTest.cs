@@ -115,6 +115,49 @@ public class BlockingCompletionModelTest
         model.Gate.Dispose();
     }
 
+    /// <summary>Remembers the texts it was asked about, in order, and matches by prefix.</summary>
+    private sealed class PrefixModel(params string[] values) : IBlockingCompletionModel
+    {
+        public List<string> Asked { get; } = [];
+
+        public Task? UpdateTask { get; set; }
+
+        public ConcurrentObservableCollection<string> MatchingValues { get; } = [];
+
+        public IEnumerable<string> Completions => values;
+
+        public void InsertCompletion(string value)
+        {
+        }
+
+        public void UpdateMatchingValues(string value)
+        {
+            Asked.Add(value);
+            MatchingValues.ReplaceAll(values.Where(v => v.StartsWith(value, StringComparison.Ordinal)).ToList());
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnUpdateOvertakenByANewerKeystroke_NeverReachesTheModel_SoItCannotOverwriteTheNewerMatches()
+    {
+        var theme = Theme();
+        var model = new PrefixModel("target");
+        var autoCompletion = new AutoCompletion(new TextModel("tar"), model, theme.Object) { ViewSize = new Size(20, 5) };
+
+        // Two keystrokes start; background tasks may run them in either order, and here the newer one runs first.
+        long older = autoCompletion.StartUpdate();
+        long newer = autoCompletion.StartUpdate();
+        autoCompletion.UpdateMatches("tar", 0, newer);
+        CollectionAssert.AreEqual(new[] { "target" }, model.MatchingValues.ToArray());
+
+        // The older keystroke's task only now gets a thread: its text ("readme.txt", no match) must not be applied.
+        autoCompletion.UpdateMatches("readme.txt", 0, older);
+
+        CollectionAssert.AreEqual(new[] { "tar" }, model.Asked.ToArray(), "the stale text never reached the model");
+        CollectionAssert.AreEqual(new[] { "target" }, model.MatchingValues.ToArray(), "the newer matches are still there");
+    }
+
     /// <summary>Blocks only its first call (the opening update) until released, so a later keystroke's update can finish first.</summary>
     private sealed class OpeningIsSlowModel : IBlockingCompletionModel
     {

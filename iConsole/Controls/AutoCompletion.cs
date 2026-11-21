@@ -252,10 +252,20 @@ public class AutoCompletion : Window, ITransientOverlayHost
     /// Numbers an update as it starts. Updates run on background tasks and can finish in any order, so an older one
     /// (the opening update, or an earlier keystroke) that finishes last must not decide the visibility.
     /// </summary>
-    private long StartUpdate() => Interlocked.Increment(ref _updateSequence);
+    internal long StartUpdate() => Interlocked.Increment(ref _updateSequence);
 
-    private void UpdateMatches(string value, int generation, long sequence, bool onUiThread = false, bool keepListDown = false)
+    internal void UpdateMatches(string value, int generation, long sequence, bool onUiThread = false, bool keepListDown = false)
     {
+        // An update that a newer keystroke has already overtaken must not reach the model at all. Updates run on
+        // background tasks that can start in any order, and a model keeps whatever it was handed last: an older text
+        // arriving after the newer one's matches had landed would put its own (often empty) matches over them, and
+        // the list the newer update opened was left up with nothing in it, or never opened. The newer update has
+        // its own task, so skipping this one loses nothing.
+        if (sequence != Volatile.Read(ref _updateSequence))
+        {
+            return;
+        }
+
         CompletionModel.UpdateMatchingValues(value);
 
         _listBox.UpdateModel();

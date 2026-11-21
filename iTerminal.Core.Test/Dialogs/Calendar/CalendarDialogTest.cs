@@ -480,4 +480,19 @@ public class CalendarDialogTest
         Assert.AreEqual(identity, meetings[1].Uid);
         Assert.AreEqual(1, fixture.Dialog.MeetingCursorForTest);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ShowsTheTimeZoneNameAndOffsetAndAMapWithItsMarker()
+    {
+        var fixture = Create();
+        fixture.Dialog.LocalTimeZone = () => TimeZoneInfo.CreateCustomTimeZone("Test/Zone", TimeSpan.FromHours(1), "Test zone", "Test zone");
+        await ShowAsync(fixture.Dialog);
+
+        var screen = Render(fixture.Dialog);
+
+        AssertScreenContains(screen, "Time zone: Test zone");
+        AssertScreenContains(screen, "UTC+01:00");
+        AssertScreenContains(screen, "●", "expected the map's marker");
+    }
 }
