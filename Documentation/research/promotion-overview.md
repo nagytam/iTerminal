@@ -134,6 +134,8 @@ given below).
   packaging changes for distribution builds (RPM licence field to MIT, `/usr/bin` link, signed RPM,
   optional native NuGet packages). Read the unverified rules in a browser before filing anything.
 
+- **Reddit post, r/VibeCodeDevs (noted at the user's request):** the user linked a post titled "Open sourced my hobby project (iTerminal) a console based file manager for the AI and security era" at <https://www.reddit.com/r/VibeCodeDevs/comments/1xvzlku/open_sourced_my_hobby_project_iterminal_a_console/>. Only the title was supplied. Reddit blocked the fetch from this environment, so the post body, the date, the author and the comments are **unverified** and are not recorded here. It is not a venue row because no submission route or rule was read; whether the user posted it is also unverified. Reddit rules for each subreddit remain as venue 9.
+
 ## 5. Suggested order
 
 1. Directory and list entries with no audience risk: the awesome-list pull requests (tuxarch, awesome-tuis, awesome-dotnet), then AlternativeTo and Terminal Trove.
