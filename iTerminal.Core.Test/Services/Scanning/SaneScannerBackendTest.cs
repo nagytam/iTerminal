@@ -42,6 +42,21 @@ public class SaneScannerBackendTest
     }
 
     [TestMethod]
+    public void ParseListing_SkipsAnHtmlBannerBeforeTheDevices()
+    {
+        // The HP embedded web server answers the scan client with an HTML page that can appear on stdout before the list.
+        const string withBanner =
+            "<!doctype html>\n" +
+            "<title>HP Embedded Web Server</title>\n" +
+            "device `escl:https://192.168.188.125:443' is a HP OfficeJet Pro 9120e Series [DDA47C] platen,adf scanner\n";
+
+        IReadOnlyList<ScannerDevice> devices = SaneScannerBackend.ParseListing(withBanner);
+
+        Assert.HasCount(1, devices);
+        Assert.AreEqual("escl:https://192.168.188.125:443", devices[0].Id);
+    }
+
+    [TestMethod]
     public void ParseListing_ReadsLocalAndNetworkScannersTogether()
     {
         IReadOnlyList<ScannerDevice> devices = SaneScannerBackend.ParseListing(
