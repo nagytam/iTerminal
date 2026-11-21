@@ -246,7 +246,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 > full-text document search, an optional local AI bar via Ollama, and six UI languages. MIT licence,
 > Windows and Linux, beta. Feedback and bug reports very welcome: https://github.com/nagytam/iTerminal
 
-*Tailor the first sentence per subreddit and follow each one's self-promotion rules.*
+*Status (2026-11-21): not posted. The subreddit rules are unverified because Reddit blocked automated reads; see [forums-and-communities.md](forums-and-communities.md). Tailor the first sentence per subreddit and follow each one's self-promotion rules.*
 
 ### 4.4 Social posts
 
