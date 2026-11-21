@@ -8,10 +8,10 @@
 
   <!--
     The file-format readers, renderers and the converter that turns a file into text. They live beside iConsole
-    rather than in it, so that a format library (SkiaSharp and its natives, Svg.Skia, the Office, PDF and TOML/YAML
-    packages) is restored only by the projects that read those formats, not by every project that references the
-    UI framework. Namespaces are unchanged. iConsole does not reference this project; the composition root registers
-    the converter with AddFileFormats.
+    rather than in it, so that a format library (SkiaSharp and its natives, Svg.Skia, the Office, PDF, TOML/YAML,
+    Parquet, HDF5 and SQLite packages) is restored only by the projects that read those formats, not by every project
+    that references the UI framework. Namespaces are unchanged. iConsole does not reference this project; the
+    composition root registers the converter and the readers with AddFileFormats.
   -->
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.13.1" />
@@ -26,6 +26,12 @@
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0" />
     <PackageReference Include="Tomlyn" Version="2.11.1" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
+    <!-- The HDF5 viewer (F3): PureHDF is fully managed. -->
+    <PackageReference Include="PureHDF" Version="2.2.0" />
+    <!-- The Parquet viewer (F3): fully managed, MIT. The reader decodes the first rows only; see Parquet. -->
+    <PackageReference Include="Parquet.Net" Version="6.1.0" />
+    <!-- The SQLite viewer (F3) and the read-only reader behind it. iTerminal.Core references it too (EF Core). -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>

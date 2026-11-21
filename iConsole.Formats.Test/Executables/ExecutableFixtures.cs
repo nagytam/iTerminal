@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace iTerminal.Core.Test.Services.Executables;
+namespace iConsole.Formats.Test.Executables;
 
 /// <summary>Builds small PE, ELF and Mach-O files byte by byte, so the tests need no binary fixtures and can switch each flag.</summary>
 internal static class ExecutableFixtures

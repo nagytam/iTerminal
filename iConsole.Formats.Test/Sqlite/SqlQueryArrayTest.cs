@@ -1,10 +1,9 @@
 using iConsole.Sqlite;
 using iConsole.Tabular;
-using iTerminal.Core.Services.Sqlite;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace iTerminal.Core.Test.Services.Sqlite;
+namespace iConsole.Formats.Test.Sqlite;
 
 /// <summary>A statement's result read as a two-axis array through the real read-only reader. Every database is a temp file.</summary>
 [TestClass]

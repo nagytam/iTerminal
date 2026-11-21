@@ -1,6 +1,6 @@
 using iConsole.Executables;
 
-namespace iTerminal.Core.Services.Executables;
+namespace iConsole.Executables;
 
 /// <summary>
 /// Reads the headers of a PE, ELF or Mach-O file and reports them. The file is only parsed, never run or loaded. Every offset and count

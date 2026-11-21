@@ -1,8 +1,7 @@
 using System.Diagnostics;
 using iConsole.Executables;
-using iTerminal.Core.Services.Executables;
 
-namespace iTerminal.Core.Test.Services.Executables;
+namespace iConsole.Formats.Test.Executables;
 
 [TestClass]
 public class ExecutableAnalyzerTest

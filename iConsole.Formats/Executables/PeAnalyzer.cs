@@ -1,7 +1,7 @@
 using System.Reflection.PortableExecutable;
 using iConsole.Executables;
 
-namespace iTerminal.Core.Services.Executables;
+namespace iConsole.Executables;
 
 /// <summary>
 /// Reads a Windows PE file. The headers come from the BCL's <see cref="PEHeaders"/>; the import and export tables, the load

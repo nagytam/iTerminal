@@ -1,11 +1,10 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
 using iConsole.Sqlite;
-using iTerminal.Core.Services.Sqlite;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace iTerminal.Core.Test.Services.Sqlite;
+namespace iConsole.Formats.Test.Sqlite;
 
 /// <summary>Every database here is a temp file made for the test; the user's own iTerminal.sqlite is never touched.</summary>
 [TestClass]

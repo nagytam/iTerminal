@@ -1,10 +1,9 @@
 using iConsole.Sqlite;
 using iConsole.Tabular;
-using iTerminal.Core.Services.Sqlite;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace iTerminal.Core.Test.Services.Sqlite;
+namespace iConsole.Formats.Test.Sqlite;
 
 /// <summary>
 /// The same grid query, run in memory by the file viewers and rendered as SQL for the SQLite viewer, must return the same rows.

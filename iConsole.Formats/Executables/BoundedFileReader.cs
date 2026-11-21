@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
 
-namespace iTerminal.Core.Services.Executables;
+namespace iConsole.Executables;
 
 /// <summary>
 /// Reads a file at absolute offsets, and never beyond its end. A hostile executable chooses every offset and size it holds, so

@@ -274,24 +274,16 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iConsole.Dialogs.CsvViewerDialog>();
         services.AddTransient<iConsole.Dialogs.XpsViewerDialog>();
         services.AddTransient<iConsole.Dialogs.CertificateViewerDialog>();
-        // The SQLite viewer reads a database through the read-only reader; the reader holds no state.
-        services.AddTransient<iConsole.Sqlite.ISqliteDatabaseReader, iTerminal.Core.Services.Sqlite.SqliteDatabaseReader>();
         services.AddTransient<iConsole.Dialogs.SqliteViewerDialog>();
-        // The HDF5 viewer reads a file through the read-only reader; the reader holds no state.
-        services.AddTransient<iConsole.Hdf.IHdfFileReader, iTerminal.Core.Services.Hdf.Hdf5FileReader>();
         services.AddTransient<iConsole.Dialogs.HdfViewerDialog>();
         // The HAR viewer reads a network log through the file system; it holds no state of its own.
         services.AddTransient<iConsole.Dialogs.HarViewerDialog>();
-        // The Parquet viewer reads the first rows through the read-only reader; the reader holds no state.
-        services.AddTransient<iConsole.Parquet.IParquetFileReader, iTerminal.Core.Services.ParquetFiles.ParquetFileReader>();
         services.AddTransient<iConsole.Dialogs.ParquetViewerDialog>();
         // Markdown, YAML, TOML and dBase viewers: each reads its file through the file system and holds no state of its own.
         services.AddTransient<iConsole.Dialogs.MarkdownViewerDialog>();
         services.AddTransient<iConsole.Dialogs.YamlViewerDialog>();
         services.AddTransient<iConsole.Dialogs.TomlViewerDialog>();
         services.AddTransient<iConsole.Dialogs.DbfViewerDialog>();
-        // The executable analysis view parses a PE, ELF or Mach-O file in-process; the analyzer holds no state.
-        services.AddTransient<iConsole.Executables.IExecutableAnalyzer, iTerminal.Core.Services.Executables.ExecutableAnalyzer>();
         services.AddTransient<iConsole.Dialogs.ExecutableAnalysisDialog>();
         // The library index is a singleton so the in-memory copy of the table is shared by the
         // indexing job and every dialog that searches it.

@@ -1,8 +1,7 @@
 using iConsole.Sqlite;
-using iTerminal.Core.Services.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace iTerminal.Core.Test.Services.Sqlite;
+namespace iConsole.Formats.Test.Sqlite;
 
 [TestClass]
 public class SqliteStatementCheckerTest
