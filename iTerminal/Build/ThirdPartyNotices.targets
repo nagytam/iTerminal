@@ -1,0 +1,34 @@
+<Project>
+
+  <!--
+    Puts THIRD-PARTY-NOTICES.txt and LICENSE.txt into the publish output, so each package that ships with
+    the app carries its licence and its notice. Every installable form publishes first (the Windows MSI,
+    the Linux tarball, deb and rpm, and the portable archives), so they all get the files. The notice lists
+    the packages of the runtime being published, so a Windows publish lists the Windows natives and a Linux
+    publish does not. The generator is iTerminal.ThirdPartyNotices, a console program run with dotnet run.
+    Documentation/architecture/build-and-packaging.md describes the sources and how to add a licence the
+    generator cannot read.
+  -->
+  <Target Name="WriteThirdPartyNotices" AfterTargets="Publish" Condition="'$(PublishDir)' != ''">
+    <PropertyGroup>
+      <!-- The key of this runtime's section in project.assets.json: net11.0/linux-x64, or net11.0 without a runtime. -->
+      <NoticeTargetKey>$(TargetFramework)</NoticeTargetKey>
+      <NoticeTargetKey Condition="'$(RuntimeIdentifier)' != ''">$(TargetFramework)/$(RuntimeIdentifier)</NoticeTargetKey>
+      <!-- Build/ is two folders below the repository root, where the generator project lives. -->
+      <NoticeTool>$(MSBuildThisFileDirectory)..\..\iTerminal.ThirdPartyNotices\ThirdPartyNotices.csproj</NoticeTool>
+      <NoticeLicenses>$(MSBuildThisFileDirectory)..\..\iTerminal.ThirdPartyNotices\Licenses</NoticeLicenses>
+      <!-- NuGetPackageRoot ends in a separator on Windows; a quoted argument ending in \ swallows its closing quote, so the rest of the command line shifts. -->
+      <NoticePackages>$(NuGetPackageRoot.TrimEnd('\').TrimEnd('/'))</NoticePackages>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <NoticeRuntimePack Include="@(ResolvedRuntimePack->'%(PackageDirectory)')" />
+    </ItemGroup>
+
+    <Exec Command="dotnet run --project &quot;$(NoticeTool)&quot; -c Release --no-launch-profile -- --assets &quot;$(ProjectAssetsFile)&quot; --target &quot;$(NoticeTargetKey)&quot; --packages &quot;$(NoticePackages)&quot; --licenses &quot;$(NoticeLicenses)&quot; --output &quot;$(PublishDir)THIRD-PARTY-NOTICES.txt&quot; --product iTerminal --version &quot;$(Version)&quot; @(NoticeRuntimePack->'--runtime-pack &quot;%(Identity)&quot;', ' ')" />
+
+    <!-- The project's own licence, next to the third-party one. -->
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\LICENSE" DestinationFiles="$(PublishDir)LICENSE.txt" />
+  </Target>
+
+</Project>

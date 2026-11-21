@@ -22,6 +22,14 @@
     <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
   </ItemGroup>
 
+  <!-- Build/ holds the notice generator (compiled by RoslynCodeTaskFactory, not into the app) and the licence texts. -->
+  <ItemGroup>
+    <Compile Remove="Build\**" />
+    <None Remove="Build\**" />
+  </ItemGroup>
+
+  <Import Project="Build\ThirdPartyNotices.targets" />
+
   <ItemGroup>
     <None Update="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
