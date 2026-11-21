@@ -1,6 +1,6 @@
-using iTerminal.Core.Services.Games;
+using iTerminal.Core.Games;
 
-namespace iTerminal.Core.Test.Services.Games;
+namespace iTerminal.Core.Games.Test;
 
 /// <summary>
 /// Checks the rules against facts that do not depend on the games' own code paths: chess move counts from known positions

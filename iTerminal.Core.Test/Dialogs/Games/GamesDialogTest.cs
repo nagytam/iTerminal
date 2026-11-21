@@ -6,7 +6,7 @@ using iConsole.Services;
 using iConsole.Test.Core;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs.Games;
-using iTerminal.Core.Services.Games;
+using iTerminal.Core.Games;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 using StringAssert = Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert;
 
@@ -276,7 +276,7 @@ public class GamesDialogTest
         Assert.AreEqual(2, chess.State.Board[7 * 8]);
     }
 
-    private static ChessState ChessTest_Fen(string fen) => iTerminal.Core.Test.Services.Games.ChessTest.FromFen(fen);
+    private static ChessState ChessTest_Fen(string fen) => iTerminal.Core.Games.Test.ChessTest.FromFen(fen);
 
     [Timeout(60_000)]
     [TestMethod]

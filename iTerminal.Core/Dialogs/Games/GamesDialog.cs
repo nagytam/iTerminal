@@ -4,7 +4,7 @@ using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Services;
-using iTerminal.Core.Services.Games;
+using iTerminal.Core.Games;
 
 namespace iTerminal.Core.Dialogs.Games;
 

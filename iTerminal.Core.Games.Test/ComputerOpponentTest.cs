@@ -1,6 +1,6 @@
-using iTerminal.Core.Services.Games;
+using iTerminal.Core.Games;
 
-namespace iTerminal.Core.Test.Services.Games;
+namespace iTerminal.Core.Games.Test;
 
 /// <summary>
 /// Full games between a random-legal-move person and the computer. The computer's planned move must always exist while the

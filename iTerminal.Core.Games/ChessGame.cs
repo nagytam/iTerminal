@@ -1,6 +1,6 @@
 using iConsole.Display;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>
 /// Chess with the whole rulebook: check, checkmate, stalemate, castling, en passant, promotion (you choose the piece),

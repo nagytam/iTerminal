@@ -1,7 +1,7 @@
 using iConsole.Display;
 using iConsole.Localization;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>
 /// A simplified Risk on a 6 x 4 map of territories with four continents, for one person against the computer (Red) or a

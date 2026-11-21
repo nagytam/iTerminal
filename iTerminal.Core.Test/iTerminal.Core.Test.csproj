@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iConsole.Test.Core\iConsole.Test.Core.csproj" />
+    <ProjectReference Include="..\iTerminal.Core.Games.Test\iTerminal.Core.Games.Test.csproj" />
     <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
   </ItemGroup>
 
