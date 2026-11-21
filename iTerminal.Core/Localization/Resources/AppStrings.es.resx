@@ -5380,7 +5380,7 @@
     <value>{0} colocan una ficha. {1}</value>
   </data>
   <data name="Games.Nmm.Rules" xml:space="preserve">
-    <value>Coloca tus nueve fichas y luego deslízalas por las líneas. Tres en línea es un molino: quita una ficha rival. Con tres fichas puedes volar.</value>
+    <value>Coloca y luego desliza. Tres en línea quitan una; con tres, vuelas.</value>
   </data>
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Una ficha se desliza a un punto vecino vacío.</value>

@@ -5444,7 +5444,7 @@
     <value>{0} setzt einen Stein. {1}</value>
   </data>
   <data name="Games.Nmm.Rules" xml:space="preserve">
-    <value>Setze deine neun Steine, dann schiebe sie entlang der Linien. Drei in einer Reihe sind eine Mühle: nimm einen gegnerischen Stein. Mit nur drei Steinen darfst du springen.</value>
+    <value>Setzen, dann ziehen. Drei in einer Reihe nehmen einen; mit drei fliegen.</value>
   </data>
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Ein Stein rutscht auf einen benachbarten freien Punkt.</value>

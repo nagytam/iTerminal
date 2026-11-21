@@ -520,7 +520,7 @@ public class NineMensMorrisGame : GameBase
 
     public override string Name => "Nine Men's Morris";
 
-    public override string Rules => GameText.Get("Games.Nmm.Rules", "Place your nine men, then slide them along the lines. Three in a row is a mill: take an opposing man. With three men left you may fly.");
+    public override string Rules => GameText.Get("Games.Nmm.Rules", "Place, then slide. Three in a row takes a man; with three left, fly.");
 
     public override bool IsOver => _winner >= 0;
 
