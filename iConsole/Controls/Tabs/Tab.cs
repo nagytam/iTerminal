@@ -198,6 +198,18 @@ public class Tab(IThemeService themeService) : Control(themeService)
         }
     }
 
+    /// <summary>
+    /// <see cref="Controls"/> is the focused page's children, so the base idle pass reaches those children but
+    /// not the page itself, whose own <see cref="TabPage.OnIdle"/> (the SMB scan, the drive list) would never run.
+    /// Only the focused page gets the pass: the base already visits its children, so the page's pass stands in
+    /// for that one, and a hidden page's children are left alone rather than repainting the screen on every
+    /// pass. A page that was hidden applies its background results the next time it is shown and idled.
+    /// </summary>
+    public override void OnIdle()
+    {
+        FocusedPage?.OnIdle();
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
