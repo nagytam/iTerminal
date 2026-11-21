@@ -7,11 +7,9 @@ Installers:
   - Architecture: x64
     InstallerType: msi
     Scope: machine
-    ElevationRequirement: elevationRequired
     InstallerUrl: https://github.com/nagytam/iTerminal/releases/download/v0.0.0.727/iTerminal-0.0.0.727-x64.msi
     InstallerSha256: 5FA2387DCC568DD6335ECE87CD65B81F833820A68EB359663FD0E095495C0747
     ProductCode: '{3D1BB8E7-CF54-46AA-BF7A-17E1151E0C55}'
-    UpgradeCode: '{0E27BCAD-3940-4A25-B391-E316A54EACF9}'
     AppsAndFeaturesEntries:
       - DisplayName: iTerminal BETA
         Publisher: Tamas Nagy
