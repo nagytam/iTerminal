@@ -2,7 +2,7 @@ namespace iConsole.Sqlite;
 
 /// <summary>
 /// Runs one read-only query over a local SQLite database file. The implementation holds the write guard
-/// (see iTerminal.Core's SqliteDatabaseReader); callers must not rely on the UI layer to refuse writes.
+/// (see iConsole.Formats' SqliteDatabaseReader); callers must not rely on the UI layer to refuse writes.
 /// </summary>
 public interface ISqliteDatabaseReader
 {

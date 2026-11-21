@@ -3,7 +3,7 @@ using iConsole.Parquet;
 using Parquet;
 using Parquet.Schema;
 
-namespace iTerminal.Core.Services.ParquetFiles;
+namespace iConsole.Parquet;
 
 /// <summary>
 /// Reads the first rows of a Parquet file for the Parquet viewer, with Parquet.Net (managed, no native library). The file is

@@ -1,6 +1,6 @@
 using iConsole.Executables;
 
-namespace iTerminal.Core.Services.Executables;
+namespace iConsole.Executables;
 
 /// <summary>
 /// Reads an ELF file by hand: the header, the program headers (stack, RELRO, dynamic section), the section table with entropy, and the

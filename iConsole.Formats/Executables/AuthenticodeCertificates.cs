@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using iConsole.Executables;
 
-namespace iTerminal.Core.Services.Executables;
+namespace iConsole.Executables;
 
 /// <summary>
 /// Lists the certificates inside an Authenticode signature (a PKCS #7 SignedData blob) without checking anything: the blob is walked with

@@ -29,7 +29,7 @@ public sealed class ParquetReadException : Exception
 }
 
 /// <summary>
-/// Reads a Parquet file for the Parquet viewer, read-only. The implementation lives in iTerminal.Core, so the UI has no Parquet
+/// Reads a Parquet file for the Parquet viewer, read-only. The implementation lives in iConsole.Formats, so the UI has no Parquet
 /// dependency. The call blocks on file I/O: callers run it on a worker thread.
 /// </summary>
 public interface IParquetFileReader

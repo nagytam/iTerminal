@@ -139,7 +139,7 @@ public sealed class ExecutableAnalysisException : Exception
 
 /// <summary>
 /// Reads an executable's headers for the analysis view, read-only: the file is parsed, never run. The implementation lives in
-/// iTerminal.Core. The call blocks on file I/O, so callers run it on a worker thread.
+/// iConsole.Formats. The call blocks on file I/O, so callers run it on a worker thread.
 /// </summary>
 public interface IExecutableAnalyzer
 {

@@ -1,8 +1,7 @@
 using iConsole.Hdf;
-using iTerminal.Core.Services.Hdf;
 using PureHDF;
 
-namespace iTerminal.Core.Test.Services.Hdf;
+namespace iConsole.Formats.Test.Hdf;
 
 [TestClass]
 public class Hdf5FileReaderTest

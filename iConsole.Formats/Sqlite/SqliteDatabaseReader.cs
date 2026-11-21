@@ -2,7 +2,7 @@ using System.Globalization;
 using iConsole.Sqlite;
 using Microsoft.Data.Sqlite;
 
-namespace iTerminal.Core.Services.Sqlite;
+namespace iConsole.Sqlite;
 
 /// <summary>
 /// Runs one read-only query over a local SQLite file for the SQLite viewer. Three guards stand together: the statement

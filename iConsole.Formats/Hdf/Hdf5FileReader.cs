@@ -4,7 +4,7 @@ using iConsole.Hdf;
 using PureHDF;
 using PureHDF.Selections;
 
-namespace iTerminal.Core.Services.Hdf;
+namespace iConsole.Hdf;
 
 /// <summary>
 /// Reads an HDF5 file for the HDF5 viewer, with PureHDF (managed, no native library). The file is opened read-only, once per

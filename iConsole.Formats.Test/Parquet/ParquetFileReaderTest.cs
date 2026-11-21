@@ -1,9 +1,8 @@
 using iConsole.Parquet;
-using iTerminal.Core.Services.ParquetFiles;
 using Parquet;
 using Parquet.Serialization;
 
-namespace iTerminal.Core.Test.Services.ParquetFiles;
+namespace iConsole.Formats.Test.Parquet;
 
 [TestClass]
 public class ParquetFileReaderTest

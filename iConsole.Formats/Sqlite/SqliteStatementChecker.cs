@@ -1,6 +1,6 @@
 using iConsole.Sqlite;
 
-namespace iTerminal.Core.Services.Sqlite;
+namespace iConsole.Sqlite;
 
 /// <summary>
 /// Refuses anything that is not one read-only statement, before SQLite sees it. The text is masked first: comments and the

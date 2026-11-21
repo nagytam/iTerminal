@@ -34,7 +34,7 @@ public sealed class HdfReadException : Exception
 }
 
 /// <summary>
-/// Reads an HDF5 file for the HDF5 viewer, read-only. The implementation lives in iTerminal.Core, so the UI has no HDF
+/// Reads an HDF5 file for the HDF5 viewer, read-only. The implementation lives in iConsole.Formats, so the UI has no HDF
 /// dependency. Both calls block on file I/O: callers run them on a worker thread.
 /// </summary>
 public interface IHdfFileReader

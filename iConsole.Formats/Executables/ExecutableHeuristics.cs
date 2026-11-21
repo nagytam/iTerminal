@@ -1,6 +1,6 @@
 using iConsole.Executables;
 
-namespace iTerminal.Core.Services.Executables;
+namespace iConsole.Executables;
 
 /// <summary>The packer and high-entropy hints, the same for every format.</summary>
 internal static class ExecutableHeuristics
