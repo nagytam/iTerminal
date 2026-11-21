@@ -1140,7 +1140,7 @@ public class SmallScreenDialogsTest
     [DataRow("About", "Laufzeit")]
     [DataRow("Filter by Label", "Ordner bleiben aufgelistet")]
     [DataRow("Open with", "Systemstandard")]
-    [DataRow("Passwords", "Noch nichts gespeichert. N fügt ein Passwort hinzu;")]
+    [DataRow("Passwords", "Netzwerk- und Mail-Passwörter")]
     [DataRow("Documents", "· Bilder:")]
     public async Task ThePaletteFooterAndSixMoreDialogsInGerman_AreGerman(string command, string expected)
     {

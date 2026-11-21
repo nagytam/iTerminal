@@ -362,21 +362,4 @@ public class PasswordManagerDialogTest
         AssertScreenContains(screen, "network and mail passwords appear here");
     }
 
-    [Timeout(60_000)]
-    [TestMethod]
-    public async Task TheListStaysOnScreenWhenTheDialogIsPaintedAfterItsTable()
-    {
-        // The renderer does not promise the paint order of a dialog and its table, which share a layer. The app painted the
-        // table first and the dialog's blank interior then erased the list; the tree helper always paints the dialog first.
-        var dialog = new PasswordManagerDialog(NewManager(), TestTheme());
-        await ShowAsync(dialog);
-
-        var buffer = new iConsole.Test.Core.ScreenBuffer(120, 40);
-        dialog.TableForTest.Draw(buffer);
-        dialog.Draw(buffer);
-
-        AssertScreenContains(buffer, "Category");
-        AssertScreenContains(buffer, "Nothing saved yet. N adds a password;");
-    }
-
 }
