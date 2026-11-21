@@ -162,6 +162,43 @@ public class SecureWipeDialogTest
 
     [TestMethod]
     [Timeout(15_000)]
+    public async Task WhileRunning_TheDiskGraphicFillsWithTheProgress()
+    {
+        IProgress<WipeProgress>? progress = null;
+        var started = new TaskCompletionSource();
+        _wipe.Setup(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()))
+            .Returns<IReadOnlyList<string>, WipePattern, IProgress<WipeProgress>?, CancellationToken>(async (_, _, p, t) =>
+            {
+                progress = p;
+                started.SetResult();
+                try
+                {
+                    await Task.Delay(Timeout.Infinite, t);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+
+                return new WipeResult(0, 0, 0, [], Cancelled: true);
+            });
+        await OpenAsync(@"C:\data\a.txt");
+        _dialog.TickSource = () => 0;
+        _dialog.Arm();
+        _dialog.Confirm();
+        await started.Task;
+
+        progress!.Report(new WipeProgress(50, 100, "a.txt"));
+        var screen = Screen();
+
+        UiTestHelper.AssertScreenContains(screen, "50%");
+        UiTestHelper.AssertScreenContains(screen, "[" + new string('█', 30) + "▓");
+
+        _dialog.Close();
+        await _dialog.WipeTask;
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
     public async Task AnyOtherKeyAfterArming_WithdrawsIt()
     {
         await OpenAsync(@"C:\data\secret.txt");
