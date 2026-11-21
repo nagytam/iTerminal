@@ -7,7 +7,7 @@ verification status, is in [promotion-overview.md](../research/promotion-overvie
 ## Files
 
 - [iTerminal-Marketing-Kit.md](iTerminal-Marketing-Kit.md): the base kit. Facts, taglines, pitches, the feature catalogue, announcement texts, the presentation outline, the demo script, the contributor and sponsor texts, the FAQ and the launch checklist.
-- [awesome-lists.md](awesome-lists.md): pull request entries for rothgar/awesome-tuis, awesome-dotnet and the awesome-cli-apps family.
+- [awesome-lists.md](awesome-lists.md): pull request entries for rothgar/awesome-tuis (blocked until 2027-04-15), awesome-dotnet (doable now), the toolleeo CSV list (doable now) and agarrharr/awesome-cli-apps (blocked: stars).
 - [directories-and-newsletters.md](directories-and-newsletters.md): the Console.dev suggestion email, the Terminal Trove submission checklist, the AlternativeTo entry.
 - [forums-and-communities.md](forums-and-communities.md): posts for r/commandline, r/dotnet, r/linux, Lobsters, plus the Show HN pointer.
 - [dev-to-article.md](dev-to-article.md): a long-form article draft for Dev.to (#showdev).
@@ -18,7 +18,7 @@ verification status, is in [promotion-overview.md](../research/promotion-overvie
 
 ## Before anything is sent
 
-1. A downloadable release exists. Replace every `<RELEASE URL>`. Most venues require it, and Show HN requires that outsiders can run the app.
+1. A downloadable release exists (v0.0.0.750 as of 2026-11-21; the files use the `releases/latest` link, so no replacement is needed except in the kit and the packaging how-to). Most venues require it, and Show HN requires that outsiders can run the app.
 2. Check each venue's current rules on the day you post. The overview marks which rules were verified and which were not.
 3. Confirm every feature claim against the release. The kit notes that the README is behind the feature set; the release notes are the reference.
 4. Fill the `<YOUR NAME>` and other placeholders. Do not add contact details you do not want public.
