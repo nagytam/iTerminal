@@ -129,9 +129,13 @@ jobs:
           # a folder in the list makes gh fail after the release is created.
           mapfile -t assets < <(find packages -type f)
           [ "${#assets[@]}" -gt 0 ] || { echo "No packages were downloaded"; exit 1; }
+          # The repository has immutable releases switched on: once published, the assets and the tag can never change.
+          # So the release is created as a draft, gets all its files, and is published last.
           gh release create "v$VERSION" "${assets[@]}" \
+            --draft \
             --repo "$GITHUB_REPOSITORY" \
             --target "${{ github.event.pull_request.merge_commit_sha }}" \
             --title "iTerminal $VERSION" \
             --notes "Built from #$PR_NUMBER: $PR_TITLE" \
             --generate-notes
+          gh release edit "v$VERSION" --repo "$GITHUB_REPOSITORY" --draft=false
