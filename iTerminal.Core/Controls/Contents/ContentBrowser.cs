@@ -526,7 +526,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             header = BuildHeaderWithLensIndicators(contentModel, header);
         }
 
-        DrawBorder(buffer, ZOrder, AbsolutePosition, ViewSize, header, footer, colorScheme, visualState);
+        DrawBorder(buffer, ZOrder, AbsolutePosition, ViewSize, header, footer, colorScheme, visualState,
+            highlightFocus: true);
         base.Draw(buffer);
 
         if (contentModel is not null && IsInfoListing)

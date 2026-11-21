@@ -56,7 +56,7 @@ public class AiPromptBarVoiceTest
         var speech = new FakeSpeech();
         var bar = new AiPromptBar(model, chat.Object, dialog, dateTime.Object, theme, null, speech)
         {
-            ViewSize = new Size(50, 3),
+            ViewSize = new Size(52, 5), // a frame around the 50x3 content
         };
         bar.OnInitializeLayout();
         if (focused)
@@ -74,6 +74,13 @@ public class AiPromptBarVoiceTest
         var buffer = new ScreenBuffer((int)bar.ViewSize.Width, (int)bar.ViewSize.Height);
         bar.Draw(buffer);
         return buffer;
+    }
+
+    /// <summary>The content of row <paramref name="y"/> inside the frame, which the screen's first and last column hold.</summary>
+    private static string Row(ScreenBuffer screen, int y)
+    {
+        var line = screen.Line(y + 1);
+        return line.Length >= 2 ? line[1..^1] : string.Empty;
     }
 
     [Timeout(60_000)]
@@ -118,7 +125,7 @@ public class AiPromptBarVoiceTest
         var theme = new TestThemeService();
         var bar = new AiPromptBar(model, Mock.Of<IAiChatService>(), new AiModelDialog(model, Options.Create(new AiOptions()), theme), Mock.Of<IDateTimeProviderService>(), theme)
         {
-            ViewSize = new Size(50, 3),
+            ViewSize = new Size(52, 5), // a frame around the 50x3 content
         };
         bar.SetFocus();
 
@@ -145,18 +152,18 @@ public class AiPromptBarVoiceTest
         var (bar, _, speech, _) = Create();
 
         speech.State = SpeechState.Recording;
-        StringAssert.Contains(Render(bar).Line(0), "[REC ●]");
+        StringAssert.Contains(Row(Render(bar), 0), "[REC ●]");
 
         speech.State = SpeechState.Transcribing;
-        string transcribing = Render(bar).Line(0);
+        string transcribing = Row(Render(bar), 0);
         StringAssert.Contains(transcribing, "[transcribing…]");
         Assert.IsFalse(transcribing.Contains("REC"), transcribing);
 
         speech.State = SpeechState.Idle;
-        string idle = Render(bar).Line(0);
+        string idle = Row(Render(bar), 0);
         StringAssert.Contains(idle, "[m]>");
         Assert.IsFalse(idle.Contains("transcribing") || idle.Contains("REC"), idle);
-        Assert.AreEqual(idle, Render(bar).Line(0), "a second draw is the same");
+        Assert.AreEqual(idle, Row(Render(bar), 0), "a second draw is the same");
     }
 
     [Timeout(60_000)]
@@ -268,13 +275,13 @@ public class AiPromptBarVoiceTest
     {
         var (bar, _, speech, _) = Create();
 
-        StringAssert.Contains(Render(bar).Line(0), "[● Mic: Alt+F1]");
+        StringAssert.Contains(Row(Render(bar), 0), "[● Mic: Alt+F1]");
 
         speech.State = SpeechState.Recording;
-        StringAssert.Contains(Render(bar).Line(0), "[■ Stop: Alt+F1]");
+        StringAssert.Contains(Row(Render(bar), 0), "[■ Stop: Alt+F1]");
 
         speech.State = SpeechState.Transcribing;
-        StringAssert.Contains(Render(bar).Line(0), "transcribing");
+        StringAssert.Contains(Row(Render(bar), 0), "transcribing");
     }
 
     [Timeout(60_000)]
@@ -282,14 +289,14 @@ public class AiPromptBarVoiceTest
     public async Task ClickingTheMicButton_TogglesTheRecording_ButOtherClicksDoNot()
     {
         var (bar, _, speech, _) = Create(focused: false);
-        string line = Render(bar).Line(0);
+        string line = Row(Render(bar), 0);
         int mic = line.IndexOf("[● Mic", StringComparison.Ordinal);
 
         Assert.IsTrue(mic > 0);
-        Assert.IsFalse(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(mic - 5, 0), LeftClicked = true }));
+        Assert.IsFalse(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(mic + 1 - 5, 1), LeftClicked = true }));
         Assert.AreEqual(0, speech.Toggles);
 
-        Assert.IsTrue(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(mic + 2, 0), LeftClicked = true }));
+        Assert.IsTrue(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(mic + 1 + 2, 1), LeftClicked = true }));
         Assert.AreEqual(1, speech.Toggles);
     }
 

@@ -40,6 +40,8 @@ public abstract class ContentPanel : Window
         }
     }
 
+    protected override bool HighlightFocusedBorder => true;
+
     protected override void OnFocusChanged()
     {
         base.OnFocusChanged();
