@@ -26,6 +26,7 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Calculator.CalculatorDialog? calculatorDialog = null,
         iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog? unitConverterDialog = null,
         iTerminal.Core.Dialogs.Calendar.CalendarDialog? calendarDialog = null,
+        iTerminal.Core.Dialogs.Watch.WatchDialog? watchDialog = null,
         iTerminal.Core.Dialogs.ToDo.ToDoListDialog? toDoListDialog = null,
         iTerminal.Core.Dialogs.Mail.MailDialog? mailDialog = null,
         iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog? passwordManagerDialog = null,
@@ -111,6 +112,7 @@ public class ToolsMenuItem : MenuItem
         if (userGroupManagerDialog is not null && UserGroupManagerDialogCommand.IsSupported) groups["sys"].Add(new UserGroupManagerDialogCommand(userGroupManagerDialog));
         if (unitConverterDialog is not null) groups["office"].Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) groups["office"].Add(new CalendarDialogCommand(calendarDialog));
+        if (watchDialog is not null) groups["office"].Add(new WatchDialogCommand(watchDialog));
         if (toDoListDialog is not null) groups["office"].Add(new ToDoListDialogCommand(toDoListDialog));
         if (mailDialog is not null) groups["net"].Add(new MailDialogCommand(mailDialog));
         if (webBrowserDialog is not null) groups["net"].Add(new WebBrowserDialogCommand(webBrowserDialog));

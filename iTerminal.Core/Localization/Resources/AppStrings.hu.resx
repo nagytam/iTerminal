@@ -862,6 +862,9 @@
   <data name="CmdDesc.4363c7ec" xml:space="preserve">
     <value>A pénzváltó megnyitása: az aktuális árfolyamok letöltése és átváltás pénznemek között.</value>
   </data>
+  <data name="CmdDesc.43caa310" xml:space="preserve">
+    <value>Az óra megnyitása: világidő, ébresztők, stopperóra és időzítők.</value>
+  </data>
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Ellenőrzi, hogy a bizonyítéknapló minden bejegyzése még megfelel-e a rögzített SHA-256 értékének és méretének.</value>
   </data>
@@ -1687,6 +1690,9 @@
   <data name="CmdTitle.a6c7a84b" xml:space="preserve">
     <value>Befejezés</value>
   </data>
+  <data name="CmdTitle.a71e7573" xml:space="preserve">
+    <value>Óra</value>
+  </data>
   <data name="CmdTitle.a7332854" xml:space="preserve">
     <value>Shell</value>
   </data>
@@ -2497,6 +2503,9 @@
   <data name="Dialog.Warning" xml:space="preserve">
     <value>Figyelmeztetés</value>
   </data>
+  <data name="Dialog.Watch" xml:space="preserve">
+    <value>Óra</value>
+  </data>
   <data name="Dialog.Weather" xml:space="preserve">
     <value>Időjárás</value>
   </data>
@@ -2655,6 +2664,9 @@
   </data>
   <data name="DialogHint.ChangeStation" xml:space="preserve">
     <value>Állomás módosítása</value>
+  </data>
+  <data name="DialogHint.ChangeTab" xml:space="preserve">
+    <value>Lap váltása</value>
   </data>
   <data name="DialogHint.ChartPeriod" xml:space="preserve">
     <value>A diagram időszakának módosítása (1M, 3M, 1É, 5É)</value>
@@ -3118,6 +3130,9 @@
   <data name="DialogHint.MountDiskImage" xml:space="preserve">
     <value>Lemezkép csatolása</value>
   </data>
+  <data name="DialogHint.MoveAlarm" xml:space="preserve">
+    <value>Ébresztő kiválasztása</value>
+  </data>
   <data name="DialogHint.MoveBetweenFields" xml:space="preserve">
     <value>Mozgás a mezők között</value>
   </data>
@@ -3159,6 +3174,12 @@
   </data>
   <data name="DialogHint.MoveQueuedTask" xml:space="preserve">
     <value>Várakozó feladat áthelyezése</value>
+  </data>
+  <data name="DialogHint.MoveTimer" xml:space="preserve">
+    <value>Időzítő kiválasztása</value>
+  </data>
+  <data name="DialogHint.MoveZone" xml:space="preserve">
+    <value>Időzóna kiválasztása</value>
   </data>
   <data name="DialogHint.MultiRename" xml:space="preserve">
     <value>Az előnézetben látható fájlok átnevezése</value>
@@ -10876,6 +10897,141 @@
   </data>
   <data name="Voice.Transcribing" xml:space="preserve">
     <value>felismerés…</value>
+  </data>
+  <data name="Watch.AddAlarm" xml:space="preserve">
+    <value>Ébresztő hozzáadása</value>
+  </data>
+  <data name="Watch.AddTimer" xml:space="preserve">
+    <value>Időzítő indítása</value>
+  </data>
+  <data name="Watch.AddZone" xml:space="preserve">
+    <value>Időzóna hozzáadása</value>
+  </data>
+  <data name="Watch.BadDuration" xml:space="preserve">
+    <value>"{0}" nem időtartam; adj meg perceket vagy perc:másodperc alakot, pl. 5 vagy 05:00</value>
+  </data>
+  <data name="Watch.BadTime" xml:space="preserve">
+    <value>"{0}" nem időpont; használd az ÓÓ:PP formátumot, pl. 07:30</value>
+  </data>
+  <data name="Watch.BadZone" xml:space="preserve">
+    <value>"{0}" nem időzóna, pl. Europe/Budapest</value>
+  </data>
+  <data name="Watch.ConfirmDelete" xml:space="preserve">
+    <value>Törlöd a kijelölt elemet? (y/n)</value>
+  </data>
+  <data name="Watch.DefaultAlarmLabel" xml:space="preserve">
+    <value>Ébresztő</value>
+  </data>
+  <data name="Watch.DefaultTimerLabel" xml:space="preserve">
+    <value>Időzítő</value>
+  </data>
+  <data name="Watch.Lap" xml:space="preserve">
+    <value>Kör rögzítése</value>
+  </data>
+  <data name="Watch.Laps" xml:space="preserve">
+    <value>Körök</value>
+  </data>
+  <data name="Watch.NewAlarmPrompt" xml:space="preserve">
+    <value>Új ébresztő (ÓÓ:PP címke)</value>
+  </data>
+  <data name="Watch.NewTimerPrompt" xml:space="preserve">
+    <value>Új időzítő (perc vagy perc:másodperc, majd címke)</value>
+  </data>
+  <data name="Watch.NewZonePrompt" xml:space="preserve">
+    <value>Időzóna hozzáadása, pl. Europe/Budapest</value>
+  </data>
+  <data name="Watch.NextAlarm" xml:space="preserve">
+    <value>Következő ébresztő: {0}, {1} múlva</value>
+  </data>
+  <data name="Watch.NoAlarmSet" xml:space="preserve">
+    <value>Nincs beállított ébresztő</value>
+  </data>
+  <data name="Watch.NoAlarms" xml:space="preserve">
+    <value>Nincs ébresztő. Az N gombbal adhatsz hozzá, pl. 07:30 Ébredés.</value>
+  </data>
+  <data name="Watch.NoLaps" xml:space="preserve">
+    <value>Még nincs kör. Az L gombbal rögzíthetsz, miközben fut.</value>
+  </data>
+  <data name="Watch.NoTimers" xml:space="preserve">
+    <value>Nincs időzítő. Az N gombbal indíthatsz, pl. 5 Tea vagy 05:00 Tojás.</value>
+  </data>
+  <data name="Watch.Off" xml:space="preserve">
+    <value>ki</value>
+  </data>
+  <data name="Watch.On" xml:space="preserve">
+    <value>be</value>
+  </data>
+  <data name="Watch.RemoveAlarm" xml:space="preserve">
+    <value>Ébresztő törlése (megerősítést kér)</value>
+  </data>
+  <data name="Watch.RemoveTimer" xml:space="preserve">
+    <value>Időzítő törlése (megerősítést kér)</value>
+  </data>
+  <data name="Watch.RemoveZone" xml:space="preserve">
+    <value>Időzóna törlése (megerősítést kér)</value>
+  </data>
+  <data name="Watch.ResetWatch" xml:space="preserve">
+    <value>Nullázás (álló állapotban)</value>
+  </data>
+  <data name="Watch.RestartTimer" xml:space="preserve">
+    <value>Újraindítás</value>
+  </data>
+  <data name="Watch.StartPauseTimer" xml:space="preserve">
+    <value>Indítás vagy szüneteltetés</value>
+  </data>
+  <data name="Watch.StartStopWatch" xml:space="preserve">
+    <value>Indítás vagy megállítás</value>
+  </data>
+  <data name="Watch.StateDone" xml:space="preserve">
+    <value>Lejárt</value>
+  </data>
+  <data name="Watch.StatePaused" xml:space="preserve">
+    <value>Szünetel</value>
+  </data>
+  <data name="Watch.StateReady" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="Watch.StateRunning" xml:space="preserve">
+    <value>Fut</value>
+  </data>
+  <data name="Watch.StateStopped" xml:space="preserve">
+    <value>Megállítva</value>
+  </data>
+  <data name="Watch.TabAlarm" xml:space="preserve">
+    <value>Ébresztő</value>
+  </data>
+  <data name="Watch.TabStopwatch" xml:space="preserve">
+    <value>Stopperóra</value>
+  </data>
+  <data name="Watch.TabTimers" xml:space="preserve">
+    <value>Időzítők</value>
+  </data>
+  <data name="Watch.TabWorldClock" xml:space="preserve">
+    <value>Világidő</value>
+  </data>
+  <data name="Watch.ThisComputer" xml:space="preserve">
+    <value>Ez a számítógép</value>
+  </data>
+  <data name="Watch.TimerFinished" xml:space="preserve">
+    <value>Lejárt az idő</value>
+  </data>
+  <data name="Watch.ToggleAlarm" xml:space="preserve">
+    <value>Be- vagy kikapcsolás</value>
+  </data>
+  <data name="Watch.ToggleFace" xml:space="preserve">
+    <value>Analóg vagy digitális</value>
+  </data>
+  <data name="Watch.TypeDuration" xml:space="preserve">
+    <value>Adj meg egy időtartamot és egy opcionális címkét, pl. 5 Tea vagy 05:00 Tojás</value>
+  </data>
+  <data name="Watch.TypeTime" xml:space="preserve">
+    <value>Adj meg egy időpontot és egy opcionális címkét, pl. 07:30 Ébredés</value>
+  </data>
+  <data name="Watch.TypeZone" xml:space="preserve">
+    <value>Add meg az időzóna azonosítóját, pl. Europe/Budapest</value>
+  </data>
+  <data name="Watch.ZoneListed" xml:space="preserve">
+    <value>Ez az időzóna már szerepel a listában</value>
   </data>
   <data name="Weather.AlreadySaved" xml:space="preserve">
     <value>{0} már mentve van</value>
