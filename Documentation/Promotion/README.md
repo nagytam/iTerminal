@@ -12,6 +12,9 @@ verification status, is in [promotion-overview.md](../research/promotion-overvie
 - [forums-and-communities.md](forums-and-communities.md): posts for r/commandline, r/dotnet, r/linux, Lobsters, plus the Show HN pointer.
 - [dev-to-article.md](dev-to-article.md): a long-form article draft for Dev.to (#showdev).
 - [launch-and-press.md](launch-and-press.md): Linux Magazine proposal, Full Circle article pitch, Phoronix tip (if a contact is found), German press pitch and heise Download, Product Hunt launch copy, and a five-minute lightning talk outline.
+- [linux-news-and-software-sites.md](linux-news-and-software-sites.md): OMG! Ubuntu news tip, LinuxLinks suggestion form (with the generative-AI disclosure it requires), Changelog News submission, It's FOSS News (unverified).
+- [contributor-listings.md](contributor-listings.md): up-for-grabs.net project file and pull request text.
+- [linux-distribution-packaging.md](linux-distribution-packaging.md): how the tar.gz, deb and rpm can reach Debian, Ubuntu, Fedora, openSUSE, Arch, Alpine, Gentoo, NixOS, Flathub, Snap and others: reviewers, sponsors, rules, the .NET runtime question, and what the build must supply. No paste-ready text; it is a how-to.
 
 ## Before anything is sent
 
