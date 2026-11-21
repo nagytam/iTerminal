@@ -8,6 +8,7 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Core;
 using Moq;
 

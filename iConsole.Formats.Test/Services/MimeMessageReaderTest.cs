@@ -1,7 +1,8 @@
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an .eml message: headers, RFC 2047 words, transfer encodings, charsets and multipart bodies.</summary>
 [TestClass]

@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 
-namespace iConsole.Fonts;
+namespace iConsole.Formats.Fonts;
 
 /// <summary>
 /// Rebuilds the two tables a WOFF 2.0 file stores in transformed form: <c>glyf</c> (with <c>loca</c> derived from it)

@@ -1,9 +1,10 @@
 using System.Globalization;
 using iConsole.Parquet;
+using iConsole.Formats.Parquet;
 using Parquet;
 using Parquet.Schema;
 
-namespace iConsole.Parquet;
+namespace iConsole.Formats.Parquet;
 
 /// <summary>
 /// Reads the first rows of a Parquet file for the Parquet viewer, with Parquet.Net (managed, no native library). The file is

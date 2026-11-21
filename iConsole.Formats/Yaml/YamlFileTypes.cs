@@ -1,4 +1,4 @@
-namespace iConsole.Yaml;
+namespace iConsole.Formats.Yaml;
 
 /// <summary>The extensions F3 opens in the YAML viewer.</summary>
 public static class YamlFileTypes

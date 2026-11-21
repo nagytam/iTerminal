@@ -1,7 +1,8 @@
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading a mailbox: each message is split at its "From " line and shown like an .eml file.</summary>
 [TestClass]

@@ -1,4 +1,5 @@
 using iConsole.Parquet;
+using iConsole.Formats.Parquet;
 using Parquet;
 using Parquet.Serialization;
 

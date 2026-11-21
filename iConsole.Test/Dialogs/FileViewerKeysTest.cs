@@ -4,6 +4,7 @@ using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using Moq;
 
 namespace iConsole.Test.Dialogs;

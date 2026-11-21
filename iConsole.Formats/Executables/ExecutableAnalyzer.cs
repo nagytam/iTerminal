@@ -1,6 +1,7 @@
 using iConsole.Executables;
+using iConsole.Formats.Executables;
 
-namespace iConsole.Executables;
+namespace iConsole.Formats.Executables;
 
 /// <summary>
 /// Reads the headers of a PE, ELF or Mach-O file and reports them. The file is only parsed, never run or loaded. Every offset and count

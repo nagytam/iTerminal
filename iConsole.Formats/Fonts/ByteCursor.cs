@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 
-namespace iConsole.Fonts;
+namespace iConsole.Formats.Fonts;
 
 /// <summary>
 /// A forward-only reader over a byte array with bounds checks. Every read that would pass the end throws

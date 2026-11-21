@@ -1,8 +1,9 @@
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using OpenMcdf;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an Outlook .msg: the MAPI property streams of the compound file, and its attachments.</summary>
 [TestClass]

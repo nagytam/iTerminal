@@ -1,7 +1,8 @@
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading a FictionBook 2 e-book: sections as headings, paragraphs, verses, tables and notes bodies.</summary>
 [TestClass]

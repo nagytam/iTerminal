@@ -1,8 +1,9 @@
 using System.Globalization;
 using iConsole.Sqlite;
+using iConsole.Formats.Sqlite;
 using Microsoft.Data.Sqlite;
 
-namespace iConsole.Sqlite;
+namespace iConsole.Formats.Sqlite;
 
 /// <summary>
 /// Runs one read-only query over a local SQLite file for the SQLite viewer. Three guards stand together: the statement

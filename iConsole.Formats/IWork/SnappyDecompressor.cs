@@ -1,4 +1,4 @@
-namespace iConsole.IWork;
+namespace iConsole.Formats.IWork;
 
 /// <summary>
 /// Decompresses one raw Snappy block, the compression iWork puts around each chunk of its .iwa archives (the format

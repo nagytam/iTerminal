@@ -4,7 +4,7 @@ using iConsole.Structured;
 using Tomlyn;
 using Tomlyn.Model;
 
-namespace iConsole.Toml;
+namespace iConsole.Formats.Toml;
 
 /// <summary>
 /// Reads TOML text into a JSON-shaped tree. Tables and arrays of tables become objects and arrays; dates and times stay as

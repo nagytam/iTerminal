@@ -1,4 +1,5 @@
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iTerminal.Core.Data.Documents;
 
 namespace iTerminal.Core.Documents.Extractors;

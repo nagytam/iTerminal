@@ -7,8 +7,9 @@ using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Services.Disassembly;
+namespace iConsole.Formats.Services.Disassembly;
 
 /// <summary>
 /// Lists the IL of every method body in a managed assembly, with the metadata tokens resolved to names. The assembly is

@@ -1,4 +1,4 @@
-namespace iConsole.Toml;
+namespace iConsole.Formats.Toml;
 
 /// <summary>The extensions F3 opens in the TOML viewer.</summary>
 public static class TomlFileTypes

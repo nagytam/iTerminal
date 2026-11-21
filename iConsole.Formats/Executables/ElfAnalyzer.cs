@@ -1,6 +1,7 @@
 using iConsole.Executables;
+using iConsole.Formats.Executables;
 
-namespace iConsole.Executables;
+namespace iConsole.Formats.Executables;
 
 /// <summary>
 /// Reads an ELF file by hand: the header, the program headers (stack, RELRO, dynamic section), the section table with entropy, and the

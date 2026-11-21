@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using SkiaSharp;
 
-namespace iConsole.Photoshop;
+namespace iConsole.Formats.Photoshop;
 
 /// <summary>Whether the merged picture of a Photoshop file could be drawn, and if not, why.</summary>
 public enum PsdPictureStatus

@@ -1,4 +1,5 @@
 using iConsole.Sqlite;
+using iConsole.Formats.Sqlite;
 using iConsole.Tabular;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

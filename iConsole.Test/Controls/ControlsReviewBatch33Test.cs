@@ -1,4 +1,5 @@
 using iConsole.Services;
+using iConsole.Formats.Services;
 
 namespace iConsole.Test.Controls;
 
@@ -8,7 +9,7 @@ public class ControlsReviewBatch33Test
 {
     /// <summary>Calls an internal static method of iConsole (the assembly shows its internals to no test project).</summary>
     private static object? Internal(string typeName, string method, params object?[] arguments)
-        => typeof(HtmlTextExtractor).Assembly.GetType("iConsole.Services." + typeName)!
+        => typeof(HtmlTextExtractor).Assembly.GetType("iConsole.Formats.Services." + typeName)!
             .GetMethod(method, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.Invoke(null, arguments);
 
     [Timeout(60_000)]

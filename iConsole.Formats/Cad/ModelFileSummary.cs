@@ -2,8 +2,9 @@ using System.Buffers.Binary;
 using System.Globalization;
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Cad;
+namespace iConsole.Formats.Cad;
 
 /// <summary>
 /// The summary the F3 viewer shows above a drawing or a 3D model: what the file holds, read from its bytes without

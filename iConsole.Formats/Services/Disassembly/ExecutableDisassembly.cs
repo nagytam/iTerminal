@@ -1,6 +1,6 @@
 using iConsole.Localization;
 
-namespace iConsole.Services.Disassembly;
+namespace iConsole.Formats.Services.Disassembly;
 
 /// <summary>
 /// Disassembles a local executable for the executable analysis view. It reads the file's bytes and hands them to the same builder the

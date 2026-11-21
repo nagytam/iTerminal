@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
 
-namespace iConsole.Fonts;
+namespace iConsole.Formats.Fonts;
 
 /// <summary>What a TrueType or OpenType font file says about itself: its names, its size and its design.</summary>
 /// <param name="Outlines">TrueType (quadratic outlines) or OpenType with CFF (cubic outlines).</param>

@@ -1,8 +1,10 @@
 ﻿using iConsole.Data;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services.Disassembly;
+using iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services.Disassembly;
 
 [TestClass]
 public class FileToTextConverterDisassemblyTest

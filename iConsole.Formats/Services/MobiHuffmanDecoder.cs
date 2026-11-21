@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// The Huffman/CDIC decompression of a Kindle book (compression 17480, used by many KF8 and AZW3 files). The HUFF record

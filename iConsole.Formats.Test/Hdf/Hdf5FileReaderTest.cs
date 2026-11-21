@@ -1,4 +1,5 @@
 using iConsole.Hdf;
+using iConsole.Formats.Hdf;
 using PureHDF;
 
 namespace iConsole.Formats.Test.Hdf;

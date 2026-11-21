@@ -1135,7 +1135,7 @@ public class ViewFileDialogCommandTest
     }
 
     private static iConsole.Dialogs.ExecutableAnalysisDialog CreateExecutableDialog(IThemeService themeService) =>
-        new(Mock.Of<iConsole.Executables.IExecutableAnalyzer>(), new iConsole.Services.Disassembly.ExecutableDisassembler(), themeService);
+        new(Mock.Of<iConsole.Executables.IExecutableAnalyzer>(), new iConsole.Formats.Services.Disassembly.ExecutableDisassembler(), themeService);
 
     private static (iConsole.Dialogs.ExecutableAnalysisDialog Executable, FileViewerDialog Viewer) RunExecutableRoute(string path, byte[] content)
     {

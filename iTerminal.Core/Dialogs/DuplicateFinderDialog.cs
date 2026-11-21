@@ -6,6 +6,7 @@ using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Duplicates;

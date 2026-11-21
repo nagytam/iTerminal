@@ -1,8 +1,9 @@
 using System.IO.Compression;
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an EPUB: the package's spine gives the chapter order, and each chapter's markup becomes lines.</summary>
 [TestClass]

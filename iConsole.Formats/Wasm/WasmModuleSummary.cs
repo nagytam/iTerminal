@@ -2,8 +2,9 @@ using System.Buffers.Binary;
 using System.Globalization;
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Wasm;
+namespace iConsole.Formats.Wasm;
 
 /// <summary>
 /// The summary the F3 viewer shows for a WebAssembly module: its version, sections, imports, exports and counts, read

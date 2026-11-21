@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads a FictionBook 2 e-book (.fb2) into lines: each body and section as headings and paragraphs, poem verses and

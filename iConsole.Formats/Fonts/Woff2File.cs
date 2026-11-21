@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 using System.IO.Compression;
 using System.Text;
 
-namespace iConsole.Fonts;
+namespace iConsole.Formats.Fonts;
 
 /// <summary>
 /// Unwraps a WOFF 2.0 web font into the TrueType or OpenType (sfnt) bytes it carries, so <see cref="FontFileReader"/>

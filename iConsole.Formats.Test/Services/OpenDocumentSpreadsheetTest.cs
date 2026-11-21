@@ -2,8 +2,10 @@ using System.IO.Compression;
 using iConsole.Data;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+using iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an OpenDocument spreadsheet (.ods) into the same grids an Excel workbook gets.</summary>
 [TestClass]

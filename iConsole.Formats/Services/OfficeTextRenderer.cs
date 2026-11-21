@@ -8,7 +8,8 @@ using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 using W = DocumentFormat.OpenXml.Wordprocessing;
 
-namespace iConsole.Services;
+using iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Turns Office Open XML documents into lines a terminal can show: Word as headings, bullets and

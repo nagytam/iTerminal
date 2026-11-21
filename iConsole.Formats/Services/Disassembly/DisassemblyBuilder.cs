@@ -1,4 +1,4 @@
-﻿namespace iConsole.Services.Disassembly;
+﻿namespace iConsole.Formats.Services.Disassembly;
 
 /// <summary>Chooses between the IL and the native disassembler for a file's bytes and returns the lines to show.</summary>
 internal static class DisassemblyBuilder

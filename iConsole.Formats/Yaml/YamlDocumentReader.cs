@@ -5,7 +5,7 @@ using iConsole.Structured;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
-namespace iConsole.Yaml;
+namespace iConsole.Formats.Yaml;
 
 /// <summary>
 /// Reads YAML text into a JSON-shaped tree. Plain scalars take the YAML 1.2 core types (<c>null</c>, <c>~</c>, booleans,

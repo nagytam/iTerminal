@@ -3,8 +3,10 @@ using System.Text;
 using iConsole.Data;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+using iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>
 /// The F3 viewer's routing for the formats added with the iWork, Access, calendar, mailbox and OpenDocument readers: each

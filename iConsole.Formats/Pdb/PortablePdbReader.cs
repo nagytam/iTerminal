@@ -4,7 +4,7 @@ using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 
-namespace iConsole.Pdb;
+namespace iConsole.Formats.Pdb;
 
 /// <summary>
 /// The summary of a portable PDB: the debug metadata header (its id and the entry point), the source documents, and the

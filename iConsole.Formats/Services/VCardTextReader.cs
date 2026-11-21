@@ -1,6 +1,6 @@
 using iConsole.Helper;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads a vCard (.vcf) address book into lines: one block per contact, headed by its name, then one line for each

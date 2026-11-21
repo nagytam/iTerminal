@@ -3,9 +3,11 @@ using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using Moq;
 
-namespace iConsole.Test.Services;
+using iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>
 /// Every Office family the viewer reads, in each of its variants (templates, macro-enabled, slide shows, the 97–2003

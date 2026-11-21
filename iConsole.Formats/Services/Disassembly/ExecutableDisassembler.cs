@@ -1,6 +1,6 @@
 using iConsole.Executables;
 
-namespace iConsole.Services.Disassembly;
+namespace iConsole.Formats.Services.Disassembly;
 
 /// <summary>The executable analysis view's disassembler: <see cref="ExecutableDisassembly.Build"/> behind the interface.</summary>
 public sealed class ExecutableDisassembler : IExecutableDisassembler

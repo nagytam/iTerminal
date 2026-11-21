@@ -3,6 +3,7 @@ using iConsole.Interfaces;
 using iConsole.Localization;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Services;
 using Moq;
 

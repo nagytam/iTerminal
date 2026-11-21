@@ -1,8 +1,8 @@
-using iConsole.Fonts;
+using iConsole.Formats.Fonts;
 using iConsole.Test.Common;
 using iConsole.Test.Services;
 
-namespace iConsole.Test.Fonts;
+namespace iConsole.Formats.Test.Fonts;
 
 [TestClass]
 public class WoffFileTest

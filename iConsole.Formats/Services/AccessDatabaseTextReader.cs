@@ -1,6 +1,6 @@
 using JetDatabaseReader;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads a Microsoft Access database (.mdb, .accdb) into lines: each user table under its name and row count, then its

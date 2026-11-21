@@ -2,10 +2,12 @@ using System.Text;
 using iConsole.Data;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Common;
 using SkiaSharp;
 
-namespace iConsole.Test.Services;
+using iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 [TestClass]
 public class SvgRenderingTest

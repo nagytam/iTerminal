@@ -1,10 +1,11 @@
 using System.Text;
-using iConsole.Fonts;
+using iConsole.Formats.Fonts;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Common;
 using iConsole.Test.Services;
 
-namespace iConsole.Test.Fonts;
+namespace iConsole.Formats.Test.Fonts;
 
 [TestClass]
 public class FontFileReaderTest

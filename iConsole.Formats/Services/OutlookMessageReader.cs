@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text;
 using OpenMcdf;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads an Outlook message (.msg) into the same lines an .eml gets: sender, recipients, date and subject, then the

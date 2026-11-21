@@ -1,10 +1,10 @@
 using System.Text.Json.Nodes;
 using iConsole.Json;
 using iConsole.Test.Common;
-using iConsole.Yaml;
+using iConsole.Formats.Yaml;
 using YamlDotNet.Core;
 
-namespace iConsole.Test.Yaml;
+namespace iConsole.Formats.Test.Yaml;
 
 [TestClass]
 public class YamlDocumentReaderTest
