@@ -151,7 +151,4 @@ public sealed class XmlTree
 
         return closest is not null ? ItemFor(closest) ?? Root : Root;
     }
-
-    /// <summary>Parses a document, or throws an <see cref="XmlException"/> that says where it is malformed. Elements keep their line numbers.</summary>
-    public static XDocument Parse(byte[] content) => XDocument.Load(new MemoryStream(content), LoadOptions.SetLineInfo);
 }

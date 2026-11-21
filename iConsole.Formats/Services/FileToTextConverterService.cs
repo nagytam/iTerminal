@@ -1,4 +1,5 @@
 ﻿using iConsole.Helper;
+using iConsole.Xps;
 using iConsole.Localization;
 using iConsole.Model;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
@@ -28,6 +29,14 @@ namespace iConsole.Formats.Services;
 
 public class FileToTextConverterService : IFileToTextConverterService
 {
+    private readonly XpsTextReader _xpsTextReader;
+
+    /// <summary>Takes the XPS text reader, which the XPS text path reads through.</summary>
+    public FileToTextConverterService(XpsTextReader xpsTextReader)
+    {
+        _xpsTextReader = xpsTextReader;
+    }
+
     // Block characters ordered from light to dark, used for luminance mapping.
     private static readonly char[] AsciiRamp = [' ', '░', '▒', '▓', '█'];
 
@@ -400,7 +409,7 @@ public class FileToTextConverterService : IFileToTextConverterService
             }
             else if (XpsExtensions.Contains(url.Extension))
             {
-                await ReadBinaryFileAsync(url, fileSystem, textModel, XpsTextReader.Read);
+                await ReadBinaryFileAsync(url, fileSystem, textModel, _xpsTextReader.Read);
             }
             else if (MessageExtensions.Contains(url.Extension))
             {

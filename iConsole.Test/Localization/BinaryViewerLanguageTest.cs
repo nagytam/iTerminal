@@ -87,7 +87,7 @@ public class BinaryViewerLanguageTest
             Mock<IFileSystem> fileSystem = new();
             fileSystem.Setup(fs => fs.ExistsFile(accessUrl)).Returns(true);
 
-            FileToTextConverterService service = new();
+            FileToTextConverterService service = new(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
             foreach (LanguageInfo language in Localizer.SupportedLanguages)
             {
                 Localizer localizer = new();

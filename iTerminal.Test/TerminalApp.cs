@@ -222,8 +222,8 @@ public sealed class TerminalApp : IAsyncDisposable
                 // Evidence entries are time-stamped by no authority: no request leaves the sandbox.
                 services.AddSingleton<Core.Services.Timestamps.ITimestampAuthority, SandboxServices.TimestampAuthority>();
                 // Voice input records from no microphone and recognises with no model: the real service runs on stand-ins.
-                services.AddSingleton<Core.Speech.ISpeechRecognizer, SandboxServices.SpeechRecognizer>();
-                services.AddSingleton<Core.Speech.IMicrophoneCaptureFactory, SandboxServices.Microphone>();
+                services.AddSingleton<iConsole.Media.Speech.ISpeechRecognizer, SandboxServices.SpeechRecognizer>();
+                services.AddSingleton<iConsole.Media.Speech.IMicrophoneCaptureFactory, SandboxServices.Microphone>();
                 // Neither the translation API nor the local model is asked: both providers give way to one that answers at once.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
                     .RemoveAll<Core.Services.Translation.ITranslationProvider>(services);

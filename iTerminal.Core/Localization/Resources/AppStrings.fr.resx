@@ -862,6 +862,9 @@
   <data name="CmdDesc.4363c7ec" xml:space="preserve">
     <value>Ouvrir le convertisseur de devises : télécharger les taux de change actuels et convertir entre devises.</value>
   </data>
+  <data name="CmdDesc.43caa310" xml:space="preserve">
+    <value>Ouvrir l'horloge : heure mondiale, alarmes, chronomètre et minuteurs.</value>
+  </data>
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Vérifie que chaque entrée du carnet correspond encore à son SHA-256 et à sa taille enregistrés.</value>
   </data>
@@ -1687,6 +1690,9 @@
   <data name="CmdTitle.a6c7a84b" xml:space="preserve">
     <value>Terminer</value>
   </data>
+  <data name="CmdTitle.a71e7573" xml:space="preserve">
+    <value>Horloge</value>
+  </data>
   <data name="CmdTitle.a7332854" xml:space="preserve">
     <value>Shell</value>
   </data>
@@ -2497,6 +2503,9 @@
   <data name="Dialog.Warning" xml:space="preserve">
     <value>Avertissement</value>
   </data>
+  <data name="Dialog.Watch" xml:space="preserve">
+    <value>Horloge</value>
+  </data>
   <data name="Dialog.Weather" xml:space="preserve">
     <value>Météo</value>
   </data>
@@ -2655,6 +2664,9 @@
   </data>
   <data name="DialogHint.ChangeStation" xml:space="preserve">
     <value>Modifier la station</value>
+  </data>
+  <data name="DialogHint.ChangeTab" xml:space="preserve">
+    <value>Changer d'onglet</value>
   </data>
   <data name="DialogHint.ChartPeriod" xml:space="preserve">
     <value>Changer la période du graphique (1M, 3M, 1A, 5A)</value>
@@ -3118,6 +3130,9 @@
   <data name="DialogHint.MountDiskImage" xml:space="preserve">
     <value>Monter une image disque</value>
   </data>
+  <data name="DialogHint.MoveAlarm" xml:space="preserve">
+    <value>Choisir une alarme</value>
+  </data>
   <data name="DialogHint.MoveBetweenFields" xml:space="preserve">
     <value>Passer d'un champ à l'autre</value>
   </data>
@@ -3159,6 +3174,12 @@
   </data>
   <data name="DialogHint.MoveQueuedTask" xml:space="preserve">
     <value>Déplacer une tâche en attente</value>
+  </data>
+  <data name="DialogHint.MoveTimer" xml:space="preserve">
+    <value>Choisir un minuteur</value>
+  </data>
+  <data name="DialogHint.MoveZone" xml:space="preserve">
+    <value>Choisir un fuseau</value>
   </data>
   <data name="DialogHint.MultiRename" xml:space="preserve">
     <value>Renommer les fichiers affichés dans l'aperçu</value>
@@ -10876,6 +10897,141 @@
   </data>
   <data name="Voice.Transcribing" xml:space="preserve">
     <value>transcription…</value>
+  </data>
+  <data name="Watch.AddAlarm" xml:space="preserve">
+    <value>Ajouter une alarme</value>
+  </data>
+  <data name="Watch.AddTimer" xml:space="preserve">
+    <value>Lancer un minuteur</value>
+  </data>
+  <data name="Watch.AddZone" xml:space="preserve">
+    <value>Ajouter un fuseau</value>
+  </data>
+  <data name="Watch.BadDuration" xml:space="preserve">
+    <value>« {0} » n'est pas une durée ; saisissez des minutes ou m:ss, p. ex. 5 ou 05:00</value>
+  </data>
+  <data name="Watch.BadTime" xml:space="preserve">
+    <value>« {0} » n'est pas une heure ; utilisez HH:mm, p. ex. 07:30</value>
+  </data>
+  <data name="Watch.BadZone" xml:space="preserve">
+    <value>« {0} » n'est pas un fuseau horaire, p. ex. Europe/Budapest</value>
+  </data>
+  <data name="Watch.ConfirmDelete" xml:space="preserve">
+    <value>Supprimer l'élément sélectionné ? (y/n)</value>
+  </data>
+  <data name="Watch.DefaultAlarmLabel" xml:space="preserve">
+    <value>Alarme</value>
+  </data>
+  <data name="Watch.DefaultTimerLabel" xml:space="preserve">
+    <value>Minuteur</value>
+  </data>
+  <data name="Watch.Lap" xml:space="preserve">
+    <value>Prendre un tour</value>
+  </data>
+  <data name="Watch.Laps" xml:space="preserve">
+    <value>Tours</value>
+  </data>
+  <data name="Watch.NewAlarmPrompt" xml:space="preserve">
+    <value>Nouvelle alarme (HH:mm libellé)</value>
+  </data>
+  <data name="Watch.NewTimerPrompt" xml:space="preserve">
+    <value>Nouveau minuteur (minutes ou m:ss, puis libellé)</value>
+  </data>
+  <data name="Watch.NewZonePrompt" xml:space="preserve">
+    <value>Ajouter un fuseau horaire, p. ex. Europe/Budapest</value>
+  </data>
+  <data name="Watch.NextAlarm" xml:space="preserve">
+    <value>Prochaine alarme : {0}, dans {1}</value>
+  </data>
+  <data name="Watch.NoAlarmSet" xml:space="preserve">
+    <value>Aucune alarme réglée</value>
+  </data>
+  <data name="Watch.NoAlarms" xml:space="preserve">
+    <value>Aucune alarme. Appuyez sur N pour en ajouter une, p. ex. 07:30 Réveil.</value>
+  </data>
+  <data name="Watch.NoLaps" xml:space="preserve">
+    <value>Aucun tour pour l'instant. Appuyez sur L pendant le chronométrage.</value>
+  </data>
+  <data name="Watch.NoTimers" xml:space="preserve">
+    <value>Aucun minuteur. Appuyez sur N pour en lancer un, p. ex. 5 Thé ou 05:00 Œufs.</value>
+  </data>
+  <data name="Watch.Off" xml:space="preserve">
+    <value>off</value>
+  </data>
+  <data name="Watch.On" xml:space="preserve">
+    <value>on</value>
+  </data>
+  <data name="Watch.RemoveAlarm" xml:space="preserve">
+    <value>Supprimer l'alarme (demande confirmation)</value>
+  </data>
+  <data name="Watch.RemoveTimer" xml:space="preserve">
+    <value>Supprimer le minuteur (demande confirmation)</value>
+  </data>
+  <data name="Watch.RemoveZone" xml:space="preserve">
+    <value>Supprimer le fuseau (demande confirmation)</value>
+  </data>
+  <data name="Watch.ResetWatch" xml:space="preserve">
+    <value>Remettre à zéro (à l'arrêt)</value>
+  </data>
+  <data name="Watch.RestartTimer" xml:space="preserve">
+    <value>Relancer</value>
+  </data>
+  <data name="Watch.StartPauseTimer" xml:space="preserve">
+    <value>Lancer ou mettre en pause</value>
+  </data>
+  <data name="Watch.StartStopWatch" xml:space="preserve">
+    <value>Démarrer ou arrêter</value>
+  </data>
+  <data name="Watch.StateDone" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
+  <data name="Watch.StatePaused" xml:space="preserve">
+    <value>En pause</value>
+  </data>
+  <data name="Watch.StateReady" xml:space="preserve">
+    <value>Prêt</value>
+  </data>
+  <data name="Watch.StateRunning" xml:space="preserve">
+    <value>En cours</value>
+  </data>
+  <data name="Watch.StateStopped" xml:space="preserve">
+    <value>Arrêté</value>
+  </data>
+  <data name="Watch.TabAlarm" xml:space="preserve">
+    <value>Alarme</value>
+  </data>
+  <data name="Watch.TabStopwatch" xml:space="preserve">
+    <value>Chronomètre</value>
+  </data>
+  <data name="Watch.TabTimers" xml:space="preserve">
+    <value>Minuteurs</value>
+  </data>
+  <data name="Watch.TabWorldClock" xml:space="preserve">
+    <value>Heure mondiale</value>
+  </data>
+  <data name="Watch.ThisComputer" xml:space="preserve">
+    <value>Cet ordinateur</value>
+  </data>
+  <data name="Watch.TimerFinished" xml:space="preserve">
+    <value>Le temps est écoulé</value>
+  </data>
+  <data name="Watch.ToggleAlarm" xml:space="preserve">
+    <value>Activer ou désactiver</value>
+  </data>
+  <data name="Watch.ToggleFace" xml:space="preserve">
+    <value>Analogique ou numérique</value>
+  </data>
+  <data name="Watch.TypeDuration" xml:space="preserve">
+    <value>Saisissez une durée et un libellé facultatif, p. ex. 5 Thé ou 05:00 Œufs</value>
+  </data>
+  <data name="Watch.TypeTime" xml:space="preserve">
+    <value>Saisissez une heure et un libellé facultatif, p. ex. 07:30 Réveil</value>
+  </data>
+  <data name="Watch.TypeZone" xml:space="preserve">
+    <value>Saisissez l'identifiant du fuseau, p. ex. Europe/Budapest</value>
+  </data>
+  <data name="Watch.ZoneListed" xml:space="preserve">
+    <value>Ce fuseau est déjà dans la liste</value>
   </data>
   <data name="Weather.AlreadySaved" xml:space="preserve">
     <value>{0} est déjà enregistré</value>

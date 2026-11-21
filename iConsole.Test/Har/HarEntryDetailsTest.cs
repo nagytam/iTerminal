@@ -1,3 +1,4 @@
+using iConsole.Formats.Har;
 using iConsole.Har;
 
 namespace iConsole.Test.Har;
@@ -8,7 +9,7 @@ public class HarEntryDetailsTest
     /// <summary>The first entry of a one-entry log, with the given entry body inserted.</summary>
     private static HarEntry EntryFrom(string entryJson)
     {
-        HarDocument document = HarDocument.Parse("{\"log\":{\"entries\":[" + entryJson + "]}}");
+        HarDocument document = new HarDocumentParser().Parse("{\"log\":{\"entries\":[" + entryJson + "]}}");
         return document.Entries[0];
     }
 

@@ -15,7 +15,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithNullUrl_ClearsLines()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         textModel.Lines.Add("existing line");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -29,7 +29,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithNonExistentFile_ClearsLines()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         textModel.Lines.Add("existing line");
         var url = new Url("file:///nonexistent.txt");
@@ -45,7 +45,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithTextFile_ReadsContent()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///test.txt");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -70,7 +70,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithEmptyFile_ReadsEmptyContent()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///empty.txt");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -92,7 +92,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_ClearsExistingLines()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         textModel.Lines.Add("old line 1");
         textModel.Lines.Add("old line 2");
@@ -117,7 +117,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithUtf8File_DetectsEncoding()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///utf8.txt");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -139,7 +139,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithNullContentMemoryFile_HandlesGracefully()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///test.txt");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -160,7 +160,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithNullMemoryFile_HandlesGracefully()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///test.txt");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -179,7 +179,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_ExtractsVisibleText()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///page.html");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -201,7 +201,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_StripsScriptContent()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///page.html");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -223,7 +223,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_StripsStyleContent()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///page.html");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -245,7 +245,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithHtmExtension_ExtractsVisibleText()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///page.htm");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -266,7 +266,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_DecodesHtmlEntities()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///page.html");
         var mockFileSystem = new Mock<IFileSystem>();
@@ -287,7 +287,7 @@ public class FileToTextConverterServiceTest
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_SkipsBlankLines()
     {
-        var service = new FileToTextConverterService();
+        var service = new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()));
         var textModel = new TextModel();
         var url = new Url("file:///page.html");
         var mockFileSystem = new Mock<IFileSystem>();

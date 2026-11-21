@@ -21,10 +21,10 @@ public static class HarEntryDetails
     public static IReadOnlyList<string> Build(HarEntry entry)
     {
         JsonElement source = entry.Source;
-        JsonElement request = HarDocument.Property(source, "request");
-        JsonElement response = HarDocument.Property(source, "response");
-        JsonElement content = HarDocument.Property(response, "content");
-        JsonElement postData = HarDocument.Property(request, "postData");
+        JsonElement request = HarJson.Property(source, "request");
+        JsonElement response = HarJson.Property(source, "response");
+        JsonElement content = HarJson.Property(response, "content");
+        JsonElement postData = HarJson.Property(request, "postData");
 
         var lines = new List<string>
         {
@@ -34,35 +34,35 @@ public static class HarEntryDetails
             Label("Har.Detail.Time", "Time") + ": " + entry.TimeMs.ToString("N1", CultureInfo.CurrentCulture) + " ms",
         };
 
-        string server = HarDocument.Text(source, "serverIPAddress");
+        string server = HarJson.Text(source, "serverIPAddress");
         if (server.Length > 0)
         {
             lines.Add(Label("Har.Detail.Server", "Server") + ": " + server);
         }
 
-        AddTimings(lines, HarDocument.Property(source, "timings"));
-        AddPairs(lines, HarDocument.Property(request, "queryString"), Label("Har.Detail.QueryString", "Query string"), " = ");
-        AddPairs(lines, HarDocument.Property(request, "headers"), Label("Har.Detail.RequestHeaders", "Request headers"), ": ");
+        AddTimings(lines, HarJson.Property(source, "timings"));
+        AddPairs(lines, HarJson.Property(request, "queryString"), Label("Har.Detail.QueryString", "Query string"), " = ");
+        AddPairs(lines, HarJson.Property(request, "headers"), Label("Har.Detail.RequestHeaders", "Request headers"), ": ");
 
         if (postData.ValueKind == JsonValueKind.Object)
         {
-            string mime = HarDocument.Text(postData, "mimeType");
+            string mime = HarJson.Text(postData, "mimeType");
             AddSection(lines, Labelled("Har.Detail.RequestBody", "Request body", mime));
-            if (HarDocument.Property(postData, "params") is { ValueKind: JsonValueKind.Array } parameters && parameters.GetArrayLength() > 0)
+            if (HarJson.Property(postData, "params") is { ValueKind: JsonValueKind.Array } parameters && parameters.GetArrayLength() > 0)
             {
                 lines.AddRange(PairLines(parameters, " = "));
             }
             else
             {
-                lines.AddRange(BodyLines(HarDocument.Text(postData, "text"), mime, base64: false));
+                lines.AddRange(BodyLines(HarJson.Text(postData, "text"), mime, base64: false));
             }
         }
 
-        AddPairs(lines, HarDocument.Property(response, "headers"), Label("Har.Detail.ResponseHeaders", "Response headers"), ": ");
+        AddPairs(lines, HarJson.Property(response, "headers"), Label("Har.Detail.ResponseHeaders", "Response headers"), ": ");
 
-        string responseMime = HarDocument.Text(content, "mimeType");
+        string responseMime = HarJson.Text(content, "mimeType");
         AddSection(lines, Labelled("Har.Detail.ResponseBody", "Response body", responseMime));
-        lines.AddRange(BodyLines(HarDocument.Text(content, "text"), responseMime, HarDocument.Text(content, "encoding") == "base64"));
+        lines.AddRange(BodyLines(HarJson.Text(content, "text"), responseMime, HarJson.Text(content, "encoding") == "base64"));
         return lines;
     }
 
@@ -77,7 +77,7 @@ public static class HarEntryDetails
         foreach (string name in TimingNames)
         {
             // HAR uses -1 for a phase that did not happen.
-            if (HarDocument.Number(timings, name) is { } milliseconds and >= 0)
+            if (HarJson.Number(timings, name) is { } milliseconds and >= 0)
             {
                 phases.Add($"  {name} {milliseconds.ToString("N1", CultureInfo.CurrentCulture)} ms");
             }
@@ -105,7 +105,7 @@ public static class HarEntryDetails
     private static IEnumerable<string> PairLines(JsonElement array, string separator) =>
         array.EnumerateArray()
             .Where(item => item.ValueKind == JsonValueKind.Object)
-            .Select(item => "  " + HarDocument.Text(item, "name") + separator + HarDocument.Text(item, "value"));
+            .Select(item => "  " + HarJson.Text(item, "name") + separator + HarJson.Text(item, "value"));
 
     private static void AddSection(List<string> lines, string title)
     {

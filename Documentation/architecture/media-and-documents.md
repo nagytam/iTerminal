@@ -38,7 +38,7 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **EPUB** (`EpubTextReader`): `container.xml` names the OPF, the spine orders the XHTML chapters. The markup goes
   through `HtmlTextExtractor`, shared with the e-mail and Kindle readers.
 - **OpenDocument drawings** (`.odg`, `.otg`): one section per page, as presentations are.
-- **XPS and OpenXPS** (`XpsTextReader`, `iConsole/Xps/XpsDocument.cs`, `.xps`, `.oxps`): the package's
+- **XPS and OpenXPS** (`XpsTextReader` and `XpsDocumentReader` in `iConsole.Formats`, the models in `iConsole/Xps/XpsDocument.cs`, `.xps`, `.oxps`): the package's
   `fixedrepresentation` relationship names the `FixedDocumentSequence`, which gives the documents, each
   `FixedDocument` its pages, and a page's `Glyphs` runs are grouped into lines by their origin. Parts are matched by
   local name, so an OpenXPS package reads the same as an XPS one. F3 opens these files in the page-aware
@@ -356,3 +356,9 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
   block (other comments and metadata blocks are kept). The file is written beside the original and moved over it, so a
   failed save leaves the original intact. ID3v2.2 tags and other formats are not written.
 - **Volume keys** (`MusicVolumeCommand`): `+`/`=` and `-` change the volume whether or not Shift is held, as on most layouts the main-row + is Shift with =; the keypad's + and - work too.
+
+### Voice input (`iConsole.Media.Speech/`, `iTerminal.Core/Speech/`)
+- **The engine is `iConsole.Media.Speech/`:** the microphone recorders (`ProcessMicrophoneCapture` for parecord, arecord and ffmpeg on macOS; `WinMmMicrophoneCapture` for waveIn), the PCM format in `Pcm`, and `WhisperRecognizer` (whisper.cpp through Whisper.net, on the CPU). It references only `iConsole` and the two Whisper packages, which ship with the application.
+- **The service stays in `iTerminal.Core/Speech/`:** `SpeechToTextService` runs one recording at a time, transcribes it and hands the text to the AI prompt bar, with `ISpeechToTextService` and `SpeechState`. It uses Serilog and the notification service, so it is app behaviour.
+- **The seams:** `WhisperRecognizer` reads the model through `IWhisperModelLocator`, which `WhisperRuntimeDependency` implements (the model is a runtime dependency, see [runtime-dependencies.md](runtime-dependencies.md)). `MicrophoneCaptureFactory` takes the program finder as a constructor argument, and the application passes `GitRuntimeDependency.FindOnPath`. On macOS the Homebrew directories are searched after the PATH.
+- **Tests:** `iConsole.Media.Speech.Test` covers the recorders, the Whisper marker filter, the missing-model refusal and the macOS finder. `SpeechToTextServiceTest` stays in `iTerminal.Core.Test`. The end-to-end suite replaces the recogniser and the factory with sandbox services, so `WhisperRecognizer` is never built there.

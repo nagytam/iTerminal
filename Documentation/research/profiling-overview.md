@@ -233,7 +233,7 @@ The cached tables are not dropped on a second start, so the rule in `CLAUDE.md` 
     - Effort: S.
 
 11. **`RecordingTest` sleeps 3.5 s for a process that is gone after 1.2 s** - Impact: **Low**. Area: test.
-    - Evidence: 3.91 s median ([RecordingTest.cs:201](../../iTerminal.Core.Test/Speech/RecordingTest.cs) to `:209`): the script runs `sleep 1.2` and the test calls `Thread.Sleep(3500)` before `Stop`.
+    - Evidence: 3.91 s median ([RecordingTest.cs:201](../../iConsole.Media.Speech.Test/RecordingTest.cs) to `:209`): the script runs `sleep 1.2` and the test calls `Thread.Sleep(3500)` before `Stop`.
     - Cause: a fixed sleep stands in for "the recorder has exited".
     - Improvement: wait until the capture reports the exit (poll the process state with a short step and a deadline), or shorten the script to the probe time plus a small margin.
     - Expected gain: about 2.3 s for this test (**estimate**).

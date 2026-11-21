@@ -5,6 +5,7 @@ using iConsole.Jobs;
 using iConsole.Services;
 using iTerminal.Core.AI;
 using iConsole.Media.Audio;
+using iConsole.Media.Speech;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Controls.Lenses;
 using iTerminal.Core.Controls.MenuBar;
@@ -172,6 +173,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
         services.AddSingleton<iTerminal.Core.Model.Calendar.MeetingStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Calendar.CalendarDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Watch.WatchStore>();
+        services.AddSingleton<iTerminal.Core.Services.Watch.WatchTimers>();
+        services.AddSingleton<iTerminal.Core.Model.Watch.WatchStopwatch>();
+        services.AddTransient<iTerminal.Core.Dialogs.Watch.WatchDialog>();
         services.AddSingleton<iTerminal.Core.Model.ToDo.ToDoStore>();
         services.AddSingleton<iTerminal.Core.Services.ToDo.ToDoReminderService>();
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
@@ -534,6 +539,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, iTerminal.Core.Jobs.InternetConnectivityJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.CalendarIdentityJob>();
+        services.AddSingleton<IJob, iTerminal.Core.Jobs.WatchAlarmJob>();
         services.AddSingleton<DriveInfoModel>();
         services.AddTransient<CopyDialog>();
         services.AddTransient<MoveDialog>();
@@ -697,8 +703,9 @@ public static class iTerminalApplicationBuilderExtension
         // offered at start-up like Ollama until it is installed or skipped.
         services.AddSingleton(_ => new WhisperRuntimeDependency(Path.Combine(runtimesDirectory, "whisper")));
         services.AddSingleton<IRuntimeDependency>(sp => sp.GetRequiredService<WhisperRuntimeDependency>());
-        services.AddSingleton<iTerminal.Core.Speech.ISpeechRecognizer, iTerminal.Core.Speech.WhisperRecognizer>();
-        services.AddSingleton<iTerminal.Core.Speech.IMicrophoneCaptureFactory, iTerminal.Core.Speech.MicrophoneCaptureFactory>();
+        services.AddSingleton<IWhisperModelLocator>(sp => sp.GetRequiredService<WhisperRuntimeDependency>());
+        services.AddSingleton<iConsole.Media.Speech.ISpeechRecognizer, iConsole.Media.Speech.WhisperRecognizer>();
+        services.AddSingleton<iConsole.Media.Speech.IMicrophoneCaptureFactory>(_ => new iConsole.Media.Speech.MicrophoneCaptureFactory(GitRuntimeDependency.FindOnPath));
         services.AddSingleton<iTerminal.Core.Speech.ISpeechToTextService, iTerminal.Core.Speech.SpeechToTextService>();
 
         services.AddSingleton<IRuntimeDependencyService, RuntimeDependencyService>();

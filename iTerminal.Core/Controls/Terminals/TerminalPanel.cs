@@ -196,7 +196,10 @@ public class TerminalPanel : Window
     internal string Prompt =>
         (_contentModelService?.GetLastContentModel() as ITerminalPromptSource)?.TerminalPrompt ?? "Terminal";
 
-    private int OutputRows => Math.Max(0, (int)ViewSize.Height - 1);
+    /// <summary>Rows of history: the frame's rows are not history, and the prompt takes the last inner row.</summary>
+    private int OutputRows => Math.Max(0, (int)ViewSize.Height - 2 * FrameInset - 1);
+
+    protected override bool HighlightFocusedBorder => true;
 
     /// <summary>How far back the history is scrolled, in lines from the bottom.</summary>
     internal int ScrollOffset => _scrollOffset;
@@ -247,15 +250,19 @@ public class TerminalPanel : Window
     {
         base.Draw(buffer);
 
-        var width = (int)ViewSize.Width;
-        var height = (int)ViewSize.Height;
+        // base.Draw has drawn the frame; the history and the prompt go inside it.
+        var inset = (uint)FrameInset;
+        var originX = AbsolutePosition.X + inset;
+        var originY = AbsolutePosition.Y + inset;
+        var width = (int)ViewSize.Width - 2 * (int)inset;
+        var height = (int)ViewSize.Height - 2 * (int)inset;
 
         if (height <= 0 || width <= 0)
             return;
 
         var historyLines = GetHistoryLines();
 
-        // Output area is all rows except the last (command input row)
+        // Output area is all inner rows except the last (command input row)
         var outputRows = height - 1;
 
         // Determine start index in history with scroll offset
@@ -275,7 +282,7 @@ public class TerminalPanel : Window
             var bg = Color.Black;
 
             var lineStr = new ConxelString(text, fg, bg);
-            buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + row), new Size(width, 1), lineStr);
+            buffer.Write(ZOrder, new Position(originX, originY + (uint)row), new Size(width, 1), lineStr);
         }
 
         // Command input line (last row)
@@ -285,6 +292,6 @@ public class TerminalPanel : Window
             + ((_terminalModel.Command.CommandTask is null) ? ">" : ProgressChar());
         var inputLine = PromptLine.Format(prompt, _terminalModel.Command.Command, width);
         var inputLineStr = new ConxelString(inputLine, inputFg, inputBg);
-        buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + height - 1), new Size(width, 1), inputLineStr);
+        buffer.Write(ZOrder, new Position(originX, originY + (uint)(height - 1)), new Size(width, 1), inputLineStr);
     }
 }

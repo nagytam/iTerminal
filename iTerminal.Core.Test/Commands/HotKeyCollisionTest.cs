@@ -77,7 +77,7 @@ public class HotKeyCollisionTest
             Mock.Of<iConsole.Services.IPromptService>(),
             Mock.Of<iTerminal.Core.Services.ISettingsService>(),
             Mock.Of<iConsole.Services.ITextClipboardService>(),
-            Mock.Of<iTerminal.Core.Speech.IMicrophoneCaptureFactory>(),
+            Mock.Of<iConsole.Media.Speech.IMicrophoneCaptureFactory>(),
             null!);
 
         Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), passwords.AlternateKey);

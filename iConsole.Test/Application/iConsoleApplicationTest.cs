@@ -40,6 +40,21 @@ public class iConsoleApplicationTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task DisposeAsync_DisposesHostWithoutStoppingIt()
+    {
+        var host = new Mock<IHost>(MockBehavior.Strict);
+        host.Setup(h => h.Dispose());
+
+        var app = new iConsoleApplication(host.Object);
+
+        await app.DisposeAsync();
+
+        host.Verify(h => h.Dispose(), Times.Once);
+        host.Verify(h => h.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void CreateBuilder_ReturnsBuilder()
     {
         var builder = iConsoleApplication.CreateBuilder([]);

@@ -76,7 +76,7 @@ public class OfficeViewerScrollingTest
         Window parent = new(theme) { ViewSize = new Size(100, 30) };
         TextViewerControl viewer = new(false, theme) { Parent = parent, ViewSize = new Size(100, 30) };
 
-        await new FileToTextConverterService().ReadFileAsync(new Url(path), new LocalFileSystemAdapter(), viewer.TextModel);
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadFileAsync(new Url(path), new LocalFileSystemAdapter(), viewer.TextModel);
         Assert.IsTrue(viewer.TextModel.Lines.Count > 100, "document should be taller than the view");
         viewer.OnInitializeLayout();
 

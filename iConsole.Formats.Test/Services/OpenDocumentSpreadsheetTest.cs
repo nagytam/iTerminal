@@ -230,7 +230,7 @@ public class OpenDocumentSpreadsheetTest
         foreach (string file in new[] { ods, ots })
         {
             TextModel model = new();
-            await new FileToTextConverterService().ReadFileAsync(new Url(file), new LocalFileSystemAdapter(), model);
+            await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadFileAsync(new Url(file), new LocalFileSystemAdapter(), model);
             Assert.IsTrue(model.Lines.Any(l => l.Contains("hello")), file);
             Assert.IsTrue(model.Lines.Any(l => l.StartsWith('┌')), file);
         }
@@ -240,8 +240,8 @@ public class OpenDocumentSpreadsheetTest
     [TestMethod]
     public void AnOdsIsNotShownAsTextInAnEncoding()
     {
-        Assert.IsFalse(new FileToTextConverterService().IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ods"))));
-        Assert.IsFalse(new FileToTextConverterService().IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ots"))));
-        Assert.IsTrue(new FileToTextConverterService().IsEncodingRelevant(new Url(Path.Combine(_directory, "a.csv"))));
+        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ods"))));
+        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ots"))));
+        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).IsEncodingRelevant(new Url(Path.Combine(_directory, "a.csv"))));
     }
 }

@@ -162,7 +162,7 @@ public class ControlInertnessSweepTest
         ["RadioGroup`1"] = c => ((RadioGroup<string>)c).SetItems(["one", "two"]),
         ["SegmentedControl"] = c => ((SegmentedControl)c).Options = ["Day", "Week"],
         ["Toolbar"] = c => ((Toolbar)c).Items = [new ToolbarItem("Open"), new ToolbarItem("Save")],
-        ["MarkdownViewerControl"] = c => ((iConsole.Controls.Viewers.MarkdownViewerControl)c).Markdown = "# Title\n\ntext",
+        ["MarkdownViewerControl"] = c => ((iConsole.Controls.Viewers.MarkdownViewerControl)c).SetDocument("# Title\n\ntext", new iConsole.Formats.Markdown.MarkdownParser().Parse("# Title\n\ntext")),
         ["TextBox"] = c => ((TextBox)c).Text = "abc",
         ["SearchBox"] = c => ((SearchBox)c).Text = "abc",
         ["PasswordBox"] = c => ((PasswordBox)c).Text = "abc",

@@ -47,7 +47,7 @@ public class FileToTextConverterPdfSignaturesTest
         {
             string path = WriteSignedPdf(directory);
 
-            IReadOnlyList<string> lines = await new FileToTextConverterService()
+            IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
                 .BuildPdfSignatureLinesAsync(new Url("file://" + path), new LocalFileSystemAdapter(), CancellationToken.None);
 
             Assert.IsTrue(lines.Any(l => l.Contains("Digital signatures")), string.Join('\n', lines));
@@ -64,7 +64,7 @@ public class FileToTextConverterPdfSignaturesTest
     [TestMethod]
     public async Task AnUnsignedPdf_GivesNothing()
     {
-        IReadOnlyList<string> lines = await new FileToTextConverterService()
+        IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
             .BuildPdfSignatureLinesAsync(new Url("file://" + Path.Combine(TestFilesDir, "sample.pdf")), new LocalFileSystemAdapter(), CancellationToken.None);
 
         Assert.AreEqual(0, lines.Count);
@@ -81,7 +81,7 @@ public class FileToTextConverterPdfSignaturesTest
             string renamed = Path.Combine(directory, "signed.txt");
             File.Move(signed, renamed);
 
-            IReadOnlyList<string> lines = await new FileToTextConverterService()
+            IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
                 .BuildPdfSignatureLinesAsync(new Url("file://" + renamed), new LocalFileSystemAdapter(), CancellationToken.None);
 
             Assert.AreEqual(0, lines.Count);
@@ -102,7 +102,7 @@ public class FileToTextConverterPdfSignaturesTest
             string path = Path.Combine(directory, "fake.pdf");
             File.WriteAllText(path, "just text with /ByteRange [0 1 2 3] in it");
 
-            IReadOnlyList<string> lines = await new FileToTextConverterService()
+            IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
                 .BuildPdfSignatureLinesAsync(new Url("file://" + path), new LocalFileSystemAdapter(), CancellationToken.None);
 
             Assert.AreEqual(0, lines.Count);
@@ -127,7 +127,7 @@ public class FileToTextConverterPdfSignaturesTest
                 stream.SetLength(iConsole.Formats.Pdf.PdfSignatureReader.MaxBytes + 1);
             }
 
-            IReadOnlyList<string> lines = await new FileToTextConverterService()
+            IReadOnlyList<string> lines = await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
                 .BuildPdfSignatureLinesAsync(new Url("file://" + path), new LocalFileSystemAdapter(), CancellationToken.None);
 
             Assert.IsTrue(lines.Any(l => l.Contains("larger than 64 MB")), string.Join('\n', lines));
@@ -145,7 +145,7 @@ public class FileToTextConverterPdfSignaturesTest
         // The preview and the F4 editor read through ReadFileAsync, so the section must not be part of it.
         TextModel model = new();
 
-        await new FileToTextConverterService()
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader()))
             .ReadFileAsync(new Url("file://" + Path.Combine(TestFilesDir, "sample.pdf")), new LocalFileSystemAdapter(), model);
 
         Assert.IsFalse(model.Lines.Any(l => l.Contains("Digital signatures")));
@@ -155,9 +155,9 @@ public class FileToTextConverterPdfSignaturesTest
     [TestMethod]
     public void HasPdfSignatures_IsTrueForPdfNamesOnly()
     {
-        Assert.IsTrue(new FileToTextConverterService().HasPdfSignatures(new Url("file://C:/x/a.pdf")));
-        Assert.IsTrue(new FileToTextConverterService().HasPdfSignatures(new Url("file://C:/x/a.PDF")));
-        Assert.IsFalse(new FileToTextConverterService().HasPdfSignatures(new Url("file://C:/x/a.txt")));
-        Assert.IsFalse(new FileToTextConverterService().HasPdfSignatures(null));
+        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasPdfSignatures(new Url("file://C:/x/a.pdf")));
+        Assert.IsTrue(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasPdfSignatures(new Url("file://C:/x/a.PDF")));
+        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasPdfSignatures(new Url("file://C:/x/a.txt")));
+        Assert.IsFalse(new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).HasPdfSignatures(null));
     }
 }

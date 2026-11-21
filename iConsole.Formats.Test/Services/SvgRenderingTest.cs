@@ -38,7 +38,7 @@ public class SvgRenderingTest
     {
         var textModel = new TextModel();
 
-        await new FileToTextConverterService().ReadFileAsync(new Url(SampleFiles.Path("example.svg")), new LocalFileSystemAdapter(), textModel);
+        await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadFileAsync(new Url(SampleFiles.Path("example.svg")), new LocalFileSystemAdapter(), textModel);
 
         List<string> lines = textModel.Lines.ToList();
         Assert.IsTrue(lines.Count > 5, "the drawing is several rows of text art");
@@ -55,7 +55,7 @@ public class SvgRenderingTest
         {
             var textModel = new TextModel();
 
-            await new FileToTextConverterService().ReadFileAsync(new Url(path), new LocalFileSystemAdapter(), textModel);
+            await new FileToTextConverterService(new iConsole.Formats.Services.XpsTextReader(new iConsole.Formats.Xps.XpsDocumentReader())).ReadFileAsync(new Url(path), new LocalFileSystemAdapter(), textModel);
 
             Assert.IsTrue(textModel.Lines.Any(l => l.Contains("<svg broken")));
         }

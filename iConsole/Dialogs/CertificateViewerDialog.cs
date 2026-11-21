@@ -29,6 +29,7 @@ public class CertificateViewerDialog : Dialog
     private readonly TextViewerControl _textViewer;
     private readonly Label _statusLabel;
     private readonly INotificationService _notifications;
+    private readonly ICertificateReader _certificateReader;
     private Url? _url;
     private Task<CertificateLoad>? _loadTask;
     private CancellationTokenSource? _cancellation;
@@ -36,10 +37,11 @@ public class CertificateViewerDialog : Dialog
     private bool _applied;
     private Task? _fallbackTask;
 
-    public CertificateViewerDialog(IThemeService themeService, INotificationService notifications)
+    public CertificateViewerDialog(IThemeService themeService, INotificationService notifications, ICertificateReader certificateReader)
         : base(nameof(CertificateViewerDialog), themeService)
     {
         _notifications = notifications;
+        _certificateReader = certificateReader;
         _picker = new ComboBox<CertificateInfo>(themeService)
         {
             Label = UiText.Get("Certificate.Picker.Label", "Certificate"),
@@ -243,9 +245,9 @@ public class CertificateViewerDialog : Dialog
         base.OnBeforeClose();
     }
 
-    private static CertificateLoad Load(string fullUrl, string path, string stamp, CancellationToken token)
+    private CertificateLoad Load(string fullUrl, string path, string stamp, CancellationToken token)
     {
-        CertificateFileRead read = CertificateFileReader.ReadCapped(path);
+        CertificateFileRead read = _certificateReader.ReadFile(path);
         if (token.IsCancellationRequested)
         {
             return CertificateLoad.Cancelled(fullUrl);
@@ -261,7 +263,7 @@ public class CertificateViewerDialog : Dialog
             return CertificateLoad.Fallback(fullUrl, UiText.Get("Certificate.Fallback.Unreadable", "The file could not be read"), read.Error);
         }
 
-        CertificateReadResult parsed = CertificateReader.Read(read.Bytes);
+        CertificateReadResult parsed = _certificateReader.Read(read.Bytes);
         return parsed.Certificates.Count == 0
             ? CertificateLoad.Fallback(fullUrl)
             : new CertificateLoad(fullUrl, stamp, CertificateLoadOutcome.Certificates, parsed.Certificates, parsed.PrivateKeyBlocks);

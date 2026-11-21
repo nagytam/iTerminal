@@ -1,3 +1,4 @@
+using iConsole.Formats.Csv;
 using System.Diagnostics;
 using System.Text;
 using iConsole.Csv;
@@ -18,7 +19,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void ADoubledSingleQuoteInAValueIsOneQuote()
     {
-        CsvDocument document = CsvDocument.Parse("name,city\nO'Brien,Cork\nSmith,Leeds\n");
+        CsvDocument document = new CsvDocumentParser().Parse("name,city\nO'Brien,Cork\nSmith,Leeds\n");
 
         GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'O''Brien'");
 
@@ -29,7 +30,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void ADoubledDoubleQuoteInAColumnNameIsOneQuote()
     {
-        CsvDocument document = CsvDocument.Parse("\"say \"\"hi\"\"\",n\nx,1\n");
+        CsvDocument document = new CsvDocumentParser().Parse("\"say \"\"hi\"\"\",n\nx,1\n");
 
         GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "SELECT \"say \"\"hi\"\"\"");
 
@@ -41,7 +42,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void AValueThatEndsInADoubledQuoteStillCloses()
     {
-        CsvDocument document = CsvDocument.Parse("name\nrock'\nrock\n");
+        CsvDocument document = new CsvDocumentParser().Parse("name\nrock'\nrock\n");
 
         GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'rock'''");
 
@@ -52,7 +53,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void AnUnclosedQuoteIsStillReported()
     {
-        CsvDocument document = CsvDocument.Parse("name\nx\n");
+        CsvDocument document = new CsvDocumentParser().Parse("name\nx\n");
 
         Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'abc"));
         Assert.ThrowsExactly<GridQueryException>(() => GridQuery.Run(document.Headers, document.Rows, "WHERE name = 'abc''"));
@@ -93,7 +94,7 @@ public class CsvEdgeCasesTest
     {
         // As a regular expression this backtracked for far longer than the one-second limit.
         string field = new('a', 60);
-        CsvDocument document = CsvDocument.Parse($"x\n{field}\n{field}\n");
+        CsvDocument document = new CsvDocumentParser().Parse($"x\n{field}\n{field}\n");
         Stopwatch clock = Stopwatch.StartNew();
 
         GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "WHERE x LIKE '%a%a%a%a%a%a%a%a%a%a%a%a%b'");
@@ -106,7 +107,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void NotLikeKeepsTheRowsThatDoNotMatch()
     {
-        CsvDocument document = CsvDocument.Parse("x\napple\nberry\n");
+        CsvDocument document = new CsvDocumentParser().Parse("x\napple\nberry\n");
 
         CollectionAssert.AreEqual(new[] { "berry" }, First(GridQuery.Run(document.Headers, document.Rows, "WHERE x NOT LIKE 'a%'")));
     }
@@ -120,7 +121,7 @@ public class CsvEdgeCasesTest
     public void AColumnOfNumbersAndWordsSortsNumbersFirstThenWords()
     {
         // "10" < "1a" and "1a" < "9" as text, but "9" < "10" as numbers: no single order satisfied all three pairs.
-        CsvDocument document = CsvDocument.Parse("v\n10\n9\n1a\napple\n2\n");
+        CsvDocument document = new CsvDocumentParser().Parse("v\n10\n9\n1a\napple\n2\n");
 
         GridQueryResult ascending = GridQuery.Run(document.Headers, document.Rows, "ORDER BY v");
         GridQueryResult descending = GridQuery.Run(document.Headers, document.Rows, "ORDER BY v DESC");
@@ -134,13 +135,13 @@ public class CsvEdgeCasesTest
     public void TheOrderDoesNotDependOnWhereTheRowsStarted()
     {
         string[] values = ["10", "9", "1a", "apple", "2", "B", "a", "-3", "0.5", ""];
-        CsvDocument sorted = CsvDocument.Parse("v\n" + string.Join("\n", values.Where(v => v.Length > 0)) + "\n");
+        CsvDocument sorted = new CsvDocumentParser().Parse("v\n" + string.Join("\n", values.Where(v => v.Length > 0)) + "\n");
         string[] expected = [.. GridQuery.Run(sorted.Headers, sorted.Rows, "ORDER BY v").Rows.Select(r => r[0])];
 
         for (int shift = 1; shift < values.Length - 1; shift++)
         {
             string[] rotated = [.. values.Skip(shift), .. values.Take(shift)];
-            CsvDocument document = CsvDocument.Parse("v\n" + string.Join("\n", rotated.Where(v => v.Length > 0)) + "\n");
+            CsvDocument document = new CsvDocumentParser().Parse("v\n" + string.Join("\n", rotated.Where(v => v.Length > 0)) + "\n");
 
             CollectionAssert.AreEqual(expected, GridQuery.Run(document.Headers, document.Rows, "ORDER BY v").Rows.Select(r => r[0]).ToArray(), $"rotated by {shift}");
         }
@@ -150,7 +151,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void AnEmptyFieldSortsLastWhicheverWayTheColumnIsSorted()
     {
-        CsvDocument document = CsvDocument.Parse("n,v\na,5\nb,\nc,1\n");
+        CsvDocument document = new CsvDocumentParser().Parse("n,v\na,5\nb,\nc,1\n");
 
         CollectionAssert.AreEqual(new[] { "c", "a", "b" }, First(GridQuery.Run(document.Headers, document.Rows, "ORDER BY v")));
         CollectionAssert.AreEqual(new[] { "a", "c", "b" }, First(GridQuery.Run(document.Headers, document.Rows, "ORDER BY v DESC")));
@@ -163,7 +164,7 @@ public class CsvEdgeCasesTest
     [DataRow("-Infinity")]
     public void NanAndInfinityAreWordsNotNumbers(string word)
     {
-        CsvDocument document = CsvDocument.Parse($"v\n{word}\n5\n");
+        CsvDocument document = new CsvDocumentParser().Parse($"v\n{word}\n5\n");
 
         CollectionAssert.AreEqual(new[] { "5", word }, First(GridQuery.Run(document.Headers, document.Rows, "ORDER BY v")));
         Assert.AreEqual(1, GridQuery.Run(document.Headers, document.Rows, $"WHERE v = '{word.ToLowerInvariant()}'").Rows.Count, "compared as text, ignoring case");
@@ -178,7 +179,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void ARepeatedNameNeverCollidesWithOneThatIsThere()
     {
-        CsvDocument document = CsvDocument.Parse("a,a,a_2,a\n1,2,3,4\n");
+        CsvDocument document = new CsvDocumentParser().Parse("a,a,a_2,a\n1,2,3,4\n");
 
         Assert.AreEqual(document.Headers.Count, document.Headers.Distinct(StringComparer.OrdinalIgnoreCase).Count(), string.Join(",", document.Headers));
         CollectionAssert.AreEqual(new[] { "a", "a_2", "a_2_2", "a_3" }, document.Headers.ToArray());
@@ -188,7 +189,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void EmptyAndRepeatedNamesTogetherStayDistinct()
     {
-        CsvDocument document = CsvDocument.Parse(",Column1,,Column1\n1,2,3,4\n");
+        CsvDocument document = new CsvDocumentParser().Parse(",Column1,,Column1\n1,2,3,4\n");
 
         Assert.AreEqual(4, document.Headers.Distinct(StringComparer.OrdinalIgnoreCase).Count(), string.Join(",", document.Headers));
     }
@@ -197,7 +198,7 @@ public class CsvEdgeCasesTest
     [TestMethod]
     public void EveryColumnCanBeNamedInAQuery()
     {
-        CsvDocument document = CsvDocument.Parse("a,a,a_2\n1,2,3\n");
+        CsvDocument document = new CsvDocumentParser().Parse("a,a,a_2\n1,2,3\n");
 
         GridQueryResult result = GridQuery.Run(document.Headers, document.Rows, "SELECT a, a_2, a_2_2");
 
@@ -230,7 +231,7 @@ public class CsvEdgeCasesTest
 
         Assert.AreEqual(text, CsvViewerDialog.Decode(plain));
         // The mark stays in the text and the reader drops it.
-        CsvDocument document = CsvDocument.Parse(CsvViewerDialog.Decode(marked));
+        CsvDocument document = new CsvDocumentParser().Parse(CsvViewerDialog.Decode(marked));
         Assert.AreEqual("név", document.Headers[0]);
     }
 

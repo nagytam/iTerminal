@@ -982,10 +982,16 @@ public class Control : INotifyPropertyChanged, IControl
     #endregion
 
     #region Border
+    /// <summary>
+    /// Draws the frame and its title and footer. When <paramref name="highlightFocus"/> is set and the window has
+    /// focus, the frame is drawn in <see cref="ColorScheme.FocusedBorder"/>; the title and footer keep the normal
+    /// text colour so they stay readable.
+    /// </summary>
     protected void DrawBorder(IBuffer buffer, int zOrder,
         Position position, Size size,
         string header, string footer,
-        ColorScheme colorScheme, VisualState visualState)
+        ColorScheme colorScheme, VisualState visualState,
+        bool highlightFocus = false)
     {
         // A border has no cells to draw in a rectangle with no width or height; the bottom row below would sit at -1.
         if (size.Width == 0 || size.Height == 0)
@@ -994,27 +1000,49 @@ public class Control : INotifyPropertyChanged, IControl
         }
 
         GetColor(colorScheme, visualState, out var foreground, out var background);
-        var line = Border.TopLeft +
-                   Border.Horizontal.Repeat((int)size.Width - 2) +
-                   Border.TopRight;
-        line = StringHelper.AlignCenter(line, header);
-        var lineString = new ConxelString(line, foreground, background);
+        var highlighted = highlightFocus && visualState == VisualState.Focused;
+        var frame = highlighted ? colorScheme.FocusedBorder : foreground;
+        // A focused window's own text colour sits on the background, not on the highlighted frame, so the text is the plain foreground.
+        var text = highlighted ? colorScheme.Foreground : foreground;
+        var topLine = Border.TopLeft +
+                      Border.Horizontal.Repeat((int)size.Width - 2) +
+                      Border.TopRight;
+        var lineString = BorderLine(topLine, header, frame, text, background);
         buffer.Write(zOrder, position, size, lineString);
-        var vertical = new ConxelString(Border.Vertical, foreground, background);
+        var vertical = new ConxelString(Border.Vertical, frame, background);
         for (uint y = 1; y < size.Height - 1; y++)
         {
             buffer.Write(zOrder, new Position(position.X, y + position.Y), SizeHelper.Size1x1, vertical);
             buffer.Write(zOrder, new Position(position.X + size.Width - 1, y + position.Y), SizeHelper.Size1x1, vertical);
         }
-        line = Border.BottomLeft +
-                   Border.Horizontal.Repeat((int)size.Width - 2) +
-                   Border.BottomRight;
-        line = StringHelper.AlignCenter(line, footer);
-        lineString = new ConxelString(line, foreground, colorScheme.Background);
-        buffer.Write(zOrder, 
-            new Position(position.X, position.Y + size.Height - 1), 
-            new Size(lineString.Count, 1), 
+        var bottomLine = Border.BottomLeft +
+                         Border.Horizontal.Repeat((int)size.Width - 2) +
+                         Border.BottomRight;
+        lineString = BorderLine(bottomLine, footer, frame, text, colorScheme.Background);
+        buffer.Write(zOrder,
+            new Position(position.X, position.Y + size.Height - 1),
+            new Size(lineString.Count, 1),
             lineString);
+    }
+
+    /// <summary>
+    /// One border line with <paramref name="text"/> centred in it (as <see cref="StringHelper.AlignCenter"/> does):
+    /// the glyphs in <paramref name="frame"/>, the text in <paramref name="textForeground"/>.
+    /// </summary>
+    private static ConxelString BorderLine(string line, string text, Color frame, Color textForeground, Color background)
+    {
+        var aligned = StringHelper.AlignCenter(line, text);
+        if (frame == textForeground || text.Length == 0 || text.Length >= line.Length)
+        {
+            return new ConxelString(aligned, frame, background);
+        }
+
+        var start = (line.Length - text.Length) / 2;
+        var result = new ConxelString();
+        result.Append(aligned[..start], frame, background);
+        result.Append(text, textForeground, background);
+        result.Append(aligned[(start + text.Length)..], frame, background);
+        return result;
     }
 
     public virtual void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)

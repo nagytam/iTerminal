@@ -137,6 +137,60 @@ public class ThemeServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ThemeServiceHasMainframeTheme()
+    {
+        var service = new ThemeService();
+        Assert.IsTrue(service.ColorSchemes.ContainsKey(Theme.Mainframe));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void MainframeThemeIsBlackWithGreenText()
+    {
+        var themeService = new ThemeService();
+
+        Assert.IsTrue(themeService.TrySetTheme(Theme.Mainframe));
+
+        var scheme = themeService.CurrentColorScheme;
+        Assert.AreEqual(Theme.Mainframe, scheme.Theme);
+        Assert.AreEqual(Color.Black, scheme.Background);
+        Assert.AreEqual(Color.Green, scheme.Foreground);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void MainframeThemeUsesOnlyGreensAndBlackExceptErrors()
+    {
+        var scheme = new ThemeService().ColorSchemes[Theme.Mainframe];
+        Color[] greenFamily = [Color.Black, Color.Green, Color.DarkGreen];
+
+        Color[] fields =
+        [
+            scheme.Background, scheme.Foreground, scheme.SelectedForeground, scheme.SelectedBackground,
+            scheme.SelectedFocusedForeground, scheme.SelectedFocusedBackground, scheme.DisabledForeground,
+            scheme.DisabledSelectedForeground, scheme.DisabledBackground, scheme.ButtonBackground,
+            scheme.DisabledButtonBackground,
+        ];
+        foreach (var color in fields)
+        {
+            CollectionAssert.Contains(greenFamily, color);
+        }
+
+        Assert.AreEqual(Color.Red, scheme.Error, "errors stay red so they stand out from the green text");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void MainframeThemeFocusedSelectionIsBrighterThanUnfocused()
+    {
+        var scheme = new ThemeService().ColorSchemes[Theme.Mainframe];
+
+        Assert.AreEqual(Color.Green, scheme.SelectedFocusedBackground);
+        Assert.AreEqual(Color.DarkGreen, scheme.SelectedBackground);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void AServiceWithAFixedSchemeCannotSwitch()
     {
         IThemeService themeService = new iConsole.Test.Core.TestThemeService();

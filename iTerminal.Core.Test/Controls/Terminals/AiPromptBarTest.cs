@@ -37,7 +37,7 @@ public class AiPromptBarTest
         dateTime.SetupGet(d => d.Now).Returns(DateTime.Now);
         var bar = new AiPromptBar(model, chat.Object, dialog, dateTime.Object, theme)
         {
-            ViewSize = new Size(width, height),
+            ViewSize = new Size(width + 2, height + 2), // the frame takes a cell on each side
         };
         bar.OnInitializeLayout();
 
@@ -55,6 +55,13 @@ public class AiPromptBarTest
         return buffer;
     }
 
+    /// <summary>The content of row <paramref name="y"/> inside the frame, which the screen's first and last column hold.</summary>
+    private static string Row(ScreenBuffer screen, int y)
+    {
+        var line = screen.Line(y + 1);
+        return line.Length >= 2 ? line[1..^1] : string.Empty;
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public async Task TypingBuildsThePrompt()
@@ -66,7 +73,7 @@ public class AiPromptBarTest
         await bar.HandleKeyEventAsync(Key('\b', ConsoleKey.Backspace));
 
         Assert.AreEqual("h", model.Input);
-        StringAssert.Contains(Render(bar).Line(0), "[m]> h");
+        StringAssert.Contains(Row(Render(bar), 0), "[m]> h");
     }
 
     [Timeout(60_000)]
@@ -124,7 +131,7 @@ public class AiPromptBarTest
         model.ModelInfo = "Ollama not running";
 
         Assert.IsFalse(await bar.HandleKeyEventAsync(Key('a', ConsoleKey.A)));
-        StringAssert.Contains(Render(bar).Line(0), "AI  unavailable: Ollama not running");
+        StringAssert.Contains(Row(Render(bar), 0), "AI  unavailable: Ollama not running");
     }
 
     [Timeout(60_000)]
@@ -134,7 +141,7 @@ public class AiPromptBarTest
         var (bar, model, _) = Create(width: 30);
         model.Input = "please explain the difference between these two files";
 
-        var line = Render(bar).Line(0);
+        var line = Row(Render(bar), 0);
 
         Assert.IsTrue(line.TrimEnd().EndsWith("two files", StringComparison.Ordinal), line);
         StringAssert.Contains(line, "…");
@@ -149,8 +156,8 @@ public class AiPromptBarTest
 
         var screen = Render(bar);
 
-        Assert.AreEqual("alpha beta", screen.Line(1).TrimEnd());
-        Assert.AreEqual("gamma", screen.Line(2).TrimEnd());
+        Assert.AreEqual("alpha beta", Row(screen, 1).TrimEnd());
+        Assert.AreEqual("gamma", Row(screen, 2).TrimEnd());
     }
 
     [Timeout(60_000)]
@@ -162,7 +169,7 @@ public class AiPromptBarTest
 
         var screen = Render(bar);
 
-        StringAssert.Contains(screen.Line(2), "↓ 3 more (PgDn)");
+        StringAssert.Contains(Row(screen, 2), "↓ 3 more (PgDn)");
     }
 
     [Timeout(60_000)]
@@ -178,8 +185,8 @@ public class AiPromptBarTest
 
         Assert.AreEqual(2, bar.ResponseScroll);
         var screen = Render(bar);
-        StringAssert.StartsWith(screen.Line(1), "3");
-        StringAssert.Contains(screen.Line(1), "↑ 2 more (PgUp)");
+        StringAssert.StartsWith(Row(screen, 1), "3");
+        StringAssert.Contains(Row(screen, 1), "↑ 2 more (PgUp)");
 
         for (var i = 0; i < 10; i++)
         {
@@ -290,7 +297,8 @@ public class AiPromptBarTest
     [TestMethod]
     public void TheCollapsedBarSaysWhatIsWrongAndWhereToLook()
     {
-        var (bar, model, _) = Create(width: 100, height: 1, available: false);
+        var (bar, model, _) = Create(available: false);
+        bar.ViewSize = new Size(100, 1); // one row: no frame, the whole bar is content
         model.ModelInfo = "server error (401)";
 
         var line = Render(bar).Line(0);

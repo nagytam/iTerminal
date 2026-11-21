@@ -1,4 +1,6 @@
 using iConsole.Localization;
+using iConsole.Media.Speech;
+
 namespace iTerminal.Core.Services.RuntimeDependencies;
 
 /// <summary>
@@ -14,7 +16,7 @@ namespace iTerminal.Core.Services.RuntimeDependencies;
 /// <para>The file is fetched from a pinned commit of the <c>ggerganov/whisper.cpp</c> Hugging Face repository
 /// and accepted only with the pinned size and SHA-256, so a moved branch or a swapped file cannot be installed.</para>
 /// </remarks>
-public sealed class WhisperRuntimeDependency : IRuntimeDependency
+public sealed class WhisperRuntimeDependency : IRuntimeDependency, IWhisperModelLocator
 {
     public const string DependencyId = "whisper";
 

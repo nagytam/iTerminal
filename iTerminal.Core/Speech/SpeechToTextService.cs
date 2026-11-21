@@ -1,3 +1,4 @@
+using iConsole.Media.Speech;
 using iConsole.Localization;
 using iConsole.Services;
 using Serilog;

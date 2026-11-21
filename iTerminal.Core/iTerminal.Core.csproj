@@ -36,13 +36,6 @@
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SMBLibrary" Version="1.5.8.1" />
     <PackageReference Include="SSH.NET" Version="2026.0.1" />
-    <!--
-      Voice input in the AI bar: whisper.cpp through Whisper.net. Unlike the Playwright driver these ship with the
-      application: the CPU natives are about 2 MB per platform. Only the speech model (148 MB) is downloaded, as the
-      "whisper" runtime dependency.
-    -->
-    <PackageReference Include="Whisper.net" Version="1.9.1" />
-    <PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
     <PackageReference Include="Svg.Skia" Version="5.2.3" />
     <!-- The zstd decoder for the Ollama release, which Linux ships as .tar.zst (.NET has none in its BCL). -->
     <PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
@@ -52,6 +45,7 @@
     <ProjectReference Include="..\iConsole.Formats\iConsole.Formats.csproj" />
     <ProjectReference Include="..\iConsole.Inputs.Windows\iConsole.Inputs.Windows.csproj" />
     <ProjectReference Include="..\iConsole.Media.Audio\iConsole.Media.Audio.csproj" />
+    <ProjectReference Include="..\iConsole.Media.Speech\iConsole.Media.Speech.csproj" />
     <ProjectReference Include="..\iConsole.Media.Video\iConsole.Media.Video.csproj" />
     <ProjectReference Include="..\iTerminal.Core.Games\iTerminal.Core.Games.csproj" />
     <ProjectReference Include="..\iConsole\iConsole.csproj" />

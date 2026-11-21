@@ -1496,7 +1496,7 @@ public static class SandboxServices
             Task.FromResult(Draft);
     }
 
-    public sealed class SpeechRecognizer : Core.Speech.ISpeechRecognizer
+    public sealed class SpeechRecognizer : iConsole.Media.Speech.ISpeechRecognizer
     {
         public const string Sentence = "what is the weather in Budapest";
 
@@ -1506,11 +1506,11 @@ public static class SandboxServices
     }
 
     /// <summary>A microphone that records one second of a tone: no device is opened and no recorder program started.</summary>
-    public sealed class Microphone : Core.Speech.IMicrophoneCaptureFactory
+    public sealed class Microphone : iConsole.Media.Speech.IMicrophoneCaptureFactory
     {
-        public Core.Speech.IMicrophoneCapture Create() => new Tone();
+        public iConsole.Media.Speech.IMicrophoneCapture Create() => new Tone();
 
-        private sealed class Tone : Core.Speech.IMicrophoneCapture
+        private sealed class Tone : iConsole.Media.Speech.IMicrophoneCapture
         {
             public void Start()
             {
@@ -1518,7 +1518,7 @@ public static class SandboxServices
 
             public byte[] Stop()
             {
-                byte[] pcm = new byte[Core.Speech.Pcm.BytesPerSecond];
+                byte[] pcm = new byte[iConsole.Media.Speech.Pcm.BytesPerSecond];
                 for (int i = 0; i < pcm.Length; i += 2)
                 {
                     pcm[i] = 0x10;

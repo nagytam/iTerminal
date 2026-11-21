@@ -7,6 +7,7 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Layouts;
 using iConsole.Localization;
+using iConsole.Markdown;
 using iConsole.Services;
 
 namespace iConsole.Dialogs;
@@ -22,6 +23,7 @@ public class MarkdownViewerDialog : Dialog
 
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly IMarkdownParser _markdownParser;
     // The rendered document is added first: a dialog gives the keyboard to its first focusable control, and that is where reading starts.
     private readonly MarkdownViewerControl _markdownViewerControl;
     private readonly TextViewerControl _textViewerControl;
@@ -32,11 +34,13 @@ public class MarkdownViewerDialog : Dialog
     public MarkdownViewerDialog(
         IContentModelService contentModelService,
         IFileToTextConverterService fileToTextConverterService,
+        IMarkdownParser markdownParser,
         IThemeService themeService)
         : base(nameof(MarkdownViewerDialog), themeService)
     {
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
+        _markdownParser = markdownParser;
         _markdownViewerControl = new MarkdownViewerControl(themeService);
         _textViewerControl = new TextViewerControl(false, themeService);
         _statusLabel = new Label(string.Empty, themeService);
@@ -75,7 +79,8 @@ public class MarkdownViewerDialog : Dialog
         }
 
         // The text is decoded the way the plain viewer decodes it: a byte order mark, else UTF-8, else the system's code page.
-        _markdownViewerControl.Markdown = TextEncodings.Decode(content, out _);
+        string source = TextEncodings.Decode(content, out _);
+        _markdownViewerControl.SetDocument(source, _markdownParser.Parse(source));
         StateHasChanged();
     }
 

@@ -27,6 +27,8 @@ public class XmlViewerDialogTest
         return new XmlViewerDialog(
             models.Object,
             converter.Object,
+            new iConsole.Formats.Xml.XmlDocumentParser(),
+            new iConsole.Formats.Xml.XmlValidator(),
             Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(),
             new ThemeService())
@@ -268,7 +270,7 @@ public class XmlViewerDialogTest
             fileSystem.Setup(f => f.ReadFileAsync(url)).ReturnsAsync(file.Object);
             Mock<IContentModelService> models = new();
             models.Setup(m => m.GetFocusedModel()).Returns(fileSystem.Object);
-            XmlViewerDialog dialog = new(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = url };
+            XmlViewerDialog dialog = new(models.Object, Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.Xml.XmlDocumentParser(), new iConsole.Formats.Xml.XmlValidator(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = url };
             await dialog.OnInitializeAsync();
             await dialog.ShowAsync();
             dialog.OnInitializeLayout();
@@ -318,7 +320,7 @@ public class XmlViewerDialogTest
         Mock<IContentModelService> models = new();
         models.Setup(m => m.GetFocusedModel()).Returns((IContentModel?)null);
         models.Setup(m => m.GetLastContentModel()).Returns(panel.Object);
-        var dialog = new XmlViewerDialog(models.Object, new Mock<IFileToTextConverterService>().Object, Mock.Of<IBeepService>(),
+        var dialog = new XmlViewerDialog(models.Object, new Mock<IFileToTextConverterService>().Object, new iConsole.Formats.Xml.XmlDocumentParser(), new iConsole.Formats.Xml.XmlValidator(), Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = Document };
 
         await dialog.OnInitializeAsync();
