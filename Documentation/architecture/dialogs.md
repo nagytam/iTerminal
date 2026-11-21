@@ -165,7 +165,16 @@ A full-screen `SplitPaneDialog` (like the Git client) showing a live watchlist: 
 - **Live means a refresh loop that exists only while someone is watching.** `Watch()` returns a handle; the first starts a `PeriodicTimer` loop (15 s), the last stops it. The dialog takes a handle in `OnInitializeAsync` and drops it in `Close`. A change raises `Changed` from the loop's thread and the dialog re-reads the rows in memory — no I/O on the key handler or in `Draw`.
 - **Quotes and search come from `IStockQuoteProvider`** (`YahooStockQuoteProvider`: the public chart endpoint, one request per symbol, and the search endpoint). These are unofficial endpoints, so a symbol that cannot be reached is left out and the old quote stays; no quotes at all is shown in the footer. The former portfolio's Stooq provider answered 404 when this was written, which is why it is not reused. Symbols are Yahoo's: a bare ticker for the US, a suffix elsewhere (`VOD.L`, `SAP.DE`).
 - **Adding searches every exchange.** `a` opens a query box; Enter searches by symbol or company name and lists each hit with its exchange, since one company trades on several; Enter on a hit adds it. A search with no hit offers the text as a symbol on the second Enter. `AddAsync` asks the provider for a quote first, so a typo is refused in words instead of sitting on the list.
+- **The watchlist and the search hits are `Table<T>`s** (`Table<StockRow>`, `Table<StockSearchHit>`). `WatchlistColumns(width)` and `HitColumns(width)` set the columns for the line width; the company name takes what the other columns leave, and on a narrow line the exchange, then the change in percent, then the change go first. A rise is green and a fall red through `RowForeground`, on rows not under the cursor. The tables redraw on `CollectionChanged`; the stock dialog's own heading is the table's header row.
 - **The end-to-end suite replaces the provider** (`SandboxServices.StockQuotes`): no run reaches the network.
+
+### Password manager (`PasswordManagerDialog`, Ctrl+X)
+The saved passwords, listed by category, title and username; the password is hidden in the detail line until V shows it.
+
+- **The list is a `Table<PasswordEntry>`, and its cursor is the only cursor.** The dialog's keys (Up/Down, Page, Home, End, Enter, N, D, V, Esc) move the table's cursor through `MoveCursor`; a click or the wheel moves it through the table itself, and the dialog reads `CursorRow` back. The table is hidden outside list mode (`SetMode` and `SyncListVisibility`), and it is not focused, so the dialog's key handling sees every key first.
+- **No secret in a column.** The columns are category, title and username. The password is drawn only in the detail line, and a new highlight hides it again.
+- **Reloads keep the entry.** `Reload(keepId)` highlights the saved or edited entry when it is still listed, and otherwise keeps the cursor row, clamped.
+- **Tests:** `PasswordManagerDialogTest` draws the table and its headings, checks that no password is drawn, and checks that a click followed by Enter edits the clicked entry.
 
 ### Translator (`TranslatorDialog`, Ctrl+Shift+F4, `Services/Translation/`)
 Tools > Translator: a text box, a From language (or *Detect language*), a To language and an engine; F5 translates, F7 detects, F6 swaps the languages and brings the translation back as the new text, F8 clears. The choices are kept in the `Translator.*` settings.
@@ -186,7 +195,7 @@ A full-screen, command-line market view in the style of a trading terminal, on t
 
 - **A lookup never joins the watchlist.** `IStockService.QuoteAsync` asks the source for one symbol and keeps nothing. A name that has no quote of its own is looked up through its best search hit, and the screen says so when nothing is found.
 - **Lookups are parked, like the currency converter's.** The lookup runs on a background task and parks its result; `OnIdle` applies it on the UI thread. Only the newest lookup may land, so an older one that finishes late is dropped. Tests have no idle job, so they pump `OnIdle` themselves.
-- **Reuses the stock browser's rows.** The monitor is the browser's `StockListBox` and its column formatting, so the two always agree on prices and colours.
+- **Reuses the stock browser's table.** The monitor is a `Table<StockRow>` built from `StockBrowserDialog.WatchlistColumns`, the same columns and the same rise/fall colours as the browser, so the two always agree on prices and colours.
 - **The end-to-end suite needs no sandbox replacement:** the lookups go through `IStockService`, which the suite already replaces with `SandboxServices.StockQuotes`.
 
 ### Currency converter (`CurrencyConverterDialog`, Ctrl+Shift+F5, `Services/Currency/`)
