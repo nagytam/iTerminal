@@ -128,9 +128,7 @@ public partial class Url
         {
             if (ContainerType == ContainerType.FileSystem)
             {
-                var fullName = _fullName[..^1];
-                var target = fullName[..fullName.LastIndexOf(DirectorySeparatorChar)];
-                return target;
+                return LocalParentPath();
             }
             else if (ContainerType == ContainerType.SshFileSystem
                      || ContainerType == ContainerType.FtpFileSystem
@@ -162,13 +160,10 @@ public partial class Url
         {
             if (ContainerType == ContainerType.FileSystem)
             {
-                var fullUrl = FullUrl;
-                if (fullUrl.EndsWith(DirectorySeparatorChar))
-                {
-                    fullUrl = fullUrl[..^1];
-                }
-                var target = fullUrl[..fullUrl.LastIndexOf(DirectorySeparatorChar)];
-                return target;
+                // Through the same path as ParentPath: cutting the URL string itself turned the parent of
+                // /home into "file://", whose path is "/" but whose text is not the root's, and the parent
+                // of "/" into "file:", which no folder answers to.
+                return new Url(LocalParentPath());
             }
             else if (ContainerType == ContainerType.SshFileSystem
                      || ContainerType == ContainerType.FtpFileSystem
@@ -190,6 +185,30 @@ public partial class Url
             }
             return this;
         }
+    }
+
+    /// <summary>
+    /// The parent of a local folder, as a path without its trailing separator. The parent of a top-level folder
+    /// (<c>/home</c>, <c>c:\windows</c>) is the drive root (<c>/</c>, <c>c:\</c>), never an empty string: an empty
+    /// path opens the working directory. The root is its own parent.
+    /// </summary>
+    private string LocalParentPath()
+    {
+        // The path as written, not _fullName: that is resolved against the working directory, so a relative path
+        // would name a parent that is not the one the URL spells.
+        var root = System.IO.Path.GetPathRoot(_path ?? string.Empty);
+        if (string.IsNullOrEmpty(root))
+        {
+            root = DirectorySeparatorChar.ToString();
+        }
+
+        var trimmed = (_path ?? string.Empty).TrimEnd(DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar);
+        var lastSeparator = trimmed.LastIndexOf(DirectorySeparatorChar);
+        var target = lastSeparator < 0 ? string.Empty : trimmed[..lastSeparator];
+        var rootWithoutSeparator = root.TrimEnd(DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar);
+
+        // A target no longer than the root's name ("" on Linux, "c:" on Windows) is the root itself.
+        return target.Length <= rootWithoutSeparator.Length ? root : target;
     }
 
     public Url RootUrl
