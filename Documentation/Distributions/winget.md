@@ -1,5 +1,7 @@
 # Releasing iTerminal on WinGet
 
+See also: [windows-msi.md](windows-msi.md) (the installer WinGet runs), [portable.md](portable.md) and [linux.md](linux.md).
+
 How a version of iTerminal gets onto the Windows Package Manager (`winget install TamasNagy.iTerminal`), what each step is for, and the problems already met. The MSI itself is built by `iTerminal.Installer` and published by `release.yml` (see [build-and-packaging.md](../architecture/build-and-packaging.md)); this page starts from a published release.
 
 ## The pieces
@@ -64,6 +66,7 @@ Copy the folder of the latest version to `iTerminal.Packaging.WinGet/manifests/t
 
 Rules the manifest has to keep:
 
+- **`InstallerSwitches: Custom: MANAGEDBYWINGET=1` in the installer entry.** It makes the MSI write `HKLM\Software\iTerminal\ManagedBy = WinGet`, which tells the app to leave updates to `winget upgrade TamasNagy.iTerminal` instead of running the MSI itself (see [windows-msi.md](windows-msi.md)). Copy it from the previous version's manifest; the 0.0.0.735 manifest first lacked it, and a WinGet install without it is indistinguishable from a direct one.
 - **No `ElevationRequirement`.** For an MSI WinGet would start the file with the `runas` verb, which `Msi.Package` does not have, and the install fails with "This file does not have an app associated". `msiexec` raises its own UAC prompt for a machine-scope MSI.
 - **`UpgradeCode` only inside `AppsAndFeaturesEntries`.** At the installer level the schema does not know the field and `winget validate` warns.
 - **Schema 1.28.0** in `ManifestVersion` and in the `$schema` header of each file: the version the `winget-pkgs` pull request template asks for.
@@ -78,7 +81,7 @@ winget validate --manifest <folder>
 winget install --manifest <folder>
 ```
 
-`winget validate` must print "Manifest validation succeeded." with no warnings. The install downloads the file from `InstallerUrl` and prints "Successfully verified installer hash"; check the registry entry (`HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\<ProductCode>`) for the name, publisher and version. Then remove the test install:
+`winget validate` must print "Manifest validation succeeded." with no warnings. After the install, `(Get-ItemProperty 'HKLM:\Software\iTerminal').ManagedBy` must print `WinGet`, and it must be gone again after the uninstall. The install downloads the file from `InstallerUrl` and prints "Successfully verified installer hash"; check the registry entry (`HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\<ProductCode>`) for the name, publisher and version. Then remove the test install:
 
 ```powershell
 winget uninstall --product-code '{<ProductCode>}'
