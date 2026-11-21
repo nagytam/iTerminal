@@ -444,6 +444,12 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.TimerWakeupProbe>();
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IPerformanceBenchmarkService, iTerminal.Core.Services.Benchmark.PerformanceBenchmarkService>();
         services.AddTransient<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>();
+        // Ctrl+Shift+X: the voice recorder. The recordings go to Documents\iTerminal recordings; the Whisper model is optional (the AI transcription option).
+        services.AddSingleton<iTerminal.Core.Services.Voice.IVoiceRecorderService>(sp => new iTerminal.Core.Services.Voice.VoiceRecorderService(
+            sp.GetRequiredService<iConsole.Media.Speech.IMicrophoneCaptureFactory>(),
+            sp.GetRequiredService<iConsole.Media.Speech.ISpeechRecognizer>(),
+            () => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "iTerminal recordings")));
+        services.AddTransient<iTerminal.Core.Dialogs.Voice.VoiceRecorderDialog>();
         // Tools > Network tools: ping, traceroute, DNS, whois, a port check and web headers. Each one contacts only the target the user typed.
         services.AddSingleton<iTerminal.Core.Services.NetworkTools.INetworkToolService, iTerminal.Core.Services.NetworkTools.NetworkToolService>();
         services.AddTransient<iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog>();

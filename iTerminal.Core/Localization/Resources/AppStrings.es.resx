@@ -910,6 +910,9 @@
   <data name="CmdDesc.5420f0c4" xml:space="preserve">
     <value>Empaquetar los archivos y carpetas marcados, o el que está bajo el cursor, en un archivo nuevo o existente.</value>
   </data>
+  <data name="CmdDesc.567c1ceb" xml:space="preserve">
+    <value>Grabar desde el micrófono a un archivo WAV, con transcripción con IA sin conexión opcional (Whisper).</value>
+  </data>
   <data name="CmdDesc.583d4195" xml:space="preserve">
     <value>Eliminar las ramas locales fusionadas en la rama principal (pregunta antes).</value>
   </data>
@@ -1383,6 +1386,9 @@
   </data>
   <data name="CmdTitle.31e392d1" xml:space="preserve">
     <value>Aplicar</value>
+  </data>
+  <data name="CmdTitle.32928a3e" xml:space="preserve">
+    <value>Grabadora de voz</value>
   </data>
   <data name="CmdTitle.32f256bd" xml:space="preserve">
     <value>Molino</value>
@@ -2499,6 +2505,9 @@
   </data>
   <data name="Dialog.VirtualMachineManager" xml:space="preserve">
     <value>Administrador de máquinas virtuales</value>
+  </data>
+  <data name="Dialog.VoiceRecorder" xml:space="preserve">
+    <value>Grabadora de voz</value>
   </data>
   <data name="Dialog.Warning" xml:space="preserve">
     <value>Advertencia</value>
@@ -10882,6 +10891,78 @@
   </data>
   <data name="Voice.NoRecorder" xml:space="preserve">
     <value>La entrada de voz necesita parecord (pulseaudio-utils) o arecord (alsa-utils) para grabar.</value>
+  </data>
+  <data name="Voice.Recorder.Cancelled" xml:space="preserve">
+    <value>Cancelado.</value>
+  </data>
+  <data name="Voice.Recorder.Discarded" xml:space="preserve">
+    <value>Grabación descartada.</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Idle" xml:space="preserve">
+    <value>Intro:grabar  T:transcripción IA  Esc:cerrar</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Recording" xml:space="preserve">
+    <value>Intro:detener y guardar  Esc:descartar</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Starting" xml:space="preserve">
+    <value>Esc:cerrar</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Working" xml:space="preserve">
+    <value>Esc:cancelar</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Discard" xml:space="preserve">
+    <value>Descartar la grabación</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Start" xml:space="preserve">
+    <value>Empezar a grabar</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Stop" xml:space="preserve">
+    <value>Detener y guardar</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Transcription" xml:space="preserve">
+    <value>Cambiar la transcripción con IA</value>
+  </data>
+  <data name="Voice.Recorder.Idle" xml:space="preserve">
+    <value>Intro inicia la grabación. Se detiene sola tras 60 segundos.</value>
+  </data>
+  <data name="Voice.Recorder.Length" xml:space="preserve">
+    <value>Duración: {0}</value>
+  </data>
+  <data name="Voice.Recorder.NoModel" xml:space="preserve">
+    <value>modelo no instalado</value>
+  </data>
+  <data name="Voice.Recorder.Recording" xml:space="preserve">
+    <value>Grabando {0}.</value>
+  </data>
+  <data name="Voice.Recorder.Saved" xml:space="preserve">
+    <value>Guardado: {0}</value>
+  </data>
+  <data name="Voice.Recorder.Saving" xml:space="preserve">
+    <value>Guardando...</value>
+  </data>
+  <data name="Voice.Recorder.Starting" xml:space="preserve">
+    <value>Abriendo el micrófono...</value>
+  </data>
+  <data name="Voice.Recorder.TooShort" xml:space="preserve">
+    <value>La grabación es demasiado corta para guardarla.</value>
+  </data>
+  <data name="Voice.Recorder.Transcribing" xml:space="preserve">
+    <value>Transcribiendo...</value>
+  </data>
+  <data name="Voice.Recorder.Transcript" xml:space="preserve">
+    <value>Transcripción</value>
+  </data>
+  <data name="Voice.Recorder.Transcription" xml:space="preserve">
+    <value>Transcripción con IA: {0}</value>
+  </data>
+  <data name="Voice.Recorder.TranscriptionOff" xml:space="preserve">
+    <value>desactivada</value>
+  </data>
+  <data name="Voice.Recorder.TranscriptionOn" xml:space="preserve">
+    <value>activada</value>
   </data>
   <data name="Voice.RecorderFailed" xml:space="preserve">
     <value>No se pudo iniciar el grabador:</value>
