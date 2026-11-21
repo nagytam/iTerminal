@@ -9,8 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 namespace iTerminal.Core.Jobs;
 
 /// <summary>
-/// Looks for a newer iTerminal release shortly after start-up, and offers it in the update dialog. Later checks
-/// (every <see cref="Interval"/>) only post a notification, so a running session is not interrupted twice.
+/// Looks for a newer iTerminal release shortly after start-up, and every <see cref="Interval"/> after that, and offers
+/// it in the update dialog where the copy can install it (the MSI, or a portable copy). A release is offered once per
+/// run, so a periodic check opens the dialog only for a release it has not announced yet. Where nothing can be
+/// installed (a Linux package), the release is only a notification.
 /// </summary>
 /// <remarks>
 /// The dialog is resolved on demand: it is shown long after start-up, from this job's thread, and taking it as a
@@ -48,7 +50,6 @@ public class UpdateCheckJob(
     {
         // The check runs when About is opened, or as configured (BackgroundStart.UpdateCheck).
         await backgroundStart.WaitForStartAsync(BackgroundServices.UpdateCheck, cancellationToken);
-        bool first = true;
         while (!cancellationToken.IsCancellationRequested)
         {
             bool manual;
@@ -59,8 +60,7 @@ public class UpdateCheckJob(
             }
 
             await updates.CheckAsync(cancellationToken);
-            await OfferAsync(first || manual, manual, cancellationToken);
-            first = false;
+            await OfferAsync(openDialog: true, manual, cancellationToken);
 
             Task wait;
             lock (_gate)
