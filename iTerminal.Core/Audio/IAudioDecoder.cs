@@ -31,4 +31,11 @@ public interface IAudioDecoder : IDisposable
 
     /// <summary>Repositions the source. Returns false when seeking is unsupported or failed.</summary>
     bool TrySeek(TimeSpan position);
+
+    /// <summary>
+    /// Unblocks a <see cref="Read"/> that is waiting on the source, so the pump can see a stop or a station change.
+    /// Called from another thread, so it must be safe while <see cref="Read"/> is in progress. After it, <see cref="Read"/>
+    /// returns 0. Sources that never block on I/O need not override it.
+    /// </summary>
+    void Interrupt() { }
 }

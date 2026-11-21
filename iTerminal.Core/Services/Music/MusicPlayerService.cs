@@ -31,6 +31,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
     private Thread? _pumpThread;
     private volatile bool _shutdown;
     private volatile IAudioSink? _currentSink;
+    private volatile IAudioDecoder? _currentDecoder;
 
     private int? _requestedIndex;
     private TimeSpan? _requestedStartPosition;
@@ -163,6 +164,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
         // and stopping that one ended the new track at once with "The audio device stopped
         // accepting data." (the pump starts fast enough on a first play to win that race).
         var interrupted = _currentSink;
+        var interruptedDecoder = _currentDecoder;
         lock (_requestLock)
         {
             _requestedIndex = index;
@@ -176,8 +178,10 @@ public sealed class MusicPlayerService : IMusicPlayerService
         // Automatic advances deliberately leave it alone — see PlayOne.
         SetStatus(string.Empty, isError: false);
         EnsurePumpStarted();
-        // Unblocks a write that is currently waiting on the device so the new track starts now.
+        // Unblocks a write that is currently waiting on the device, and a read that is waiting on a stalled stream,
+        // so the new track starts now.
         interrupted?.Stop();
+        InterruptDecoder(interruptedDecoder);
         _wakeUp.Set();
     }
 
@@ -232,7 +236,22 @@ public sealed class MusicPlayerService : IMusicPlayerService
         }
 
         _currentSink?.Stop();
+        // A stream can be waiting for the network inside the decoder, which the sink stop does not reach.
+        InterruptDecoder(_currentDecoder);
         _wakeUp.Set();
+    }
+
+    /// <summary>Unblocks a decoder read that is waiting on its source. Never throws: the caller is a key handler or a shutdown.</summary>
+    private static void InterruptDecoder(IAudioDecoder? decoder)
+    {
+        try
+        {
+            decoder?.Interrupt();
+        }
+        catch
+        {
+            // A decoder that cannot be interrupted is left to finish its read, as before.
+        }
     }
 
     public void Next()
@@ -314,6 +333,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
             {
                 // Taken before the request, for the reason PlayIndex gives.
                 var interrupted = _currentSink;
+                var interruptedDecoder = _currentDecoder;
                 lock (_requestLock)
                 {
                     _requestedIndex = index;
@@ -324,6 +344,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
 
                 EnsurePumpStarted();
                 interrupted?.Stop();
+                InterruptDecoder(interruptedDecoder);
                 _wakeUp.Set();
                 return;
             }
@@ -430,6 +451,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
         try
         {
             decoder = AudioDecoderFactory.Create(track.Path);
+            _currentDecoder = decoder;
 
             Interlocked.Exchange(ref _durationTicks, decoder.Duration.Ticks);
             if (decoder.Duration > TimeSpan.Zero && track.Duration != decoder.Duration)
@@ -477,6 +499,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
         finally
         {
             _currentSink = null;
+            _currentDecoder = null;
 
             try
             {
@@ -559,6 +582,16 @@ public sealed class MusicPlayerService : IMusicPlayerService
 
             if (read <= 0)
             {
+                // An interrupted read looks like the end of the stream. A stop or a new request is not the end, so it must
+                // not advance the queue.
+                lock (_requestLock)
+                {
+                    if (_requestedStop || _requestedIndex is not null)
+                    {
+                        return false;
+                    }
+                }
+
                 sink.Drain();
                 return true;
             }
@@ -733,6 +766,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
         {
         }
 
+        InterruptDecoder(_currentDecoder);
         _wakeUp.Set();
 
         var pumpThread = _pumpThread;

@@ -10907,6 +10907,15 @@
   <data name="Radio.FooterBrowse" xml:space="preserve">
     <value>Enter lejátszás  Szóköz szünet  F kedvenc  / keresés  Esc bezár</value>
   </data>
+  <data name="Radio.FooterPlaying" xml:space="preserve">
+    <value>Enter lejátszás  Szóköz szünet  S leállítás  F kedvenc  / keresés  Esc bezár</value>
+  </data>
+  <data name="Radio.Stopped" xml:space="preserve">
+    <value>Leállítva</value>
+  </data>
+  <data name="Radio.NothingToStop" xml:space="preserve">
+    <value>Nincs lejátszás</value>
+  </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>Az állomásnak nevet kell adni</value>
   </data>
