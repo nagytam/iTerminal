@@ -201,7 +201,54 @@ public class OnlineRadioDialogTest
 
         player.Setup(p => p.CurrentTrack).Returns(new MusicTrack(Rock) { Title = "Rock Live" });
         player.Setup(p => p.State).Returns(PlaybackState.Playing);
-        AssertScreenContains(Render(dialog), "On air: Rock Live");
+        AssertScreenContains(Render(dialog), "On air");
+        AssertScreenContains(Render(dialog), "Rock Live");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheStationOnAirHasAnArrowInTheListAndItsOwnLineWhilePlaying()
+    {
+        var (dialog, store, player) = Create();
+        store.Add(new RadioStation(Guid.NewGuid(), "Alpha Jazz", Jazz, "music, jazz", IsFavourite: false));
+        store.Add(new RadioStation(Guid.NewGuid(), "Rock Live", Rock, "music, rock", IsFavourite: false));
+        await ShowAsync(dialog);
+        player.Setup(p => p.CurrentTrack).Returns(new MusicTrack(Jazz) { Title = "Alpha Jazz" });
+        player.Setup(p => p.State).Returns(PlaybackState.Playing);
+
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "▶", "the station on air is marked in the list");
+        AssertScreenContains(screen, "● On air", "the status line shows the live state");
+        AssertScreenContains(screen, "♭ Alpha Jazz", "the status line names the station with its genre icon");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task APausedStationIsShownAsPausedNotOnAir()
+    {
+        var (dialog, store, player) = Create();
+        store.Add(new RadioStation(Guid.NewGuid(), "Alpha Jazz", Jazz, "music, jazz", IsFavourite: false));
+        await ShowAsync(dialog);
+        player.Setup(p => p.CurrentTrack).Returns(new MusicTrack(Jazz) { Title = "Alpha Jazz" });
+        player.Setup(p => p.State).Returns(PlaybackState.Paused);
+
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "‖ Paused");
+        AssertScreenDoesNotContain(screen, "● On air");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFavouriteHasAStarInTheListAndALabelInTheDetails()
+    {
+        var (dialog, store, _) = Create();
+        store.Add(new RadioStation(Guid.NewGuid(), "Alpha Jazz", Jazz, "music, jazz", IsFavourite: true));
+        store.Add(new RadioStation(Guid.NewGuid(), "Rock Live", Rock, "music, rock", IsFavourite: false));
+        await ShowAsync(dialog);
+
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "★ ");
+        AssertScreenContains(screen, "★ Favourite", "the highlighted favourite is labelled in the details");
     }
 
     [Timeout(60_000)]

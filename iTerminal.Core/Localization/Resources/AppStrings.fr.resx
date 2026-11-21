@@ -10883,6 +10883,9 @@
   <data name="Radio.NotPlaying" xml:space="preserve">
     <value>Lecture arrêtée</value>
   </data>
+  <data name="Radio.Favourite" xml:space="preserve">
+    <value>Favori</value>
+  </data>
   <data name="Radio.OnAir" xml:space="preserve">
     <value>En direct</value>
   </data>
