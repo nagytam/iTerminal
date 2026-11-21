@@ -1,6 +1,6 @@
-using iConsole.Services.Disassembly;
+using iConsole.Formats.Services.Disassembly;
 
-namespace iConsole.Test.Services.Disassembly;
+namespace iConsole.Formats.Test.Services.Disassembly;
 
 [TestClass]
 public class ExecutableDisassemblyTest

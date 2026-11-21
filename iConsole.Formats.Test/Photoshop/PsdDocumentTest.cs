@@ -1,11 +1,12 @@
 using System.Buffers.Binary;
-using iConsole.Photoshop;
+using iConsole.Formats.Photoshop;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Common;
 using iConsole.Test.Services;
 using SkiaSharp;
 
-namespace iConsole.Test.Photoshop;
+namespace iConsole.Formats.Test.Photoshop;
 
 [TestClass]
 public class PsdDocumentTest

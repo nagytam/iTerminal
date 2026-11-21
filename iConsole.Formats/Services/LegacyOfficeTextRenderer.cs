@@ -3,7 +3,8 @@ using System.Globalization;
 using System.Text;
 using OpenMcdf;
 
-namespace iConsole.Services;
+using iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Turns the Office 97–2003 binary formats into the same lines the Open XML renderers produce: Word (.doc) as

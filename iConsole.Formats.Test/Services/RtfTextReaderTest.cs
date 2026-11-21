@@ -1,6 +1,7 @@
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading the text of an RTF file: control words, escapes and the destinations that are not body text.</summary>
 [TestClass]

@@ -1,6 +1,7 @@
 using iConsole.Sqlite;
+using iConsole.Formats.Sqlite;
 
-namespace iConsole.Sqlite;
+namespace iConsole.Formats.Sqlite;
 
 /// <summary>
 /// Refuses anything that is not one read-only statement, before SQLite sees it. The text is masked first: comments and the

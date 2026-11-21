@@ -2,12 +2,13 @@ using System.Text;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Model;
-using iConsole.Pdb;
+using iConsole.Formats.Pdb;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Common;
 using Moq;
 
-namespace iConsole.Test.Pdb;
+namespace iConsole.Formats.Test.Pdb;
 
 [TestClass]
 public class PdbFileSummaryTest

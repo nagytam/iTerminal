@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads the text of a Kindle MOBI, AZW or AZW3 (Palm database) book into lines. The text records are PalmDOC- or

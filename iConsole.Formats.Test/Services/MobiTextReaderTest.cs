@@ -1,8 +1,9 @@
 using System.Buffers.Binary;
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>
 /// Reading a Kindle MOBI file. The books are built here: a Palm database with a PalmDOC record 0, a MOBI header and

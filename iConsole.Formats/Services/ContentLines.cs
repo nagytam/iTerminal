@@ -1,6 +1,7 @@
 using System.Text;
 
-namespace iConsole.Services;
+using iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>One property of an iCalendar or vCard file: a name, its parameters and the raw, still escaped value.</summary>
 internal readonly record struct ContentLine(string Name, IReadOnlyList<(string Key, string Value)> Parameters, string Value)

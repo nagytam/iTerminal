@@ -1,12 +1,13 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 using W = DocumentFormat.OpenXml.Wordprocessing;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 [TestClass]
 public class OfficeTextRendererTest

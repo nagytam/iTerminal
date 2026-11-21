@@ -3,6 +3,7 @@ using iConsole.Controls.Charts;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Core;
 using Moq;
 

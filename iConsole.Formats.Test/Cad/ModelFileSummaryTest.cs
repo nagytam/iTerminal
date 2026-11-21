@@ -1,8 +1,8 @@
 using System.Buffers.Binary;
 using System.Text;
-using iConsole.Cad;
+using iConsole.Formats.Cad;
 
-namespace iConsole.Test.Cad;
+namespace iConsole.Formats.Test.Cad;
 
 /// <summary>
 /// The DXF, OBJ and STL summaries, checked on the examples in Test/FileTypes (linked into this project) and on

@@ -1,7 +1,8 @@
 using System.IO.Compression;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an OpenDocument presentation (.odp/.otp) into the same framed slides a PowerPoint file gets.</summary>
 [TestClass]

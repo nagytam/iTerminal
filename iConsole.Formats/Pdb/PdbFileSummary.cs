@@ -1,4 +1,4 @@
-namespace iConsole.Pdb;
+namespace iConsole.Formats.Pdb;
 
 /// <summary>
 /// The summary the F3 viewer shows for a <c>.pdb</c> file, which is a debug symbol file in one of two formats: a portable

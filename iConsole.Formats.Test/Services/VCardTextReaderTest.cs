@@ -1,7 +1,8 @@
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading a vCard address book: one block per contact, with structured values spelled out.</summary>
 [TestClass]

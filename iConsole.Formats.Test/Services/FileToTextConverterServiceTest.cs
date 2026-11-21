@@ -2,10 +2,11 @@ using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using Moq;
 using System.Text;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 [TestClass]
 public class FileToTextConverterServiceTest

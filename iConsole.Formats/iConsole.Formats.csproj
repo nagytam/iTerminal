@@ -10,7 +10,7 @@
     The file-format readers, renderers and the converter that turns a file into text. They live beside iConsole
     rather than in it, so that a format library (SkiaSharp and its natives, Svg.Skia, the Office, PDF, TOML/YAML,
     Parquet, HDF5 and SQLite packages) is restored only by the projects that read those formats, not by every project
-    that references the UI framework. Namespaces are unchanged. iConsole does not reference this project; the
+    that references the UI framework. Their namespaces are `iConsole.Formats.*`; the contracts they implement stay in `iConsole.*`. iConsole does not reference this project; the
     composition root registers the converter and the readers with AddFileFormats.
   -->
   <ItemGroup>

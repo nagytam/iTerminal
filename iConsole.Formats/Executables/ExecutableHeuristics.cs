@@ -1,6 +1,7 @@
 using iConsole.Executables;
+using iConsole.Formats.Executables;
 
-namespace iConsole.Executables;
+namespace iConsole.Formats.Executables;
 
 /// <summary>The packer and high-entropy hints, the same for every format.</summary>
 internal static class ExecutableHeuristics

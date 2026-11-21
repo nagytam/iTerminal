@@ -5,8 +5,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Pdf;
+namespace iConsole.Formats.Pdf;
 
 /// <summary>Whether the bytes a signature covers still match it.</summary>
 internal enum PdfSignatureIntegrity

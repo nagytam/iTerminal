@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace iConsole.IWork;
+namespace iConsole.Formats.IWork;
 
 /// <summary>One field of a protobuf message as it appears on the wire: its number, its wire type and its value.</summary>
 internal readonly record struct WireField(int Number, int WireType, ulong Varint, ReadOnlyMemory<byte> Bytes);

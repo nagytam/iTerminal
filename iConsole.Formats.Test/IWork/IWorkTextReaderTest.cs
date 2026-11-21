@@ -1,8 +1,8 @@
 using System.IO.Compression;
 using System.Text;
-using iConsole.IWork;
+using iConsole.Formats.IWork;
 
-namespace iConsole.Test.IWork;
+namespace iConsole.Formats.Test.IWork;
 
 /// <summary>
 /// Reading an iWork document. The archives are built here: a Snappy block of literals, the protobuf messages of a Pages

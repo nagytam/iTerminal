@@ -2,8 +2,9 @@ using System.Formats.Asn1;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using iConsole.Executables;
+using iConsole.Formats.Executables;
 
-namespace iConsole.Executables;
+namespace iConsole.Formats.Executables;
 
 /// <summary>
 /// Lists the certificates inside an Authenticode signature (a PKCS #7 SignedData blob) without checking anything: the blob is walked with

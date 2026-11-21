@@ -1,6 +1,7 @@
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>
 /// The Office 97–2003 readers on damaged input. The real files are covered by the fixture tests; this checks that a

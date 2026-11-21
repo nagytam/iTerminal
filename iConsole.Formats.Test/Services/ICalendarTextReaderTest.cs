@@ -1,7 +1,8 @@
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an iCalendar file: events, tasks and alarms, with their dates shown as they read.</summary>
 [TestClass]

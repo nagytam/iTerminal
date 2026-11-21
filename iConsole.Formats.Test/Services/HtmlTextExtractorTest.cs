@@ -1,7 +1,8 @@
 using iConsole.Services;
+using iConsole.Formats.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Markup becomes readable lines: headings and list items marked, table cells barred, preformatted spacing kept, scripts dropped.</summary>
 [TestClass]

@@ -5,6 +5,7 @@ using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Services;
 using Moq;
 using S = DocumentFormat.OpenXml.Spreadsheet;

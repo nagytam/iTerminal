@@ -1,9 +1,14 @@
 using iConsole.Executables;
+using iConsole.Formats.Executables;
 using iConsole.Hdf;
+using iConsole.Formats.Hdf;
 using iConsole.Parquet;
+using iConsole.Formats.Parquet;
 using iConsole.Services;
-using iConsole.Services.Disassembly;
+using iConsole.Formats.Services;
+using iConsole.Formats.Services.Disassembly;
 using iConsole.Sqlite;
+using iConsole.Formats.Sqlite;
 using iConsole.Structured;
 using Microsoft.Extensions.DependencyInjection;
 

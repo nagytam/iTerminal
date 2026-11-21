@@ -16,14 +16,15 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Presentation;
 using System.Reflection;
-using iConsole.IWork;
-using iConsole.Fonts;
-using iConsole.Photoshop;
-using iConsole.Cad;
-using iConsole.Pdb;
-using iConsole.Wasm;
+using iConsole.Formats.IWork;
+using iConsole.Formats.Fonts;
+using iConsole.Formats.Photoshop;
+using iConsole.Formats.Cad;
+using iConsole.Formats.Pdb;
+using iConsole.Formats.Wasm;
 
-namespace iConsole.Services;
+using iConsole.Services;
+namespace iConsole.Formats.Services;
 
 public class FileToTextConverterService : IFileToTextConverterService
 {

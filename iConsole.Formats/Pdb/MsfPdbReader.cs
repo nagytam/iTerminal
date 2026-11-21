@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 using System.Globalization;
 using System.Text;
 
-namespace iConsole.Pdb;
+namespace iConsole.Formats.Pdb;
 
 /// <summary>
 /// The summary of a Windows PDB, an MSF 7.00 container: the superblock's block size and count, the stream directory, and the

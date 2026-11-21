@@ -1,8 +1,8 @@
 using iConsole.Test.Common;
 using iConsole.Test.Services;
-using iConsole.Wasm;
+using iConsole.Formats.Wasm;
 
-namespace iConsole.Test.Wasm;
+namespace iConsole.Formats.Test.Wasm;
 
 [TestClass]
 public class WasmModuleSummaryTest

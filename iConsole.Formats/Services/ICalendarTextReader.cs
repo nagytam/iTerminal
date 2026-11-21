@@ -2,7 +2,7 @@ using iConsole.Helper;
 
 using System.Text.RegularExpressions;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads an iCalendar (.ics) file into lines: the calendar's name, then each event, task, journal entry or alarm under

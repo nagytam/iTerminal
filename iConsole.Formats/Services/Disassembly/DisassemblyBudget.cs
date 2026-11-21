@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace iConsole.Services.Disassembly;
+namespace iConsole.Formats.Services.Disassembly;
 
 /// <summary>
 /// The output of one disassembly run and the limits it keeps to. The file is untrusted, so a crafted one must not be

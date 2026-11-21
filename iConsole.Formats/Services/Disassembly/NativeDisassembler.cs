@@ -3,8 +3,9 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using Iced.Intel;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Services.Disassembly;
+namespace iConsole.Formats.Services.Disassembly;
 
 /// <summary>
 /// Disassembles the code sections of a native x86 or x86-64 executable (Windows PE or Linux ELF) with Iced. The sections

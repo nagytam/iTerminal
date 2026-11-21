@@ -5,8 +5,10 @@ using System.Text;
 using iConsole.Data;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+using iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 [TestClass]
 public class FileToTextConverterPdfSignaturesTest
@@ -122,7 +124,7 @@ public class FileToTextConverterPdfSignaturesTest
             await using (FileStream stream = new(path, FileMode.Create))
             {
                 stream.Write("%PDF-1.7\n"u8);
-                stream.SetLength(iConsole.Pdf.PdfSignatureReader.MaxBytes + 1);
+                stream.SetLength(iConsole.Formats.Pdf.PdfSignatureReader.MaxBytes + 1);
             }
 
             IReadOnlyList<string> lines = await new FileToTextConverterService()

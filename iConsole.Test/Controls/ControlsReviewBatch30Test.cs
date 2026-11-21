@@ -3,6 +3,7 @@ using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Markdown;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iConsole.Test.Core;
 
 namespace iConsole.Test.Controls;

@@ -1,7 +1,8 @@
 using System.Text;
 using iConsole.Executables;
+using iConsole.Formats.Executables;
 
-namespace iConsole.Executables;
+namespace iConsole.Formats.Executables;
 
 /// <summary>
 /// Reads a Mach-O file by hand: a thin file, or the first readable slice of a universal binary. The load commands are walked inside one

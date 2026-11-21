@@ -1,7 +1,7 @@
 using System.IO.Compression;
 using System.Xml.Linq;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads the text of an EPUB e-book into lines, in reading order. An EPUB is a zip: <c>META-INF/container.xml</c>

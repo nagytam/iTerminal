@@ -1,9 +1,9 @@
 using System.Text.Json.Nodes;
 using iConsole.Test.Common;
-using iConsole.Toml;
+using iConsole.Formats.Toml;
 using Tomlyn;
 
-namespace iConsole.Test.Toml;
+namespace iConsole.Formats.Test.Toml;
 
 [TestClass]
 public class TomlDocumentReaderTest

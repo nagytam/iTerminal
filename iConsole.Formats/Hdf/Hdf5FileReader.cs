@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Globalization;
 using iConsole.Hdf;
+using iConsole.Formats.Hdf;
 using PureHDF;
 using PureHDF.Selections;
 
-namespace iConsole.Hdf;
+namespace iConsole.Formats.Hdf;
 
 /// <summary>
 /// Reads an HDF5 file for the HDF5 viewer, with PureHDF (managed, no native library). The file is opened read-only, once per

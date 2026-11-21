@@ -7,6 +7,7 @@ using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Services;
+using iConsole.Formats.Services;
 using iTerminal.Core.Services.Updates;
 
 namespace iTerminal.Core.Dialogs;

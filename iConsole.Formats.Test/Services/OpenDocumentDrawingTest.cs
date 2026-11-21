@@ -1,7 +1,8 @@
 using System.IO.Compression;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>Reading an OpenDocument drawing (.odg/.otg): one section per page, with the text of its shapes.</summary>
 [TestClass]

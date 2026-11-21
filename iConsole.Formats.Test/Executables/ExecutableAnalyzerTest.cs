@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using iConsole.Executables;
+using iConsole.Formats.Executables;
 
 namespace iConsole.Formats.Test.Executables;
 

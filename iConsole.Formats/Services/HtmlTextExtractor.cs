@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using iConsole.Helper;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Turns HTML or XHTML into lines for the viewer: headings with hashes, list items with bullets, table cells

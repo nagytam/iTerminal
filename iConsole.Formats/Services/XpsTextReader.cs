@@ -1,6 +1,6 @@
 using iConsole.Xps;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads an XPS or OpenXPS document (.xps, .oxps) into lines, page by page in document order. The package is read by

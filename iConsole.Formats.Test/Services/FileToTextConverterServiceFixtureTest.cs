@@ -1,9 +1,11 @@
 using iConsole.Data;
 using iConsole.Model;
 using iConsole.Services;
+using iConsole.Formats.Services;
+using iConsole.Test.Services;
 using System.Text;
 
-namespace iConsole.Test.Services;
+namespace iConsole.Formats.Test.Services;
 
 /// <summary>
 /// Integration tests that run <see cref="FileToTextConverterService"/> against real sample files

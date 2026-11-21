@@ -1,8 +1,9 @@
 using System.IO.Compression;
 using System.Text;
 using iConsole.Services;
+using iConsole.Formats.Services;
 
-namespace iConsole.IWork;
+namespace iConsole.Formats.IWork;
 
 /// <summary>
 /// Reads the text of an Apple iWork document (.pages, .numbers, .key) into lines. The file is a zip of .iwa archives,

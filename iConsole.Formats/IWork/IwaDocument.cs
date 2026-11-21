@@ -1,4 +1,4 @@
-namespace iConsole.IWork;
+namespace iConsole.Formats.IWork;
 
 /// <summary>One object of an iWork document: the messages (type and protobuf payload) its archive holds under one identifier.</summary>
 internal sealed class IwaObject(ulong identifier)

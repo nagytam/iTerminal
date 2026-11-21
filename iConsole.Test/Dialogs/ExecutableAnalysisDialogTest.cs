@@ -3,7 +3,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Executables;
 using iConsole.Services;
-using iConsole.Services.Disassembly;
+using iConsole.Formats.Services.Disassembly;
 
 namespace iConsole.Test.Dialogs;
 

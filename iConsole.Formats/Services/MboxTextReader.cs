@@ -1,4 +1,4 @@
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads a mbox mailbox into lines: each message is split out at its "From " line, its quoting undone (mboxrd and

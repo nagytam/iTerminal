@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace iConsole.Services;
+namespace iConsole.Formats.Services;
 
 /// <summary>
 /// Reads the text of a Rich Text Format file (.rtf) into lines. The formatting is dropped and the document's

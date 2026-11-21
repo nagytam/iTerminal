@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Numerics;
 
-namespace iConsole.Fonts;
+namespace iConsole.Formats.Fonts;
 
 /// <summary>
 /// Lays tables out as an sfnt font (TrueType or OpenType): the offset table, the directory sorted by tag, then each table

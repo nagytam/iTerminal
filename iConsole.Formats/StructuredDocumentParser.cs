@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using iConsole.Structured;
-using iConsole.Toml;
-using iConsole.Yaml;
+using iConsole.Formats.Toml;
+using iConsole.Formats.Yaml;
 
 namespace iConsole.Formats;
 
