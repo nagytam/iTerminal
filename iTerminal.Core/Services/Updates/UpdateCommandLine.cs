@@ -22,8 +22,28 @@ public static class UpdateCommandLine
     /// </summary>
     public static async Task<int> RunAsync(IUpdateService updates, TextWriter output, CancellationToken cancellationToken)
     {
+        try
+        {
+            return await RunCoreAsync(updates, output, cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Cancelled (Ctrl+C): nothing is reported as installed, and the download is left as a .partial file.
+            output.WriteLine("The update was cancelled. Nothing was installed.");
+            return Failed;
+        }
+    }
+
+    private static async Task<int> RunCoreAsync(IUpdateService updates, TextWriter output, CancellationToken cancellationToken)
+    {
         output.WriteLine($"iTerminal {updates.CurrentVersion}: looking for a newer release...");
         UpdateInfo? update = await updates.CheckAsync(cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+        {
+            output.WriteLine("The update was cancelled. Nothing was installed.");
+            return Failed;
+        }
+
         if (update is null)
         {
             output.WriteLine("iTerminal is up to date, or GitHub could not be reached.");

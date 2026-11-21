@@ -66,6 +66,41 @@ public class UpdateCommandLineTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task ACancelledCheckIsAFailureNotAnUpToDateAnswer()
+    {
+        Mock<IUpdateService> updates = Updates(null, canInstall: true);
+        using var cancel = new CancellationTokenSource();
+        updates.Setup(u => u.CheckAsync(It.IsAny<CancellationToken>()))
+            .Callback(() => cancel.Cancel())
+            .ReturnsAsync((UpdateInfo?)null);
+        var output = new StringWriter();
+
+        int code = await UpdateCommandLine.RunAsync(updates.Object, output, cancel.Token);
+
+        Assert.AreEqual(UpdateCommandLine.Failed, code);
+        StringAssert.Contains(output.ToString(), "The update was cancelled");
+        updates.Verify(u => u.InstallAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ACancelledInstallIsAFailure()
+    {
+        Mock<IUpdateService> updates = Updates(new UpdateInfo("1.2.0", null), canInstall: true);
+        using var cancel = new CancellationTokenSource();
+        updates.Setup(u => u.InstallAsync(It.IsAny<CancellationToken>()))
+            .Callback(() => cancel.Cancel())
+            .ThrowsAsync(new OperationCanceledException(cancel.Token));
+        var output = new StringWriter();
+
+        int code = await UpdateCommandLine.RunAsync(updates.Object, output, cancel.Token);
+
+        Assert.AreEqual(UpdateCommandLine.Failed, code);
+        StringAssert.Contains(output.ToString(), "The update was cancelled");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ANewReleaseIsInstalledAndTheRunSucceeds()
     {
         Mock<IUpdateService> updates = Updates(new UpdateInfo("1.2.0", null), canInstall: true, installed: true, "Starting the update.");
