@@ -11355,4 +11355,25 @@
   <data name="Wipe.What" xml:space="preserve">
     <value>{0} Datei(en), {1}</value>
   </data>
+  <data name="Process.Column.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Process.Column.Pid" xml:space="preserve">
+    <value>PID</value>
+  </data>
+  <data name="Process.Column.Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Process.Column.Memory" xml:space="preserve">
+    <value>Speicher</value>
+  </data>
+  <data name="Process.Shown" xml:space="preserve">
+    <value>{0} von {1} Prozessen</value>
+  </data>
+  <data name="DialogHint.ProcessSortColumn" xml:space="preserve">
+    <value>Spalte zum Sortieren wählen (Tabelle hat den Fokus)</value>
+  </data>
+  <data name="DialogHint.ProcessSortDirection" xml:space="preserve">
+    <value>Sortierung umkehren</value>
+  </data>
 </root>

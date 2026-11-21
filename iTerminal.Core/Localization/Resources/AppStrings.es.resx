@@ -11291,4 +11291,25 @@
   <data name="Wipe.What" xml:space="preserve">
     <value>{0} archivo(s), {1}</value>
   </data>
+  <data name="Process.Column.Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Process.Column.Pid" xml:space="preserve">
+    <value>PID</value>
+  </data>
+  <data name="Process.Column.Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Process.Column.Memory" xml:space="preserve">
+    <value>Memoria</value>
+  </data>
+  <data name="Process.Shown" xml:space="preserve">
+    <value>{0} de {1} procesos</value>
+  </data>
+  <data name="DialogHint.ProcessSortColumn" xml:space="preserve">
+    <value>Elegir la columna por la que ordenar (tabla enfocada)</value>
+  </data>
+  <data name="DialogHint.ProcessSortDirection" xml:space="preserve">
+    <value>Invertir el orden</value>
+  </data>
 </root>
