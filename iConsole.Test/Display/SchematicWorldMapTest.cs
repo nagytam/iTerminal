@@ -85,4 +85,39 @@ public class SchematicWorldMapTest
             }
         }
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RenderBraille_ReturnsTheRequestedNumberOfCharactersPerRow()
+    {
+        string[] rows = SchematicWorldMap.RenderBraille(21, 8, 15, 45);
+
+        Assert.AreEqual(8, rows.Length);
+        foreach (string row in rows)
+        {
+            Assert.AreEqual(21, row.Length);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RenderBraille_MarksTheMarkerCellOnTheMeridianInItsRow()
+    {
+        // 15°E is the meridian of UTC+1; with 21 characters it falls in dot column 22 of 42, which is character column 11.
+        string[] rows = SchematicWorldMap.RenderBraille(21, 8, 15, 45);
+
+        Assert.AreEqual('●', rows[SchematicWorldMap.RowOf(45, 32) / 4][SchematicWorldMap.ColumnOf(15, 42) / 2]);
+        Assert.AreEqual(1, rows.Sum(row => row.Count(c => c == '●')));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RenderBraille_DrawsLandAsBraillePatterns()
+    {
+        // The bottom-left cell is open Pacific, so it is blank; some cell of the map is land.
+        string[] rows = SchematicWorldMap.RenderBraille(21, 8, 15, 45);
+
+        Assert.AreEqual('\u2800', rows[7][0]);
+        Assert.IsTrue(rows.Any(row => row.Any(c => c is > '\u2800' and <= '\u28FF')));
+    }
 }
