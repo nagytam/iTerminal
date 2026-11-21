@@ -66,7 +66,7 @@ public class SecureWipeDialog : Dialog
     public Task CountTask { get; private set; } = Task.CompletedTask;
 
     /// <summary>Milliseconds for the disk graphic's animation; replaceable so a test can fix a frame.</summary>
-    internal Func<long> TickSource { get; set; } = () => Environment.TickCount64;
+    internal Func<long> DiskTickSource { get; set; } = () => Environment.TickCount64;
 
     public SecureWipeDialog(
         ISecureWipeService wipeService,
@@ -332,7 +332,7 @@ public class SecureWipeDialog : Dialog
                     lines.Add(default);
                     lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Wipe.Overwriting", "Overwriting…{0}  {1} of {2}"), percent, FilePropertiesService.FormatSize(done), FilePropertiesService.FormatSize(total))));
                     var fraction = total > 0 ? (double)done / total : 0;
-                    lines.Add(new(WipeDiskGraphic.Render(fraction, Math.Clamp(width - 12, 8, 60), TickSource()), colors.Error));
+                    lines.Add(new(WipeDiskGraphic.Render(fraction, Math.Clamp(width - 12, 8, 60), DiskTickSource()), colors.Error));
                     lines.Add(new(Path.GetFileName(_current).Shrink(width) ?? string.Empty, colors.DisabledForeground));
                     lines.Add(default);
                     lines.Add(new(iConsole.Localization.UiText.Get("Wipe.EscStops", "Esc stops it; files already wiped stay wiped."), colors.DisabledForeground));

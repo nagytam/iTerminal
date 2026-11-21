@@ -1,6 +1,6 @@
 # QA overview
 
-This document is the running record of the QA agent (`.claude/agents/qa.md`). Each run appends a section. Issue IDs (`QA-n`) are unique across the whole document, and older sections are not edited. A later run records the new state of an earlier issue in its own "Status of earlier issues" list.
+This document is the running record of the QA agent (`.claude/agents/qa.md`). Each run appends a section. Solved issues (QA-1, QA-2, QA-14, QA-16) have been removed from the document. Issue IDs (`QA-n`) are unique across the whole document, and older sections are not edited. A later run records the new state of an earlier issue in its own "Status of earlier issues" list.
 
 ## Q1 2026-11-21: all (pipeline, coverage, code review)
 
@@ -10,7 +10,7 @@ Scope `all`, chosen because the request named none. Branch `add-sonar-analyzer-q
 
 - Pipeline: of the last 50 "Build and test" runs on `main`, 15 passed, 19 failed and 16 were cancelled (a failure rate of 38% of all runs, 56% of completed runs). The longest red streak is 12 failed runs with no success in between. The 3 newest completed runs are red. "Release builds" has no run on `main` (it runs on closed pull requests; its last 50 runs all passed).
 - Largest coverage gap: 153 of 908 `iTerminal.Core` source files have no test that mentions their type (11 987 lines), and `iConsole.Media.Audio` is covered at 31.2% lines. 605 of 627 BDD scenarios in `iTerminal.Specifications.Test` are skipped as `@ignore` stubs.
-- Most serious defect: `main` is red on the German Passwords dialog end-to-end test (QA-1), and a 12-run red streak on one test shows that failing tests were merged repeatedly (QA-2).
+- Most serious open defect: directory completion fails intermittently in the end-to-end suite (QA-3). A 12-run red streak on one Windows test showed that failing tests were merged repeatedly (the test is fixed; the process point is noted under the suggested order).
 
 ### Measurements
 
@@ -72,26 +72,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
 
 ### Quality issues
 
-1. **QA-1 The German Passwords dialog test fails on both operating systems, and `main` is red**
-   - **Severity**: Critical
-   - **Category**: defect
-   - **Area**: `iTerminal.Core/Dialogs/PasswordManager`, `iTerminal.Test`
-   - **Evidence**: runs 44942013183 (commit `df0fc527`, 19:38) and 44943515522 (`25ba25f5`, 19:55) fail `ThePaletteFooterAndSixMoreDialogsInGerman_AreGerman ("Passwords","Netzwerk- und Mail-Passwörter")` on the Linux and the Windows job: "Timed out waiting for the German text." The dumped screen shows the dialog "Passwörter" with "0 gespeichert · entsperrt" and 20 blank rows, so no empty-list text is drawn (`iTerminal.Test/SmallScreenDialogsTest.cs:1143`; German text at `iTerminal.Core/Localization/Resources/AppStrings.de.resx:8040`). The test passed before: the run before (44939633048) passed the end-to-end suite. `df0fc527` is "Move the password list and the stock lists to Table<T>"; its patch (read with `gh api repos/{owner}/{repo}/commits/df0fc527`) replaces the two `Passwords.NothingSaved` and `Passwords.NothingSaved2` lines drawn by hand with one `EmptyText` that joins both strings with a space. The local clone predates that commit (`iTerminal.Core/Dialogs/PasswordManager/PasswordManagerDialog.cs:582` still has the old code), so the link between the commit and the failure is a reading, not a reproduction.
-   - **Impact**: every later pull request merged into `main` starts red. A user with no saved passwords may see an empty dialog with no hint.
-   - **Suggested fix**: find why the `Table<T>` empty text does not reach the screen at 78 columns (one joined line, too long to fit, not wrapped), split it over two lines or shorten it, and re-run the test.
-   - **Test that would catch it**: the existing end-to-end test above. A unit test on the dialog with an empty list and a `ScreenBuffer` asserting the German sentence is missing.
-   - **unverified** as to the cause.
-
-2. **QA-2 A test merged on `main` failed 12 runs in a row on Windows**
-   - **Severity**: High
-   - **Category**: pipeline
-   - **Area**: `iTerminal.Core.Test/Dialogs/ProcessManagerDialogTest.cs`
-   - **Evidence**: `ShowsMemoryAndProcessorUseForEachProcess` failed in 12 runs from 44891874408 (09:55, commit `16a9faa6`, #771) to 44907848614 (13:14): "expected the screen to contain 'testhost'". The list is sorted by processor use, so on a busy runner the test host was not on the first screen. The test now checks `RowsForTest` instead (`iTerminal.Core.Test/Dialogs/ProcessManagerDialogTest.cs:44-58`) and has not failed since run 44915127385.
-   - **Impact**: main was red for 3 h 19 min, and a second failure (QA-5, `Identity_IsReadOnce_UntilItAnswers`) appeared inside that window, in runs 44897329529 and 44900935517, where it was hidden behind the first.
-   - **Suggested fix**: the test is fixed; the open point is process (block merging while the Windows job fails, or run the new test on the Windows job before merging).
-   - **Test that would catch it**: the fixed test; the earlier version depended on machine load and would not have been caught on a Linux run.
-
-3. **QA-3 Directory completion: four end-to-end timeouts and one unit test failure in the same model**
+1. **QA-3 Directory completion: four end-to-end timeouts and one unit test failure in the same model**
    - **Severity**: High
    - **Category**: flaky-test
    - **Area**: `iTerminal.Core/Model/DirectoryCompletionModel.cs`, `iTerminal.Test/DirectoryCompletionTest.cs`, `iTerminal.Core.Test/Model/DirectoryCompletionModelTest.cs`
@@ -101,7 +82,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Test that would catch it**: the three tests above; a loop test running the unit test 200 times on a loaded machine.
    - **unverified** as to the race.
 
-4. **QA-4 `Draw_LoadsThePictureAndShowsItAsAscii` throws a NullReferenceException on Windows from time to time**
+2. **QA-4 `Draw_LoadsThePictureAndShowsItAsAscii` throws a NullReferenceException on Windows from time to time**
    - **Severity**: Medium
    - **Category**: flaky-test
    - **Area**: `iTerminal.Core.Test/Dialogs/Video/ImageFileViewerDialogTest.cs`
@@ -110,7 +91,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Suggested fix**: read the stack in the job log, fix the null source, and switch the test to `ScreenBuffer`.
    - **Test that would catch it**: the same test, run in a loop.
 
-5. **QA-5 `Identity_IsReadOnce_UntilItAnswers` asserts on a timing result**
+3. **QA-5 `Identity_IsReadOnce_UntilItAnswers` asserts on a timing result**
    - **Severity**: Medium
    - **Category**: flaky-test
    - **Area**: `iTerminal.Core.Test/Services/SystemInfo/SystemSamplerTest.cs`
@@ -119,7 +100,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Suggested fix**: hold the fake identity probe with a gate until after the first snapshot.
    - **Test that would catch it**: the same test, after the gate.
 
-6. **QA-6 `F2InTheCsvViewerAsksForAFileNameAndWritesTheRowsOnScreen` wrote an empty file**
+4. **QA-6 `F2InTheCsvViewerAsksForAFileNameAndWritesTheRowsOnScreen` wrote an empty file**
    - **Severity**: Medium
    - **Category**: flaky-test
    - **Area**: `iTerminal.Test/EditorViewerAndPermissionsTest.cs:152`, CSV viewer export
@@ -129,7 +110,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Test that would catch it**: the same test with the wait.
    - **unverified** as to the cause.
 
-7. **QA-7 Windows end-to-end tests time out singly under load**
+5. **QA-7 Windows end-to-end tests time out singly under load**
    - **Severity**: Medium
    - **Category**: flaky-test
    - **Area**: `iTerminal.Test`
@@ -138,7 +119,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Suggested fix**: profile the Windows suite (the `profiler` agent) before raising any timeout.
    - **Test that would catch it**: none; these tests are the detectors.
 
-8. **QA-8 153 `iTerminal.Core` files have no test that names them**
+6. **QA-8 153 `iTerminal.Core` files have no test that names them**
    - **Severity**: Medium
    - **Category**: test-gap
    - **Area**: `iTerminal.Core/Commands` (67 files), `Services` (42), `Dialogs` (13), `Model` (11), `Tasks` (5), `Jobs` (3)
@@ -147,7 +128,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Suggested fix**: first read the Cobertura rate for the files above and add a unit test for the ones under 50% (recycle bin stores and the folder copy pipeline first).
    - **Test that would catch it**: none; add one per file.
 
-9. **QA-9 `iConsole.Media.Audio` is 31.2% covered and its sinks have no tests**
+7. **QA-9 `iConsole.Media.Audio` is 31.2% covered and its sinks have no tests**
    - **Severity**: Medium
    - **Category**: test-gap
    - **Area**: `iConsole.Media.Audio/Sinks`
@@ -156,7 +137,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Suggested fix**: add sink tests against a fake process runner (the `AplayAudioOutputBackendTest` already does this for the backend) and un-skip the tests that need only a decoder.
    - **Test that would catch it**: none.
 
-10. **QA-10 605 of 627 BDD scenarios are skipped**
+8. **QA-10 605 of 627 BDD scenarios are skipped**
     - **Severity**: Medium
     - **Category**: test-gap
     - **Area**: `iTerminal.Specifications.Test`
@@ -165,7 +146,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
     - **Suggested fix**: bind the steps for one feature folder per improvement, starting with `Files` and `Archives`.
     - **Test that would catch it**: the scenarios themselves.
 
-11. **QA-11 `ReleaseArchive` silently skips archive entries that contain a colon, and has no test**
+9. **QA-11 `ReleaseArchive` silently skips archive entries that contain a colon, and has no test**
     - **Severity**: Medium
     - **Category**: defect
     - **Area**: `iTerminal.Core/Services/RuntimeDependencies/ReleaseArchive.cs`, `iTerminal.Core/Helper/ArchivePaths.cs`
@@ -175,7 +156,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
     - **Test that would catch it**: none; add a `ReleaseArchive` test with an entry `a:b.txt` and an entry `../x`.
     - **unverified** (read, not reproduced).
 
-12. **QA-12 Fix that did not stick: the picture dialog and the Tab completion**
+10. **QA-12 Fix that did not stick: the picture dialog and the Tab completion**
     - **Severity**: Low
     - **Category**: pipeline
     - **Area**: process
@@ -184,7 +165,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
     - **Suggested fix**: none; track in the next run.
     - **Test that would catch it**: not applicable.
 
-13. **QA-13 No end-to-end scenario for the screen saver**
+11. **QA-13 No end-to-end scenario for the screen saver**
     - **Severity**: Low
     - **Category**: test-gap
     - **Area**: `iTerminal.Test`, `iTerminal.Core/ScreenSavers`
@@ -204,12 +185,11 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
 
 ### Suggested order
 
-1. QA-1 (main is red).
-2. QA-3, then QA-6 and QA-7 (flaky tests in the end-to-end suite erode trust in every run), then QA-4 and QA-5.
-3. QA-11 (defect a user can reach).
-4. QA-2 (process: do not merge while the Windows job is red).
-5. Coverage gaps: QA-8, QA-9, QA-10, QA-13.
-6. QA-12 on the next run.
+1. QA-3, then QA-6 and QA-7 (flaky tests in the end-to-end suite erode trust in every run), then QA-4 and QA-5.
+2. QA-11 (defect a user can reach).
+3. Process: do not merge while the Windows job is red.
+4. Coverage gaps: QA-8, QA-9, QA-10, QA-13.
+5. QA-12 on the next run.
 
 ### Status of earlier issues
 
@@ -247,7 +227,7 @@ Scope `warnings`. Branch `docs/qa-warnings`, from commit `fd0c0d13` on `main`. T
 - The Release build has 1,838 unique warnings. 1,824 (99.3%) come from SonarAnalyzer (`S####`), 5 from the compiler (`CS`), 7 from the .NET and MSTest analyzers (`CA`, `MSTEST`), and 2 have no rule code.
 - The 1,827 warnings in the non-test projects are almost all Sonar. The 9 in the test projects are `iTerminal.Core.Test` (8) and `iConsole.Media.Audio.Test` (1); none of them is from Sonar.
 - Most warnings are style rules: `S3358` (nested ternary), `S108` (empty block), `S8949` (cancellation token not passed on), `S927` (parameter name differs from base) and `S1905` (redundant cast). These five codes make up 904 of the 1,824 Sonar warnings.
-- The warnings that read as defects are the disposal rule `S2930` (34), the swallowed-exception rule `S2486` (68), and the compiler warnings `CS0108` (1) and `CS8604` (1). They are listed as issues below.
+- The warnings that read as defects are the swallowed-exception rule `S2486` (68) and the compiler warning `CS8604` (1). The disposal rule `S2930` (34) and `CS0108` (1) have since been fixed. They are listed as issues below.
 - No `CS8602` (possible null dereference) warning is in the build. The `S2245` (random number) and `S2068` (`password`) hits were read as false positives: the random numbers are in game code, and the `password` hits are property names.
 
 ### Measurements
@@ -297,17 +277,7 @@ The 1,824 Sonar warnings are 99.3% of the total. The five largest codes (S3358, 
 
 ### Quality issues
 
-1. **QA-14 Undisposed `CancellationTokenSource` fields (S2930, 34 warnings)**
-   - **Severity**: Medium
-   - **Category**: defect
-   - **Area**: `iConsole/Controls/Control.cs`, `iConsole/Controls/Experimental/BouncingLabel.cs`, `iTerminal.Core/Application/DatabaseInitializationHostedService.cs`
-   - **Evidence**: `iConsole/Controls/Control.cs:773` assigns `_autoRefresh = new CancellationTokenSource()` in `StartAutoRefresh`, which replaces the previous source with `StopAutoRefresh()` just before it. The analyzer reports `_autoRefresh` as "Dispose … when it is no longer needed". `BouncingLabel.cs:20` (`_stop`) and `DatabaseInitializationHostedService.cs:113` (`_stopping`) are the same pattern. Build warnings are from the Release build of this run.
-   - **Impact**: a cancellation source has a small unmanaged handle, so a leak is minor per control, but controls are created and destroyed in a loop when dialogs open and close.
-   - **Suggested fix**: dispose the previous source in `StopAutoRefresh` (or in `Dispose`) and set the field to null; for the `Control.cs` case check that no task still holds the token before disposing.
-   - **Test that would catch it**: none; a test that starts and stops auto-refresh many times would not fail today.
-   - **unverified** as to whether any path leaves a source undisposed; the warning is from the analyzer's reading.
-
-2. **QA-15 Exceptions swallowed in the idle loop and elsewhere (S2486, 68 warnings)**
+1. **QA-15 Exceptions swallowed in the idle loop and elsewhere (S2486, 68 warnings)**
    - **Severity**: Medium
    - **Category**: error-handling
    - **Area**: `iConsole/Controls/Control.cs:949`, `iConsole/Desktops/Desktop.cs:101`, `iConsole/Controls/StatusBar/Date.cs:43`
@@ -317,17 +287,7 @@ The 1,824 Sonar warnings are 99.3% of the total. The five largest codes (S3358, 
    - **Test that would catch it**: none; a unit test with a control whose `OnIdle` throws, asserting that the failure is recorded.
    - **unverified** as to which of the 68 places hide a real failure; only `Control.cs:949` was read, and `Desktop.cs:101` and `Date.cs:43` were taken from the analyzer output.
 
-3. **QA-16 `TickSource` in `SecureWipeDialog` hides the base member (CS0108)**
-   - **Severity**: Low
-   - **Category**: defect
-   - **Area**: `iTerminal.Core/Dialogs/SecureWipeDialog.cs:69`, `iConsole/Controls/PopUpWindows/PopUpWindow.cs:27`
-   - **Evidence**: `SecureWipeDialog` declares `internal Func<long> TickSource { get; set; }` and the base `PopUpWindow` declares a public `TickSource` (`PopUpWindow.cs:27`), used by its title marquee (`PopUpWindow.cs:333`). The compiler warns that the derived property hides the base one. The derived property is set by the wipe dialog's tests, so a test that fixes the disk graphic's frame does not change the base title marquee.
-   - **Impact**: a test that tries to fix the dialog's animation may see the title and the disk graphic on different clocks; a developer reading the code may take one `TickSource` for the other.
-   - **Suggested fix**: rename the wipe dialog's property (for example `DiskTickSource`) or make it override the base member, and check the test that sets it.
-   - **Test that would catch it**: none.
-   - **unverified** as to a visible effect; read from the code.
-
-4. **QA-17 Possible null argument in the PDF signature reader (CS8604)**
+2. **QA-17 Possible null argument in the PDF signature reader (CS8604)**
    - **Severity**: Low
    - **Category**: defect
    - **Area**: `iConsole.Formats/Pdf/PdfSignatureReader.cs:119`
@@ -347,10 +307,9 @@ The 1,824 Sonar warnings are 99.3% of the total. The five largest codes (S3358, 
 ### Suggested order
 
 1. QA-15 (exceptions swallowed in the idle loop; the rest are the same pattern).
-2. QA-14 (undisposed sources).
-3. QA-17 and QA-16 (compiler warnings, one-line fixes).
-4. The style codes (`S3358`, `S108`, `S8949`) only when a file is touched for another reason; they are not worth a dedicated change.
-5. The `S5332` URLs need a decision: each `http` URL is either fixed or documented as intentional.
+2. QA-17 (compiler warning, one-line fix).
+3. The style codes (`S3358`, `S108`, `S8949`) only when a file is touched for another reason; they are not worth a dedicated change.
+4. The `S5332` URLs need a decision: each `http` URL is either fixed or documented as intentional.
 
 ### Status of earlier issues
 
@@ -368,48 +327,4 @@ grep -oE "warning [A-Z]+[0-9]+" <scratch>/warnings-unique.txt | sort | uniq -c |
 
 # Per project
 grep -oE "\[[^]]*\.(csproj|slnx|props)\]" <scratch>/warnings-unique.txt | sort | uniq -c | sort -rn
-```
-
-## Q3 2026-11-21: warnings (S2930 fix)
-
-Scope: the S2930 warnings of Q2, fixed on branch `fix/s2930-dispose-cancellation`, cut from `main` at `fd0c0d13`. The change is not committed. The build is `dotnet build iTerminal.slnx -c Release --no-incremental` on Linux, with its log in the scratchpad (`build5.log` and `warnings-final.txt`). Tests run: `iConsole.Test` (5 073 passed, 0 failed) and `iTerminal.Core.Test` (6 365 passed, 0 failed, 54 skipped, the same skips as Q1). Not run: the end-to-end suite `iTerminal.Test`, and the Windows build.
-
-### Summary
-
-- S2930 (undisposed `IDisposable`): 34 warnings before, 0 after. The change touches 27 files and no test was changed.
-- Unique warnings across the solution: 1 838 in Q2, 1 804 now (a drop of 34). Sonar: 1 824 in Q2, 1 790 now.
-- No new warning code appeared. Two `S9422` warnings that my first version introduced (lock objects typed as `object`) were fixed to `Lock` before the final build, so `S9422` is back at its Q2 count of 39.
-- The two sides of each fix are one rule: a source is cancelled and disposed when it is replaced or when its owner ends, and no code reads a source's `Token` after it has been disposed. A token from a disposed source still works (`IsCancellationRequested`, `Register`, linked sources), but `Cancel()` and the `Token` getter throw on a disposed source. This was checked with a small program before the change was made.
-
-### Measurements
-
-| Build | Unique warnings | Sonar (`S####`) | S2930 | S9422 |
-| --- | --- | --- | --- | --- |
-| Q2, `main` at `fd0c0d13` | 1 838 | 1 824 | 34 | 39 |
-| Q3, `fix/s2930-dispose-cancellation` (uncommitted) | 1 804 | 1 790 | 0 | 39 |
-
-### Quality issues
-
-No new issues. The change touches several points that a reviewer should read, recorded here as notes, not as issues:
-
-- Some sources are disposed when the owner closes (`Close()`), so a later call that reads the source's `Token` would throw. The reads were moved to the start of each background task (for example `MarketTerminalDialog`, `MailDialog`, `PropertiesDialog`, `HashManifestDialog`). A new read of the field inside a task would bring the exception back.
-- A `Cancel()` that races with a `Dispose()` on another thread can throw `ObjectDisposedException`. For the scan classes (`DiskUsageScan`, `DuplicateScan`) this is guarded by a lock. For the dialogs it is not, because they cancel and dispose on the UI thread.
-- `BouncingLabel.Dispose` and `DatabaseInitializationHostedService.StopAsync` now dispose their source. A second call to `BouncingLabel.Dispose` returns early.
-
-### Status of earlier issues
-
-- QA-14 (undisposed `CancellationTokenSource` fields, S2930, 34 warnings): fixed on the branch, not committed. The build has 0 S2930 warnings. The unit tests pass. The end-to-end suite is not run.
-- QA-15 (exceptions swallowed in the idle loop, S2486): open, unchanged, 68 warnings in this build.
-- QA-16 (`SecureWipeDialog.TickSource` hides base member, CS0108): open, unchanged.
-- QA-17 (possible null argument in the PDF signature reader, CS8604): open, unchanged.
-
-### How to reproduce
-
-```bash
-dotnet build iTerminal.slnx -c Release --no-incremental -nologo -v:n > <scratch>/build5.log 2>&1
-grep -E ": warning " <scratch>/build5.log | sed -E 's/^ *[0-9]+>//' | sed -E 's/^\s+//' | sort -u > <scratch>/warnings-final.txt
-grep -c "" <scratch>/warnings-final.txt
-grep -c "warning S2930" <scratch>/warnings-final.txt
-dotnet test iConsole.Test/iConsole.Test.csproj -c Release
-dotnet test iTerminal.Core.Test/iTerminal.Core.Test.csproj -c Release
 ```
