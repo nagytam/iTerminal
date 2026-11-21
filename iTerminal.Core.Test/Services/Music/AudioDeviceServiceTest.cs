@@ -14,7 +14,14 @@ public class AudioDeviceServiceTest
         public bool ThrowOnProbe { get; set; }
         public int DeviceQueryCount { get; private set; }
 
-        public bool IsAvailable() => ThrowOnProbe ? throw new InvalidOperationException("probe blew up") : available;
+        /// <summary>When set, probing waits here, so a test can hold a probe open.</summary>
+        public ManualResetEventSlim? ProbeGate { get; set; }
+
+        public bool IsAvailable()
+        {
+            ProbeGate?.Wait(TimeSpan.FromSeconds(30));
+            return ThrowOnProbe ? throw new InvalidOperationException("probe blew up") : available;
+        }
 
         public IReadOnlyList<AudioDevice> GetDevices()
         {
@@ -25,6 +32,31 @@ public class AudioDeviceServiceTest
         public IAudioSink CreateSink() => new FakeAudioSink();
     }
 
+    /// <summary>
+    /// Starts a probe with <paramref name="start"/> and waits for it to land. Subscribing before
+    /// starting means the event cannot be missed.
+    /// </summary>
+    private static void AwaitProbe(AudioDeviceService service, Action start)
+    {
+        using var landed = new ManualResetEventSlim(false);
+        void OnLanded(object? sender, EventArgs e) => landed.Set();
+
+        service.DevicesChanged += OnLanded;
+        try
+        {
+            start();
+            Assert.IsTrue(landed.Wait(TimeSpan.FromSeconds(30)), "The background probe did not land.");
+        }
+        finally
+        {
+            service.DevicesChanged -= OnLanded;
+        }
+    }
+
+    /// <summary>Waits for the first probe of a freshly built service, which the first read starts.</summary>
+    private static void AwaitFirstProbe(AudioDeviceService service) =>
+        AwaitProbe(service, () => _ = service.GetDevices());
+
     [Timeout(60_000)]
     [TestMethod]
     public void ResolvesTheAvailableBackendWithTheLowestPriorityNumber()
@@ -34,6 +66,8 @@ public class AudioDeviceServiceTest
             new StubBackend("Fallback", 20, available: true),
             new StubBackend("Primary", 10, available: true),
         ]);
+
+        AwaitFirstProbe(service);
 
         Assert.AreEqual("Primary", service.ActiveBackendName);
     }
@@ -48,6 +82,8 @@ public class AudioDeviceServiceTest
             new StubBackend("Fallback", 10, available: true),
         ]);
 
+        AwaitFirstProbe(service);
+
         Assert.AreEqual("Fallback", service.ActiveBackendName);
         Assert.IsTrue(service.HasAudioOutput);
     }
@@ -59,6 +95,8 @@ public class AudioDeviceServiceTest
         var broken = new StubBackend("Broken", 0, available: true) { ThrowOnProbe = true };
         var service = new AudioDeviceService([broken, new StubBackend("Working", 10, available: true)]);
 
+        AwaitFirstProbe(service);
+
         Assert.AreEqual("Working", service.ActiveBackendName);
     }
 
@@ -67,6 +105,8 @@ public class AudioDeviceServiceTest
     public void WithNoUsableBackend_ReportsNoOutputAndCreatesNoSink()
     {
         var service = new AudioDeviceService([new StubBackend("None", 0, available: false)]);
+
+        AwaitFirstProbe(service);
 
         Assert.IsFalse(service.HasAudioOutput);
         Assert.AreEqual(string.Empty, service.ActiveBackendName);
@@ -80,6 +120,8 @@ public class AudioDeviceServiceTest
     {
         var service = new AudioDeviceService([]);
 
+        AwaitFirstProbe(service);
+
         Assert.IsFalse(service.HasAudioOutput);
         Assert.IsNull(service.CreateSink());
     }
@@ -91,13 +133,63 @@ public class AudioDeviceServiceTest
         var backend = new StubBackend("Primary", 0, available: true);
         var service = new AudioDeviceService([backend]);
 
-        service.GetDevices();
-        service.GetDevices();
+        AwaitFirstProbe(service);
+        _ = service.GetDevices();
+        _ = service.GetDevices();
         Assert.AreEqual(1, backend.DeviceQueryCount, "Repeated reads must not re-enumerate");
 
-        service.Refresh();
-        service.GetDevices();
+        AwaitProbe(service, service.Refresh);
+        _ = service.GetDevices();
         Assert.AreEqual(2, backend.DeviceQueryCount, "Refresh must pick up hot-plugged devices");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Readers_ReturnAtOnce_WhileTheFirstProbeIsStillRunning()
+    {
+        using var gate = new ManualResetEventSlim(false);
+        var backend = new StubBackend("Slow", 0, available: true) { ProbeGate = gate };
+        var service = new AudioDeviceService([backend]);
+
+        try
+        {
+            // The probe is held open on the thread pool; none of these reads may wait for it.
+            Assert.AreEqual(string.Empty, service.ActiveBackendName);
+            Assert.IsFalse(service.HasAudioOutput);
+            Assert.AreEqual(0, service.GetDevices().Count);
+            Assert.IsTrue(service.IsProbing);
+        }
+        finally
+        {
+            gate.Set();
+        }
+
+        AwaitProbeAfterGate(service);
+
+        Assert.AreEqual("Slow", service.ActiveBackendName);
+        Assert.IsFalse(service.IsProbing);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Refresh_KeepsThePreviousListUntilTheNewOneLands()
+    {
+        using var gate = new ManualResetEventSlim(true);
+        var backend = new StubBackend("Primary", 0, available: true);
+        var service = new AudioDeviceService([backend]);
+        AwaitFirstProbe(service);
+
+        gate.Reset();
+        backend.ProbeGate = gate;
+        service.Refresh();
+
+        Assert.IsTrue(service.IsProbing);
+        Assert.AreEqual("Primary", service.ActiveBackendName, "The old result stays readable during a rescan");
+        Assert.AreEqual(1, service.GetDevices().Count);
+
+        gate.Set();
+        AwaitProbeAfterGate(service);
+        Assert.IsFalse(service.IsProbing);
     }
 
     [Timeout(60_000)]
@@ -109,5 +201,20 @@ public class AudioDeviceServiceTest
         using var sink = service.CreateSink();
 
         Assert.IsNotNull(sink);
+    }
+
+    /// <summary>
+    /// For a probe that is already running and was gated open: waits until it lands. The event may
+    /// already have been raised, so this checks the state the event announces, polled briefly.
+    /// </summary>
+    private static void AwaitProbeAfterGate(AudioDeviceService service)
+    {
+        var deadline = DateTime.UtcNow.AddSeconds(30);
+        while (service.IsProbing && DateTime.UtcNow < deadline)
+        {
+            Thread.Sleep(5);
+        }
+
+        Assert.IsFalse(service.IsProbing, "The background probe did not land.");
     }
 }

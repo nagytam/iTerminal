@@ -57,6 +57,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
         sessionRestoreService?.RestoreOnce();
 
         Player.StateChanged += OnPlayerStateChanged;
+        _deviceService.DevicesChanged += OnDevicesChanged;
     }
 
     protected override string UrlScheme => Container.MUSIC_PLAYLIST;
@@ -118,6 +119,12 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
         }
     }
 
+    /// <summary>
+    /// A device probe landed on its background task. Rebuilds the rows, since the output row and the
+    /// device list both read the probe's result.
+    /// </summary>
+    private void OnDevicesChanged(object? sender, EventArgs e) => Refresh();
+
     private bool HasRowStateMoved()
     {
         var state = (Player.Playlist.Version, Player.Playlist.CurrentIndex, Player.State);
@@ -173,7 +180,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
             .WithContext(VolumeBar(Player.Volume)));
 
         entries.Add(new MusicEntry(MusicEntryKind.Folder, ChildUrl(DevicesSection), UiText.Get("Music.Output", "[Output]"))
-            .WithValue(_deviceService.HasAudioOutput ? _deviceService.ActiveBackendName : UiText.Get("Music.None", "none"))
+            .WithValue(OutputValue())
             .WithContext(CurrentDeviceName()));
 
         var tracks = Player.Playlist.Tracks;
@@ -362,8 +369,9 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
                 break;
 
             case MusicAction.RescanDevices:
+                // The probe runs in the background; the list repaints when it lands (OnDevicesChanged).
                 _deviceService.Refresh();
-                SetStatus(string.Format(UiText.Get("Music.Rescanned", "Devices rescanned ({0})"), _deviceService.ActiveBackendName));
+                SetStatus(UiText.Get("Music.Probing", "Looking for outputs…"));
                 break;
 
             default:
@@ -482,11 +490,30 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
         return string.IsNullOrEmpty(StatusMessage) ? footer : $"{footer}{Border.Horizontal}{StatusMessage}";
     }
 
+    private string OutputValue()
+    {
+        if (_deviceService.HasAudioOutput)
+        {
+            return _deviceService.ActiveBackendName;
+        }
+
+        return _deviceService.IsProbing
+            ? UiText.Get("Music.Probing", "Looking for outputs…")
+            : UiText.Get("Music.None", "none");
+    }
+
     private string CurrentDeviceName()
     {
         var currentId = Player.DeviceId ?? string.Empty;
         var device = _deviceService.GetDevices().FirstOrDefault(d => string.Equals(d.Id, currentId, StringComparison.Ordinal));
-        return device?.Name ?? UiText.Get("Music.DefaultOutput", "Default output");
+        if (device is not null)
+        {
+            return device.Name;
+        }
+
+        return _deviceService.IsProbing
+            ? UiText.Get("Music.Probing", "Looking for outputs…")
+            : UiText.Get("Music.DefaultOutput", "Default output");
     }
 
     private static string StateGlyph(PlaybackState state) => state switch
@@ -515,6 +542,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
         if (disposing)
         {
             Player.StateChanged -= OnPlayerStateChanged;
+            _deviceService.DevicesChanged -= OnDevicesChanged;
         }
 
         base.Dispose(disposing);

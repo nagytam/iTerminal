@@ -44,6 +44,7 @@ public class MusicFileViewerDialog : Dialog
     private readonly IAudioDeviceService _deviceService;
     private readonly IMusicMetadataService _metadataService;
     private readonly IBeepService _beepService;
+    private string _shownDeviceName = string.Empty;
     private readonly IDateTimeProviderService _dateTimeProviderService;
 
     private readonly ConcurrentObservableCollection<string> _tagRows = new();
@@ -536,7 +537,30 @@ public class MusicFileViewerDialog : Dialog
         var currentId = _player.DeviceId ?? string.Empty;
         AudioDevice? device = _deviceService.GetDevices()
             .FirstOrDefault(d => string.Equals(d.Id, currentId, StringComparison.Ordinal));
-        return device?.Name ?? "Default output";
+        if (device is not null)
+        {
+            return device.Name;
+        }
+
+        return _deviceService.IsProbing
+            ? iConsole.Localization.UiText.Get("Music.Probing", "Looking for outputs…")
+            : "Default output";
+    }
+
+    /// <summary>
+    /// The output name comes from a cache that a background probe fills in, and nothing tells the
+    /// dialog when that happens. Repaint when the name it would show has changed.
+    /// </summary>
+    public override void OnIdle()
+    {
+        var name = CurrentDeviceName();
+        if (name != _shownDeviceName)
+        {
+            _shownDeviceName = name;
+            StateHasChanged();
+        }
+
+        base.OnIdle();
     }
 
     private void WriteField(IBuffer buffer, int x, int y, int w, string label, string value, ColorScheme colorScheme)
