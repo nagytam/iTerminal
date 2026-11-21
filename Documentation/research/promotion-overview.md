@@ -18,7 +18,7 @@ given below).
 
 | # | Venue | Type | How to submit | Rule status | Content file | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | rothgar/awesome-tuis | Awesome-list (TUI apps) | Pull request to the list | Unverified: the list is the largest TUI catalogue, the contribution guide was not read | [awesome-lists.md](../Promotion/awesome-lists.md) | prepared |
+| 1 | rothgar/awesome-tuis | Awesome-list (TUI apps) | Pull request to the list | Verified from `.github/pull_request_template.md`: repository at least 6 months old (a workflow checks the first-commit date on README PRs); unique application and interface; no wrappers; interactive or redrawing interface. iTerminal is not eligible before 2027-04-15 | [awesome-lists.md](../Promotion/awesome-lists.md) | blocked until 2027-04-15 |
 | 2 | awesome-dotnet (quozd/awesome-dotnet) | Awesome-list (.NET) | Pull request, one link per PR, title "Add <project>" | Partly verified: one link per pull request and a title of the form "Add <project>" are stated in the guide as seen in search results (not read in full); the `[Free for OSS]` tag requirement is unverified | awesome-lists.md | prepared |
 | 3 | tuxarch/cli-apps (awesome-cli-apps family) | Awesome-list (CLI and TUI apps) | Pull request editing a CSV file under `data/` in the newer forks | Unverified. The older guide (mirror of agarrharr/awesome-cli-apps) asks for apps older than 90 days with more than 20 stars and one PR per app; whether that still holds is unknown | awesome-lists.md | prepared |
 | 4 | Console.dev | Developer-tool newsletter | Email hello@console.dev (the About page) | Partly verified: selection criteria read on the site (regular-use tool, fits the development flow). The site says it does not do sponsored reviews | [directories-and-newsletters.md](../Promotion/directories-and-newsletters.md) | user to submit |
@@ -112,7 +112,13 @@ given below).
   `-bin` ebuild and an own signed apt and dnf repository; COPR, OBS home project and a PPA need a spec or
   `debian/` source package first; nixpkgs is the most realistic official route; Flathub excludes console
   apps by its stated rule.
-- Nothing was sent, submitted, posted or signed up for in any pass.
+- **2026-11-21, awesome-tuis attempt:** Prepared the PR (fork under `nagytam`, one line under File
+  Managers). Stopped before the pull request: the list's template requires a repository at least six
+  months old, and iTerminal's first commit is 2026-10-15. The fork was created in error and is to be
+  deleted; the token needs the `delete_repo` scope first. Rule recorded in `awesome-lists.md`; venue 1
+  blocked until 2027-04-15.
+- Nothing was sent, submitted, posted or signed up for in any pass (the awesome-tuis fork is the one
+  exception; it is not a submission).
 
 **Waiting for the user:**
 - Choose the first wave (see section 5).
