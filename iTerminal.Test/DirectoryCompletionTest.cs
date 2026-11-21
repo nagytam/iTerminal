@@ -31,10 +31,10 @@ public class DirectoryCompletionTest
         dialog.TextBoxTarget.Text = RightFolderText;
         await _app.TypeAsync("tar");
 
-        await _app.WaitUntilAsync(() => dialog.TextBoxTarget.AutoCompletion!.IsPopupOpen, "the suggestion list to open under the box");
+        await WaitForBoxAsync(dialog.TextBoxTarget, () => dialog.TextBoxTarget.AutoCompletion!.IsPopupOpen, "the suggestion list to open under the box");
         await _app.PressAsync("Tab");
 
-        await _app.WaitUntilAsync(() => dialog.TextBoxTarget.Text == RightFolderText + "target" + Path.DirectorySeparatorChar, "Tab to replace the text with the folder");
+        await WaitForBoxAsync(dialog.TextBoxTarget, () => dialog.TextBoxTarget.Text == RightFolderText + "target" + Path.DirectorySeparatorChar, "Tab to replace the text with the folder");
     }
 
     [Timeout(120_000)]
@@ -48,10 +48,30 @@ public class DirectoryCompletionTest
         dialog.TextBoxTarget.Text = RightFolderText;
         await _app.TypeAsync("tar");
 
-        await _app.WaitUntilAsync(() => dialog.TextBoxTarget.AutoCompletion!.IsPopupOpen, "the suggestion list to open under the box");
+        await WaitForBoxAsync(dialog.TextBoxTarget, () => dialog.TextBoxTarget.AutoCompletion!.IsPopupOpen, "the suggestion list to open under the box");
         await _app.PressAsync("Tab");
 
-        await _app.WaitUntilAsync(() => dialog.TextBoxTarget.Text == RightFolderText + "target" + Path.DirectorySeparatorChar, "Tab to replace the text with the folder");
+        await WaitForBoxAsync(dialog.TextBoxTarget, () => dialog.TextBoxTarget.Text == RightFolderText + "target" + Path.DirectorySeparatorChar, "Tab to replace the text with the folder");
+    }
+
+    /// <summary>
+    /// Waits as <see cref="TerminalApp.WaitUntilAsync(Func{bool}, string, TimeSpan?)"/> does, and on a timeout adds the
+    /// state of the box and its suggestion list at that moment (popup open, highlighted item, matches, text), so a CI
+    /// failure says which step went wrong without a rerun.
+    /// </summary>
+    private async Task WaitForBoxAsync(iConsole.Controls.TextBox box, Func<bool> condition, string because)
+    {
+        try
+        {
+            await _app.WaitUntilAsync(condition, because);
+        }
+        catch (AssertFailedException exception)
+        {
+            iConsole.Controls.AutoCompletion? completion = box.AutoCompletion;
+            string state = $"Box state: popup open={completion?.IsPopupOpen}, highlighted='{completion?.GetSelectedValue()}', "
+                + $"matches=[{string.Join(", ", completion?.CompletionModel.MatchingValues ?? [])}], text='{box.Text}'";
+            throw new AssertFailedException($"{exception.Message}{Environment.NewLine}{state}", exception);
+        }
     }
 
     [Timeout(120_000)]
