@@ -153,9 +153,9 @@ public class FileToTextConverterPdfSignaturesTest
     [TestMethod]
     public void HasPdfSignatures_IsTrueForPdfNamesOnly()
     {
-        Assert.IsTrue(FileToTextConverterService.HasPdfSignatures(new Url("file://C:/x/a.pdf")));
-        Assert.IsTrue(FileToTextConverterService.HasPdfSignatures(new Url("file://C:/x/a.PDF")));
-        Assert.IsFalse(FileToTextConverterService.HasPdfSignatures(new Url("file://C:/x/a.txt")));
-        Assert.IsFalse(FileToTextConverterService.HasPdfSignatures(null));
+        Assert.IsTrue(new FileToTextConverterService().HasPdfSignatures(new Url("file://C:/x/a.pdf")));
+        Assert.IsTrue(new FileToTextConverterService().HasPdfSignatures(new Url("file://C:/x/a.PDF")));
+        Assert.IsFalse(new FileToTextConverterService().HasPdfSignatures(new Url("file://C:/x/a.txt")));
+        Assert.IsFalse(new FileToTextConverterService().HasPdfSignatures(null));
     }
 }

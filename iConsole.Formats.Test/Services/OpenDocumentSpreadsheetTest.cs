@@ -238,8 +238,8 @@ public class OpenDocumentSpreadsheetTest
     [TestMethod]
     public void AnOdsIsNotShownAsTextInAnEncoding()
     {
-        Assert.IsFalse(FileToTextConverterService.IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ods"))));
-        Assert.IsFalse(FileToTextConverterService.IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ots"))));
-        Assert.IsTrue(FileToTextConverterService.IsEncodingRelevant(new Url(Path.Combine(_directory, "a.csv"))));
+        Assert.IsFalse(new FileToTextConverterService().IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ods"))));
+        Assert.IsFalse(new FileToTextConverterService().IsEncodingRelevant(new Url(Path.Combine(_directory, "a.ots"))));
+        Assert.IsTrue(new FileToTextConverterService().IsEncodingRelevant(new Url(Path.Combine(_directory, "a.csv"))));
     }
 }

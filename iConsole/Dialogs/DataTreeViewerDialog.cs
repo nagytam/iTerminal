@@ -258,22 +258,24 @@ public abstract class DataTreeViewerDialog : Dialog
 public class YamlViewerDialog(
     IContentModelService contentModelService,
     IFileToTextConverterService fileToTextConverterService,
+    IStructuredDocumentParser structuredDocumentParser,
     IThemeService themeService)
     : DataTreeViewerDialog(nameof(YamlViewerDialog), contentModelService, fileToTextConverterService, themeService)
 {
     protected override string FormatName => "YAML";
 
-    protected override JsonNode? ParseText(string text) => iConsole.Yaml.YamlDocumentReader.Read(text);
+    protected override JsonNode? ParseText(string text) => structuredDocumentParser.ParseYaml(text);
 }
 
 /// <summary>The TOML viewer: F4 on a <c>.toml</c> file, from any drive.</summary>
 public class TomlViewerDialog(
     IContentModelService contentModelService,
     IFileToTextConverterService fileToTextConverterService,
+    IStructuredDocumentParser structuredDocumentParser,
     IThemeService themeService)
     : DataTreeViewerDialog(nameof(TomlViewerDialog), contentModelService, fileToTextConverterService, themeService)
 {
     protected override string FormatName => "TOML";
 
-    protected override JsonNode? ParseText(string text) => iConsole.Toml.TomlDocumentReader.Read(text);
+    protected override JsonNode? ParseText(string text) => structuredDocumentParser.ParseToml(text);
 }

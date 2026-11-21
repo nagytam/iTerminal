@@ -27,4 +27,16 @@ public interface IFileToTextConverterService
     /// the editor keep the plain text that <see cref="ReadFileAsync"/> gives and can never save the summary into the file.
     /// </summary>
     Task ReadPdbForViewerAsync(Url url, IFileSystem fileSystem, ITextModel textModel);
+
+    /// <summary>True when the file's text encoding is worth showing; false for the formats that have their own view.</summary>
+    bool IsEncodingRelevant(Url? url);
+
+    /// <summary>True for the binaries whose F3 view adds a disassembly after the metadata page.</summary>
+    bool HasDisassembly(Url? url);
+
+    /// <summary>True for a <c>.pdb</c> file, whose F3 view adds its debug symbol summary.</summary>
+    bool HasPdbSummary(Url? url);
+
+    /// <summary>True for a PDF, whose F3 view adds its digital signatures.</summary>
+    bool HasPdfSignatures(Url? url);
 }

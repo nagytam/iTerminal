@@ -130,7 +130,6 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<IPromptService, Prompts.PromptService>();
         services.AddSingleton<IDateTimeProviderService, DateTimeProviderService>();
         services.AddSingleton<IFrequentExecutionGuardService, FrequentExecutionGuardService>();
-        services.AddSingleton<IFileToTextConverterService, FileToTextConverterService>();
         services.AddSingleton<ICommandLogger>(NullCommandLogger.Instance);
         services.AddSingleton<IScreenLogger>(NullScreenLogger.Instance);
         return services;

@@ -1135,7 +1135,7 @@ public class ViewFileDialogCommandTest
     }
 
     private static iConsole.Dialogs.ExecutableAnalysisDialog CreateExecutableDialog(IThemeService themeService) =>
-        new(Mock.Of<iConsole.Executables.IExecutableAnalyzer>(), themeService);
+        new(Mock.Of<iConsole.Executables.IExecutableAnalyzer>(), new iConsole.Services.Disassembly.ExecutableDisassembler(), themeService);
 
     private static (iConsole.Dialogs.ExecutableAnalysisDialog Executable, FileViewerDialog Viewer) RunExecutableRoute(string path, byte[] content)
     {
@@ -1369,7 +1369,7 @@ public class ViewFileDialogCommandTest
     public void ExecuteAsync_WithAYamlFile_PointsTheYamlViewerAtIt(string extension)
     {
         var themeService = CreateThemeService();
-        var yamlDialog = new iConsole.Dialogs.YamlViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var yamlDialog = new iConsole.Dialogs.YamlViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.StructuredDocumentParser(), themeService);
         var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.{extension}");
         File.WriteAllText(path, "a: 1\n");
 
@@ -1392,7 +1392,7 @@ public class ViewFileDialogCommandTest
     public void ExecuteAsync_WithATomlFile_PointsTheTomlViewerAtIt()
     {
         var themeService = CreateThemeService();
-        var tomlDialog = new iConsole.Dialogs.TomlViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var tomlDialog = new iConsole.Dialogs.TomlViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), new iConsole.Formats.StructuredDocumentParser(), themeService);
         var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.toml");
         File.WriteAllText(path, "a = 1\n");
 

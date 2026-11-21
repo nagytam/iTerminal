@@ -169,7 +169,7 @@ public class FileToTextConverterService : IFileToTextConverterService
     /// True when the viewer shows this file's bytes as text, so that a code page means something for
     /// it — not for a PDF, an Office document, an image or a binary, whose text is read by other means.
     /// </summary>
-    public static bool IsEncodingRelevant(Url? url) =>
+    public bool IsEncodingRelevant(Url? url) =>
         url is not null
         && !url.Extension.Equals("pdf", StringComparison.OrdinalIgnoreCase)
         && !IsStructuredExtension(url.Extension)
@@ -181,11 +181,11 @@ public class FileToTextConverterService : IFileToTextConverterService
         && !AssemblyExtensions.Contains(url.Extension);
 
     /// <summary>True for the binaries whose F3 view adds a disassembly after the metadata page.</summary>
-    public static bool HasDisassembly(Url? url) =>
+    public bool HasDisassembly(Url? url) =>
         url is not null && AssemblyExtensions.Contains(url.Extension);
 
     /// <summary>True for a <c>.pdb</c> file, whose F3 view is its debug symbol summary (<see cref="PdbFileSummary"/>).</summary>
-    public static bool HasPdbSummary(Url? url) =>
+    public bool HasPdbSummary(Url? url) =>
         url is not null && PdbFileSummary.Extensions.Contains(url.Extension);
 
     public async Task ReadPdbForViewerAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
@@ -232,7 +232,7 @@ public class FileToTextConverterService : IFileToTextConverterService
     }
 
     /// <summary>True for a file named like a PDF, the only kind whose F3 view can carry a signature section.</summary>
-    public static bool HasPdfSignatures(Url? url) =>
+    public bool HasPdfSignatures(Url? url) =>
         url is not null && url.Extension.Equals("pdf", StringComparison.OrdinalIgnoreCase);
 
     public async Task<IReadOnlyList<string>> BuildPdfSignatureLinesAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken)

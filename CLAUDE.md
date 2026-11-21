@@ -8,6 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Build entire solution
 dotnet build iTerminal.slnx
 
+# Run the format readers' unit tests (iConsole.Formats.Test)
+dotnet test iConsole.Formats.Test/iConsole.Formats.Test.csproj
+
 # Run all tests (all test projects)
 dotnet test iTerminal.slnx
 
@@ -40,7 +43,7 @@ Runtime state lives outside the repo: the SQLite database (settings, folder cach
 
 ## Architecture
 
-Dependency chain: `iConsole` ← `iTerminal.Core` ← `iTerminal`. The platform input plug-ins `iConsole.Inputs.Posix` and `iConsole.Inputs.Windows` also depend on `iConsole` and are selected at startup. Reusable primitives belong in `iConsole`; app behaviour belongs in `iTerminal.Core`. `Program.cs` is the composition root: register new services and controls in `iConsoleApplicationBuilderExtension` / `iTerminalApplicationBuilderExtension`, not in `Program.cs`.
+Dependency chain: `iConsole` ← `iConsole.Formats` ← `iTerminal.Core` ← `iTerminal`. `iConsole.Formats` holds the file-format readers, renderers and their third-party packages (SkiaSharp, Svg.Skia, PdfPig, OpenXml and the rest); `iConsole` never references it, so a dialog that needs a format goes through an interface `iConsole` defines (`IFileToTextConverterService`, `IStructuredDocumentParser`, `IExecutableDisassembler`), and `AddFileFormats()` registers the implementations from `AddiTerminal`. The platform input plug-ins `iConsole.Inputs.Posix` and `iConsole.Inputs.Windows` also depend on `iConsole` and are selected at startup. Reusable primitives belong in `iConsole`; app behaviour belongs in `iTerminal.Core`. `Program.cs` is the composition root: register new services and controls in `iConsoleApplicationBuilderExtension` / `iTerminalApplicationBuilderExtension`, not in `Program.cs`.
 
 The detailed write-ups are in `Documentation/architecture/`. Read the relevant one before changing a subsystem:
 

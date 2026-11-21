@@ -14,12 +14,12 @@ public class FileToTextConverterDisassemblyTest
     [TestMethod]
     public void HasDisassembly_IsTrueForTheBinaryExtensionsOnly()
     {
-        Assert.IsTrue(FileToTextConverterService.HasDisassembly(new Url("file://C:/x/a.dll")));
-        Assert.IsTrue(FileToTextConverterService.HasDisassembly(new Url("file://C:/x/a.EXE")));
-        Assert.IsTrue(FileToTextConverterService.HasDisassembly(new Url("file://C:/x/liba.so")));
-        Assert.IsFalse(FileToTextConverterService.HasDisassembly(new Url("file://C:/x/a.txt")));
-        Assert.IsFalse(FileToTextConverterService.HasDisassembly(new Url("file://C:/x/liba.so.1")));
-        Assert.IsFalse(FileToTextConverterService.HasDisassembly(null));
+        Assert.IsTrue(new FileToTextConverterService().HasDisassembly(new Url("file://C:/x/a.dll")));
+        Assert.IsTrue(new FileToTextConverterService().HasDisassembly(new Url("file://C:/x/a.EXE")));
+        Assert.IsTrue(new FileToTextConverterService().HasDisassembly(new Url("file://C:/x/liba.so")));
+        Assert.IsFalse(new FileToTextConverterService().HasDisassembly(new Url("file://C:/x/a.txt")));
+        Assert.IsFalse(new FileToTextConverterService().HasDisassembly(new Url("file://C:/x/liba.so.1")));
+        Assert.IsFalse(new FileToTextConverterService().HasDisassembly(null));
     }
 
     [Timeout(60_000)]

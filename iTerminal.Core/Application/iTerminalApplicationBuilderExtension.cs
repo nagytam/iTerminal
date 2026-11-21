@@ -1,4 +1,5 @@
 using iConsole.Dialogs;
+using iConsole.Formats.Application;
 using iConsole.Interfaces;
 using iConsole.Jobs;
 using iConsole.Services;
@@ -49,6 +50,8 @@ public static class iTerminalApplicationBuilderExtension
 
     public static IServiceCollection AddiTerminal(this IServiceCollection services, IConfiguration? configuration = null)
     {
+        // The file-format services (converter, YAML/TOML parser, executable disassembler) come from iConsole.Formats.
+        services.AddFileFormats();
         string databaseDirectory = configuration?[DataDirectoryKey] is { Length: > 0 } configuredDirectory
             ? configuredDirectory
             : Path.Combine(UserDataRoot(), "iTerminal");

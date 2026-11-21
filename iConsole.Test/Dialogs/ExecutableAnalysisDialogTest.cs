@@ -3,6 +3,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Executables;
 using iConsole.Services;
+using iConsole.Services.Disassembly;
 
 namespace iConsole.Test.Dialogs;
 
@@ -39,7 +40,7 @@ public class ExecutableAnalysisDialogTest
     };
 
     private static ExecutableAnalysisDialog Create(FakeAnalyzer analyzer) =>
-        new(analyzer, new ThemeService()) { Url = new Url("file:///usr/bin/sample") };
+        new(analyzer, new ExecutableDisassembler(), new ThemeService()) { Url = new Url("file:///usr/bin/sample") };
 
     private static async Task LandAsync(ExecutableAnalysisDialog dialog)
     {
@@ -192,7 +193,7 @@ public class ExecutableAnalysisDialogTest
     public async Task WithoutAUrl_SaysThereIsNothingToShow()
     {
         var analyzer = new FakeAnalyzer();
-        var dialog = new ExecutableAnalysisDialog(analyzer, new ThemeService());
+        var dialog = new ExecutableAnalysisDialog(analyzer, new ExecutableDisassembler(), new ThemeService());
 
         await dialog.OnInitializeAsync();
 

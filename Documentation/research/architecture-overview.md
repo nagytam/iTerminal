@@ -9,19 +9,12 @@ Reviewed on 2026-11-21, scope "Dependencies and packages", branch `promotion-sur
 **Summary**
 
 - No package has a known vulnerability (direct or transitive), and every project targets `net11.0`. Only one package is deprecated (`imobiledevice-net`, finding 4).
-- The biggest structural risk is that `Svg.Skia` is referenced at 3.0.0 in `iConsole` and 5.2.3 in `iTerminal.Core`: `iConsole`'s SVG code is compiled and tested against one major version and ships with another, and its catch-all hides a failure (finding 1).
+- The biggest structural risk was that `Svg.Skia` was referenced at 3.0.0 in `iConsole` and 5.2.3 in `iTerminal.Core` (finding 1, now resolved with finding 8, which moved the format packages to `iConsole.Formats`).
 - The releases ship about 40 third-party assemblies, some under LGPL-3.0-or-later and MPL-2.0, with no notice file, and the packaging documents still say the repository has no licence (finding 2).
 - Versions are written by hand in up to seven project files each, with no Central Package Management, lock files or audit gate (findings 5 and 6). The `Svg.Skia` split is the cost of that.
 - Strong parts: the Playwright driver is kept out of every package and installed against the exact library version with a NuGet SHA-512 check; the Whisper model is pinned by URL, size and hash; every GitHub download refuses an asset without a digest; and the Linux dependency lists are owned by the project rather than the packaging tool.
 
 **Findings**
-
-1. **`Svg.Skia` is at two major versions, so `iConsole`'s SVG rendering is tested against a stack that is never shipped** — **High**, kind: dependency, consistency.
-   - **Where:** [iConsole/iConsole.csproj:26](../../iConsole/iConsole.csproj) (`Svg.Skia` 3.0.0), [iTerminal.Core/iTerminal.Core.csproj:49](../../iTerminal.Core/iTerminal.Core.csproj) (`Svg.Skia` 5.2.3). Users: [iConsole/Services/FileToTextConverterService.cs:808](../../iConsole/Services/FileToTextConverterService.cs) (`RenderSvg`, compiled against 3.0.0) and [iTerminal.Core/Video/SvgVideoDecoder.cs:2](../../iTerminal.Core/Video/SvgVideoDecoder.cs) (5.2.3). Tests: `iConsole.Test/Services/SvgRenderingTest.cs` (resolves 3.0.0) and `iTerminal.Core.Test/Video/SvgVideoDecoderTest.cs` (resolves 5.2.3).
-   - **Problem:** NuGet picks the nearest reference, so the app and `iTerminal.Core.Test` run `RenderSvg` on `Svg.Skia` 5.2.3 with `HarfBuzzSharp` 14.2.0, while `iConsole`, `iConsole.Test` and both input plug-ins resolve 3.0.0, which pulls `SkiaSharp.HarfBuzz` 3.116.1 and `HarfBuzzSharp` 8.3.0.1 (built for SkiaSharp 3) next to SkiaSharp 4.156.0, and has no Linux HarfBuzz native asset. `RenderSvg` catches every exception except `OutOfMemoryException` ([FileToTextConverterService.cs:833](../../iConsole/Services/FileToTextConverterService.cs)), so a missing member at run time would quietly turn the F3 SVG view into plain text, and the only tests of that method run against the other version. This breaks the "one problem, one solution" consistency principle and makes the shipped path untested. Whether 5.2.3 still has every member `RenderSvg` calls was not checked: **unverified**.
-   - **Improvement:** move the single `Svg.Skia` reference to `iConsole` at 5.2.3 (where the lower layer needs it), and remove it from `iTerminal.Core`, which then gets it transitively like SkiaSharp. If `iConsole` should not carry it (finding 8), move `RenderSvg` up instead; either way one project owns the version.
-   - **Effort:** S.
-   - **Risk of the change:** a source break in `RenderSvg` if the 5.x API differs; the build shows it, and `SvgRenderingTest`, `SvgVideoDecoderTest` and the F3 image viewer tests in `iTerminal.Test` catch a behaviour change. `iConsole` is not packed as a NuGet package (no `PackageId`, not packable by any workflow), and no project outside this solution was found that references it, so no outside caller is affected.
 
 2. **The releases ship third-party code under notice-requiring licences without any notice file** — **Medium**, kind: dependency, documentation.
    - **Where:** the licence fields of the cached packages (`nuspec`): `SMBLibrary` 1.5.8.1 LGPL-3.0-or-later, `OpenMcdf` 3.3.0 MPL-2.0, `PdfPig` 0.1.16 and `Serilog.Sinks.File` Apache-2.0, `Tomlyn` BSD-2-Clause, `imobiledevice-net` 1.3.17 a licence URL only (its native `libimobiledevice` files are LGPL), most others MIT. Release artifacts: [iTerminal.Installer/Package.wxs:37](../../iTerminal.Installer/Package.wxs) (licence page skipped because "the repository has no licence text"), [build-and-packaging.md:12](../architecture/build-and-packaging.md) and `:34` (RPM licence field "iterminal License"), while [LICENSE](../../LICENSE) is an MIT licence present since the first public commit. No `THIRD-PARTY-NOTICES` or similar file exists in the repository or the publish output.
@@ -64,13 +57,6 @@ Reviewed on 2026-11-21, scope "Dependencies and packages", branch `promotion-sur
    - **Improvement:** give `OllamaRuntimeDependency` and `PowerShellRuntimeDependency` a pinned default (version plus the SHA-256 of each platform asset, verified once by a real download, as for Whisper) installed by default, and keep "newer on the same line" as the offered update that the user accepts. Put the pins of all four downloaded dependencies in one internal `RuntimeDependencyPins` class, so a release note can list them and a test can check each pin has a hash for every platform asset.
    - **Effort:** M.
    - **Risk of the change:** a wrong pinned hash refuses the install; `VerifiedDownload` already deletes a mismatch. The `*RuntimeDependencyTest` classes in `iTerminal.Core.Test` fake the feeds and cover the line rule; the end-to-end suite replaces the service with `SandboxServices.Dependencies`, so it does not reach the change.
-
-8. **`iConsole` carries eleven file-format packages for eleven of its 543 source files** — **Medium**, kind: layering, coupling.
-   - **Where:** [iConsole/iConsole.csproj:16](../../iConsole/iConsole.csproj) to `:29`. The users are `Pdf/PdfSignatureReader.cs`, `Photoshop/PsdDocument.cs`, `Services/AccessDatabaseTextReader.cs`, `Services/Disassembly/NativeDisassembler.cs`, `Services/FileToTextConverterService.cs` (1 163 lines), `Services/HtmlTextExtractor.cs`, `Services/LegacyOfficeTextRenderer.cs`, `Services/OfficeTextRenderer.cs`, `Services/OutlookMessageReader.cs`, `Toml/TomlDocumentReader.cs` and `Yaml/YamlDocumentReader.cs`. `iTerminal.Core` uses SkiaSharp in nine files with no reference of its own.
-   - **Problem:** every project that references the UI framework, including both input plug-ins and their tests, restores and copies SkiaSharp with its native assets, `Svg.Skia`, HarfBuzz, OpenXml, PdfPig, Iced and the rest (the transitive list of `iConsole.Inputs.Posix` shows them). A package decision about a viewer is therefore a decision about the framework, which is how finding 1 arose. `CLAUDE.md` asks for "reusable primitives in iConsole", and format readers are reusable, so this is a cohesion question, not a rule breach. Whether it costs start-up time was not measured (profiling overview, finding 4, does not separate assembly loading): **unverified**.
-   - **Improvement:** move the eleven files and their packages into a new `iConsole.Formats` project that references `iConsole`, referenced by `iTerminal.Core` and registered from `iConsoleApplicationBuilderExtension` as today; give `iTerminal.Core` its own `SkiaSharp` reference. The public interfaces (`IFileToTextConverterService` and the readers) keep their namespaces, so callers change only their project reference. The same project is the place for the "large native packages" of an in-process model (AI overview, item 2) if that is ever adopted.
-   - **Effort:** L.
-   - **Risk of the change:** `InstantiateAllTypesTest` must still find every moved public type, so the new project must be in the scan; `iConsole.Test` needs a reference to it. Build plus all three test projects.
 
 9. **`Microsoft.FeatureManagement` is referenced and never used** — **Low**, kind: dependency.
    - **Where:** [iConsole/iConsole.csproj:21](../../iConsole/iConsole.csproj). The only feature flag is read as plain configuration: `configuration.GetValue<bool>("FeatureManagement:WindowsConsoleDriver")` in [iConsole.Inputs.Windows/Extensions/BuilderExtension.cs:27](../../iConsole.Inputs.Windows/Extensions/BuilderExtension.cs). No source file uses the `Microsoft.FeatureManagement` namespace, `AddFeatureManagement` or `IFeatureManager`.
@@ -131,6 +117,8 @@ Reviewed on 2026-11-21, scope "Dependencies and packages", branch `promotion-sur
 **Package table**
 
 "Used by" is the number of source files that use the package's namespace in non-test projects, then in test projects; "native" means the package carries native files only. "Latest" is the latest stable version on nuget.org on 2026-11-21 from `dotnet list --outdated`; a pre-release is named only where it matters.
+
+The rows for the format packages of findings 1 and 8 (`iConsole`, `Svg.Skia` under `iConsole`, and the Office, PDF, TOML, YAML, font and disassembly packages) describe the state at the review; those packages now belong to `iConsole.Formats`, and `Svg.Skia` is one reference there at 5.2.3.
 
 | Package | Project | Current | Latest | Major change | Used by (count) | Action |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -202,13 +190,14 @@ Reviewed on 2026-11-21, scope "Dependencies and packages", branch `promotion-sur
 **Suggested order**
 
 1. Quick wins, no dependencies: finding 9 (remove `Microsoft.FeatureManagement`), finding 10 (remove the unused project edge), finding 3 (stable log sink), finding 14 (`global.json`, runtime-async note), finding 15 (version defaults and page corrections).
-2. Finding 1 (one `Svg.Skia` version), the only High finding. It does not wait for finding 8: if `iConsole.Formats` is made later, the reference moves with the file.
+2. ~~Finding 1 (one `Svg.Skia` version)~~ — resolved with finding 8, see Resolved.
 3. Finding 5 (Central Package Management), then finding 6 (audit, lock files, source mapping), which is simpler once versions are central.
 4. Finding 11 (patch updates), then finding 13 (YamlDotNet) and finding 12 (Playwright, with a release), all after finding 5 so each is one line.
 5. Finding 2 (third-party notices and the project licence in the packages), before the next public release.
 6. Finding 4 (iPhone drive platform contract) and finding 7 (pinned runtime downloads), which need a decision from the maintainer first.
-7. Finding 16 (one archive path check), and finding 8 (`iConsole.Formats`), the largest change, last.
+7. Finding 16 (one archive path check). ~~Finding 8 (`iConsole.Formats`)~~ — resolved, see Resolved.
 
 ## Resolved
 
-None yet.
+- **Finding 1 (`Svg.Skia` at two major versions)** — resolved by finding 8: the one `Svg.Skia` reference is now in `iConsole.Formats` at 5.2.3, the version `iTerminal.Core` already used. `RenderSvg` compiles and passes `iConsole.Formats.Test` against it.
+- **Finding 8 (`iConsole` carries the file-format packages)** — resolved: the format readers, renderers, converter and their packages (HtmlAgilityPack, Iced, JetDatabaseReader, DocumentFormat.OpenXml, OpenMcdf, PdfPig, SkiaSharp, Svg.Skia, System.Security.Cryptography.Pkcs, Tomlyn, YamlDotNet) moved to `iConsole.Formats`, and their unit tests to `iConsole.Formats.Test`. `iConsole` keeps only the interfaces its dialogs use (`IFileToTextConverterService`, `IStructuredDocumentParser`, `IExecutableDisassembler`). The move kept the namespaces. Not moved, because the viewer dialogs in `iConsole` read those formats directly: Csv, Dbf, Har, Hdf, Parquet, Json, Xml, Markdown, Xps and Sqlite (each needs an interface per dialog before it can move).
