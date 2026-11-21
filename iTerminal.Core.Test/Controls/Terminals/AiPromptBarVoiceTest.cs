@@ -295,13 +295,15 @@ public class AiPromptBarVoiceTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task CtrlF7_IsASecondKeyForTheRecording_AndHasItsOwnHint()
+    public async Task CtrlF7_IsLeftToTheMusicPlayer_AndIsNoVoiceKey()
     {
         var (bar, _, speech, _) = Create();
 
-        Assert.IsTrue(await bar.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.F7, false, false, true)));
+        // Ctrl+F7 opens the music panels. With the bar focused it must neither record nor be taken by the bar,
+        // so the screen's music command gets it.
+        Assert.IsFalse(await bar.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.F7, false, false, true)));
 
-        Assert.AreEqual(1, speech.Toggles);
-        Assert.IsTrue(bar.GetKeyHints().Any(h => h.Key == "Ctrl+F7"));
+        Assert.AreEqual(0, speech.Toggles);
+        Assert.IsFalse(bar.GetKeyHints().Any(h => h.Key == "Ctrl+F7"));
     }
 }
