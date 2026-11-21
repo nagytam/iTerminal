@@ -1235,11 +1235,26 @@
   <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
     <value>Switch between the computer and two players</value>
   </data>
-  <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
-    <value>Pause or resume the snake, or start it moving</value>
-  </data>
   <data name="Games.Snake.Pause" xml:space="preserve">
     <value>pause</value>
+  </data>
+  <data name="Games.Snake.Start" xml:space="preserve">
+    <value>start</value>
+  </data>
+  <data name="Games.Snake.Resume" xml:space="preserve">
+    <value>resume</value>
+  </data>
+  <data name="Games.Snake.New" xml:space="preserve">
+    <value>new</value>
+  </data>
+  <data name="DialogHint.StartSnake" xml:space="preserve">
+    <value>Start the snake moving</value>
+  </data>
+  <data name="DialogHint.PauseSnake" xml:space="preserve">
+    <value>Pause the snake</value>
+  </data>
+  <data name="DialogHint.ResumeSnake" xml:space="preserve">
+    <value>Resume the snake</value>
   </data>
   <data name="Games.OnePlayer" xml:space="preserve">
     <value>one player</value>

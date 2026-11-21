@@ -201,6 +201,43 @@ public class SnakeGameTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void EnterAndItsFooterLabelFollowTheSnakesState()
+    {
+        SnakeGame game = Create();
+        Assert.AreEqual("start", game.ActivateLabel);
+
+        game.Activate();
+        Assert.AreEqual("pause", game.ActivateLabel);
+
+        game.Activate();
+        Assert.AreEqual("resume", game.ActivateLabel);
+
+        game.Activate();
+        Assert.AreEqual("pause", game.ActivateLabel);
+
+        game.Tick(TimeSpan.FromSeconds(10));
+        Assert.IsTrue(game.IsOver);
+        Assert.AreEqual("new", game.ActivateLabel);
+        Assert.AreEqual("Start the game again", game.ActivateHint);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void EnterAfterACrashStartsANewGame()
+    {
+        SnakeGame game = Create();
+        game.Activate();
+        game.Tick(TimeSpan.FromSeconds(10));
+        Assert.IsTrue(game.IsOver);
+
+        game.Activate();
+
+        Assert.IsFalse(game.IsOver);
+        Assert.AreEqual(3, game.Body.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void NewGameStartsAgainWithThreeCellsAndNotOver()
     {
         SnakeGame game = Create();
