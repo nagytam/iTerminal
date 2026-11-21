@@ -112,6 +112,23 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
         return read;
     }
 
+    /// <summary>
+    /// A stream's Read waits on ffmpeg's output, which can stall for seconds while the server is silent. Killing the process
+    /// closes that pipe, so the waiting Read returns 0 and the pump can act on the stop at once.
+    /// </summary>
+    public void Interrupt()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        lock (_processLock)
+        {
+            StopProcess();
+        }
+    }
+
     public bool TrySeek(TimeSpan position)
     {
         if (_disposed || _isStream)

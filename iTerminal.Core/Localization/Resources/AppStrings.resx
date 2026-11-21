@@ -11113,6 +11113,15 @@
   <data name="Radio.FooterBrowse" xml:space="preserve">
     <value>Enter play  Space pause  F favourite  / find  Esc close</value>
   </data>
+  <data name="Radio.FooterPlaying" xml:space="preserve">
+    <value>Enter play  Space pause  S stop  F favourite  / find  Esc close</value>
+  </data>
+  <data name="Radio.Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="Radio.NothingToStop" xml:space="preserve">
+    <value>Nothing is playing</value>
+  </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>A station needs a name</value>
   </data>

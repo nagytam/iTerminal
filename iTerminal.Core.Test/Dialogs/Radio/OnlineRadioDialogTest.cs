@@ -207,6 +207,31 @@ public class OnlineRadioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task StopConfirmsOnTheMessageRowAndTheFooterOffersStopOnlyWhileOnAir()
+    {
+        var (dialog, store, player) = Create();
+        store.Add(new RadioStation(Guid.NewGuid(), "Rock Live", Rock, "music, rock", IsFavourite: false));
+        await ShowAsync(dialog);
+        player.Setup(p => p.CurrentTrack).Returns(new MusicTrack(Rock) { Title = "Rock Live" });
+        player.Setup(p => p.State).Returns(PlaybackState.Playing);
+        AssertScreenContains(Render(dialog), "S stop", "the footer offers the stop key while a station plays");
+
+        await dialog.HandleKeyEventAsync(Char('s'));
+        player.Verify(p => p.Stop(), Times.Once);
+        AssertScreenContains(Render(dialog), "Stopped", "the stop is confirmed on the message row");
+
+        player.Setup(p => p.CurrentTrack).Returns((MusicTrack?)null);
+        player.Setup(p => p.State).Returns(PlaybackState.Stopped);
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "Not playing");
+        AssertScreenDoesNotContain(screen, "S stop", "the footer drops the stop key once nothing plays");
+
+        await dialog.HandleKeyEventAsync(Char('s'));
+        AssertScreenContains(Render(dialog), "Nothing is playing", "S with nothing playing says so instead of staying silent");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task TheStationOnAirHasAnArrowInTheListAndItsOwnLineWhilePlaying()
     {
         var (dialog, store, player) = Create();

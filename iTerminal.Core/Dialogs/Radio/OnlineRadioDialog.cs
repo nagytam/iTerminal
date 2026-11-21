@@ -264,8 +264,7 @@ public class OnlineRadioDialog : Dialog
                     ToggleView(ListView.Recent);
                     return true;
                 case 's':
-                    _player.Stop();
-                    StateHasChanged();
+                    StopPlayback();
                     return true;
             }
         }
@@ -476,6 +475,16 @@ public class OnlineRadioDialog : Dialog
         StateHasChanged();
     }
 
+    /// <summary>S: stops the station on air. The stop is confirmed on the message row, because the playback line only
+    /// changes once the pump has let go of the stream.</summary>
+    private void StopPlayback()
+    {
+        var wasPlaying = _player.State != PlaybackState.Stopped;
+        _player.Stop();
+        _notice = UiText.Get(wasPlaying ? "Radio.Stopped" : "Radio.NothingToStop", wasPlaying ? "Stopped" : "Nothing is playing");
+        StateHasChanged();
+    }
+
     /// <summary>Space: starts the highlighted station, or pauses and resumes it when it is the one on air.</summary>
     private void TogglePlayback()
     {
@@ -660,6 +669,7 @@ public class OnlineRadioDialog : Dialog
     {
         Mode.Form => UiText.Get("Radio.FooterForm", "Enter next field  Tab/Shift+Tab move  Esc discard"),
         Mode.Filter => UiText.Get("Radio.FooterFilter", "Type to filter  Enter keep  Esc clear"),
+        _ when _player.State != PlaybackState.Stopped => UiText.Get("Radio.FooterPlaying", "Enter play  Space pause  S stop  F favourite  / find  Esc close"),
         _ => UiText.Get("Radio.FooterBrowse", "Enter play  Space pause  F favourite  / find  Esc close"),
     };
 

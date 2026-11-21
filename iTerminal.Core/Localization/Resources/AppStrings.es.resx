@@ -10907,6 +10907,15 @@
   <data name="Radio.FooterBrowse" xml:space="preserve">
     <value>Intro reproducir  Espacio pausa  F favorita  / buscar  Esc cerrar</value>
   </data>
+  <data name="Radio.FooterPlaying" xml:space="preserve">
+    <value>Intro reproducir  Espacio pausa  S detener  F favorita  / buscar  Esc cerrar</value>
+  </data>
+  <data name="Radio.Stopped" xml:space="preserve">
+    <value>Detenida</value>
+  </data>
+  <data name="Radio.NothingToStop" xml:space="preserve">
+    <value>No hay nada en reproducción</value>
+  </data>
   <data name="Radio.NeedsName" xml:space="preserve">
     <value>Una emisora necesita un nombre</value>
   </data>
