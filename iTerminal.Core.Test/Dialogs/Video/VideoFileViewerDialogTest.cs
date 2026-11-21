@@ -4,8 +4,8 @@ using iConsole.Data;
 using iConsole.Display;
 using iConsole.Services;
 using iTerminal.Core.Dialogs.Video;
-using iTerminal.Core.Test.Video;
-using iTerminal.Core.Video;
+using iConsole.Test.Core.Video;
+using iConsole.Media.Video;
 using Moq;
 
 namespace iTerminal.Core.Test.Dialogs.Video;

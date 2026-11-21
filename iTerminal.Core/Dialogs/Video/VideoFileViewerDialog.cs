@@ -7,7 +7,7 @@ using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Services;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 
 namespace iTerminal.Core.Dialogs.Video;
 

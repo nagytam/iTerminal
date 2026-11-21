@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using iConsole.Media.Audio.Decoders;
 using iTerminal.Core.Services.PackageManager;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 
 namespace iTerminal.Core.Services.RuntimeDependencies;
 

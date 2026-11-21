@@ -4,7 +4,7 @@ using iTerminal.Core.Dialogs;
 using iTerminal.Core.Dialogs.ToDo;
 using iTerminal.Core.Dialogs.Video;
 using iTerminal.Core.Model.Validations;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 
 namespace iTerminal.Core.Test.Commands;
 

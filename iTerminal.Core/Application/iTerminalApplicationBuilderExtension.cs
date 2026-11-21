@@ -265,8 +265,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicMetadataService, iTerminal.Core.Services.Music.MusicMetadataService>();
         services.AddTransient<iTerminal.Core.Dialogs.Music.MusicFileViewerDialog>();
         // F3 on a video or a picture. Both decode through ffmpeg; the factory holds no state.
-        services.AddSingleton<iTerminal.Core.Video.FfmpegVideoDecoderFactory>();
-        services.AddSingleton<iTerminal.Core.Video.IVideoDecoderFactory, iTerminal.Core.Video.PictureVideoDecoderFactory>();
+        services.AddSingleton<iConsole.Media.Video.FfmpegVideoDecoderFactory>();
+        services.AddSingleton<iConsole.Media.Video.IVideoDecoderFactory, iConsole.Media.Video.PictureVideoDecoderFactory>();
         services.AddTransient<iTerminal.Core.Dialogs.Video.VideoFileViewerDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Video.ImageFileViewerDialog>();
         services.AddTransient<XmlViewerDialog>();

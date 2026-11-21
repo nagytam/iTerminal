@@ -4,7 +4,7 @@ using iTerminal.Core.Dialogs.Video;
 using iTerminal.Core.Dialogs.YouTube;
 using iTerminal.Core.Services.FileAssociations;
 using iTerminal.Core.Services.YouTube;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 

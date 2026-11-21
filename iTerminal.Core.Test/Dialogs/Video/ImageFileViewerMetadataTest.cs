@@ -2,7 +2,7 @@ using iConsole.Data;
 using iConsole.Services;
 using iTerminal.Core.Dialogs.Video;
 using iTerminal.Core.Services.Images;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 

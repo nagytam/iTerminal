@@ -16,7 +16,7 @@ using iTerminal.Core.Services.Map;
 using iTerminal.Core.Services.Music;
 using iTerminal.Core.Services.Signing;
 using iTerminal.Core.Services.Stocks;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 

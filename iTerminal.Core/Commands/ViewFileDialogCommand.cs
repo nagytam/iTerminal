@@ -23,7 +23,7 @@ using iTerminal.Core.Dialogs.Music;
 using iTerminal.Core.Dialogs.Video;
 using iTerminal.Core.Dialogs.Web;
 using iTerminal.Core.Model.Web;
-using iTerminal.Core.Video;
+using iConsole.Media.Video;
 
 namespace iTerminal.Core.Commands;
 
