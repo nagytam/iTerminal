@@ -87,4 +87,9 @@
     <DebDotNetDependencies Include="libicu76 | libicu74 | libicu72 | libicu71 | libicu70 | libicu69 | libicu67 | libicu66" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Static analysis for every non-test project. PrivateAssets keeps the analyzer out of consumers. -->
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.37.0.15768" PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>

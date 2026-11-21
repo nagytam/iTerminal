@@ -13,4 +13,9 @@
     <RootNamespace>ThirdPartyNotices</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Static analysis for every non-test project. PrivateAssets keeps the analyzer out of consumers. -->
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.37.0.15768" PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>
