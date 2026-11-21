@@ -74,3 +74,51 @@ decision), `skipped` (reason given below).
 - Is there a downloadable release for the Windows MSI and Linux packages yet? Most venues need one.
 - Which languages should the press pitch be written in? German tech press and the Hungarian community are natural fits given the six-language UI; drafts are in English only.
 - Is an email from the author's own address acceptable for press and Console.dev, or should a project address be used?
+
+## Survey 2: 2026-11-21
+
+Venues added in this run: news tip forms, a software directory, a developer link feed and a
+contributor listing. Rules were read on the venues' own pages unless marked unverified. Nothing was
+submitted, posted or sent.
+
+### 1. Venues and rules
+
+| # | Venue | Type | How to submit | Rule status | Content file | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 17 | OMG! Ubuntu | Linux news site | Tip form with a link (<https://omgubuntu.co.uk/tip>) | Verified: name and message required, link requested, no promise of coverage | [linux-news-and-software-sites.md](../Promotion/linux-news-and-software-sites.md) | prepared; user to submit |
+| 18 | LinuxLinks | Linux software directory | Suggestion form (<https://linuxlinks.com/suggest-open-source-program/>) | Verified: needs a repository, license, and a public AI-use disclosure URL when generative AI was used; projects developed largely with generative AI are unlikely to be featured. The linked AI-heavy policy page was not read | linux-news-and-software-sites.md | waiting for user (AI-disclosure decision) |
+| 19 | Changelog News | Developer link feed | Signed-in submission (<https://changelog.com/news/submit>) | Verified: excludes how-tos and commercial products; submitter must say why it is newsworthy | linux-news-and-software-sites.md | prepared; user to submit |
+| 20 | It's FOSS News | Linux news site | Contact page, news only | Unverified: the contact URL returned 404; the rule comes from a search snippet | linux-news-and-software-sites.md | waiting for user (find the current form) |
+| 21 | up-for-grabs.net | Contributor listing | Pull request adding a YAML file (<https://github.com/up-for-grabs/up-for-grabs.net/blob/gh-pages/docs/list-a-project.md>) | Verified: needs active maintainers and a list of beginner-friendly issues | [contributor-listings.md](../Promotion/contributor-listings.md) | waiting for user (labelled issues must exist) |
+
+### 2. Venues considered and skipped
+
+- **Awesome .NET Newsletter, C# Digest, Dotnet Weekly:** no submission route found in search results. A ".NET News" newsletter takes news through pull requests, but it concerns .NET Foundation projects; iTerminal is not one as far as the repository shows. Skipped.
+- **German press (Linux-Magazin, Golem, ubuntuusers, Linuxnews):** the searches returned no submission pages for them. Not drafted; heise (already venue 13) remains the only German route found. Recommend a German-language pitch only after the user confirms the language and a contact address.
+- **Hungarian sites (Linuxportal, Prohardver):** no current pages found. Only an old Linuxvilág call for programs came up, and that is archive material. Skipped. The author's own Hungarian communities are a user decision.
+- **LWN, Hackaday, Linuxiac, 9to5Linux:** no tip route found in search. Skipped until one is found.
+
+### 3. Activity log
+
+- **2026-11-21 (second run):** Read the existing overview and Promotion files first. Ran six searches
+  (Changelog, .NET newsletters, Linux news tip forms, German press, up-for-grabs and LWN/Hackaday,
+  Hungarian press) and read five venue pages. Wrote
+  `Documentation/Promotion/linux-news-and-software-sites.md` and
+  `Documentation/Promotion/contributor-listings.md`, and added both to
+  `Documentation/Promotion/README.md`. Checked the facts against `LICENSE` (MIT), the six `Strings*.resx`
+  files, `.github/workflows/release.yml` (MSI, tar.gz, deb, rpm) and `CONTRIBUTING.md` (labels,
+  AI-use paragraph). Nothing was sent, submitted, posted or signed up for.
+- **Waiting for the user:**
+  - Decide whether to submit to LinuxLinks at all: it asks about generative-AI use and may exclude
+    heavily AI-built projects. If yes, give a public disclosure URL (`<AI DISCLOSURE URL>`).
+  - Confirm that `good first issue` and `help wanted` labels exist with open issues before the
+    up-for-grabs.net pull request (`<LABEL ISSUE LIST URL>`).
+  - Provide `<RELEASE URL>`, a submitter name and email for the forms that need them, and a
+    changelog.com account.
+  - A fix noted in the marketing kit: section 7.3 says the repository has no `CONTRIBUTING.md`,
+    `SPONSORS.md` or similar; the files now exist, so that checklist is out of date (not edited).
+
+### 4. Open questions for the user
+
+- Is the AI-assisted development something to state in every announcement? Two venues now ask
+  (LinuxLinks directly, Changelog by its audience), and `CONTRIBUTING.md` already says so publicly.
