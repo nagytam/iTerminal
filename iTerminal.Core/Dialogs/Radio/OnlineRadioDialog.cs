@@ -32,8 +32,9 @@ public class OnlineRadioDialog : Dialog
     private const int UrlField = 2;
     private const int LabelWidth = 10;
     private const int GenreColumn = 16;
-    // The marker is a favourite star and a playing arrow, then a space before the name.
-    private const int MarkerWidth = 3;
+    // The marker is three columns of icons, each followed by a space: a favourite star, the on-air arrow and the genre
+    // icon. Then the name.
+    private const int MarkerWidth = 5;
 
     /// <summary>Rows the list may use: up to twelve, fewer on a short terminal, so the details, the message and the footer stay inside the frame.</summary>
     private int ListRows => Math.Clamp((int)ViewSize.Height - 2 - 8, 3, MaxListRows);
@@ -686,10 +687,11 @@ public class OnlineRadioDialog : Dialog
             count = $"{viewName}  {count}";
         }
 
+        // The column labels are quieter than the stations under them, so the list reads as the content.
         var (nameWidth, genreWidth) = Columns(iw - 2);
         var header = new string(' ', MarkerWidth) + Fit(UiText.Get("Radio.ColName", "Name"), nameWidth)
             + (genreWidth > 0 ? UiText.Get("Radio.ColGenre", "Genre") : string.Empty);
-        Put(buffer, 1, 0, iw - 2, header, colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, header, colorScheme.DisabledForeground, colorScheme.Background);
 
         if (count.Length < iw - header.Length - 3)
         {
@@ -729,9 +731,17 @@ public class OnlineRadioDialog : Dialog
 
             var station = visible[index];
             var highlighted = station.Id == selectedId;
-            var foreground = highlighted ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+            var onAir = IsOnAir(station);
+            // The station on air is green even when the highlight is elsewhere, and its arrow stays with it.
+            var foreground = highlighted
+                ? colorScheme.SelectedFocusedForeground
+                : onAir ? Color.Green : colorScheme.Foreground;
             var background = highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
-            var marker = (station.IsFavourite ? "*" : " ") + (IsOnAir(station) ? ">" : " ") + " ";
+            var marker = (station.IsFavourite ? "★" : " ")
+                + (onAir ? "▶" : " ")
+                + " "
+                + RadioGenre.IconFor(station.Genre)
+                + " ";
             var line = marker + Fit(station.Name, nameWidth) + (genreWidth > 0 ? Fit(station.Genre, genreWidth) : string.Empty);
             Put(buffer, 1, y, iw - 2, line, foreground, background);
         }
@@ -762,10 +772,20 @@ public class OnlineRadioDialog : Dialog
 
         var station = Selected;
         Put(buffer, 1, DetailsTop, iw - 2, station?.Url ?? string.Empty, colorScheme.Foreground, colorScheme.Background);
+
+        // The favourite label comes first and in yellow, so a favourite is spotted without reading the genre.
+        var x = 1;
+        if (station?.IsFavourite == true)
+        {
+            var favourite = "★ " + UiText.Get("Radio.Favourite", "Favourite") + "   ";
+            Put(buffer, x, DetailsTop + 1, iw - 2 - x, favourite, Color.Yellow, colorScheme.Background);
+            x += favourite.Length;
+        }
+
         var genre = string.IsNullOrWhiteSpace(station?.Genre)
             ? string.Empty
-            : string.Format(UiText.Get("Radio.GenreLine", "Genre: {0}"), station!.Genre);
-        Put(buffer, 1, DetailsTop + 1, iw - 2, genre, colorScheme.DisabledForeground, colorScheme.Background);
+            : RadioGenre.IconFor(station.Genre) + " " + string.Format(UiText.Get("Radio.GenreLine", "Genre: {0}"), station.Genre);
+        Put(buffer, x, DetailsTop + 1, iw - 2 - x, genre, colorScheme.DisabledForeground, colorScheme.Background);
     }
 
     private void DrawMessage(IBuffer buffer, int iw, ColorScheme colorScheme)
@@ -797,31 +817,37 @@ public class OnlineRadioDialog : Dialog
         }
     }
 
-    /// <summary>What the player is doing: the station on air with its elapsed time, or the player's error when it could not start one.</summary>
+    /// <summary>
+    /// What the player is doing, on the line above the footer: the station on air with a state mark (a green dot
+    /// while it plays, a pause bar when it is paused), its genre icon, its name and the elapsed time. The player's
+    /// error replaces it when the station could not start.
+    /// </summary>
     private void DrawPlayback(IBuffer buffer, int iw, int y, ColorScheme colorScheme)
     {
         var track = _player.CurrentTrack;
-        string line;
-        Color foreground = colorScheme.Foreground;
         if (_player.StatusIsError && !string.IsNullOrEmpty(_player.StatusMessage))
         {
-            line = _player.StatusMessage;
-            foreground = colorScheme.Error;
-        }
-        else if (track is null || _player.State == PlaybackState.Stopped)
-        {
-            line = UiText.Get("Radio.NotPlaying", "Not playing");
-            foreground = colorScheme.DisabledForeground;
-        }
-        else
-        {
-            var state = _player.State == PlaybackState.Playing
-                ? UiText.Get("Radio.OnAir", "On air")
-                : UiText.Get("Radio.Paused", "Paused");
-            line = $"{state}: {track.DisplayTitle}  {FormatElapsed(_player.Position)}";
+            Put(buffer, 1, y, iw - 2, _player.StatusMessage, colorScheme.Error, colorScheme.Background);
+            return;
         }
 
-        Put(buffer, 1, y, iw - 2, line, foreground, colorScheme.Background);
+        if (track is null || _player.State == PlaybackState.Stopped)
+        {
+            Put(buffer, 1, y, iw - 2, UiText.Get("Radio.NotPlaying", "Not playing"), colorScheme.DisabledForeground, colorScheme.Background);
+            return;
+        }
+
+        var playing = _player.State == PlaybackState.Playing;
+        var state = playing
+            ? "● " + UiText.Get("Radio.OnAir", "On air")
+            : "‖ " + UiText.Get("Radio.Paused", "Paused");
+        Put(buffer, 1, y, iw - 2, state, playing ? Color.Green : colorScheme.DisabledForeground, colorScheme.Background);
+
+        var x = 1 + state.Length + 3;
+        var station = _store.Find().FirstOrDefault(s => string.Equals(s.Url, track.Path, StringComparison.Ordinal));
+        var icon = station is null ? string.Empty : RadioGenre.IconFor(station.Genre) + " ";
+        var rest = $"{icon}{track.DisplayTitle}  {FormatElapsed(_player.Position)}";
+        Put(buffer, x, y, iw - 2 - x, rest, colorScheme.Foreground, colorScheme.Background);
     }
 
     private static string FormatElapsed(TimeSpan elapsed) =>

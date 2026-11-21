@@ -10886,6 +10886,9 @@
   <data name="Radio.NotPlaying" xml:space="preserve">
     <value>Nincs lejátszás</value>
   </data>
+  <data name="Radio.Favourite" xml:space="preserve">
+    <value>Kedvenc</value>
+  </data>
   <data name="Radio.OnAir" xml:space="preserve">
     <value>Adás</value>
   </data>

@@ -10950,6 +10950,9 @@
   <data name="Radio.NotPlaying" xml:space="preserve">
     <value>Keine Wiedergabe</value>
   </data>
+  <data name="Radio.Favourite" xml:space="preserve">
+    <value>Favorit</value>
+  </data>
   <data name="Radio.OnAir" xml:space="preserve">
     <value>Läuft</value>
   </data>
