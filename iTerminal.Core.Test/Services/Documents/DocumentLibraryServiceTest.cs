@@ -76,11 +76,9 @@ public class DocumentLibraryServiceTest
     {
         SettingsService empty = new();
 
-        string expected = OperatingSystem.IsLinux()
-            ? "/home/tamas/nata/documents"
-            : Path.Combine(
-                Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)) ?? @"C:\",
-                @"users\tamas\nata\documents");
+        string expected = OperatingSystem.IsWindows()
+            ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents");
 
         Assert.AreEqual(expected, DocumentLibraryService.ResolveDocumentsFolder(empty));
     }

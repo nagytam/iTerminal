@@ -40,12 +40,6 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
     /// </summary>
     private const int MaxScanDepth = 16;
 
-    /// <summary>
-    /// The default when no folder is configured. Kept as the literal the user asked for; on Windows
-    /// it is anchored to a drive by <see cref="ResolveDocumentsFolder"/>.
-    /// </summary>
-    public const string DefaultDocumentsFolder = @"\users\tamas\nata\documents";
-
     private readonly IDbContextFactory<iTerminalDbContext> _dbContextFactory;
     private readonly ISettingsService _settingsService;
     private readonly DocumentTextExtractorFactory _extractorFactory;
@@ -210,12 +204,10 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
 
     /// <summary>
     /// The folder the indexer walks: the <c>DocumentsFolder</c> setting when it is set, otherwise
-    /// the built-in default. Shared with the settings page so both show the same default.
+    /// the user's Documents folder. Shared with the settings page so both show the same default.
     ///
-    /// <para>On Windows the default is anchored to the system drive. A path that starts with a
-    /// separator but names no drive is resolved against whichever drive the process happens to be
-    /// running on, so left as written it would name a different folder depending on where the app
-    /// was launched from.</para>
+    /// <para>On Windows this is the Documents known folder, which follows a redirected location
+    /// (OneDrive, for example). Elsewhere it is <c>Documents</c> in the home folder.</para>
     /// </summary>
     public static string ResolveDocumentsFolder(ISettingsService? settingsService)
     {
@@ -225,13 +217,12 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
             return configured.Trim();
         }
 
-        if (OperatingSystem.IsLinux())
+        if (OperatingSystem.IsWindows())
         {
-            return "/home/tamas/nata/documents";
+            return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }
 
-        string root = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)) ?? @"C:\";
-        return Path.Combine(root, DefaultDocumentsFolder.TrimStart('\\', '/'));
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents");
     }
 
     public int DocumentCount
