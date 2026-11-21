@@ -40,7 +40,7 @@ public class MarketTerminalDialog : SplitPaneDialog
 
     private readonly IStockService _stockService;
     private readonly ConcurrentObservableCollection<StockBrowserDialog.StockRow> _rowItems = new();
-    private readonly StockBrowserDialog.StockListBox _listBox;
+    private readonly Table<StockBrowserDialog.StockRow> _listBox;
     private readonly TextBox _inputBox;
     private readonly Lock _landGate = new();
     private readonly CancellationTokenSource _cancellation = new();
@@ -74,9 +74,16 @@ public class MarketTerminalDialog : SplitPaneDialog
         _stockService = stockService;
         Title = UiText.Get("Dialog.MarketTerminal", "Market Terminal");
 
-        _listBox = new StockBrowserDialog.StockListBox(new ListBoxModel<StockBrowserDialog.StockRow>(_rowItems), themeService)
+        _listBox = new Table<StockBrowserDialog.StockRow>(_rowItems, themeService)
         {
             EmptyText = UiText.Get("Empty.Watchlist", " The watchlist is empty — add stocks in the stock browser (Alt+F7)."),
+            // The same colouring as the stock browser: a rise is green, a fall red.
+            RowForeground = row => row.Quote?.Change switch
+            {
+                > 0 => Color.Green,
+                < 0 => Color.Red,
+                _ => null,
+            },
         };
         _inputBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
@@ -125,12 +132,16 @@ public class MarketTerminalDialog : SplitPaneDialog
 
             // Interior rows, from the bottom: the status line, the security's three lines and heading, then the chart
             // (its heading and plot rows) and the monitor above it.
-            _listBox.Position = new Position(1, MonitorTopRows + 1);
-            _listBox.ViewSize = new Size(iw, Math.Max(0, ih - MonitorTopRows - SecurityBlockHeight - ChartBlockHeight));
+            // The table's first row is its heading, which the monitor heading used to be, so the entries start below it as before.
+            var monitorRows = Math.Max(0, ih - MonitorTopRows - SecurityBlockHeight - ChartBlockHeight);
+            _listBox.Position = new Position(1, MonitorTopRows);
+            _listBox.ViewSize = new Size(iw, monitorRows + 1);
+            _listBox.ScrollableModel.ViewSize = new Size(iw, monitorRows);
+            _listBox.Columns.Clear();
+            _listBox.Columns.AddRange(StockBrowserDialog.WatchlistColumns(iw));
         }
 
         base.OnInitializeLayout();
-        _listBox.UpdateModel();
     }
 
     #region Monitor
@@ -144,7 +155,6 @@ public class MarketTerminalDialog : SplitPaneDialog
             .Select(stock => new StockBrowserDialog.StockRow(stock, _stockService.GetQuote(stock.Symbol)))
             .ToList();
         _rowItems.ReplaceAll(rows);
-        _listBox.UpdateModel();
         var scrollable = _listBox.ScrollableModel;
         scrollable.CursorPosition.Y = rows.Count <= 0 ? 0 : Math.Clamp(scrollable.CursorPosition.Y, 0, rows.Count - 1);
         scrollable.ScrollPosition.Y = rows.Count <= 0 ? 0 : Math.Clamp(scrollable.ScrollPosition.Y, 0, rows.Count - 1);
@@ -154,9 +164,7 @@ public class MarketTerminalDialog : SplitPaneDialog
     /// <summary>The monitor's cursor row, or null when the monitor is empty.</summary>
     private StockBrowserDialog.StockRow? CursorRow()
     {
-        var items = _listBox.ListModel.ListItems;
-        var index = (int)_listBox.ScrollableModel.CursorPosition.Y;
-        return index >= 0 && index < items.Count ? items[index].Item : null;
+        return _listBox.SelectedRow;
     }
 
     private void SetMessage(string message)
@@ -636,19 +644,6 @@ public class MarketTerminalDialog : SplitPaneDialog
             WriteLine(buffer, ix, iy + 1, iw, FormatTape(quotes, iw, UiText.Get("Stocks.Waiting", "waiting for the first quotes…")), colorScheme.Foreground, colorScheme.Background);
         }
 
-        if (ih >= MonitorTopRows)
-        {
-            var headings = StockBrowserDialog.FormatColumns(
-                UiText.Get("Stocks.ColSymbol", "Symbol"),
-                UiText.Get("Stocks.ColName", "Name"),
-                UiText.Get("Stocks.ColPrice", "Price"),
-                UiText.Get("Stocks.ColChange", "Change"),
-                UiText.Get("Stocks.ColChangePct", "Change %"),
-                UiText.Get("Stocks.ColExchange", "Exchange"),
-                iw);
-            DrawSectionHeader(buffer, ix, iy + 2, iw, headings.TrimStart(), _listBox.IsFocused, colorScheme);
-        }
-
         if (ih >= MonitorTopRows + SecurityBlockHeight + ChartBlockHeight + 1)
         {
             DrawChart(buffer, ix, iy + ih - SecurityBlockHeight - ChartBlockHeight, iw, colorScheme);
@@ -744,14 +739,14 @@ public class MarketTerminalDialog : SplitPaneDialog
     internal string MessageForTest => _message;
     internal StockQuote? SecurityForTest => _security;
     internal TextBox InputBoxForTest => _inputBox;
-    internal StockBrowserDialog.StockListBox ListBoxForTest => _listBox;
+    internal Table<StockBrowserDialog.StockRow> ListBoxForTest => _listBox;
     internal StockQuote? CursorQuoteForTest => CursorRow()?.Quote;
     internal IReadOnlyList<StockBar> HistoryForTest => _history;
     internal bool HistoryLoadedForTest => _historyLoaded;
     internal StockHistoryRange RangeForTest => _range;
 
     /// <summary>How many monitor rows the list has actually taken up. The rows are filled on a worker, and the list is rebuilt after them.</summary>
-    internal int MonitorRowsShownForTest => _listBox.Count;
+    internal int MonitorRowsShownForTest => _rowItems.Count;
 
     #endregion
 }

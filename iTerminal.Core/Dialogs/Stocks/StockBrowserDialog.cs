@@ -96,71 +96,64 @@ public class StockBrowserDialog : SplitPaneDialog
     internal static string FormatPercent(decimal percent) =>
         (percent > 0 ? "+" : string.Empty) + percent.ToString("0.00", CultureInfo.InvariantCulture) + "%";
 
-    internal sealed class StockListBox : ListBox<StockRow>
+    /// <summary>
+    /// The watchlist's columns for a line this wide. The company name takes what the others leave; the columns on the right
+    /// go first when it would get fewer than <see cref="MinNameWidth"/> (the exchange, then the change in percent, then the change).
+    /// The price stays.
+    /// </summary>
+    internal static List<ColumnDefinition<StockRow>> WatchlistColumns(int width)
     {
-        public StockListBox(IListBoxModel<StockRow> listModel, IThemeService themeService)
-            : base(listModel, themeService)
+        int[] extra = [ChangeWidth, PercentWidth, ExchangeWidth];
+        var keep = extra.Length;
+        // Three columns plus the kept ones, with one space between each pair.
+        int Room(int kept) => width - SymbolWidth - PriceWidth - extra.Take(kept).Sum() - (2 + kept);
+        while (keep > 0 && Room(keep) < MinNameWidth)
         {
-            ListModel.TransformItem = TransformRow;
+            keep--;
         }
 
-        private ListItem<StockRow> TransformRow(StockRow row, CancellationToken cancellationToken)
+        var columns = new List<ColumnDefinition<StockRow>>
         {
-            var quote = row.Quote;
-            var text = quote is null
-                ? FormatColumns(row.Stock.Symbol, row.Stock.Name, "…", string.Empty, string.Empty, string.Empty, (int)ViewSize.Width)
-                : FormatColumns(
-                    row.Stock.Symbol,
-                    quote.Name,
-                    FormatPrice(quote.Price),
-                    FormatChange(quote.Change),
-                    FormatPercent(quote.ChangePercent),
-                    quote.Exchange,
-                    (int)ViewSize.Width);
-            return new ListItem<StockRow>(row) { Value = text, IsEnabled = true };
+            new(UiText.Get("Stocks.ColSymbol", "Symbol"), SymbolWidth, row => row.Stock.Symbol),
+            new(UiText.Get("Stocks.ColName", "Name"), Math.Max(4, Room(keep)), row => row.Quote?.Name ?? row.Stock.Name),
+            new(UiText.Get("Stocks.ColPrice", "Price"), PriceWidth, row => row.Quote is null ? "…" : FormatPrice(row.Quote.Price), TextAlignment.Right),
+        };
+        if (keep >= 1)
+        {
+            columns.Add(new(UiText.Get("Stocks.ColChange", "Change"), ChangeWidth, row => row.Quote is null ? string.Empty : FormatChange(row.Quote.Change), TextAlignment.Right));
         }
 
-        protected override Color? GetItemForegroundOverride(int index)
+        if (keep >= 2)
         {
-            if (index < 0 || index >= ListModel.ListItems.Count)
-            {
-                return null;
-            }
-
-            return ListModel.ListItems[index].Item.Quote?.Change switch
-            {
-                > 0 => Color.Green,
-                < 0 => Color.Red,
-                _ => null,
-            };
+            columns.Add(new(UiText.Get("Stocks.ColChangePct", "Change %"), PercentWidth, row => row.Quote is null ? string.Empty : FormatPercent(row.Quote.ChangePercent), TextAlignment.Right));
         }
+
+        if (keep >= 3)
+        {
+            columns.Add(new(UiText.Get("Stocks.ColExchange", "Exchange"), ExchangeWidth, row => row.Quote?.Exchange ?? string.Empty));
+        }
+
+        return columns;
     }
 
-    private sealed class HitListBox : ListBox<StockSearchHit>
-    {
-        public HitListBox(IListBoxModel<StockSearchHit> listModel, IThemeService themeService)
-            : base(listModel, themeService)
-        {
-            ListModel.TransformItem = (hit, _) => new ListItem<StockSearchHit>(hit)
-            {
-                Value = FormatHit(hit, (int)ViewSize.Width),
-                IsEnabled = true,
-            };
-        }
-    }
-
-    internal static string FormatHit(StockSearchHit hit, int width)
+    /// <summary>The add-stock hits' columns for a line this wide: the company name takes what is left after the symbol, the exchange and the type.</summary>
+    internal static List<ColumnDefinition<StockSearchHit>> HitColumns(int width)
     {
         var nameWidth = Math.Max(4, width - 1 - SymbolWidth - ExchangeWidth - 6);
-        return Cut(" " + Cut(hit.Symbol, SymbolWidth - 1).PadRight(SymbolWidth) + Cut(hit.Name, nameWidth - 1).PadRight(nameWidth)
-            + " " + Cut(hit.Exchange, ExchangeWidth).PadRight(ExchangeWidth) + " " + hit.Type, width);
+        return
+        [
+            new(UiText.Get("Stocks.ColSymbol", "Symbol"), SymbolWidth, hit => hit.Symbol),
+            new(UiText.Get("Stocks.ColCompany", "Company"), nameWidth, hit => hit.Name),
+            new(UiText.Get("Stocks.ColExchange", "Exchange"), ExchangeWidth, hit => hit.Exchange),
+            new(UiText.Get("Stocks.ColType", "Type"), Math.Max(1, width - SymbolWidth - nameWidth - ExchangeWidth - 3), hit => hit.Type),
+        ];
     }
 
     private readonly IStockService _stockService;
     private readonly ConcurrentObservableCollection<StockRow> _rowItems = new();
     private readonly ConcurrentObservableCollection<StockSearchHit> _hitItems = new();
-    private readonly StockListBox _stockListBox;
-    private readonly HitListBox _hitListBox;
+    private readonly Table<StockRow> _stockTable;
+    private readonly Table<StockSearchHit> _hitTable;
     private readonly TextBox _inputBox;
 
     private IDisposable? _watch;
@@ -184,11 +177,18 @@ public class StockBrowserDialog : SplitPaneDialog
         _stockService = stockService;
         Title = iConsole.Localization.UiText.Get("Dialog.Stocks", "Stocks");
 
-        _stockListBox = new StockListBox(new ListBoxModel<StockRow>(_rowItems), themeService)
+        _stockTable = new Table<StockRow>(_rowItems, themeService)
         {
             EmptyText = UiText.Get("Empty.Watchlist", " The watchlist is empty — press a to add a stock."),
+            // A quote that rose is green and one that fell is red, on rows that are not under the cursor.
+            RowForeground = row => row.Quote?.Change switch
+            {
+                > 0 => Color.Green,
+                < 0 => Color.Red,
+                _ => null,
+            },
         };
-        _hitListBox = new HitListBox(new ListBoxModel<StockSearchHit>(_hitItems), themeService)
+        _hitTable = new Table<StockSearchHit>(_hitItems, themeService)
         {
             EmptyText = UiText.Get("Empty.StockNothing", " Nothing found."),
         };
@@ -199,8 +199,8 @@ public class StockBrowserDialog : SplitPaneDialog
             CanFocus = false,
         };
 
-        AddControl(_stockListBox);
-        AddControl(_hitListBox);
+        AddControl(_stockTable);
+        AddControl(_hitTable);
         AddControl(_inputBox);
     }
 
@@ -232,11 +232,18 @@ public class StockBrowserDialog : SplitPaneDialog
         var ih = (int)ViewSize.Height - 2;
         if (iw > 0 && ih > 0)
         {
+            // The table's first row is its heading, so it starts one row above the first entry, as the section heading did.
             var listHeight = Math.Max(0, ih - 5);
-            _stockListBox.Position = new Position(1, 3);
-            _stockListBox.ViewSize = new Size(iw, listHeight);
-            _hitListBox.Position = new Position(1, 3);
-            _hitListBox.ViewSize = new Size(iw, listHeight);
+            _stockTable.Position = new Position(1, 2);
+            _stockTable.ViewSize = new Size(iw, listHeight + 1);
+            _stockTable.ScrollableModel.ViewSize = new Size(iw, listHeight);
+            _stockTable.Columns.Clear();
+            _stockTable.Columns.AddRange(WatchlistColumns(iw));
+            _hitTable.Position = new Position(1, 2);
+            _hitTable.ViewSize = new Size(iw, listHeight + 1);
+            _hitTable.ScrollableModel.ViewSize = new Size(iw, listHeight);
+            _hitTable.Columns.Clear();
+            _hitTable.Columns.AddRange(HitColumns(iw));
 
             _inputBox.Position = new Position(1, ih);
             _inputBox.ViewSize = new Size(iw, 1);
@@ -245,7 +252,6 @@ public class StockBrowserDialog : SplitPaneDialog
 
         // Children must have their Position/ViewSize assigned before base.OnInitializeLayout() recurses into them.
         base.OnInitializeLayout();
-        _stockListBox.UpdateModel();
     }
 
     #region Rows
@@ -259,8 +265,7 @@ public class StockBrowserDialog : SplitPaneDialog
             .Select(stock => new StockRow(stock, _stockService.GetQuote(stock.Symbol)))
             .ToList();
         _rowItems.ReplaceAll(rows);
-        _stockListBox.UpdateModel();
-        ClampCursor(_stockListBox.ScrollableModel, rows.Count);
+        ClampCursor(_stockTable.ScrollableModel, rows.Count);
         StateHasChanged();
     }
 
@@ -270,12 +275,7 @@ public class StockBrowserDialog : SplitPaneDialog
         scrollableModel.ScrollPosition.Y = count <= 0 ? 0 : Math.Clamp(scrollableModel.ScrollPosition.Y, 0, count - 1);
     }
 
-    private static T? CursorItem<T>(ListBox<T> box) where T : class
-    {
-        var items = box.ListModel.ListItems;
-        var index = (int)box.ScrollableModel.CursorPosition.Y;
-        return index >= 0 && index < items.Count ? items[index].Item : null;
-    }
+    private static T? CursorItem<T>(Table<T> table) where T : class => table.SelectedRow;
 
     private void SetMessage(string message)
     {
@@ -315,7 +315,6 @@ public class StockBrowserDialog : SplitPaneDialog
         _adding = true;
         _searchedQuery = string.Empty;
         _hitItems.ReplaceAll([]);
-        _hitListBox.UpdateModel();
         ShowInput(iConsole.Localization.UiText.Get("Stocks.FindPrompt", "Find stock by symbol or company name"));
         ApplyVisibility();
         SetMessage(string.Empty);
@@ -333,7 +332,7 @@ public class StockBrowserDialog : SplitPaneDialog
         _inputBox.ResetFocus();
         _inputBox.Text = string.Empty;
         ApplyVisibility();
-        _stockListBox.SetFocus();
+        _stockTable.SetFocus();
         StateHasChanged();
     }
 
@@ -351,8 +350,8 @@ public class StockBrowserDialog : SplitPaneDialog
         _inputBox.CanFocus = _inputActive;
         _inputBox.IsVisible = _inputActive;
         _inputBox.IsEnabled = _inputActive;
-        _hitListBox.IsVisible = _adding;
-        _stockListBox.IsVisible = !_adding;
+        _hitTable.IsVisible = _adding;
+        _stockTable.IsVisible = !_adding;
     }
 
     public override async Task ShowAsync()
@@ -385,8 +384,7 @@ public class StockBrowserDialog : SplitPaneDialog
                 var hits = await _stockService.SearchAsync(query);
                 _searchedQuery = query;
                 _hitItems.ReplaceAll([.. hits]);
-                _hitListBox.UpdateModel();
-                ClampCursor(_hitListBox.ScrollableModel, hits.Count);
+                ClampCursor(_hitTable.ScrollableModel, hits.Count);
                 SetMessage(hits.Count == 0
                     ? string.Format(UiText.Get("Stocks.NoneFound", "No stock found for \"{0}\". Enter again adds it as a symbol (exchange suffix: VOD.L)."), query)
                     : string.Format(UiText.Get("Stocks.Found", "{0} found — ↑↓ choose, Enter adds the chosen one"), hits.Count));
@@ -405,7 +403,7 @@ public class StockBrowserDialog : SplitPaneDialog
 
     private void AddChosenHit()
     {
-        if (CursorItem(_hitListBox) is { } hit)
+        if (CursorItem(_hitTable) is { } hit)
         {
             AddSymbol(hit.Symbol, hit.Name);
         }
@@ -459,7 +457,7 @@ public class StockBrowserDialog : SplitPaneDialog
 
     private void BeginRemove()
     {
-        if (CursorItem(_stockListBox) is not { } row)
+        if (CursorItem(_stockTable) is not { } row)
         {
             return;
         }
@@ -558,7 +556,7 @@ public class StockBrowserDialog : SplitPaneDialog
                 case ConsoleKey.Home:
                 case ConsoleKey.End:
                     // The query box keeps the keyboard so typing always searches; the hits are driven from here.
-                    return await _hitListBox.HandleKeyEventAsync(keyEvent);
+                    return await _hitTable.HandleKeyEventAsync(keyEvent);
                 case ConsoleKey.Tab:
                     // Nowhere else to go: Tab would leave the add flow.
                     return true;
@@ -616,10 +614,6 @@ public class StockBrowserDialog : SplitPaneDialog
         }
 
         DrawHeader(buffer, ix, iy, iw, colorScheme);
-        var headings = _adding
-            ? FormatHitHeadings(iw)
-            : FormatColumns(UiText.Get("Stocks.ColSymbol", "Symbol"), UiText.Get("Stocks.ColName", "Name"), UiText.Get("Stocks.ColPrice", "Price"), UiText.Get("Stocks.ColChange", "Change"), UiText.Get("Stocks.ColChangePct", "Change %"), UiText.Get("Stocks.ColExchange", "Exchange"), iw);
-        DrawSectionHeader(buffer, ix, iy + 1, iw, headings.TrimStart(), _adding ? _hitListBox.IsFocused : _stockListBox.IsFocused, colorScheme);
 
         if (ih >= 3)
         {
@@ -635,12 +629,6 @@ public class StockBrowserDialog : SplitPaneDialog
         {
             DrawFooter(buffer, ix, iy + ih - 1, iw, colorScheme);
         }
-    }
-
-    private static string FormatHitHeadings(int width)
-    {
-        var nameWidth = Math.Max(4, width - 1 - SymbolWidth - ExchangeWidth - 6);
-        return Cut(" " + UiText.Get("Stocks.ColSymbol", "Symbol").PadRight(SymbolWidth) + UiText.Get("Stocks.ColCompany", "Company").PadRight(nameWidth) + " " + UiText.Get("Stocks.ColExchange", "Exchange").PadRight(ExchangeWidth) + " " + UiText.Get("Stocks.ColType", "Type"), width);
     }
 
     private void DrawHeader(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
@@ -661,7 +649,7 @@ public class StockBrowserDialog : SplitPaneDialog
     private void DrawDetails(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
         var text = string.Empty;
-        if (!_adding && CursorItem(_stockListBox) is { Quote: { } quote })
+        if (!_adding && CursorItem(_stockTable) is { Quote: { } quote })
         {
             var parts = new List<string> { quote.Name };
             if (quote is { DayLow: { } dayLow, DayHigh: { } dayHigh })
@@ -733,8 +721,8 @@ public class StockBrowserDialog : SplitPaneDialog
     /// the list boxes rebuilt right after on the same worker, so a test that renders as soon as the collection
     /// is full can draw the list before it has caught up; it waits on these instead.
     /// </summary>
-    internal int StockRowsShownForTest => _stockListBox.Count;
-    internal int HitRowsShownForTest => _hitListBox.Count;
+    internal int StockRowsShownForTest => _rowItems.Count;
+    internal int HitRowsShownForTest => _hitItems.Count;
     internal IReadOnlyList<StockSearchHit> HitsForTest => [.. _hitItems.AsSnapshot()];
     internal TextBox InputBoxForTest => _inputBox;
 

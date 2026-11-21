@@ -53,10 +53,16 @@ public class PasswordManagerDialog : Dialog
     private readonly IPasswordManager _passwords;
     private readonly Lock _sync = new();
 
+    /// <summary>The entries the list shows. Only the UI thread writes it, from Reload.</summary>
+    private readonly ConcurrentObservableCollection<PasswordEntry> _rows = [];
+
+    /// <summary>
+    /// The list. Its cursor is the only cursor: the keys move it through <see cref="MoveCursor"/>, and a click or the
+    /// wheel moves it through the table itself. Only columns that hold no secret are shown; the password is in the detail line.
+    /// </summary>
+    private readonly Table<PasswordEntry> _table;
+
     private Mode _mode = Mode.Unavailable;
-    private IReadOnlyList<PasswordEntry> _list = [];
-    private int _cursor;
-    private string? _selectedId;
     private bool _reveal;
     private bool _confirmDelete;
 
@@ -80,6 +86,16 @@ public class PasswordManagerDialog : Dialog
         Title = iConsole.Localization.UiText.Get("Dialog.Passwords", "Passwords");
         _passwords = passwords;
         _strengthMeter = new StrengthMeter(themeService);
+        _table = new Table<PasswordEntry>(_rows, themeService)
+        {
+            // Two sentences, wrapped by the table to its width, as the empty list used to show them on two lines.
+            EmptyText = iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;") + " "
+                + iConsole.Localization.UiText.Get("Passwords.NothingSaved2", "network and mail passwords appear here as they are saved."),
+        };
+        _table.Columns.Add(new ColumnDefinition<PasswordEntry>(iConsole.Localization.UiText.Get("Passwords.ColCategory", "Category"), 10, entry => Clip(entry.Category.ToString(), 10)));
+        _table.Columns.Add(new ColumnDefinition<PasswordEntry>(iConsole.Localization.UiText.Get("Passwords.ColTitle", "Title"), 30, entry => Clip(entry.Title, 30)));
+        _table.Columns.Add(new ColumnDefinition<PasswordEntry>(iConsole.Localization.UiText.Get("Passwords.ColUsername", "Username"), 24, entry => entry.Username));
+        AddControl(_table);
     }
 
     public override async Task ShowAsync()
@@ -90,16 +106,25 @@ public class PasswordManagerDialog : Dialog
             _confirmDelete = false;
             if (!_passwords.IsUnlocked && !_passwords.Unlock())
             {
-                _mode = Mode.Unavailable;
+                SetMode(Mode.Unavailable);
             }
             else if (_mode == Mode.Unavailable)
             {
-                _mode = Mode.List;
+                SetMode(Mode.List);
                 Reload();
             }
         }
 
         await base.ShowAsync();
+
+        // ShowAsync makes every child visible, so the list is hidden again here when another mode is on.
+        SyncListVisibility();
+
+        // The list was read before the dialog had its size, so the cursor is placed again now that the view has one.
+        lock (_sync)
+        {
+            SetCursor(Cursor);
+        }
     }
 
     public override void OnInitializeLayout()
@@ -110,7 +135,26 @@ public class PasswordManagerDialog : Dialog
         }
 
         base.OnInitializeLayout();
+
+        // The list sits under the count line and the header, and has the rows the dialog height leaves room for.
+        _table.Position = new Position(1, 2);
+        _table.ViewSize = new Size(Math.Max(0, ViewSize.Width - 4), ListRows + 1);
+        _table.ScrollableModel.ViewSize = new Size(_table.ViewSize.Width, ListRows);
     }
+
+    /// <summary>Changes the mode and shows the list only while it is the mode on screen.</summary>
+    private void SetMode(Mode mode)
+    {
+        _mode = mode;
+        SyncListVisibility();
+    }
+
+    private void SyncListVisibility() => _table.IsVisible = _mode == Mode.List;
+
+    /// <summary>The entry under the cursor, or null when the list is empty.</summary>
+    private PasswordEntry? Selected => _table.SelectedRow;
+
+    private int Cursor => _table.CursorRow;
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
@@ -223,7 +267,7 @@ public class PasswordManagerDialog : Dialog
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Escape)
         {
-            _mode = Mode.List;
+            SetMode(Mode.List);
             SetStatus(string.Empty, false);
             StateHasChanged();
             return true;
@@ -344,51 +388,54 @@ public class PasswordManagerDialog : Dialog
 
     #region Actions
 
-    private PasswordEntry? Selected => _list.FirstOrDefault(e => e.Id == _selectedId) ?? _list.FirstOrDefault();
-
-    private void Reload()
+    /// <summary>
+    /// Reads the list again. The entry with <paramref name="keepId"/> is highlighted when it is there; otherwise the
+    /// cursor keeps its row, clamped to the list.
+    /// </summary>
+    private void Reload(string? keepId = null)
     {
-        _list = _passwords.List();
-        var index = _list.ToList().FindIndex(e => e.Id == _selectedId);
-        _cursor = index >= 0 ? index : Math.Clamp(_cursor, 0, Math.Max(0, _list.Count - 1));
-        _selectedId = _list.ElementAtOrDefault(_cursor)?.Id;
+        var cursor = Cursor;
+        var entries = _passwords.List();
+        _rows.ReplaceAll(entries.ToList());
+        var index = keepId is null ? -1 : entries.ToList().FindIndex(e => e.Id == keepId);
+        SetCursor(index >= 0 ? index : Math.Clamp(cursor, 0, Math.Max(0, entries.Count - 1)));
+    }
+
+    private void SetCursor(int index)
+    {
+        _table.ScrollableModel.CursorPosition.Y = Math.Clamp(index, 0, Math.Max(0, _rows.Count - 1));
+        _table.ScrollableModel.ScrollToVisible();
     }
 
     /// <summary>
-    /// The wheel moves the highlight three entries; a click highlights the entry under the pointer. Only the list
-    /// answers, and not while "delete?" is on screen.
+    /// The wheel and a click are the table's own (three rows a notch, a click highlights the row under the pointer, and a
+    /// second click on the highlighted row opens nothing, as before). While "delete?" is on screen the list does not answer.
     /// </summary>
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
-        if (_mode == Mode.List && !_confirmDelete && _list.Count > 0)
+        if (_mode == Mode.List && _confirmDelete)
         {
-            if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
-            {
-                return MoveCursor(mouseEvent.WheelDelta > 0 ? -3 : 3);
-            }
-
-            if (mouseEvent.LeftClicked)
-            {
-                long row = mouseEvent.Position.Y - (AbsolutePosition.Y + 3);
-                long column = mouseEvent.Position.X - (AbsolutePosition.X + 2);
-                int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
-                if (row >= 0 && row < ListRows && column >= 0 && column < ViewSize.Width - 4 && first + (int)row < _list.Count)
-                {
-                    return MoveCursor(first + (int)row - _cursor);
-                }
-            }
+            return true;
         }
 
-        return await base.HandleMouseEventAsync(mouseEvent);
+        var before = Cursor;
+        var handled = await base.HandleMouseEventAsync(mouseEvent);
+        if (_mode == Mode.List && Cursor != before)
+        {
+            // A new highlight hides the password again, as a keyboard move does.
+            _reveal = false;
+            StateHasChanged();
+        }
+
+        return handled;
     }
 
     private bool MoveCursor(int delta)
     {
         _confirmDelete = false;
-        if (_list.Count > 0)
+        if (_rows.Count > 0)
         {
-            _cursor = Math.Clamp(_cursor + delta, 0, _list.Count - 1);
-            _selectedId = _list[_cursor].Id;
+            SetCursor(Cursor + delta);
             _reveal = false;
         }
 
@@ -408,7 +455,7 @@ public class PasswordManagerDialog : Dialog
             new Field("Notes", FieldKind.Text, entry?.Notes ?? string.Empty),
         ];
         _field = 0;
-        _mode = Mode.Edit;
+        SetMode(Mode.Edit);
         _reveal = false;
         SetStatus(entry is null ? Say("PasswordManager.Status.NewEntry", "A new saved password. Ctrl+S saves it, Esc goes back.") : Say("PasswordManager.Status.Editing", "Ctrl+S saves, Ctrl+R shows the password, Esc goes back."), false);
         StateHasChanged();
@@ -436,9 +483,8 @@ public class PasswordManagerDialog : Dialog
                 Password = _fields[3].Text,
                 Notes = _fields[4].Text,
             });
-            _selectedId = _editingId;
-            _mode = Mode.List;
-            Reload();
+            SetMode(Mode.List);
+            Reload(_editingId);
             SetStatus(Say("PasswordManager.Status.Saved", "Saved \"{0}\".", title), false);
         }
         catch (InvalidOperationException exception)
@@ -551,47 +597,8 @@ public class PasswordManagerDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Passwords.ListHeader", "{0} saved  ·  unlocked"), _list.Count), colorScheme.Foreground, colorScheme.Background);
-        Put(buffer, 1, 1, iw - 2, "  " + UiText.Get("Passwords.ColCategory", "Category").PadRight(10) + "  " + UiText.Get("Passwords.ColTitle", "Title").PadRight(30) + "  " + UiText.Get("Passwords.ColUsername", "Username"), colorScheme.DisabledForeground, colorScheme.Background);
-        var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
-        for (var i = 0; i < ListRows; i++)
-        {
-            var index = first + i;
-            var y = 2 + i;
-            if (index >= _list.Count)
-            {
-                Put(buffer, 1, y, iw - 2, string.Empty, colorScheme.Foreground, colorScheme.Background);
-                continue;
-            }
-
-            var entry = _list[index];
-            var highlighted = index == _cursor;
-            var line = $"{Clip(entry.Category.ToString(), 10),-10}  {Clip(entry.Title, 30),-30}  {entry.Username}";
-            Put(buffer, 1, y, iw - 2, (highlighted ? "> " : "  ") + line,
-                highlighted ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground,
-                highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background);
-        }
-
-        if (_list.Count == 0)
-        {
-            // After the rows: they blank every row they do not fill, and used to paint this message away.
-            // Two lines of one message, each wrapped on its own: on a wide dialog they stay two lines, and on a narrow terminal neither is cut off.
-            var emptyRow = 2;
-            foreach (var text in new[]
-            {
-                iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;"),
-                iConsole.Localization.UiText.Get("Passwords.NothingSaved2", "network and mail passwords appear here as they are saved."),
-            })
-            {
-                foreach (var part in text.WrapWords(iw - 2))
-                {
-                    if (emptyRow - 2 < ListRows)
-                    {
-                        Put(buffer, 1, emptyRow++, iw - 2, part, colorScheme.DisabledForeground, colorScheme.Background);
-                    }
-                }
-            }
-        }
+        // The count line; the table below paints its own header, rows and empty text over its whole rectangle.
+        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Passwords.ListHeader", "{0} saved  ·  unlocked"), _rows.Count), colorScheme.Foreground, colorScheme.Background);
 
         var selected = Selected;
         if (selected is not null)
@@ -658,8 +665,11 @@ public class PasswordManagerDialog : Dialog
 
     internal string ModeForTest { get { lock (_sync) return _mode.ToString(); } }
     internal string StatusForTest { get { lock (_sync) return _status; } }
-    internal int CursorForTest { get { lock (_sync) return _cursor; } }
-    internal int ListCountForTest { get { lock (_sync) return _list.Count; } }
+    internal int CursorForTest { get { lock (_sync) return Cursor; } }
+    internal int ListCountForTest { get { lock (_sync) return _rows.Count; } }
+
+    /// <summary>The list, so a test can draw it and read back its rows.</summary>
+    internal Table<PasswordEntry> TableForTest => _table;
     internal PasswordStrength StrengthForTest => _strengthMeter.Strength;
     internal bool RevealForTest { get { lock (_sync) return _reveal; } }
     internal string FieldForTest(string label) { lock (_sync) return _fields.First(f => f.Label == label).Text; }

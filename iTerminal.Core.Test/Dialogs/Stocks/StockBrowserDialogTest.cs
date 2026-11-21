@@ -1,8 +1,10 @@
-﻿using iConsole.Services;
+﻿using iConsole.Display;
+using iConsole.Services;
 using iTerminal.Core.Dialogs.Stocks;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Stocks;
 using Moq;
+using System.Linq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Stocks;
@@ -98,6 +100,35 @@ public class StockBrowserDialogTest
         AssertScreenContains(screen, "-10.00%");
         AssertScreenContains(screen, "live, updated");
         dialog.Close();
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheWatchlistTable_ColoursARiseGreenAndAFallRed_ButNotTheCursorRow()
+    {
+        var (dialog, _, _) = Create();
+        await ShowAsync(dialog);
+        await QuotesLandedAsync(dialog);
+
+        var screen = Render(dialog);
+
+        // MSFT rose by 10 and TSLA fell by 10 in the fake quotes; the first row is under the cursor and keeps the selection colours.
+        Assert.AreEqual(Color.Green, screen.CellOf("MSFT").ForegroundColor);
+        Assert.AreEqual(Color.Red, screen.CellOf("TSLA").ForegroundColor);
+        Assert.AreNotEqual(Color.Green, screen.CellOf("AAPL").ForegroundColor);
+        dialog.Close();
+    }
+
+    [TestMethod]
+    public void TheWatchlistColumns_DropTheExchangeFirstOnANarrowLine()
+    {
+        var wide = StockBrowserDialog.WatchlistColumns(110).Select(column => column.Header).ToList();
+        var narrow = StockBrowserDialog.WatchlistColumns(45).Select(column => column.Header).ToList();
+
+        CollectionAssert.Contains(wide, "Exchange");
+        CollectionAssert.DoesNotContain(narrow, "Exchange");
+        CollectionAssert.Contains(narrow, "Name");
+        CollectionAssert.Contains(narrow, "Price");
     }
 
     [Timeout(60_000)]
