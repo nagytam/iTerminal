@@ -10539,7 +10539,7 @@
     <value>Az alatta lévő mentett FTP- vagy SFTP-kapcsolat megnyitása, a saját mappájában.</value>
   </data>
   <data name="FolderSelector.Remote.Empty" xml:space="preserve">
-    <value> Nincs mentett FTP- vagy SFTP-kapcsolat. Egyet a Távoli kapcsolatok (Alt+F2) ablakban adhat hozzá.</value>
+    <value> Nincs mentett FTP- vagy SFTP-kiszolgáló. Az N új hozzáadásához.</value>
   </data>
   <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
     <value>Az itt felsorolt kapcsolatok hozzáadása és szerkesztése a Távoli kapcsolatok ablakban.</value>
@@ -11320,6 +11320,66 @@
   </data>
   <data name="Wipe.What" xml:space="preserve">
     <value>{0} fájl, {1}</value>
+  </data>
+  <data name="Dialog.AddServer" xml:space="preserve">
+    <value>Kiszolgáló hozzáadása</value>
+  </data>
+  <data name="AddServer.Type.Ftp" xml:space="preserve">
+    <value>FTP</value>
+  </data>
+  <data name="AddServer.Type.Sftp" xml:space="preserve">
+    <value>SFTP (SSH)</value>
+  </data>
+  <data name="AddServer.Host" xml:space="preserve">
+    <value>Gépnév: </value>
+  </data>
+  <data name="AddServer.Port" xml:space="preserve">
+    <value>Port: </value>
+  </data>
+  <data name="AddServer.User" xml:space="preserve">
+    <value>Felhasználó: </value>
+  </data>
+  <data name="AddServer.Password" xml:space="preserve">
+    <value>Jelszó: </value>
+  </data>
+  <data name="AddServer.Folder" xml:space="preserve">
+    <value>Mappa: </value>
+  </data>
+  <data name="AddServer.Name" xml:space="preserve">
+    <value>Név: </value>
+  </data>
+  <data name="AddServer.PortDefault" xml:space="preserve">
+    <value>alapértelmezett {0}</value>
+  </data>
+  <data name="AddServer.Hint.Ftp" xml:space="preserve">
+    <value>FTP: jelszó nélkül névtelenül jelentkezik be; a jelszó a jelszótárolóba kerül.</value>
+  </data>
+  <data name="AddServer.Hint.Sftp" xml:space="preserve">
+    <value>SFTP: 22-es port; jelszó nélkül a kulcs vagy az SSH-ügynök él; a jelszó a jelszótárolóba kerül.</value>
+  </data>
+  <data name="AddServer.HostNeeded" xml:space="preserve">
+    <value>Előbb írja be a gépnevet vagy az IP-címet.</value>
+  </data>
+  <data name="AddServer.Button.Add" xml:space="preserve">
+    <value>Hozzáadás és megnyitás</value>
+  </data>
+  <data name="AddServer.Hint.Page" xml:space="preserve">
+    <value>FTP- vagy SFTP-kiszolgáló hozzáadása és megnyitása.</value>
+  </data>
+  <data name="FolderSelector.Remote.New" xml:space="preserve">
+    <value>Új kiszolgáló…</value>
+  </data>
+  <data name="CmdTitle.c2ee50f7" xml:space="preserve">
+    <value>Új kiszolgáló</value>
+  </data>
+  <data name="CmdTitle.b37158e7" xml:space="preserve">
+    <value>Hozzáadás és megnyitás</value>
+  </data>
+  <data name="CmdDesc.bd936c94" xml:space="preserve">
+    <value>FTP- vagy SFTP-kiszolgáló hozzáadása és megnyitása.</value>
+  </data>
+  <data name="CmdDesc.2489e3b7" xml:space="preserve">
+    <value>A kiszolgáló mentése és megnyitása a panelben.</value>
   </data>
   <data name="Process.Column.Name" xml:space="preserve">
     <value>Név</value>

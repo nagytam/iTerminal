@@ -82,16 +82,19 @@ public sealed class RemoteConnectionService(
             {
                 saved.Secure = false;
                 saved.RemotePath = null;
-                if (connection.HasSavedCredential || networkProfiles?.Get(saved.Id) is not null)
-                {
-                    // The entry used to be an FTP or WebDAV one: its login goes with it.
-                    RemoveLogin(saved.Id);
-                }
-
-                saved.HasSavedCredential = false;
                 if (saved.Protocol == RemoteProtocol.Ssh)
                 {
-                    SaveSshProfile(saved);
+                    SaveSshProfile(saved, password);
+                }
+                else
+                {
+                    if (connection.HasSavedCredential || networkProfiles?.Get(saved.Id) is not null)
+                    {
+                        // The entry used to be an FTP or WebDAV one: its login goes with it.
+                        RemoveLogin(saved.Id);
+                    }
+
+                    saved.HasSavedCredential = false;
                 }
             }
 
@@ -118,19 +121,7 @@ public sealed class RemoteConnectionService(
     {
         if (!string.IsNullOrEmpty(password))
         {
-            if (passwordManager is null || !(passwordManager.IsUnlocked || passwordManager.Unlock()))
-            {
-                throw new InvalidOperationException("The password manager could not be opened, so the password was not saved.");
-            }
-
-            passwordManager.Save(new PasswordEntry
-            {
-                Id = saved.Id,
-                Title = $"{(saved.Protocol == RemoteProtocol.Ftp ? "FTP" : "WebDAV")} {saved.Username}@{saved.DriveHost}",
-                Username = saved.Username,
-                Category = PasswordCategory.Network,
-                Password = password,
-            });
+            SaveSecret(saved, saved.Protocol == RemoteProtocol.Ftp ? "FTP" : "WebDAV", password);
             saved.HasSavedCredential = true;
         }
 
@@ -155,15 +146,54 @@ public sealed class RemoteConnectionService(
     }
 
     /// <summary>
-    /// An SSH entry is also a network profile, so the SFTP drive finds its key under the same host and user it
+    /// Writes the password manager entry the drives look a login up in. A locked password manager refuses.
+    /// </summary>
+    private void SaveSecret(RemoteConnection saved, string kind, string password)
+    {
+        if (passwordManager is null || !(passwordManager.IsUnlocked || passwordManager.Unlock()))
+        {
+            throw new InvalidOperationException("The password manager could not be opened, so the password was not saved.");
+        }
+
+        passwordManager.Save(new PasswordEntry
+        {
+            Id = saved.Id,
+            Title = $"{kind} {saved.Username}@{saved.DriveHost}",
+            Username = saved.Username,
+            Category = PasswordCategory.Network,
+            Password = password,
+        });
+    }
+
+    /// <summary>
+    /// An SSH entry is also a network profile, so the SFTP drive finds its login under the same host and user it
     /// connects with. A non-default port gets none: the SSH drive has no port to connect on, so the entry is
     /// left to the shell alone rather than listed for an SFTP connection that cannot be made.
+    /// <para>
+    /// A password, when one is given, is kept for the SFTP drive (the shell still asks for its own). Saving again
+    /// without one keeps the password already saved; otherwise the profile authenticates with the key or the agent.
+    /// </para>
     /// </summary>
-    private void SaveSshProfile(RemoteConnection saved)
+    private void SaveSshProfile(RemoteConnection saved, string? password)
     {
+        var previous = networkProfiles?.Get(saved.Id);
+        if (previous is not null && previous.Protocol != NetworkProtocol.Ssh)
+        {
+            // The entry used to be an FTP or WebDAV one: its login goes with it.
+            RemoveLogin(saved.Id);
+        }
+
+        saved.HasSavedCredential = false;
         if (saved.EffectivePort != saved.DefaultPort || networkProfiles is null)
         {
             return;
+        }
+
+        var passwordAuth = !string.IsNullOrEmpty(password)
+            || previous is { SshAuthMethod: SshAuthMethod.Password, HasSavedCredential: true };
+        if (!string.IsNullOrEmpty(password))
+        {
+            SaveSecret(saved, "SSH", password);
         }
 
         networkProfiles.Save(new NetworkConnectionProfile
@@ -172,10 +202,11 @@ public sealed class RemoteConnectionService(
             Protocol = NetworkProtocol.Ssh,
             Host = saved.Host,
             Username = saved.Username,
-            SshAuthMethod = SshAuthMethod.PrivateKey,
-            PrivateKeyPath = string.IsNullOrEmpty(saved.PrivateKeyPath) ? null : saved.PrivateKeyPath,
-            HasSavedCredential = false,
+            SshAuthMethod = passwordAuth ? SshAuthMethod.Password : SshAuthMethod.PrivateKey,
+            PrivateKeyPath = passwordAuth || string.IsNullOrEmpty(saved.PrivateKeyPath) ? null : saved.PrivateKeyPath,
+            HasSavedCredential = passwordAuth,
         });
+        saved.HasSavedCredential = passwordAuth;
     }
 
     private void RemoveLogin(string id)

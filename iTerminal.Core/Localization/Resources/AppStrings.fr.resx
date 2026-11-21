@@ -10539,7 +10539,7 @@
     <value>Ouvrir la connexion FTP ou SFTP enregistrée sous le curseur, dans son dossier.</value>
   </data>
   <data name="FolderSelector.Remote.Empty" xml:space="preserve">
-    <value> Aucune connexion FTP ou SFTP enregistrée. Ajoutez-en une dans Connexions distantes (Alt+F2).</value>
+    <value> Aucun serveur FTP ou SFTP enregistré. Appuyez sur N pour en ajouter un.</value>
   </data>
   <data name="FolderSelector.Hint.RemoteConnections" xml:space="preserve">
     <value>Ajouter et modifier les connexions listées ici, dans Connexions distantes.</value>
@@ -11320,6 +11320,66 @@
   </data>
   <data name="Wipe.What" xml:space="preserve">
     <value>{0} fichier(s), {1}</value>
+  </data>
+  <data name="Dialog.AddServer" xml:space="preserve">
+    <value>Ajouter un serveur</value>
+  </data>
+  <data name="AddServer.Type.Ftp" xml:space="preserve">
+    <value>FTP</value>
+  </data>
+  <data name="AddServer.Type.Sftp" xml:space="preserve">
+    <value>SFTP (SSH)</value>
+  </data>
+  <data name="AddServer.Host" xml:space="preserve">
+    <value>Hôte : </value>
+  </data>
+  <data name="AddServer.Port" xml:space="preserve">
+    <value>Port : </value>
+  </data>
+  <data name="AddServer.User" xml:space="preserve">
+    <value>Utilisateur : </value>
+  </data>
+  <data name="AddServer.Password" xml:space="preserve">
+    <value>Mot de passe : </value>
+  </data>
+  <data name="AddServer.Folder" xml:space="preserve">
+    <value>Dossier : </value>
+  </data>
+  <data name="AddServer.Name" xml:space="preserve">
+    <value>Nom : </value>
+  </data>
+  <data name="AddServer.PortDefault" xml:space="preserve">
+    <value>par défaut {0}</value>
+  </data>
+  <data name="AddServer.Hint.Ftp" xml:space="preserve">
+    <value>FTP : sans mot de passe, la connexion est anonyme ; le mot de passe est gardé dans le coffre.</value>
+  </data>
+  <data name="AddServer.Hint.Sftp" xml:space="preserve">
+    <value>SFTP : port 22 ; sans mot de passe, la clé ou l'agent SSH sert ; le mot de passe est gardé dans le coffre.</value>
+  </data>
+  <data name="AddServer.HostNeeded" xml:space="preserve">
+    <value>Saisissez d'abord le nom d'hôte ou l'adresse IP.</value>
+  </data>
+  <data name="AddServer.Button.Add" xml:space="preserve">
+    <value>Ajouter et ouvrir</value>
+  </data>
+  <data name="AddServer.Hint.Page" xml:space="preserve">
+    <value>Ajouter un serveur FTP ou SFTP et l'ouvrir.</value>
+  </data>
+  <data name="FolderSelector.Remote.New" xml:space="preserve">
+    <value>Nouveau serveur…</value>
+  </data>
+  <data name="CmdTitle.c2ee50f7" xml:space="preserve">
+    <value>Nouveau serveur</value>
+  </data>
+  <data name="CmdTitle.b37158e7" xml:space="preserve">
+    <value>Ajouter et ouvrir</value>
+  </data>
+  <data name="CmdDesc.bd936c94" xml:space="preserve">
+    <value>Ajouter un serveur FTP ou SFTP et l'ouvrir.</value>
+  </data>
+  <data name="CmdDesc.2489e3b7" xml:space="preserve">
+    <value>Enregistrer le serveur et l'ouvrir dans le panneau.</value>
   </data>
   <data name="Process.Column.Name" xml:space="preserve">
     <value>Nom</value>
