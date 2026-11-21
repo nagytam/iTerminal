@@ -961,6 +961,9 @@
     <value>Pack the marked files and folders, or the one under the cursor, into a new or existing archive.</value>
     <comment>Pack the marked files and folders, or the one under the cursor, into a new or existing archive.</comment>
   </data>
+  <data name="CmdDesc.567c1ceb" xml:space="preserve">
+    <value>Record from the microphone to a WAV file, with an optional offline AI transcription (Whisper).</value>
+  </data>
   <data name="CmdDesc.583d4195" xml:space="preserve">
     <value>Delete the local branches merged into the main branch (asks first).</value>
   </data>
@@ -1525,6 +1528,9 @@
   </data>
   <data name="CmdTitle.31e392d1" xml:space="preserve">
     <value>Apply</value>
+  </data>
+  <data name="CmdTitle.32928a3e" xml:space="preserve">
+    <value>Voice recorder</value>
   </data>
   <data name="CmdTitle.32f256bd" xml:space="preserve">
     <value>Nine Men&apos;s Morris</value>
@@ -2641,6 +2647,9 @@
   </data>
   <data name="Dialog.VirtualMachineManager" xml:space="preserve">
     <value>Virtual machine manager</value>
+  </data>
+  <data name="Dialog.VoiceRecorder" xml:space="preserve">
+    <value>Voice recorder</value>
   </data>
   <data name="Dialog.Warning" xml:space="preserve">
     <value>Warning</value>
@@ -11088,6 +11097,78 @@
   </data>
   <data name="Voice.NoRecorder" xml:space="preserve">
     <value>Voice input needs parecord (pulseaudio-utils) or arecord (alsa-utils) to record.</value>
+  </data>
+  <data name="Voice.Recorder.Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="Voice.Recorder.Discarded" xml:space="preserve">
+    <value>Recording discarded.</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Idle" xml:space="preserve">
+    <value>Enter:record  T:AI transcription  Esc:close</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Recording" xml:space="preserve">
+    <value>Enter:stop and save  Esc:discard</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Starting" xml:space="preserve">
+    <value>Esc:close</value>
+  </data>
+  <data name="Voice.Recorder.Footer.Working" xml:space="preserve">
+    <value>Esc:cancel</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Discard" xml:space="preserve">
+    <value>Discard the recording</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Start" xml:space="preserve">
+    <value>Start recording</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Stop" xml:space="preserve">
+    <value>Stop and save</value>
+  </data>
+  <data name="Voice.Recorder.Hint.Transcription" xml:space="preserve">
+    <value>Switch the AI transcription</value>
+  </data>
+  <data name="Voice.Recorder.Idle" xml:space="preserve">
+    <value>Enter starts recording. It stops by itself after 60 seconds.</value>
+  </data>
+  <data name="Voice.Recorder.Length" xml:space="preserve">
+    <value>Length: {0}</value>
+  </data>
+  <data name="Voice.Recorder.NoModel" xml:space="preserve">
+    <value>model not installed</value>
+  </data>
+  <data name="Voice.Recorder.Recording" xml:space="preserve">
+    <value>Recording {0}.</value>
+  </data>
+  <data name="Voice.Recorder.Saved" xml:space="preserve">
+    <value>Saved: {0}</value>
+  </data>
+  <data name="Voice.Recorder.Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
+  <data name="Voice.Recorder.Starting" xml:space="preserve">
+    <value>Opening the microphone...</value>
+  </data>
+  <data name="Voice.Recorder.TooShort" xml:space="preserve">
+    <value>The recording was too short to keep.</value>
+  </data>
+  <data name="Voice.Recorder.Transcribing" xml:space="preserve">
+    <value>Transcribing...</value>
+  </data>
+  <data name="Voice.Recorder.Transcript" xml:space="preserve">
+    <value>Transcript</value>
+  </data>
+  <data name="Voice.Recorder.Transcription" xml:space="preserve">
+    <value>AI transcription: {0}</value>
+  </data>
+  <data name="Voice.Recorder.TranscriptionOff" xml:space="preserve">
+    <value>off</value>
+  </data>
+  <data name="Voice.Recorder.TranscriptionOn" xml:space="preserve">
+    <value>on</value>
   </data>
   <data name="Voice.RecorderFailed" xml:space="preserve">
     <value>The recorder could not start:</value>

@@ -735,3 +735,11 @@ F3 and F4 offer the file to plug-ins before the built-in code. `IFileViewer` and
 - **Start-up.** The plug-ins the user loaded are saved in the `LoadedPlugins` setting (a JSON array of file names) and loaded again by `PluginStartupHostedService`, which notifies once if some fail. A failed plug-in stays saved until the user unloads it.
 - **Unloading** removes the handlers at once; the assembly's memory goes when the garbage collector finds nothing referring to it, so a viewer dialog the plug-in opened keeps it until that dialog closes.
 - **Tests:** `FileHandlerRegistryTest` and `FileHandlerRegistryChangesTest` (ordering, candidates, the host, add and remove), `FilePluginDispatchTest` (F3 and F4 offering, fall-through, `CanExecute`), `PluginManagerServiceTest` (scan, load and unload of a real plug-in copied from the test assembly, saved list, failures) and `PluginManagerDialogTest`.
+
+### The voice recorder (`VoiceRecorderDialog`, Ctrl+Shift+X, `Services/Voice/`)
+Ctrl+Shift+X records from the default microphone (`IMicrophoneCaptureFactory`, the same recorder as voice input and evidence voice entries) to `Documents/iTerminal recordings/voice-yyyyMMdd-HHmmss.wav`. Enter starts and stops; a recording stops by itself at 60 seconds; Esc discards a recording that is going. **T** switches the AI transcription option: when the Whisper model is installed, the stopped recording is transcribed offline with `ISpeechRecognizer` and the text is saved beside the WAV file as a `.txt`. Transcription is off by default and nothing leaves the machine.
+
+- The WAV file is written before the model runs, so a failed or cancelled transcription keeps the recording; the problem is shown in the dialog.
+- The microphone, the disk and the model all run on background tasks; the dialog draws only its snapshot. `VoiceRecorderService.Discard` releases the device in the background, and only `Dispose` waits.
+- The dialog's height is fixed when it opens, so it reserves room for a full transcript rather than the rows present at that moment.
+- Not in the menus yet: the chord is the only entry point.
