@@ -405,7 +405,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 | Translation | `iConsole/Localization/Resources/Strings.*.resx` | No deep code knowledge; a new string needs a key in all six files |
 | File viewer / reader | F3 readers in `iConsole`, `iTerminal.Core` | Takes bytes, returns lines; easy to unit-test |
 | New drive (URL scheme) | `iTerminal.Core`, see the checklist in `CLAUDE.md` | Clear recipe, big user-visible value |
-| Game or small dialog | Tools menu, `Services/Games/` | Fun, isolated, low risk |
+| Game or small dialog | Tools menu, `iTerminal.Core.Games/` | Fun, isolated, low risk |
 | Terminal compatibility | `iConsole.Inputs.Windows` / `.Posix` | Test on WezTerm, Kitty, tmux, Windows Terminal, SSH |
 | Docs and tests | `docs/`, `*.Test` | Always useful |
 

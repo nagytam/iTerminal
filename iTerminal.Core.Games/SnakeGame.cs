@@ -1,7 +1,7 @@
 using iConsole.Display;
 using iConsole.Localization;
 
-namespace iTerminal.Core.Services.Games;
+namespace iTerminal.Core.Games;
 
 /// <summary>
 /// Snake on a 20 x 12 board. The snake starts stopped; an arrow key or Enter sets it moving, and it moves one cell per 120 ms

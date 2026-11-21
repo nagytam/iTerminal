@@ -17,6 +17,12 @@ if (launch.HelpRequested)
     return launch.ShowHelp();
 }
 
+foreach (string unknown in launch.UnknownSwitches)
+{
+    // The interface still starts: an old shortcut or script keeps working, and the warning names the switch that was not understood.
+    Console.Error.WriteLine($"iTerminal: unknown switch '{unknown}' is ignored. Run iTerminal --help for the switches.");
+}
+
 if (launch.ParentProcessId is { } parentId)
 {
     try

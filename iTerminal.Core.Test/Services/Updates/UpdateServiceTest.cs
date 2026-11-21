@@ -390,6 +390,26 @@ public class UpdateServiceTest
     }
 
     [TestMethod]
+    public void AWinGetInstallIsLeftToWinGetAndAPortableCopyStillUpdatesItself()
+    {
+        string directory = NewDirectory();
+        try
+        {
+            Directory.CreateDirectory(directory);
+            Assert.AreEqual(UpdateInstallKind.PackageManager, UpdateService.KindFor(windows: true, directory, managedByWinGet: true), "The WinGet marker makes the install WinGet's.");
+            Assert.AreEqual(UpdateInstallKind.Installer, UpdateService.KindFor(windows: true, directory, managedByWinGet: false));
+            Assert.AreEqual(UpdateInstallKind.Unsupported, UpdateService.KindFor(windows: false, directory, managedByWinGet: true), "The marker is a Windows registry value; elsewhere it means nothing.");
+
+            File.WriteAllText(Path.Combine(directory, UpdateService.PortableMarker), string.Empty);
+            Assert.AreEqual(UpdateInstallKind.PortableArchive, UpdateService.KindFor(windows: true, directory, managedByWinGet: true), "A portable copy is never WinGet's.");
+        }
+        finally
+        {
+            DeleteQuietly(directory);
+        }
+    }
+
+    [TestMethod]
     public void TheMarkerBesideTheProgramMakesAnUnzippedCopyAPortableOne()
     {
         string directory = NewDirectory();

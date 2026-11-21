@@ -10634,6 +10634,9 @@
   <data name="Update.SkipDescription" xml:space="preserve">
     <value>Ne ajánlja fel többé ezt a kiadást.</value>
   </data>
+  <data name="Update.WinGetManaged" xml:space="preserve">
+    <value>A WinGet telepítette, és ez frissíti. Futtassa: winget upgrade TamasNagy.iTerminal</value>
+  </data>
   <data name="UserGroup.Busy" xml:space="preserve">
     <value>Kis türelmet...</value>
   </data>

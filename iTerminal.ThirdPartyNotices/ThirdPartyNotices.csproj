@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Writes THIRD-PARTY-NOTICES.txt for a publish output (iTerminal/Build/ThirdPartyNotices.targets runs it after
+    Publish). A small console program rather than an inline MSBuild task: the SDK's reference set does not
+    compile an inline task that uses System.Text.Json. Not in the solution; an ordinary build never builds it.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ThirdPartyNotices</RootNamespace>
+  </PropertyGroup>
+
+</Project>

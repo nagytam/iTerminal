@@ -10840,6 +10840,9 @@
   <data name="Update.SkipDescription" xml:space="preserve">
     <value>Do not offer this release again.</value>
   </data>
+  <data name="Update.WinGetManaged" xml:space="preserve">
+    <value>Installed with WinGet, which updates it. Run: winget upgrade TamasNagy.iTerminal</value>
+  </data>
   <data name="UserGroup.Busy" xml:space="preserve">
     <value>Please wait...</value>
   </data>

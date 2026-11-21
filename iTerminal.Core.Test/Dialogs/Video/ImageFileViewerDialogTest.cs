@@ -38,10 +38,26 @@ public class ImageFileViewerDialogTest
     private static async Task<string> DrawUntilLoadedAsync(ImageFileViewerDialog dialog)
     {
         var buffer = new iConsole.Test.Core.MockBuffer(new Size(120, 40));
-        dialog.Draw(buffer);
-        await dialog.LoadTask;
-        buffer = new iConsole.Test.Core.MockBuffer(new Size(120, 40));
-        dialog.Draw(buffer);
+        try
+        {
+            dialog.Draw(buffer);
+            await dialog.LoadTask;
+            buffer = new iConsole.Test.Core.MockBuffer(new Size(120, 40));
+            dialog.Draw(buffer);
+        }
+        catch (Exception exception)
+        {
+            // Diagnostics for an intermittent NullReferenceException seen only on the Windows CI runner: the exception
+            // with its full stack trace, and the state the dialog was in. Printed to the test output, then rethrown.
+            Console.WriteLine("DIAG ImageFileViewerDialogTest: draw threw " + exception.GetType().FullName);
+            Console.WriteLine("DIAG exception: " + exception);
+            Console.WriteLine($"DIAG thread={Environment.CurrentManagedThreadId} os={Environment.OSVersion} culture={System.Globalization.CultureInfo.CurrentCulture.Name}");
+            Console.WriteLine($"DIAG FilePath='{dialog.FilePath}' Error='{dialog.Error}' Picture={(dialog.Picture is null ? "null" : "set")} ColorMode={dialog.ColorMode}");
+            Console.WriteLine($"DIAG LoadTask status={dialog.LoadTask.Status} faulted={dialog.LoadTask.IsFaulted} canceled={dialog.LoadTask.IsCanceled}");
+            Console.WriteLine($"DIAG ViewSize={dialog.ViewSize} IsVisible={dialog.IsVisible} Parent={(dialog.Parent is null ? "null" : dialog.Parent.GetType().Name)}");
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
+            throw;
+        }
         return buffer.ContentAsString;
     }
 

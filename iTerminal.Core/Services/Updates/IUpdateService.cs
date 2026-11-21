@@ -19,6 +19,12 @@ public enum UpdateInstallKind
     /// archive (zip, or tar.gz on Linux) replaces its files.
     /// </summary>
     PortableArchive,
+
+    /// <summary>
+    /// Installed by WinGet (the MSI, with the WinGet marker in the registry). WinGet owns the install and its updates,
+    /// so this copy does not install a release itself; it says to run <c>winget upgrade</c>.
+    /// </summary>
+    PackageManager,
 }
 
 /// <summary>

@@ -26,6 +26,8 @@
   <PropertyGroup>
     <Version Condition="'$(Version)' == ''">1.0.0</Version>
     <Release Condition="'$(Release)' == ''">0</Release>
+    <!-- The RPM's licence field, as an SPDX expression. The project is MIT-licensed (LICENSE). -->
+    <RpmLicense Condition="'$(RpmLicense)' == ''">MIT</RpmLicense>
     <Runtimes Condition="'$(Runtimes)' == ''">linux-x64</Runtimes>
     <AppProject>$(MSBuildProjectDirectory)\..\iTerminal\iTerminal.csproj</AppProject>
     <OutputDir>$(MSBuildProjectDirectory)\bin\Release\</OutputDir>
@@ -115,13 +117,13 @@
     <Copy SourceFiles="$(RuntimeStagingDir)$(StagedName).tar.gz" DestinationFiles="$(OutputDir)iterminal-$(Version)-$(Rid).tar.gz" />
     <Copy SourceFiles="$(RuntimeStagingDir)$(StagedName).deb" DestinationFiles="$(OutputDir)iterminal_$(Version)_$(DebArchitecture).deb" />
     <Copy SourceFiles="$(RuntimeStagingDir)$(StagedName).rpm" DestinationFiles="$(OutputDir)iterminal-$(Version)-$(Release).$(RpmArchitecture).rpm" />
-    <RpmFinisher RpmPath="$(OutputDir)iterminal-$(Version)-$(Release).$(RpmArchitecture).rpm" Requires="@(RpmRequire)" />
+    <RpmFinisher RpmPath="$(OutputDir)iterminal-$(Version)-$(Release).$(RpmArchitecture).rpm" Requires="@(RpmRequire)" License="$(RpmLicense)" />
   </Target>
 
   <!-- Finishes one RPM that is already built: -t:FinishRpm -p:RpmToFinish=path. For trying RpmFinisher.cs without rebuilding the app. -->
   <Target Name="FinishRpm">
     <Error Condition="'$(RpmToFinish)' == ''" Text="Pass -p:RpmToFinish=&lt;path to an .rpm&gt;." />
-    <RpmFinisher RpmPath="$(RpmToFinish)" Requires="@(RpmRequire)" />
+    <RpmFinisher RpmPath="$(RpmToFinish)" Requires="@(RpmRequire)" License="$(RpmLicense)" />
   </Target>
 
   <Target Name="Clean">

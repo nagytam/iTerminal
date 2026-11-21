@@ -34,6 +34,10 @@ public class RpmFinisher : Task
     /// <summary>Replaces every dependency the tool wrote other than rpmlib(...), rtld(...) and file paths.</summary>
     public ITaskItem[] Requires { get; set; }
 
+    /// <summary>The licence of the package, as an SPDX expression. The tool writes "iterminal License", which is not a licence.</summary>
+    [Required]
+    public string License { get; set; }
+
     private static readonly byte[] Magic = { 0x8e, 0xad, 0xe8, 0x01, 0, 0, 0, 0 };
     private const int LeadSize = 96;
 
@@ -41,6 +45,7 @@ public class RpmFinisher : Task
     private const int RegionSignatures = 62, RegionImmutable = 63;
     private const int RequireFlags = 1048, RequireName = 1049, RequireVersion = 1050;
     private const int PayloadDigest = 5092, PayloadDigestAlgorithm = 5093;
+    private const int LicenseTag = 1014;
     private const int SigSize = 1000, SigMd5 = 1004, SigPayloadSize = 1007, SigSha1 = 269, SigSha256 = 273;
     private const uint SenseLess = 0x02, SenseEqual = 0x08, SenseRpmlib = 1u << 24;
     private const int Sha256Algorithm = 8;
@@ -83,6 +88,8 @@ public class RpmFinisher : Task
             payloadSha256 = sha256.ComputeHash(data, headerEnd, payloadLength);
         }
 
+        header.RemoveAll(entry => entry.Tag == LicenseTag);
+        header.Add(new Entry(LicenseTag, StringType, Terminated(License), 1));
         header.RemoveAll(entry => entry.Tag == PayloadDigest || entry.Tag == PayloadDigestAlgorithm);
         header.Add(new Entry(PayloadDigest, StringArrayType, Terminated(Hex(payloadSha256)), 1));
         header.Add(new Entry(PayloadDigestAlgorithm, Int32Type, BigEndian(Sha256Algorithm), 1));

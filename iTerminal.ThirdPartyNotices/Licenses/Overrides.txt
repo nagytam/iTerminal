@@ -1,0 +1,7 @@
+# Licences for distributed packages whose nuspec states none (a licence given only by a URL, or
+# nothing). Each line: <package id> <version> <licence expression>. Checked by hand against the
+# licence file in each package's source repository when the line is added:
+#   K4os.Compression.LZ4 1.3.8: LICENSE on GitHub (MIT License, Copyright (c) 2017 Milosz Krajewski)
+#   iMobileDevice-net 1.3.17: LICENSE.txt on GitHub (GNU Lesser General Public License, version 2.1)
+K4os.Compression.LZ4 1.3.8 MIT
+iMobileDevice-net 1.3.17 LGPL-2.1
