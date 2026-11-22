@@ -14,6 +14,7 @@ public class VoiceRecorderDialogTest
     {
         public bool IsModelInstalled { get; set; } = true;
         public SpeechException? StartFails { get; set; }
+        public SpeechException? StopFails { get; set; }
         public volatile bool Discarded;
         public volatile bool Stopped;
 
@@ -28,6 +29,10 @@ public class VoiceRecorderDialogTest
         public Task<VoiceRecording?> StopAsync(bool transcribe, CancellationToken cancellationToken)
         {
             Stopped = true;
+            if (StopFails is not null)
+            {
+                return Task.FromException<VoiceRecording?>(StopFails);
+            }
             string wav = Path.Combine(Path.GetTempPath(), "voice-test.wav");
             return Task.FromResult<VoiceRecording?>(transcribe
                 ? new VoiceRecording(wav, TimeSpan.FromSeconds(2), "hello there", Path.ChangeExtension(wav, ".txt"), null)
@@ -150,6 +155,23 @@ public class VoiceRecorderDialogTest
 
         Assert.IsFalse(dialog.IsRecording);
         AssertScreenContains(Render(dialog), "No microphone here.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ARecorderThatFailsWhileStoppingSaysWhy()
+    {
+        var dialog = NewDialog(new FakeRecorder { StopFails = new SpeechException("The microphone was revoked.") });
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.RunTask;
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.RunTask;
+
+        Assert.IsFalse(dialog.IsRecording);
+        Assert.IsNull(dialog.LastRecording);
+        AssertScreenContains(Render(dialog), "The microphone was revoked.");
     }
 
     [TestMethod]
