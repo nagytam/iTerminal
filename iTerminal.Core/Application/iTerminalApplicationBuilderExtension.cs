@@ -388,7 +388,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.TimerWakeupProbe>();
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IPerformanceBenchmarkService, iTerminal.Core.Services.Benchmark.PerformanceBenchmarkService>();
         services.AddTransient<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>();
-        // Ctrl+Shift+X: the voice recorder. The recordings go to Documents\iTerminal recordings; the Whisper model is optional (the AI transcription option).
+        // The voice recorder has no hot key; Tools > Office opens it. The recordings go to Documents\iTerminal recordings; the Whisper model is optional (the AI transcription option).
         services.AddSingleton<iTerminal.Core.Services.Voice.IVoiceRecorderService>(sp => new iTerminal.Core.Services.Voice.VoiceRecorderService(
             sp.GetRequiredService<iConsole.Media.Speech.IMicrophoneCaptureFactory>(),
             sp.GetRequiredService<iConsole.Media.Speech.ISpeechRecognizer>(),

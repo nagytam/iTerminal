@@ -13,7 +13,7 @@ using System.Globalization;
 namespace iTerminal.Core.Dialogs.Voice;
 
 /// <summary>
-/// Ctrl+Shift+X: records from the default microphone, saves the recording as a WAV file in the recordings folder, and, when the
+/// Opened from Tools > Office or the command palette (it has no hot key): records from the default microphone, saves the recording as a WAV file in the recordings folder, and, when the
 /// AI transcription option is on (T), transcribes it offline with the Whisper model and saves the text beside it.
 /// Enter starts and stops a recording; a recording stops by itself at <see cref="Pcm.MaxSeconds"/>. Esc discards a recording
 /// that is going, cancels a transcription, and closes the dialog otherwise.

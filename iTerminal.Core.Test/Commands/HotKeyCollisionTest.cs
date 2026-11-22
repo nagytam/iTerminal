@@ -22,6 +22,21 @@ public class HotKeyCollisionTest
         Assert.AreNotEqual(duplicates.Key.ConsoleKey, signatures.Key.ConsoleKey);
     }
 
+    /// <summary>
+    /// The voice recorder and the password manager's alternate chord were both Ctrl+Shift+X, so one of them was unreachable.
+    /// The recorder now has no hot key and is opened from the Tools menu, so it cannot collide with any chord.
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheVoiceRecorderHasNoHotKeyThatCollidesWithThePasswordManager()
+    {
+        var recorder = new VoiceRecorderDialogCommand(null!);
+        var passwords = new PasswordManagerDialogCommand(null!);
+
+        Assert.IsNull(recorder.Key);
+        Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), passwords.AlternateKey);
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public void TheHashManifestChordIsShiftAltF3_AndNotOneOfTheOthers()
