@@ -7110,6 +7110,9 @@
   <data name="Menu.File" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="Menu.Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
   <data name="Menu.Filetransfer" xml:space="preserve">
     <value>File transfer</value>
   </data>
@@ -7124,6 +7127,9 @@
   </data>
   <data name="Menu.FindOldFiles" xml:space="preserve">
     <value>Find Old Files</value>
+  </data>
+  <data name="Menu.Games" xml:space="preserve">
+    <value>Games</value>
   </data>
   <data name="Menu.GitHistory" xml:space="preserve">
     <value>Git History</value>
@@ -7161,8 +7167,14 @@
   <data name="Menu.Navigate" xml:space="preserve">
     <value>Navigate</value>
   </data>
+  <data name="Menu.Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
   <data name="Menu.NetworkManager" xml:space="preserve">
     <value>Network Manager</value>
+  </data>
+  <data name="Menu.Office" xml:space="preserve">
+    <value>Office</value>
   </data>
   <data name="Menu.OpenWith" xml:space="preserve">
     <value>Open With…</value>
@@ -7232,6 +7244,9 @@
   </data>
   <data name="Menu.SynchroniseFolders" xml:space="preserve">
     <value>Synchronise Folders</value>
+  </data>
+  <data name="Menu.System" xml:space="preserve">
+    <value>System</value>
   </data>
   <data name="Menu.SystemInfo" xml:space="preserve">
     <value>System Info</value>

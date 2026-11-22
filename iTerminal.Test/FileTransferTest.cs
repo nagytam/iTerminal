@@ -25,6 +25,7 @@ public class FileTransferTest
         await _app.WaitUntilAsync(
             () => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar,
             "the Tools menu to take the keyboard");
+        await _app.OpenSubmenuAsync("Network");
         for (int attempt = 0; attempt < 100
             && !_app.Screen.Lines.Any(line => line.Contains("File transfer", StringComparison.Ordinal));
             attempt++)

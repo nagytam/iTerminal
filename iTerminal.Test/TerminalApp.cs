@@ -417,6 +417,23 @@ public sealed class TerminalApp : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Moves the open Tools drop-down onto the submenu titled <paramref name="title"/> and opens it with Right. A submenu's
+    /// row carries a ▶ and is drawn as "&lt;Title ▶&gt;" while selected; its entries are drawn only once it is open, so a test
+    /// that looks for one of them calls this first.
+    /// </summary>
+    public async Task OpenSubmenuAsync(string title)
+    {
+        for (int attempt = 0; attempt < 100 && !Screen.Lines.Any(line => line.Contains("<" + title, StringComparison.Ordinal) && line.Contains("▶>", StringComparison.Ordinal)); attempt++)
+        {
+            ConsoleSnapshot previous = Screen;
+            await PressAsync("Down");
+            await Driver.WaitUntilAsync(screen => !screen.HasSameContent(previous), "the Tools menu to redraw after moving selection", TimeSpan.FromSeconds(2));
+        }
+
+        await PressAsync("Right");
+    }
+
     /// <summary>Waits until the focused panel lists the folder at <paramref name="path"/>.</summary>
     public Task WaitForFocusedFolderAsync(string path) =>
         WaitUntilAsync(
