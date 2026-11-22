@@ -86,9 +86,16 @@ public partial class AiPanelTools
             return "Error: the panel shows no folder.";
         }
 
-        Url root = model.Url.RootUrl;
-        await contentModelService.SetUrlAsync(model.Name, root);
-        return $"{PanelLabel(model)} panel is now at {root.FullUrl}";
+        try
+        {
+            Url root = model.Url.RootUrl;
+            await contentModelService.SetUrlAsync(model.Name, root);
+            return $"{PanelLabel(model)} panel is now at {root.FullUrl}";
+        }
+        catch (Exception ex)
+        {
+            return $"Error: cannot go to the root folder: {ex.Message}";
+        }
     }
 
     internal string SetHiddenFilesVisible(bool visible)
@@ -430,7 +437,10 @@ public partial class AiPanelTools
             string parent = source.FullUrl.TrimEnd('/', '\\');
             parent = parent[..(parent.LastIndexOfAny(['/', '\\']) + 1)];
             Url destination = new(UrlPath.Child(parent, newName, source.PathType == PathType.Folder));
-            if (model.ExistsFile(destination) || model.ExistsFolder(destination))
+            // A change of case only (Report.txt to report.txt) finds the entry itself on a case-insensitive file system, so
+            // it is not a clash. Where a different entry already has the name, the move itself refuses to overwrite it.
+            bool caseOnly = string.Equals(oldName, newName, StringComparison.OrdinalIgnoreCase);
+            if (!caseOnly && (model.ExistsFile(destination) || model.ExistsFolder(destination)))
             {
                 skipped.Add($"{oldName}: '{newName}' already exists");
                 continue;
