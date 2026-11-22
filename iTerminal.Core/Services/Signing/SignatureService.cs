@@ -1,5 +1,6 @@
 using iConsole.Localization;
-using iConsole.OpenPgp;
+using iTerminal.Security.OpenPgp;
+using iTerminal.Security.Signing;
 using iTerminal.Core.Services.Processes;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,53 +8,6 @@ using System.Text.RegularExpressions;
 
 namespace iTerminal.Core.Services.Signing;
 
-/// <summary>The three ways a file can be signed or checked here.</summary>
-public enum SignatureMethod
-{
-    /// <summary>A detached OpenPGP signature (<c>name.asc</c>), made and checked by the <c>gpg</c> program.</summary>
-    Gpg,
-
-    /// <summary>The signature embedded in a Windows executable, script or installer. Windows only.</summary>
-    Authenticode,
-
-    /// <summary>A detached signature (<c>name.sig</c>) made with a PEM RSA or ECDSA key, in-process: no tool needed.</summary>
-    Pem,
-}
-
-public enum SignatureStatus
-{
-    /// <summary>The signature is there and the file matches it.</summary>
-    Valid,
-
-    /// <summary>The signature is there and the file does NOT match it — changed, or signed by someone else.</summary>
-    Invalid,
-
-    /// <summary>The file is not signed (by this method).</summary>
-    NotSigned,
-
-    /// <summary>The signature matches but the signer is not one this machine trusts or knows (no public key, untrusted root).</summary>
-    UnknownSigner,
-
-    /// <summary>The check could not be made: the tool is missing, or a key could not be read.</summary>
-    Unavailable,
-}
-
-/// <summary>
-/// What one method found: the verdict, who signed, and a sentence for the screen. <see cref="Packet"/> is the first signature
-/// packet of a gpg signature, read from the file's bytes before gpg ran; it is a fact about the file, not part of the verdict.
-/// </summary>
-public sealed record SignatureVerdict(SignatureMethod Method, SignatureStatus Status, string Signer, string Message, OpenPgpSignaturePacket? Packet = null);
-
-/// <summary>What signing did. <see cref="SignaturePath"/> is the detached file written, or null for an embedded signature.</summary>
-public sealed record SignResult(bool Success, string? SignaturePath, string Message);
-
-/// <summary>A code-signing certificate the Windows certificate store holds.</summary>
-public sealed record SigningCertificate(string Thumbprint, string Subject, DateTime Expires);
-
-/// <summary>What is available on this machine, so the dialog offers only what can work.</summary>
-public sealed record SigningCapabilities(bool Gpg, bool Authenticode);
-
-/// <summary>
 /// Signs a file and checks signatures. Async by contract: gpg and PowerShell are processes, and a
 /// large file is read end to end.
 /// </summary>
@@ -190,7 +144,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             return new(SignatureMethod.Gpg, SignatureStatus.Unavailable, string.Empty, "gpg is not installed (or not on the PATH), so the signature cannot be checked.", packet);
         }
 
-        return ParseGpgStatus(output.StandardOutput, output.ExitCode, output.FirstErrorLine) with { Packet = packet };
+        return SignatureParser.ParseGpgStatus(output.StandardOutput, output.ExitCode, output.FirstErrorLine) with { Packet = packet };
     }
 
     /// <summary>
@@ -229,56 +183,6 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             // The packet is optional extra information: a path that cannot be opened leaves it out and never fails the verdict.
             return null;
         }
-    }
-
-    /// <summary>Reads gpg's <c>[GNUPG:]</c> status lines into a verdict. Public for tests: it is the part that can be wrong.</summary>
-    internal static SignatureVerdict ParseGpgStatus(string status, int exitCode, string fallback)
-    {
-        string? Find(string keyword) => status
-            .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
-            .Select(line => line.TrimEnd())
-            .FirstOrDefault(line => line.StartsWith("[GNUPG:] " + keyword, StringComparison.Ordinal));
-
-        static string Signer(string line, string keyword)
-        {
-            // "[GNUPG:] GOODSIG <keyid> <user id...>"
-            var rest = line[("[GNUPG:] " + keyword).Length..].Trim();
-            var cut = rest.IndexOf(' ');
-            return cut < 0 ? rest : $"{rest[(cut + 1)..]} ({rest[..cut]})";
-        }
-
-        if (Find("GOODSIG") is { } good)
-        {
-            return new(SignatureMethod.Gpg, SignatureStatus.Valid, Signer(good, "GOODSIG"), UiText.Get("Sign.Good", "Good signature."));
-        }
-
-        if (Find("EXPKEYSIG") is { } expiredKey)
-        {
-            return new(SignatureMethod.Gpg, SignatureStatus.Valid, Signer(expiredKey, "EXPKEYSIG"), UiText.Get("Sign.GoodExpired", "Good signature, but the key has expired."));
-        }
-
-        if (Find("REVKEYSIG") is { } revokedKey)
-        {
-            return new(SignatureMethod.Gpg, SignatureStatus.Invalid, Signer(revokedKey, "REVKEYSIG"), UiText.Get("Sign.Revoked", "The signature is good but the key was revoked — do not trust it."));
-        }
-
-        if (Find("BADSIG") is { } bad)
-        {
-            return new(SignatureMethod.Gpg, SignatureStatus.Invalid, Signer(bad, "BADSIG"), "BAD signature: the file was changed after it was signed, or this is not its signature.");
-        }
-
-        if (Find("NO_PUBKEY") is { } missing)
-        {
-            var key = missing["[GNUPG:] NO_PUBKEY".Length..].Trim();
-            return new(SignatureMethod.Gpg, SignatureStatus.UnknownSigner, key, string.Format(UiText.Get("Sign.UnknownKey", "Signed with key {0}, which is not in your keyring (gpg --recv-keys {0})."), key));
-        }
-
-        if (Find("NODATA") is not null)
-        {
-            return new(SignatureMethod.Gpg, SignatureStatus.NotSigned, string.Empty, UiText.Get("Sign.NotOpenPgp", "That is not an OpenPGP signature."));
-        }
-
-        return new(SignatureMethod.Gpg, SignatureStatus.Unavailable, string.Empty, exitCode == 0 ? "gpg gave no verdict." : fallback);
     }
 
     private async Task<SignResult> SignGpgAsync(string filePath, string? keyIdentifier, CancellationToken cancellationToken)
@@ -328,32 +232,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             return new(SignatureMethod.Authenticode, SignatureStatus.Unavailable, string.Empty, "PowerShell could not be started.");
         }
 
-        return ParseAuthenticode(output.StandardOutput, output.Success ? null : output.FirstErrorLine);
-    }
-
-    /// <summary>Reads the three lines the script above prints.</summary>
-    internal static SignatureVerdict ParseAuthenticode(string text, string? failure = null)
-    {
-        var lines = text.Split(['\r', '\n'], StringSplitOptions.None).Select(line => line.Trim()).ToArray();
-        if (failure is not null || lines.Length == 0 || lines[0].Length == 0)
-        {
-            return new(SignatureMethod.Authenticode, SignatureStatus.Unavailable, string.Empty, failure ?? UiText.Get("Sign.NoPowerShell", "No answer from PowerShell."));
-        }
-
-        var signer = lines.Length > 1 ? lines[1] : string.Empty;
-        var message = lines.Length > 2 && lines[2].Length > 0 ? lines[2] : lines[0];
-        var status = lines[0] switch
-        {
-            "Valid" => SignatureStatus.Valid,
-            "NotSigned" or "NotSupportedFileFormat" => SignatureStatus.NotSigned,
-            "HashMismatch" => SignatureStatus.Invalid,
-            // A file with no signature certificate at all is not signed, whatever PowerShell calls it:
-            // a .txt answers UnknownError ("the form specified for the subject is not one supported").
-            "UnknownError" or "Incompatible" when signer.Length == 0 => SignatureStatus.NotSigned,
-            "NotTrusted" or "UnknownError" or "Incompatible" => SignatureStatus.UnknownSigner,
-            _ => SignatureStatus.Unavailable,
-        };
-        return new(SignatureMethod.Authenticode, status, signer, message);
+        return SignatureParser.ParseAuthenticode(output.StandardOutput, output.Success ? null : output.FirstErrorLine);
     }
 
     private async Task<SignResult> SignAuthenticodeAsync(string filePath, string? thumbprint, CancellationToken cancellationToken)
@@ -390,24 +269,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         var output = await RunPowerShellAsync(
             "Get-ChildItem Cert:\\CurrentUser\\My -CodeSigningCert | ForEach-Object { \"$($_.Thumbprint)|$($_.NotAfter.ToString('o'))|$($_.Subject)\" }",
             cancellationToken);
-        return output.Success ? ParseCertificates(output.StandardOutput) : [];
-    }
-
-    internal static IReadOnlyList<SigningCertificate> ParseCertificates(string text)
-    {
-        var certificates = new List<SigningCertificate>();
-        foreach (var line in text.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-        {
-            var parts = line.Split('|', 3);
-            if (parts.Length == 3
-                && ThumbprintPattern().IsMatch(parts[0])
-                && DateTime.TryParse(parts[1], null, System.Globalization.DateTimeStyles.RoundtripKind, out var expires))
-            {
-                certificates.Add(new SigningCertificate(parts[0].ToUpperInvariant(), parts[2], expires));
-            }
-        }
-
-        return certificates;
+        return output.Success ? SignatureParser.ParseCertificates(output.StandardOutput) : [];
     }
 
     /// <summary>pwsh when installed, else Windows PowerShell — the latter is on every Windows machine.</summary>

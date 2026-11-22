@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace iConsole.Security;
+namespace iTerminal.Security;
 
 /// <summary>What a file's leading bytes say it is. Only the kinds that matter for telling a disguise are listed.</summary>
 public enum FileKind

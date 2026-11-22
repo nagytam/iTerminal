@@ -5,7 +5,7 @@ using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
-using iConsole.Security;
+using iTerminal.Security;
 using iConsole.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Helper;

@@ -1,5 +1,6 @@
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.Signing;
+using iTerminal.Security.Signing;
 
 namespace iTerminal.Test;
 

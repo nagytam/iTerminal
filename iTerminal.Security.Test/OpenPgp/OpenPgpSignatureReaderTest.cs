@@ -1,7 +1,7 @@
 using System.Text;
-using iConsole.OpenPgp;
+using iTerminal.Security.OpenPgp;
 
-namespace iConsole.Test.OpenPgp;
+namespace iTerminal.Security.Test.OpenPgp;
 
 [TestClass]
 public class OpenPgpSignatureReaderTest

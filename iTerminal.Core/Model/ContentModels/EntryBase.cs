@@ -4,7 +4,7 @@ using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
-using iConsole.Security;
+using iTerminal.Security;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 

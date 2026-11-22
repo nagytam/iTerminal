@@ -1,4 +1,5 @@
 using iTerminal.Core.Services.Signing;
+using iTerminal.Security.Signing;
 using iTerminal.Core.Test.Helper;
 using System.Security.Cryptography;
 
@@ -40,7 +41,7 @@ public class SignatureServiceTest
     [Timeout(15_000)]
     public void ParseGpgStatus_AGoodSignature_NamesTheSigner()
     {
-        var verdict = SignatureService.ParseGpgStatus("[GNUPG:] NEWSIG\n[GNUPG:] GOODSIG 1A2B3C4D5E6F7788 Ada Lovelace <ada@example.org>\n[GNUPG:] VALIDSIG ...", 0, "");
+        var verdict = SignatureParser.ParseGpgStatus("[GNUPG:] NEWSIG\n[GNUPG:] GOODSIG 1A2B3C4D5E6F7788 Ada Lovelace <ada@example.org>\n[GNUPG:] VALIDSIG ...", 0, "");
 
         Assert.AreEqual(SignatureStatus.Valid, verdict.Status);
         Assert.AreEqual("Ada Lovelace <ada@example.org> (1A2B3C4D5E6F7788)", verdict.Signer);
@@ -50,7 +51,7 @@ public class SignatureServiceTest
     [Timeout(15_000)]
     public void ParseGpgStatus_ABadSignature_IsInvalid()
     {
-        var verdict = SignatureService.ParseGpgStatus("[GNUPG:] BADSIG 1A2B3C4D5E6F7788 Ada", 1, "");
+        var verdict = SignatureParser.ParseGpgStatus("[GNUPG:] BADSIG 1A2B3C4D5E6F7788 Ada", 1, "");
 
         Assert.AreEqual(SignatureStatus.Invalid, verdict.Status);
     }
@@ -59,14 +60,14 @@ public class SignatureServiceTest
     [Timeout(15_000)]
     public void ParseGpgStatus_ARevokedKey_IsNotTrusted()
     {
-        Assert.AreEqual(SignatureStatus.Invalid, SignatureService.ParseGpgStatus("[GNUPG:] REVKEYSIG AAAA Ada", 1, "").Status);
+        Assert.AreEqual(SignatureStatus.Invalid, SignatureParser.ParseGpgStatus("[GNUPG:] REVKEYSIG AAAA Ada", 1, "").Status);
     }
 
     [TestMethod]
     [Timeout(15_000)]
     public void ParseGpgStatus_AnExpiredKey_StillMatchesButSaysSo()
     {
-        var verdict = SignatureService.ParseGpgStatus("[GNUPG:] EXPKEYSIG AAAA Ada", 0, "");
+        var verdict = SignatureParser.ParseGpgStatus("[GNUPG:] EXPKEYSIG AAAA Ada", 0, "");
 
         Assert.AreEqual(SignatureStatus.Valid, verdict.Status);
         StringAssert.Contains(verdict.Message, "expired");
@@ -76,7 +77,7 @@ public class SignatureServiceTest
     [Timeout(15_000)]
     public void ParseGpgStatus_AKeyNotInTheKeyring_IsAnUnknownSignerWithTheIdToFetch()
     {
-        var verdict = SignatureService.ParseGpgStatus("[GNUPG:] ERRSIG AAAA 1 8 00 1 9 01 AAAA\n[GNUPG:] NO_PUBKEY AAAA1111BBBB2222", 2, "");
+        var verdict = SignatureParser.ParseGpgStatus("[GNUPG:] ERRSIG AAAA 1 8 00 1 9 01 AAAA\n[GNUPG:] NO_PUBKEY AAAA1111BBBB2222", 2, "");
 
         Assert.AreEqual(SignatureStatus.UnknownSigner, verdict.Status);
         StringAssert.Contains(verdict.Message, "AAAA1111BBBB2222");
@@ -86,14 +87,14 @@ public class SignatureServiceTest
     [Timeout(15_000)]
     public void ParseGpgStatus_NotASignatureAtAll_IsNotSigned()
     {
-        Assert.AreEqual(SignatureStatus.NotSigned, SignatureService.ParseGpgStatus("[GNUPG:] NODATA 3", 2, "").Status);
+        Assert.AreEqual(SignatureStatus.NotSigned, SignatureParser.ParseGpgStatus("[GNUPG:] NODATA 3", 2, "").Status);
     }
 
     [TestMethod]
     [Timeout(15_000)]
     public void ParseGpgStatus_NoVerdict_FallsBackToTheTool()
     {
-        var verdict = SignatureService.ParseGpgStatus(string.Empty, 2, "gpg: something broke");
+        var verdict = SignatureParser.ParseGpgStatus(string.Empty, 2, "gpg: something broke");
 
         Assert.AreEqual(SignatureStatus.Unavailable, verdict.Status);
         Assert.AreEqual("gpg: something broke", verdict.Message);
@@ -311,21 +312,21 @@ public class SignatureServiceTest
     [Timeout(15_000)]
     public void ParseAuthenticode_MapsPowerShellsStatuses()
     {
-        Assert.AreEqual(SignatureStatus.Valid, SignatureService.ParseAuthenticode("Valid\nCN=Acme\nSignature verified.").Status);
-        Assert.AreEqual(SignatureStatus.NotSigned, SignatureService.ParseAuthenticode("NotSigned\n\nnot signed").Status);
-        Assert.AreEqual(SignatureStatus.Invalid, SignatureService.ParseAuthenticode("HashMismatch\nCN=Acme\nchanged").Status);
-        Assert.AreEqual(SignatureStatus.UnknownSigner, SignatureService.ParseAuthenticode("NotTrusted\nCN=Acme\nroot not trusted").Status);
-        Assert.AreEqual(SignatureStatus.Unavailable, SignatureService.ParseAuthenticode("Surprise\n\n").Status);
+        Assert.AreEqual(SignatureStatus.Valid, SignatureParser.ParseAuthenticode("Valid\nCN=Acme\nSignature verified.").Status);
+        Assert.AreEqual(SignatureStatus.NotSigned, SignatureParser.ParseAuthenticode("NotSigned\n\nnot signed").Status);
+        Assert.AreEqual(SignatureStatus.Invalid, SignatureParser.ParseAuthenticode("HashMismatch\nCN=Acme\nchanged").Status);
+        Assert.AreEqual(SignatureStatus.UnknownSigner, SignatureParser.ParseAuthenticode("NotTrusted\nCN=Acme\nroot not trusted").Status);
+        Assert.AreEqual(SignatureStatus.Unavailable, SignatureParser.ParseAuthenticode("Surprise\n\n").Status);
         // A file type that cannot carry a signature at all (a .txt) comes back as an error with no signer.
-        Assert.AreEqual(SignatureStatus.NotSigned, SignatureService.ParseAuthenticode("UnknownError\n\nThe form specified for the subject is not one supported.").Status);
-        Assert.AreEqual("CN=Acme", SignatureService.ParseAuthenticode("Valid\nCN=Acme\nok").Signer);
+        Assert.AreEqual(SignatureStatus.NotSigned, SignatureParser.ParseAuthenticode("UnknownError\n\nThe form specified for the subject is not one supported.").Status);
+        Assert.AreEqual("CN=Acme", SignatureParser.ParseAuthenticode("Valid\nCN=Acme\nok").Signer);
     }
 
     [TestMethod]
     [Timeout(15_000)]
     public void ParseAuthenticode_AFailedScript_IsUnavailable()
     {
-        Assert.AreEqual(SignatureStatus.Unavailable, SignatureService.ParseAuthenticode(string.Empty, "boom").Status);
+        Assert.AreEqual(SignatureStatus.Unavailable, SignatureParser.ParseAuthenticode(string.Empty, "boom").Status);
     }
 
     [TestMethod]
@@ -342,7 +343,7 @@ public class SignatureServiceTest
     {
         var text = "0123456789ABCDEF0123456789ABCDEF01234567|2030-01-02T03:04:05.0000000Z|CN=Acme, O=Acme\nWARNING: something\nnot-a-thumbprint|2030-01-02T03:04:05Z|CN=X";
 
-        var certificates = SignatureService.ParseCertificates(text);
+        var certificates = SignatureParser.ParseCertificates(text);
 
         Assert.AreEqual(1, certificates.Count);
         Assert.AreEqual("0123456789ABCDEF0123456789ABCDEF01234567", certificates[0].Thumbprint);

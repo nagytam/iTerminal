@@ -1,7 +1,7 @@
-using iConsole.Security;
+using iTerminal.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace iConsole.Test.Security;
+namespace iTerminal.Security.Test;
 
 [TestClass]
 [DoNotParallelize]

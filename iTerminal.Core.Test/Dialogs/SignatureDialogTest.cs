@@ -1,8 +1,9 @@
 using iConsole.Interfaces;
-using iConsole.OpenPgp;
+using iTerminal.Security.OpenPgp;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.Signing;
+using iTerminal.Security.Signing;
 using iTerminal.Core.Test.Helper;
 using Moq;
 

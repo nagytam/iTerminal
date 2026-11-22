@@ -48,6 +48,7 @@
     <ProjectReference Include="..\iConsole.Media.Speech\iConsole.Media.Speech.csproj" />
     <ProjectReference Include="..\iConsole.Media.Video\iConsole.Media.Video.csproj" />
     <ProjectReference Include="..\iTerminal.Core.Games\iTerminal.Core.Games.csproj" />
+    <ProjectReference Include="..\iTerminal.Security\iTerminal.Security.csproj" />
     <ProjectReference Include="..\iConsole\iConsole.csproj" />
   </ItemGroup>
 

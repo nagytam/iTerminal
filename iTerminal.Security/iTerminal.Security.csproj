@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The file-security checks: the file-disguise detector (magic bytes against the extension), the name analysis
+    (bidi overrides, hidden characters, double extensions), the bounded cache of what was read, the OpenPGP signature
+    reader, and the signature verdict types with the parsers for what gpg, PowerShell and the certificate store print.
+    The parsers are pure text-to-value functions. They reference only iConsole, for the localized messages (UiText).
+    iTerminal.Core reads the bytes and runs the tools (FileDisguiseChecker, SignatureService) and shows the findings.
+  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\iConsole\iConsole.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Static analysis for every non-test project. PrivateAssets keeps the analyzer out of consumers. -->
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.37.0.15768" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

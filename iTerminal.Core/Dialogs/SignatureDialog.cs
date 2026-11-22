@@ -7,10 +7,11 @@ using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
-using iConsole.OpenPgp;
+using iTerminal.Security.OpenPgp;
 using iConsole.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Services.Signing;
+using iTerminal.Security.Signing;
 
 namespace iTerminal.Core.Dialogs;
 

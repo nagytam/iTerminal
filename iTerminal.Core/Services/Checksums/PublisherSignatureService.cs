@@ -1,5 +1,6 @@
 using iTerminal.Core.Services.Processes;
 using iTerminal.Core.Services.Signing;
+using iTerminal.Security.Signing;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -243,7 +244,7 @@ public class PublisherSignatureService(IExternalProcessRunner runner) : IPublish
 
     private static PublisherVerification FromGpg(ProcessOutput output, Func<PublisherSignatureStatus, string, string, string?, PublisherVerification> make)
     {
-        SignatureVerdict parsed = SignatureService.ParseGpgStatus(output.StandardOutput, output.ExitCode, output.FirstErrorLine);
+        SignatureVerdict parsed = SignatureParser.ParseGpgStatus(output.StandardOutput, output.ExitCode, output.FirstErrorLine);
         // The expired key is its own status: a good signature, but not one that vouches for a list.
         bool expired = parsed.Status == SignatureStatus.Valid && output.StandardOutput.Contains("[GNUPG:] EXPKEYSIG", StringComparison.Ordinal);
         PublisherSignatureStatus status = parsed.Status switch
