@@ -8,80 +8,54 @@ The supervisor agent (`.claude/agents/supervisor.md`) audits the agent definitio
 
 | ID | Title | Kind | Effort | Status |
 | --- | --- | --- | --- | --- |
-| S1 | List the six undescribed agents in `CLAUDE.md` and fix the agent ordinals | Change to CLAUDE.md | S | Proposed |
+| S1 | List the six undescribed agents in `CLAUDE.md` and fix the agent ordinals | Change to CLAUDE.md | S | Applied (#814) |
 | S2 | `fixer`: use the `github` remote and ignore cancelled runs | Revise agent | S | Proposed |
 | S3 | `fixer`: add a suite-wide slowdown class for mass end-to-end timeouts | Revise agent | S | Proposed |
 | S4 | `incremental-improvement`: add a narrow-terminal check to the review gate | Change to a skill | S | Proposed |
-| S5 | `janitor`: reconcile the remote note and consider a stronger model | Revise agent | S | Proposed |
-| S6 | `supervisor` and `promoter`: change colour (three agents are orange) | Revise agent | S | Proposed |
+| S5 | `janitor`: reconcile the remote note and consider a stronger model | Revise agent | S | Applied (#814; model left `haiku`) |
+| S6 | `supervisor` and `promoter`: change colour (three agents are orange) | Revise agent | S | Applied (#814) |
 | S7 | `fixer`, `profiler`, `qa`: stop embedding the test project list | Revise agent | S | Proposed |
 | S8 | `integrator`: align the merge authority with `CLAUDE.md` | Revise agent | S | Proposed |
 
-## Current review: 2026-11-22 all agents
+## Current review: 2026-11-22 all agents, follow-up
 
-Window: `4ad0edba` (the previous review's tip) to `61b68691`, 92 commits. Reviewed on branch `fix/qa-16-wipe-tick-source` at `61b68691` (not `main`; the branch has an unrelated uncommitted change in `iTerminal.Core/Dialogs/SecureWipeDialog.cs`, left untouched). Sources available: git history, `gh` (authenticated, read-only queries), the workflow files. Not run: the app and the test suites. "Not found" means a grep or `git ls-files` returned nothing. S1 to S6 were re-checked against the agent files and `CLAUDE.md`: none is applied yet.
+Window: the previous review's tip commit (`61b68691`) is no longer in the repository history (squash merges), so this run uses `7486f8e8` (#813) to `b9b81269`, 6 commits, plus `build.yml` runs up to 2026-11-22 03:54 UTC. Reviewed on branch `docs/agents-review-update` cut from `main` at `b9b81269`. Sources available: git history, `gh` (read-only), workflow files. Not run: the app and the test suites. "Not found" means a grep returned nothing. The data model was not diffed; `git log -3 -- iTerminal.Core/Data` shows nothing newer than #792, so no model change in the window.
 
 ### Evidence summary
 
-Commit themes (`git log --oneline 4ad0edba..HEAD`, `git log --name-only`, subject greps):
-
-| Theme | Count | Note |
-| --- | --- | --- |
-| Commits in the window | 92 | |
-| Project splits ("Move ... into ...") | 8 | `iConsole.Formats`, `iConsole.Media.Audio`, `.Speech`, `.Video`, `iTerminal.Core.Games`; `iTerminal.slnx` gained 10 projects (5 source, 5 test) |
-| WinGet manifests and publishing | 7 | #782, #783, #784, #786, #788, #791, #793: three hand-made manifest sets (0.0.0.727, .731, .735), then a manual `winget.yml` |
-| Subjects with Fix, Repair, Revert, Stop, Keep or Never | 14 | recurring class: German or narrow layout in e2e tests (#811) |
-| Agent additions | 4 | `integrator` #747 (then 7 follow-ups #749 to #758), `promoter` #767, `architect` #776, `qa` #810 |
-| Agent outputs used | yes | architect findings shipped (#805, #807, #808 name findings 24, 26, 10, 55, 68); promotion overview updated in #770, #794, #795, #806; `Documentation/QA/qa-overview.md` used by `61b68691` (QA-16) and #812 |
-
-`Documentation/plans/feature-proposals.md` still does not exist: `planner` has never run, so its effectiveness is unmeasured.
-
-Pipeline results (`gh run list --workflow build.yml --limit 40`, `gh run view <id> --json jobs`, `--log-failed | grep`):
-
-| Item | Result |
+| Theme | Result |
 | --- | --- |
-| `build.yml`, last 40 runs (2026-11-21 17:37 to 21:20) | pull_request: 8 success, 7 failure, 9 cancelled; push on `main`: 5 success, 6 failure, 5 cancelled |
-| `release.yml`, last 30 runs | 30 success (pull_request events); `winget.yml`: 0 runs |
-| Six failed `main` pushes (44936425002, 44939633048, 44942013183, 44943515522, 44947969087, 44948346711) | all fail in the "Test (including end-to-end suite)" step; Windows only in 3, both jobs in 3 |
-| Cause 1: German Passwords e2e test | `ThePaletteFooterAndSixMoreDialogsInGerman_AreGerman ("Passwords", ...)` failed after 30 s on 3 consecutive pushes (44942013183, 44943515522, 44947969087), fixed by #811 (the empty-list hint wrapped). Same class as the German locale failures of the previous review |
-| Cause 2: other e2e timeouts, one each | `CtrlShiftDShowsTheFocusedFolderInTheOtherPanel` (44936425002), `ASlowListingIsNotCachedAsEmpty_...` (44939633048), `CtrlShiftF8_AnyOtherKeyAfterTheFirstEnter_WithdrawsIt` (44942013183), `EnterOpensATarGzAndF5CopiesOutOfIt` (44948346711); all in Windows jobs. No test went red then green on one commit in the sample, so flakiness is suspected, not proven |
-| Workflow settings | Linux job 30 min, test step 20 min; Windows job 45 min, test step 38 min (`build.yml` lines 26, 58, 134, 152); the Linux step runs nine test projects (lines 60 to 99) |
-| Cancelled runs | 14 of 40 are cancelled; `fixer` still treats every non-green run as a failure |
+| Commits in the window (`git log --oneline`) | 6: #814 agent fixes (supervisor S1, S5, S6), #815 two e2e timeout defects, #816 AI panel tools, #817 architect agent extended with duplication review, #812/#813 QA items |
+| Agent outputs used | `qa-overview.md` items fixed in #812, #813, #815; `architecture-overview.md` findings added in #817 |
+| Repeated manual work with no agent | none new |
 
-Model changes:
-
-| Item | Result |
+| Pipeline item | Result |
 | --- | --- |
-| Data model | `git log 4ad0edba..HEAD -- iTerminal.Core/Data` lists `a3773607` (disk usage), `df8c67d4` (audio move) and `53c58bff` (music player buttons). I did not diff the entities, so a cached-table drop is not excluded. No agent writes persistence code |
-| Agent models | `opus`: `architect`. `sonnet`: `design-reviewer`, `fixer`, `integrator`, `planner`, `profiler`, `promoter`, `qa`, `supervisor`. `haiku`: three researchers, `janitor`. All aliases, none pinned |
-| Other | `iTerminal.slnx` gained 10 projects and `build.yml` runs all of them, but `fixer.md` lines 21 and 22, `profiler.md` line 32 and `qa.md` line 48 name only the older set (S7). New workflow `winget.yml` (manual) has no agent |
+| `build.yml`, last 30 runs (`gh run list`) | pull_request: 6 success, 6 failure, 6 cancelled; push: 5 success, 6 failure, 1 cancelled |
+| Failed `main` pushes | 44939633048, 44942013183, 44943515522, 44947969087, 44948346711 (before #811, e2e timeouts, German Passwords three times) and 44981366585 (new, after #816: Windows job failed, Linux passed; `--log-failed` returned nothing usable, cause unknown) |
+| `release.yml`, last 15 runs | 15 success; `winget.yml`: no runs |
+| Timing | run 44981366585: Linux job 8.5 min, Windows job 14.5 min; `fixer.md` line 22 says the Windows suite alone takes about 25 minutes |
+
+| Model item | Result |
+| --- | --- |
+| Agent models | `opus`: architect; `sonnet`: design-reviewer, fixer, integrator, planner, profiler, promoter, qa, supervisor; `haiku`: three researchers, janitor. No evidence of poor output |
+| Data model, other | no change in the window; no new projects or workflows |
 
 ### Agent audit
 
 | Agent | Verdict | Reason |
 | --- | --- | --- |
-| `architect` | OK | opus fits a deep review; writes one document; output used (#776, #805, #807, #808) |
-| `design-reviewer` | OK | unchanged, output used |
-| `fixer` | Revise | `origin/main`, cancelled runs, no suite-wide class, stale project list (S2, S3, S7) |
-| `integrator` | Revise | claims a standing authority to merge while `CLAUDE.md` says merging waits for the user's approval (S8); worktree and one-shot wait script are sound |
-| `janitor` | Revise | remote note (S5) |
-| `planner` | OK | never run |
-| `profiler` | Revise | stale test project list (S7), colour (S6) |
-| `promoter` | Revise | colour only (S6); output logged and used (#770, #794, #795, #806) |
-| `qa` | Revise | unit-test pairing names only two source projects (S7); scope `pipeline` overlaps `fixer` by design (qa documents, fixer fixes) |
-| `researcher-console-features`, `researcher-security-features`, `researcher-ai-features` | OK | unchanged |
-| `supervisor` | Revise | colour (S6) |
+| `architect` | OK | extended in #817, output used |
+| `design-reviewer`, `researcher-*` (3), `planner` | OK | unchanged; planner never run (`Documentation/plans/feature-proposals.md` absent) |
+| `fixer` | Revise | `origin/main`, cancelled runs, no suite-wide class, stale project list and 25-minute claim (S2, S3, S7) |
+| `integrator` | Revise | standing merge authority claimed in the file (S8) |
+| `janitor` | OK | remote note fixed in #814 |
+| `profiler`, `qa` | Revise | stale project lists (S7) |
+| `promoter`, `supervisor` | OK | colours fixed in #814 |
 
-Across the set: `CLAUDE.md` describes none of `fixer`, `janitor`, `integrator`, `architect`, `promoter`, `qa` (S1). Colours: orange is used by `profiler`, `promoter` and `supervisor`; green by `integrator` and `qa`; blue by the three researchers, `planner` and `architect` (acceptable as the research and plan group).
+Colours are now distinct except green (`integrator`, `qa`) and blue (research and plan group), both acceptable.
 
 ### Suggestions
-
-**S1. List the six undescribed agents in `CLAUDE.md`, fix the ordinals** (Change to CLAUDE.md)
-- Why: the agent paragraph names the three researchers, `planner`, "a fifth" `design-reviewer`, "a sixth" `profiler` and `supervisor`; `fixer`, `janitor`, `integrator`, `architect`, `promoter` and `qa` are absent.
-- Evidence: `ls .claude/agents` lists 12 agents and `wait-for-change.sh`; `grep -n -i 'fixer\|janitor\|integrator\|promoter' CLAUDE.md` finds nothing; four were added in this window (#747, #767, #776, #810).
-- Change: replace "A fifth agent, `design-reviewer`" and "A sixth agent, `profiler`" with "The `design-reviewer` agent" and "The `profiler` agent", and add: "`architect` writes `Documentation/research/architecture-overview.md`, `qa` writes `Documentation/QA/qa-overview.md`, `promoter` writes `Documentation/Promotion/` and `Documentation/research/promotion-overview.md`. `fixer` fixes red `Build and test` runs on `main` on a branch with a pull request (`/fix-main` is the gated version). `integrator` lands green pull requests when the user starts it for that. `janitor` deletes local branches and worktrees already merged into `main`."
-- Risk: none beyond keeping the text in step.
-- Effort: S.
 
 **S2. `fixer`: use the `github` remote and skip cancelled runs** (Revise agent)
 - Why: `fixer.md` line 64 cuts the branch from `origin/main`, while the skill and `integrator.md` use `github`; Phase 1 acts on every non-green run, and cancelled runs are common.
@@ -104,20 +78,6 @@ Across the set: `CLAUDE.md` describes none of `fixer`, `janitor`, `integrator`, 
 - Risk: one more gate item, limited to changes that draw.
 - Effort: S.
 
-**S5. `janitor`: reconcile the remote note, consider `sonnet`** (Revise agent)
-- Why: line 11 says "The remote is named `github` (not `origin`)"; a clone without `github` makes every merge check fail. The agent runs `git branch -D` and `git worktree remove` on `haiku`.
-- Evidence: `janitor.md` lines 11, 19, 31; `git remote -v` lists `github`, `max` and others.
-- Change: line 11: "The GitHub remote is usually named `github` (check `git remote -v`; use the remote whose URL is the GitHub repository)." Optionally `model: sonnet`.
-- Risk: higher cost per run if the model changes; optional.
-- Effort: S.
-
-**S6. `supervisor` and `promoter`: change colour** (Revise agent)
-- Why: `profiler`, `promoter` and `supervisor` are all `orange` for unrelated roles.
-- Evidence: `grep '^color' .claude/agents/*.md`.
-- Change: `supervisor.md`: `color: cyan`; `promoter.md`: `color: pink`. The green pair (`integrator`, `qa`) is left: both touch the pipeline.
-- Risk: none.
-- Effort: S.
-
 **S7. `fixer`, `profiler`, `qa`: stop embedding the test project list** (Revise agent)
 - Why: the embedded lists miss five new test projects, so the fixer can name a failing job's projects wrongly and `qa` pairs only two source projects with tests.
 - Evidence: `fixer.md` lines 21 and 22 list four Linux test projects; `build.yml` lines 60 to 99 run nine (`iConsole.Formats.Test`, `iConsole.Media.Audio.Test`, `iConsole.Media.Speech.Test`, `iConsole.Media.Video.Test`, `iTerminal.Core.Games.Test` are missing); `profiler.md` line 32 and `qa.md` line 48 are equally partial; `git diff 4ad0edba..HEAD -- iTerminal.slnx` adds 10 projects.
@@ -134,18 +94,13 @@ Across the set: `CLAUDE.md` describes none of `fixer`, `janitor`, `integrator`, 
 
 ### Suggested order
 
-1. S1: six agents are missing from `CLAUDE.md`; a few lines.
-2. S8: the one place an agent file overrides a stated project rule.
-3. S3, S2: `fixer` is the agent used on red runs, and both classes recurred this window.
-4. S7: stale lists cause wrong guesses and rot again unless replaced by a pointer.
-5. S4: removes a defect class at its source.
-6. S5, S6: polish.
+1. S8: the one place an agent file overrides a stated project rule.
+2. S3, S2: `fixer` is used on red runs; run 44981366585 is another red push to triage, and cancelled runs are common.
+3. S7: stale lists rot again unless replaced by a pointer; also settle the 25-minute claim (measured Windows job: 14.5 min).
+4. S4: removes a defect class at its source.
 
 ### Rejected or skipped
 
-- New agent for WinGet or release publishing: 7 commits, but three manifest sets were hand-made and `winget.yml` (manual, 0 runs) now automates it; judge it after its first run.
-- New agent for localisation or layout checking: one German failure class (3 red pushes) is covered by S3, S4 and the `design-reviewer` resilience heuristic.
-- New agent to implement architect findings or project splits: findings already ship through `/incremental-improvement` (#805, #807, #808); the splits are one-off.
-- New agent for end-to-end flake triage: four different tests timed out once each and none went red then green on one commit; `fixer` covers it (S3).
-- Model change for `architect` (`opus`) or the researchers (`haiku`): no evidence of poor output.
+- New agents (WinGet, localisation, flake triage, implement-findings): no new evidence since the last review; `winget.yml` has still never run.
+- Model changes for `architect`, researchers or `janitor`: no evidence of poor output.
 - Judging `planner`: not possible until it has run once.
