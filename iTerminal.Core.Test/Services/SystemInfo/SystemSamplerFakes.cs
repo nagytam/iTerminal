@@ -33,6 +33,28 @@ internal sealed class FakeSystemProbes : ISystemProbes
         }
     }
 
+    /// <summary>Waits until a blocked disk read has been released and has returned.</summary>
+    public async Task WaitForReturnAsync()
+    {
+        DateTime deadline = DateTime.UtcNow.AddSeconds(15);
+        while (DateTime.UtcNow < deadline)
+        {
+            lock (_lock)
+            {
+                if (ReturnedReads > 0)
+                {
+                    return;
+                }
+            }
+
+            await Task.Delay(5);
+        }
+
+        throw new TimeoutException("The blocked disk read never returned.");
+    }
+
+    private int ReturnedReads { get; set; }
+
     public string OperatingSystem() => "Test OS";
 
     public string Architecture() => "X64";
@@ -99,6 +121,10 @@ internal sealed class FakeSystemProbes : ISystemProbes
         if (HangingDisks.Contains(name))
         {
             Gate.Wait();
+            lock (_lock)
+            {
+                ReturnedReads++;
+            }
         }
 
         return new DiskCounters((ulong)call * 1000, 0);
