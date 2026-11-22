@@ -1,7 +1,7 @@
 namespace iTerminal.Core.Services.RuntimeDependencies;
 
 /// <summary>What a program is called in each package manager, for programs the system installs rather than iTerminal.</summary>
-internal sealed record SystemPackageNames(
+public sealed record SystemPackageNames(
     string WinGet,
     string Homebrew,
     string Apt,
@@ -16,7 +16,7 @@ internal sealed record SystemPackageNames(
 /// process is not root the command runs under <c>sudo -n</c> (no password prompt, since a prompt has no terminal to
 /// appear on here), and a failure says what to run by hand.
 /// </summary>
-internal sealed record SystemPackageInstallPlan(
+public sealed record SystemPackageInstallPlan(
     string DisplayName,
     string Program,
     IReadOnlyList<string> Arguments,

@@ -781,32 +781,32 @@ public static class SandboxServices
     /// The stock quote source with no network: every symbol trades at 100.00 after closing at 99.00 on the
     /// "Sandbox" exchange, except <see cref="Unknown"/> ones, and a search finds two fixed hits.
     /// </summary>
-    public sealed class StockQuotes : Core.Services.Stocks.IStockQuoteProvider
+    public sealed class StockQuotes : Widgets.Services.Stocks.IStockQuoteProvider
     {
         public HashSet<string> Unknown { get; } = new(StringComparer.OrdinalIgnoreCase) { "NOPE" };
 
-        public Task<IReadOnlyDictionary<string, Core.Services.Stocks.StockQuote>> GetQuotesAsync(IReadOnlyList<string> symbols, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<string, Core.Services.Stocks.StockQuote>>(
+        public Task<IReadOnlyDictionary<string, Widgets.Services.Stocks.StockQuote>> GetQuotesAsync(IReadOnlyList<string> symbols, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, Widgets.Services.Stocks.StockQuote>>(
                 symbols.Where(s => !Unknown.Contains(s)).ToDictionary(
                     s => s,
-                    s => new Core.Services.Stocks.StockQuote(s, s + " Inc.", 100.00m, 99.00m, "USD", "Sandbox", DateTime.Now),
+                    s => new Widgets.Services.Stocks.StockQuote(s, s + " Inc.", 100.00m, 99.00m, "USD", "Sandbox", DateTime.Now),
                     StringComparer.OrdinalIgnoreCase));
 
-        public Task<IReadOnlyList<Core.Services.Stocks.StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockSearchHit>>(
-                [new Core.Services.Stocks.StockSearchHit("ACME.L", "Acme Holdings plc", "London", "EQUITY"),
-                 new Core.Services.Stocks.StockSearchHit("ACME", "Acme Holdings Inc", "NASDAQ", "EQUITY")]);
+        public Task<IReadOnlyList<Widgets.Services.Stocks.StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Widgets.Services.Stocks.StockSearchHit>>(
+                [new Widgets.Services.Stocks.StockSearchHit("ACME.L", "Acme Holdings plc", "London", "EQUITY"),
+                 new Widgets.Services.Stocks.StockSearchHit("ACME", "Acme Holdings Inc", "NASDAQ", "EQUITY")]);
 
-        public Task<IReadOnlyList<Core.Services.Stocks.StockBar>> GetHistoryAsync(string symbol, Core.Services.Stocks.StockHistoryRange range, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockBar>>(
-                [.. Enumerable.Range(0, 30).Select(day => new Core.Services.Stocks.StockBar(DateTime.Today.AddDays(day - 29), 90m + day))]);
+        public Task<IReadOnlyList<Widgets.Services.Stocks.StockBar>> GetHistoryAsync(string symbol, Widgets.Services.Stocks.StockHistoryRange range, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Widgets.Services.Stocks.StockBar>>(
+                [.. Enumerable.Range(0, 30).Select(day => new Widgets.Services.Stocks.StockBar(DateTime.Today.AddDays(day - 29), 90m + day))]);
     }
 
     /// <summary>
     /// The translation engines with no network and no model: the one provider says it is the translation API,
     /// "translates" by putting the target language in front of the text, and finds every text to be German.
     /// </summary>
-    public sealed class Translation : Core.Services.Translation.ITranslationProvider
+    public sealed class Translation : Widgets.Services.Translation.ITranslationProvider
     {
         public string Id => "api";
 
@@ -816,11 +816,11 @@ public static class SandboxServices
 
         public string? UnavailableReason => null;
 
-        public Task<Core.Services.Translation.TranslationResult> TranslateAsync(string text, string? sourceCode, string targetCode, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Core.Services.Translation.TranslationResult($"[{targetCode}] {text}", "de", Name));
+        public Task<Widgets.Services.Translation.TranslationResult> TranslateAsync(string text, string? sourceCode, string targetCode, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Widgets.Services.Translation.TranslationResult($"[{targetCode}] {text}", "de", Name));
 
-        public Task<Core.Services.Translation.LanguageDetection?> DetectAsync(string text, CancellationToken cancellationToken = default) =>
-            Task.FromResult<Core.Services.Translation.LanguageDetection?>(new Core.Services.Translation.LanguageDetection("de", 0.99));
+        public Task<Widgets.Services.Translation.LanguageDetection?> DetectAsync(string text, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Widgets.Services.Translation.LanguageDetection?>(new Widgets.Services.Translation.LanguageDetection("de", 0.99));
     }
 
     /// <summary>Exchange rates with no network: one euro is exactly two dollars, so a conversion is easy to read.</summary>
@@ -828,10 +828,10 @@ public static class SandboxServices
     /// YouTube with no yt-dlp and no network: one fixed video for any search, and a stream address that does not resolve, so a
     /// play attempt ends in the viewer's own error rather than in a download.
     /// </summary>
-    public sealed class YouTube : Core.Services.YouTube.IYouTubeService
+    public sealed class YouTube : Widgets.Services.YouTube.IYouTubeService
     {
-        public Task<IReadOnlyList<Core.Services.YouTube.YouTubeVideo>> SearchAsync(string query, int count, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Core.Services.YouTube.YouTubeVideo>>(
+        public Task<IReadOnlyList<Widgets.Services.YouTube.YouTubeVideo>> SearchAsync(string query, int count, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Widgets.Services.YouTube.YouTubeVideo>>(
             [
                 new("sandbox0001", $"{query} (sandbox)", "Sandbox channel", TimeSpan.FromMinutes(3), 1234, new DateTime(2026, 1, 2)),
             ]);
@@ -841,19 +841,19 @@ public static class SandboxServices
     }
 
     /// <summary>Two results for any term and a short article for each: no test reaches Wikipedia.</summary>
-    public sealed class Encyclopedia : Core.Services.Encyclopedia.IEncyclopediaProvider
+    public sealed class Encyclopedia : Widgets.Services.Encyclopedia.IEncyclopediaProvider
     {
-        public Task<IReadOnlyList<Core.Services.Encyclopedia.EncyclopediaHit>> SearchAsync(
-            Core.Services.Encyclopedia.EncyclopediaSource source, string query, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Core.Services.Encyclopedia.EncyclopediaHit>>(
+        public Task<IReadOnlyList<Widgets.Services.Encyclopedia.EncyclopediaHit>> SearchAsync(
+            Widgets.Services.Encyclopedia.EncyclopediaSource source, string query, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Widgets.Services.Encyclopedia.EncyclopediaHit>>(
             [
                 new($"{query} (sandbox)", $"All about {query}"),
                 new($"History of {query}", $"How {query} came about"),
             ]);
 
-        public Task<Core.Services.Encyclopedia.EncyclopediaArticle> GetArticleAsync(
-            Core.Services.Encyclopedia.EncyclopediaSource source, string title, bool full, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Core.Services.Encyclopedia.EncyclopediaArticle(
+        public Task<Widgets.Services.Encyclopedia.EncyclopediaArticle> GetArticleAsync(
+            Widgets.Services.Encyclopedia.EncyclopediaSource source, string title, bool full, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Widgets.Services.Encyclopedia.EncyclopediaArticle(
                 title,
                 full ? $"The whole sandbox article on {title}." : $"The sandbox introduction to {title}.",
                 $"https://{source.Address}/wiki/{Uri.EscapeDataString(title.Replace(' ', '_'))}",
@@ -1003,41 +1003,41 @@ public static class SandboxServices
     /// The weather forecast and place search: one place, Budapest, with a fixed day, so the dialog's views are the same in every run. The header's 'updated' time is the moment of the fetch, as in the real app, so it differs from run to run.
     /// The forecast starts at 10:00 on 18 November 2026 and rains at 15:00.
     /// </summary>
-    public sealed class WeatherForecasts : Core.Services.Weather.IForecastProvider
+    public sealed class WeatherForecasts : Widgets.Services.Weather.IForecastProvider
     {
-        private static readonly Core.Services.Weather.PlaceHit Budapest = new("Budapest", "Budapest", "Hungary", 47.4979, 19.0402, "Europe/Budapest");
+        private static readonly Widgets.Services.Weather.PlaceHit Budapest = new("Budapest", "Budapest", "Hungary", 47.4979, 19.0402, "Europe/Budapest");
 
-        public Task<Core.Services.Weather.Forecast> FetchAsync(Core.Services.Weather.SavedPlace place, CancellationToken cancellationToken = default)
+        public Task<Widgets.Services.Weather.Forecast> FetchAsync(Widgets.Services.Weather.SavedPlace place, CancellationToken cancellationToken = default)
         {
             var start = new DateTime(2026, 11, 18, 10, 0, 0);
-            var hours = Enumerable.Range(0, 24).Select(hour => new Core.Services.Weather.HourlyPoint(
+            var hours = Enumerable.Range(0, 24).Select(hour => new Widgets.Services.Weather.HourlyPoint(
                 start.AddHours(hour),
                 8 + 4 * Math.Sin(hour / 4.0),
                 hour == 15 ? 1.2 : 0,
                 hour == 15 ? 70 : 10,
                 hour == 15 ? 61 : 3)).ToList();
-            var days = Enumerable.Range(0, 7).Select(day => new Core.Services.Weather.DailyPoint(
+            var days = Enumerable.Range(0, 7).Select(day => new Widgets.Services.Weather.DailyPoint(
                 new DateOnly(2026, 11, 18).AddDays(day),
                 2 + day,
                 10 + day,
                 day == 1 ? 4.5 : 0,
                 day == 1 ? 80 : 5,
                 day == 1 ? 63 : 2)).ToList();
-            var current = new Core.Services.Weather.CurrentConditions(start, 9.5, 2, true);
-            return Task.FromResult(new Core.Services.Weather.Forecast(current, hours, days, DateTimeOffset.UtcNow));
+            var current = new Widgets.Services.Weather.CurrentConditions(start, 9.5, 2, true);
+            return Task.FromResult(new Widgets.Services.Weather.Forecast(current, hours, days, DateTimeOffset.UtcNow));
         }
 
-        public Task<IReadOnlyList<Core.Services.Weather.PlaceHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Core.Services.Weather.PlaceHit>>(
+        public Task<IReadOnlyList<Widgets.Services.Weather.PlaceHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Widgets.Services.Weather.PlaceHit>>(
                 Budapest.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ? [Budapest] : []);
     }
 
-    public sealed class CurrencyRates : Core.Services.Currency.ICurrencyRateProvider
+    public sealed class CurrencyRates : Widgets.Services.Currency.ICurrencyRateProvider
     {
         public string Name => "Sandbox";
 
-        public Task<Core.Services.Currency.CurrencyRates> FetchAsync(CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Core.Services.Currency.CurrencyRates(
+        public Task<Widgets.Services.Currency.CurrencyRates> FetchAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Widgets.Services.Currency.CurrencyRates(
                 new DateOnly(2026, 10, 16),
                 new Dictionary<string, decimal> { ["USD"] = 2m, ["GBP"] = 0.5m, ["JPY"] = 100m }));
     }

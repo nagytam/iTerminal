@@ -1,3 +1,4 @@
+using iTerminal.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using iConsole.Controls;
 using iTerminal.Core.Test.Controls.MenuBar;
@@ -46,14 +47,14 @@ public class ToolsMenuItemTest
     public void TheTranslatorIsListedWithItsKey()
     {
         var theme = iTerminal.Core.Test.Helper.UiTestHelper.TestTheme();
-        var translator = new iTerminal.Core.Dialogs.Translator.TranslatorDialog(
-            Moq.Mock.Of<iTerminal.Core.Services.Translation.ITranslationService>(),
+        var translator = new iTerminal.Widgets.Dialogs.Translator.TranslatorDialog(
+            Moq.Mock.Of<iTerminal.Widgets.Services.Translation.ITranslationService>(),
             Moq.Mock.Of<iTerminal.Core.Services.ISettingsService>(),
-            Microsoft.Extensions.Options.Options.Create(new iTerminal.Core.Services.Translation.TranslationOptions()),
+            Microsoft.Extensions.Options.Options.Create(new iTerminal.Widgets.Services.Translation.TranslationOptions()),
             theme);
         var menu = new ToolsMenuItem(
             null!, null!, null!, null!, Moq.Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, null!, null!, theme,
-            translatorDialog: translator);
+            widgetContributions: [new iTerminal.Widgets.Application.WidgetToolsMenuEntry("office", new iTerminal.Widgets.Commands.TranslatorDialogCommand(translator))]);
 
         var entries = Entries(menu).Select(m => m.Text).ToList();
 

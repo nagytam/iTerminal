@@ -14,6 +14,7 @@ using iTerminal.Core.Dialogs;
 using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.Git;
 using iTerminal.Core.Dialogs.PackageManager;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Git;
@@ -83,9 +84,6 @@ public class HotKeys : StatusBarItem
         INotificationService? notificationService = null,
         DuplicateFinderDialog? duplicateFinderDialog = null,
         SystemSettingsDialog? systemSettingsDialog = null,
-        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
-        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
-        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         LanguageDialog? languageDialog = null,
         ILocalizer? localizer = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
@@ -107,7 +105,8 @@ public class HotKeys : StatusBarItem
         iConsole.Tasks.TaskManager? taskManager = null,
         IPromptService? promptService = null,
         iConsole.Viewers.FileViewerRegistry? fileViewers = null,
-        iConsole.Viewers.FileEditorRegistry? fileEditors = null)
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null,
+        IEnumerable<IStatusBarHotKey>? extraHotKeys = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -440,39 +439,6 @@ public class HotKeys : StatusBarItem
             AddControl(systemSettingsDialogButton);
         }
 
-        if (stockBrowserDialog is not null)
-        {
-            var stockBrowserDialogButton = new Button("Alt-F7-Stocks", new StockBrowserDialogCommand(stockBrowserDialog), themeService)
-            {
-                Position = new Position(0, 0),
-                ViewSize = new Size(15, 1),
-                IsVisible = false
-            };
-            AddControl(stockBrowserDialogButton);
-        }
-
-        if (translatorDialog is not null)
-        {
-            var translatorDialogButton = new Button("Shift-Ctrl-F4-Translate", new TranslatorDialogCommand(translatorDialog), themeService)
-            {
-                Position = new Position(0, 0),
-                ViewSize = new Size(18, 1),
-                IsVisible = false
-            };
-            AddControl(translatorDialogButton);
-        }
-
-        if (currencyConverterDialog is not null)
-        {
-            var currencyConverterDialogButton = new Button("Shift-Ctrl-F5-Currency", new CurrencyConverterDialogCommand(currencyConverterDialog), themeService)
-            {
-                Position = new Position(0, 0),
-                ViewSize = new Size(22, 1),
-                IsVisible = false
-            };
-            AddControl(currencyConverterDialogButton);
-        }
-
         if (torrentManagerDialog is not null)
         {
             var torrentManagerDialogButton = new Button("Shift-Ctrl-F1-BitTorrent", new TorrentManagerDialogCommand(torrentManagerDialog), themeService)
@@ -496,6 +462,18 @@ public class HotKeys : StatusBarItem
         }
 
         _localizer = localizer;
+        // Hot keys that features outside this assembly add (the online information widgets), after the built-in row.
+        foreach (IStatusBarHotKey hotKey in extraHotKeys ?? [])
+        {
+            var button = new Button(hotKey.Label, hotKey.Command, themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(hotKey.Width, 1),
+                IsVisible = false
+            };
+            AddControl(button);
+        }
+
         if (localizer is not null)
         {
             // The language can change on any thread; the idle pass re-reads the labels on the UI thread.

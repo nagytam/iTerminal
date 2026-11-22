@@ -13,7 +13,7 @@ namespace iTerminal.Core.Test.Helper;
 /// whole control tree drew — the dialog and every visible child, since what matters to the user is
 /// the composed screen and not one control's layer.
 /// </summary>
-internal static class UiTestHelper
+public static class UiTestHelper
 {
     public static readonly Size ScreenSize = new(120, 40);
 

@@ -1,3 +1,4 @@
+using iTerminal.Core.Services;
 ﻿using iTerminal.Core.Services;
 using Serilog;
 using Serilog.Events;

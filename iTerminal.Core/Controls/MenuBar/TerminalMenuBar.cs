@@ -9,6 +9,7 @@ using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Data;
 using iTerminal.Core.Data.Music;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Music;
@@ -20,17 +21,11 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
 {
     private const int DateTimeWidth = 19;
     private const int TaskIndicatorWidth = 10;
-    private const int WeatherIndicatorWidth = 20;
-    private const int QuoteBtcIndicatorWidth = 18;
-    private const int QuoteEthIndicatorWidth = 17;
     private const int OnlineIndicatorWidth = 10;
 
     private ISettingsService _settingsService { get; set; }
     private iConsole.Controls.StatusBar.StatusBar _statusBarTopRight { get; set; }
     private iConsole.Controls.StatusBar.TaskStatus _taskStatus { get; set; }
-    private WeatherIndicator _weather { get; set; }
-    private QuoteIndicator _quoteETH { get; set; }
-    private QuoteIndicator _quoteBTC { get; set; }
     private OnlineIndicator _online { get; set; }
     private MusicIndicator? _music { get; set; }
     private IMusicPlayerService? _musicPlayer { get; set; }
@@ -38,18 +33,16 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     /// <summary>Whether music or radio was playing at the last layout or idle pass; a change lays the bar out again.</summary>
     private bool _isMusicPlaying;
 
-    private bool _isWeatherIndicatorEnabled = true;
     private bool _isOnlineIndicatorEnabled = true;
     private readonly ILocalizer? _localizer;
     private volatile bool _languageChanged;
-    private bool _isQuotesIndicatorEnabled = true;
+    private IReadOnlyList<IMenuBarIndicator> _indicators = [];
+    private bool[] _indicatorStates = [];
 
     public TerminalMenuBar(
         IThemeService themeService,
         IContentModelService contentModelService,
         ISettingsService settingsService,
-        WeatherService weatherService,
-        OnlineQuoteService onlineQuoteService,
         TaskManager taskManager,
         // File
         FileViewerDialog fileViewerDialog,
@@ -129,21 +122,13 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
         SystemSettingsDialog? systemSettingsDialog = null,
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
-        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
-        iTerminal.Core.Dialogs.Terminal.MarketTerminalDialog? marketTerminalDialog = null,
-        iTerminal.Core.Dialogs.Map.MapDialog? mapDialog = null,
         iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null,
-        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
-        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog? workspaceManagerDialog = null,
         LanguageDialog? languageDialog = null,
         ILocalizer? localizer = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
-        iTerminal.Core.Dialogs.Radio.OnlineRadioDialog? onlineRadioDialog = null,
         iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
-        iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
-        iTerminal.Core.Dialogs.YouTube.YouTubeDialog? youTubeDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.TicTacToeDialog? ticTacToeDialog = null,
         iTerminal.Core.Dialogs.Games.ChessDialog? chessDialog = null,
@@ -179,14 +164,16 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Jobs.UpdateCheckJob? updateCheckJob = null,
         iConsole.Viewers.FileViewerRegistry? fileViewers = null,
         iConsole.Viewers.FileEditorRegistry? fileEditors = null,
-        iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
         InternetConnectivityService? connectivityService = null,
         IMusicPlayerService? musicPlayerService = null,
-        iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null
+        iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null,
+        IEnumerable<IMenuBarIndicator>? indicators = null,
+        IEnumerable<IToolsMenuContribution>? toolsMenuContributions = null
         )
         : base([], themeService)
     {
         _settingsService = settingsService;
+        _indicators = [.. (indicators ?? []).OrderBy(indicator => indicator.Order)];
 
         Name = nameof(iConsole.Controls.MenuBar);
 
@@ -300,20 +287,12 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             duplicateFinderDialog,
             systemSettingsDialog,
             webBrowserDialog,
-            stockBrowserDialog,
-            marketTerminalDialog,
-            mapDialog,
             remoteConnectionManagerDialog,
-            translatorDialog,
-            currencyConverterDialog,
             workspaceManagerDialog,
             languageDialog,
             torrentManagerDialog,
             contactManagerDialog,
-            onlineRadioDialog,
             environmentVariablesDialog,
-            encyclopediaDialog,
-            youTubeDialog,
             performanceBenchmarkDialog,
             ticTacToeDialog,
             chessDialog,
@@ -328,9 +307,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             userGroupManagerDialog: userGroupManagerDialog,
             scannerDialog: scannerDialog,
             networkToolsDialog: networkToolsDialog,
-            weatherDialog: weatherDialog,
             pluginManagerDialog: pluginManagerDialog,
-            fileTransferDialog: fileTransferDialog));
+            fileTransferDialog: fileTransferDialog,
+            toolsMenuContributions));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));
 
@@ -349,14 +328,14 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         _taskStatus = new iConsole.Controls.StatusBar.TaskStatus(taskManager, themeService);
         AddControl(_taskStatus);
 
-        _weather = new WeatherIndicator(weatherService, themeService);
-        AddControl(_weather);
-
-        _quoteBTC = new QuoteIndicator("Bitcoin", onlineQuoteService, themeService);
-        AddControl(_quoteBTC);
-
-        _quoteETH = new QuoteIndicator("Ethereum", onlineQuoteService, themeService);
-        AddControl(_quoteETH);
+        // The feature indicators (weather and quotes) come from the features that own them; the bar lays them out.
+        foreach (IMenuBarIndicator indicator in _indicators)
+        {
+            foreach (MenuBarIndicatorPart part in indicator.Parts)
+            {
+                AddControl(part.Control);
+            }
+        }
 
         _online = new OnlineIndicator(connectivityService ?? new InternetConnectivityService(), themeService);
         AddControl(_online);
@@ -381,24 +360,18 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     {
         var changed = false;
 
-        bool? isQuotesIndicatorEnabled = _settingsService.GetAsBool(Settings.IsQuotesIndicatorEnabled, true);
-        if (isQuotesIndicatorEnabled is not null && isQuotesIndicatorEnabled.Value != _isQuotesIndicatorEnabled)
-        {
-            _isQuotesIndicatorEnabled = isQuotesIndicatorEnabled.Value;
-            changed = true;
-        }
-
-        bool? isWeatherIndicatorEnabled = _settingsService.GetAsBool(Settings.IsWeatherIndicatorEnabled, true);
-        if (isWeatherIndicatorEnabled is not null && isWeatherIndicatorEnabled.Value != _isWeatherIndicatorEnabled)
-        {
-            _isWeatherIndicatorEnabled = isWeatherIndicatorEnabled.Value;
-            changed = true;
-        }
-
         bool? isOnlineIndicatorEnabled = _settingsService.GetAsBool(Settings.IsOnlineIndicatorEnabled, true);
         if (isOnlineIndicatorEnabled is not null && isOnlineIndicatorEnabled.Value != _isOnlineIndicatorEnabled)
         {
             _isOnlineIndicatorEnabled = isOnlineIndicatorEnabled.Value;
+            changed = true;
+        }
+
+        // The feature indicators (weather, quotes) report their own switches.
+        bool[] states = _indicators.Select(indicator => indicator.IsEnabled).ToArray();
+        if (!_indicatorStates.SequenceEqual(states))
+        {
+            _indicatorStates = states;
             changed = true;
         }
 
@@ -463,8 +436,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         }
     }
 
-    internal bool IsQuoteIndicatorShownForTest => _quoteBTC.IsVisible && _quoteETH.IsVisible;
-    internal bool IsWeatherIndicatorShownForTest => _weather.IsVisible;
+    internal IReadOnlyList<IMenuBarIndicator> IndicatorsForTest => _indicators;
     internal bool IsOnlineIndicatorShownForTest => _online.IsVisible;
     internal bool IsMusicIndicatorShownForTest => _music?.IsVisible ?? false;
 
@@ -532,25 +504,24 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             }
         }
 
-        long quotesWidth = QuoteEthIndicatorWidth + QuoteBtcIndicatorWidth;
-        if (_isQuotesIndicatorEnabled && remainingForOptionalIndicators >= quotesWidth)
+        // The feature indicators, in Order: each goes in whole, with all its parts, or not at all.
+        foreach (IMenuBarIndicator indicator in _indicators)
         {
-            PlaceIndicator(_quoteETH, QuoteEthIndicatorWidth);
-            PlaceIndicator(_quoteBTC, QuoteBtcIndicatorWidth);
-        }
-        else
-        {
-            _quoteETH.IsVisible = false;
-            _quoteBTC.IsVisible = false;
-        }
-
-        if (_isWeatherIndicatorEnabled && remainingForOptionalIndicators >= WeatherIndicatorWidth)
-        {
-            PlaceIndicator(_weather, WeatherIndicatorWidth);
-        }
-        else
-        {
-            _weather.IsVisible = false;
+            long indicatorWidth = indicator.Parts.Sum(part => (long)part.Width);
+            if (indicator.IsEnabled && remainingForOptionalIndicators >= indicatorWidth)
+            {
+                foreach (MenuBarIndicatorPart part in indicator.Parts)
+                {
+                    PlaceIndicator(part.Control, part.Width);
+                }
+            }
+            else
+            {
+                foreach (MenuBarIndicatorPart part in indicator.Parts)
+                {
+                    part.Control.IsVisible = false;
+                }
+            }
         }
 
         ViewSize.Width = Math.Max(rightCursor, 1);

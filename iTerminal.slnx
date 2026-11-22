@@ -23,6 +23,10 @@
   <Project Path="iConsole\iConsole.csproj" />
   <Project Path="iTerminal.Core.Games\iTerminal.Core.Games.csproj" />
   <Project Path="iTerminal.Core.Games.Test\iTerminal.Core.Games.Test.csproj" />
+  <Project Path="iTerminal.Widgets\iTerminal.Widgets.csproj" />
+  <Project Path="iTerminal.Widgets.Test\iTerminal.Widgets.Test.csproj">
+    <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />
+  </Project>
   <Project Path="iTerminal.Core.Test\iTerminal.Core.Test.csproj">
     <BuildDependency Project="iConsole\iConsole.csproj" />
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />

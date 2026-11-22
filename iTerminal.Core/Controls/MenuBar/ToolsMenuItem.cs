@@ -1,7 +1,9 @@
+using iTerminal.Core.Services;
 using iConsole.Controls;
 using iConsole.Services;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Extensions;
 
 namespace iTerminal.Core.Controls.MenuBar;
 
@@ -38,20 +40,12 @@ public class ToolsMenuItem : MenuItem
         DuplicateFinderDialog? duplicateFinderDialog = null,
         SystemSettingsDialog? systemSettingsDialog = null,
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
-        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
-        iTerminal.Core.Dialogs.Terminal.MarketTerminalDialog? marketTerminalDialog = null,
-        iTerminal.Core.Dialogs.Map.MapDialog? mapDialog = null,
         iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null,
-        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
-        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog? workspaceManagerDialog = null,
         LanguageDialog? languageDialog = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
-        iTerminal.Core.Dialogs.Radio.OnlineRadioDialog? onlineRadioDialog = null,
         iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
-        iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
-        iTerminal.Core.Dialogs.YouTube.YouTubeDialog? youTubeDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.TicTacToeDialog? ticTacToeDialog = null,
         iTerminal.Core.Dialogs.Games.ChessDialog? chessDialog = null,
@@ -66,9 +60,9 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
         iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
         iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
-        iTerminal.Core.Dialogs.Weather.WeatherDialog? weatherDialog = null,
         iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null,
-        iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null)
+        iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null,
+        IEnumerable<IToolsMenuContribution>? widgetContributions = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -105,8 +99,6 @@ public class ToolsMenuItem : MenuItem
         if (networkToolsDialog is not null) groups["net"].Add(new NetworkToolsDialogCommand(networkToolsDialog));
         if (fileTransferDialog is not null) groups["net"].Add(new FileTransferDialogCommand(fileTransferDialog, contentModelService));
         if (packageManagerDialog is not null) groups["files"].Add(new PackageManagerDialogCommand(packageManagerDialog));
-        if (stockBrowserDialog is not null) groups["office"].Add(new StockBrowserDialogCommand(stockBrowserDialog));
-        if (marketTerminalDialog is not null) groups["office"].Add(new MarketTerminalDialogCommand(marketTerminalDialog));
         if (calculatorDialog is not null) groups["office"].Add(new CalculatorDialogCommand(calculatorDialog));
         if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) groups["office"].Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         if (userGroupManagerDialog is not null && UserGroupManagerDialogCommand.IsSupported) groups["sys"].Add(new UserGroupManagerDialogCommand(userGroupManagerDialog));
@@ -116,16 +108,9 @@ public class ToolsMenuItem : MenuItem
         if (toDoListDialog is not null) groups["office"].Add(new ToDoListDialogCommand(toDoListDialog));
         if (mailDialog is not null) groups["net"].Add(new MailDialogCommand(mailDialog));
         if (webBrowserDialog is not null) groups["net"].Add(new WebBrowserDialogCommand(webBrowserDialog));
-        if (youTubeDialog is not null) groups["net"].Add(new YouTubeDialogCommand(youTubeDialog));
-        if (mapDialog is not null) groups["office"].Add(new MapDialogCommand(mapDialog));
-        if (translatorDialog is not null) groups["office"].Add(new TranslatorDialogCommand(translatorDialog));
-        if (currencyConverterDialog is not null) groups["office"].Add(new CurrencyConverterDialogCommand(currencyConverterDialog));
-        if (weatherDialog is not null) groups["office"].Add(new WeatherDialogCommand(weatherDialog));
         if (torrentManagerDialog is not null) groups["net"].Add(new TorrentManagerDialogCommand(torrentManagerDialog));
         if (contactManagerDialog is not null) groups["office"].Add(new ContactManagerDialogCommand(contactManagerDialog));
-        if (onlineRadioDialog is not null) groups["net"].Add(new OnlineRadioDialogCommand(onlineRadioDialog));
         if (environmentVariablesDialog is not null) groups["files"].Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));
-        if (encyclopediaDialog is not null) groups["office"].Add(new EncyclopediaDialogCommand(encyclopediaDialog));
         if (performanceBenchmarkDialog is not null) groups["sys"].Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
         if (ticTacToeDialog is not null) groups["games"].Add(new TicTacToeDialogCommand(ticTacToeDialog));
         if (chessDialog is not null) groups["games"].Add(new ChessDialogCommand(chessDialog));
@@ -145,6 +130,15 @@ public class ToolsMenuItem : MenuItem
         if (runtimeDependencyDialog is not null) groups["sys"].Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
         if (diskUsageDialog is not null) groups["files"].Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
         if (duplicateFinderDialog is not null) groups["files"].Add(new DuplicateFinderDialogCommand(duplicateFinderDialog, contentModelService));
+        // Entries that features outside this assembly add (the online information widgets). They follow the entries above in their submenu.
+        foreach (IToolsMenuContribution contribution in widgetContributions ?? [])
+        {
+            if (groups.TryGetValue(contribution.Group, out List<iConsole.Commands.ICommand>? group))
+            {
+                group.Add(contribution.Command);
+            }
+        }
+
         if (elevationService is not null)
         {
             groups["sys"].Add(new RestartAsAdministratorCommand(elevationService, notificationService));

@@ -1,3 +1,4 @@
+using iTerminal.Core.Services;
 ﻿using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;

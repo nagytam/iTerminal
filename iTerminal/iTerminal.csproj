@@ -20,6 +20,7 @@
     <ProjectReference Include="..\iConsole.Inputs.Windows\iConsole.Inputs.Windows.csproj" />
     <ProjectReference Include="..\iConsole\iConsole.csproj" />
     <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
+    <ProjectReference Include="..\iTerminal.Widgets\iTerminal.Widgets.csproj" />
   </ItemGroup>
 
   <!-- Build/ holds the notice generator (compiled by RoslynCodeTaskFactory, not into the app) and the licence texts. -->

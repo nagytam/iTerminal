@@ -1,3 +1,4 @@
+using iTerminal.Core.Services;
 namespace iTerminal.Test;
 
 /// <summary>Moving around the file panels with the keyboard, through the real key routing.</summary>

@@ -1,5 +1,7 @@
 ﻿using iConsole.Interfaces;
 using iConsole.Jobs;
+using iTerminal.Widgets.Application;
+using iTerminal.Widgets.Jobs;
 using iConsole.Test.Core.Automation;
 using iTerminal.Core.Application;
 using iTerminal.Core.Data;
@@ -198,6 +200,7 @@ public sealed class TerminalApp : IAsyncDisposable
             driver = await ConsoleAppDriver.StartAsync<TerminalScreen>((services, configuration) =>
             {
                 services.AddiTerminal(configuration);
+                services.AddWidgets(configuration);
 
                 foreach (var descriptor in services
                     .Where(d => d.ServiceType == typeof(IJob) && OmittedJobs.Contains(d.ImplementationType))
@@ -218,7 +221,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
-                services.AddSingleton<Core.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();
+                services.AddSingleton<Widgets.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();
                 // Evidence entries are time-stamped by no authority: no request leaves the sandbox.
                 services.AddSingleton<Core.Services.Timestamps.ITimestampAuthority, SandboxServices.TimestampAuthority>();
                 // Voice input records from no microphone and recognises with no model: the real service runs on stand-ins.
@@ -226,25 +229,25 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<iConsole.Media.Speech.IMicrophoneCaptureFactory, SandboxServices.Microphone>();
                 // Neither the translation API nor the local model is asked: both providers give way to one that answers at once.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
-                    .RemoveAll<Core.Services.Translation.ITranslationProvider>(services);
-                services.AddSingleton<Core.Services.Translation.ITranslationProvider, SandboxServices.Translation>();
+                    .RemoveAll<Widgets.Services.Translation.ITranslationProvider>(services);
+                services.AddSingleton<Widgets.Services.Translation.ITranslationProvider, SandboxServices.Translation>();
                 // AI queries in the file viewers: the model is not asked, a fixed draft answers at once, so no run reaches an AI provider.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
                     .RemoveAll<iConsole.Tabular.IGridQueryAssistant>(services);
                 services.AddSingleton<iConsole.Tabular.IGridQueryAssistant, SandboxServices.GridQueryAssistant>();
-                services.AddSingleton<Core.Services.Currency.ICurrencyRateProvider, SandboxServices.CurrencyRates>();
+                services.AddSingleton<Widgets.Services.Currency.ICurrencyRateProvider, SandboxServices.CurrencyRates>();
                 // Tools > Weather: the forecast and the place search are answered from a fixed table, so no run reaches Open-Meteo.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
-                    .RemoveAll<Core.Services.Weather.IForecastProvider>(services);
-                services.AddSingleton<Core.Services.Weather.IForecastProvider, SandboxServices.WeatherForecasts>();
-                services.AddSingleton<Core.Services.Encyclopedia.IEncyclopediaProvider, SandboxServices.Encyclopedia>();
+                    .RemoveAll<Widgets.Services.Weather.IForecastProvider>(services);
+                services.AddSingleton<Widgets.Services.Weather.IForecastProvider, SandboxServices.WeatherForecasts>();
+                services.AddSingleton<Widgets.Services.Encyclopedia.IEncyclopediaProvider, SandboxServices.Encyclopedia>();
                 // The network tools would ping, resolve and query whois for the typed target: a fixed answer stands in, so no run reaches the network.
                 services.AddSingleton<Core.Services.NetworkTools.INetworkToolService, SandboxServices.NetworkToolRunner>();
                 // The file transfer would bind a port on the LAN and serve the selection: a fixed share stands in, so no run listens on a socket.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
                     .RemoveAll<Core.Services.Sharing.IFileShareService>(services);
                 services.AddSingleton<Core.Services.Sharing.IFileShareService, SandboxServices.FileShareStub>();
-                services.AddSingleton<Core.Services.YouTube.IYouTubeService, SandboxServices.YouTube>();
+                services.AddSingleton<Widgets.Services.YouTube.IYouTubeService, SandboxServices.YouTube>();
                 // The benchmark's probes read the disk and the network: each one gives a fixed figure, so no run measures this machine.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
                     .RemoveAll<Core.Services.Benchmark.IBenchmarkProbe>(services);

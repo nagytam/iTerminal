@@ -33,7 +33,7 @@ public class WeatherDialogTest
         }
 
         await _app.PressAsync("Enter");
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Weather.WeatherDialog, "the weather dialog to open from Tools");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Widgets.Dialogs.Weather.WeatherDialog, "the weather dialog to open from Tools");
 
         // No place is saved yet, so the dialog opens on the search.
         await _app.WaitForTextAsync("Find a place by name");

@@ -4,6 +4,7 @@ using System.Reflection;
 using iConsole.Localization;
 using iConsole.Services;
 using Microsoft.Extensions.Hosting;
+using iTerminal.Core.Extensions;
 using Serilog;
 
 namespace iTerminal.Core.Services.KeyBindings;
@@ -16,8 +17,14 @@ public sealed record KeyMapLocation(string Path);
 /// cannot be read leaves the default keys in place. Bindings that were not used are logged with the reason, and a
 /// notification names them. Edits take effect at the next start.
 /// </summary>
-public sealed class KeyMapStartupHostedService(KeyMapLocation location, ILogger logger, INotificationService? notifications = null) : IHostedService
+public sealed class KeyMapStartupHostedService(
+    KeyMapLocation location,
+    ILogger logger,
+    INotificationService? notifications = null,
+    IEnumerable<ICommandAssemblyContribution>? commandAssemblies = null) : IHostedService
 {
+    private readonly IReadOnlyList<ICommandAssemblyContribution> _commandAssemblies = [.. commandAssemblies ?? []];
+
     private readonly ILogger _logger = logger.ForContext<KeyMapStartupHostedService>();
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -82,8 +89,9 @@ public sealed class KeyMapStartupHostedService(KeyMapLocation location, ILogger 
         }
     }
 
-    private static IEnumerable<Type> CommandTypes() =>
+    private IEnumerable<Type> CommandTypes() =>
         new[] { typeof(Command).Assembly, typeof(KeyMapFile).Assembly }
+            .Concat(_commandAssemblies.Select(contribution => contribution.Assembly))
             .Distinct()
             .SelectMany(LoadableTypes)
             .Where(type => type is { IsClass: true, IsAbstract: false } && typeof(Command).IsAssignableFrom(type));
