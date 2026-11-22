@@ -102,4 +102,41 @@ public class ContentModelFileSystemTest
             Directory.Delete(root, recursive: true);
         }
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AForcedRefresh_DoesNotCancelTheOtherPanelsListingOfTheSameFolder()
+    {
+        // Ctrl+Shift+D puts both panels on one folder; the watcher of one then refreshes it by force, and used to
+        // cancel the other panel's running listing, which stayed empty because nothing started it again.
+        var root = Path.Combine(Path.GetTempPath(), "forced_" + Guid.NewGuid().ToString("N")[..8]);
+        Directory.CreateDirectory(root);
+        var guard = new Mock<IFrequentExecutionGuardService>();
+        guard.Setup(g => g.Execute(It.IsAny<Action>())).Callback<Action>(a => a());
+        var files = new Mock<IFileSystemService>();
+        files.Setup(f => f.ExistsFolder(It.IsAny<Url>())).Returns(true);
+        var settings = new Mock<ISettingsService>();
+        var tasks = new TaskManager();
+        var model = new ContentModelFileSystem(
+            "Left", tasks, settings.Object, new FolderHistoryService(settings.Object), files.Object,
+            guard.Object, Mock.Of<IMemoryCacheService>(), Serilog.Log.Logger);
+        try
+        {
+            model.SetUrl(new Url(root));
+
+            // The other panel's listing of the same folder, held in the queue so that it is still running when the refresh comes.
+            var others = new Tasks.FilePanelRefreshTask(new Url(root), "Right", Mock.Of<IMemoryCacheService>(), Serilog.Log.Logger);
+            others.PauseGate.Pause();
+            tasks.Add(others);
+
+            model.Refresh(forceRefresh: true);
+
+            Assert.IsFalse(others.CancellationTokenSource.IsCancellationRequested);
+        }
+        finally
+        {
+            model.Dispose();
+            Directory.Delete(root, recursive: true);
+        }
+    }
 }
