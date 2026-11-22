@@ -1,5 +1,5 @@
 using iTerminal.Core.Data;
-using iTerminal.Core.Test.Model.Map;
+using iTerminal.Core.Test.Helper;
 using iTerminal.Core.Model.Workspaces;
 using iTerminal.Core.Services.Workspaces;
 

@@ -1,3 +1,4 @@
+using iTerminal.Core.Services;
 ﻿namespace iTerminal.Core.Services;
 
 public interface ISettingsService

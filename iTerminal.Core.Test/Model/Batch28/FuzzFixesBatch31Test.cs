@@ -1,7 +1,6 @@
 using iTerminal.Core.Controls.Terminals;
 using iTerminal.Core.Services.Documents;
 using iTerminal.Core.Services.Remote;
-using iTerminal.Core.Services.Stocks;
 using iTerminal.Core.Services.UserMenu;
 
 namespace iTerminal.Core.Test.Model.Batch28;
@@ -10,21 +9,6 @@ namespace iTerminal.Core.Test.Model.Batch28;
 [TestClass]
 public class FuzzFixesBatch31Test
 {
-    [Timeout(60_000)]
-    [TestMethod]
-    public void YahooStockQuoteProvider_ParseSearch_OfAnEmptyOrBrokenReply_IsNoHits()
-    {
-        Assert.AreEqual(0, YahooStockQuoteProvider.ParseSearch(string.Empty).Count);
-        Assert.AreEqual(0, YahooStockQuoteProvider.ParseSearch("<html>502 Bad Gateway</html>").Count);
-    }
-
-    [Timeout(60_000)]
-    [TestMethod]
-    public void YahooStockQuoteProvider_ParseChart_OfAnEmptyReply_IsNoQuote()
-    {
-        Assert.IsNull(YahooStockQuoteProvider.ParseChart("MSFT", string.Empty));
-    }
-
     [Timeout(60_000)]
     [TestMethod]
     public void DocumentSearchIndex_BuildSnippet_WithNullsOrANegativeRadius_DoesNotThrow()

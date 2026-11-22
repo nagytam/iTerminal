@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The online information widgets: the Tools menu dialogs that read the internet (weather, stocks, currency,
+    encyclopedia, translator, YouTube, online radio, map) and the menu bar indicators that show their values. They sit
+    above iTerminal.Core, which knows nothing about them: Core exposes the extension points (tools menu entries,
+    hot keys, menu bar indicators) and this project contributes to them.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Static analysis for every non-test project. PrivateAssets keeps the analyzer out of consumers. -->
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.37.0.15768" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

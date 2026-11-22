@@ -1,3 +1,4 @@
+using iTerminal.Core.Services;
 using iConsole.Data;
 using iTerminal.Core.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

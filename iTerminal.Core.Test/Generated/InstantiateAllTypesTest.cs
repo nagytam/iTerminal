@@ -1,3 +1,4 @@
+using iTerminal.Widgets.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -264,19 +265,6 @@ public class InstantiateAllTypesTest
         if (type == typeof(IContentModelService))
         {
             value = NullContentModelService.Instance;
-            return true;
-        }
-
-        // Common core services/types used by TerminalMenuBar and related UI components
-        if (type == typeof(iTerminal.Core.Services.WeatherService))
-        {
-            value = new iTerminal.Core.Services.WeatherService();
-            return true;
-        }
-
-        if (type == typeof(iTerminal.Core.Services.OnlineQuoteService))
-        {
-            value = new iTerminal.Core.Services.OnlineQuoteService();
             return true;
         }
 

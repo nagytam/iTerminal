@@ -49,13 +49,17 @@ public static class iTerminalApplicationBuilderExtension
     public static string UserDataRoot() =>
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
 
+/// <summary>The data folder: the <see cref="DataDirectoryKey"/> setting when it is set, otherwise the user's iTerminal folder. Every AddXxx that stores files reads it.</summary>
+    public static string ResolveDataDirectory(IConfiguration? configuration) =>
+        configuration?[DataDirectoryKey] is { Length: > 0 } configuredDirectory
+            ? configuredDirectory
+            : Path.Combine(UserDataRoot(), "iTerminal");
+
     public static IServiceCollection AddiTerminal(this IServiceCollection services, IConfiguration? configuration = null)
     {
         // The file-format services (converter, YAML/TOML parser, executable disassembler) come from iConsole.Formats.
         services.AddFileFormats();
-        string databaseDirectory = configuration?[DataDirectoryKey] is { Length: > 0 } configuredDirectory
-            ? configuredDirectory
-            : Path.Combine(UserDataRoot(), "iTerminal");
+        string databaseDirectory = ResolveDataDirectory(configuration);
         Directory.CreateDirectory(databaseDirectory);
 
         string databasePath = Path.Combine(databaseDirectory, "iTerminal.sqlite");
@@ -70,10 +74,8 @@ public static class iTerminalApplicationBuilderExtension
             services.Configure<FileInformationRefreshOptions>(configuration.GetSection("FileInformationRefresh"));
             services.Configure<AiOptions>(configuration.GetSection("AI"));
             services.Configure<iTerminal.Core.Services.Cloud.CloudOptions>(configuration.GetSection("Cloud"));
-            services.Configure<iTerminal.Core.Services.Translation.TranslationOptions>(configuration.GetSection("Translation"));
         }
 
-        services.AddOptions<iTerminal.Core.Services.Translation.TranslationOptions>();
         services.AddOptions<FileInformationRefreshOptions>();
         services.AddOptions<AiOptions>();
         services.AddOptions<iTerminal.Core.Services.Cloud.CloudOptions>();
@@ -182,8 +184,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
         services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
-        services.AddSingleton<iTerminal.Core.Model.Radio.RadioStationStore>();
-        services.AddTransient<iTerminal.Core.Dialogs.Radio.OnlineRadioDialog>();
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISessionEnvironment, iTerminal.Core.Services.SystemSettings.SessionEnvironment>();
         services.AddTransient<iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog>();
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
@@ -194,15 +194,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.Web.WebBrowserDialog>();
         services.AddSingleton<Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>>(provider =>
             () => provider.GetRequiredService<iTerminal.Core.Dialogs.Web.WebBrowserDialog>());
-        // Alt+F10: the ASCII-art OpenStreetMap. Tiles are saved (and .mbtiles files read) under <data directory>/maps,
-        // so it works offline; a test replaces the tile service so no run reaches the network.
-        services.AddSingleton<iTerminal.Core.Services.Map.MapStore>();
-        services.AddSingleton<iTerminal.Core.Services.Map.IMapSearchService, iTerminal.Core.Services.Map.MapSearchService>();
-        services.AddSingleton<iTerminal.Core.Services.Map.IMapTileService>(provider => new iTerminal.Core.Services.Map.MapTileService(
-            provider.GetRequiredService<iTerminal.Core.Services.Web.IWebFetcher>(),
-            provider.GetRequiredService<iTerminal.Core.Services.Map.MapStore>(),
-            Path.Combine(databaseDirectory, "maps")));
-        services.AddTransient<iTerminal.Core.Dialogs.Map.MapDialog>();
         // Alt+F2: saved SSH and PowerShell remoting connections, each a keypress from a live session on the lent terminal.
         services.AddSingleton<iTerminal.Core.Services.Remote.IRemoteConnectionService, iTerminal.Core.Services.Remote.RemoteConnectionService>();
         services.AddTransient<iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog>();
@@ -380,56 +371,6 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+Shift+Q: the evidence notebook as a drive. One instance holds the open notebook folder for the run.
         services.AddSingleton<iTerminal.Core.Services.Timestamps.ITimestampAuthority, iTerminal.Core.Services.Timestamps.Rfc3161TimestampAuthority>();
         services.AddSingleton<iTerminal.Core.Services.Evidence.IEvidenceNotebookService, iTerminal.Core.Services.Evidence.EvidenceNotebookService>();
-        // Alt+F7: the full-screen stock browser. Quotes come from Yahoo Finance; a test replaces the
-        // provider so no run reaches the network.
-        services.AddSingleton<iTerminal.Core.Services.Stocks.IStockQuoteProvider, iTerminal.Core.Services.Stocks.YahooStockQuoteProvider>();
-        services.AddSingleton<iTerminal.Core.Services.Stocks.IStockService, iTerminal.Core.Services.Stocks.StockService>();
-        services.AddTransient<iTerminal.Core.Dialogs.Stocks.StockBrowserDialog>();
-        services.AddTransient<iTerminal.Core.Dialogs.Terminal.MarketTerminalDialog>();
-        // Ctrl+Shift+F4: the translator. A LibreTranslate-compatible API (Translation:ApiUrl) and the connected AI
-        // model are two providers behind one service; a test replaces the providers so no run reaches the network.
-        services.AddSingleton<iTerminal.Core.Services.Translation.ILanguageDetector, iTerminal.Core.Services.Translation.LanguageDetector>();
-        services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationProvider>(provider =>
-        {
-            var translation = provider.GetRequiredService<IOptions<iTerminal.Core.Services.Translation.TranslationOptions>>().Value;
-            return new iTerminal.Core.Services.Translation.LibreTranslateProvider(translation.ApiUrl, () =>
-            {
-                string? key = Environment.GetEnvironmentVariable(translation.ApiKeyEnvVar);
-                if (!string.IsNullOrEmpty(key))
-                {
-                    return key;
-                }
-
-                try
-                {
-                    return provider.GetRequiredService<IPasswordManager>().GetSecret(iTerminal.Core.Services.Translation.TranslationOptions.ApiKeyPasswordId);
-                }
-                catch (Exception exception) when (exception is InvalidOperationException or IOException)
-                {
-                    return null;
-                }
-            });
-        });
-        services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationProvider, iTerminal.Core.Services.Translation.LlmTranslationProvider>();
-        services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationService, iTerminal.Core.Services.Translation.TranslationService>();
-        services.AddTransient<iTerminal.Core.Dialogs.Translator.TranslatorDialog>();
-        // Ctrl+Shift+F5: the currency converter. Rates are the European Central Bank's daily file; a test replaces
-        // the provider so no run reaches the network.
-        services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyRateProvider, iTerminal.Core.Services.Currency.EcbCurrencyRateProvider>();
-        services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyService, iTerminal.Core.Services.Currency.CurrencyService>();
-        services.AddTransient<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>();
-        // Tools > Weather: the forecast and place names are Open-Meteo's (no key). Places, the home place and the last forecast
-        // of each are kept in the settings; a test replaces the provider so no run reaches the network.
-        services.AddSingleton<iTerminal.Core.Services.Weather.IForecastProvider, iTerminal.Core.Services.Weather.OpenMeteoForecastProvider>();
-        services.AddSingleton<iTerminal.Core.Services.Weather.IForecastService, iTerminal.Core.Services.Weather.ForecastService>();
-        services.AddTransient<iTerminal.Core.Dialogs.Weather.WeatherDialog>();
-        // Ctrl+Shift+W: the encyclopedia. Wikipedia and Wiktionary are read through the MediaWiki API; a test replaces the
-        // provider so no run reaches the network.
-        services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaProvider, iTerminal.Core.Services.Encyclopedia.WikiEncyclopediaProvider>();
-        services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaService, iTerminal.Core.Services.Encyclopedia.EncyclopediaService>();
-        services.AddTransient<iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog>();
-        services.AddSingleton<iTerminal.Core.Services.YouTube.IYouTubeService, iTerminal.Core.Services.YouTube.YtDlpYouTubeService>();
-        services.AddTransient<iTerminal.Core.Dialogs.YouTube.YouTubeDialog>();
         // Ctrl+Shift+B: the performance benchmark. Its probes are registered in the order a run measures them; each one only reads or computes.
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.CpuSingleThreadProbe>();
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.CpuMultiThreadProbe>();
@@ -539,8 +480,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, SettingsSynchronizationJob>();
         services.AddSingleton<IJob, MemoryDriveSynchronizationJob>();
         services.AddSingleton<IJob, FolderIndexJob>();
-        services.AddSingleton<IJob, OnlineQuoteJob>();
-        services.AddSingleton<IJob, WeatherJob>();
         services.AddSingleton<iTerminal.Core.Services.InternetConnectivityService>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.InternetConnectivityJob>();
         services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
@@ -672,7 +611,6 @@ public static class iTerminalApplicationBuilderExtension
             serviceProvider.GetRequiredService<IDbContextFactory<iTerminalDbContext>>()));
         services.AddSingleton<INetworkProfileService, NetworkProfileService>();
         services.AddSingleton<INetworkDiscoveryService, NetworkDiscoveryService>();
-        services.AddSingleton<OnlineQuoteService>();
         // Components downloaded into the data folder instead of shipped (see RuntimeDependencyService). The
         // Playwright driver and its Chromium are what the quote indicator needs; the list is one entry per component.
         string runtimesDirectory = Path.Combine(databaseDirectory, "runtimes");
@@ -685,7 +623,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IRuntimeDependency, FfmpegRuntimeDependency>();
         services.AddSingleton<IRuntimeDependency, iTerminal.Core.Services.RuntimeDependencies.RarRuntimeDependency>();
         services.AddSingleton<IRuntimeDependency, iTerminal.Core.Services.RuntimeDependencies.UnrarRuntimeDependency>();
-        services.AddSingleton<IRuntimeDependency, YtDlpRuntimeDependency>();
 
         // PowerShell 7 for remote PowerShell sessions and Ctrl+O on Windows, downloaded from its GitHub release. A
         // PowerShell that is installed already is used as it is.
@@ -723,7 +660,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<UpdateCheckJob>();
         services.AddSingleton<IJob>(sp => sp.GetRequiredService<UpdateCheckJob>());
         services.AddTransient<UpdateDialog>();
-        services.AddSingleton<WeatherService>();
         services.AddSingleton<FolderIndexModel>();
         services.AddTransient<TerminalWindow>();
         services.AddTransient<TerminalPanel>();

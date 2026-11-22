@@ -41,7 +41,9 @@ public class DialogLabelsLanguageTest
     private static string? LabelOf(string type, string member)
     {
         const BindingFlags Flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-        Type dialogType = typeof(RenameDialog).Assembly.GetExportedTypes().Single(t => t.Name == type);
+        Type dialogType = new[] { typeof(RenameDialog).Assembly, typeof(iTerminal.Widgets.Application.WidgetsApplicationBuilderExtension).Assembly }
+            .SelectMany(assembly => assembly.GetExportedTypes())
+            .Single(t => t.Name == type);
         Dialog? dialog = DialogHintsWholeTest.Resolve(dialogType, 0) as Dialog;
         Assert.IsNotNull(dialog, type);
         object? value = null;
@@ -97,7 +99,9 @@ public class DialogLabelsLanguageTest
             Speak(language.Code);
             foreach ((string type, string member, _, _) in Labels.DistinctBy(l => l.Type))
             {
-                Type dialogType = typeof(RenameDialog).Assembly.GetExportedTypes().Single(t => t.Name == type);
+                Type dialogType = new[] { typeof(RenameDialog).Assembly, typeof(iTerminal.Widgets.Application.WidgetsApplicationBuilderExtension).Assembly }
+                    .SelectMany(assembly => assembly.GetExportedTypes())
+                    .Single(t => t.Name == type);
                 Dialog dialog = (Dialog)DialogHintsWholeTest.Resolve(dialogType, 0)!;
                 iConsole.Data.Size screen = new(80, 24);
                 string drawn;

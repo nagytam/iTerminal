@@ -1,3 +1,6 @@
+using iTerminal.Core.Extensions;
+using iTerminal.Widgets.Controls.MenuBar;
+using iTerminal.Widgets.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using iConsole.Controls;
 using iConsole.Data;
@@ -28,18 +31,22 @@ public class TerminalMenuBarTest
         guard.Setup(g => g.Execute(It.IsAny<Action>())).Callback<Action>(a => a());
 
         var bar = new TerminalMenuBar(
-            TestTheme(), Mock.Of<IContentModelService>(), settings, new WeatherService(), new OnlineQuoteService(), taskManager,
+            TestTheme(), Mock.Of<IContentModelService>(), settings, taskManager,
             null!, null!, null!, null!, null!,
             null!, null!, null!,
             null!, new DriveInfoModel(), null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), guard.Object, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>(), iTerminal.Core.Test.Dialogs.FolderSelectorTestHarness.EmptyRemoteConnections(), null!, null!, null!,
             null!, null!, null!, null!, null!, null!, null!, null!, null!,
-            null!, null!, connectivityService: connectivity, musicPlayerService: player);
+            null!, null!, connectivityService: connectivity, musicPlayerService: player,
+            indicators: [new QuoteMenuBarIndicator(new OnlineQuoteService(), settings, TestTheme()), new WeatherMenuBarIndicator(new WeatherService(), settings, TestTheme())]);
 
         var parent = new Control(TestTheme()) { ViewSize = new Size(width, 40) };
         parent.AddControl(bar);
         bar.ViewSize = new Size(width, 1);
         return (bar, settings, taskManager);
     }
+
+    private static bool Shown<TIndicator>(TerminalMenuBar bar) where TIndicator : IMenuBarIndicator =>
+        bar.IndicatorsForTest.OfType<TIndicator>().Single().Parts.All(part => part.Control.IsVisible);
 
     [Timeout(60_000)]
     [TestMethod]
@@ -51,8 +58,8 @@ public class TerminalMenuBarTest
 
         bar.OnInitializeLayout();
 
-        Assert.IsTrue(bar.IsQuoteIndicatorShownForTest);
-        Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
+        Assert.IsTrue(Shown<QuoteMenuBarIndicator>(bar));
+        Assert.IsTrue(Shown<WeatherMenuBarIndicator>(bar));
     }
 
     [Timeout(60_000)]
@@ -65,8 +72,8 @@ public class TerminalMenuBarTest
 
         bar.OnInitializeLayout();
 
-        Assert.IsFalse(bar.IsQuoteIndicatorShownForTest);
-        Assert.IsFalse(bar.IsWeatherIndicatorShownForTest);
+        Assert.IsFalse(Shown<QuoteMenuBarIndicator>(bar));
+        Assert.IsFalse(Shown<WeatherMenuBarIndicator>(bar));
     }
 
     [Timeout(60_000)]
@@ -80,8 +87,8 @@ public class TerminalMenuBarTest
 
         bar.OnInitializeLayout();
 
-        Assert.IsFalse(bar.IsQuoteIndicatorShownForTest);
-        Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
+        Assert.IsFalse(Shown<QuoteMenuBarIndicator>(bar));
+        Assert.IsTrue(Shown<WeatherMenuBarIndicator>(bar));
     }
 
     [Timeout(60_000)]
@@ -94,17 +101,17 @@ public class TerminalMenuBarTest
         using var _ = taskManager;
         await bar.OnInitializeAsync();
         bar.OnInitializeLayout();
-        Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
+        Assert.IsTrue(Shown<WeatherMenuBarIndicator>(bar));
 
         settings.Set(Settings.IsWeatherIndicatorEnabled, bool.FalseString);
         bar.OnIdle();
 
-        Assert.IsFalse(bar.IsWeatherIndicatorShownForTest);
+        Assert.IsFalse(Shown<WeatherMenuBarIndicator>(bar));
 
         settings.Set(Settings.IsWeatherIndicatorEnabled, bool.TrueString);
         bar.OnIdle();
 
-        Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
+        Assert.IsTrue(Shown<WeatherMenuBarIndicator>(bar));
     }
 
     [Timeout(60_000)]
@@ -221,7 +228,7 @@ public class TerminalMenuBarTest
             var (bar, _, taskManager) = Create(candidate, player: MusicPlayer(() => PlaybackState.Stopped).Object);
             using var _ = taskManager;
             bar.OnInitializeLayout();
-            if (bar.IsQuoteIndicatorShownForTest)
+            if (Shown<QuoteMenuBarIndicator>(bar))
             {
                 width = candidate;
             }
@@ -232,6 +239,6 @@ public class TerminalMenuBarTest
         using var __ = playingTasks;
         playing.OnInitializeLayout();
 
-        Assert.IsFalse(playing.IsQuoteIndicatorShownForTest, "the quotes give way to the music widget");
+        Assert.IsFalse(Shown<QuoteMenuBarIndicator>(playing), "the quotes give way to the music widget");
     }
 }

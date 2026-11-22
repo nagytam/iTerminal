@@ -2,6 +2,7 @@ using iConsole.Desktops;
 using iConsole.Dialogs;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace iTerminal.Core.AI;
@@ -42,12 +43,9 @@ public class UiService : IUiService
             "screen_manager" or "screens" => _serviceProvider.GetRequiredService<ScreenManagerDialog>(),
             "ai_model" or "ai_info" or "ai" => _serviceProvider.GetRequiredService<AiModelDialog>(),
             "git" or "git_client" or "source_control" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Git.GitClientDialog>(),
-            "currency" or "currencyconverter" or "currency converter" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>(),
             "torrent" or "torrents" or "bittorrent" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog>(),
-            "encyclopedia" or "wikipedia" or "wiki" or "britannica" or "dictionary" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog>(),
             "benchmark" or "performance" or "performance_benchmark" or "speed_test" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>(),
             "contacts" or "contact" or "contact_manager" or "address_book" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>(),
-            "radio" or "online_radio" or "internet_radio" or "radio_stations" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Radio.OnlineRadioDialog>(),
             "environment" or "env" or "environment_variables" or "variables" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog>(),
             "games" or "game" or "tictactoe" or "tic-tac-toe" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.TicTacToeDialog>(),
             "chess" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.ChessDialog>(),
@@ -57,12 +55,28 @@ public class UiService : IUiService
             "tetris" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.TetrisDialog>(),
             "jass" or "swiss_jass" or "schieber" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.JassDialog>(),
             "risk" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.RiskDialog>(),
-            "translator" or "translate" or "translation" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Translator.TranslatorDialog>(),
             _ => null
         };
 
+        dialog ??= ResolveContributedDialog(name);
+
         if (dialog is not null)
             await ContentWindow.ShowDialogAsync(dialog);
+    }
+
+    // Dialogs that features outside iTerminal.Core contribute (the online information widgets) are looked up by name here.
+    private Dialog? ResolveContributedDialog(string name)
+    {
+        string key = name.ToLowerInvariant();
+        foreach (IOpenableDialogContribution contribution in _serviceProvider.GetServices<IOpenableDialogContribution>())
+        {
+            if (contribution.Names.Contains(key))
+            {
+                return contribution.Resolve(_serviceProvider);
+            }
+        }
+
+        return null;
     }
 
     // Cancelling the desktop token is the same shutdown path as F10 / QuitCommand: it stops the

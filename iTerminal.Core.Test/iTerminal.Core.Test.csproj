@@ -33,6 +33,8 @@
     <ProjectReference Include="..\iConsole.Test.Core\iConsole.Test.Core.csproj" />
     <ProjectReference Include="..\iTerminal.Core.Games.Test\iTerminal.Core.Games.Test.csproj" />
     <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
+    <!-- Cross-cutting tests (the menus, key-hint batches) construct widget dialogs; the widget tests live in iTerminal.Widgets.Test. -->
+    <ProjectReference Include="..\iTerminal.Widgets\iTerminal.Widgets.csproj" />
   </ItemGroup>
 
   <ItemGroup>

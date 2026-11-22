@@ -178,7 +178,7 @@ public class DialogsTest
     public async Task TheTranslatorTranslatesATypedText()
     {
         await _app.PressAsync("Ctrl+Shift+F4");
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Translator.TranslatorDialog, "the translator to open");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Widgets.Dialogs.Translator.TranslatorDialog, "the translator to open");
 
         // From, To and Engine come first; the text field is the fourth stop.
         await _app.PressAsync("Tab");
@@ -323,7 +323,7 @@ public class DialogsTest
     public async Task TheEncyclopediaSearchesAndReadsAnArticle()
     {
         await _app.PressAsync("Ctrl+Shift+W");
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Encyclopedia.EncyclopediaDialog, "the encyclopedia to open");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Widgets.Dialogs.Encyclopedia.EncyclopediaDialog, "the encyclopedia to open");
 
         await _app.TypeAsync("tulip");
         await _app.PressAsync("Enter");
@@ -370,7 +370,7 @@ public class DialogsTest
     public async Task TheCurrencyConverterConvertsWithTheDownloadedRates()
     {
         await _app.PressAsync("Ctrl+Shift+F5");
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.CurrencyConverter.CurrencyConverterDialog, "the currency converter to open");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Widgets.Dialogs.CurrencyConverter.CurrencyConverterDialog, "the currency converter to open");
 
         await _app.WaitForTextAsync("1.00 EUR  =  2.00 USD");
         await _app.WaitForTextAsync("Rates of 2026-10-16 downloaded.");

@@ -103,7 +103,7 @@ public class OutsideWorldDialogsTest
     {
         Assert.IsTrue(await _app.PressAsync("Alt+F7"));
 
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Stocks.StockBrowserDialog, "the stock browser");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Widgets.Dialogs.Stocks.StockBrowserDialog, "the stock browser");
         await _app.WaitForTextAsync("SPCX");
         await _app.WaitForTextAsync("Sandbox");
         foreach (var symbol in new[] { "AAPL", "MSFT", "TSLA", "GOOGL", "NVDA", "INTC" })
