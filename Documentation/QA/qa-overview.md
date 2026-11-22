@@ -329,3 +329,277 @@ grep -oE "warning [A-Z]+[0-9]+" <scratch>/warnings-unique.txt | sort | uniq -c |
 # Per project
 grep -oE "\[[^]]*\.(csproj|slnx|props)\]" <scratch>/warnings-unique.txt | sort | uniq -c | sort -rn
 ```
+
+
+## Q3 2026-11-22: all (pipeline, coverage, warnings, code review)
+
+Scope `all`, chosen because the request named none. Branch `docs/qa-all-q3`, cut from `main` at commit `b9b81269`; Linux 7.3.0-11, `dotnet 11.0.100`, `gh 2.46.0`. Pipeline history is the last 50 runs of "Build and test" on `main` (2026-11-21 09:55 to 2026-11-22 04:01 UTC); "Release builds" has no run on `main`. Coverage is the `XPlat Code Coverage` collector (`coverlet.collector` is referenced by the test projects, with `coverage.runsettings`) on the seven unit test projects that build on Linux. The Release build ran on a clean `git archive HEAD` copy in the scratchpad, because a first build in the working tree failed with `MSB4018` ("iConsole.dll is being used by another process": another process was building in the same tree). Code review covered the changes since Q1: the voice recorder (#809), the AI panel tools (#816), the wipe dialog and panel refresh fix (#815) and the Sonar fixes (#812). Not measured: the Windows build and Windows coverage; `iTerminal.Test` and `iTerminal.Specifications.Test` coverage (the end-to-end suite was not run; CI logs were read instead). The working tree held uncommitted edits to other documents made by another process; they are not part of this run.
+
+### Summary
+
+- Pipeline: of the last 50 "Build and test" runs on `main`, 16 passed, 22 failed and 12 were cancelled (failure rate 57.9% of the 38 completed runs, 44% of all). The longest red streak is 12 runs. The 8 runs since Q1 have 3 failures; the head of `main` (`b9b81269`, run 44983162486) is green. Median duration of successful runs rose from 15.8 min (older 8) to 20.7 min (newest 8).
+- Largest coverage gap: `iTerminal.Core` is at 82.4% lines and 68.6% branches, but `EvidenceCommands.cs` is at 11% (276 lines) and `TwainScannerBackend.cs` at 0% (235 lines); `iConsole.Media.Audio` is at 36.1% lines. The Q1 name-pairing count of untested `iTerminal.Core` files grew from 153 to 173, but coverage shows the pairing overstates the gap (see the status of QA-8).
+- Build warnings: 1,805 unique (Q2: 1,838), 1,793 of them Sonar. The 34 `S2930` and the `CS0108` of Q2 are gone.
+- Most serious defects found: the new voice recorder shares Ctrl+Shift+X with the password manager (QA-18), and a recorder that dies while recording is lost without a message (QA-19).
+
+### Measurements
+
+Pipeline, branch `main`, last 50 runs per workflow:
+
+| Workflow | Runs | Pass | Fail | Cancelled | Failure rate (completed) | Median duration of successful runs |
+| --- | --- | --- | --- | --- | --- | --- |
+| Build and test | 50 | 16 | 22 | 12 | 57.9% (22 of 38) | 20.7 min (newest 8 of 16) against 15.8 min (older 8): +31% |
+| Release builds | 0 on `main` | n/a | n/a | n/a | n/a | not measured; the 10 newest runs (all `pull_request`) passed |
+
+Fewer than 40 successful runs exist, so 8 against 8 was compared. The window is one day, so the trend is noisy; the slowest successes (26.0, 26.4, 28.2 min) are all on days with several merges in a row.
+
+Failure patterns (each failed run counted once, under its first failing test; no build error, infrastructure failure or job timeout was found):
+
+| Pattern | Failed runs | First run | Last run | Class |
+| --- | --- | --- | --- | --- |
+| `ShowsMemoryAndProcessorUseForEachProcess` (Windows, Core.Test), 12 runs in a row | 12 | 44891874408 (11-21 09:55) | 44907848614 (13:14) | Test failure, fixed |
+| `Draw_LoadsThePictureAndShowsItAsAscii` (Windows) | 2 | 44915127385 | 44925547090 | Flaky |
+| Windows end-to-end timeouts (`CtrlShiftDShowsTheFocusedFolderInTheOtherPanel`, `ShrinkingTheTerminalLeavesNothingOffScreen`) | 2 | 44924437491 | 44936425002 | Timeout, QA-7 |
+| `ASlowListingIsNotCachedAsEmpty_...` (Windows, Core.Test) | 1 | 44939633048 | 44939633048 | Test failure |
+| `CtrlShiftF8_AnyOtherKeyAfterTheFirstEnter_WithdrawsIt` (Windows) | 1 | 44942013183 | 44942013183 | Test failure, fixed in #815 |
+| `ThePaletteFooterAndSixMoreDialogsInGerman_AreGerman("Passwords", ...)`, both OS | 2 | 44943515522 | 44947969087 | Test failure, fixed in #811 (no red run for it since) |
+| `EnterOpensATarGzAndF5CopiesOutOfIt` (Windows, 34 s) | 1 | 44948346711 | 44948346711 | Flaky (timeout) |
+| `OneHungDisk_DoesNotBlankTheOthers` (Windows, Core.Test) | 1 | 44981366585 (11-22 03:35) | 44981366585 | Flaky |
+
+Counts add to 22. Run 44942013183 is also counted for the German test in Q1; here it is placed under its first failure. The German test was read in the logs of runs 44943515522 and 44947969087 (jobs 136979370778 and 136979371056: "Timed out waiting for the German text.").
+
+Coverage per project, line and branch rate of the assembly under test (Cobertura package, Linux, Release):
+
+| Test project | Assembly | Line rate | Branch rate | Tests passed / skipped | Q1 line rate |
+| --- | --- | --- | --- | --- | --- |
+| `iConsole.Test` | `iConsole` | 91.4% | 83.5% | 5073 / 0 | 91.5% |
+| `iConsole.Formats.Test` | `iConsole.Formats` | 87.2% | 75.3% | 576 / 0 | 87.2% |
+| `iTerminal.Core.Test` | `iTerminal.Core` | 82.4% | 68.6% | 6374 / 54, 1 failed under the collector (QA-21) | 82.5% |
+| `iTerminal.Core.Games.Test` | `iTerminal.Core.Games` | 89.7% | 83.3% | 164 / 0 | 89.7% |
+| `iConsole.Media.Video.Test` | `iConsole.Media.Video` | 89.5% | 76.7% | 113 / 1 | 89.5% |
+| `iConsole.Media.Speech.Test` | `iConsole.Media.Speech` | 48.7% | 37.1% | 26 / 1 | 48.7% |
+| `iConsole.Media.Audio.Test` | `iConsole.Media.Audio` | 36.1% | 32.5% | 40 / 0 | 31.2% |
+| `iTerminal.Test` (end-to-end) | all | not measured | not measured | CI run 44983162486 (head of `main`): green | not measured |
+| `iTerminal.Specifications.Test` | all | not measured | not measured | not re-read | not measured |
+
+`iTerminal.Core` by folder, lowest line rate first (lines in the measured assembly): `Screens` 47% (77), `Jobs` 65% (852), `AI` 66% (1,538), `Commands` 67% (2,842), `Services` 77% (22,472), `Model` 85%, `Documents` 86%, `Tasks` 87%, `Dialogs` 88% (26,602). Selected files: `Commands/Evidence/EvidenceCommands.cs` 11% (276 lines), `Services/Scanning/Twain/TwainScannerBackend.cs` 0% (235), `AI/AiPanelTools.MorePanelOperations.cs` 58% (277), `Dialogs/Voice/VoiceRecorderDialog.cs` 85% (305), `Services/Voice/VoiceRecorderService.cs` 91% (70), `Services/Recycle/RecycleBinStores.cs` 80% (172), `Tasks/ContentModelFolderTransferTask.cs` 98% (113), `Tasks/FolderCopyPipeline.cs` 89% (28), `Services/RuntimeDependencies/ReleaseArchive.cs` 95% (39).
+
+Untested source types by name pairing (no `<Name>Test.cs` and no mention of the type name in any test file of the paired project; a proxy):
+
+| Source project | Files | With no test | Lines in them | Largest folders (count) |
+| --- | --- | --- | --- | --- |
+| `iConsole` | 512 | 57 | 3,985 | Services 8, Diagnostics 5, Interfaces 5, Controls 4 |
+| `iConsole.Formats` | 66 | 24 | 4,210 | Executables 6, Services 5, IWork 3, Fonts 3 |
+| `iTerminal.Core` | 912 | 173 | 13,764 | Commands 73, Services 52, Dialogs 13, Model 12, Tasks 5 |
+| `iTerminal.Core.Games` | 12 | 1 | 683 | `ChessEngine.cs` |
+| `iConsole.Media.Audio` | 13 | 8 | 1,532 | Sinks 4 (`WinMmAudioSink` 497 lines, `PulseAudioSink` 403, `AplayAudioSink` 311) |
+| `iConsole.Media.Speech` | 11 | 2 | 34 | interfaces |
+| `iConsole.Media.Video` | 18 | 2 | 92 | small types |
+| `iConsole.Inputs.Posix` | 3 | 2 | 76 | `LinuxStdin.cs` |
+| `iConsole.Inputs.Windows` | 12 | 2 | 736 | `VKey.cs` (730 lines of constants) |
+
+Test quality counts (grep): `[Ignore]` 6, all in `iTerminal.Core.Test`, each with a reason (live Swissquote page, Ollama, SSH server, a 360 MB Playwright download); `Thread.Sleep` 30 (12 in `iConsole.Test`, 14 in `iTerminal.Core.Test`, 2 in `iTerminal.Test`, 2 in `iConsole.Media.Speech.Test`); `Assert.Inconclusive` 119 (101 in `iTerminal.Core.Test`). Skips are by platform: on the Windows runner 19 of 40 `iConsole.Media.Audio.Test` tests are skipped (job 137083178496).
+
+Build warnings, Release, `dotnet build iTerminal.slnx -c Release --no-incremental`, unique lines (the only errors are the known WiX `MSB4057`):
+
+| Project | Unique warnings | Sonar (`S####`) | Compiler (`CS####`) | .NET and MSTest analyzers | Other |
+| --- | --- | --- | --- | --- | --- |
+| `iTerminal.Core` | 1,020 | 1,019 | 1 | 0 | 0 |
+| `iConsole` | 577 | 577 | 0 | 0 | 0 |
+| `iConsole.Formats` | 67 | 66 | 1 | 0 | 0 |
+| `iTerminal.Core.Games` | 45 | 45 | 0 | 0 | 0 |
+| `iConsole.Media.Audio` | 38 | 38 | 0 | 0 | 0 |
+| `iConsole.Media.Video` | 16 | 16 | 0 | 0 | 0 |
+| `iConsole.Inputs.Windows` | 15 | 15 | 0 | 0 | 0 |
+| `iConsole.Inputs.Posix` | 9 | 9 | 0 | 0 | 0 |
+| `iConsole.Media.Speech` | 7 | 7 | 0 | 0 | 0 |
+| `iTerminal` | 1 | 1 | 0 | 0 | 0 |
+| `iTerminal.Core.Test` | 8 | 0 | 2 | 6 | 0 |
+| `iConsole.Media.Audio.Test` | 1 | 0 | 0 | 1 | 0 |
+| Installer (`NU1503`) | 1 | 0 | 0 | 0 | 1 |
+| Total | 1,805 | 1,793 | 4 | 7 | 1 |
+
+Test projects have no `S####` warning, as intended. Against Q2 (1,838 total, 1,824 Sonar): minus 34 `S2930` and the `CS0108` (fixed in #812), plus a few new Sonar hits in the new code; the net is minus 33 (Sonar minus 31).
+
+Top warning codes:
+
+| Code | Analyzer | Count | Projects | Class |
+| --- | --- | --- | --- | --- |
+| `S3358` | Sonar | 348 | not split | Low (nested ternary) |
+| `S108` | Sonar | 163 | not split | Low (empty block) |
+| `S8949` | Sonar | 153 | not split | Low (cancellation token not passed on) |
+| `S927` | Sonar | 127 | not split | Low (parameter name differs from base) |
+| `S1905` | Sonar | 114 | not split | Low (redundant cast) |
+| `S3267` | Sonar | 70 | not split | Low |
+| `S2486` | Sonar | 68 | 6 | High (exception swallowed; QA-15) |
+| `S2325` | Sonar | 51 | not split | Low (could be static) |
+| `S1075` | Sonar | 50 | not split | Low (hard-coded URI or path) |
+| `S9422`, `S6966` | Sonar | 40 each | 5 and 4 | Low |
+| `S5332` | Sonar | 28 | 3 | Medium (plain `http` or `ftp`) |
+| `S1172` | Sonar | 13 | 4 | Medium (unused parameter) |
+| `CS8604` | compiler | 1 | `iConsole.Formats` | High (possible null argument; QA-17) |
+| `CS9107` | compiler | 1 | `iTerminal.Core` | Low (`EditTextFileDialogCommand.cs:21`, a captured parameter also passed to the base) |
+| `CS0067` | compiler | 2 | `iTerminal.Core.Test` | Low (`SystemSamplerFakes.cs:137,139`, unused events in a fake) |
+| `MSTEST0044` | MSTest analyzers | 5 | `iTerminal.Core.Test` | Low (`DataTestMethod` is obsolete) |
+| `CA1416` | .NET analyzers | 2 | 2 test projects | Medium (Unix-only API in tests) |
+
+Suppressions: 7 `#pragma warning disable` (all in test code; 5 carry a reason, 2 have none: `iTerminal.Core.Test/Dialogs/NetworkBrowserDialogTest.cs:351` for `CS0162` and `iTerminal.Core.Test/Helper/MarkableTestModel.cs:30` for `CS0067`); 0 `[SuppressMessage]`; one `NoWarn` (`NETSDK1206` in `Directory.Build.props:6`); `.editorconfig` sets 4 diagnostic severities (naming rules to suggestion, `IDE1006` to none). The two reasonless pragmas are Low (an unreachable `yield break` that makes the method an iterator, and an interface event a fake never raises); they are counted under QA-27.
+
+### Quality issues
+
+1. **QA-18 Ctrl+Shift+X is bound to the voice recorder and to the password manager**
+   - **Severity**: High
+   - **Category**: input
+   - **Area**: `iTerminal.Core/Commands/VoiceRecorderDialogCommand.cs`, `iTerminal.Core/Commands/PasswordManagerDialogCommand.cs`
+   - **Evidence**: `VoiceRecorderDialogCommand.cs:13-14` sets `Key` to `new Key(ConsoleKey.X, true, false, true)` (Ctrl+Shift+X). `PasswordManagerDialogCommand.cs:19` sets `AlternateKey` to the same chord and handles it at `:25-28`; its comment says this is "the chord that always reaches it" because Ctrl+X cuts in a file panel. `HotKeyCollisionTest.cs:83` pins the password manager's alternate key to Ctrl+Shift+X, and the file's other tests exist because earlier collisions made a feature unreachable (design review finding 11, `Documentation/research/design-review-overview.md:729`). The test for the recorder (`VoiceRecorderDialogTest.cs:164`, `TheCommandIsCtrlShiftX`) asserts only its own key. `Documentation/architecture/dialogs.md:308` still says Ctrl+Shift+X is the password manager's, and `:739` gives it to the recorder. No end-to-end test presses Ctrl+Shift+X (`grep -rn ConsoleKey.X iTerminal.Test` finds nothing).
+   - **Impact**: one of the two dialogs does not open on its default chord, or the chord opens the wrong one; the footer and the command palette show a key that does something else. Which command wins depends on the order the key router offers the commands, which was not traced.
+   - **Suggested fix**: give the recorder a free chord (not Alt+letter, not Ctrl+M) and add a collision test next to `AddEvidenceAndThePasswordManagerHaveDifferentChords`; fix the sentence in `dialogs.md`.
+   - **Test that would catch it**: none; a `HotKeyCollisionTest` case comparing every command's `Key` and `AlternateKey` over the container (a generic duplicate-chord test would have caught finding 11 as well), plus a `DialogsTest` scenario that presses the recorder's chord.
+   - **unverified** as to which command wins; the duplicate itself was read in both files.
+
+2. **QA-19 A recorder that dies while recording loses the recording with no message**
+   - **Severity**: High
+   - **Category**: error-handling
+   - **Area**: `iTerminal.Core/Services/Voice/VoiceRecorderService.cs`, `iTerminal.Core/Dialogs/Voice/VoiceRecorderDialog.cs`, `iConsole.Media.Speech/ProcessMicrophoneCapture.cs`
+   - **Evidence**: `ProcessMicrophoneCapture.Stop` throws `SpeechException` when the recorder process exited with a non-zero code (`ProcessMicrophoneCapture.cs:135`; a permission or a device that failed after the start-up probe). `VoiceRecorderService.StopAsync` awaits it at `VoiceRecorderService.cs:102` inside a `try/finally` with no `catch`; its `catch (Exception ... when SpeechException or IOException)` covers only the transcription (`:138`). The dialog's background task catches only `OperationCanceledException`, `IOException` and `UnauthorizedAccessException` (`VoiceRecorderDialog.cs:241-254`; the `IOException` catch is at `:248`), so the `SpeechException` ends the task unobserved: the `finally` sets the state to Idle with `_message` null and `_last` null. The user sees the status line go back to the idle text. `VoiceRecorderServiceTest` and `VoiceRecorderDialogTest` use a fake whose `Stop()` returns bytes and never throws (`VoiceRecorderServiceTest.cs:17`); the only `SpeechException` tests cover `Start` and the recognizer.
+   - **Impact**: on a machine where the recorder fails late (for example a revoked microphone permission), the user speaks for up to 60 seconds, presses Enter and gets nothing, with no reason.
+   - **Suggested fix**: catch `SpeechException` in the dialog's stop task (and in the start task for any other exception type) and show its message in `_message`.
+   - **Test that would catch it**: none; a dialog test with a capture whose `Stop()` throws `SpeechException("recorder failed")`, asserting the message appears in `Rows(...)`.
+
+3. **QA-20 `OneHungDisk_DoesNotBlankTheOthers` fails on the Windows runner**
+   - **Severity**: Medium
+   - **Category**: flaky-test
+   - **Area**: `iTerminal.Core.Test/Services/SystemInfo/SystemSamplerTest.cs:101`
+   - **Evidence**: run 44981366585 (Windows job 137083178496, 2026-11-22 03:46): "expected: Measuring, actual: NotAnswering" at `Assert.AreEqual(ProbeState.Measuring, DiskState(second, "sda"))`, 682 ms. The healthy disk `sda` was reported as not answering in the second snapshot, so the 750 ms probe budget (or the virtual clock) expired while the probe was still running on a loaded runner. The sibling `Identity_IsReadOnce_UntilItAnswers` (QA-5) fails for the same family of reason.
+   - **Impact**: a random red Windows run, and the merge of PR #816 went through on a red run.
+   - **Suggested fix**: drive the fake probes through the gate or the virtual clock only, with no real-time budget, as QA-5 suggests; one change can fix both tests.
+   - **Test that would catch it**: the same test, repeated in a loop with `Task.Run` load.
+
+4. **QA-21 `Rescan_TriggersSecondEnumeration` waits a fixed 50 ms**
+   - **Severity**: Medium
+   - **Category**: flaky-test
+   - **Area**: `iTerminal.Core.Test/Dialogs/IPhoneBrowserDialogTest.cs:88-99`
+   - **Evidence**: the test failed once in the coverage run of `iTerminal.Core.Test` on Linux ("Expected invocation on the mock at least 2 times, but was 1 times: s => s.GetDevices()"). It presses `r` and then does `await Task.Delay(50)` (`:97`) before the verify. The same project passed 6,362 tests in CI.
+   - **Impact**: a random red run under load or under the coverage collector.
+   - **Suggested fix**: wait on the dialog's scan flag (`IsScanningForTest`, used by `WaitForScanAsync` in the same file) instead of the delay.
+   - **Test that would catch it**: the same test.
+
+5. **QA-22 `EnterOpensATarGzAndF5CopiesOutOfIt` timed out on Windows**
+   - **Severity**: Medium
+   - **Category**: flaky-test
+   - **Area**: `iTerminal.Test/ArchiveDriveTest.cs:74`
+   - **Evidence**: run 44948346711, Windows job 136982868202: "Timed out waiting for the folder the archive is in." after 34 s; the Linux job of the same commit passed. It is a second archive-listing timeout on Windows after the one in QA-7.
+   - **Impact**: a random red Windows run; the Windows end-to-end step takes 9 min (run 44947969087) against about 4.4 min on Linux.
+   - **Suggested fix**: as in QA-7, profile the Windows end-to-end run before raising a timeout; read the failure screen in the job log to see whether the listing was empty or still running.
+   - **Test that would catch it**: the same test.
+   - **unverified** as to the cause.
+
+6. **QA-23 Merges went in on red runs**
+   - **Severity**: Medium
+   - **Category**: pipeline
+   - **Area**: process
+   - **Evidence**: 3 of the 8 runs since Q1 on `main` are red (44947969087, 44948346711, 44981366585); the red run 44981366585 is the merge of #816 (`8bfa8ae6`), and the next run (44983162486) is green. Q1 recorded a 12-run red streak. In the 50-run window 22 runs failed (57.9% of completed runs).
+   - **Impact**: a failing test on `main` is only noticed when the next author hits it; flaky tests (QA-20 to QA-22) and real defects look the same.
+   - **Suggested fix**: do not merge while the Windows job is red; re-run once and, if it is green, file the test as flaky instead of merging past it.
+   - **Test that would catch it**: not applicable.
+
+7. **QA-24 Median run time of "Build and test" grew by a third**
+   - **Severity**: Low
+   - **Category**: pipeline
+   - **Area**: `.github/workflows` (Build and test)
+   - **Evidence**: median of the successful runs, newest 8 against the 8 before: 20.7 min against 15.8 min; the successes of 26.0, 26.4 and 28.2 min are runs 44979642086, 44950987713 and 44931138996. The Windows end-to-end step is the largest part (9 min 16 s in run 44947969087).
+   - **Impact**: slower feedback; only 16 successful runs exist, so the trend may be noise.
+   - **Suggested fix**: none until the next run confirms it; then compare the Windows job times step by step (`gh run view <id> --json jobs`).
+   - **Test that would catch it**: not applicable.
+
+8. **QA-25 `EvidenceCommands` (11%) and `TwainScannerBackend` (0%) are almost untested**
+   - **Severity**: Medium
+   - **Category**: test-gap
+   - **Area**: `iTerminal.Core/Commands/Evidence/EvidenceCommands.cs`, `iTerminal.Core/Services/Scanning/Twain/TwainScannerBackend.cs`
+   - **Evidence**: Cobertura of `iTerminal.Core.Test`: `EvidenceCommands.cs` 276 lines at 11%, `TwainScannerBackend.cs` 235 lines at 0%. The end-to-end `EvidenceNotebookTest.cs` exists, but it does not count in the unit-test numbers.
+   - **Impact**: the evidence notebook commands write case files; a regression is found only by the end-to-end test. The Twain backend is Windows-only native code that CI does not exercise.
+   - **Suggested fix**: unit tests for the evidence commands (the service is already behind an interface); for Twain, a test of the parts that do not call the native library.
+   - **Test that would catch it**: none.
+
+9. **QA-26 The new AI tools `multi_rename`, `create_file` and `go_to_root_folder` are 58% covered**
+   - **Severity**: Medium
+   - **Category**: test-gap
+   - **Area**: `iTerminal.Core/AI/AiPanelTools.MorePanelOperations.cs` (536 lines, #816)
+   - **Evidence**: 58% line coverage of 277 lines in `iTerminal.Core.Test`. The file renames and creates files after an approval dialog. `GoToRootFolder` (`:78-91`) has no `try/catch`, unlike `GoToPath` (`:55-75`, catch at `:72`), so a failing `SetUrlAsync` reaches the caller as an exception instead of an "Error:" string. A case-only rename (`ignoreCase`, `A` to `a`) on a case-insensitive file system is reported as "already exists", because `ExistsFile(destination)` sees the entry itself (`:433`); not reproduced.
+   - **Impact**: the approval path is tested (`AiPanelToolsMoreOperationsTest`), but the error paths of a tool that moves user files are not.
+   - **Suggested fix**: add tests for a failing `SetUrlAsync`, a case-only rename and a partial failure in `MultiRename` (the undo batch must hold only the renames that succeeded).
+   - **Test that would catch it**: none for these three cases.
+   - **unverified** as to the case-only rename.
+
+10. **QA-27 Two suppressions without a reason, and obsolete `DataTestMethod` use**
+    - **Severity**: Low
+    - **Category**: test-quality
+    - **Area**: `iTerminal.Core.Test`
+    - **Evidence**: `NetworkBrowserDialogTest.cs:351` (`#pragma warning disable CS0162`) and `MarkableTestModel.cs:30` (`#pragma warning disable CS0067`) carry no reason; five `MSTEST0044` warnings (`DataTestMethod`) in `WatchAlarmTest.cs:30`, `WatchStopwatchTest.cs:49`, `WatchTimerTest.cs:10,24` and `NetworkManagerDialogTest.cs:67`; two `CS0067` in `SystemSamplerFakes.cs:137,139` that have no pragma.
+    - **Impact**: noise in the test build; a reader cannot tell whether the suppression is still needed.
+    - **Suggested fix**: add one-line reasons, replace `DataTestMethod` with `TestMethod`, and declare the fake's events with `#pragma ... // reason` or an empty accessor.
+    - **Test that would catch it**: not applicable.
+
+### Code review notes (no issue raised)
+
+- `VoiceRecorderService` releases the microphone under a lock on every path (`Start` after `Dispose`, a second `Start`, `Discard`), and the dialog reads a snapshot under a lock so no key handler waits for the device; the dialog is removed from the tree by `Close()` (`VoiceRecorderDialog.cs`). Coverage of both is 85% and 91%.
+- `SecureWipeDialog` (#815): `UpdateLines` is serialized with `_linesLock` and reads the phase once; `ContentModelFileSystem.Refresh` now cancels only the panel's own tasks (`ContentModelFileSystem.cs:221`), with a test in `ContentModelFileSystemTest`.
+- `GoToPath` in the AI tools cannot carry a credential: `Url` parses only `user@host` (`iConsole/Data/Url.cs:30-42`), no password.
+- `Control.cs:949` and `Desktop.cs:101` still hold the empty `catch` (QA-15).
+
+### What is in good shape
+
+- `iConsole` 91.4% lines and 83.5% branches over 5,073 tests in about 40 s; `iTerminal.Core.Games` 89.7%, `iConsole.Media.Video` 89.5%, `iConsole.Formats` 87.2%.
+- Files that Q1 listed as untested are in fact well covered: `ContentModelFolderTransferTask` 98%, `ReleaseArchive` 95%, `FolderCopyPipeline` 89%, `RecycleBinStores` 80%.
+- Build warnings fell by 33 since Q2: the disposal rule `S2930` (34) and `CS0108` are at zero. No `CS8602` and no `S####` in a test project.
+- Head of `main` is green; no build error, infrastructure failure or job timeout in 50 runs. No `[Ignore]` without a reason.
+- The new voice recorder service and dialog have unit tests that cover the start, stop, discard, transcription and missing-model paths.
+
+### Suggested order
+
+1. QA-18 (duplicate chord, one-line fix plus a collision test), then QA-19.
+2. QA-20, QA-21, QA-22 with QA-5 and QA-7 (flaky tests; QA-20 and QA-5 can be one change).
+3. QA-23 (process) and QA-24 (re-check on the next run).
+4. Coverage: QA-26, QA-25, then QA-8, QA-9, QA-10, QA-13 from Q1.
+5. QA-11, QA-15, QA-17 from Q1/Q2, then QA-27.
+
+### Status of earlier issues
+
+- **QA-3** (directory completion): not seen in the 50-run window (its last failure, run 44879680992, is older); open, not proven fixed, since the cause was never found.
+- **QA-4** (`Draw_LoadsThePictureAndShowsItAsAscii`): last failure run 44925547090; no failure in the 30 runs since. Open, watch.
+- **QA-5** (`Identity_IsReadOnce_UntilItAnswers`): not seen again, but its sibling in the same fixture failed (QA-20). Open.
+- **QA-6** (CSV export empty file): no failure since 44905768469. Open, watch.
+- **QA-7**: `CtrlShiftF8_...` was fixed in #815; `CtrlShiftDShowsTheFocusedFolderInTheOtherPanel` was also fixed there (panel refresh cancelling the other panel's listing); `ShrinkingTheTerminalLeavesNothingOffScreen` not seen since 44924437491. A new Windows timeout is QA-22. Partly fixed, open.
+- **QA-8** (untested `iTerminal.Core` files): name pairing now gives 173 (Q1: 153); coverage shows `RecycleBinStores` 80%, `ContentModelFolderTransferTask` 98% and `FolderCopyPipeline` 89%, so the original examples are covered. The remaining real gaps are QA-25 and QA-26. Open, narrowed.
+- **QA-9** (audio coverage): 36.1% lines (Q1: 31.2%), 40 passed and 0 skipped on Linux; on Windows 19 of 40 are skipped. Open.
+- **QA-10** (605 of 627 BDD scenarios skipped): not re-measured.
+- **QA-11** (`ReleaseArchive` and a colon in an entry name): code unchanged (`ArchivePaths.cs:18` refuses `:` on every OS; `ReleaseArchive.cs:34` continues on null). The file is 95% covered, but no test with a colon entry was found by name. Open, unverified.
+- **QA-12** (fixes that did not stick): the Tab completion and the picture dialog did not fail again in the window. Open, watch.
+- **QA-13** (screen saver, no end-to-end scenario): still no match in `iTerminal.Test`; unit tests exist (`ScreenSaverSettingsTest.cs`, `ScreenSaverEffectsTest.cs`, `ScreenSaverOverlayTest.cs`). Open.
+- **QA-15** (S2486): 68 warnings, unchanged; `Control.cs:949` and `Desktop.cs:101` unchanged. Open.
+- **QA-17** (`CS8604` in `PdfSignatureReader.cs:119`): still reported. Open.
+- Q2 items `S2930` (34) and `CS0108`: fixed in #812, zero in this build.
+
+### How to reproduce
+
+```bash
+# Pipeline
+gh run list --branch main --workflow "Build and test" --limit 50 --json databaseId,conclusion,createdAt,startedAt,updatedAt,headSha,displayTitle,event
+gh run list --branch main --workflow "Release builds" --limit 50 --json databaseId,conclusion,createdAt,event
+gh run view <id> --json jobs --jq '.jobs[]|{name,conclusion,id:.databaseId,steps:[.steps[]|select(.conclusion=="failure")|.name]}'
+gh api repos/{owner}/{repo}/actions/jobs/<job id>/logs | grep -E "Failed |Error Message|Timed out"
+
+# Build warnings, on a clean copy so no other build locks the obj folders (about 1 minute with a warm server)
+git archive HEAD | tar -x -C <scratch>/src && cd <scratch>/src
+dotnet build iTerminal.slnx -c Release --no-incremental -nologo -v:n > <scratch>/build.log 2>&1
+grep -E ": warning " <scratch>/build.log | sed -E 's/^ *[0-9]+>//; s/^\s+//' | sort -u > <scratch>/warnings-unique.txt
+
+# Coverage, one test project at a time (Linux), then read the package with the assembly's name in coverage.cobertura.xml
+dotnet test <project>/<project>.csproj -c Release --no-build --collect:"XPlat Code Coverage" \
+  --settings coverage.runsettings --results-directory <scratch>/cov/<project>
+
+# Quality counts
+grep -rE '^\s*\[Ignore' --include=*.cs <test project>
+grep -r 'Thread\.Sleep' --include=*.cs <test project>
+grep -rn 'pragma warning disable' --include=*.cs .
+```

@@ -1005,6 +1005,146 @@ Method: candidate blocks were found with `grep` on a distinctive line, the bodie
 3. Finding 44 (the inner-row helper and `TextWidth.Ellipsize`), then finding 45 (the line editor), because the three dialogs of 45 use the `Put` that 44 replaces.
 4. Finding 46 after a maintainer decision on the fallback encoding, then findings 50 and 52, one store or dialog at a time when it is touched anyway.
 
+## Rendering pipeline
+
+Reviewed on 2026-11-22, scope "Rendering pipeline". No review had covered this scope; the caller asked for a full review, and the whole-repository pass of 2026-11-21 had already refreshed the other scopes a day earlier, so this run takes the one scope never reviewed. Branch `docs/architecture-review-rendering-pipeline`, cut from `main` at `b9b81269`. Read: `CLAUDE.md`, `ui-framework.md`, `ui-framework/rendering-pipeline.md`, the profiling and design-review overviews; in the source `ControlRendererJob`, `ConsoleBufferRendererJob`, `Job`, `Desktop`, `IDesktop`, `Buffer`, `BufferLayer`, `IBuffer`, `OffscreenBuffer`, `RenderingDumpHelper`, `Cursor`, `Position`, the render and invalidation members of `Control`, `IConsoleDriver` and the two drivers' frame methods, `TerminalScreen.OnWindowSizeChanged`, the rendering registrations in `iConsoleApplicationBuilderExtension`, and the names of the rendering tests in `iConsole.Test/Jobs` and `iConsole.Test/Buffers`. Run: `dotnet list iTerminal.slnx package` with `--vulnerable --include-transitive`, `--outdated` and `--deprecated` (read-only, nuget.org reachable), to check that the "Dependencies and packages" section still holds: no advisory, `OpenMcdf` 3.4.0 the only update (finding 25), `imobiledevice-net` still deprecated (finding 4); that section is not rewritten. Not done: no build, no test run, no run-time check, no render dump, no resize or clock change tried on a running app.
+
+**Summary**
+
+- The two render jobs split the work well (compose on one thread, diff and write on the other), and the diff writer is careful: byte compare per row, runs of changed cells per write, synchronized output, Sixel under the same lock.
+- The largest structural risk: on a terminal resize the writer thread lays the control tree out and renders the whole screen, while the control renderer draws into the same layers without the lock (finding 54). The lock rule in `CLAUDE.md` is kept on the resize side only.
+- The writer loop times its resize check with the wall clock, so after the clock goes back an hour, window resizes are not seen for an hour (finding 55).
+- Nothing tells the loops that something changed. Four loops poll, and two independent one-second fallbacks repaint the whole screen (finding 56, the structure behind profiling item 1).
+- An exception in `Draw` is swallowed in five places under four policies, and none reaches the log in a release build (finding 57).
+
+**Findings**
+
+54. **On a resize the writer thread lays out and renders the control tree, beside the control renderer, and `Buffer.SyncLock` does not cover the writes** — **Medium**, kind: concurrency.
+    - **Where:** [ConsoleBufferRendererJob.cs:212](../../iConsole/Jobs/ConsoleBufferRendererJob.cs) (`DetectWindowSizeChanges`, on the writer thread) resizes the buffer under the lock (line 228) and then raises `WindowSizeChanged` (line 244). [Desktop.cs:269](../../iConsole/Desktops/Desktop.cs) handles it: `Screens.First().OnWindowSizeChanged`, which in [TerminalScreen.cs:180](../../iTerminal.Core/Screens/TerminalScreen.cs) sets `ViewSize` and runs the whole layout, then `RenderInitialState` ([Desktop.cs:275](../../iConsole/Desktops/Desktop.cs)), which calls `Buffer.UpdateLayers` and `screen.Render(Buffer)` for the whole tree. At the same time `ControlRendererJob` calls `UpdateLayers` ([ControlRendererJob.cs:80](../../iConsole/Jobs/ControlRendererJob.cs)) and `control.Render` (line 100) outside the lock; it takes the lock only around `Merge` (line 130) and the layer wipe (line 180). `Buffer.Write` resizes the layer it writes to without the lock ([Buffer.cs:140](../../iConsole/Buffers/Buffer.cs)), and `BufferLayer.Resize` replaces `Size` and `Content` in two steps ([BufferLayer.cs:88](../../iConsole/Buffers/BufferLayer.cs)). [rendering-pipeline.md:13](../architecture/ui-framework/rendering-pipeline.md) says the lock "guards the layer array", which `UpdateLayers` changes without it.
+    - **Problem:** two threads draw into the same layers and one of them moves controls while the other draws them. The rule "don't mutate the control tree from a worker thread" is broken by the framework itself, and the code knows it: the comment at [ConsoleBufferRendererJob.cs:237](../../iConsole/Jobs/ConsoleBufferRendererJob.cs) says the layout handler can throw because "the tree can change under it", and retries it up to five times. A user who resizes the window can see a frame mixed from the old and new layout until the next full repaint, and an `IndexOutOfRangeException` in a write lands in an empty `catch` (finding 57). Principles: ownership (one thread owns the tree), explicit contracts.
+    - **Improvement:** keep the writer thread to "measure and report". It records the new size in `_layoutPending` (already there) and stops; `ControlRendererJob` applies it at the start of its next pass, on the thread that owns the tree:
+
+      ```csharp
+      // IDesktop (iConsole), called by ControlRendererJob at the top of Render()
+      void ApplyPendingResize();   // Buffer.Resize under SyncLock, screen.OnWindowSizeChanged, then RepaintFromScratch
+      ```
+
+      `ConsoleBufferRendererJob` keeps reading `MergedLayer` under the lock and keeps its own `LastBuffer` resize (line 285). Then correct the sentence on the architecture page: the lock guards the merged layer and the layer set against the writer; drawing is single-threaded by design.
+    - **Effort:** M.
+    - **Risk of the change:** a resize that is applied one pass later (about a millisecond). The resize tests in `ConsoleBufferRendererJobRunTest` and `DesktopTest`, which drive `WindowSizeChanged` directly, need to move to the new entry point; the end-to-end suite resizes the virtual terminal.
+    - **unverified:** no torn frame or exception was observed; the race is read from the code.
+
+55. **The writer loop uses the wall clock, so after the clock goes back the resize check stops** — **Medium**, kind: consistency.
+    - **Where:** [ConsoleBufferRendererJob.cs:120](../../iConsole/Jobs/ConsoleBufferRendererJob.cs) and line 132 take `DateTime.Now`; `DetectWindowSizeChanges` returns early while `now - _lastWindowSizeCheck < 100 ms` (line 214). This is the only place that notices a resize (`RefreshWindowSize()` is called from here and once in `Desktop.RunAsync`). The sibling job uses `Environment.TickCount64` ([ControlRendererJob.cs:22](../../iConsole/Jobs/ControlRendererJob.cs)), and `MainLoopWatchDog` uses `ITimeProvider` ([ITimeProvider.cs](../../iConsole/Services/ITimeProvider.cs)).
+    - **Problem:** `DateTime.Now` is local time. When daylight saving ends (or the clock is set back), `now - _lastWindowSizeCheck` is negative for an hour, so for that hour a resized window keeps its old layout and the one-second fallback repaint (line 133) stops too. Lending the terminal (Ctrl+O) resets the check (line 100), which hides the fault for a user who happens to do that. Principle: consistency with the framework (two clocks in two sibling loops).
+    - **Improvement:** use `Environment.TickCount64` for `lastRedraw`, `_lastWindowSizeCheck` and `_lastStatisticsDate`, as `ControlRendererJob` does, or take `ITimeProvider` through the constructor (it is registered already) so a test can move the clock back. `_lastWindowSizeCheck = DateTime.MinValue` becomes `long.MinValue / 2` or a "check now" flag.
+    - **Effort:** S.
+    - **Risk of the change:** none beyond the timing tests in `RendererJobRedrawTimingTest` and `ConsoleBufferRendererJobRunTest`; with `ITimeProvider` a new test can set the clock back and assert that a resize is still seen.
+    - **unverified:** not reproduced by changing the clock of a running app.
+
+56. **No change signal: four loops poll, and two independent one-second fallbacks repaint the whole screen** — **Medium**, kind: performance, consistency.
+    - **Where:** profiling item 1 (measured: 25 % of a core and 6.9 kB/s of output at idle). `Thread.Sleep(1)` in [ControlRendererJob.cs:36](../../iConsole/Jobs/ControlRendererJob.cs), [ConsoleBufferRendererJob.cs:155](../../iConsole/Jobs/ConsoleBufferRendererJob.cs) and [KeyboardEventPublisherJob.cs:45](../../iConsole/Jobs/KeyboardEventPublisherJob.cs); `Thread.Sleep(10)` on a thread-pool thread for the whole life of the app in [Desktop.cs:204](../../iConsole/Desktops/Desktop.cs). The fallbacks: `FullRedrawFallbackInterval` in [ControlRendererJob.cs:10](../../iConsole/Jobs/ControlRendererJob.cs) marks the whole tree changed, and the one in [ConsoleBufferRendererJob.cs:19](../../iConsole/Jobs/ConsoleBufferRendererJob.cs) clears `LastBuffer` (line 190), so every cell is written again. The Sixel code has to work around the second one ([ConsoleBufferRendererJob.cs:416](../../iConsole/Jobs/ConsoleBufferRendererJob.cs)). On Windows the 1 ms sleeps need the machine-wide timer resolution raised for the life of the app ([Desktop.cs:72](../../iConsole/Desktops/Desktop.cs)). The tree version that the renderer compares is one process-wide static ([Control.cs:35](../../iConsole/Controls/Control.cs)). The tests that pin the fallback are named `TriggersRedrawEvery500ms` ([RendererJobRedrawTimingTest.cs:12](../../iConsole.Test/Jobs/RendererJobRedrawTimingTest.cs), line 34) for an interval of one second.
+    - **Problem:** the pipeline does not trust its own change tracking, so it pays for it twice: every millisecond on three threads, and a full repaint once a second, which over SSH is a frame of traffic per second for nothing. The same "has anything changed" question is answered three ways (`HasStateChanged`, `TreeVersion`, the fallback timers). The whole-repository section gave the decision (one signal owned by `Desktop`); this finding turns it into steps. Principle: performance structure, consistency.
+    - **Improvement:** add one small primitive in `iConsole` and move the loops onto it one at a time:
+
+      ```csharp
+      // iConsole/Jobs/RenderSignal.cs, one per Desktop
+      public sealed class RenderSignal
+      {
+          public void Set();                                         // any thread
+          public bool Wait(TimeSpan timeout, CancellationToken token); // the loop's thread
+      }
+      ```
+
+      Step 1 (S): `Control.StateHasChanged`, `InvalidateTree` and `Refresh` set it; `ControlRendererJob` waits on it with a timeout of one second instead of `Sleep(1)`, and keeps `OnIdle` on the timeout. Step 2 (S): `Buffer.Merge` sets a second signal that `ConsoleBufferRendererJob` waits on (with its 100 ms resize check as the timeout). Step 3: lengthen both fallbacks (the profiling item suggests 30 s), drop the Sixel workaround if it is no longer needed, rename the two tests. Step 4: replace the `Desktop.RunAsync` loop with `await Task.Delay(Timeout.Infinite, token)`, and drop `TimerResolution` once no loop sleeps 1 ms (the key reader has to be on its own signal first; the Posix publisher also sleeps 1 ms). Step 5, after finding 54: a tree version per root instead of the static.
+    - **Effort:** M overall; steps 1, 2 and 4 are S each.
+    - **Risk of the change:** a path that changes the screen without setting the signal shows the change only at the fallback. `ControlRendererJobTest`, `ConsoleBufferRendererJobRunTest` and the end-to-end suite (which waits on drawn text) catch a missed wake-up; keep the fallback at one second until the suite is green with the signal.
+
+57. **A failing `Draw` is swallowed in five places under four policies, and none reaches the log** — **Medium**, kind: consistency, testability.
+    - **Where:** [ControlRendererJob.cs:40](../../iConsole/Jobs/ControlRendererJob.cs) (empty `catch`); [Control.cs:339](../../iConsole/Controls/Control.cs) (`Debug.WriteLine`, compiled out of a release build; the call uses the `(message, category)` overload, so the text is never formatted); [Control.cs:394](../../iConsole/Controls/Control.cs) (written to the render dump, which is off unless `ITERMINAL_RENDER_DUMPS` is set); [ConsoleBufferRendererJob.cs:369](../../iConsole/Jobs/ConsoleBufferRendererJob.cs) (`Debug.WriteLine`); [Job.cs:23](../../iConsole/Jobs/Job.cs) (empty `catch` around the whole job). The only diagnostic that reaches Serilog from the render path is the stall report: `MainLoopWatchDog` raises `Stalled` and `Recovered`, and [MainLoopWatchDogLoggingHostedService.cs](../../iTerminal.Core/Services/Diagnostics/MainLoopWatchDogLoggingHostedService.cs) logs them.
+    - **Problem:** a control whose `Draw` throws keeps `HasStateChanged` set, so `GetControlsToRender` picks it up again and it throws on every pass, about a thousand times a second, while its rectangle shows whatever was there before. In a release build nothing is written anywhere, so a user report "this panel stopped updating" has no trace in the log. Principle: explicit contracts (error behaviour), consistency.
+    - **Improvement:** one reporting path in `iConsole`, logged by the app the same way as the stalls:
+
+      ```csharp
+      // iConsole/Diagnostics/MainLoopWatchDog.cs (or a separate RenderErrors class, registered beside it)
+      public event EventHandler<RenderErrorEventArgs>? RenderFailed;   // raised once per control type until it draws again
+      public void ReportRenderError(IControl control, Exception exception);
+      ```
+
+      `Control.Render`, `Control.Draw` and both render jobs call it (keeping the dump line where there is one), and `MainLoopWatchDogLoggingHostedService` writes it with Serilog. `Control` reaches it the way it reaches `Dump` today, through the property the desktop sets.
+    - **Effort:** S to M.
+    - **Risk of the change:** a log flood if the once-per-type rule is wrong; a unit test that makes a control throw twice and asserts one log entry covers it. `ControlRendererJobTest` covers the loop.
+
+58. **`IBuffer` is the drawing surface and the compositor in one interface, so `OffscreenBuffer` stubs half of it** — **Low**, kind: interface.
+    - **Where:** [IBuffer.cs:6](../../iConsole/Buffers/IBuffer.cs) has 11 members. Controls use `Size`, `Cursor`, `Write` and `SetCursorPosition`; `SyncLock`, `Layers`, `MergedLayer`, `Merge`, `UpdateLayers` and `Resize` are used only by the two jobs, `Desktop` and `Buffer` itself, plus `ScreenRecorder.Capture` ([ScreenRecorder.cs:37](../../iConsole/Diagnostics/ScreenRecorder.cs)), which reads `MergedLayer`. `OffscreenBuffer` (the `ScrollView` target) implements the compositor half as stubs: an empty `Layers`, a `MergedLayer` that allocates a new blank layer on every read, an empty `Merge` and an `UpdateLayers` that returns nothing ([OffscreenBuffer.cs:32](../../iConsole/Buffers/OffscreenBuffer.cs), lines 34, 96 and 100). `IBuffer` appears on 386 lines in 205 files of the three product projects, nearly all of them `Draw(IBuffer buffer)`.
+    - **Problem:** a new offscreen or recording target has to invent answers for members it has no meaning for, and a control can reach `Layers` or `Merge` from `Draw`, which would break the single-merge rule of the control renderer. Principle: interface segregation.
+    - **Improvement:** split the interface; `Draw(IBuffer)` keeps its signature.
+
+      ```csharp
+      public interface IBuffer            // what a control draws on
+      {
+          Size Size { get; }
+          Cursor Cursor { get; set; }
+          void Write(int zOrder, Position position, Size size, ConxelString conxelString);
+          void SetCursorPosition(Position position, bool isVisible);
+          void Clear();
+      }
+
+      public interface ICompositeBuffer : IBuffer   // what the desktop and the render jobs compose
+      {
+          Lock SyncLock { get; }
+          ConcurrentList<BufferLayer> Layers { get; }
+          BufferLayer MergedLayer { get; }
+          void Resize(Size newSize);
+          void Merge();
+          IEnumerable<int> UpdateLayers(int maxZOrder);
+      }
+      ```
+
+      `Buffer`, `MockBuffer` and `ScreenBuffer` implement `ICompositeBuffer`; `OffscreenBuffer` only `IBuffer`. `IDesktop.Buffer`, `ConsoleBufferRendererJob.Buffer` and `ScreenRecorder.Capture` take `ICompositeBuffer`. Register `Buffer` once and forward both interfaces to it, so `InstantiateAllTypesTest` still resolves every constructor.
+    - **Effort:** M (mechanical; most of the work is in tests that call `Merge` through an `IBuffer`, to be counted with `Grep` first).
+    - **Risk of the change:** breaking for any project outside the solution that calls a compositor member through `IBuffer` or implements `IDesktop` (none is known in this repository; **unverified** for the other users of iConsole). The compiler finds every caller inside the solution.
+
+59. **Two `RenderingDumpHelper` instances, and the second deletes what the first wrote** — **Low**, kind: lifetime, cohesion.
+    - **Where:** `IRenderingDumpHelper` is not registered (no line in [iConsoleApplicationBuilderExtension.cs:85](../../iConsole/Application/iConsoleApplicationBuilderExtension.cs) or elsewhere), so `Desktop` ([Desktop.cs:40](../../iConsole/Desktops/Desktop.cs)) and `ConsoleBufferRendererJob` ([ConsoleBufferRendererJob.cs:81](../../iConsole/Jobs/ConsoleBufferRendererJob.cs)) each build their own. `Desktop.RunAsync` starts the session (line 151) and writes the initial-state dumps (line 167); then the render job starts, and its `OnStart` (line 109) starts a second session, which deletes every file in the folder ([RenderingDumpHelper.cs:54](../../iConsole/Helper/RenderingDumpHelper.cs)). The folder is the same for every process ([RenderingDumpHelper.cs:43](../../iConsole/Helper/RenderingDumpHelper.cs)). The dump text is built in two classes: five public static methods, about 150 lines, sit in [ConsoleBufferRendererJob.cs:610](../../iConsole/Jobs/ConsoleBufferRendererJob.cs) to line 762 beside `RenderingDumpHelper`, and `MaxDumpHeight` and `MaxDumpWidth` are declared in both (line 22 and [RenderingDumpHelper.cs:16](../../iConsole/Helper/RenderingDumpHelper.cs)).
+    - **Problem:** the developer who sets `ITERMINAL_RENDER_DUMPS=1` to debug a blank start-up screen does not get the `buffer-initial-state` files that exist for that case, and two instances append to one `session` trace under two different locks. The render job is a third of a frame-dump formatter. Principle: ownership (one instance per session), single responsibility.
+    - **Improvement:** register `services.AddSingleton<IRenderingDumpHelper, RenderingDumpHelper>()` in `AddiConsoleCore` (both constructors already take it as an optional argument), and move the five static methods and the two constants into `RenderingDumpHelper`. Callers to move: [Desktop.cs:302](../../iConsole/Desktops/Desktop.cs) and nine calls in `iConsole.Test/Jobs/RenderingJobsTest.cs`.
+    - **Copies:** 2 helper instances; 2 pairs of constants; about 150 lines move, none are deleted. Not drifted.
+    - **Effort:** S.
+    - **Risk of the change:** `RenderingJobsTest` (the dump formatting); a dump run by hand confirms that the initial-state files survive.
+    - **unverified:** read from the start-up order, not from a dump folder.
+
+60. **The desktop keeps a list of screens, but only the first is ever used** — **Low**, kind: interface.
+    - **Where:** `Screens` is a `ConcurrentList<IScreen>` on `IDesktop` ([IDesktop.cs:16](../../iConsole/Desktops/IDesktop.cs)), filled only in the constructor ([Desktop.cs:60](../../iConsole/Desktops/Desktop.cs)). Key routing takes `screens[0]` (line 336), resize takes `Screens.First()` (line 271), and three prompt services do the same. `ControlRendererJob` loops over all screens ([ControlRendererJob.cs:75](../../iConsole/Jobs/ControlRendererJob.cs)) and merges each into the one `MergedLayer`, so a second screen would overwrite the first.
+    - **Problem:** the type promises several screens and the pipeline supports one; a developer who adds a second gets a screen that is drawn and then overdrawn. Principle: explicit contracts.
+    - **Improvement:** state the single-screen contract: add `IScreen Screen { get; }` to `IDesktop`, move the `First()` callers to it, and keep `Screens` (used by the screen manager dialog) with an XML comment that it holds one entry. Removing `Screens` is a breaking change and is not needed.
+    - **Effort:** S.
+    - **Risk of the change:** none in behaviour; the compiler finds the callers.
+
+**What works well**
+
+- The split of the two jobs: controls draw into per-Z-order layers on one thread, and the writer only reads the merged layer under `Buffer.SyncLock`, so the terminal is never written from a key handler.
+- The diff writer: a SIMD byte compare per row, one write per run of changed cells, synchronized output bracketing each frame, and `LastBuffer` marked unknown (not blank) after a resize or a lend, so a matching blank never hides a cell ([ConsoleBufferRendererJob.cs:293](../../iConsole/Jobs/ConsoleBufferRendererJob.cs), line 97).
+- Compositing by the cells each row actually wrote (`BufferLayer` row extents), with a comment that names the two bugs it fixed. `RepairWideCharacters` runs once on the merged layer, the one place it can see both halves.
+- The Sixel overlay is drawn only while the cells under it are still the blank the control painted, so a toast or a menu over it never leaves pixels behind.
+- `IConsoleDriver` is small, and the frame, graphics and cursor-shape members have default bodies, so a test driver needs only the basics. The loops that write to the terminal bracket each pass with `ConsoleOwnership`.
+- The second start-up wave (background jobs after `FirstFrameRendered`) and the per-pass reuse of the collections in both jobs.
+
+**Research cross-reference**
+
+- Profiling overview, item 1: finding 56 is its structural side and gives the steps; the measured cost is the profiling item's. Ranked Medium here because it costs CPU and traffic, not data; it is still the first change to make in this scope.
+- Whole repository section, research cross-reference (the per-root change signal and the static `Control._treeVersion`): finding 56 step 5 is that decision, and it waits for finding 54 so that one thread owns the tree.
+- Design review, finding 25 (folder selector rows cut once at a width and not again after a resize): a control-level resize gap; finding 54 does not fix it, but after 54 a resize reaches every control on the render thread, where a re-cut can run safely.
+- Console features overview: synchronized output and diff rendering are recorded as built; this review agrees.
+
+**Suggested order**
+
+1. Quick wins, S: finding 55 (one clock), finding 59 (one dump helper), finding 60 (single-screen contract).
+2. Finding 57 (render errors reach the log) before finding 54, so that the change of thread in 54 has a log that shows what breaks.
+3. Finding 54 (resize on the render thread).
+4. Finding 56, steps 1 and 2, then 3 and 4; step 5 after 54.
+5. Finding 58 when the buffer types are touched anyway; it does not depend on the others.
+
 ## Resolved
 
 - **Finding 10 (`iTerminal.Core` references the Windows input plug-in)** — resolved in #805 (`8724e369`): the `ProjectReference` to `iConsole.Inputs.Windows` is removed from `iTerminal.Core.csproj`. Nothing in `iTerminal.Core` used it. Verification: `dotnet build iTerminal.slnx` succeeds (0 errors, 12 warnings); the test suites and the end-to-end suite were not run.

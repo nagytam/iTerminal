@@ -563,3 +563,102 @@ These are the new items only, ranked by value to iTerminal.
 - Items 10 and 12 were re-checked by term sweep: item 10 (`%G?`, `%GS`, `verify-commit`) still Missing, and item 12 (confusable, homoglyph, mixed-script) still Partly with the mixed-script part missing. Item 12 was not re-checked in the last pull.
 - Items 1, 2, 3, 4, 5, 6, 8, 9, 14, 15, 16, 17, 19, 20, 21, 24, 25, 26, 27, 28, 29, 31 and 32 were re-checked by term sweep and still match: no term of their "Not found" lists is in the source. Item 4 is still a writer only, item 5 still has no shell-link reader, and item 21 still has no Landlock call.
 - Totals after this survey: 38 items. Partly: 11 (7, 11, 12, 13, 16, 18, 20, 21, 23, 27, 30). Built: 1 (22). Missing: 26.
+
+### Survey 6: signed checksum lists, SSH server audit, kernel and file attribute status, locked memory, clipboard history and journal sealing
+
+Surveyed on 2026-11-22 on branch `docs/research-security-survey-6` at commit `b9b81269`. Topics: a second signed-checksum tool, a remote SSH server audit, the Linux integrity measurement list, Linux file attributes, Windows platform security state, locked and non-dumpable process memory, Windows clipboard history exclusion and journal sealing. Basis: official documentation (the OpenBSD and kernel documentation, the man-pages, systemd and e2fsprogs man pages, Microsoft Learn and the ssh-audit repository README), not run-time behaviour. "Not found" means a case-insensitive grep of `iConsole/`, `iTerminal.Core/` and `iConsole.Formats/` (`*.cs`) on that branch and commit. A term sweep of items 1 to 38 found no status change. The unbounded term `scrypt` matches `IsCrypted` in the archive services; the word-bounded `\bscrypt\b` finds nothing, so item 2 stands.
+
+**Signatures**
+
+39. **signify check for signed checksum lists.**
+    - Missing: `PublisherSignatureService.PickTool` names gpg, minisign and Sigstore only (`PublisherTool` in `iTerminal.Core/Services/Checksums/PublisherSignatureService.cs`). Nothing runs `signify` on a signed `SHA256` list.
+    - Fits: a new `PublisherTool` value chosen in `PickTool` from the signature file's form, run through `IExternalProcessRunner` with a fixed argument list (`-C`, `-p`, `-x`, then the file). The public key comes from a key file the user names, never from beside the signed file, as the keyring rule in file-operations.md requires. The tool is installed through `SystemToolRuntimeDependency`, as `RarRuntimeDependency` is (runtime-dependencies.md).
+    - Seen in: the OpenBSD signify man page, dated 16 July 2026 by its footer ([signify](https://man.openbsd.org/signify)). `-C` verifies a signed list and then each file it names; `-V` verifies a message against its signature; `-p` names the public key; `-x` names the signature file; exit status 0 means success. The portable project repeats the `-C` usage, is ISC-licensed and shows no release ([aperezdc/signify](https://github.com/aperezdc/signify)).
+    - Not found: `signify`.
+    - Unverified: the Debian and Ubuntu package name `signify-openbsd` (from a search summary, [signify-openbsd](https://manpages.debian.org/signify-openbsd)); the latest release of the portable project, which its page does not show; the verifier's arguments, read on the man page and not run.
+
+**Network**
+
+40. **ssh-audit scan of an SSH server's banner, host key and algorithms.**
+    - Missing: nothing reads a remote SSH server's banner, host key or algorithm list. `NetworkToolService` has a TCP port check (`PortCheckAsync`) and an HTTP headers tool, and no SSH probe. The host keys the app records (`TrustedHostStore`) are the client's own trust decisions, a different check.
+    - Fits: a new `NetworkToolKind` beside the port check in `iTerminal.Core/Services/NetworkTools/NetworkToolService.cs`, run through `IExternalProcessRunner` with the host and port as separate arguments after `--`. It runs only against a host the user names and confirms, as the other network tools do. The tool is installed through `SystemToolRuntimeDependency` by a package manager; the PyPI and Docker forms are outside the runtime-dependency pattern. Its notes are shown in the tool's own words, never as a verdict on the host (security-tools section 5, rule 9). This is not security-tools 3.6's service audit, which reads `sshd_config` on the local machine; this item reads a server from outside.
+    - Seen in: the ssh-audit README ([jtesta/ssh-audit](https://github.com/jtesta/ssh-audit)). The project is MIT-licensed. It reads the server banner, host key, key exchange, cipher, MAC and compression algorithms, and reports the weak or legacy ones. Its usage examples pass a host and a port and no credentials. An exit code of 0 means every algorithm is considered secure in the standard audit. The latest dated release on the page is v3.9.0, dated 4 July 2026; the entry above it, v3.9.1-dev, has no date.
+    - Not found: `ssh-audit`, `sshaudit`, `SSH-2.0`, `sshd_config`.
+    - Unverified: a Windows build (a search snippet names one on the releases page, not read); the statement that a scan needs no login (inferred from the usage examples, not stated).
+
+**Integrity**
+
+41. **IMA measurement list status (Linux, read-only).**
+    - Missing: nothing reads whether the kernel's Integrity Measurement Architecture is active or how many measurements it holds. No `securityfs` or `/sys/kernel/security` path is read; `LinuxSystemProbes` reads `/proc` and the `/sys` block, display and power paths.
+    - Fits: a read-only probe in `iTerminal.Core/Services/SystemInfo/LinuxSystemProbes.cs`, shown in the System Info dialog and reported as a fact: present, not present, or needs a privilege. It runs on a background probe, as the other probes do.
+    - Seen in: the kernel's IMA export and delete page, marked kernel 7.4.0-rc3 ([IMA measurements export and delete](https://docs.kernel.org/security/IMA-export-delete.html)). The measurements are exposed through `securityfs` in a binary and an ASCII interface; with `CONFIG_IMA_STAGING`, staged copies get a `_staged` suffix. Writes need root and `CAP_SYS_ADMIN`. The kernel security index links the template page ([kernel security index](https://docs.kernel.org/security/index.html)).
+    - Not found: `securityfs`, `/sys/kernel/security`, `runtime_measurements`.
+    - Unverified: the file name `ascii_runtime_measurements` under `/sys/kernel/security/ima/` (from a secondary wiki, [Gentoo IMA wiki](https://wiki.gentoo.org/wiki/Integrity_Measurement_Architecture)); whether reading the list needs root (the page states only the write rights); the line format (not described on the page).
+
+42. **Immutable and append-only file flags (Linux, read-only).**
+    - Missing: Properties (Ctrl+F12) shows the permission bits and, on Windows, the attributes, but not the Linux `immutable` and `append-only` flags. A file with the immutable flag cannot be opened for writing, deleted or renamed, so a wipe or a delete of it fails. Nothing reads these flags, so the app cannot name the flag as the reason.
+    - Fits: two read-only rows in `PropertiesDialog`, in its Linux part beside the permission bits, read on a background task as the origin read is (`OriginTask`, file-operations.md). Two ways to read them: the `FS_IOC_GETFLAGS` ioctl through a libc import, the pattern `LinkService` already uses, or `lsattr -d --` through `IExternalProcessRunner` with a fixed argument list. A file system without flags gives a fact, not an error. The secure wipe can name the flag when an overwrite is refused (`SecureWipeService`).
+    - Seen in: the chattr(1) man page, e2fsprogs 1.47.4, March 2025 ([chattr](https://www.man7.org/linux/man-pages/man1/chattr.1.html)). `a` lets a file be opened only for appending; `i` stops changes, deletion, renaming, linking and opening for writing. Only the superuser or a process with `CAP_LINUX_IMMUTABLE` can set or clear either. `lsattr` shows flags that `chattr` cannot change, and not every flag works on every file system; the page points to btrfs, ext4 and XFS for the details. The ioctl and its flag values are in ioctl_iflags(2), named by a search summary ([ioctl_iflags(2)](https://manpages.ubuntu.com/manpages/focal/man2/ioctl_iflags.2.html)).
+    - Not found: `chattr`, `lsattr`, `FS_IOC`, `FS_IMMUTABLE`, `IOC_GETFLAGS`, `ioctl`.
+    - Unverified: the flag values and ioctl numbers (not read on the fetched pages); the behaviour on file systems other than ext4 (not checked); whether `lsattr` is installed on the target systems (not checked).
+
+**Hardening**
+
+43. **Windows platform security state (Secure Boot, virtualization-based security, Credential Guard), read-only.**
+    - Missing: nothing reads whether Secure Boot, virtualization-based security (VBS) or Credential Guard is on. The only WMI calls in the source read printers, the operating system and the computer name (`PrintService`, `SystemSettingsService`).
+    - Fits: a read-only probe in `iTerminal.Core/Services/SystemInfo/WindowsSystemProbes.cs`, shown in the System Info dialog. It runs as a `Get-CimInstance` call through PowerShell, as `PrintService` and `SystemSettingsService` already do. Each fact is shown as on, off, or "needs an administrator" when the call is refused (the Secure Boot check needs one). Nothing on the machine is changed.
+    - Seen in: the Credential Guard page on Microsoft Learn, updated 17 November 2026 ([Credential Guard](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/)). Credential Guard relies on VBS and requires Secure Boot; TPM and UEFI lock are recommended; on Windows 11 22H2 and later it is enabled by default on eligible domain-joined devices that are not domain controllers. The Learn page for `Confirm-SecureBootUEFI` ([Confirm-SecureBootUEFI](https://learn.microsoft.com/en-us/powershell/module/secureboot/confirm-securebootuefi)) returns True or False, reports "not supported" on a BIOS computer, and needs administrator mode.
+    - Not found: `DeviceGuard`, `SecureBoot`, `Win32_Tpm`, `credential guard`, `Confirm-SecureBootUEFI`.
+    - Unverified: the properties of the `Win32_DeviceGuard` class and their codes. Its Learn page was not reached (the fetch returned not found), and a Microsoft Q&A thread ([Q&A](https://learn.microsoft.com/en-us/answers/questions/951827/use-get-ciminstance-to-get-win32-deviceguard)) and community pages give different codes for `SecurityServicesRunning`, so the class page must be read before a probe is written. Whether a given machine meets the default-enablement rules was not checked.
+
+44. **Keep key material out of swap and core dumps.**
+    - Missing: the derived keys and decrypted buffers are zeroed (`CryptographicOperations.ZeroMemory` in `FileEncryptionService` and `PasswordManager`), but nothing locks their pages in RAM or clears the process's dumpable flag. `ProtectedData` and the Data Protection keys appear in `PasswordManager`, which seals its stored keys; that is item 16, not this one.
+    - Fits: a small platform helper in `iTerminal.Core/Services` (not `iConsole`, since it makes platform calls), used by `FileEncryptionService` and `PasswordManager` on the key buffers. On Linux it calls `mlock` through the libc import pattern (`LinkService`). Locking can fail on a limit, so the failure is ignored and zeroing stays the main step. Clearing the dumpable flag affects ptrace and `/proc` for the whole process and is a larger decision for the maintainer. On Windows, `ProtectedMemory` would encrypt a buffer in place with DPAPI, so the key would be decrypted for each use.
+    - Seen in: the mlock(2) page, man-pages 6.19 ([mlock(2)](https://man7.org/linux/man-pages/man2/mlock.2.html)). Locked pages stay in RAM and are not paged to swap; an unprivileged caller is limited by `RLIMIT_MEMLOCK` and needs `CAP_IPC_LOCK`; locks are not inherited by a fork child and are removed by `execve` or exit. The PR_SET_DUMPABLE page, man-pages 6.19 ([PR_SET_DUMPABLE](https://man7.org/linux/man-pages/man2/PR_SET_DUMPABLE.2const.html)). The flag decides whether a signal that dumps core produces a core file and whether `ptrace` can attach; 1 is the normal value and 0 means not dumpable; it first appeared in Linux 2.3.20. The .NET ProtectedMemory page, updated 27 May 2026 ([ProtectedMemory](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.protectedmemory)). The class wraps the Windows DPAPI as `Protect` and `Unprotect`, which work in place with a scope value.
+    - Not found: `mlock`, `VirtualLock`, `VirtualAlloc`, `dumpable`, `setrlimit`, `prctl`. The `srlimit` text in a Wikipedia URL matches `RLIMIT` only as a substring and is not a limit call.
+    - Unverified: whether `ProtectedMemory` exists in .NET 11 (the fetched page lists .NET Framework versions only); the Windows `VirtualLock` behaviour (not read); whether locked pages are left out of a core dump (the mlock page does not say); the default `RLIMIT_MEMLOCK` on the target systems.
+
+45. **Clipboard history and cloud-sync exclusion for copied secrets (Windows).**
+    - Missing: Windows clipboard history and cloud sync take what the app copies. The text clipboard (`WindowsTextClipboardService` in `iTerminal.Core/Services/Clipboard/TextClipboardServices.cs`) writes `CF_UNICODETEXT` only, and the file clipboard registers `Preferred DropEffect` only. Nothing copies a password today: no clipboard call exists in `PasswordManager` or its dialogs, so the item matters once a secret copy exists (security-tools 3.4, clipboard auto-clear).
+    - Fits: a flag on the Windows text clipboard write, set by the caller for a secret and written as the three registered formats beside the text. The `RegisterClipboardFormat` call is the one `WindowsFileClipboardService` already makes. Linux and macOS: no equivalent is sourced here, so the item is Windows only.
+    - Seen in: Microsoft Learn, Clipboard Formats, updated 15 April 2025 ([Clipboard formats](https://learn.microsoft.com/en-us/windows/win32/dataxchg/clipboard-formats)). Three registered names: `ExcludeClipboardContentFromMonitorProcessing` (any data; keeps every format out of history and sync); `CanIncludeInClipboardHistory` (a DWORD, 0 keeps every format out of history, 1 asks for inclusion); and `CanUploadToCloudClipboard` (a DWORD, 0 keeps every format from sync). The names are obtained with `RegisterClipboardFormat`.
+    - Not found: `ExcludeClipboard`, `CanIncludeInClipboardHistory`, `CanUploadToCloudClipboard`, `clipboard history`.
+    - Unverified: how each Windows release treats the three formats (the page names no version); the Linux and macOS equivalents (not sourced).
+
+**Auditing**
+
+46. **Journal sealing check (systemd Forward Secure Sealing, Linux).**
+    - Missing: nothing runs `journalctl --verify`, and nothing reads whether journal sealing is set up.
+    - Fits: a read-only check in `iTerminal.Core/Services`, beside the authentication log summary (security-tools 3.7) and item 8, run through `IExternalProcessRunner` with fixed arguments: `journalctl --verify`, with `--verify-key` only when the user names the key. A set-up journal is a fact. A failed or missing check is shown as a result, never as a verdict that the machine was tampered with. A system without systemd gets "not available".
+    - Seen in: the journalctl(1) man page, systemd 262~devel, fetched from upstream on 4 August 2026 ([journalctl](https://man7.org/linux/man-pages/man1/journalctl.1.html)). `--setup-keys` makes a sealing key that stays on the host and a verification key to keep elsewhere; `--verify` checks a journal for internal consistency and checks the seal when a verification key is given; `--verify-key` names that key; `--interval` sets how often the sealing key changes, 15 minutes by default. The version is a development build, not a release.
+    - Not found: `journalctl`, `systemd-journal`, `verify-key`, `forward secure sealing`.
+    - Unverified: what `--verify` reports (the page does not say whether it prints PASS, FAIL or missing tags); a secondary note that a plain verify can fail on an archive with no corruption (Ghaf documentation, not read in full); a search summary names a paper that reports weaknesses in journald's sealing, which was not read, so sealing is tamper evidence and not a guarantee.
+
+**Suggested order**
+
+These are the new items only, ranked by value to iTerminal.
+
+1. Immutable and append-only flags (42): read-only and small, and it explains a wipe or delete that fails.
+2. signify check (39): one fixed process call and a key the user names.
+3. Key material out of swap and core dumps (44): best effort, and it limits what a process dump holds.
+4. Windows platform security state (43): read-only, one block in the System Info dialog.
+5. ssh-audit scan (40): needs a confirmed target and a runtime install.
+6. Clipboard exclusion (45): small, but it waits for a secret copy to exist.
+7. Journal sealing check (46): useful only where sealing is set up.
+8. IMA measurement status (41): the least certain of the set, since the read privilege and the line format are unverified.
+
+**Already covered, or considered and not added**
+
+- Mark of the Web: partly present. `FileOriginService` reads `Zone.Identifier`, the `user.xdg.*` attributes and `com.apple.quarantine`, and Properties (Ctrl+F) shows and removes the mark (file-operations.md). The info-strip flag and the launch gate of security-tools 3.2 are still missing. security-tools.md is read-only, so section 2 and 3.2 are for the maintainer to update.
+- Lynis and other Linux hardening audits: security-tools 3.6, no new item.
+- gitleaks and other secret scanners: security-tools 3.4.
+- LUKS and FileVault status: survey 5, not added.
+- SLH-DSA (FIPS 205) signatures: another algorithm for item 3; not searched in this survey.
+- PKCS#11 and smart-card signing: considered; not searched in this survey.
+- diffoscope: binary comparison is present (`BinaryDiffView`); not researched.
+- Active vulnerability scanners and intercepting proxies: declined under the stance in security-tools section 1 (exploitation and interception).
+- `sshd_config` audit: security-tools 3.6; item 40 is the remote check.
+- Argon2: item 2. The scrypt substring hit is noted above.
+- Key storage on disk: item 16. Item 44 covers pages in RAM, a different risk.
+
+Totals after this survey: 46 items. Partly: 11 (7, 11, 12, 13, 16, 18, 20, 21, 23, 27, 30). Built: 1 (22). Missing: 34.

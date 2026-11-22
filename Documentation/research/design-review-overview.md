@@ -12,8 +12,9 @@ UI/UX review of the iConsole controls and the iTerminal dialogs and panels. This
 | [File-operation dialogs: copy and move, delete, rename, multi-rename, conflict prompt, secure wipe](#file-operation-dialogs-copy-and-move-delete-rename-multi-rename-conflict-prompt-secure-wipe) | 44 to 54 | none |
 | [Music player: F3 music viewer, playlist and catalog panels, audio output](#music-player-f3-music-viewer-playlist-and-catalog-panels-audio-output) | 56 to 64, 71, 72 | 55 |
 | [Dialog set: tables, live data and labels across the dialogs](#dialog-set-tables-live-data-and-labels-across-the-dialogs) | 68 to 70 | 65 to 67 |
+| [Menus: menu bar, drop-downs, context menu and the file panel's right-click menu](#menus-menu-bar-drop-downs-context-menu-and-the-file-panels-right-click-menu) | 73 to 83 | none |
 
-Totals: 72 findings, 64 open and 8 resolved.
+Totals: 83 findings, 75 open and 8 resolved.
 
 ## Earlier finding numbers
 
@@ -721,6 +722,107 @@ No research overview covers dialog tables. The console overview's table entries 
 
 1. Quick wins (S): finding 70 (key hints and `KeyValueList`), and finding 69 once finding 68 has converted the Torrent list.
 2. Medium: finding 68, Print queue first, since it is live and the queue is what a user watches.
+
+## Menus: menu bar, drop-downs, context menu and the file panel's right-click menu
+
+Scope: the menu stack, which no earlier section covers: `MenuBar`, `MenuItem` (the drop-downs), `ContextMenu` and `ContextMenuItem` in `iConsole`, `TerminalMenuBar` and the File, Edit, Navigate, Tools and Help menus in `iTerminal.Core/Controls/MenuBar`, and the right-click menu of a file panel (`FileContextMenu`, `ContentBrowser.ShowContextMenuAsync`). Chosen because the menus are the one place where every feature must be findable, and the review of the dialogs left them out. Reviewed on 2026-11-22 at commit b9b81269 (the checkout was on branch `docs/research-security-survey-6` with other agents' documents changed; no source was touched). Read: the source above, `Control.cs` (the context-menu key path), `Command.cs`, `ConxelString.HighlightHotKey`, the input decoder's control-key mapping, the German and Hungarian menu strings, the existing menu tests (`MenuBarTest`, `MenuItemTest`, `ToolsAndMenusTest`, `ContextMenuAndDiffTest`), the architecture pages `ui-framework.md` and `key-patterns.md`, and the console research overview and library comparison. Not done: no run-time check, no render dump, no key trace. Findings that rest on reading alone are marked **unverified**.
+
+### Summary
+
+- Biggest problem: the only context menu the app really uses is a hand-built popup that opens on a right-click and nowhere else (finding 73). The framework's `ContextMenu`, which has Shift+F10, separators, hot keys, check marks and submenus, has no production user at all, and in a file panel Shift+F10 belongs to the user menu. A keyboard-only user cannot reach the file menu.
+- The drop-down menus are more basic than the context menu: no disabled entries, no letter jump, no page keys and no mouse wheel, on a Tools menu of about 60 rows (findings 77 and 79). A menu entry whose command cannot run closes the menu and says nothing.
+- The Ctrl+letter hint of the menu bar is shown by colour alone, and in German and Hungarian the translated title often has no such letter (finding 78).
+- Wins: the drop-down is lifted off layer 0, scrolls with `▲`/`▼` marks on a short screen, opens under its own title, and is tested at 80x24; the context menu has a good key set and a clear contract.
+
+### Findings
+
+73. **The file panel's right-click menu has no keyboard path, and it is built beside the framework's `ContextMenu`, not on it** - Severity: **Medium**. Kind: usability, consistency.
+   - Where: [ContentBrowser.cs:1060](../../iTerminal.Core/Controls/Contents/ContentBrowser.cs) to `:1063` (the only caller of `ShowContextMenuAsync`, from the mouse path), `:1085` to `:1119` (a `Popup` with a `PopupListView`), [Control.cs:446](../../iConsole/Controls/Control.cs) and `:898` to `:907` (the Shift+F10 and Menu-key path, which reads `Control.ContextMenu`), [UserMenuDialogCommand.cs:24](../../iTerminal.Core/Commands/UserMenuDialogCommand.cs) (Shift+F10 is the user menu), [FileContextMenu.cs:11](../../iTerminal.Core/Controls/Contents/FileContextMenu.cs) (a second type named `ContextMenuItem`, a record of label and action). A search finds no assignment to `Control.ContextMenu` anywhere in `iTerminal.Core` or `iConsole`.
+   - Problem: the app is keyboard-driven, but the one menu that lists what can be done with the row under the cursor (with its keys) opens only with the right mouse button. `ContentBrowser` never sets `ContextMenu`, and Shift+F10 is taken by the user menu (as in mc), so even the framework's keyboard path would not reach it. The framework's own `ContextMenu` (`ui-framework.md`, "Context menus") has the features the hand-built popup lacks (finding 74), so two menu implementations exist and one is unused. Heuristic: Keyboard and focus, Consistency, Discoverability.
+   - Improvement: build the panel menu as a `ContextMenu` (`ContextMenuItem` with `Shortcut`, `Execute` and `IsEnabled`, replacing the label padding in `FileContextMenu.Build`) and open it with `OpenAtAsync` at the pointer for a click and at the cursor row for the Menu (Applications) key. Keep Shift+F10 for the user menu. Add a palette command "Context menu" (Shift+F1) and an entry in the Edit menu, because many terminals never send the Menu key. Rename the record so it does not share a name with the control type. Tests: extend `ContextMenuAndDiffTest` with a key path that opens the menu and runs "Properties".
+   - Effort: M. **Unverified**: that the Menu key reaches the app on a given terminal (a key trace, `ITERMINAL_KEY_TRACE=1`, would show it).
+
+74. **The panel menu can be taller than the screen, and it is one long unsorted run of text rows** - Severity: **Medium**. Kind: usability, resilience to size.
+   - Where: [ContentBrowser.cs:1109](../../iTerminal.Core/Controls/Contents/ContentBrowser.cs) to `:1115` (`ViewSize = new Size(width + 2, items.Count + 2)`, not limited to the screen), [Popup.cs:311](../../iConsole/Controls/Popup.cs) to `:345` (the position is clamped, the height is not), [PopupListView.cs:184](../../iConsole/Controls/PopupListView.cs) (`Rows()` is the popup's height), [FileContextMenu.cs:52](../../iTerminal.Core/Controls/Contents/FileContextMenu.cs) to `:105` (no separators, no groups, key hints padded into the label text).
+   - Problem: on a local file with three open-with and three edit-with programs the list can reach about 27 rows (Open, six programs, and up to 20 commands from View to Properties). On a 24-row terminal the popup is clipped at the bottom, and the highlight can move onto rows that are off screen. Even when it fits, the list has no gap between "look at it", "change it", "pack it" and "dangerous" (Delete, Secure wipe sit between Move and Properties with no break), and no letter picks an entry. Heuristic: Resilience to size, Error prevention (a destructive entry beside harmless ones).
+   - Improvement: when the menu moves to `ContextMenu` (finding 73), use `ContextMenuItem.Separator()` between the groups the source comment already names, give the common entries `&` hot keys (V, E, C, M, D), and limit the menu's height to the screen with a scroll window (finding 76). Test at 80x24 with a file that has six associations.
+   - Effort: M. **Unverified**: the clipping rests on reading `Popup` and the row count; a render dump at 80x24 on a file with associations would settle it.
+
+75. **Two words in the panel menu are not translated: "Open" and the English command titles** - Severity: **Low**. Kind: localization.
+   - Where: [FileContextMenu.cs:54](../../iTerminal.Core/Controls/Contents/FileContextMenu.cs) (`("Open", "Enter", open)`; there is no `Ctx.Open` key in `AppStrings.resx`), `:77`, `:94` and `:95` (`null` title, so the command's English `Title` is used for Open with, Git pull and Git sync).
+   - Problem: the menu is otherwise localized (`Ctx.*` keys), so a German user sees "Open" first and untranslated entries after. Heuristic: Consistency.
+   - Improvement: add `Ctx.Open`, `Ctx.GitPullRebase` and `Ctx.GitSync` to all six `.resx` files in sorted position and pass them as titles; reuse the `Menu.*` key for Open with if one exists.
+   - Effort: S.
+
+76. **`ContextMenu` cannot scroll, so a menu taller than the screen is clipped and the cursor can leave the screen** - Severity: **Low** now, **Medium** once finding 73 puts the long panel menu on it. Kind: resilience to size.
+   - Where: [ContextMenu.cs:351](../../iConsole/Controls/ContextMenu.cs) (height limited to the screen), `:281` (the draw loop stops at `ContentSize.Height`), `:360` to `:371` (`Move` steps over all items, not only the drawn ones).
+   - Problem: the width and height are limited to the screen, but the list is not windowed. Entries past the last row are not drawn, and Down still selects them. `MenuItem` already solves this for its drop-down (`VisibleRowCount`, `KeepSelectionVisible`, the `▲`/`▼` marks at `MenuItem.cs:159` to `:192` and `:755` to `:757`). Heuristic: Resilience to size, Visibility of status.
+   - Improvement: add a first-visible index to `ContextMenu`, keep the selection inside it, draw the `▲`/`▼` marks as `MenuItem` does, and scroll on the mouse wheel. Test: 30 entries in a 10-row screen, Down to the last, the last row is drawn.
+   - Effort: S to M. **Unverified**: the clipping rests on reading the draw loop.
+
+77. **The Tools menu has about 60 rows and only one-row keys to reach them** - Severity: **Medium**. Kind: usability, efficiency.
+   - Where: [ToolsMenuItem.cs:77](../../iTerminal.Core/Controls/MenuBar/ToolsMenuItem.cs) to `:166` (13 fixed entries and 48 added from the groups), [MenuItem.cs:606](../../iConsole/Controls/MenuBar/MenuItem.cs) to `:653` (Up, Down, Home, End, Enter, Space, Left, Right, Esc; no PageUp or PageDown, no letter jump), [MenuBar.cs:47](../../iConsole/Controls/MenuBar/MenuBar.cs) to `:97` (clicks only: no wheel, no hover), [ContextMenu.cs:206](../../iConsole/Controls/ContextMenu.cs) (the context menu does have letter jump and hot keys). Console survey item 147.
+   - Problem: on 80x24 about 20 rows show, so reaching "Tetris" or "Workspaces" takes dozens of Down presses (Up from the first entry wraps to the last, which helps only for the end). A mouse user cannot scroll the list at all. The key hint line for an open menu does not name the command palette (Shift+F1), which is the real fast path. Heuristic: Efficiency, Discoverability, Consistency (the context menu jumps by letter, the menu does not).
+   - Improvement: in `MenuItem.HandleKeyEventAsync` add PageUp, PageDown and a first-letter jump (the code of `ContextMenu.JumpToLetter`, moved to a shared helper in `iConsole`), handle `WheelDelta` and hover in `HandleDropDownClickAsync`'s sibling, and add "Shift+F1 Command palette" to the open-menu hints. Test: Tools menu at 80x24, press "T", the cursor is on an entry that starts with T.
+   - Effort: M.
+
+78. **The menu bar shows its Ctrl+letter only by colour, and a translated title often has no such letter** - Severity: **Medium**. Kind: accessibility, localization.
+   - Where: [MenuItem.cs:671](../../iConsole/Controls/MenuBar/MenuItem.cs) to `:685`, [ConxelString.cs:196](../../iConsole/Display/ConxelString.cs) to `:217` (sets foreground and background of one cell; no underline), [ContextMenu.cs:304](../../iConsole/Controls/ContextMenu.cs) to `:312` (the context menu underlines), [ToolsMenuItem.cs:74](../../iTerminal.Core/Controls/MenuBar/ToolsMenuItem.cs) (`HotKeyChar = 'T'`), `FileMenuItem.cs:65`, `EditMenuItem.cs:33`, `NavigateMenuItem.cs:36`, `AboutMenuItem.cs:22`; `Menu.Tools` is "Werkzeuge" in German and "Eszközök" in Hungarian, `Menu.File` is "Datei", Hungarian `Menu.Help` is "Súgó". Console survey item 147.
+   - Problem: the only sign that Ctrl+F, Ctrl+E, Ctrl+N, Ctrl+T and Ctrl+H open the menus is one letter in a different foreground colour. On a 16-colour or monochrome theme it can look the same as its neighbours. When the translated title has no such letter (Datei, Werkzeuge, Eszközök, Súgó) `IndexOf` finds nothing and nothing is highlighted, while the key stays fixed. Heuristic: Accessibility (no colour-only meaning), Discoverability.
+   - Improvement: let `HighlightHotKey` also set `IsUnderline` (as `ContextMenu` does), and when the title lacks the letter draw a suffix such as `Werkzeuge(T)` in the bar. The width code in `TerminalMenuBar.OnInitializeLayout` and the click code in `MenuBar` read `Text.Length`, so keep the suffix inside the title text, not in the draw only.
+   - Effort: S to M. Related: the `&` marker for menu titles (console survey item 147) would give each language its own visible letter, but the keys would then differ by language, which `key-patterns.md` argues against; keep the key fixed and show it.
+
+79. **A menu entry cannot be disabled, and a command that cannot run closes the menu and says nothing** - Severity: **Medium**. Kind: usability, feedback.
+   - Where: [MenuItem.cs:413](../../iConsole/Controls/MenuBar/MenuItem.cs) to `:431` (`command.RunAsync(null)` and then `CloseWholeMenu()`; the result is ignored), [Command.cs:54](../../iConsole/Commands/Command.cs) to `:80` (`RunAsync` returns false when `CanExecute` is false, and swallows an exception into the command log), [ContextMenuItem.cs:49](../../iConsole/Controls/ContextMenuItem.cs) (`IsEnabled`, which `MenuItem` lacks), [FileContextMenu.cs:129](../../iTerminal.Core/Controls/Contents/FileContextMenu.cs) to `:141` (the panel menu already hides what cannot run).
+   - Problem: Edit and File entries that need a file (Copy, Delete, Compress) or a drive that is not there are drawn as if they could run. The file keys say "Nothing selected" (`NothingToActOnTest`), but an entry that runs the same command from the menu may close the menu with no message, and a command that throws leaves no sign on screen. Heuristic: Feedback and visibility of status, Error prevention and recovery.
+   - Improvement: when the drop-down opens, mark entries whose `CanExecute()` is false as disabled (drawn faint, skipped by Up and Down, as `ContextMenu` does); and when `RunAsync` returns false or throws, raise a toast through `INotificationService`. Measure the cost of 60 `CanExecute` calls on open first.
+   - Effort: M. **Unverified**: which menu commands refuse without their own message; a `ConsoleAppDriver` test that chooses Copy from the Edit menu on the `..` row would show it.
+
+80. **Ctrl+H opens the Help menu, and some terminals send that byte for Backspace** - Severity: **Low**. Kind: usability, consistency with the key rules.
+   - Where: [AboutMenuItem.cs:22](../../iTerminal.Core/Controls/MenuBar/AboutMenuItem.cs) (`HotKeyChar = 'H'`), [TerminalInputUtf8Decoder.cs:788](../../iConsole/Inputs/TerminalInputUtf8Decoder.cs) (0x7F is Backspace) and `:798` (every other byte below 0x20 becomes Ctrl plus letter, so 0x08 is Ctrl+H), the key rule for Ctrl+M in `CLAUDE.md`.
+   - Problem: the project already avoids Ctrl+M because a TTY sends the same byte as Enter. Ctrl+H is the same case for Backspace on terminals whose Backspace sends 0x08 (some serial and older SSH set-ups). There Backspace in a place that does not consume it would open the Help menu. Heuristic: Keyboard and focus.
+   - Improvement: record it in `key-patterns.md` and check on such a terminal with a key trace. If confirmed, decode 0x08 as Backspace when no Ctrl was reported another way, and leave the Help menu on F1 and Ctrl+Shift letters.
+   - Effort: S. **Unverified**: no terminal with a 0x08 Backspace was available; a key trace would confirm what arrives.
+
+81. **Draw of an open drop-down and of a context menu allocates on every frame** - Severity: **Low**. Kind: performance.
+   - Where: [MenuItem.cs:75](../../iConsole/Controls/MenuBar/MenuItem.cs) to `:81` (`GetEntryColumns`: a LINQ filter, a `ToList` and two `Max` calls over `HotKeyText`, called at `:133` and again in `Draw` at `:719`), `:41` to `:58` (`HotKeyText` substrings the label or formats the command's chord with a new list, `Command.cs:104` to `:127`), `:744` to `:745` (a string per visible row), [ContextMenu.cs:322](../../iConsole/Controls/ContextMenu.cs) to `:329` (`Measure`: LINQ and a list on every draw), and `ContextMenuItem.cs` (`Text`, `HotKey` and `HotKeyIndex` each parse the title again).
+   - Problem: with the Tools menu open the pass does about 120 small allocations per frame for text that does not change while the menu is open. The cost is small against the 200 ms budget, but the menu is redrawn on every frame the layer is repainted. Heuristic: Performance.
+   - Improvement: compute the column widths and the formatted entries once in `OpenMenu` (and again in `Localize`), and cache the parsed title in `ContextMenuItem`. Measure before and after with the profiler agent before spending time on it.
+   - Effort: S. **Unverified**: no timing was taken.
+
+82. **Menu widths and click positions count characters, not cells** - Severity: **Low**. Kind: resilience to content.
+   - Where: [MenuBar.cs:74](../../iConsole/Controls/MenuBar/MenuBar.cs) and `:86`, [MenuItem.cs:63](../../iConsole/Controls/MenuBar/MenuItem.cs), `:80`, `:136`, `:208`, [TerminalMenuBar.cs:477](../../iTerminal.Core/Controls/MenuBar/TerminalMenuBar.cs), [ContextMenu.cs:326](../../iConsole/Controls/ContextMenu.cs) and `:334`, [FileContextMenu.cs:102](../../iTerminal.Core/Controls/Contents/FileContextMenu.cs). `TextWidth.Of` and `TextWidth.Fit` exist in `iConsole/Display/TextWidth.cs` and `CsvGrid` already uses them (finding 21).
+   - Problem: a title or an entry with a wide character (a CJK or emoji name from a plugin or a program name in "Open with") is counted as one cell, so the drop-down is too narrow and a click lands on the wrong title. The six shipped languages are all narrow, so nothing is wrong today. Heuristic: Resilience to content.
+   - Improvement: replace `.Length` with `TextWidth.Of` in the width and hit-test code, and pad with the same helper. Test: a title with two wide characters, the drop-down has the right width and a click on its last cell opens it.
+   - Effort: S.
+
+83. **`MenuItem` and `ContextMenu` differ on Esc and on wrap-around** - Severity: **Low**. Kind: consistency.
+   - Where: [MenuItem.cs:645](../../iConsole/Controls/MenuBar/MenuItem.cs) to `:647` (Esc closes the whole chain), `:373` to `:384` (Up and Down wrap), [ContextMenu.cs:360](../../iConsole/Controls/ContextMenu.cs) to `:371` (no wrap) and the class remark that Esc closes a submenu only (`ui-framework.md`, "Context menus"); `CLAUDE.md` asks for Esc to close one layer at a time.
+   - Problem: no menu bar entry has a submenu today (every `MenuItem` is built with `[]`), so Esc cannot go wrong yet, but the first nested entry would make Esc close everything while the same key in a context menu closes one level. The wrap-around differs now, and the Tools menu test relies on it. Heuristic: Consistency, Keyboard and focus.
+   - Improvement: make `MenuItem` Esc close the open submenu first (as Left does) and the bar next; pick one wrap rule for both menus and note it in `ui-framework.md`.
+   - Effort: S.
+
+### What works well
+
+- The drop-down is lifted one layer above the screen on open and put back on close (`LiftAboveTheScreen`), so a panel repaint cannot paint over a menu that holds the keyboard; the bug behind it is documented in `key-patterns.md`.
+- On a short screen the drop-down shows a window of its entries with `▲` and `▼` in the right border, keeps the selection in view, and ends on its bottom border; `ToolsAndMenusTest` checks it at 80x24.
+- Entries show the key after a tab, taken from the command (`KeyDisplayText`), so a label cannot drift from the real key; the selected row keeps its `<…>` marks for a monochrome terminal.
+- A menu mnemonic gives way to a command bound to the same chord (`HandleHotKeyEventAsync`), and Ctrl+E is tested not to open the Edit menu while the unit converter owns it.
+- `FileContextMenu` offers only what `CanExecute` allows and nothing on the `..` row, on a container row or on the music drives, and builds its list from the commands so it cannot disagree with the keys.
+- The top bar drops the optional indicators in a fixed order when the screen is narrow (`TerminalMenuBar.OnInitializeLayout`), and picks up language and indicator changes from `OnIdle` without a restart.
+- `ContextMenu` has a complete contract: hot keys, check marks, submenus, disabled entries, the entry runs after the menu has closed and focus is back.
+
+### Research cross-reference
+
+- Console survey item 147 (hot-key marker in a caption): confirmed as a gap for the menu bar. This review adds an accessibility angle (finding 78: colour-only hint, translated titles without the letter), and ranks the visible Ctrl+letter hint above the `&` marker, because the Ctrl+letter keys are fixed by design.
+- Library comparison item 19 (sub-menus and checked entries in `ContextMenu` and `MenuBar`, "documented as not built") and the source disagree: `ContextMenu` has submenus, check marks and hot keys (`ContextMenu.cs:80`, `:333`, `ContextMenuItem.cs:57`, `:62`), and `MenuItem` supports nested entries (`MenuItem.cs:420`) but has no check marks or hot keys inside a drop-down. The research document was not edited. The practical gap now is that no screen uses the framework `ContextMenu` (finding 73).
+- No AI or security research item needs a menu screen. Plug-ins that add commands (the Plugin manager) will land in the Tools menu, which makes finding 77 grow.
+- Item that needs a layout decision first: where the command palette hint goes in the open-menu key line (finding 77), and whether the panel menu moves to `ContextMenu` before or after the scroll window of finding 76.
+
+### Suggested order
+
+1. Quick wins (S): finding 75 (three `.resx` keys), finding 78 (underline and suffix), finding 83 (Esc and wrap rule), finding 82 (`TextWidth`), finding 80 (check on a 0x08 terminal), finding 81 (cache the columns).
+2. Medium: finding 73 with 76 and 74 as one sequence (move the panel menu onto `ContextMenu`, add the scroll window, then groups and hot keys), finding 77 (page keys, letter jump, wheel), finding 79 (disabled entries and a toast).
 
 ## Resolved
 

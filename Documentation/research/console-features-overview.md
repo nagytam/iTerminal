@@ -544,3 +544,68 @@ Feature sources: vim-quickui from its manual (the dialog guide, DIALOG.md, was n
 #### Status re-checks (Survey 5)
 
 Items 64, 113, 121, 49, 98 and 147 were checked by search, with no change of status. Item 64 is still missing: `TerminalPanel` runs commands, and no pseudo-terminal or escape-sequence parser was found (`forkpty`, `openpty`, `CreatePseudoConsole`, `VtParser`, `TerminalEmulator` match nothing). Item 113 has no preview control in `iConsole/Controls` or `iConsole/Dialogs`. Item 121 has no layout loader (`LayoutLoader`, `FromJson`, `LoadLayout`). Item 49 has no history type in the text controls (`History` appears only in a comment in `AutoCompletion.cs`). Item 98 has no colour derivation helper. Item 147 still parses `&` only in `ContextMenuItem.cs`. No status change was found, so no dated block was added.
+
+#### Survey 6: Fantom and Yabasic
+
+Survey 6, dated 2026-11-22: ansi-terminal (afTerminal, Fantom) and clasquinator (yabasiclibs, Yabasic). The target was six to ten libraries from languages no survey covers yet, and only these two had a feature list to read: the other candidates were searched and rejected (see "Considered and skipped (Survey 6)"). Both are the only option in their language and both are unmaintained, which the table records. The basis is the README and docs of each library, fetched on 2026-11-22, plus the repository record for licence, release and last commit; it is not run-time behaviour. "Not found" means a grep of `iConsole/` and `iTerminal.Core/` (`--include=*.cs`) on `main` at commit `b9b81269`, the commit this run read. The highest item is now 157.
+
+| Library | Language | Licence | Date checked | Release (as found) | Survey | Links |
+| --- | --- | --- | --- | --- | --- | --- |
+| afTerminal (ANSI Terminal) | Fantom | ISC (README badge) | 2026-11-22 | 0.9.0 in the README and on Eggbox; no GitHub release or tag; last commit 13 November 2017; unmaintained | 6 | [GitHub](https://github.com/Fantom-Factory/afTerminal), [API docs](https://eggbox.fantomfactory.org/pods/afTerminal/doc) |
+| clasquinator (yabasiclibs) | Yabasic | MIT | 2026-11-22 | No version given; copyright 2018; repository archived on 11 June 2022 and read-only; the README says it is no longer maintained and still alpha | 6 | [docs](https://clasqm.github.io/yabasiclibs/clasquinator), [GitHub](https://github.com/clasqm/yabasiclibs) |
+
+Features of afTerminal, from its README: an `AnsiTerminal` control that wraps a `RichText` widget and prints ANSI sequences, an `AnsiBuf` helper that builds them, a 256-colour palette or full colour, foreground and background colours, bold, italic, underline and crossed-out text, cursor movement (up, down, left, right and absolute), save and restore of the cursor, and clearing of the line and the screen. Features of clasquinator, from its documentation page: message, input, password, one-line menu and submenu, radio, string display, text file viewer, wait, yes/no, and file and directory choosers, each with four looks. The dialogs are drawn inside the library; the choosers call Linux or Windows utilities (`ls`, `grep`, `dir` and similar). The page lists no list, checklist or progress dialog. Both lists are summaries in our own words.
+
+**Terminal protocol**
+
+157. **Cursor save and restore.** *Missing.* No save or restore of the cursor position is found: no `ESC 7` and `ESC 8` (DECSC and DECRC), and no `CSI s` or `CSI u`. The renderer positions every cell with an absolute `CSI row;col H` (`iConsole/Drivers/SystemConsoleDriver.cs:297`), so the sequence is needed only for output that moves the cursor away from the screen. Search terms that found nothing in `iConsole/` and `iTerminal.Core/`: `SaveCursor`, `RestoreCursor` (the one match is `VirtualMachineManagerDialog.RestoreCursor`, which restores a list row and not the terminal cursor), `DECSC`, `DECRC`, `\u001b7`, `\u001b8` and `\u001b[s`. **Seen in:** afTerminal (cursor save and restore, from its README). Fits: `AnsiRenderer` and `IConsoleDriver`. A restore should use `ESC 8`, because the Kitty keyboard protocol already uses `CSI u` (`iConsole/Inputs/KittyKeyboardProtocol.cs`). Item 28 (inline output) is the feature that would need it. Priority: low.
+
+#### Suggested order for Survey 6
+
+1. Item 157 (cursor save and restore): low; build it only with item 28 (inline output), which would be its first user.
+
+#### Already covered (Survey 6 candidates)
+
+- Bold, italic, underline and crossed-out text (afTerminal): built (`Conxel`, with strike-through; see "Text attributes" in `ui-framework.md`).
+- 256-colour palette and full colour (afTerminal): item 34, still missing (no `38;5` or `38;2` in `iConsole/`). The sixteen colours are built (`Color`).
+- Absolute cursor positioning (afTerminal): built (`SystemConsoleDriver.cs:297`, `VirtualSequenceConsoleDriver.cs:287`).
+- Clearing the screen (afTerminal): built (`IConsoleDriver.Clear`, `SystemConsoleDriver.cs:223`). A line is cleared by painting it, because a control paints its whole rectangle.
+- A string builder for ANSI text (afTerminal `AnsiBuf`): built as `ConxelString`, written out by `AnsiRenderer.ConxelString2Ansi`.
+- A control that shows text with ANSI colour codes (afTerminal `AnsiTerminal`): partly, under item 47; see the status block below.
+- Message dialog (clasquinator): item 94, still missing.
+- Wait dialog (clasquinator): item 94, still missing. `Spinner` and `ProgressGroup` exist, but no dialog wraps them.
+- Input, password, yes/no and radio prompts (clasquinator): built (prompt kinds of item 94, `PasswordBox` of item 130, `RadioGroup`).
+- One-line menu and submenu (clasquinator): built (`ContextMenu` with submenus, `MenuBar`).
+- Text file viewer (clasquinator): built (`TextViewerControl`, the F3 viewer).
+- File and directory choosers (clasquinator): built (`FilePicker`, `FolderSelectorDialog`).
+- Capital letters in yes/no labels as hot keys (clasquinator): item 147, partly built.
+
+#### Considered and skipped (Survey 6)
+
+- Jai, Carbon, Factor and Hare: one search each, no widget library found; the results were for other languages.
+- C3: one search; the only hit is `tessela`, a C library. C is covered.
+- Wolfram Language: one search, no library found.
+- Wren: one search; the only hit is Wren CLI, a runtime with file and network modules and no widget layer. Not read.
+- ReasonML: Matcha, bs-ink and reason-ink were found. Matcha is an OCaml library (OCaml is covered), and the other two are bindings to Ink. Not read.
+- ReScript: a search found only bindings (`opentui-rescript`, `rescript-opentui-react`, `rescript-ink`), which the document already excludes. Not read.
+- Lean 4: Leansi (already skipped as output-only in an earlier survey), Pigment (a colour library), ProofWidgets (for the editor's graphical infoview) and lean-tui (an application). Not read again.
+- Elvish: a Go shell; its `tk` widgets are part of the shell (from a search snippet, **unverified**). Go is covered.
+- ArkTS (HarmonyOS): ArkUI is graphical. `libghostty-ohos` embeds a terminal surface and has no widgets; it was found on one unofficial mirror, so it is **unverified** and was not read.
+- SWI-Prolog `library(tty)`: a termcap helper with a `menu/3` predicate and a terminal-size predicate (from a search snippet of the manual, **unverified**). It is a helper, not a widget library.
+- Liberty BASIC: its text windows, buttons and menus are part of the language (from a search snippet, **unverified**). No third-party console library was found.
+- Nushell: the Rust crates it uses (`nu-term-grid` is internal to Nushell) are Rust, which is covered.
+- yabasic-libs-2 (Yabasic): its OpenEditor library launches text editors and is not a widget set (from a search snippet, **unverified**).
+
+#### Status after the pull of 2026-11-22
+
+Items 2, 3, 34, 94 and 132 to 156 were searched again. Items 2, 3, 34, 94 and 146 (no `2004h`, `NO_COLOR`, `38;5`, `38;2` or `?1049` in `iConsole/`) and the others not listed below kept their status. Three items changed:
+
+- **Item 47 (inline colour and style tags): now partly.** `AnsiText.Parse` (`iConsole/Helper/LogHighlighting.cs:133`) turns the SGR colour, bold, italic and underline codes into spans, and only `LogView` (`iConsole/Controls/LogView.cs:196`) calls it. Labels and the other text controls take no escape codes, and no markup parser was found. Earlier status: still missing.
+- **Item 137 (export of table or list data): still partly, and narrower.** `TableExport.Build` (`iConsole/Csv/TableExport.cs:29`) writes rows as CSV, JSON or XML, and the F2 command of the CSV viewer (`iConsole/Commands/CsvExportCommand.cs`) uses it. No Markdown writer exists, and no table or list control calls it. The search terms named in the item (`ToCsv`, `ExportCsv` and so on) still find nothing; the names in use are `CsvExport.Build` and `TableExport.Build`.
+- **Item 143 (indent and dedent helpers): still partly, and the text is out of date.** `TextEditorControl.Indent(bool outdent)` (`iConsole/Controls/Editors/TextEditorControl.cs:221`) indents and outdents the selected lines in the editor. No `Indent(` or `Dedent(` helper exists in `iConsole/Helper/`, so `StringHelper` still has none.
+
+Rows outside this document, in the comparison table of `Documentation/architecture/ui-framework.md` (not edited by this run; that file needs the update):
+
+- **Focus-in and focus-out reporting (`?1004h`)**: built. `TerminalFocusReporting` (`iConsole/Inputs/TerminalFocusReporting.cs`) and `TerminalFocusService`; the Posix input job switches it on and off (`iConsole.Inputs.Posix/Jobs/PosixTerminalInputPublisherJob.cs`). The table says "Not found".
+- **Window title (OSC 0/2) and title stack**: built. `TerminalSequences.SetTitle` (OSC 2), `PushTitle` and `PopTitle` (`CSI 22;2t` and `CSI 23;2t`), used by `TerminalTitleService`. The table says "Not found".
+- **Cursor shape (DECSCUSR) and pointer shape (OSC 22)**: built (`iConsole/Display/CursorShape.cs`, `PointerShapeService`). Neither is in the table.

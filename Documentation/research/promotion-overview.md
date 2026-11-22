@@ -203,3 +203,41 @@ given below).
 **Activity log, 2026-11-21 (refresh).** Read the overview and index; confirmed the release and repository state with `gh`; fetched seven venue pages (above); replaced the release placeholder in `awesome-lists.md`, `directories-and-newsletters.md`, `forums-and-communities.md`, `dev-to-article.md`, `launch-and-press.md` and `linux-news-and-software-sites.md`; corrected the awesome-dotnet and awesome-cli-apps rules in `awesome-lists.md`; recorded verified rules in `forums-and-communities.md`, `dev-to-article.md` and `directories-and-newsletters.md`. Nothing was sent, posted, submitted or signed up for. Still for the user: submit or send whichever actionable venues they choose; confirm the release notes match the feature claims (the kit warns the README lags); decide the AI-disclosure answer for LinuxLinks; supply a Terminal Trove preview image; label some open issues before up-for-grabs.
 
 **Skipped in this refresh:** agarrharr/awesome-cli-apps (stars rule and no-AI-PR rule), Lobsters as a first venue (invite and 70-day rule).
+
+## Survey 4: 2026-11-22 (Windows package managers, Lemmy, news forms)
+
+**Basis.** Eighteen web searches and about twelve page fetches on 2026-11-22. The latest release is v0.0.0.763 (published 2026-11-22; MSI, portable zip, deb and rpm for x64 and arm64, tar.gz). Repository: 1 star, MIT. Rules read on the venue's own page are **verified**; the rest are marked. Nothing was sent, posted, submitted or signed up for.
+
+**Found in the repository, not previously in this overview.** `Documentation/Distributions/winget.md` shows the winget route is already under way by the user: `microsoft/winget-pkgs#485881` ("New package: TamasNagy.iTerminal version 0.0.0.735") is open (`gh pr list`, state OPEN, not merged), with a manual workflow `.github/workflows/winget.yml` and an immutable release repository `nagytam/iTerminal-WinGet`. The app's `UpdateService` already knows the identifier `TamasNagy.iTerminal`. No winget content was written; the existing document is the reference.
+
+| # | Venue | Type | How to submit | Rule status | Content file | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 36 | winget (microsoft/winget-pkgs) | Windows package manager | Pull request per version | Verified on <https://learn.microsoft.com/windows/package-manager/package/repository> and <https://learn.microsoft.com/windows/package-manager/package/windows-package-manager-policies>: one manifest per PR, installer URL from the publisher's own release location, antivirus and install validation, moderator review, 10-day author-feedback limit | [Documentation/Distributions/winget.md](../Distributions/winget.md) (existing) | submitted by the user (#485881, open); nothing to add |
+| 37 | Scoop `extras` bucket | Windows package manager | Issue first, then a pull request after a maintainer agrees | Verified from <https://github.com/ScoopInstaller/.github/blob/main/.github/CONTRIBUTING.md>; acceptance threshold for `extras` unverified | [scoop-and-chocolatey.md](../Promotion/scoop-and-chocolatey.md) | prepared; user to open the issue |
+| 38 | Chocolatey community repository | Windows package manager | Account, package, moderation per version | Unverified (search summary of <https://docs.chocolatey.org/en-us/community-repository/moderation/package-validator/rules>) | scoop-and-chocolatey.md | not drafted (revisit after winget merges) |
+| 39 | Lemmy `commandline@lemmy.ml` | Fediverse forum | Post to the community | Verified from <https://lemmy.ml/c/commandline>: programs "made yourself are welcome"; no written self-promotion limit; instance rules unread | [lemmy-news-forms-and-awesome-dotnet-issue.md](../Promotion/lemmy-news-forms-and-awesome-dotnet-issue.md) | prepared; user to post |
+| 40 | Linux Today | Linux news aggregator | Contribution form (headline, article link, description, name, email) | Verified from <https://www.linuxtoday.com/contribute-to-linuxtoday/>: moderator review; no acceptance rules stated; wants an article link | lemmy-news-forms-and-awesome-dotnet-issue.md | prepared; waiting for user (needs an article URL) |
+| 41 | aloneguid/awesome-dotnet | Awesome-list (issue-based) | Issue; listed after five likes or the maintainer's like | Unverified: mirror text only; the repository returned 404 to the fetch tool | lemmy-news-forms-and-awesome-dotnet-issue.md | prepared; user to check the list's current address first |
+
+**Correction to venue 20 (It's FOSS News).** The page <https://itsfoss.com/contact-us-2> was read: developers of open-source software who release a version can use its form; coverage is not guaranteed; the news portal takes news only. Rule now **verified**; the form's fields were not visible. The earlier 404 URL (`itsfoss.com/news/contact-us`) is the redirect target of `news.itsfoss.com/contact-us` and does not work. Content is in lemmy-news-forms-and-awesome-dotnet-issue.md, section 3.
+
+**Considered and skipped in this survey**
+- **luong-komorebi/Awesome-Linux-Software:** its README says (May 2026) the repository is being archived and points to maintained forks; the forks were not identified. Skipped until a live fork is confirmed.
+- **Awesome-Windows lists:** the canonical repository could not be fetched (404 on the tried paths); only a fork's CONTRIBUTING (generic checklist) turned up. Skipped as unverified and mostly GUI-oriented.
+- **TLDR newsletter:** the searches found only advertising and signup pages, no editorial submission route. Skipped; paid placement is not pursued.
+- **Awesome .NET Newsletter, Dotnet Weekly, C# Digest, Hacker Newsletter, The .NET Stacks:** no submission route found again (see Survey 3 skipped list). Skipped.
+- **programming.dev `c/dotnet` (Lemmy):** the community page returned HTTP 403; rules unread. Skipped; the user may read it in a browser.
+- **Mailing lists:** no project or distribution announcement list that accepts third-party application announcements was found. The results were mailing lists of other file managers (Midnight Commander, Tux Commander), where an unsolicited announcement would be spam. Linux-announce, freshcode and the Free Software Directory were searched; no rules were found and none is pursued.
+- **heise, Linux-Magazin and other German press:** another search gave no editorial submission route. Unchanged from Survey 2.
+- **Linux Journal press page, UbuntuPIT:** Linux Journal no longer publishes; UbuntuPIT welcomes press releases from "official companies" and was not judged a fit for a hobby project.
+- **Chocolatey package content:** see venue 38.
+
+**Activity log, 2026-11-22.** Read the overview, the index, the kit (sections 0 and 1) and the repository facts (v0.0.0.763 assets, MIT, six `Strings*.resx` files, `CONTRIBUTING.md` AI section). Ran 18 searches and about twelve fetches (winget repository and policy pages, Scoop contributing guide, Linux Today, It's FOSS, Lemmy commandline, awesome lists). Discovered that the winget route exists already; wrote no winget content, to avoid a duplicate of `Documentation/Distributions/winget.md`. Wrote `Documentation/Promotion/scoop-and-chocolatey.md` and `Documentation/Promotion/lemmy-news-forms-and-awesome-dotnet-issue.md` and indexed both. A first draft that treated winget as new was deleted before the end of the run. `Documentation/agents/supervisor-review.md` showed as modified in `git status`; this run did not touch it.
+
+**Waiting for the user (Survey 4)**
+- Winget: watch `microsoft/winget-pkgs#485881`; answer reviewer comments. Nothing to send from this file.
+- Scoop: open the request issue (text in scoop-and-chocolatey.md) if wanted; decide the immutable-release and self-update questions it raises.
+- Lemmy: post in `commandline@lemmy.ml` after reading the community and instance rules (needs an account).
+- Linux Today: only with a published article URL; give a submitter name and email or skip.
+- It's FOSS News: open `https://itsfoss.com/contact-us-2` and use the form.
+- aloneguid/awesome-dotnet: find the list's current address, then open the issue; do not solicit likes.
