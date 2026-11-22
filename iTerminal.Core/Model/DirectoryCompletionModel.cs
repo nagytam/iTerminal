@@ -43,13 +43,14 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
     internal const int MaxListed = 5000;
 
     internal static readonly TimeSpan CacheLifetime = TimeSpan.FromSeconds(2);
-    internal static readonly TimeSpan ListTimeout = TimeSpan.FromMilliseconds(750);
+    internal static readonly TimeSpan DefaultListTimeout = TimeSpan.FromMilliseconds(750);
 
     private readonly IDirectoryLister _lister;
     private readonly DirectoryCompletionMode _mode;
     private readonly ICompletionModel? _history;
     private readonly HashSet<string>? _extensions;
     private readonly Func<long> _clock;
+    private readonly TimeSpan _listTimeout;
 
     private readonly object _cacheGate = new();
     private string? _cachedPath;
@@ -66,18 +67,21 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
     /// <param name="mode">Folders only, or folders and files.</param>
     /// <param name="history">Paths to offer after the live matches, and where <see cref="InsertCompletion"/> remembers.</param>
     /// <param name="fileExtensions">With <see cref="DirectoryCompletionMode.FilesAndFolders"/>: the extensions (".iso") a file must have to be offered. Null offers every file.</param>
+    /// <param name="listTimeout">How long an update waits for a folder's listing before it offers what it has. Null is <see cref="DefaultListTimeout"/>.</param>
     /// <param name="clock">Milliseconds, for the cache. Tests move it by hand.</param>
     public DirectoryCompletionModel(
         IDirectoryLister lister,
         DirectoryCompletionMode mode = DirectoryCompletionMode.FoldersOnly,
         ICompletionModel? history = null,
         IEnumerable<string>? fileExtensions = null,
+        TimeSpan? listTimeout = null,
         Func<long>? clock = null)
     {
         _lister = lister;
         _mode = mode;
         _history = history;
         _extensions = fileExtensions is null ? null : new HashSet<string>(fileExtensions, StringComparer.OrdinalIgnoreCase);
+        _listTimeout = listTimeout ?? DefaultListTimeout;
         _clock = clock ?? (() => Environment.TickCount64);
     }
 
@@ -95,17 +99,48 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
         value ??= string.Empty;
         long sequence = Interlocked.Increment(ref _sequence);
 
+        string folderText = string.Empty;
+        string prefix = string.Empty;
+        char separator = Path.DirectorySeparatorChar;
+        IReadOnlyList<DirectoryChild> children = [];
+        Task<IReadOnlyList<DirectoryChild>>? late = null;
+
+        if (TryParse(value, out folderText, out string listPath, out prefix, out separator))
+        {
+            children = ListCached(listPath, out late);
+        }
+
+        Publish(sequence, Build(value, folderText, prefix, separator, children), onlyIfLatest: false);
+
+        // A listing that outlasted the wait is still running. When it lands, the matches it gives replace the empty
+        // ones, so a Tab typed now is not left with nothing until the next keystroke. Only the newest update may do this.
+        if (late is not null)
+        {
+            _ = late.ContinueWith(
+                done =>
+                {
+                    if (done.IsCompletedSuccessfully)
+                    {
+                        Publish(sequence, Build(value, folderText, prefix, separator, done.Result), onlyIfLatest: true);
+                    }
+                },
+                TaskScheduler.Default);
+        }
+    }
+
+    private List<string> Build(string value, string folderText, string prefix, char separator, IReadOnlyList<DirectoryChild> children)
+    {
         List<string> matches = [];
         HashSet<string> seen = new(StringComparer.OrdinalIgnoreCase);
 
-        if (TryParse(value, out string folderText, out string listPath, out string prefix, out char separator))
+        if (folderText.Length > 0)
         {
-            IEnumerable<DirectoryChild> children = ListCached(listPath)
+            IEnumerable<DirectoryChild> offered = children
                 .Where(child => child.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && IsOffered(child))
                 .OrderBy(child => child.IsFolder ? 0 : 1)
                 .ThenBy(child => child.Name, StringComparer.OrdinalIgnoreCase);
 
-            foreach (DirectoryChild child in children)
+            foreach (DirectoryChild child in offered)
             {
                 if (matches.Count >= MaxMatches)
                 {
@@ -141,11 +176,19 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
             }
         }
 
-        // The newest update to have started is the only one allowed to publish: an older one that finishes last
-        // (a slow listing) must not put its matches over the newer ones.
+        return matches;
+    }
+
+    /// <summary>
+    /// The newest update to have started is the only one allowed to publish: an older one that finishes last (a slow
+    /// listing) must not put its matches over the newer ones. A late listing asks for <paramref name="onlyIfLatest"/>, so it
+    /// also gives way to any update that has started since, even one that has not published yet.
+    /// </summary>
+    private void Publish(long sequence, List<string> matches, bool onlyIfLatest)
+    {
         lock (_publishGate)
         {
-            if (sequence < _published)
+            if (sequence < _published || (onlyIfLatest && Interlocked.Read(ref _sequence) != sequence))
             {
                 return;
             }
@@ -212,8 +255,13 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
         return true;
     }
 
-    private IReadOnlyList<DirectoryChild> ListCached(string path)
+    /// <summary>
+    /// The children of <paramref name="path"/>: the cached listing, or the listing when it ends within the wait. When it
+    /// does not, the children are empty and <paramref name="late"/> is the listing still running.
+    /// </summary>
+    private IReadOnlyList<DirectoryChild> ListCached(string path, out Task<IReadOnlyList<DirectoryChild>>? late)
     {
+        late = null;
         Task<IReadOnlyList<DirectoryChild>> listing;
         lock (_cacheGate)
         {
@@ -244,7 +292,7 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
 
         try
         {
-            if (listing.Wait(ListTimeout))
+            if (listing.Wait(_listTimeout))
             {
                 Store(path, listing);
                 return listing.Result;
@@ -253,8 +301,10 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
         catch (Exception)
         {
             // A lister that throws (the contract says it does not) offers nothing.
+            return [];
         }
 
+        late = listing;
         return [];
     }
 

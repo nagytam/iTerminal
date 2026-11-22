@@ -4,6 +4,7 @@ using iTerminal.Widgets.Application;
 using iTerminal.Widgets.Jobs;
 using iConsole.Test.Core.Automation;
 using iTerminal.Core.Application;
+using iTerminal.Core.Commands;
 using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Screens;
@@ -398,6 +399,9 @@ public sealed class TerminalApp : IAsyncDisposable
 
     /// <summary>The name of the entry under the focused panel's cursor.</summary>
     public string? FocusedEntryName => FocusedModel?.GetFocusedEntry()?.Name;
+
+    /// <summary>True when the cursor is on the <c>..</c> row, whose <see cref="IEntry.Name"/> is the parent's name, not <c>..</c>.</summary>
+    public bool ParentRowFocused => FocusedModel?.GetFocusedEntry() is { } entry && FocusedEntry.IsParentEntry(entry);
 
     /// <summary>
     /// Moves the focused panel's cursor onto <paramref name="name"/> with Home and Down, the way a

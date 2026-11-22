@@ -92,11 +92,14 @@ public class ArchiveDriveTest
         await _app.WaitUntilAsync(() => File.Exists(copy) && SharedFileReader.ReadAllText(copy) == "beta from the archive", "the entry to be copied out");
         await _app.WaitForNoDialogAsync();
 
-        // ".." up to the archive's top, ".." again out of it: back in the folder, on the archive.
+        // ".." up to the archive's top, ".." again out of it: back in the folder, on the archive. Each Enter waits for the
+        // cursor to be on ".." first, so a key pressed before the listing has settled cannot land on another row.
         await _app.PressAsync("Home");
+        await _app.WaitUntilAsync(() => _app.ParentRowFocused, "the cursor on \"..\" in the folder");
         await _app.PressAsync("Enter");
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("a.txt", s), "the archive's top level again");
         await _app.PressAsync("Home");
+        await _app.WaitUntilAsync(() => _app.ParentRowFocused, "the cursor on \"..\" at the archive's top");
         await _app.PressAsync("Enter");
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("readme.txt", s), "the folder the archive is in");
         await _app.WaitUntilAsync(() => _app.FocusedEntryName == "bundle.tar.gz", "the cursor to be on the archive");

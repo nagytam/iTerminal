@@ -93,8 +93,13 @@ public class IPhoneBrowserDialogTest
 
         await dialog.HandleKeyEventAsync(new KeyEvent('r', ConsoleKey.R, false, false, false));
 
-        // One scan from OnInitializeAsync, one from the 'r' key.
-        await Task.Delay(50);
+        // One scan from OnInitializeAsync, one from the 'r' key: wait for the second call itself, not for a fixed time.
+        var deadline = DateTime.UtcNow.AddSeconds(5);
+        while (devices.Invocations.Count(call => call.Method.Name == nameof(IIPhoneDeviceService.GetDevices)) < 2 && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(10);
+        }
+
         devices.Verify(s => s.GetDevices(), Times.AtLeast(2));
     }
 

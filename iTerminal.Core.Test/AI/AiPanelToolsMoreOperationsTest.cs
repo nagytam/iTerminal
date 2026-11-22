@@ -83,6 +83,53 @@ public class AiPanelToolsMoreOperationsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task GoToRootFolder_ReportsAFailedNavigationInsteadOfThrowing()
+    {
+        var f = new Fixture();
+        f.Service.Setup(s => s.SetUrlAsync(It.IsAny<string>(), It.IsAny<Url>())).ThrowsAsync(new IOException("the share is gone"));
+
+        string result = await f.Tools.GoToRootFolder("left");
+
+        StringAssert.StartsWith(result, "Error:");
+        StringAssert.Contains(result, "the share is gone");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MultiRename_ACaseOnlyChangeIsNotACollisionWithItself()
+    {
+        var f = new Fixture();
+        f.AddEntry("img_1.jpg");
+        // On a case-insensitive file system the new name finds the entry being renamed.
+        f.Left.Setup(m => m.ExistsFile(It.IsAny<Url>())).Returns(true);
+
+        string preview = await f.Tools.MultiRename("img_1", "IMG_1", "left", "img_1.jpg");
+
+        StringAssert.Contains(preview, "IMG_1.jpg");
+        Assert.IsFalse(preview.Contains("already exists"), preview);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MultiRename_AFailedMoveIsReportedAndLeftOutOfTheUndoBatch()
+    {
+        var f = new Fixture();
+        f.AddEntry("IMG_1.jpg");
+        f.AddEntry("IMG_2.jpg");
+        f.Left.Setup(m => m.MoveAsync(It.Is<Url>(u => u.FullUrl.EndsWith("IMG_2.jpg")), It.IsAny<Url>(), false))
+            .ThrowsAsync(new IOException("file is locked"));
+
+        string done = await f.Tools.MultiRename("IMG_", "holiday_", "left", "IMG_1.jpg;IMG_2.jpg", confirmed: true);
+
+        StringAssert.Contains(done, "Renamed 1");
+        StringAssert.Contains(done, "file is locked");
+        IReadOnlyList<RenameUndoService.Rename> batch = f.Undo.TakeAll();
+        Assert.AreEqual(1, batch.Count, "only the rename that happened can be undone");
+        StringAssert.EndsWith(batch[0].Source.FullUrl, "IMG_1.jpg");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void SetHiddenFilesVisible_SavesTheSettingAndAppliesItToThePanels()
     {
         var f = new Fixture();

@@ -245,6 +245,11 @@ public class VoiceRecorderDialog : Dialog
             {
                 message = UiText.Get("Voice.Recorder.Cancelled", "Cancelled.");
             }
+            catch (SpeechException exception)
+            {
+                // The recorder failed while it was running (a revoked permission, a device that went away): say why.
+                message = exception.Message;
+            }
             catch (IOException exception)
             {
                 message = exception.Message;

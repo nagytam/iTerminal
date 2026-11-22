@@ -217,7 +217,8 @@ public class DirectoryCompletionModelTest
                 return [new DirectoryChild("late", true)];
             },
         };
-        var model = new DirectoryCompletionModel(lister);
+        // Zero wait: the listing is still blocked by the gate when the update gives up, so no wall-clock budget is involved.
+        var model = new DirectoryCompletionModel(lister, listTimeout: TimeSpan.Zero);
 
         Assert.AreEqual(0, Match(model, @"C:\slow\").Count, "the first update gives up");
         Assert.AreEqual(0, Match(model, @"C:\slow\l").Count, "and so does the next while it is still running");
@@ -231,6 +232,62 @@ public class DirectoryCompletionModelTest
 
         CollectionAssert.AreEqual(new[] { @"C:\slow\late\" }, Match(model, @"C:\slow\l"), "the late listing was kept");
         Assert.AreEqual(1, lister.Listed.Count);
+    }
+
+    [TestMethod]
+    public void ALateListingIsOfferedWithoutAnotherKeystroke()
+    {
+        using ManualResetEventSlim release = new();
+        FakeLister lister = new([])
+        {
+            Override = _ =>
+            {
+                release.Wait(TimeSpan.FromSeconds(20));
+                return [new DirectoryChild("late", true)];
+            },
+        };
+        // Zero wait: the listing is still blocked by the gate when the update gives up, so no wall-clock budget is involved.
+        var model = new DirectoryCompletionModel(lister, listTimeout: TimeSpan.Zero);
+
+        Assert.AreEqual(0, Match(model, @"C:\slow\").Count, "the update gives up while the listing runs");
+
+        release.Set();
+        for (int i = 0; i < 200 && model.MatchingValues.Count == 0; i++)
+        {
+            Thread.Sleep(20);
+        }
+
+        // No second UpdateMatchingValues call: the late listing alone must have published its match.
+        CollectionAssert.AreEqual(new[] { @"C:\slow\late\" }, model.MatchingValues.ToList());
+    }
+
+    [TestMethod]
+    public void ALateListingDoesNotOverwriteANewerUpdate()
+    {
+        using ManualResetEventSlim release = new();
+        FakeLister lister = new([])
+        {
+            Override = folder =>
+            {
+                if (folder == @"C:\slow\")
+                {
+                    release.Wait(TimeSpan.FromSeconds(20));
+                    return [new DirectoryChild("late", true)];
+                }
+
+                return [new DirectoryChild("other", true)];
+            },
+        };
+        // The gated folder cannot finish, so its update gives up whatever the wait; the newer folder has two seconds to list.
+        var model = new DirectoryCompletionModel(lister, listTimeout: TimeSpan.FromSeconds(2));
+
+        Assert.AreEqual(0, Match(model, @"C:\slow\").Count, "the gated listing gives up after the wait");
+        CollectionAssert.AreEqual(new[] { @"C:\fast\other\" }, Match(model, @"C:\fast\"), "a newer update publishes first");
+
+        release.Set();
+        Thread.Sleep(300);
+
+        CollectionAssert.AreEqual(new[] { @"C:\fast\other\" }, model.MatchingValues.ToList(), "the older late listing does not publish over it");
     }
 
     [TestMethod]
