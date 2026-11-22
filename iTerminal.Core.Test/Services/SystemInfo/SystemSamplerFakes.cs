@@ -17,6 +17,9 @@ internal sealed class FakeSystemProbes : ISystemProbes
 
     public HashSet<string> HangingDisks { get; } = new(StringComparer.Ordinal);
 
+    /// <summary>Holds the processor-model read until it is set, so a test decides when identity answers. Open by default.</summary>
+    public ManualResetEventSlim IdentityGate { get; } = new(true);
+
     public List<string> DiskList { get; set; } = [];
 
     public int CpuModelCalls { get; private set; }
@@ -55,6 +58,28 @@ internal sealed class FakeSystemProbes : ISystemProbes
 
     private int ReturnedReads { get; set; }
 
+    private readonly HashSet<string> _returnedDisks = new(StringComparer.Ordinal);
+
+    /// <summary>Waits until a read of the named disk has returned, whether or not it was held.</summary>
+    public async Task WaitForDiskReturnAsync(string name)
+    {
+        DateTime deadline = DateTime.UtcNow.AddSeconds(15);
+        while (DateTime.UtcNow < deadline)
+        {
+            lock (_lock)
+            {
+                if (_returnedDisks.Contains(name))
+                {
+                    return;
+                }
+            }
+
+            await Task.Delay(5);
+        }
+
+        throw new TimeoutException($"The read of {name} never returned.");
+    }
+
     public string OperatingSystem() => "Test OS";
 
     public string Architecture() => "X64";
@@ -76,6 +101,7 @@ internal sealed class FakeSystemProbes : ISystemProbes
             CpuModelCalls++;
         }
 
+        IdentityGate.Wait();
         return "Test CPU";
     }
 
@@ -125,6 +151,11 @@ internal sealed class FakeSystemProbes : ISystemProbes
             {
                 ReturnedReads++;
             }
+        }
+
+        lock (_lock)
+        {
+            _returnedDisks.Add(name);
         }
 
         return new DiskCounters((ulong)call * 1000, 0);
@@ -202,17 +233,20 @@ internal sealed class FakeFocus : ITerminalFocusService
 }
 
 /// <summary>
-/// Holds the sample interval until the test releases it, so each pass happens when the test says. Any other delay (a
-/// probe's time budget) is a real short delay, so a hung probe times out in the test without the test releasing it.
+/// Holds the sample interval until the test releases it, so each pass happens when the test says. By default any other
+/// delay (a probe's time budget) is a real short delay, so a hung probe times out in the test without the test releasing it.
+/// With <paramref name="holdBudgets"/> every budget is held too, and it runs out only when <see cref="ExpireBudgets"/> is
+/// called, so no healthy probe can be cut short by a loaded runner.
 /// </summary>
-internal sealed class FakeIntervalClock(TimeSpan interval) : ISampleClock
+internal sealed class FakeIntervalClock(TimeSpan interval, bool holdBudgets = false) : ISampleClock
 {
     private readonly object _lock = new();
     private readonly List<TaskCompletionSource> _held = [];
+    private readonly List<TaskCompletionSource> _budgets = [];
 
     public Task Delay(TimeSpan delay, CancellationToken cancellationToken)
     {
-        if (delay != interval)
+        if (delay != interval && !holdBudgets)
         {
             return Task.Delay(delay, cancellationToken);
         }
@@ -221,10 +255,26 @@ internal sealed class FakeIntervalClock(TimeSpan interval) : ISampleClock
         cancellationToken.Register(() => source.TrySetCanceled());
         lock (_lock)
         {
-            _held.Add(source);
+            (delay == interval ? _held : _budgets).Add(source);
         }
 
         return source.Task;
+    }
+
+    /// <summary>Runs out every held budget, so each probe still waiting on one is abandoned.</summary>
+    public void ExpireBudgets()
+    {
+        List<TaskCompletionSource> expired;
+        lock (_lock)
+        {
+            expired = [.. _budgets];
+            _budgets.Clear();
+        }
+
+        foreach (TaskCompletionSource source in expired)
+        {
+            source.TrySetResult();
+        }
     }
 
     /// <summary>Lets the sampler's next pass run, once the sampler is waiting for it.</summary>

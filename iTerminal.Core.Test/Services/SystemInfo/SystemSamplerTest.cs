@@ -91,6 +91,11 @@ public class SystemSamplerTest
     [TestMethod]
     public async Task OneHungDisk_DoesNotBlankTheOthers()
     {
+        // Every budget is held: the hung disk's budget runs out only when the test expires it, after the healthy read has
+        // returned, so a loaded runner cannot make a healthy read miss its budget.
+        _sampler.Dispose();
+        _clock = new FakeIntervalClock(Interval, holdBudgets: true);
+        _sampler = Create(Budget);
         _probes.DiskList = ["sda", "sdb"];
         _probes.HangingDisks.Add("sdb");
         _sampler.Watch();
@@ -99,6 +104,8 @@ public class SystemSamplerTest
 
         _time.Advance(Interval);
         await _clock.ReleaseAsync();
+        await _probes.WaitForDiskReturnAsync("sda");
+        _clock.ExpireBudgets();
         SystemSnapshot second = await NextSnapshotAsync(first);
         Assert.AreEqual(ProbeState.Measuring, DiskState(second, "sda"));
         Assert.AreEqual(ProbeState.NotAnswering, DiskState(second, "sdb"));
@@ -168,18 +175,27 @@ public class SystemSamplerTest
     [TestMethod]
     public async Task Identity_IsReadOnce_UntilItAnswers()
     {
+        // The processor-model read is held until the first snapshot is taken, so the first pass cannot see its answer.
+        _sampler.Dispose();
+        _clock = new FakeIntervalClock(Interval, holdBudgets: true);
+        _sampler = Create(Budget);
+        _probes.IdentityGate.Reset();
         _sampler.Watch();
 
         SystemSnapshot first = await NextSnapshotAsync(null);
-        await _clock.ReleaseAsync();
-        SystemSnapshot second = await NextSnapshotAsync(first);
-        await _clock.ReleaseAsync();
-        SystemSnapshot third = await NextSnapshotAsync(second);
+        Assert.AreNotEqual(ProbeState.Ok, first.CpuModel.State, "the first pass does not wait for identity");
 
+        _probes.IdentityGate.Set();
+        SystemSnapshot latest = first;
+        for (int pass = 0; pass < 20 && latest.CpuModel.State != ProbeState.Ok; pass++)
+        {
+            await _clock.ReleaseAsync();
+            latest = await NextSnapshotAsync(latest);
+        }
+
+        Assert.AreEqual(ProbeState.Ok, latest.CpuModel.State);
+        Assert.AreEqual("Test CPU", latest.CpuModel.Value);
         Assert.AreEqual(1, _probes.CpuModelCalls, "the processor model is asked for once");
-        Assert.AreEqual(ProbeState.Ok, third.CpuModel.State);
-        Assert.AreEqual("Test CPU", third.CpuModel.Value);
-        Assert.IsTrue(first.CpuModel.State != ProbeState.Ok, "the first pass does not wait for identity");
     }
 
     // The fake clock tells the sample interval apart from the probe budgets by their length, so no budget may equal the
