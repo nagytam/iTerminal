@@ -73,19 +73,24 @@ public class DiskUsageServiceTest
     [TestMethod]
     public async Task Cancel_EndsTheScanWithoutATree()
     {
-        var root = MakeTree();
-        try
+        // A walk that waits for the cancel is used, so the scan is still running when Cancel is called. Start with a
+        // tiny tree could finish first, and then the cancel would have nothing to end.
+        var scan = new DiskUsageScan(Path.GetTempPath());
+        using var walking = new ManualResetEventSlim(false);
+        scan.Run((path, parent, visit, token) =>
         {
-            var scan = new DiskUsageService().Start(root);
-            scan.Cancel();
-            await scan.Completion;
+            walking.Set();
+            token.WaitHandle.WaitOne();
+            token.ThrowIfCancellationRequested();
+            return new DiskUsageNode(path, path, isFolder: true, parent);
+        });
 
-            Assert.IsTrue(scan.IsComplete);
-            Assert.IsTrue(scan.WasCancelled);
-        }
-        finally
-        {
-            Directory.Delete(root, recursive: true);
-        }
+        Assert.IsTrue(walking.Wait(TimeSpan.FromSeconds(15)), "the walk never started");
+        scan.Cancel();
+        await scan.Completion;
+
+        Assert.IsTrue(scan.IsComplete);
+        Assert.IsTrue(scan.WasCancelled);
+        Assert.IsNull(scan.Root);
     }
 }

@@ -14,7 +14,9 @@ namespace iTerminal.Core.Services.SystemInfo.Test;
 public class SystemSamplerTest
 {
     private static readonly TimeSpan Interval = TimeSpan.FromSeconds(1);
-    private static readonly TimeSpan Budget = TimeSpan.FromMilliseconds(200);
+    // A healthy probe must answer inside its budget, so the budget is generous: a loaded CI runner can take a few hundred
+    // milliseconds to start a thread. It must still differ from the interval (see Create).
+    private static readonly TimeSpan Budget = TimeSpan.FromMilliseconds(1500);
 
     private FakeSystemProbes _probes = null!;
     private FakeFocus _focus = null!;
@@ -78,7 +80,7 @@ public class SystemSamplerTest
         Assert.AreEqual(1, _probes.DiskCalls("sda"), "a hung probe is not called again while its call is outstanding");
 
         _probes.Gate.Set();
-        await Task.Delay(100);
+        await _probes.WaitForReturnAsync();
         await _clock.ReleaseAsync();
         SystemSnapshot fourth = await NextSnapshotAsync(third);
         Assert.AreEqual(2, _probes.DiskCalls("sda"), "after the abandoned call returns, the next pass calls it again");
