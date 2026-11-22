@@ -488,7 +488,8 @@ internal sealed class TwainSession : IDisposable
         throw new TwainException($"{sourceName} is no longer connected.");
     }
 
-    private static ushort PixelType(ScanColorMode mode) => mode switch
+    /// <summary>The TWAIN pixel type for a colour mode. Pure, so it is tested without the native library.</summary>
+    internal static ushort PixelType(ScanColorMode mode) => mode switch
     {
         ScanColorMode.BlackAndWhite => TwptBw,
         ScanColorMode.Grayscale => TwptGray,
