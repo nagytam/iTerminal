@@ -216,7 +216,9 @@ public class ContentModelFileSystem(
     {
         if (forceRefresh)
         {
-            foreach (var task in _taskManager.GetTasks<FilePanelRefreshTask>(t => t.Url.FullUrl == Url.FullUrl))
+            // Only this panel's own listings: with both panels on the same folder (Ctrl+Shift+D), a file-watcher refresh of one
+            // used to cancel the other's running listing, which then stayed empty because nothing started it again.
+            foreach (var task in _taskManager.GetTasks<FilePanelRefreshTask>(t => t.ContentModelName == Name && t.Url.FullUrl == Url.FullUrl))
             {
                 task?.CancellationTokenSource.Cancel();
             }

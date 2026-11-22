@@ -287,15 +287,31 @@ public class SecureWipeDialog : Dialog
     /// <summary>The phase the lines were last built for; <see cref="OnIdle"/> rebuilds when it changes.</summary>
     private WipePhase _shownPhase = WipePhase.Choosing;
 
+    /// <summary>
+    /// Serializes <see cref="UpdateLines"/>: it runs on the key thread and on the idle thread. Without it the idle thread could build the
+    /// armed lines, lose to a key that withdrew the arming, and then store its stale lines over the new ones for good.
+    /// </summary>
+    private readonly object _linesLock = new();
+
     private void UpdateLines()
     {
-        _shownPhase = Phase;
+        lock (_linesLock)
+        {
+            BuildLines();
+        }
+    }
+
+    private void BuildLines()
+    {
+        // Read once, inside the lock: the last writer then always shows the latest phase.
+        WipePhase phase = Phase;
+        _shownPhase = phase;
         var colors = ThemeService.CurrentColorScheme;
         var width = Math.Max(16, (int)_info.ViewSize.Width);
         var lines = new List<InfoLines.Line>();
         lines.Add(new(_heading.Shrink(width) ?? string.Empty));
 
-        switch (Phase)
+        switch (phase)
         {
             case WipePhase.Choosing:
                 lines.Add(default);
