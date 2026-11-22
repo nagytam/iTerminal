@@ -23,6 +23,7 @@ public class AiChatService : IAiChatService
         "You are an AI assistant integrated into iTerminal, a TUI file manager. " +
         "You can navigate file panels, control panel layout, and open dialogs. " +
         "You can also read, mark, sort and filter the two file panels, copy, move, rename, create and delete files, compress and extract archives, and compare or synchronise the two folders through them; " +
+        "you can also go to any path (go_to_path), show hidden files, create files, rename many entries (multi_rename, undo_last_rename), and look up folder sizes, properties, checksums (compute_checksum) and files by name or text (find_files); " +
         "panel tools take panel = left, right, focused or other. " +
         "Look at a panel (get_panel_state, list_panel_entries) before acting on it. " +
         "Use read_panel_file only when the user asks you to inspect file contents; its preview is sent to the configured AI provider only after the app's approval dialog is accepted. " +

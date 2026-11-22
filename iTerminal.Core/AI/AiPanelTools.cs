@@ -8,7 +8,9 @@ using iTerminal.Core.Model;
 using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Archives;
+using iTerminal.Core.Services.Checksums;
 using iTerminal.Core.Services.Preview;
+using iTerminal.Core.Services.Properties;
 using Microsoft.Extensions.AI;
 using System.Text;
 
@@ -33,7 +35,11 @@ public partial class AiPanelTools(
     IArchiveExtractionService? extractionService = null,
     FileSystemResolver? fileSystemResolver = null,
     IAiActionApprovalService? approvalService = null,
-    IFilePreviewService? filePreviewService = null)
+    IFilePreviewService? filePreviewService = null,
+    ISettingsService? settingsService = null,
+    IFilePropertiesService? propertiesService = null,
+    IChecksumService? checksumService = null,
+    RenameUndoService? renameUndoService = null)
 {
     /// <summary>The most rows a listing tool returns, so a huge folder cannot swamp the model's context.</summary>
     internal const int MaxListedEntries = 200;
@@ -88,6 +94,7 @@ public partial class AiPanelTools(
         AIFunctionFactory.Create(DeleteEntries, "delete_entries",
             "Move the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) to the recycle bin. DESTRUCTIVE: first ask the user in chat, then pass confirmed=true to show an app approval dialog listing every target. The user must approve there; this parameter is not authorization."),
         .. CreateArchiveAndFolderTools(),
+        .. CreateMorePanelTools(),
     ];
 
     #region Panel resolution
