@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace iConsole.Security;
+namespace iTerminal.Security;
 
 /// <summary>
 /// The kinds read from files' leading bytes so far, by full path. The listing only looks a path up here — it

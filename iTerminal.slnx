@@ -36,6 +36,8 @@
     <Platform Project="x86" />
     <Build />
   </Project>
+  <Project Path="iTerminal.Security\iTerminal.Security.csproj" />
+  <Project Path="iTerminal.Security.Test\iTerminal.Security.Test.csproj" />
   <Project Path="iTerminal.Specifications.Test\iTerminal.Specifications.Test.csproj">
     <BuildDependency Project="iTerminal.Test\iTerminal.Test.csproj" />
   </Project>

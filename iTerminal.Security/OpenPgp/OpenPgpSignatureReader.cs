@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace iConsole.OpenPgp;
+namespace iTerminal.Security.OpenPgp;
 
 /// <summary>
 /// One signature packet of a detached OpenPGP signature, as the bytes state it. Nothing here is verified: the
