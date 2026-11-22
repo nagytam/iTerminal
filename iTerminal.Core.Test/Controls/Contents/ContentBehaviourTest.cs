@@ -5,6 +5,7 @@ using iConsole.Tasks;
 using iTerminal.Core.AI;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Controls.Terminals;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
@@ -26,7 +27,7 @@ public class ContentBehaviourTest
 
     private const int BarHeight = 5;
 
-    private static Setup Create(int width = 120, int height = 40)
+    private static Setup Create(int width = 120, int height = 40, bool withBar = true)
     {
         var theme = TestTheme();
         var taskManager = new Mock<TaskManager>(MockBehavior.Loose).Object;
@@ -40,14 +41,29 @@ public class ContentBehaviourTest
         var aiModel = new AiChatModel();
         var aiBar = new AiPromptBar(aiModel, Mock.Of<IAiChatService>(), new iTerminal.Core.Dialogs.AiModelDialog(aiModel, Options.Create(new AiOptions()), theme), Mock.Of<IDateTimeProviderService>(), theme);
         var terminal = new TerminalPanel(terminalModel, contentModelService.Object, theme);
-        var content = new Content(factory, aiBar, terminal, contentModelService.Object, theme, Options.Create(new AiOptions { BarHeight = BarHeight }))
+        var bottomBar = withBar ? new AiBottomBarContribution(aiBar, Options.Create(new AiOptions { BarHeight = BarHeight })) : null;
+        var content = new Content(factory, terminal, contentModelService.Object, theme, bottomBar)
         {
             ViewSize = new Size(width, height),
         };
         content.OnInitializeLayout();
 
         var panels = content.Controls.AsSnapshot().OfType<FilePanel>().ToList();
-        return new Setup(content, panels[0], panels[1], aiBar, terminal);
+        return new Setup(content, panels[0], panels[1], withBar ? aiBar : null!, terminal);
+    }
+
+    /// <summary>
+    /// Behaviour pin, not a new behaviour: with no bottom bar contributed (the Core-only hosts), the content lays out its two
+    /// panels and holds no bar control. Without a bar it still reserves the default five rows, as it did before the contribution.
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void WithoutABottomBarTheContentHoldsTwoPanelsAndNoBarControl()
+    {
+        var s = Create(withBar: false);
+
+        Assert.AreEqual(2, s.Content.Controls.AsSnapshot().OfType<FilePanel>().Count());
+        Assert.AreEqual(0, s.Content.Controls.AsSnapshot().OfType<IBottomBar>().Count());
     }
 
     [Timeout(60_000)]

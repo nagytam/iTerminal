@@ -6,6 +6,7 @@ using iTerminal.Core.Controls.Terminals;
 using iTerminal.Core.Services;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Commands;
+using iTerminal.Core.Extensions;
 using System.Diagnostics;
 using iConsole.Interfaces;
 
@@ -18,7 +19,7 @@ public class Content : Window, IContent
 
     private readonly FilePanel? _leftPanel;
     private readonly FilePanel? _rightPanel;
-    private readonly AiPromptBar? _aiPromptBar;
+    private readonly IBottomBar? _aiPromptBar;
     private readonly TerminalPanel? _terminalPanel;
     private readonly int _barHeight;
     private bool _showTerminalPanel = false;
@@ -31,11 +32,10 @@ public class Content : Window, IContent
 
     public Content(
         FilePanelFactory filePanelFactory,
-        AiPromptBar aiPromptBar,
         TerminalPanel terminalPanel,
         IContentModelService contentModelService,
         IThemeService themeService,
-        Microsoft.Extensions.Options.IOptions<AI.AiOptions> aiOptions,
+        IBottomBarContribution? bottomBar = null,
         InteractiveShellCommand? shellCommand = null,
         ISettingsService? settingsService = null,
         INotificationService? notificationService = null)
@@ -44,16 +44,16 @@ public class Content : Window, IContent
         Name = nameof(Content);
         _leftPanel = filePanelFactory?.Create(Left);
         _rightPanel = filePanelFactory?.Create(Right);
-        _aiPromptBar = aiPromptBar;
+        _aiPromptBar = bottomBar?.Bar;
         _terminalPanel = terminalPanel;
-        _barHeight = aiOptions?.Value.BarHeight ?? 5;
+        _barHeight = bottomBar?.BarHeight ?? 5;
 
         if (_leftPanel is not null) AddControl(_leftPanel);
         if (_rightPanel is not null) AddControl(_rightPanel);
-        if (aiPromptBar is not null)
+        if (_aiPromptBar is not null)
         {
-            AddControl(aiPromptBar);
-            aiPromptBar.PreferredHeightChanged += OnBarHeightChanged;
+            AddControl(_aiPromptBar);
+            _aiPromptBar.PreferredHeightChanged += OnBarHeightChanged;
         }
         if (terminalPanel is not null) AddControl(terminalPanel);
 

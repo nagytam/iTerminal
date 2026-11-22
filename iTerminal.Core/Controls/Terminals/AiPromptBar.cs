@@ -12,12 +12,13 @@ using iTerminal.Core.AI;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Speech;
 using System.ComponentModel;
 
 namespace iTerminal.Core.Controls.Terminals;
 
-public class AiPromptBar : Window
+public class AiPromptBar : Window, IBottomBar
 {
     /// <summary>Columns of the first row: "AI" (0-1), the spinner (2), then the model label and the prompt label share the rest.</summary>
     private const int AiLabelWidth = 2;
@@ -189,7 +190,7 @@ public class AiPromptBar : Window
         var parent = Parent;
         if (parent is null) return;
         var focusable = parent.Controls
-            .Where(c => (c is FilePanel || c is AiPromptBar || c is TerminalPanel) && c.IsVisible)
+            .Where(c => (c is FilePanel || c is IBottomBar || c is TerminalPanel) && c.IsVisible)
             .ToList();
         var idx = focusable.IndexOf(this);
         focusable[(idx + 1) % focusable.Count]?.SetFocus();
@@ -200,7 +201,7 @@ public class AiPromptBar : Window
         var parent = Parent;
         if (parent is null) return;
         var focusable = parent.Controls
-            .Where(c => (c is FilePanel || c is AiPromptBar || c is TerminalPanel) && c.IsVisible)
+            .Where(c => (c is FilePanel || c is IBottomBar || c is TerminalPanel) && c.IsVisible)
             .ToList();
         var idx = focusable.IndexOf(this);
         focusable[(idx - 1 + focusable.Count) % focusable.Count]?.SetFocus();

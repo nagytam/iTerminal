@@ -1,6 +1,7 @@
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls;
+using iTerminal.Core.Extensions;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -48,7 +49,7 @@ public class TerminalPanel : Window
         var parent = Parent;
         if (parent is null) return;
         var focusable = parent.Controls
-            .Where(c => (c is FilePanel || c is AiPromptBar || c is TerminalPanel) && c.IsVisible)
+            .Where(c => (c is FilePanel || c is IBottomBar || c is TerminalPanel) && c.IsVisible)
             .ToList();
         var idx = focusable.IndexOf(this);
         focusable[(idx + 1) % focusable.Count]?.SetFocus();
@@ -59,7 +60,7 @@ public class TerminalPanel : Window
         var parent = Parent;
         if (parent is null) return;
         var focusable = parent.Controls
-            .Where(c => (c is FilePanel || c is AiPromptBar || c is TerminalPanel) && c.IsVisible)
+            .Where(c => (c is FilePanel || c is IBottomBar || c is TerminalPanel) && c.IsVisible)
             .ToList();
         var idx = focusable.IndexOf(this);
         focusable[(idx - 1 + focusable.Count) % focusable.Count]?.SetFocus();
