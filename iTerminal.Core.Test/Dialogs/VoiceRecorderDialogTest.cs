@@ -161,10 +161,10 @@ public class VoiceRecorderDialogTest
     }
 
     [TestMethod]
-    public void TheCommandIsCtrlShiftX()
+    public void TheCommandHasNoHotKey()
     {
         var command = new VoiceRecorderDialogCommand(NewDialog(new FakeRecorder()));
 
-        Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), command.Key);
+        Assert.IsNull(command.Key);
     }
 }
