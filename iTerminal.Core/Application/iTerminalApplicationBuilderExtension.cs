@@ -140,6 +140,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iConsole.Tabular.IGridQueryAssistant, iTerminal.Core.AI.GridQueryAssistant>();
         services.AddTransient<AiModelDialog>();
         services.AddTransient<AiPromptBar>();
+        // The bar the content lays out (one instance, as the content is a singleton) and the chat service's warm-up.
+        services.AddSingleton<iTerminal.Core.Extensions.IBottomBarContribution, AiBottomBarContribution>();
+        services.AddSingleton<iTerminal.Core.Extensions.IStartupWarmUpContribution, iTerminal.Core.AI.AiWarmUpContribution>();
 
         services.AddSingleton<StartupWarningService>();
 

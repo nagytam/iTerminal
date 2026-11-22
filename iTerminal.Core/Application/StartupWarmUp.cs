@@ -1,5 +1,5 @@
 using iConsole.Diagnostics;
-using iTerminal.Core.AI;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Services.RuntimeDependencies;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,24 +17,29 @@ public static class StartupWarmUp
     private static readonly Type[] SlowServices =
     [
         typeof(IRuntimeDependencyService),
-        typeof(IAiChatService),
         typeof(FilePanelFactory),
     ];
 
     /// <summary>
     /// Starts building the services and returns at once. A failure is left for the first real use to report. Call it once the
     /// password manager is unlocked: the AI client reads its key from the store, and a locked one answers "no secret".
+    /// The services named by <see cref="IStartupWarmUpContribution"/> follow the static ones, so a feature outside Core
+    /// (the AI assistant) is warmed the same way without Core naming it.
     /// </summary>
     public static void Start(IServiceProvider services)
     {
-        foreach (Type type in SlowServices)
+        Type[] contributed = services.GetServices<IStartupWarmUpContribution>().Select(contribution => contribution.ServiceType).ToArray();
+        foreach (Type type in SlowServices.Concat(contributed))
         {
             _ = Task.Run(() =>
             {
                 try
                 {
-                    services.GetService(type);
-                    StartupTrace.Mark("warmed-" + type.Name);
+                    // An unregistered type comes back null rather than throwing, and is not a warm-up, so it is not marked.
+                    if (services.GetService(type) is not null)
+                    {
+                        StartupTrace.Mark("warmed-" + type.Name);
+                    }
                 }
                 catch (Exception)
                 {

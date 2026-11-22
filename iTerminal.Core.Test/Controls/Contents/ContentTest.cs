@@ -63,7 +63,7 @@ public class ContentTest
         var terminalPanel = new TerminalPanel(terminalModel, mockService.Object, themeService);
         var aiOptions = Options.Create(new AiOptions { BarHeight = barHeight });
 
-        var sut = new Content(factory, aiPromptBar, terminalPanel, mockService.Object, themeService, aiOptions);
+        var sut = new Content(factory, terminalPanel, mockService.Object, themeService, new AiBottomBarContribution(aiPromptBar, aiOptions));
 
         return new ContentTestSetup
         {

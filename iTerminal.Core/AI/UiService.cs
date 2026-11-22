@@ -11,7 +11,7 @@ public class UiService : IUiService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    // Resolved lazily to avoid circular dependency: Content → AiPromptBar → IAiChatService → IUiService → Content
+    // Resolved lazily to avoid circular dependency: Content → IBottomBarContribution (the AI bar) → IAiChatService → IUiService → Content
     private Content ContentWindow => _serviceProvider.GetRequiredService<Content>();
     private IContent ContentLayout => ContentWindow;
 

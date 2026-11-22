@@ -1,6 +1,7 @@
 ﻿using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls;
+using iTerminal.Core.Extensions;
 using iConsole.Controls.ScrollBar;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -969,7 +970,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         var parentPanel = Parent?.Parent;
         if (parentPanel != null)
         {
-            var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is AiPromptBar || c is TerminalPanel) && c.IsVisible).ToList();
+            var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is IBottomBar || c is TerminalPanel) && c.IsVisible).ToList();
             var index = focusableControls.IndexOf(Parent!);
             var nextIndex = (index + 1) % focusableControls.Count;
             var nextPanel = focusableControls[nextIndex];
@@ -985,7 +986,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         var parentPanel = Parent?.Parent;
         if (parentPanel != null)
         {
-            var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is AiPromptBar || c is TerminalPanel) && c.IsVisible).ToList();
+            var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is IBottomBar || c is TerminalPanel) && c.IsVisible).ToList();
             var index = focusableControls.IndexOf(Parent!);
             var nextIndex = (index - 1 + focusableControls.Count) % focusableControls.Count;
             var nextPanel = focusableControls[nextIndex];

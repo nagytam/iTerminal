@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using iTerminal.Core.AI;
 using iTerminal.Core.Application;
 using iTerminal.Core.Data;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Services.RuntimeDependencies;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ public class StartupWarmUpTest
         ServiceCollection services = new();
         services.AddSingleton<IRuntimeDependencyService>(_ => Build(Mock.Of<IRuntimeDependencyService>()));
         services.AddSingleton<IAiChatService>(_ => Build(Mock.Of<IAiChatService>()));
+        services.AddSingleton<IStartupWarmUpContribution, AiWarmUpContribution>();
         services.AddSingleton<FilePanelFactory>(_ => Build(UnbuiltPanelFactory()));
         using ServiceProvider provider = services.BuildServiceProvider();
 
@@ -57,6 +59,7 @@ public class StartupWarmUpTest
             built.Signal();
             return Mock.Of<IAiChatService>();
         });
+        services.AddSingleton<IStartupWarmUpContribution, AiWarmUpContribution>();
         services.AddSingleton<FilePanelFactory>(_ =>
         {
             built.Signal();
