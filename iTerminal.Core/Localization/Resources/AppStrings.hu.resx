@@ -6904,6 +6904,9 @@
   <data name="Menu.File" xml:space="preserve">
     <value>Fájl</value>
   </data>
+  <data name="Menu.Files" xml:space="preserve">
+    <value>Fájlok</value>
+  </data>
   <data name="Menu.Filetransfer" xml:space="preserve">
     <value>Fájlátvitel</value>
   </data>
@@ -6918,6 +6921,9 @@
   </data>
   <data name="Menu.FindOldFiles" xml:space="preserve">
     <value>Régi fájlok keresése</value>
+  </data>
+  <data name="Menu.Games" xml:space="preserve">
+    <value>Játékok</value>
   </data>
   <data name="Menu.GitHistory" xml:space="preserve">
     <value>Git-előzmények</value>
@@ -6955,8 +6961,14 @@
   <data name="Menu.Navigate" xml:space="preserve">
     <value>Navigálás</value>
   </data>
+  <data name="Menu.Network" xml:space="preserve">
+    <value>Hálózat</value>
+  </data>
   <data name="Menu.NetworkManager" xml:space="preserve">
     <value>Hálózatkezelő</value>
+  </data>
+  <data name="Menu.Office" xml:space="preserve">
+    <value>Iroda</value>
   </data>
   <data name="Menu.OpenWith" xml:space="preserve">
     <value>Megnyitás ezzel…</value>
@@ -7026,6 +7038,9 @@
   </data>
   <data name="Menu.SynchroniseFolders" xml:space="preserve">
     <value>Mappák szinkronizálása</value>
+  </data>
+  <data name="Menu.System" xml:space="preserve">
+    <value>Rendszer</value>
   </data>
   <data name="Menu.SystemInfo" xml:space="preserve">
     <value>Rendszerinformáció</value>

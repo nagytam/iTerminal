@@ -47,6 +47,11 @@ public class MenuItem : PopUpWindow
             {
                 return Text[(tab + 1)..];
             }
+            // An entry of a drop-down that opens a submenu shows the same arrow the context menu does.
+            if (MenuItems.Count > 0 && Parent is MenuItem and not MenuBar)
+            {
+                return "▶";
+            }
             var command = Commands.FirstOrDefault();
             if (command is null)
             {

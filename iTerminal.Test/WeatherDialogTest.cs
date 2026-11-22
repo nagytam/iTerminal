@@ -22,8 +22,10 @@ public class WeatherDialogTest
         await _app.WaitUntilAsync(
             () => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar,
             "the Tools menu to take the keyboard");
-        // The entry is in the drop-down, below the menu bar row; the bar's own weather indicator is on row 0 and does not count.
-        for (int attempt = 0; attempt < 100 && !_app.Screen.Lines.Skip(1).Any(line => line.Contains("Weather", StringComparison.Ordinal)); attempt++)
+        await _app.OpenSubmenuAsync("Office");
+        // The entry is in the Office submenu, below the menu bar row; the bar's own weather indicator is on row 0 and does not count.
+        // Opening the submenu draws its entries already, so wait for Weather to be the selected row ("<Weather ...>") before Enter.
+        for (int attempt = 0; attempt < 100 && !_app.Screen.Lines.Skip(1).Any(line => line.Contains("<Weather", StringComparison.Ordinal)); attempt++)
         {
             ConsoleSnapshot previous = _app.Screen;
             await _app.PressAsync("Down");

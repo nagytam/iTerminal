@@ -235,6 +235,7 @@ public class DialogsTest
         await _app.WaitUntilAsync(
             () => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar,
             "the Tools menu to take the keyboard");
+        await _app.OpenSubmenuAsync("System");
         for (int attempt = 0; attempt < 100
             && !_app.Screen.Lines.Any(line => line.Contains("User and group manager", StringComparison.Ordinal));
             attempt++)

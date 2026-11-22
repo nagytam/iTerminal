@@ -151,17 +151,42 @@ public class ToolsMenuItem : MenuItem
             groups["sys"].Add(new RunAsAdministratorCommand(contentModelService, elevationService, notificationService));
         }
 
-        // Related tools sit together between separators — files, network, everyday helpers, games, system —
-        // rather than in one unbroken run of forty rows.
-        foreach (List<iConsole.Commands.ICommand> group in groups.Values.Where(g => g.Count > 0))
+        // Related tools live in a submenu each — files, network, office, games, system — rather than in one
+        // run of forty rows. The submenus follow the top-level entries, after a single separator.
+        // The English titles are the source text; MenuItem.Localize translates them through Menu.<title>.
+        Dictionary<string, string> groupTitles = new()
         {
-            AddMenuItem(new MenuItem("-", null, [], themeService));
+            ["files"] = "Files",
+            ["net"] = "Network",
+            ["office"] = "Office",
+            ["games"] = "Games",
+            ["sys"] = "System",
+        };
+        List<MenuItem> submenus = [];
+        foreach ((string key, List<iConsole.Commands.ICommand> group) in groups)
+        {
+            if (group.Count == 0)
+            {
+                continue;
+            }
+
+            List<MenuItem> entries = [];
             foreach (iConsole.Commands.ICommand command in group)
             {
                 string label = string.IsNullOrEmpty(command.KeyDisplayText)
                     ? command.Title
                     : $"{command.Title}	{command.KeyDisplayText}";
-                AddMenuItem(new MenuItem(label, command, [], themeService));
+                entries.Add(new MenuItem(label, command, [], themeService));
+            }
+            submenus.Add(new MenuItem(groupTitles[key], null, entries, themeService));
+        }
+
+        if (submenus.Count > 0)
+        {
+            AddMenuItem(new MenuItem("-", null, [], themeService));
+            foreach (MenuItem submenu in submenus)
+            {
+                AddMenuItem(submenu);
             }
         }
     }

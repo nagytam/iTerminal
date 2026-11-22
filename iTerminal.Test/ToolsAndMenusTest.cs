@@ -44,6 +44,7 @@ public class ToolsAndMenusTest
         await _app.PressAsync("Ctrl+F");
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the menu");
         await _app.PressSequenceAsync("Right", "Right", "Right");
+        await _app.OpenSubmenuAsync("Office");
         await _app.WaitForTextAsync("Calculator");
 
         if (Core.Commands.VirtualMachineManagerDialogCommand.IsSupported)
@@ -64,7 +65,7 @@ public class ToolsAndMenusTest
 
     [Timeout(120_000)]
     [TestMethod]
-    public async Task TheToolsMenuStaysOnAShortScreenAndScrollsToItsLastEntry()
+    public async Task TheToolsSubmenusFitAShortScreen()
     {
         await using TerminalApp small = await TerminalApp.StartAsync(width: 80, height: 24);
         await small.PressAsync("Ctrl+F");
@@ -72,16 +73,12 @@ public class ToolsAndMenusTest
         await small.PressSequenceAsync("Right", "Right", "Right");
         await small.WaitForTextAsync("Disk Manager");
 
-        // Its entries are more than the screen has rows: the bottom border and a "more below" mark must show.
+        // The longest submenu, Office, opens in full: its bottom border is on the screen and nothing is marked as hidden.
+        await small.OpenSubmenuAsync("Office");
+        await small.WaitForTextAsync("Calculator");
         await small.WaitUntilAsync(
-            s => s.Lines[s.Height - 1].Contains("╚", StringComparison.Ordinal) && s.Lines.Any(l => l.Contains('▼')),
-            "the drop-down to end on its bottom border inside the screen, marked as continuing");
-
-        // Up from the first entry wraps to the last one, whatever the menu's length.
-        await small.PressAsync("Up");
-
-        // The last entry is in view: entries are hidden above it and none below.
-        await small.WaitUntilAsync(s => s.Lines.Any(l => l.Contains('▲')) && !s.Lines.Any(l => l.Contains('▼')), "a mark that entries are hidden above and none below");
+            s => s.Lines.Any(l => l.Contains('╚', StringComparison.Ordinal)) && !s.Lines.Any(l => l.Contains('▼') || l.Contains('▲')),
+            "the Office submenu to end on its bottom border inside the screen, with no mark that entries are hidden");
     }
 
     [Timeout(120_000)]

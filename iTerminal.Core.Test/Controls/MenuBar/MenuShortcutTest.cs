@@ -125,8 +125,24 @@ public class MenuShortcutTest
         return string.Join('+', modifiers.Append(parts[^1].ToLowerInvariant()));
     }
 
-    private static IEnumerable<MenuItem> Entries(MenuItem menu) =>
-        menu.Controls.AsSnapshot().OfType<MenuItem>().Where(m => m.Text != "-");
+    /// <summary>The entries that run something, including those inside a submenu; a submenu's own title is not one.</summary>
+    private static IEnumerable<MenuItem> Entries(MenuItem menu)
+    {
+        foreach (MenuItem item in menu.Controls.AsSnapshot().OfType<MenuItem>().Where(m => m.Text != "-"))
+        {
+            if (item.Controls.AsSnapshot().OfType<MenuItem>().Any())
+            {
+                foreach (MenuItem child in Entries(item))
+                {
+                    yield return child;
+                }
+            }
+            else
+            {
+                yield return item;
+            }
+        }
+    }
 
     [Timeout(60_000)]
     [TestMethod]

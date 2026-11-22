@@ -35,7 +35,7 @@ public class ToolsMenuItemTest
             unitConverterDialog: new iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog(
                 Moq.Mock.Of<iConsole.Services.IBeepService>(), new iConsole.Services.DateTimeProviderService(), theme));
 
-        var entries = menu.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToList();
+        var entries = Entries(menu).Select(m => m.Text).ToList();
 
         CollectionAssert.Contains(entries, "Calculator" + (char)9 + "Ctrl+A");
         CollectionAssert.Contains(entries, "Unit Converter" + (char)9 + "Ctrl+E");
@@ -55,7 +55,7 @@ public class ToolsMenuItemTest
             null!, null!, null!, null!, Moq.Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, null!, null!, theme,
             translatorDialog: translator);
 
-        var entries = menu.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToList();
+        var entries = Entries(menu).Select(m => m.Text).ToList();
 
         Assert.IsTrue(entries.Any(e => e.StartsWith("Translator" + (char)9, StringComparison.Ordinal) && e.Contains("F4", StringComparison.Ordinal)),
             string.Join(" | ", entries));
@@ -72,8 +72,49 @@ public class ToolsMenuItemTest
             null!, null!, null!, null!, Moq.Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, null!, null!, theme,
             runtimeDependencyDialog: new iTerminal.Core.Dialogs.RuntimeDependencyDialog(service, theme));
 
-        var entries = menu.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToList();
+        var entries = Entries(menu).Select(m => m.Text).ToList();
 
         CollectionAssert.Contains(entries, "Runtime Dependencies");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RelatedToolsSitInSubmenusUnderTheirTitle()
+    {
+        var theme = iTerminal.Core.Test.Helper.UiTestHelper.TestTheme();
+        var menu = new ToolsMenuItem(
+            null!, null!, null!, null!, Moq.Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, null!, null!, theme,
+            calculatorDialog: new iTerminal.Core.Dialogs.Calculator.CalculatorDialog(theme),
+            runtimeDependencyDialog: new iTerminal.Core.Dialogs.RuntimeDependencyDialog(
+                Moq.Mock.Of<iTerminal.Core.Services.RuntimeDependencies.IRuntimeDependencyService>(), theme));
+
+        var topLevel = menu.Controls.AsSnapshot().OfType<MenuItem>().ToList();
+        var office = topLevel.Single(m => m.Text == "Office");
+        var system = topLevel.Single(m => m.Text == "System");
+
+        // The title is the drop-down's own row: it carries the submenu arrow and no shortcut.
+        Assert.AreEqual("▶", office.HotKeyText);
+        CollectionAssert.AreEqual(new[] { "Calculator" + (char)9 + "Ctrl+A" }, office.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToArray());
+        CollectionAssert.AreEqual(new[] { "Runtime Dependencies" }, system.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToArray());
+        Assert.IsFalse(topLevel.Any(m => m.Text == "Calculator" + (char)9 + "Ctrl+A"), "the calculator belongs in the Office submenu, not the top level");
+    }
+
+    /// <summary>Every entry of the menu in order, including those inside a submenu; a submenu's own title is not one.</summary>
+    private static IEnumerable<MenuItem> Entries(MenuItem menu)
+    {
+        foreach (MenuItem item in menu.Controls.AsSnapshot().OfType<MenuItem>().Where(m => !m.IsSeparator))
+        {
+            if (item.Controls.AsSnapshot().OfType<MenuItem>().Any())
+            {
+                foreach (MenuItem child in Entries(item))
+                {
+                    yield return child;
+                }
+            }
+            else
+            {
+                yield return item;
+            }
+        }
     }
 }
