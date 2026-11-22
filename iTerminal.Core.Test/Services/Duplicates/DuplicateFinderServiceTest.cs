@@ -130,9 +130,19 @@ public class DuplicateFinderServiceTest
     [TestMethod]
     public async Task CancellingEndsTheScanWithNothing()
     {
-        Write("a.txt", "same");
-        Write("b.txt", "same");
-        var scan = new DuplicateFinderService().Start(_root);
+        // A work function that waits for the cancel is used, so the scan is still running when Cancel is called. With
+        // real files the scan could finish first, and then the cancel would have nothing to end.
+        var scan = new DuplicateScan(_root);
+        using var working = new ManualResetEventSlim(false);
+        scan.Run((_, token) =>
+        {
+            working.Set();
+            token.WaitHandle.WaitOne();
+            token.ThrowIfCancellationRequested();
+            return [];
+        });
+
+        Assert.IsTrue(working.Wait(TimeSpan.FromSeconds(15)), "the scan never started");
         scan.Cancel();
         await scan.Completion;
 
