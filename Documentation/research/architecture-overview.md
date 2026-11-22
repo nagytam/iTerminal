@@ -728,6 +728,283 @@ Which check found what: the vulnerability check found no advisory for any packag
 2. Finding 5 (Central Package Management), then finding 6 (audit, lock files, source mapping, Dependabot with the `OpenMcdf` ignore).
 3. Finding 4 (the iPhone drive's platform contract) and finding 7 (pinned runtime downloads), which need a decision from the maintainer first.
 
+## Duplication and refactoring
+
+Reviewed on 2026-11-22, scope "Duplication and refactoring" (asked for by name), on branch `feature/ai-panel-tools-more-operations` at commit `cf844281`. No review branch was cut, because the branch is not `main`.
+
+Read: `CLAUDE.md`; `ui-framework.md`, `runtime-dependencies.md` and `testing.md`; the design-review, profiling and security overviews and the earlier sections of this document. In the source: the runtime-dependency classes, `SystemPackageInstallPlan`, `ExternalProcessRunner` and `IExternalProcessRunner`, `GitService`, `PackageManagerProcess` and `DefenderScanService`; the dialogs that hand-paint their rows (Contacts, Environment Variables, Online Radio, To-Do, Calendar, Mail, Password Manager, Remote Connections, Workspaces, Access Control, Print, Scanner, Streams, Torrents); `SplitPaneDialog`; `TextWidth`, `StringHelper`, `FileSizeHelper`, `TextEncodings`, `ProgressGroup`, `StreamCopyHelper` and `UrlPath`; `WeatherJob` and `OpenMeteoForecastProvider`; the settings-backed JSON stores; the stream-copy loops of the drive services; and the new AI panel tools.
+
+Method: candidate blocks were found with `grep` on a distinctive line, the bodies were cut out with `awk` and compared by hash and `diff`, and the helpers that already exist were searched for by name and by job. Not done: no build, no test run, no run-time check. `dotnet list package` was not run, because no finding in this scope rests on a package. The `.claude/worktrees` folder holds copies of the source and was left out of every count.
+
+**Summary**
+
+- The strongest findings are drifted copies, where one copy has the fix and the others do not:
+  - git and yt-dlp do not accept WinGet's "already installed" answer that ffmpeg and rar accept (finding 42);
+  - `GitService` decodes git's output in the console code page, while the shared runner reads UTF-8 (finding 43);
+  - the F3 viewer, the file comparison and the document index decode the same file differently (finding 46).
+- In most cases the helper already exists and the copies do not use it: `TextWidth.Fit`, `ProgressGroup.FormatDuration`, `StreamCopyHelper`, `SystemPackageInstallPlan`, `IExternalProcessRunner`, `UrlPath.Child`. The cheapest fixes point copies at the helper that is already there.
+- The largest families are hand-copied dialogs: 14 copies of the same 14-line `Put` (finding 44), and three record-manager dialogs written three times (finding 45).
+- No finding is High. None loses data or causes a race, and each refactoring can be done one behaviour-preserving step at a time.
+- Strong parts: the remote content models, the cloud services and the split-pane dialogs each share one base class. The AI panel tools added on this branch reuse the properties, checksum and search services instead of copying them.
+
+**Findings**
+
+42. **ffmpeg, git and yt-dlp are hand copies of `SystemToolRuntimeDependency`, and git and yt-dlp lost the WinGet "already installed" rule** — **Medium**, kind: duplication, consistency.
+    - **Where:**
+      - The base, used only by rar and unrar: [SystemToolRuntimeDependency.cs:14](../../iTerminal.Core/Services/RuntimeDependencies/SystemToolRuntimeDependency.cs). Its comment calls it "the same contract as `FfmpegRuntimeDependency` for one program", but it hard-codes RAR: version 5 at `:72` and `:74`, `https://www.rarlab.com/` at `:115`.
+      - The copies: [FfmpegRuntimeDependency.cs:19](../../iTerminal.Core/Services/RuntimeDependencies/FfmpegRuntimeDependency.cs), [GitRuntimeDependency.cs:14](../../iTerminal.Core/Services/RuntimeDependencies/GitRuntimeDependency.cs) and [YtDlpRuntimeDependency.cs:15](../../iTerminal.Core/Services/RuntimeDependencies/YtDlpRuntimeDependency.cs). Each repeats the cache tuple, `InstalledVersion`, `InstallAsync`, `Activate`, `Invalidate`, `ListVersionsAsync`, `FindTool` and `SafeWriteTime`. The `InstalledVersion` bodies differ only in a variable name. `SafeWriteTime` is byte-identical in these four files and in [PowerShellRuntimeDependency.cs:403](../../iTerminal.Core/Services/RuntimeDependencies/PowerShellRuntimeDependency.cs).
+      - The drift: [SystemToolRuntimeDependency.cs:119](../../iTerminal.Core/Services/RuntimeDependencies/SystemToolRuntimeDependency.cs) and [FfmpegRuntimeDependency.cs:132](../../iTerminal.Core/Services/RuntimeDependencies/FfmpegRuntimeDependency.cs) treat WinGet's "no applicable update" and "already installed" exit codes (`:151`) as success. [GitRuntimeDependency.cs:116](../../iTerminal.Core/Services/RuntimeDependencies/GitRuntimeDependency.cs) and [YtDlpRuntimeDependency.cs:127](../../iTerminal.Core/Services/RuntimeDependencies/YtDlpRuntimeDependency.cs) test `exitCode != 0` only. yt-dlp's messages are also English-only (`:123`, `:125`), while the other three use the `Dep.NoPackageManager` and `Dep.InstallingWith` keys.
+      - `GitInstallPlan` ([GitRuntimeDependency.cs:278](../../iTerminal.Core/Services/RuntimeDependencies/GitRuntimeDependency.cs) to `:340`) is a line-for-line copy of [SystemPackageInstallPlan.cs:19](../../iTerminal.Core/Services/RuntimeDependencies/SystemPackageInstallPlan.cs), with "git" written in where the general one takes `SystemPackageNames`.
+    - **Problem:** on Windows, Tools > Runtime Dependencies reports a failed install of git or yt-dlp when WinGet answers that the package is already installed. ffmpeg and rar report success in the same case. The fix exists in the base class, but the copies never received it. The next system tool will copy whichever class its author opens first. Principle: one solution per problem (DRY), consistency. The failure is **unverified** at run time; it is read from the exit-code checks.
+    - **Improvement:** two steps.
+      1. (S) Delete `GitInstallPlan` and use `SystemPackageInstallPlan.For(GitPackageNames, …)`, with `new SystemPackageNames("Git.Git", "git", "git", "git", "git", "git", "git")`. Add the WinGet exit-code check to git and yt-dlp, and the two localized keys to yt-dlp.
+      2. (M) Turn the RAR constants of the base into data and derive the three classes from it:
+
+         ```csharp
+         internal sealed record SystemToolSpec(
+             string Id, string Name, string PurposeKey, string PurposeFallback,
+             string UnixTool, string WindowsTool, IReadOnlyList<string> AlsoRequired, // ffprobe
+             SystemPackageNames Packages, string DownloadPage, Version Minimum,
+             IReadOnlyList<string> VersionArguments, Func<string, string?> ParseVersion);
+
+         public abstract class SystemToolRuntimeDependency(SystemToolSpec spec, /* the existing seams */) : IRuntimeDependency
+         ```
+
+         The base becomes `public abstract`, because `public sealed` subclasses cannot derive from an `internal` base. No caller outside `iTerminal.Core` uses these classes, and `InstantiateAllTypesTest` skips abstract types ([InstantiateAllTypesTest.cs:61](../../iTerminal.Core.Test/Generated/InstantiateAllTypesTest.cs)). Move `FindOnPath` out of the git class as part of finding 48.
+    - **Copies:** 4 classes (3 copies of the base), 1 copied plan record; about 300 lines would go (63 lines of `GitInstallPlan` and about 80 per class). Drifted: yes (exit codes, localization).
+    - **Effort:** S for step 1, M for step 2.
+    - **Risk of the change:** a changed install plan or exit-code rule. `GitRuntimeDependencyTest` (it asserts on `GitInstallPlan`, which moves to `SystemPackageInstallPlan`), `FfmpegRuntimeDependencyTest`, `YtDlpRuntimeDependencyTest`, `RarRuntimeDependencyTest` and `RuntimeDependencyServiceTest` cover each class through the existing constructor seams.
+
+43. **Seven hand-written process runs beside `IExternalProcessRunner` differ on UTF-8, standard input and cancellation** — **Medium**, kind: duplication, consistency, testability.
+    - **Where:**
+      - The shared runner: [ExternalProcessRunner.cs:12](../../iTerminal.Core/Services/Processes/ExternalProcessRunner.cs). It drains both pipes, reads UTF-8 (`:143`), kills the process tree on its 30 s timeout, and rethrows when the caller cancels (`:66`). It is injected in 30 files.
+      - [GitService.cs:447](../../iTerminal.Core/Services/Git/GitService.cs) (the Git client dialog) is the same method again, down to `GIT_TERMINAL_PROMPT` (`:463`) and the 30 s timeout. It sets no output encoding, and it returns "git command timed out" when the caller cancels (`:482` to `:485`). The git drive beside it uses the shared runner. Because `GitService` builds its process itself, its 13 tests need a real git (`GitServiceTest`).
+      - [PackageManagerProcess.cs:20](../../iTerminal.Core/Services/PackageManager/PackageManagerProcess.cs): the same again with a timeout parameter, and the same "timed out" answer for a cancellation (`:50` to `:53`). It has 7 callers (apt, WinGet, yt-dlp).
+      - Five version probes with a 5 s timeout: [GitRuntimeDependency.cs:225](../../iTerminal.Core/Services/RuntimeDependencies/GitRuntimeDependency.cs), [FfmpegRuntimeDependency.cs:255](../../iTerminal.Core/Services/RuntimeDependencies/FfmpegRuntimeDependency.cs), [SystemToolRuntimeDependency.cs:206](../../iTerminal.Core/Services/RuntimeDependencies/SystemToolRuntimeDependency.cs), [PowerShellRuntimeDependency.cs:329](../../iTerminal.Core/Services/RuntimeDependencies/PowerShellRuntimeDependency.cs), and [OllamaRuntimeDependency.cs:257](../../iTerminal.Core/Services/RuntimeDependencies/OllamaRuntimeDependency.cs), which blocks in `WaitForExit(3000)` with no token. The git and ffmpeg probes redirect standard error but never read it.
+      - [DefenderScanService.cs:55](../../iTerminal.Core/Services/Defender/DefenderScanService.cs): the same capture without a timeout.
+    - **Problem:** each copy settles the same questions differently.
+      - Encoding: on Windows, a non-ASCII commit message or author shown by the Git client is decoded in the console code page, because nothing in the app sets the console to UTF-8.
+      - Cancellation: closing the Git client or the package manager mid-command is reported as a timeout.
+      - Standard input: the probes redirect it and close it, so a tool that waits for input ends. The shared runner does not redirect it unless a writer is given (`:140`), so its child inherits the terminal that the TUI is reading.
+
+      Which copy a caller gets decides its behaviour. Principle: one solution per problem; testability seams. The mis-decoding and the inherited input are **unverified** at run time.
+    - **Improvement:** the shared runner is the right copy, except on standard input, where the probes are right. Three steps:
+      1. (S) In `ExternalProcessRunner.Start`, always redirect standard input and close it when no writer is given. Add an options overload with a default body, so the two test fakes (`FakeProcessRunner`, and the one in `PrintServiceTest`) keep compiling:
+
+         ```csharp
+         public sealed record ProcessRunOptions(
+             string? WorkingDirectory = null,
+             TimeSpan? Timeout = null,                              // null: ExternalProcessRunner.Timeout
+             IReadOnlyDictionary<string, string>? Environment = null);
+
+         // IExternalProcessRunner (new)
+         Task<ProcessOutput> RunAsync(string fileName, IReadOnlyList<string> arguments, ProcessRunOptions options, CancellationToken cancellationToken = default)
+             => RunAsync(fileName, arguments, options.WorkingDirectory, cancellationToken);
+         ```
+
+      2. (M) `GitService(IExternalProcessRunner runner)`: there are 14 `new GitService()` calls in the tests, and the registration resolves the runner already. `PackageManagerProcess.RunCaptureAsync` becomes a call to the runner with `Timeout = timeout`.
+      3. (S) One `internal static Task<string?> ToolVersionProbe.ReadAsync(IExternalProcessRunner runner, string path, IReadOnlyList<string> arguments, TimeSpan timeout, Func<string, string?> parse)` for the five probes. It also removes the blocking Ollama wait.
+    - **Copies:** 8 (GitService, PackageManagerProcess, five probes, Defender) in 8 files; about 300 lines would go. Drifted: yes (encoding, cancellation, stdin, stderr drained or not).
+    - **Effort:** M in total.
+    - **Risk of the change:** the Git client's output changes from the console code page to UTF-8, which is what git writes. A tool that relied on reading the terminal (none was found among the runner's callers) would see end of input. `GitServiceTest` keeps its real-git tests and gains fakes. `GitDriveServiceTest`, `DockerDriveServiceTest`, the package-manager tests and the `*RuntimeDependencyTest` classes (which inject `readVersion`) cover the callers.
+
+44. **Fourteen dialogs carry the same private `Put`, and about 26 private clip helpers sit beside `TextWidth.Fit`** — **Medium**, kind: duplication, consistency.
+    - **Where:**
+      - `private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)`, which writes one row inside the border. Compared by hash, four variants:
+        - byte-identical in 8 dialogs: [AccessControlDialog.cs:890](../../iTerminal.Core/Dialogs/AccessControlDialog.cs), [ContactManagerDialog.cs:647](../../iTerminal.Core/Dialogs/Contacts/ContactManagerDialog.cs), [EnvironmentVariablesDialog.cs:912](../../iTerminal.Core/Dialogs/EnvVars/EnvironmentVariablesDialog.cs), [MailDialog.cs:1143](../../iTerminal.Core/Dialogs/Mail/MailDialog.cs), [PasswordManagerDialog.cs:646](../../iTerminal.Core/Dialogs/PasswordManager/PasswordManagerDialog.cs), [OnlineRadioDialog.cs:870](../../iTerminal.Core/Dialogs/Radio/OnlineRadioDialog.cs), [RemoteConnectionManagerDialog.cs:823](../../iTerminal.Core/Dialogs/Remote/RemoteConnectionManagerDialog.cs) and [ToDoListDialog.cs:667](../../iTerminal.Core/Dialogs/ToDo/ToDoListDialog.cs);
+        - the same with `string` for `var` in 3: [PrintDialog.cs:624](../../iTerminal.Core/Dialogs/PrintDialog.cs), [ScannerDialog.cs:776](../../iTerminal.Core/Dialogs/Scanning/ScannerDialog.cs) and [StreamsDialog.cs:687](../../iTerminal.Core/Dialogs/StreamsDialog.cs);
+        - with an ellipsis in 2: [WorkspaceManagerDialog.cs:736](../../iTerminal.Core/Dialogs/Workspaces/WorkspaceManagerDialog.cs) and [TorrentManagerDialog.cs:706](../../iTerminal.Core/Dialogs/Torrents/TorrentManagerDialog.cs);
+        - with a row-bounds check in 1: [CalendarDialog.cs:602](../../iTerminal.Core/Dialogs/Calendar/CalendarDialog.cs) ("a row below the inner area would be drawn on the bottom border").
+
+        All 14 cut by `string.Length`, not by columns.
+      - The column-aware helper already exists: [TextWidth.cs:95](../../iConsole/Display/TextWidth.cs) (`Fit`). It is called 4 times. Its sibling for the split-pane dialogs is [SplitPaneDialog.cs:73](../../iTerminal.Core/Dialogs/SplitPaneDialog.cs) (`WriteLine`).
+      - Private clip helpers, one or two lines each:
+        - `Clip` in 7 dialogs, for example [MailDialog.cs:1158](../../iTerminal.Core/Dialogs/Mail/MailDialog.cs). The copies in [TorrentManagerDialog.cs:721](../../iTerminal.Core/Dialogs/Torrents/TorrentManagerDialog.cs) and [StreamsDialog.cs:704](../../iTerminal.Core/Dialogs/StreamsDialog.cs) have no caller.
+        - `Ellipsize` in 4 places, among them [Toast.cs:79](../../iConsole/Controls/Toast.cs) and [SplitPaneDialog.cs:71](../../iTerminal.Core/Dialogs/SplitPaneDialog.cs). Mail and Remote Connections each hold both a `Clip` and an `Ellipsize` that differ.
+        - `Fit` in 13 places, for example [ComboBox.cs:294](../../iConsole/Controls/ComboBox.cs), [PopupListView.cs:201](../../iConsole/Controls/PopupListView.cs) and [ImageFileViewerDialog.cs:601](../../iTerminal.Core/Dialogs/Video/ImageFileViewerDialog.cs).
+    - **Problem:** each dialog decides again how a row is cut, padded and kept off the border. The fixes so far landed in one copy each: the bounds check in Calendar, the ellipsis in Workspaces and Torrents. A row with CJK text or emoji is cut by characters, so it overflows its column in every one of these dialogs (design review, finding 4). Principle: DRY, consistency with the framework (the column-aware primitive is in `iConsole` and unused).
+    - **Improvement:** two additive members in `iConsole`, then one dialog per commit:
+
+      ```csharp
+      // iConsole/Display/TextWidth.cs (new)
+      public static string Ellipsize(string? text, int columns);   // Fit, with "…" in the last column when cut
+
+      // iConsole/Dialogs/Dialog.cs (new, protected)
+      /// <summary>One row inside the border at (x, y) of the inner area, cut or padded to width columns;
+      /// a row outside the inner area is not drawn.</summary>
+      protected void WriteInnerRow(IBuffer buffer, int x, int y, int width, string? text, Color foreground, Color background, bool ellipsis = false);
+      ```
+
+      Each of the 14 `Put` bodies becomes a call to `WriteInnerRow`; `Clip` and `Ellipsize` become `TextWidth.Ellipsize`. Delete the two unused `Clip` copies at once. Both new members are additive. A dialog outside the solution that already has a member of that name gets a hiding warning, not a break (the `dotnet-breaking-changes` concern), so a distinct name is used rather than `Put`.
+    - **Copies:** 14 `Put` copies (about 196 lines, down to 14 calls) and about 26 clip helpers in 24 files. Drifted: yes (bounds check, ellipsis).
+    - **Effort:** M (S for the two members; S per dialog).
+    - **Risk of the change:** a row that was drawn on the border is no longer drawn, and a wide character now takes two columns. The `ScreenBuffer` tests of each dialog (`ContactManagerDialogTest`, `MailDialogTest`, `TorrentManagerDialogTest`, `CalendarDialogTest` and the others) compare the drawn text, and the end-to-end `DialogsTest` opens each dialog.
+
+45. **The contact manager, the environment-variable editor and the radio station list are one dialog written three times** — **Medium**, kind: duplication.
+    - **Where:**
+      - The same `private enum Mode { Browse, Form, Filter, ConfirmDelete }`: [ContactManagerDialog.cs:53](../../iTerminal.Core/Dialogs/Contacts/ContactManagerDialog.cs), [EnvironmentVariablesDialog.cs:49](../../iTerminal.Core/Dialogs/EnvVars/EnvironmentVariablesDialog.cs) and [OnlineRadioDialog.cs:47](../../iTerminal.Core/Dialogs/Radio/OnlineRadioDialog.cs).
+      - The same delete question: `case Mode.ConfirmDelete` at `:153`, `:322` and `:181`.
+      - The same filter editor, 53 to 57 lines (`HandleFilterKey` at `:306`, `:508` and `:351`).
+      - The same form editor, 72 to 73 lines (`HandleFormKey` at `:231`, `:417` and `:276`). The contact and radio copies are identical; the environment-variable copy adds a locked name field.
+      - The same `Fit` and `Put` (finding 44).
+    - **Drift:** the environment-variable filter caps typed text at a literal `200` ([EnvironmentVariablesDialog.cs:550](../../iTerminal.Core/Dialogs/EnvVars/EnvironmentVariablesDialog.cs)), not at its `MaxFieldLength` of 4 000. Its paste has no cap at all (`:519`). The contact and radio copies cap both with `MaxFieldLength` (`:352` and `:397`).
+    - **Problem:** a change to how a field edits (a new key, Ctrl+Left, wide characters, an undo) is made three times or drifts, as the paste cap already has. The same y/n delete question is hand-written in To-Do ([ToDoListDialog.cs:221](../../iTerminal.Core/Dialogs/ToDo/ToDoListDialog.cs)) and Calendar ([CalendarDialog.cs:172](../../iTerminal.Core/Dialogs/Calendar/CalendarDialog.cs)) too. Principle: DRY. This is the code side of design review finding 68 and of the Tui comparison item 72 ("form bound to a model").
+    - **Improvement:** extract the line editor first. It is the part that drifted, and it is smaller than a base dialog:
+
+      ```csharp
+      // iTerminal.Core/Controls/InlineTextField.cs (uses PasteHelper, which is in iTerminal.Core)
+      internal sealed class InlineTextField(int maxLength)
+      {
+          public string Text { get; set; }
+          public bool IsLocked { get; set; }
+          /// <summary>Backspace, Ctrl+W, Ctrl+U, paste and printable keys; true when the key was used.</summary>
+          public bool HandleKey(KeyEvent keyEvent, Action changed);
+      }
+      ```
+
+      `HandleFilterKey` keeps only Enter and Esc, and `HandleFormKey` keeps only field navigation and saving. A `RecordListDialog<TRecord>` base for the four modes is a second, separate decision; do it only if a fourth dialog of this shape appears.
+    - **Copies:** 3 dialogs; about 250 lines would go (the two key handlers). Drifted: yes (paste and typing caps).
+    - **Effort:** M.
+    - **Risk of the change:** a key that one dialog handled differently changes. `ContactManagerDialogTest`, `EnvironmentVariablesDialogTest` and `OnlineRadioDialogTest`, and the end-to-end `EnvVarsFooterTest`, type into the fields. Add one `InlineTextFieldTest` for the caps.
+
+46. **Three decoders and three binary checks for "text of unknown encoding" give three different answers** — **Medium**, kind: duplication, consistency.
+    - **Where:**
+      - Decoding:
+        - [TextEncodings.cs:127](../../iConsole/Helper/TextEncodings.cs) reads the byte-order mark, then UTF-8, then the system's ANSI code page (`:160`). The F3 viewer, the CSV, Markdown and HAR viewers and the format readers use it (10 callers).
+        - [PlainTextExtractor.cs:66](../../iTerminal.Core/Documents/Extractors/PlainTextExtractor.cs), for the document index, falls back to Latin-1 instead (`:89`).
+        - [FileDiffDialog.cs:261](../../iTerminal.Core/Dialogs/FileDiffDialog.cs), for file comparison, also falls back to Latin-1 (`:281`).
+      - Binary checks:
+        - [FileDiffDialog.cs:252](../../iTerminal.Core/Dialogs/FileDiffDialog.cs) looks for a NUL in 8 192 bytes;
+        - [FilePreviewService.cs:330](../../iTerminal.Core/Services/Preview/FilePreviewService.cs) looks for a NUL or more than a tenth control characters in 8 000 bytes;
+        - [FileSearch.cs:339](../../iTerminal.Core/Services/Search/FileSearch.cs) looks for a NUL in 8 000 bytes.
+
+        All three repeat the UTF-16 byte-order-mark test.
+    - **Problem:** on a Windows machine whose ANSI code page is 1250, a Hungarian text file without a byte-order mark shows "ő" in F3. The comparison shows "õ", and the document index stores "õ", so searching the index for the word finds nothing. Preview can call a file binary that search still searches. One question gets three answers, and the user sees the difference between features. Principle: one solution per problem, consistency with the framework (`iConsole` has the decoder). **Unverified** at run time; the difference is read from the fallbacks.
+    - **Improvement:** one decision, then two moves:
+      1. Decide the fallback. `TextEncodings` states why it uses ANSI, and the index and the comparison give no reason for Latin-1.
+      2. Point `PlainTextExtractor.Decode` and `FileDiffDialog.Decode` at `TextEncodings.Decode(bytes, out _)`. Keep the extractor's partial-UTF-8 trimming by moving it into `TextEncodings`, so the shared decoder gains it.
+      3. Add `public static bool LooksBinary(ReadOnlySpan<byte> head)` to `TextEncodings`, with the preview rule (NUL or control characters, the byte-order mark excepted), and call it from the three places.
+    - **Copies:** 3 decoders and 3 binary checks in 5 files; about 70 lines would go. Drifted: yes (fallback, control-character rule, sample size).
+    - **Effort:** S once the fallback is decided.
+    - **Risk of the change:** text already in the document index keeps its old decoding until the file is indexed again, so old and new entries can differ until a rescan. `PlainAndMarkupExtractorTest`, `FileDiffDialogTest`, the preview and search tests, and the `TextEncodings` tests in `iConsole.Test` cover each path.
+
+47. **The status-bar weather calls Open-Meteo itself beside `IForecastProvider`, so the end-to-end suite has to leave the job out** — **Low**, kind: duplication, testability.
+    - **Where:**
+      - [WeatherJob.cs:12](../../iTerminal.Core/Jobs/WeatherJob.cs): a static `HttpClient` with the default 100 s timeout and no User-Agent. The same forecast endpoint is called at `:91` and parsed at `:122`.
+      - [OpenMeteoForecastProvider.cs:43](../../iTerminal.Core/Services/Weather/OpenMeteoForecastProvider.cs): the Weather dialog's client, with a 15 s timeout and a User-Agent. Its `FetchAsync` (`:48`) already returns `CurrentConditions` ([WeatherModels.cs:18](../../iTerminal.Core/Services/Weather/WeatherModels.cs)).
+      - [iTerminal.Test/TerminalApp.cs:35](../../iTerminal.Test/TerminalApp.cs) omits `WeatherJob`, while the provider has a sandbox replacement (`:239`).
+    - **Problem:** two clients and two parsers for one API have already drifted on timeout and identification. The job has no seam, so the end-to-end suite cannot run it, and the status-bar weather is untested in the app. Principle: DRY, testability seams.
+    - **Improvement:** let `WeatherJob` take `IForecastProvider` and read `Forecast.Current`, or add `Task<CurrentConditions> FetchCurrentAsync(SavedPlace, CancellationToken)` to the interface if the full forecast is too heavy for a 15-minute poll. Keep the IP lookup in the job behind its own small interface, so the sandbox can answer both.
+    - **Copies:** 2 clients, 2 parsers; about 40 lines would go. Drifted: yes (timeout, User-Agent).
+    - **Effort:** S.
+    - **Risk of the change:** the status bar's request gets the provider's 15 s timeout. `WeatherJobTest` tests the parser it would lose and needs a fake provider. The job could then be run in the end-to-end suite against `SandboxServices.WeatherForecasts`.
+
+48. **Six PATH searches, and the shared one lives in the git dependency** — **Low**, kind: duplication, consistency.
+    - **Where:**
+      - [GitRuntimeDependency.cs:198](../../iTerminal.Core/Services/RuntimeDependencies/GitRuntimeDependency.cs) (`FindOnPath`, with `PATHEXT` and quoted entries) is used by ffmpeg, PowerShell, rar, unrar and yt-dlp, by `YtDlpYouTubeService`, and by the microphone registration ([iTerminalApplicationBuilderExtension.cs:714](../../iTerminal.Core/Application/iTerminalApplicationBuilderExtension.cs)).
+      - Its siblings:
+        - [ShellLaunch.cs:87](../../iTerminal.Core/Services/Shell/ShellLaunch.cs), with no `PATHEXT`, so its callers pass `pwsh.exe` themselves;
+        - [ElevationService.cs:275](../../iTerminal.Core/Services/Elevation/ElevationService.cs), which does not strip quotes;
+        - [RarArchiveWriter.cs:153](../../iTerminal.Core/Services/Archives/RarArchiveWriter.cs) (`RarTools.Find`) and [SevenZipArchiveWriter.cs:34](../../iTerminal.Core/Services/Archives/SevenZipArchiveWriter.cs);
+        - [DriveActionsService.cs:340](../../iTerminal.Core/Services/Drives/DriveActionsService.cs), which returns the bare name, not the path (`:352`).
+    - **Problem:** whether a program "is installed" depends on which feature asks. A quoted PATH entry on Windows finds `pwsh` for the shell but not for elevation. A helper used by the speech registration sits in the git dependency class. Principle: DRY, cohesion.
+    - **Improvement:** `internal static class ExecutableSearch { public static string? Find(string program); public static string? FindAny(params string[] names); }` in `iTerminal.Core/Helper`, with the git copy's rules (quotes, `PATHEXT`, a malformed entry skipped). The other five call it, and the remaining delegate parameters take `ExecutableSearch.Find`.
+    - **Copies:** 6 in 6 files; about 90 lines would go. Drifted: yes (quotes, `PATHEXT`, return value).
+    - **Effort:** S.
+    - **Risk of the change:** the elevation check starts finding `sudo` in a quoted entry. `ElevationServiceTest`, `ShellLaunchTest` and the archive-writer tests show any change.
+
+49. **Six stream-copy loops with progress beside `StreamCopyHelper`** — **Low**, kind: duplication.
+    - **Where:** [StreamCopyHelper.cs:12](../../iTerminal.Core/Helper/StreamCopyHelper.cs) (`CopyWithProgressAsync`, used by the local, memory and archive drives). The same eight-line loop is written out at [HttpFileSystemServiceBase.cs:195](../../iTerminal.Core/Services/Cloud/HttpFileSystemServiceBase.cs), [WebDavFileSystemService.cs:456](../../iTerminal.Core/Services/WebDavFileSystemService.cs), [ShellMtpBackend.cs:194](../../iTerminal.Core/Services/Mtp/ShellMtpBackend.cs) and `:219`, [RecycleBinService.cs:197](../../iTerminal.Core/Services/Recycle/RecycleBinService.cs) and [EvidenceNotebookService.cs:266](../../iTerminal.Core/Services/Evidence/EvidenceNotebookService.cs).
+    - **Problem:** the copies report no initial 0 and use a 64 KB buffer where the helper uses 128 KB. A change to progress pacing (design review finding 17 asks for long copies to report through `TaskManager`) has seven places to go. Principle: DRY; the helper exists.
+    - **Improvement:** replace each loop with `await StreamCopyHelper.CopyWithProgressAsync(source, destination, progress, cancellationToken, 1 << 16);`. The SMB loop ([SmbFileSystemService.cs:534](../../iTerminal.Core/Services/SmbFileSystemService.cs)) writes in the server's chunk size and stays as it is.
+    - **Copies:** 6 in 5 files; about 45 lines would go. Drifted: slightly (the initial report).
+    - **Effort:** S.
+    - **Risk of the change:** progress gets one more report at 0. The cloud and WebDAV service tests, `ContentModelCopyPipelineTest` and `FileTransferTest` cover the copies.
+
+50. **Sizes and durations are formatted in about 15 private copies beside the two shared helpers** — **Low**, kind: duplication, consistency.
+    - **Where:**
+      - Sizes: [FileSizeHelper.cs:5](../../iConsole/Helper/FileSizeHelper.cs) (`ToFileSize`, 32 users) formats every value without decimals, because all three branches of `ThreeNonZeroDigits` (`:26`) use `"0"` (1.5 MB shows as "2 MB"). Five dialogs and models wrote their own one-decimal version, with different unit lists and decimal rules:
+        - [DiskManagerDialog.cs:479](../../iTerminal.Core/Dialogs/DiskManagerDialog.cs);
+        - [DocumentManagerDialog.cs:934](../../iTerminal.Core/Dialogs/Documents/DocumentManagerDialog.cs);
+        - [MusicFileViewerDialog.cs:615](../../iTerminal.Core/Dialogs/Music/MusicFileViewerDialog.cs);
+        - [TorrentManagerDialog.cs:587](../../iTerminal.Core/Dialogs/Torrents/TorrentManagerDialog.cs), which uses `0.0`;
+        - [WebBrowserModel.cs:1018](../../iTerminal.Core/Model/Web/WebBrowserModel.cs), which stops at MB.
+
+        A one-line `Megabytes` is in four files ([VerifiedDownload.cs:82](../../iTerminal.Core/Services/RuntimeDependencies/VerifiedDownload.cs), `GitHubReleaseFeed.cs`, `NuGetPackageFeed.cs`, `OllamaServer.cs`). [FilePropertiesService.cs:262](../../iTerminal.Core/Services/Properties/FilePropertiesService.cs) is the copy that builds on the shared helper.
+      - Durations: [ProgressGroup.cs:295](../../iConsole/Controls/Progress/ProgressGroup.cs) (`FormatDuration`, public) is written again in [MusicFileViewerDialog.cs:603](../../iTerminal.Core/Dialogs/Music/MusicFileViewerDialog.cs), [VideoFileViewerDialog.cs:554](../../iTerminal.Core/Dialogs/Video/VideoFileViewerDialog.cs), [ContentModelMusicBase.cs:197](../../iTerminal.Core/Model/ContentModels/ContentModelMusicBase.cs), [YouTubeDialog.cs:409](../../iTerminal.Core/Dialogs/YouTube/YouTubeDialog.cs), [FilePreviewService.cs:485](../../iTerminal.Core/Services/Preview/FilePreviewService.cs) and [OnlineRadioDialog.cs:863](../../iTerminal.Core/Dialogs/Radio/OnlineRadioDialog.cs). A zero length shows as `--:--` in the music copies, `0:00` in YouTube and preview, and `00:00` in the radio.
+    - **Problem:** the same file has a different size in the panel, the disk manager and the torrent list, and the same track length looks different in three places. The copies exist because the shared size helper rounds away the decimal, and because the duration helper sits on a progress control where nobody looks. Principle: DRY, consistency with the framework.
+    - **Improvement:** in `iConsole/Helper`, add `public static string ToFileSize(this long value, int decimals)` beside the existing overload (additive), and move `FormatDuration` to a `DurationText` helper, keeping a forwarding member on `ProgressGroup` because it is public. Add a `zeroAsUnknown` flag for the music rule. Point the copies at them, and remove the dead branch of `ThreeNonZeroDigits`. The panel's size column keeps its whole-number format, which is tested ([FileSizeHelperTest.cs:13](../../iConsole.Test/Helper/FileSizeHelperTest.cs)).
+    - **Copies:** 5 size and 4 megabyte formatters, 6 duration formatters, in 14 files; about 90 lines would go. Drifted: yes (units, decimals, zero).
+    - **Effort:** S.
+    - **Risk of the change:** displayed numbers change by one decimal in some dialogs. `TorrentManagerDialogTest` and `FilePropertiesServiceTest` assert on formatted sizes, and the music viewer tests on times.
+
+51. **Two copies of one test assertion that MSTest already has** — **Low**, kind: duplication (tests).
+    - **Where:** [AssertAsync.cs:6](../../iTerminal.Core.Test/Helper/AssertAsync.cs) (25 uses in 10 files) and [AsyncAssert.cs:4](../../iTerminal.Core.Test/Helper/AsyncAssert.cs) (13 uses in 6 files), in the same folder with the same body. Both say "this MSTest version has no" awaitable assertion, but the test projects use MSTest 4.5.3, and its `Assert.ThrowsAsync<T>` and `Assert.ThrowsExactlyAsync<T>` are already called 154 times.
+    - **Problem:** two helpers and the framework method do the same job, and the comments state something that is no longer true. Principle: DRY.
+    - **Improvement:** replace the 38 calls with `Assert.ThrowsAsync<T>`, which also accepts derived exceptions as both helpers do, and delete both files.
+    - **Copies:** 2 helpers, about 45 lines. Drifted: no.
+    - **Effort:** S (mechanical).
+    - **Risk of the change:** none at run time; the build shows a missed call. **Unverified** that `Assert.ThrowsAsync` in 4.5.3 matches derived types exactly as the helpers do; check one test that expects a subclass.
+
+52. **Sixteen stores read and write a JSON list in `Settings` with the same ten lines** — **Low**, kind: duplication, persistence.
+    - **Where:** `Get(key)`, `JsonSerializer.Deserialize`, `catch (JsonException)`, then `Set` and `Write()`, in [ToDoTask.cs:275](../../iTerminal.Core/Model/ToDo/ToDoTask.cs), [Contact.cs:147](../../iTerminal.Core/Model/Contacts/Contact.cs), [Meeting.cs:218](../../iTerminal.Core/Model/Calendar/Meeting.cs), [MailModels.cs:106](../../iTerminal.Core/Model/Mail/MailModels.cs), [RadioStationStore.cs:147](../../iTerminal.Core/Model/Radio/RadioStationStore.cs), [WebBrowserStore.cs:149](../../iTerminal.Core/Services/Web/WebBrowserStore.cs), [WorkspaceService.cs:188](../../iTerminal.Core/Services/Workspaces/WorkspaceService.cs), [WatchStore.cs:168](../../iTerminal.Core/Services/Watch/WatchStore.cs), [TorrentService.cs:461](../../iTerminal.Core/Services/Torrents/TorrentService.cs), [RemoteConnectionService.cs:254](../../iTerminal.Core/Services/Remote/RemoteConnectionService.cs), [StockService.cs:173](../../iTerminal.Core/Services/Stocks/StockService.cs), [PluginManagerService.cs:368](../../iTerminal.Core/Services/Plugins/PluginManagerService.cs), [NetworkProfileService.cs:56](../../iTerminal.Core/Services/NetworkProfileService.cs), [MapStore.cs:102](../../iTerminal.Core/Services/Map/MapStore.cs), [FileAssociationService.cs:153](../../iTerminal.Core/Services/FileAssociations/FileAssociationService.cs) and [ForecastService.cs:232](../../iTerminal.Core/Services/Weather/ForecastService.cs). The last one already has a generic `Load<T>`. Some copies log a damaged value and some do not.
+    - **Problem:** each store decides again what a damaged value means, whether to log it, and whether to clear it. Finding 33 shows that where user data is stored decides whether it survives an upgrade, and today that decision is spread over 16 classes. Principle: DRY, one place per decision.
+    - **Improvement:** one helper, beside `ISettingsService` rather than on it, so the interface does not change:
+
+      ```csharp
+      internal static class SettingsJson
+      {
+          public static T? Read<T>(ISettingsService settings, string key, JsonSerializerOptions? options = null, ILogger? logger = null);
+          public static void Write<T>(ISettingsService settings, string key, T value, JsonSerializerOptions? options = null);
+      }
+      ```
+
+      Move the stores one at a time, starting with `ForecastService`, whose `Load<T>` is the model. Keep each store's own clean-up of null entries.
+    - **Copies:** 16 in 16 files; about 120 lines would go. Drifted: slightly (logging, clearing).
+    - **Effort:** S per store, M in total.
+    - **Risk of the change:** a store that threw on a damaged value now starts empty. Each store's test (`ToDoTaskTest`, `ContactTest`, `RadioStationStoreTest`, `WorkspaceServiceTest` and the others) covers its load path.
+
+53. **The folder-URL idiom is written 13 times, three times as the join `UrlPath.Child` exists to replace** — **Low**, kind: duplication, consistency.
+    - **Where:**
+      - "Add a trailing slash unless there is one" as a one-line expression in 10 places, among them [TransferCommand.cs:164](../../iTerminal.Core/Commands/TransferCommand.cs) (the only one that also accepts `\`), `:236` and `:335`, [ContentModelRemoteDrive.cs:73](../../iTerminal.Core/Model/ContentModels/ContentModelRemoteDrive.cs), [MemoryFolder.cs:188](../../iTerminal.Core/Model/ContentModels/MemoryFolder.cs), [FtpFileSystemService.cs:199](../../iTerminal.Core/Services/FtpFileSystemService.cs) and [WebDavFileSystemService.cs:270](../../iTerminal.Core/Services/WebDavFileSystemService.cs).
+      - The join that `CLAUDE.md` forbids, `FullUrl.TrimEnd('/') + "/" + name`, at [SmbFileSystemService.cs:179](../../iTerminal.Core/Services/SmbFileSystemService.cs) and `:339`, and [IPhoneFileSystemService.cs:207](../../iTerminal.Core/Services/IPhoneFileSystemService.cs). The helper is [UrlPath.cs:40](../../iTerminal.Core/Helper/UrlPath.cs), with 21 callers.
+    - **Problem:** the three joins are correct today only because an SMB share and an iPhone always have a segment after the scheme. The rule exists because the same join broke `memdrive://`. The trailing-slash copies disagree on `\`. Principle: consistency with the framework; one way to build a child URL.
+    - **Improvement:** add `public static Url AsFolder(Url url)` to `UrlPath`, with the `TransferCommand` rule for both separators, and replace the 10 expressions. Replace the three joins with `new Url(UrlPath.Child(url.FullUrl, name, isFolder))`.
+    - **Copies:** 13 in 10 files; one line each. Drifted: yes (the `\` case).
+    - **Effort:** S.
+    - **Risk of the change:** a Windows path ending in `\` gets no extra `/`. `UrlPathTest`, `ContentModelSmbDriveTest`, the memory-drive tests and `FileTransferTest` cover the paths.
+
+**Candidates checked and not reported**
+
+- The 88 `ShowDialogCommand<T>` subclasses (most are 13 or 14 lines) differ in key, title, description and `CanExecute`, and the base class already holds the shared part. Their construction cost is finding 32.
+- The remote and cloud drive models are already factored: each subclass of `ContentModelRemoteDrive` is 32 to 64 lines and only resolves credentials, and the three cloud services share `HttpFileSystemServiceBase`, including its throttling retry ([HttpFileSystemServiceBase.cs:85](../../iTerminal.Core/Services/Cloud/HttpFileSystemServiceBase.cs)).
+- The two `ProgressStream` classes ([ProgressStream.cs:7](../../iTerminal.Core/Helper/ProgressStream.cs) and the private one in `WebDavFileSystemService`) look alike but count writes and reads respectively; merging them would join two things that change for different reasons.
+- The ffmpeg processes in `iConsole.Media.Audio` and `iConsole.Media.Video` stream for the life of a playback. They are not run-to-completion calls and are outside finding 43.
+- The three file-name sanitisers ([EvidenceNotebookService.cs:427](../../iTerminal.Core/Services/Evidence/EvidenceNotebookService.cs), [WebBrowserModel.cs:990](../../iTerminal.Core/Model/Web/WebBrowserModel.cs), [RenderingDumpHelper.cs:199](../../iConsole/Helper/RenderingDumpHelper.cs)) differ in what they keep. They are short, and the web copy's caller handles the empty result. Use the evidence copy if a fourth is ever needed.
+- The six `.resx` files and their checklist are guarded by `LocalizationResourcesTest`; the URL-scheme checklist is finding 37.
+
+**What works well**
+
+- `ContentModelRemoteDrive` and `ContentModelAsyncDrive` hold the listing, caching and stale-result logic once for 13 drive models, so the per-drive classes stay small.
+- `IExternalProcessRunner` and `ProcessOutput` give the drives one process seam, with arguments passed through `ArgumentList`, and 30 files use it. Finding 43 extends it rather than adding another.
+- `SplitPaneDialog` gives 16 dialogs one header, footer and status row. It is the model for the inner-row helper of finding 44.
+- The AI panel tools of this branch (`AiPanelTools.MorePanelOperations.cs`) call `FilePropertiesService`, `ChecksumService`, `FileSearch` and the content-model service instead of copying them.
+- `ArchivePaths.Inside` (finding 16, resolved) and `UrlPath.Child` show the pattern that works here: one helper, with a comment that names the bug it prevents.
+
+**Research cross-reference**
+
+- Design review, finding 4 (wide characters counted as one column): finding 44 fixes it for 14 dialogs at once, through `TextWidth.Fit`.
+- Design review, finding 68 (hand-painted tables), and the Tui comparison item 72 (a form bound to a model): finding 45 is the first step. Finding 19 (the worker-to-UI hand-off) is the same problem on the threading side and is still open.
+- Earlier findings of this document that are duplications: finding 28 (the WinGet hint built in three consumers), finding 35 (three lists of dialogs) and finding 37 (the URL scheme in six places). Finding 30 (SSH quoting) can reuse `ShellLaunch.QuotePosix` ([ShellLaunch.cs:85](../../iTerminal.Core/Services/Shell/ShellLaunch.cs)) instead of adding a third quoting function.
+- Profiling overview: no item measures any of these paths, so no finding here claims a speed gain.
+
+**Suggested order**
+
+1. Quick wins, S, no dependencies: finding 51 (test helpers), finding 42 step 1 (one install plan and the WinGet rule), finding 48 (one PATH search), finding 49 (copy loops), finding 53 (folder URLs) and finding 47 (weather).
+2. Finding 43, step 1 then 2 then 3. Do it before finding 42 step 2, because the version probes move to the runner and the base class then takes the probe as data.
+3. Finding 44 (the inner-row helper and `TextWidth.Ellipsize`), then finding 45 (the line editor), because the three dialogs of 45 use the `Put` that 44 replaces.
+4. Finding 46 after a maintainer decision on the fallback encoding, then findings 50 and 52, one store or dialog at a time when it is touched anyway.
+
 ## Resolved
 
 - **Finding 10 (`iTerminal.Core` references the Windows input plug-in)** — resolved in #805 (`8724e369`): the `ProjectReference` to `iConsole.Inputs.Windows` is removed from `iTerminal.Core.csproj`. Nothing in `iTerminal.Core` used it. Verification: `dotnet build iTerminal.slnx` succeeds (0 errors, 12 warnings); the test suites and the end-to-end suite were not run.
