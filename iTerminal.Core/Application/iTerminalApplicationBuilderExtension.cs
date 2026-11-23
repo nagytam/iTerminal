@@ -552,6 +552,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Terminal.TerminalTitleJob>();
         services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
+        // The logs the F3 viewer showed lately, for Ctrl+PageUp and Ctrl+PageDown; one list for the whole run.
+        services.AddSingleton<iConsole.Services.ILogFileHistory, iTerminal.Core.Services.LogFileHistoryService>();
         // Each configurable background service's start mode (BackgroundStart.<service>, default on demand).
         services.AddSingleton<iTerminal.Core.Services.BackgroundStart.IBackgroundStartService, iTerminal.Core.Services.BackgroundStart.BackgroundStartService>();
         // Where a local delete with the bin ticked goes on Linux: the freedesktop Trash, home or per-volume.

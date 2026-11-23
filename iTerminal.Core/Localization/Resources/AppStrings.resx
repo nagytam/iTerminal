@@ -1321,6 +1321,9 @@
     <value>Choose the colour theme.</value>
     <comment>Choose the colour theme.</comment>
   </data>
+  <data name="CmdDesc.e33a8df1" xml:space="preserve">
+    <value>Show the log shown before this one in the viewer's log history.</value>
+  </data>
   <data name="CmdDesc.e4ae0c07" xml:space="preserve">
     <value>Compare the two panels' folders and copy the differences across, after showing what would change.</value>
     <comment>Compare the two panels' folders and copy the differences across, after showing what would change.</comment>
@@ -1386,6 +1389,9 @@
   <data name="CmdDesc.f388f305" xml:space="preserve">
     <value>Compute the selected file's MD5, SHA-1, SHA-256 and SHA-512, and compare them with a checksum.</value>
     <comment>Compute the selected file's MD5, SHA-1, SHA-256 and SHA-512, and compare them with a checksum.</comment>
+  </data>
+  <data name="CmdDesc.f4742b58" xml:space="preserve">
+    <value>Show the log shown after this one in the viewer's log history.</value>
   </data>
   <data name="CmdDesc.f51143b0" xml:space="preserve">
     <value>Unmark every row in the panel.</value>
@@ -1691,6 +1697,9 @@
   <data name="CmdTitle.6ad50765" xml:space="preserve">
     <value>Volume down</value>
   </data>
+  <data name="CmdTitle.6c8bdcc8" xml:space="preserve">
+    <value>Newer log</value>
+  </data>
   <data name="CmdTitle.6c94221e" xml:space="preserve">
     <value>Move left</value>
   </data>
@@ -1750,6 +1759,9 @@
   </data>
   <data name="CmdTitle.7d9eb7ac" xml:space="preserve">
     <value>Close</value>
+  </data>
+  <data name="CmdTitle.7f088537" xml:space="preserve">
+    <value>Older log</value>
   </data>
   <data name="CmdTitle.81233d97" xml:space="preserve">
     <value>Volume up</value>
