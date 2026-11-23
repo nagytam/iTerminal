@@ -22,6 +22,7 @@ using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.Music;
 using iTerminal.Core.Dialogs.Video;
 using iTerminal.Core.Dialogs.Web;
+using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Model.Web;
 using iConsole.Media.Video;
 
@@ -88,7 +89,7 @@ public class ViewFileDialogCommand(
             {
                 var url = _contentModelService.FocusedFileUrl;
                 var model = _contentModelService.GetFocusedModel();
-                if (url is not null && model is not null && model.ExistsFile(url))
+                if (url is not null && model is not null && ContentModelListing.FileIsShown(model, url))
                 {
                     return IsVideoFile(url) || IsImageFile(url) || IsMusicFile(url) || IsSupportedFileType(url.Extension)
                         || _fileViewers?.HasCandidate(url) == true;

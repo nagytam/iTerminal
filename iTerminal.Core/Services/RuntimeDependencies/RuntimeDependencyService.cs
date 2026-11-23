@@ -66,6 +66,9 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
 
     public IReadOnlyList<RuntimeDependencyStatus> Statuses => Current;
 
+    /// <summary>Set by the first build, whether it found anything or failed; never waits.</summary>
+    public bool IsReady => _initialBuild.IsCompleted;
+
     public IReadOnlyList<string> Log
     {
         get

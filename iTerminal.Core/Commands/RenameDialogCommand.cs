@@ -1,4 +1,4 @@
-using iConsole.Data;
+﻿using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
@@ -29,7 +29,7 @@ public class RenameDialogCommand(
 
     public override bool CanExecute()
     {
-        return FocusedEntry.ActionableUrl(contentModelService.GetLastContentModel()) is not null;
+        return FocusedEntry.ActionableUrl(contentModelService.GetLastContentModel(), fromListing: true) is not null;
     }
 
     protected override void OnBeforeShow(RenameDialog dialog)

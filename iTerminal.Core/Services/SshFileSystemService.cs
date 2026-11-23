@@ -123,8 +123,7 @@ public partial class SshFileSystemService : ISshFileSystemService
     {
         if (_client is not null)
         {
-            var noClobber = overwrite ? string.Empty : " -n";
-            using SshCommand cmd = _client.RunCommand($"cp -r{noClobber} {sourceUrl.Path} {targetUrl.Path}");
+            using SshCommand cmd = _client.RunCommand(SshCommands.Copy(sourceUrl.Path, targetUrl.Path, !overwrite));
             if (cmd.ExitStatus != 0)
             {
                 throw new IOException($"SSH copy failed: {cmd.Error}");
@@ -137,7 +136,7 @@ public partial class SshFileSystemService : ISshFileSystemService
     {
         if (_client is not null)
         {
-            using SshCommand cmd = _client.RunCommand($"rm {url.Path}");
+            using SshCommand cmd = _client.RunCommand(SshCommands.RemoveFile(url.Path));
             return cmd.ExitStatus == 0;
         }
         return false;
@@ -147,8 +146,9 @@ public partial class SshFileSystemService : ISshFileSystemService
     {
         if (_client is not null)
         {
-            var isRecursive = (recursive) ? " -R" : string.Empty;
-            using SshCommand cmd = _client.RunCommand($"rm {url.Path}{isRecursive}");
+            using SshCommand cmd = _client.RunCommand(recursive
+                ? SshCommands.RemoveTree(url.Path)
+                : SshCommands.RemoveEmptyFolder(url.Path));
             return cmd.ExitStatus == 0;
         }
         return false;
@@ -200,7 +200,7 @@ public partial class SshFileSystemService : ISshFileSystemService
         {
             try
             {
-                using SshCommand cmd = _client.RunCommand("ls -la " + url.Path);
+                using SshCommand cmd = _client.RunCommand(SshCommands.List(url.Path));
                 var listEntries = cmd.Result.Split("\n");
                 var regex = RegexLs();
                 foreach (var listEntry in listEntries)
@@ -264,8 +264,7 @@ public partial class SshFileSystemService : ISshFileSystemService
     {
         if (_client is not null)
         {
-            var noClobber = overwrite ? string.Empty : " -n";
-            using SshCommand cmd = _client.RunCommand($"mv{noClobber} {sourceUrl.Path} {targetUrl.Path}");
+            using SshCommand cmd = _client.RunCommand(SshCommands.Move(sourceUrl.Path, targetUrl.Path, !overwrite));
             if (cmd.ExitStatus != 0)
             {
                 throw new IOException($"SSH move failed: {cmd.Error}");
@@ -296,7 +295,7 @@ public partial class SshFileSystemService : ISshFileSystemService
         {
             return false;
         }
-        using SshCommand cmd = _client.RunCommand($"test -f {url.Path} && echo 1 || echo 0");
+        using SshCommand cmd = _client.RunCommand(SshCommands.TestFile(url.Path));
         return cmd.Result.Trim() == "1";
     }
 
@@ -306,14 +305,14 @@ public partial class SshFileSystemService : ISshFileSystemService
         {
             return false;
         }
-        using SshCommand cmd = _client.RunCommand($"test -d {url.Path} && echo 1 || echo 0");
+        using SshCommand cmd = _client.RunCommand(SshCommands.TestFolder(url.Path));
         return cmd.Result.Trim() == "1";
     }
 
     public async Task CreateFolderAsync(Url url)
     {
         var folderName = url.Directory;
-        using SshCommand command = _client!.CreateCommand("mkdir " + url.Path);
+        using SshCommand command = _client!.CreateCommand(SshCommands.MakeFolder(url.Path));
         await command.ExecuteAsync(CancellationToken.None);
     }
 
@@ -362,7 +361,7 @@ public partial class SshFileSystemService : ISshFileSystemService
             using SshCommand cmdEnv = _client.RunCommand($"env");
             command.EnvironmentVariables = cmdEnv.Result.Replace("\n", Environment.NewLine);
 
-            using SshCommand cmd = _client.RunCommand($"cd {command.WorkingDirectoryUrl.Path};"
+            using SshCommand cmd = _client.RunCommand(SshCommands.ChangeDirectory(command.WorkingDirectoryUrl.Path)
                 + command.Command);
             command.Output = cmd.Result.Replace("\n", Environment.NewLine);
             command.Error = cmd.Error.Replace("\n", Environment.NewLine);

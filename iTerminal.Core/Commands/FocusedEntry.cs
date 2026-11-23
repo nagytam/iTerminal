@@ -1,4 +1,4 @@
-using iConsole.Data;
+﻿using iConsole.Data;
 using iConsole.Interfaces;
 
 namespace iTerminal.Core.Commands;
@@ -25,7 +25,11 @@ public static class FocusedEntry
     /// exists, or null when there is nothing a file operation may touch — which includes a row that
     /// stands for something other than a file (a container, <see cref="Model.ContentModels.IDriveObjectEntry"/>).
     /// </summary>
-    public static Url? ActionableUrl(IContentModel? model)
+    /// <param name="fromListing">
+    /// For a footer's <c>CanExecute</c>, which is read on every draw: a remote drive answers from its listing
+    /// instead of asking the server (see <see cref="Model.ContentModels.ContentModelListing"/>).
+    /// </param>
+    public static Url? ActionableUrl(IContentModel? model, bool fromListing = false)
     {
         var entry = model?.GetFocusedEntry();
         if (model is null || entry is null || IsParentEntry(entry) || entry is Model.ContentModels.IDriveObjectEntry)
@@ -34,7 +38,14 @@ public static class FocusedEntry
         }
 
         var url = entry.Url;
-        return url is not null && (model.ExistsFile(url) || model.ExistsFolder(url)) ? url : null;
+        if (url is null)
+        {
+            return null;
+        }
+        var exists = fromListing
+            ? Model.ContentModels.ContentModelListing.IsShown(model, url)
+            : model.ExistsFile(url) || model.ExistsFolder(url);
+        return exists ? url : null;
     }
 
     /// <summary>

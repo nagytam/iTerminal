@@ -2,6 +2,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
 using iConsole.Viewers;
+using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services.FileAssociations;
 
 namespace iTerminal.Core.Commands;
@@ -35,7 +36,7 @@ public class EditTextFileDialogCommand(
             return true;
         }
 
-        if (url is not null && model is not null && model.ExistsFile(url))
+        if (url is not null && model is not null && ContentModelListing.FileIsShown(model, url))
         {
             var extension = url.Extension;
             if (IsSupportedFileType(extension) || fileEditors?.HasCandidate(url) == true)

@@ -1050,6 +1050,8 @@ public static class SandboxServices
     {
         public IReadOnlyList<RuntimeDependencyStatus> Statuses { get; } = [];
 
+        public bool IsReady => true;
+
         public IReadOnlyList<string> Log { get; } = [];
 
         public bool IsBusy => false;

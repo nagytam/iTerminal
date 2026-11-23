@@ -12,7 +12,7 @@ Run: `dotnet list iTerminal.slnx package` with `--outdated`, `--vulnerable --inc
 
 **Summary**
 
-- Three High findings, all new. The SSH drive puts unquoted paths into shell commands, so deleting a file with a space in its name removes other files (finding 30). `CanExecute` runs on every draw of a footer button, and the F3 and F4 checks reach the network on the SSH, SMB, FTP and WebDAV drives (finding 31). User data (file labels, the playing queue) shares the cache database that any model change deletes (finding 33).
+- One High finding is open: user data (file labels, the playing queue) shares the cache database that any model change deletes (finding 33). The two other High findings of the previous pass, the unquoted SSH paths (finding 30) and the network calls in `CanExecute` (finding 31), are fixed in this pass and listed under **Resolved**.
 - The largest structural cost is the composition: four constructors take 133, 80, 67 and 66 parameters and build about 200 dialogs before the first frame, some of them twice (finding 32). This is probably part of the start-up gap in profiling item 4.
 - The layer edges still hold. The four new projects (#790, #792, #796, #797) reference only `iConsole` and each other in the stated order, and none uses a UI namespace. The new weak spots are the test projects (finding 38) and the drive schemes that the framework defines for the app (finding 37).
 - No package has a known vulnerability. `OpenMcdf` 3.4.0 is the only update and is held back on purpose. No shipped package is under a strong copyleft licence, and since #789 every release carries the notices.
@@ -34,24 +34,21 @@ Run: `dotnet list iTerminal.slnx package` with `--outdated`, `--vulnerable --inc
 **What works well**
 
 - The dependency chain that `CLAUDE.md` states is the one the project files build, including the four projects split out since the last pass.
-- The research documents and the code agree on the threading rules. Where the code departs from them (findings 31 and 36), a comment nearby already states the rule (`ValidationModel.cs:59`, `IFileHandler.cs:19`, `ContentModelAsyncDrive.cs:236`), so the fixes have a pattern to follow.
+- The research documents and the code agree on the threading rules. Where the code departs from them (finding 36; finding 31 is resolved), a comment nearby already states the rule (`ValidationModel.cs:59`, `IFileHandler.cs:19`, `ContentModelAsyncDrive.cs:236`), so the fixes have a pattern to follow.
 
 **Research cross-reference**
 
-- Profiling overview, item 1 (render and key loops poll every millisecond, 25 % of a core at idle): the largest rendering cost, and it needs an architecture decision before code. The decision: one change signal owned by `Desktop`, set by `Control.StateHasChanged`, by `TreeVersion` moves and by input events, which the three loops wait on. `Control._treeVersion` is a process-wide static ([Control.cs:35](../../iConsole/Controls/Control.cs)), so in a process with two roots (the end-to-end suite) a change in one tree also repaints the other; a per-root signal would remove that as well. Ranked here below findings 30, 31 and 33 only because it costs CPU, not data.
+- Profiling overview, item 1 (render and key loops poll every millisecond, 25 % of a core at idle): the largest rendering cost, and it needs an architecture decision before code. The decision: one change signal owned by `Desktop`, set by `Control.StateHasChanged`, by `TreeVersion` moves and by input events, which the three loops wait on. `Control._treeVersion` is a process-wide static ([Control.cs:35](../../iConsole/Controls/Control.cs)), so in a process with two roots (the end-to-end suite) a change in one tree also repaints the other; a per-root signal would remove that as well. Ranked here below finding 33 only because it costs CPU, not data.
 - Profiling overview, item 4 (start-up, 1.1 to 1.4 s unexplained before the database initializer): finding 32 names a likely cause (about 200 dialogs built in four constructors). This stays **unverified** until the `StartupTrace` marks that item asks for are added.
 - Profiling overview, item 5 (2.5 s per test for a temporary database): finding 34 adds that those databases are never deleted.
-- Security overview: no item covers the SSH command construction of finding 30. It belongs in that overview's next survey of the app's own surface.
 
 **Suggested order** (all scopes in this document)
 
 1. Quick wins, S, no dependencies:
-   - finding 30 (quote the SSH paths, High);
    - findings 9 and 25 (project-file lines), 29 (pin `wingetcreate`), 3 (stable log sink);
    - findings 27 and 28 (version reader, update hint), 35 (dialog tool answer);
    - findings 38, 39, 40 and 41 (tidiness), 14 and 15 (SDK pin, packaging text).
 2. High:
-   - finding 31 (existence from the listing, the `CanExecute` contract). It touches the same SSH methods as finding 30, so do it after 30.
    - finding 33 needs a maintainer decision (a second database file) before code. Do its hash part only after the split: changing the hash recreates the cache once and would drop the labels with it.
 3. Medium:
    - finding 18 (validated container test) before finding 32 (dialogs built on first use), so the constructor changes have a safety net;
@@ -74,41 +71,18 @@ Part of the whole-repository pass of 2026-11-21 (see that section for the commit
 
 **Summary**
 
-- `CanExecute` is on the render path: a `Button` asks it on every draw. The contract is written in two comments but not on `ICommand`, and the F3 and F4 commands break it on four drive types (finding 31).
+- `CanExecute` is on the render path: a `Button` asks it on every draw. The contract was written in two comments but not on `ICommand`, and the F3 and F4 commands broke it on the remote drives (finding 31, resolved in this pass).
 - The terminal-ownership rule holds everywhere: the four loops that read or write the terminal bracket each pass, and only the console drivers write to it.
 - The worker-to-UI hand-off is still written by hand in 12 dialogs (finding 19, in "Layering and dependencies").
 
 **Findings**
 
-31. **`CanExecute` runs on every draw, but the contract is not on `ICommand`, and the F3 and F4 checks reach the network** — **High**, kind: concurrency, interface.
-    - **Where:**
-      - The draw path: [Button.cs:151](../../iConsole/Controls/Buttons/Button.cs) (`Draw` calls `GetVisualState`) → [Control.cs:576](../../iConsole/Controls/Control.cs) (`IsEnabled`) → [Button.cs:108](../../iConsole/Controls/Buttons/Button.cs) (`_command.CanExecute()`).
-      - The key path: [Command.cs:62](../../iConsole/Commands/Command.cs).
-      - The commands: [ViewFileDialogCommand.cs:91](../../iTerminal.Core/Commands/ViewFileDialogCommand.cs) and [EditTextFileDialogCommand.cs:38](../../iTerminal.Core/Commands/EditTextFileDialogCommand.cs) call `model.ExistsFile(url)`, which [ContentModelRemoteDrive.cs:144](../../iTerminal.Core/Model/ContentModels/ContentModelRemoteDrive.cs) passes to the service.
-      - What the service does per call: a remote `test -f` process at [SshFileSystemService.cs:299](../../iTerminal.Core/Services/SshFileSystemService.cs), a PROPFIND under a lock at [WebDavFileSystemService.cs:313](../../iTerminal.Core/Services/WebDavFileSystemService.cs), and a request at [FtpFileSystemService.cs:239](../../iTerminal.Core/Services/FtpFileSystemService.cs) and [SmbFileSystemService.cs:198](../../iTerminal.Core/Services/SmbFileSystemService.cs).
-      - The rule is stated only in comments: [ValidationModel.cs:59](../../iConsole/Model/Validations/ValidationModel.cs) ("a `CanExecute` that a button reads on every draw") and [IFileHandler.cs:19](../../iConsole/Viewers/IFileHandler.cs). [ICommand.cs:18](../../iConsole/Commands/ICommand.cs) says nothing.
-      - A second case, on the key path: [RuntimeDependencyDialogCommand.cs:15](../../iTerminal.Core/Commands/RuntimeDependencyDialogCommand.cs) → [RuntimeDependencyDialog.cs:54](../../iTerminal.Core/Dialogs/RuntimeDependencyDialog.cs) → [RuntimeDependencyService.cs:62](../../iTerminal.Core/Services/RuntimeDependencies/RuntimeDependencyService.cs) waits for the first probe build. [runtime-dependencies.md:15](../architecture/runtime-dependencies.md) says that build takes seconds and that reads "must not come from a key handler".
-    - **Problem:** with an SSH, SMB, FTP or WebDAV panel focused, the F3 and F4 footer buttons make a network round trip on the render thread each time the footer is drawn. A slow or dead server stops the whole screen, and on SSH each draw starts a process on the server. This breaks the 200 ms rule by design, not by a slip. The next command that checks a file in `CanExecute` will repeat it, because nothing in the type says where `CanExecute` runs. Principle: explicit contracts for background work, dependency on the real network without a seam. **Unverified** at run time (no server was available); the call chain is read from the code.
-    - **Improvement:** two steps, one branch.
-      1. Answer the two existence checks of `ContentModelRemoteDrive` from the current listing, as `ContentModelAsyncDrive` already does ([ContentModelAsyncDrive.cs:236](../../iTerminal.Core/Model/ContentModels/ContentModelAsyncDrive.cs)). Move its `FindListed` to `ContentModelBase` as `protected Url? FindListed(Url url)` and use it in both classes. The services keep their network `ExistsFile` for the copy and move walkers, which run on background tasks.
-      2. State the contract on the interface (no signature change):
-
-         ```csharp
-         /// <summary>
-         /// Whether the command can run now. Called on the render thread each time a button bound to it is drawn,
-         /// and on the input thread before every run: answer from memory, with no I/O, no process and no wait.
-         /// </summary>
-         bool CanExecute();
-         ```
-
-         Then make `RuntimeDependencyDialog.HasWork` answer `false` until the first build has landed, through a new `bool IsReady` on `IRuntimeDependencyService` that is read without waiting.
-    - **Effort:** S for step 1, S for step 2.
-    - **Risk of the change:** a file created on the server since the last listing cannot be opened with F3 until the panel refreshes. The docker, git and MTP drives already behave this way. `ContentModelSshDriveTest`, the SMB, FTP and WebDAV model tests, and `RuntimeDependencyDialogTest` would show a changed answer. Tools > Runtime Dependencies is greyed out for the first seconds after start.
+No open findings in this scope. Finding 31 is resolved (see **Resolved**).
 
 **What works well**
 
 - Terminal ownership is applied everywhere it is needed. `ConsoleBufferRendererJob`, `KeyboardEventPublisherJob`, `PosixTerminalInputPublisherJob` and `MouseEventPublisherJob` bracket each pass with `TryBeginUse`. The only direct console writes outside the drivers are in `InteractiveShellService` (writing to the lent terminal) and the key reader.
-- `ContentModelAsyncDrive` answers the F3, F5 and F8 checks from the listing and says why in its comment; it is the pattern finding 31 extends.
+- `ContentModelAsyncDrive` answers the F3, F5 and F8 checks from the listing and says why in its comment; it is the pattern finding 31 extended to the remote drives.
 - `FileHandlerRegistry` publishes one immutable snapshot of its handlers, so a plug-in loaded at run time never shows a half-changed list to the render thread.
 - The two ambient statics that tests would trip over have per-flow scopes (`UiText.Scope`, `TextClipboard.Scope`). `DialogRefreshHostedService` takes its static service provider back when the host stops, so the container is not kept alive after the app ends.
 - Shutdown takes 0.11 to 0.16 s in the profiling measurements, far inside the five seconds jobs get.
@@ -117,10 +91,6 @@ Part of the whole-repository pass of 2026-11-21 (see that section for the commit
 
 - Profiling overview, item 1: see "Whole repository". It is the rendering-pipeline change that needs a design decision first.
 - Design review, finding 68 (hand-painted tables), and finding 19 here: the shared hand-off primitive is still missing.
-
-**Suggested order**
-
-1. Finding 31, step 1 then step 2, after finding 30 (same SSH file).
 
 ## Drives and content models
 
@@ -133,35 +103,10 @@ Part of the whole-repository pass of 2026-11-21. Read for this scope:
 
 **Summary**
 
-- The SSH drive writes paths into shell commands without quoting (finding 30). It is a data-loss bug with a small fix.
 - `IFileSystem` is half synchronous, so the network drives block on their own async code with no way to cancel (finding 36).
 - Every drive scheme of the app is defined in `iConsole`, so a new drive changes the framework's public enum (finding 37).
 
 **Findings**
-
-30. **The SSH drive puts unquoted paths into shell commands** — **High**, kind: interface, consistency (data loss).
-    - **Where:** [SshFileSystemService.cs:127](../../iTerminal.Core/Services/SshFileSystemService.cs) (`cp -r {source} {target}`), `:140` (`rm {path}`), `:151` (`rm {path} -R`), `:203` (`ls -la ` + path), `:268` (`mv`), `:299` and `:309` (`test -f`, `test -d`), `:316` (`mkdir`), `:365` (`cd {folder};` before a user command). The SCP client built in the same file quotes its paths ([SshFileSystemService.cs:113](../../iTerminal.Core/Services/SshFileSystemService.cs), `RemotePathTransformation.ShellQuote`). The file has not changed since #45.
-    - **Problem:** the remote shell splits every path at spaces and runs anything after `;`, `|` or `$(`.
-      - Deleting `/home/u/my file` runs `rm /home/u/my file`. That removes `/home/u/my` and `file` in the login folder if they exist, and reports success.
-      - A folder named `a;b` breaks the listing.
-      - A file whose name contains a command runs that command on the server, as the user. Because `ExistsFile` runs on every footer draw (finding 31), this needs no key press: the cursor resting on the row is enough.
-
-      Principle: one solution per problem (the quoting exists in the same class), explicit contracts. **Unverified** at run time; no research item covers it.
-    - **Improvement:** one helper in the service, used for every operand, with `--` before the operands so a name starting with `-` is not read as an option:
-
-      ```csharp
-      // POSIX single-quote form: ' becomes '\''
-      internal static string Quote(string path) => "'" + path.Replace("'", "'\\''") + "'";
-
-      // before
-      _client.RunCommand($"rm {url.Path}");
-      // after
-      _client.RunCommand($"rm -- {Quote(url.Path)}");
-      ```
-
-      Use `rmdir` for a non-recursive folder delete (today `rm` without `-r` fails on a folder). To test the strings without a server, build them in one `internal static class SshCommands` (`Remove`, `RemoveTree`, `Copy`, `Move`, `List`, `TestFile`, `TestFolder`, `MakeFolder`) and assert on its output in `SshFileSystemServiceTest`.
-    - **Effort:** S.
-    - **Risk of the change:** a caller that relied on the shell expanding a pattern in the path would stop working; no such caller was found. The new `SshCommands` tests and `ContentModelSshDriveTest` cover the change. A manual check against one SSH server is still needed.
 
 36. **`IFileSystem` is synchronous where the drives are remote, so six services block on their own async code without cancellation** — **Medium**, kind: interface, concurrency.
     - **Where:**
@@ -212,13 +157,10 @@ Part of the whole-repository pass of 2026-11-21. Read for this scope:
 
 **Research cross-reference**
 
-- Security overview: no item covers finding 30. The overview's surveys look at features to add, not at the app's own command construction.
-
 **Suggested order**
 
-1. Finding 30 (S, High).
-2. Finding 36, first step, after finding 31.
-3. Finding 37, registry step.
+1. Finding 36, first step.
+2. Finding 37, registry step.
 
 ## Persistence
 
@@ -692,7 +634,7 @@ Not done: no build, no test run, no publish. There is still no `global.json`, `D
 | Serilog.Sinks.File | iTerminal.Core | 8.0.0-dev-02318 | stable 7.x (unverified) | Yes (to stable) | Apache-2.0 | none | 1 | Move to stable (finding 3) |
 | SharpZipLib | iTerminal.Core | 1.4.2 | 1.4.2 | No | MIT | none | 10 | Keep |
 | SMBLibrary | iTerminal.Core | 1.5.8.1 | 1.5.8.1 | No | LGPL-3.0-or-later | none | 2 | Keep; notice shipped since #789 |
-| SSH.NET | iTerminal.Core | 2026.0.1 | 2026.0.1 | No | MIT | none | 1 | Keep; quote the commands (finding 30) |
+| SSH.NET | iTerminal.Core | 2026.0.1 | 2026.0.1 | No | MIT | none | 1 | Keep; the SSH commands are quoted (finding 30, resolved) |
 | ZstdSharp.Port | iTerminal.Core | 0.8.8 | 0.8.8 | No | MIT | none | 3 | Keep (no zstd in the BCL) |
 | Packaging.Targets | iTerminal (Linux packaging only) | 0.1.232 | unverified | Unknown | — | not checked | build only | Check by hand |
 | WixToolset.Sdk, .UI.wixext, .Util.wixext | iTerminal.Installer | 5.0.2 | unverified | Unknown | — | not checked | build only | Check by hand; one version property (finding 5) |
@@ -1147,6 +1089,19 @@ Reviewed on 2026-11-22, scope "Rendering pipeline". No review had covered this s
 
 ## Resolved
 
+- **Finding 31 (`CanExecute` reaches the network on every draw; the contract is not on `ICommand`)** — resolved on branch `fix-ssh-quoting-and-existence-checks` (not yet merged to `main`).
+  - The F3 and F4 gates (`ViewFileDialogCommand`, `EditTextFileDialogCommand`) and the F6 rename gate (`RenameDialogCommand`, through `FocusedEntry.ActionableUrl(model, fromListing: true)`) ask `ContentModelListing`. A remote drive answers from its listing with no I/O; the other drives answer as before.
+  - `ContentModelAsyncDrive` uses the same `ContentModelListing.FindListed`, so the lookup exists once.
+  - The contract is on `ICommand.CanExecute`: answer from memory, with no I/O, no process and no wait.
+  - `IRuntimeDependencyService.IsReady` lets `RuntimeDependencyDialog.HasWork` answer `false` until the first probe has landed, so the Tools command no longer waits for it.
+  - Changed from the finding: `ContentModelRemoteDrive.ExistsFile` and `ExistsFolder` still ask the server. The copy, move and compress tasks read them on a background task as the overwrite check; answering from the listing would let a file made after the last listing be overwritten without a prompt. The gates above are the only callers that changed.
+  - Not run: a real SSH, SMB, FTP or WebDAV server, so the draw-time cost is confirmed by reading the code, not measured.
+  - Verification: the solution builds (0 errors); `iTerminal.Core.Test` 5896 passed, 51 skipped; `iTerminal.Test` 482 passed, 2 skipped.
+- **Finding 30 (the SSH drive puts unquoted paths into shell commands)** — resolved on branch `fix-ssh-quoting-and-existence-checks` (not yet merged to `main`).
+  - `iTerminal.Core/Services/SshCommands.cs` builds every remote command line. `Quote` puts each path in POSIX single quotes (an embedded `'` becomes `'\''`), and `--` ends the options before each path.
+  - Folder deletes without recursion use `rmdir`, so a folder with contents is refused instead of being removed by a bare `rm` that failed on it. The `cd` before a user's command quotes the working folder too.
+  - The user's own command text is not quoted; it stays the user's shell text.
+  - Verification: `SshCommandsTest` covers the quoting, the dashed and the spaced names, and the copy and move flags. Not run: an SSH server, so the remote behaviour is confirmed by the strings only.
 - **Finding 10 (`iTerminal.Core` references the Windows input plug-in)** — resolved in #805 (`8724e369`): the `ProjectReference` to `iConsole.Inputs.Windows` is removed from `iTerminal.Core.csproj`. Nothing in `iTerminal.Core` used it. Verification: `dotnet build iTerminal.slnx` succeeds (0 errors, 12 warnings); the test suites and the end-to-end suite were not run.
 - **Finding 24 (`Svg.Skia` repeated in `iTerminal.Core`)** — resolved in #805 (`8724e369`), with the first option. The `Svg.Skia` line is removed from `iTerminal.Core.csproj`, with a comment that SkiaSharp and Svg.Skia arrive through `iConsole.Media.Video` and `iConsole.Formats`, which own their versions and natives. The version stays 5.2.3 in `iConsole.Formats`. Verification: the solution build succeeds; the decoder tests were not run.
 - **Finding 26 (unused `ZXing.Net` in `iConsole.Formats.Test`)** — resolved in #805 (`8724e369`): the `PackageReference` is removed from `iConsole.Formats.Test.csproj`. Verification: the solution build succeeds; the tests were not run.

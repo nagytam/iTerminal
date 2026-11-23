@@ -5,6 +5,9 @@ public interface IRuntimeDependencyService
     /// <summary>Every dependency as it stands now. Replaced as a whole, never edited, so it is safe to read from the render thread.</summary>
     IReadOnlyList<RuntimeDependencyStatus> Statuses { get; }
 
+    /// <summary>True once the first build of <see cref="Statuses"/> has landed. Read it before <see cref="Statuses"/> where a wait is not wanted.</summary>
+    bool IsReady { get; }
+
     /// <summary>The most recent progress and error lines, oldest first.</summary>
     IReadOnlyList<string> Log { get; }
 

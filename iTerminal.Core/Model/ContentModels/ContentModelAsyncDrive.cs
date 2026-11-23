@@ -233,23 +233,10 @@ public abstract class ContentModelAsyncDrive : ContentModelBase, IFileSystemProv
     /// gates check the row under the cursor. Asking the tool instead would put a process spawn on
     /// the key handler.
     /// </summary>
-    public override bool ExistsFile(Url url) => FindListed(url) is { PathType: PathType.File };
+    public override bool ExistsFile(Url url) => ContentModelListing.FindListed(this, url) is { PathType: PathType.File };
 
     public override bool ExistsFolder(Url url) =>
-        IsSameLocation(url.FullUrl, Url?.FullUrl) || FindListed(url) is { PathType: PathType.Folder };
-
-    private Url? FindListed(Url url)
-    {
-        foreach (var entry in Entries.AsSnapshot())
-        {
-            if (entry.DisplayName != ".." && IsSameLocation(entry.Url.FullUrl, url.FullUrl))
-            {
-                return entry.Url;
-            }
-        }
-
-        return null;
-    }
+        IsSameLocation(url.FullUrl, Url?.FullUrl) || ContentModelListing.FindListed(this, url) is { PathType: PathType.Folder };
 
     public override Task<IMemoryFile?> ReadFileAsync(Url url) => FileSystem.ReadFileAsync(url);
 
