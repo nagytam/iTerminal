@@ -139,4 +139,35 @@ public class ShellLinkReaderTest
 
         CollectionAssert.Contains(lines, @"Target: C:\Windows\notepad.exe");
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void BidiOverridesAreShownAsReplacementCharacters()
+    {
+        byte[] link = Link(HasArguments | IsUnicode, "abc" + (char)0x202E + "def");
+
+        List<string> lines = [.. ShellLinkReader.Read(link)];
+
+        CollectionAssert.Contains(lines, "Arguments: abc" + (char)0xFFFD + "def");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ALinkInfoOffsetOutsideItsStructureIsRefused()
+    {
+        List<byte> info = [];
+        info.AddRange(BitConverter.GetBytes(0x20u));
+        info.AddRange(BitConverter.GetBytes(0x1Cu));
+        info.AddRange(BitConverter.GetBytes(1u));
+        info.AddRange(BitConverter.GetBytes(0u));
+        info.AddRange(BitConverter.GetBytes(0xFFFFFFF0u));
+        info.AddRange(BitConverter.GetBytes(0u));
+        info.AddRange(BitConverter.GetBytes(0u));
+        info.AddRange(new byte[4]);
+        byte[] link = [.. Link(HasLinkInfo), .. info];
+
+        IReadOnlyList<string> lines = ShellLinkReader.Read(link);
+
+        Assert.IsTrue(lines.Single().StartsWith("[Could not read the shortcut", StringComparison.Ordinal), string.Join(Environment.NewLine, lines));
+    }
 }

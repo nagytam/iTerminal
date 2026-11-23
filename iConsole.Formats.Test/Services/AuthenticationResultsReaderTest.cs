@@ -57,7 +57,7 @@ public class AuthenticationResultsReaderTest
     {
         string? line = AuthenticationResultsReader.FormatLine("mx\u001b.example.org; garbage; =x; spf=; dkim=pass");
 
-        Assert.AreEqual("Authentication-Results (as recorded by mx.example.org, not checked here): dkim=pass", line);
+        Assert.AreEqual("Authentication-Results (as recorded by mx.example.org, not checked here; any sender can write this header): dkim=pass", line);
     }
 
     [Timeout(60_000)]

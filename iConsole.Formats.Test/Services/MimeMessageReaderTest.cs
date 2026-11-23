@@ -156,7 +156,7 @@ public class MimeMessageReaderTest
             Body
             """);
 
-        CollectionAssert.Contains(lines, "Authentication-Results (as recorded by mx.example.org, not checked here): spf=pass, dkim=pass, dmarc=fail");
+        CollectionAssert.Contains(lines, "Authentication-Results (as recorded by mx.example.org, not checked here; any sender can write this header): spf=pass, dkim=pass, dmarc=fail");
         Assert.IsFalse(lines.Any(l => l.Contains("older.example.net")), "only the topmost header, the receiver's own, is read");
         Assert.IsTrue(lines.IndexOf("Subject: Hello") < lines.FindIndex(l => l.StartsWith("Authentication-Results", StringComparison.Ordinal)));
     }
@@ -173,5 +173,21 @@ public class MimeMessageReaderTest
             """);
 
         Assert.IsFalse(lines.Any(l => l.StartsWith("Authentication-Results", StringComparison.Ordinal)));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AFoldedDuplicateAuthenticationResultsHeader_DoesNotReachTheTopmostOne()
+    {
+        List<string> lines = Read("""
+            Authentication-Results: mx.example.org; spf=pass
+            Authentication-Results: older.example.net;
+             dkim=fail header.d=other.example
+            Subject: Hello
+
+            Body
+            """);
+
+        CollectionAssert.Contains(lines, "Authentication-Results (as recorded by mx.example.org, not checked here; any sender can write this header): spf=pass");
     }
 }

@@ -70,7 +70,7 @@ public static class AuthenticationResultsReader
         string checks = summary.Checks.Count == 0
             ? "no checks recorded"
             : string.Join(", ", summary.Checks.Select(c => $"{c.Method}={c.Result}"));
-        return $"Authentication-Results (as recorded by {Clean(summary.Server)}, not checked here): {checks}";
+        return $"Authentication-Results (as recorded by {Clean(summary.Server)}, not checked here; any sender can write this header): {checks}";
     }
 
     /// <summary>Removes the parenthesised comments RFC 5322 allows, which may nest.</summary>
@@ -97,6 +97,9 @@ public static class AuthenticationResultsReader
         return result.ToString();
     }
 
-    /// <summary>The server name with control characters dropped, since it comes from the message.</summary>
-    private static string Clean(string text) => new(text.Where(c => !char.IsControl(c)).ToArray());
+    /// <summary>The server name with control characters dropped and format characters (bidi, zero-width) shown as U+FFFD.</summary>
+    private static string Clean(string text) =>
+        new(text.Where(c => !char.IsControl(c))
+            .Select(c => char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.Format ? '�' : c)
+            .ToArray());
 }

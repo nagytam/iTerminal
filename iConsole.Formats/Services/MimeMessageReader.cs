@@ -200,13 +200,20 @@ public static class MimeMessageReader
                 }
 
                 int colon = line.IndexOf(':');
+                if (name is null && line.Length > 0 && char.IsWhiteSpace(line[0]))
+                {
+                    // The continuation of a repeated header whose first copy was kept: there is nothing to add it to.
+                    continue;
+                }
+
                 if (colon <= 0)
                 {
                     continue;
                 }
 
-                name = line[..colon].Trim();
-                headers.TryAdd(name, HeaderText(line[(colon + 1)..].Trim()));
+                // A repeated header keeps its first (topmost) copy, so its continuation lines must not reach that copy.
+                string headerName = line[..colon].Trim();
+                name = headers.TryAdd(headerName, HeaderText(line[(colon + 1)..].Trim())) ? headerName : null;
             }
 
             return new MimePart(headers, body);

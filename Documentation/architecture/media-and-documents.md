@@ -46,11 +46,11 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **E-mail** (`MimeMessageReader`, `.eml`): the headers unfolded and their RFC 2047 words decoded, the body from
   base64 or quoted-printable in its charset, the plain part preferred over HTML. Attachments are listed by name. The
   topmost `Authentication-Results` header (RFC 8601, `AuthenticationResultsReader`) becomes one line after the Subject:
-  the receiving server's name and the `method=result` checks it recorded (spf, dkim, dmarc ...). It is the receiver's
-  word, read and not checked, and the line says so; a message with no such header shows no line.
+  the receiving server's name and the `method=result` checks it recorded (spf, dkim, dmarc ...). It is read and not
+  checked, and the line says that any sender can write the header (a forged one is the topmost when the receiver added none); a message with no such header shows no line.
 - **Windows shortcuts** (`ShellLinkReader`, `.lnk`, MS-SHLLINK): F3 shows the target (from the link info), relative path,
   arguments, working folder, description and icon as text, with hints (not a verdict) for a command interpreter as the
-  target, for arguments and for an icon from another file. Nothing is resolved, followed or launched, every read is
+  target and for arguments. Nothing is resolved, followed or launched, every read is
   bounds-checked, and control characters are dropped from the text. The target ID list is skipped, not decoded.
 - **Outlook messages** (`OutlookMessageReader`, `.msg`): the MAPI property streams of the compound file, Unicode
   when present, and the attachment storages' names.
