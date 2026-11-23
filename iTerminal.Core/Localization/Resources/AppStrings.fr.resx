@@ -2890,6 +2890,9 @@
   <data name="DialogHint.DetectLanguage" xml:space="preserve">
     <value>Détecter la langue du texte</value>
   </data>
+  <data name="DialogHint.DiscardChanges" xml:space="preserve">
+    <value>Abandonner les modifications</value>
+  </data>
   <data name="DialogHint.DiscardEntry" xml:space="preserve">
     <value>Abandonner l'entrée</value>
   </data>
@@ -3090,6 +3093,9 @@
   </data>
   <data name="DialogHint.KeepContact" xml:space="preserve">
     <value>Garder le contact</value>
+  </data>
+  <data name="DialogHint.KeepEditing" xml:space="preserve">
+    <value>Continuer la modification</value>
   </data>
   <data name="DialogHint.KeepEntry" xml:space="preserve">
     <value>Garder l'entrée</value>
@@ -8504,7 +8510,7 @@
     <value>Le dossier contient des caractères de contrôle.</value>
   </data>
   <data name="Remote.HintForm" xml:space="preserve">
-    <value>Tab champ  Espace change type/transport  Entrée/Ctrl+S enregistrer  Échap retour</value>
+    <value>Tab champ  Gauche/Droite type  Entrée/Ctrl+S enregistrer  Échap retour</value>
   </data>
   <data name="Remote.HintList" xml:space="preserve">
     <value>Entrée connecter  B parcourir les fichiers  N nouvelle  E modifier  D supprimer  Échap fermer</value>
@@ -8557,9 +8563,6 @@
   <data name="Remote.SessionFailed" xml:space="preserve">
     <value>La session n&apos;a pas démarré.</value>
   </data>
-  <data name="Remote.SpaceChanges" xml:space="preserve">
-    <value>  (Espace change)</value>
-  </data>
   <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
     <value>Seules les connexions SSH, FTP et WebDAV peuvent être parcourues comme lecteur.</value>
   </data>
@@ -8568,6 +8571,9 @@
   </data>
   <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
     <value>Supprimer « {0} » ? Appuyez sur y pour supprimer, toute autre touche annule.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDiscard" xml:space="preserve">
+    <value>Abandonner les modifications ? Appuyez sur y pour abandonner, toute autre touche poursuit la modification.</value>
   </data>
   <data name="Remote.Status.Connecting" xml:space="preserve">
     <value>Connexion à {0}…</value>

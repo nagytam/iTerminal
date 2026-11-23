@@ -2890,6 +2890,9 @@
   <data name="DialogHint.DetectLanguage" xml:space="preserve">
     <value>Detectar el idioma del texto</value>
   </data>
+  <data name="DialogHint.DiscardChanges" xml:space="preserve">
+    <value>Descartar los cambios</value>
+  </data>
   <data name="DialogHint.DiscardEntry" xml:space="preserve">
     <value>Descartar la entrada</value>
   </data>
@@ -3090,6 +3093,9 @@
   </data>
   <data name="DialogHint.KeepContact" xml:space="preserve">
     <value>Conservar el contacto</value>
+  </data>
+  <data name="DialogHint.KeepEditing" xml:space="preserve">
+    <value>Seguir editando</value>
   </data>
   <data name="DialogHint.KeepEntry" xml:space="preserve">
     <value>Conservar la entrada</value>
@@ -8504,7 +8510,7 @@
     <value>La carpeta tiene caracteres de control.</value>
   </data>
   <data name="Remote.HintForm" xml:space="preserve">
-    <value>Tab campo  Espacio cambia tipo/transporte  Intro/Ctrl+S guardar  Esc volver</value>
+    <value>Tab campo  Izq./Der. tipo  Intro/Ctrl+S guardar  Esc volver</value>
   </data>
   <data name="Remote.HintList" xml:space="preserve">
     <value>Intro conectar  B explorar archivos  N nueva  E editar  D eliminar  Esc cerrar</value>
@@ -8557,9 +8563,6 @@
   <data name="Remote.SessionFailed" xml:space="preserve">
     <value>La sesión no se inició.</value>
   </data>
-  <data name="Remote.SpaceChanges" xml:space="preserve">
-    <value>  (Espacio cambia)</value>
-  </data>
   <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
     <value>Solo las conexiones SSH, FTP y WebDAV se pueden explorar como unidad.</value>
   </data>
@@ -8568,6 +8571,9 @@
   </data>
   <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
     <value>¿Eliminar "{0}"? Pulse y para eliminar, cualquier otra tecla cancela.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDiscard" xml:space="preserve">
+    <value>¿Descartar los cambios? Pulse y para descartar, cualquier otra tecla sigue editando.</value>
   </data>
   <data name="Remote.Status.Connecting" xml:space="preserve">
     <value>Conectando con {0}…</value>

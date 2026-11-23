@@ -32,7 +32,7 @@ public class DialogKeyHintsBatch24Test
     public void RemoteConnections_KeyHints_NameTheListKeys()
     {
         RemoteConnectionManagerDialog dialog = new(Mock.Of<IRemoteConnectionService>(), Mock.Of<IInteractiveShellService>(),
-            Mock.Of<IContentModelService>(), TestTheme());
+            Mock.Of<IContentModelService>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
 
         CollectionAssert.IsSubsetOf(new[] { "Enter", "N", "E", "D/Delete", "B" }, Keys(dialog.GetKeyHints()));
     }

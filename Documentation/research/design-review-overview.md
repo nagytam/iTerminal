@@ -8,13 +8,13 @@ UI/UX review of the iConsole controls and the iTerminal dialogs and panels. This
 | --- | --- | --- |
 | [iConsole list and text-input controls](#iconsole-list-and-text-input-controls) | 1 to 10 | none |
 | [Recent UI changes: key map, grid queries, evidence notebook, tab progress, folder selector](#recent-ui-changes-key-map-grid-queries-evidence-notebook-tab-progress-folder-selector) | 12 to 14, 16 to 20, 23 to 28 | 11, 15, 21, 22 |
-| [Feedback controls, dialog shell, and the Git, remote, palette and file panel screens](#feedback-controls-dialog-shell-and-the-git-remote-palette-and-file-panel-screens) | 29 to 43 | none |
+| [Feedback controls, dialog shell, and the Git, remote, palette and file panel screens](#feedback-controls-dialog-shell-and-the-git-remote-palette-and-file-panel-screens) | 29 to 35, 37 to 43 | 36 |
 | [File-operation dialogs: copy and move, delete, rename, multi-rename, conflict prompt, secure wipe](#file-operation-dialogs-copy-and-move-delete-rename-multi-rename-conflict-prompt-secure-wipe) | 44 to 54 | none |
 | [Music player: F3 music viewer, playlist and catalog panels, audio output](#music-player-f3-music-viewer-playlist-and-catalog-panels-audio-output) | 56 to 64, 71, 72 | 55 |
 | [Dialog set: tables, live data and labels across the dialogs](#dialog-set-tables-live-data-and-labels-across-the-dialogs) | 68 to 70 | 65 to 67 |
 | [Menus: menu bar, drop-downs, context menu and the file panel's right-click menu](#menus-menu-bar-drop-downs-context-menu-and-the-file-panels-right-click-menu) | 73 to 83 | none |
 
-Totals: 83 findings, 75 open and 8 resolved.
+Totals: 83 findings, 74 open and 9 resolved.
 
 ## Earlier finding numbers
 
@@ -57,7 +57,7 @@ Each finding from an earlier pass, with its number in this document. "Open (part
 | R3 finding 5 | 33 | open |
 | R3 finding 6 | 34 | open |
 | R3 finding 7 | 35 | open |
-| R3 finding 8 | 36 | open |
+| R3 finding 8 | 36 | resolved |
 | R3 finding 9 | 37 | open |
 | R3 finding 10 | 38 | open |
 | R3 finding 11 | 39 | open |
@@ -331,7 +331,7 @@ Scope: the controls that report or confirm something (`Toast`, `ToastHost`, `Pro
 
 - Biggest problems are about what happens when something goes wrong or is pressed by mistake. Esc on the progress window cancels a running copy, move or delete with no question (finding 29). A failed operation's toast can be neither read in full nor dismissed from the keyboard, and the notification history that exists has no screen (finding 30). In the Git client, Caps Lock turns pull into push and stage into stash, and push and abort-merge never ask (finding 31).
 - The file panel does a full scan of the listing in every `Draw` as soon as one entry is marked (finding 33), and the mark itself is shown by colour only (finding 34).
-- The remote connection manager's hint says D and Delete confirm a delete; the code asks again instead (finding 35), and its hand-drawn edit form cannot move the cursor inside a field (finding 36).
+- The remote connection manager's hint says D and Delete confirm a delete; the code asks again instead (finding 35).
 - Wins: the new `DirectoryCompletionModel` is a model of how to do background I/O in a text box (generation order, cache, timeout, `ReplaceAll`); the progress window, palette and Git client all keep their list areas fully painted and say why a list is empty; destructive Git keys that exist ask first.
 - Earlier findings: findings 11, 15, 21 and 22 are fixed (see Resolved). Finding 20 is only partly fixed (cancellation works; the per-cell copy was not re-read) and stays open.
 
@@ -381,12 +381,6 @@ Scope: the controls that report or confirm something (`Toast`, `ToastHost`, `Pro
     - Problem: the F1 help promises a second D or Delete confirms, as the Git client's and package manager's prompts do not; the user presses D twice and sees the same question again. Not data loss, but a confirmation that does not answer to the key it names is a trap in the one dialog that stores credentials. Heuristic: Consistency, Error prevention (the hint must match the key).
     - Improvement: change the hint to "Y: delete" (and keep "any other key keeps it"); or make a second D/Delete confirm and say so in the footer. Pick one, and add the `d`, `d` test.
     - Effort: S.
-
-36. **The connection edit form is hand-drawn: no cursor movement inside a field, no copy, and Esc throws the whole form away** - Severity: **Medium**. Kind: usability, consistency.
-    - Where: [RemoteConnectionManagerDialog.cs:353](../../iTerminal.Core/Dialogs/Remote/RemoteConnectionManagerDialog.cs) to `:364` (typing appends to `field.Text`, Backspace removes the last char), `:240` to `:246` (Esc returns to the list without asking), `:264` to `:294` (its own paste, delete-word and Ctrl+U), `:776` to `:820` (`DrawForm`, characters counted by `.Length`; `Put` at `:823` clips by `.Length`). `key-patterns.md` ("Text boxes and the editor have a text clipboard and selection") and tui comparison item 72 (form bound to a model) describe the building blocks that exist.
-    - Problem: a typo in the middle of a host name or key-file path can only be fixed by deleting back to it; Left, Right, Home, End, Shift-select and Ctrl+C do nothing. Esc after typing eight fields drops them silently. The password field shows `*` per character, so its length is visible. Heuristic: Consistency (every other form uses `TextBox`), Error prevention, Efficiency.
-    - Improvement: build the form from `FormPanel` with `TextBox`, `PasswordBox` and a `ComboBox` or `SegmentedControl` for type and transport, as the Compress dialog does; ask `Discard changes? (y/n)` on Esc only when a field changed. The dialog's tests use `StatusForTest` and the key paths, so keep those seams.
-    - Effort: M to L.
 
 37. **Focus on a `Button` or `CheckBox` is shown by a foreground colour change only, and the default scheme makes it low contrast** - Severity: **Medium**. Kind: accessibility.
     - Where: [iConsole/Controls/Buttons/Button.cs:164](../../iConsole/Controls/Buttons/Button.cs) to `:168` (Focused: `SelectedFocusedForeground` on the unchanged `ButtonBackground`), [iConsole/Controls/CheckBox.cs:121](../../iConsole/Controls/CheckBox.cs) to `:127` (the same on the plain background), [iConsole/Display/ColorScheme.cs:24](../../iConsole/Display/ColorScheme.cs) to `:33` (Default scheme: `SelectedFocusedForeground = DarkGreen` on `Blue` and `DarkBlue`; `DisabledForeground = White`, equal to `Foreground`; `DisabledBackground = Gray`). The scheme list has only `Default` and `Dark` ([iConsole/Data/Theme.cs:3](../../iConsole/Data/Theme.cs)); the earlier reviews' phrase "light and dark themes" does not apply, there is no light theme. Tui comparison items 26 and 78 ask for a high-contrast theme.
@@ -444,11 +438,10 @@ Scope: the controls that report or confirm something (`Toast`, `ToastHost`, `Pro
 
 - **Tui comparison items 26 and 78 (accessibility, high-contrast theme):** confirmed and made concrete by finding 37 (focus is colour only, the Default scheme's disabled colour equals its normal colour, only two schemes exist) and finding 34 (marks). They need a layout decision first only for the focus cue (a glyph in the button border changes its width by two cells).
 - **Console survey item 108 (toast actions) and the missing notification history:** finding 30 argues for the history screen before actions; an Undo button on a toast cannot be reached from the keyboard until toasts can be focused or invoked by a chord.
-- **Tui comparison item 72 (form bound to a model) and item 94 (quick modal dialogs):** the remote manager (finding 36) and the Git client's inline prompt (`ShowInput`, `BeginConfirm`) are two more hand-built copies of what those items would share.
+- **Tui comparison item 72 (form bound to a model) and item 94 (quick modal dialogs):** the Git client's inline prompt (`ShowInput`, `BeginConfirm`) is one more hand-built copy of what those items would share; the remote manager's form was the other, and now uses `FormPanel`.
 - **Tui comparison items 17 and 104 (table upgrades, formatted columns):** finding 41 lists what `Table<T>` needs before a dialog adopts it; no dialog uses it today, so the research gap is not yet felt.
 - **Tui comparison item 22 (fuzzy matching):** built and wired into the palette, but the matched positions are not drawn (finding 39).
 - **Console survey item 1 (wide characters):** `CsvGrid` now uses `TextWidth`; `Toast`, `Table`, the palette list, the remote manager and the folder selector rows still count chars (findings 41, 43). The research table still says "no width handling found"; it was not edited.
-- **Console survey item 2 (bracketed paste):** the remote manager's form has its own paste (`PasteHelper`), so finding 36 would remove one more special case from that work.
 - **AI overview, "Approval for writes":** the Git client has no equivalent preview for push (finding 31); `AiActionApprovalService` shows how an action can state what it will do before it does it.
 - **Security overview, evidence and RFC 3161:** nothing in this scope needs a layout change; the file panel's footer (findings 33, 34) is already full, so a timestamp state needs its own row first (see finding 19).
 
@@ -456,8 +449,7 @@ Scope: the controls that report or confirm something (`Toast`, `ToastHost`, `Pro
 
 1. Quick wins (S): finding 35 (hint or key), finding 31 (confirm push and abort, or require Shift), finding 42 (check-mark glyphs), finding 38 (notify on close).
 2. Medium, high leverage: finding 29 (progress window Esc), finding 30 (notifications list and dismiss-all), finding 33 (cache the marks summary; a frame-budget risk), finding 34 (mark glyph), finding 37 (focus cue), finding 32 (queue or signal the dropped key).
-3. Larger: finding 36 (rebuild the connection form from `FormPanel`).
-4. Low: findings 39, 40, 41, 43, in that order; 41 before any dialog uses `Table<T>`.
+3. Low: findings 39, 40, 41, 43, in that order; 41 before any dialog uses `Table<T>`.
 
 Nothing here is High: no finding shows a loss of data or a measured miss of the 200 ms budget. Findings 29, 31 and 33 could reach that on a real system and should be confirmed first with a key trace, a `ConsoleAppDriver` test and `RecordingStopwatchFactory`.
 
@@ -836,3 +828,5 @@ Findings that a status check found fixed. Each keeps its number from the table a
 - **65. The network interfaces are text rows, and a status goes stale until the dialog is reopened** - Scope: Dialog set: tables, live data and labels across the dialogs. Fixed: `NetworkManagerDialog` is a `Table<NetworkInfo>` bound to `NetworkInfoModel.Networks`, so a status is read on each draw ([NetworkManagerDialog.cs](../../iTerminal.Core/Dialogs/NetworkManagerDialog.cs)). Columns Name, Status and Description carry headers. Tests: [NetworkManagerDialogTest.cs](../../iTerminal.Core.Test/Dialogs/NetworkManagerDialogTest.cs) (an interface added while the dialog is open is drawn without reopening; the columns fit the width at 60 and 120). Open remark: non-Up interfaces used to be dimmed; `Table` has no per-row disabled state, so they are not dimmed now.
 - **66. The Bluetooth device list has no column headers, and its rows are formatted once** - Scope: Dialog set: tables, live data and labels across the dialogs. Fixed: the list is a `Table<BluetoothDevice>` bound to the device collection, with Name, Address and State headers ([BluetoothDeviceManagerDialog.cs](../../iTerminal.Core/Dialogs/Bluetooth/BluetoothDeviceManagerDialog.cs)). The state is read per draw. The tests that asserted on the formatted row text now render the dialog and compare the header column with the value column. The highlight still follows the device across a refresh.
 - **67. The link target line says "to" in English** - Scope: Dialog set: tables, live data and labels across the dialogs. Fixed: [CreateLinkDialog.cs:138](../../iTerminal.Core/Dialogs/CreateLinkDialog.cs) reads "to" from the existing `Task.To` key, so the German, French, Spanish, Italian and Hungarian builds show the translated word.
+
+- **36. The connection edit form is hand-drawn: no cursor movement inside a field, no copy, and Esc throws the whole form away** - Scope: Feedback controls, dialog shell, and the Git, remote, palette and file panel screens. Fixed in PR 835, not yet merged: [RemoteConnectionManagerDialog.cs](../../iTerminal.Core/Dialogs/Remote/RemoteConnectionManagerDialog.cs) builds its edit mode from a `FormPanel` of `TextBox`, `PasswordBox` and two `SegmentedControl`s (type and transport), attached to the dialog only while an entry is edited. Every field now has the cursor, selection, copy, cut and paste of a `TextBox`; the password box masks and never copies out; the port takes digits only and shows the default port while empty; fields the type does not use are dimmed and skipped by Tab. Esc goes straight back when the form is unchanged, and asks "Discard the changes? (y/n)" when any field, the type or the transport changed (the form compares a snapshot with the one taken when it opened). Tests: [RemoteConnectionManagerDialogTest.cs](../../iTerminal.Core.Test/Dialogs/Remote/RemoteConnectionManagerDialogTest.cs) (an edit in the middle of a host, copy and paste between fields, the discard question with y and with another key, a type change counting as a change, the masked password, digits-only port) and the end-to-end FTP save in `EditorViewerAndPermissionsTest`. Changed keys: Space no longer cycles the type (Left/Right do), and Up/Down no longer move between fields (Tab and Shift+Tab do). Open remark: the status line and the key hints under the form are still drawn by the dialog.

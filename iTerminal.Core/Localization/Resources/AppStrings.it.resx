@@ -2890,6 +2890,9 @@
   <data name="DialogHint.DetectLanguage" xml:space="preserve">
     <value>Rileva la lingua del testo</value>
   </data>
+  <data name="DialogHint.DiscardChanges" xml:space="preserve">
+    <value>Scarta le modifiche</value>
+  </data>
   <data name="DialogHint.DiscardEntry" xml:space="preserve">
     <value>Scarta la voce</value>
   </data>
@@ -3090,6 +3093,9 @@
   </data>
   <data name="DialogHint.KeepContact" xml:space="preserve">
     <value>Mantieni il contatto</value>
+  </data>
+  <data name="DialogHint.KeepEditing" xml:space="preserve">
+    <value>Continua la modifica</value>
   </data>
   <data name="DialogHint.KeepEntry" xml:space="preserve">
     <value>Mantieni la voce</value>
@@ -8504,7 +8510,7 @@
     <value>La cartella contiene caratteri di controllo.</value>
   </data>
   <data name="Remote.HintForm" xml:space="preserve">
-    <value>Tab campo  Spazio cambia tipo/trasporto  Invio/Ctrl+S salva  Esc indietro</value>
+    <value>Tab campo  Sinistra/Destra tipo  Invio/Ctrl+S salva  Esc indietro</value>
   </data>
   <data name="Remote.HintList" xml:space="preserve">
     <value>Invio connetti  B sfoglia file  N nuova  E modifica  D elimina  Esc chiudi</value>
@@ -8557,9 +8563,6 @@
   <data name="Remote.SessionFailed" xml:space="preserve">
     <value>La sessione non è stata avviata.</value>
   </data>
-  <data name="Remote.SpaceChanges" xml:space="preserve">
-    <value>  (Spazio cambia)</value>
-  </data>
   <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
     <value>Solo le connessioni SSH, FTP e WebDAV si possono esplorare come unità.</value>
   </data>
@@ -8568,6 +8571,9 @@
   </data>
   <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
     <value>Eliminare "{0}"? Premi y per eliminare, qualsiasi altro tasto annulla.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDiscard" xml:space="preserve">
+    <value>Scartare le modifiche? Premi y per scartare, qualsiasi altro tasto continua la modifica.</value>
   </data>
   <data name="Remote.Status.Connecting" xml:space="preserve">
     <value>Connessione a {0}…</value>

@@ -2890,6 +2890,9 @@
   <data name="DialogHint.DetectLanguage" xml:space="preserve">
     <value>Die Sprache des Textes erkennen</value>
   </data>
+  <data name="DialogHint.DiscardChanges" xml:space="preserve">
+    <value>Änderungen verwerfen</value>
+  </data>
   <data name="DialogHint.DiscardEntry" xml:space="preserve">
     <value>Den Eintrag verwerfen</value>
   </data>
@@ -3090,6 +3093,9 @@
   </data>
   <data name="DialogHint.KeepContact" xml:space="preserve">
     <value>Den Kontakt behalten</value>
+  </data>
+  <data name="DialogHint.KeepEditing" xml:space="preserve">
+    <value>Weiter bearbeiten</value>
   </data>
   <data name="DialogHint.KeepEntry" xml:space="preserve">
     <value>Den Eintrag behalten</value>
@@ -8568,7 +8574,7 @@
     <value>Der Ordner enthält Steuerzeichen.</value>
   </data>
   <data name="Remote.HintForm" xml:space="preserve">
-    <value>Tab Feld  Leer ändert Typ/Transport  Enter/Ctrl+S speichern  Esc zurück</value>
+    <value>Tab Feld  Links/Rechts Typ  Enter/Ctrl+S speichern  Esc zurück</value>
   </data>
   <data name="Remote.HintList" xml:space="preserve">
     <value>Enter verbinden  B Dateien durchsuchen  N neu  E bearbeiten  D löschen  Esc schließen</value>
@@ -8621,9 +8627,6 @@
   <data name="Remote.SessionFailed" xml:space="preserve">
     <value>Die Sitzung wurde nicht gestartet.</value>
   </data>
-  <data name="Remote.SpaceChanges" xml:space="preserve">
-    <value>  (Leertaste ändert)</value>
-  </data>
   <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
     <value>Nur SSH-, FTP- und WebDAV-Verbindungen können als Laufwerk durchsucht werden.</value>
   </data>
@@ -8632,6 +8635,9 @@
   </data>
   <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
     <value>"{0}" löschen? Mit y löschen, jede andere Taste bricht ab.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDiscard" xml:space="preserve">
+    <value>Änderungen verwerfen? Mit y verwerfen, jede andere Taste setzt die Bearbeitung fort.</value>
   </data>
   <data name="Remote.Status.Connecting" xml:space="preserve">
     <value>Verbindung zu {0} wird hergestellt…</value>

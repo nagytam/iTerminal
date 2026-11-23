@@ -2890,6 +2890,9 @@
   <data name="DialogHint.DetectLanguage" xml:space="preserve">
     <value>A szöveg nyelvének felismerése</value>
   </data>
+  <data name="DialogHint.DiscardChanges" xml:space="preserve">
+    <value>Módosítások elvetése</value>
+  </data>
   <data name="DialogHint.DiscardEntry" xml:space="preserve">
     <value>A bejegyzés elvetése</value>
   </data>
@@ -3090,6 +3093,9 @@
   </data>
   <data name="DialogHint.KeepContact" xml:space="preserve">
     <value>A névjegy megtartása</value>
+  </data>
+  <data name="DialogHint.KeepEditing" xml:space="preserve">
+    <value>Szerkesztés folytatása</value>
   </data>
   <data name="DialogHint.KeepEntry" xml:space="preserve">
     <value>A bejegyzés megtartása</value>
@@ -8504,7 +8510,7 @@
     <value>A mappa vezérlőkaraktereket tartalmaz.</value>
   </data>
   <data name="Remote.HintForm" xml:space="preserve">
-    <value>Tab mező  Szóköz típus/átvitel váltása  Enter/Ctrl+S mentés  Esc vissza</value>
+    <value>Tab mező  Balra/Jobbra típus  Enter/Ctrl+S mentés  Esc vissza</value>
   </data>
   <data name="Remote.HintList" xml:space="preserve">
     <value>Enter kapcsolódik  B fájlok böngészése  N új  E szerkeszt  D töröl  Esc bezár</value>
@@ -8557,9 +8563,6 @@
   <data name="Remote.SessionFailed" xml:space="preserve">
     <value>A munkamenet nem indult el.</value>
   </data>
-  <data name="Remote.SpaceChanges" xml:space="preserve">
-    <value>  (Szóköz vált)</value>
-  </data>
   <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
     <value>Csak SSH, FTP és WebDAV kapcsolat böngészhető meghajtóként.</value>
   </data>
@@ -8568,6 +8571,9 @@
   </data>
   <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
     <value>Törli: „{0}”? y gombbal törli, más gomb megszakít.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDiscard" xml:space="preserve">
+    <value>Elveti a módosításokat? y gombbal elveti, más gombbal folytatja a szerkesztést.</value>
   </data>
   <data name="Remote.Status.Connecting" xml:space="preserve">
     <value>Kapcsolódás: {0}…</value>
