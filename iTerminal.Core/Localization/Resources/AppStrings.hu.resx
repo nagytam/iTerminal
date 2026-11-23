@@ -865,6 +865,9 @@
   <data name="CmdDesc.43caa310" xml:space="preserve">
     <value>Az óra megnyitása: világidő, ébresztők, stopperóra és időzítők.</value>
   </data>
+  <data name="CmdDesc.43cc5bd8" xml:space="preserve">
+    <value>A kurzor alatti elem lehetséges műveleteinek menüjének megnyitása.</value>
+  </data>
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Ellenőrzi, hogy a bizonyítéknapló minden bejegyzése még megfelel-e a rögzített SHA-256 értékének és méretének.</value>
   </data>
@@ -1425,6 +1428,9 @@
   </data>
   <data name="CmdTitle.40bb50da" xml:space="preserve">
     <value>Le</value>
+  </data>
+  <data name="CmdTitle.41afe4cc" xml:space="preserve">
+    <value>Helyi menü</value>
   </data>
   <data name="CmdTitle.424dc8eb" xml:space="preserve">
     <value>Pénzváltó</value>

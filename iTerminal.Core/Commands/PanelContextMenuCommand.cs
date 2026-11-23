@@ -1,6 +1,7 @@
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iTerminal.Core.Controls.Contents;
 
 namespace iTerminal.Core.Commands;
@@ -15,8 +16,11 @@ namespace iTerminal.Core.Commands;
 /// </summary>
 public class PanelContextMenuCommand(IContentModelService contentModelService, ContentBrowser? browser = null) : Command
 {
-    public override string Title => "Context menu";
-    public override string Description => "Open the menu of what can be done with the entry under the cursor.";
+    public override string Title => UiText.Title("Context menu");
+    public override string Description => UiText.Describe("Open the menu of what can be done with the entry under the cursor.");
+
+    /// <summary>The Edit menu's instance has no key of its own but is the way to the panel's Menu key, so it shows that key.</summary>
+    public override string KeyDisplayText => browser is null ? "Menu" : base.KeyDisplayText;
 
     // Key ctor is (consoleKey, shift, alt, control). Only the panel's own instance listens to the key.
     public override Key? Key { get; init; } = browser is null ? null : new Key(ConsoleKey.Applications, false, false, false);

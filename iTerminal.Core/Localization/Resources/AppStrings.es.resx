@@ -865,6 +865,9 @@
   <data name="CmdDesc.43caa310" xml:space="preserve">
     <value>Abrir el reloj: hora mundial, alarmas, cronómetro y temporizadores.</value>
   </data>
+  <data name="CmdDesc.43cc5bd8" xml:space="preserve">
+    <value>Abrir el menú de lo que se puede hacer con la entrada bajo el cursor.</value>
+  </data>
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Comprueba que cada entrada del cuaderno sigue coincidiendo con su SHA-256 y tamaño registrados.</value>
   </data>
@@ -1425,6 +1428,9 @@
   </data>
   <data name="CmdTitle.40bb50da" xml:space="preserve">
     <value>Mover abajo</value>
+  </data>
+  <data name="CmdTitle.41afe4cc" xml:space="preserve">
+    <value>Menú contextual</value>
   </data>
   <data name="CmdTitle.424dc8eb" xml:space="preserve">
     <value>Conversor de divisas</value>
