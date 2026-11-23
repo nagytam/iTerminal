@@ -730,6 +730,10 @@ public sealed class TerminalInputUtf8Decoder
             case "24":
                 consoleKey = ConsoleKey.F12;
                 return true;
+            case "29":
+                // The Menu (Applications) key, as xterm sends it.
+                consoleKey = ConsoleKey.Applications;
+                return true;
             default:
                 consoleKey = default;
                 return false;

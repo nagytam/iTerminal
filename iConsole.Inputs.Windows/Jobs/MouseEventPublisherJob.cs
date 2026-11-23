@@ -282,6 +282,7 @@ public partial class MouseEventPublisherJob : Job, ITerminalInputSource, IConsol
             case VKey.NEXT: return ConsoleKey.PageDown;
             case VKey.LEFT: return ConsoleKey.LeftArrow;
             case VKey.RIGHT: return ConsoleKey.RightArrow;
+            case VKey.APPS: return ConsoleKey.Applications;
             case VKey.CONTROL: return ConsoleKey.None;
             case VKey.LCONTROL: return ConsoleKey.None;
             case VKey.RCONTROL: return ConsoleKey.None;

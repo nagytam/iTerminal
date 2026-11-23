@@ -7068,6 +7068,9 @@
   <data name="Menu.Compress" xml:space="preserve">
     <value>Compress</value>
   </data>
+  <data name="Menu.ContextMenu" xml:space="preserve">
+    <value>Context Menu</value>
+  </data>
   <data name="Menu.Copy" xml:space="preserve">
     <value>Copy</value>
   </data>

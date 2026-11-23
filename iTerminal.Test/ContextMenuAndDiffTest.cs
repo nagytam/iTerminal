@@ -51,6 +51,52 @@ public class ContextMenuAndDiffTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheMenuKeyOpensTheMenuOnTheCursorRow_AndTheKeyboardChoosesFromIt()
+    {
+        await _app.SelectEntryAsync("readme.txt");
+        await _app.WaitForTextAsync("readme.txt");
+
+        await _app.PressAsync("Menu");
+
+        var screen = await _app.WaitForTextAsync("Properties");
+        foreach (var item in new[] { "Open", "View", "Copy", "Delete", "Checksums" })
+        {
+            Assert.IsTrue(screen.Contains(item), $"the menu offers {item}\n{screen.Dump()}");
+        }
+
+        // Properties is the last row; End goes to it and Enter chooses it, with no mouse.
+        await _app.PressAsync("End");
+        await _app.PressAsync("Enter");
+
+        var dialog = await _app.Driver.WaitForModalAsync<Core.Dialogs.PropertiesDialog>();
+        Assert.IsNotNull(dialog);
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheEditMenuEntryOpensTheSameMenu_AndEscReturnsToThePanel()
+    {
+        await _app.SelectEntryAsync("readme.txt");
+        await _app.WaitForTextAsync("readme.txt");
+
+        await _app.Driver.ClickAsync("Edit");
+        await _app.Driver.ClickAsync("Context Menu");
+
+        var screen = await _app.WaitForTextAsync("Properties");
+        Assert.IsTrue(screen.Contains("Checksums"), screen.Dump());
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForTextGoneAsync("Checksums");
+        await _app.WaitForNoStrayFramesAsync();
+
+        // The panel has the keyboard again: the Menu key works a second time.
+        await _app.PressAsync("Menu");
+        await _app.WaitForTextAsync("Properties");
+        await _app.PressAsync("Esc");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task RightClickOnTheParentRowOffersNothing()
     {
         await _app.Driver.WaitForTextAsync("..");

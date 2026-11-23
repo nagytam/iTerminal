@@ -50,8 +50,8 @@ public class FileContextMenuTest
             var folderRows = FileContextMenu.Build(ModelWithFocusedEntry("sub").Object, [onFolder], null, () => Task.CompletedTask);
 
             Assert.IsTrue(onFile.CanExecute() && onFolder.CanExecute(), "Print always runs: it is the queue manager too");
-            Assert.IsTrue(fileRows.Any(r => r.Label.StartsWith("Print")));
-            Assert.IsFalse(folderRows.Any(r => r.Label.StartsWith("Print")));
+            Assert.IsTrue(fileRows.Any(r => r.Text.StartsWith("Print")));
+            Assert.IsFalse(folderRows.Any(r => r.Text.StartsWith("Print")));
         }
         finally
         {
@@ -68,7 +68,7 @@ public class FileContextMenuTest
         var rows = FileContextMenu.Build(ModelWithFocusedEntry("report.txt").Object, [remote], null, () => Task.CompletedTask);
 
         Assert.IsFalse(remote.HasPrintableFile);
-        Assert.IsFalse(rows.Any(r => r.Label.StartsWith("Print")));
+        Assert.IsFalse(rows.Any(r => r.Text.StartsWith("Print")));
     }
 
     [Timeout(60_000)]
@@ -104,8 +104,19 @@ public class FileContextMenuTest
         });
 
         Assert.AreEqual(1, items.Count);
-        StringAssert.StartsWith(items[0].Label, "Open");
-        await items[0].Run();
+        StringAssert.StartsWith(items[0].Text, "Open");
+        await items[0].Execute!();
         Assert.IsTrue(opened);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheKeyOfARow_IsItsShortcut_NotPaddingInItsTitle()
+    {
+        var items = FileContextMenu.Build(ModelWithFocusedEntry("notes.txt").Object, [], null, () => Task.CompletedTask);
+
+        Assert.AreEqual("Open", items[0].Text);
+        Assert.AreEqual("Enter", items[0].Shortcut);
+        Assert.IsNull(items[0].HotKey, "no hot keys until the menu is grouped");
     }
 }

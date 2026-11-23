@@ -160,6 +160,7 @@ public abstract class Command : ICommand
             ConsoleKey.UpArrow => "Up",
             ConsoleKey.LeftArrow => "Left",
             ConsoleKey.RightArrow => "Right",
+            ConsoleKey.Applications => "Menu",
             ConsoleKey.PageUp => "PgUp",
             ConsoleKey.PageDown => "PgDn",
             ConsoleKey.Backspace => "Backspace",

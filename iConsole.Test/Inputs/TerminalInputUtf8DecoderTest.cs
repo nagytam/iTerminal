@@ -115,6 +115,7 @@ public class TerminalInputUtf8DecoderTest
     [DataRow("\x1b[21~", ConsoleKey.F10)]
     [DataRow("\x1b[23~", ConsoleKey.F11)]
     [DataRow("\x1b[24~", ConsoleKey.F12)]
+    [DataRow("\x1b[29~", ConsoleKey.Applications)]
     public void Drain_ParsesCsiFunctionKey(string sequence, ConsoleKey expected)
     {
         var d = new TerminalInputUtf8Decoder();

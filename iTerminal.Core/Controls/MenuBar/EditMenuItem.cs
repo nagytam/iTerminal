@@ -44,6 +44,9 @@ public class EditMenuItem : MenuItem
 
         AddMenuItem(new MenuItem("Copy Path	Ctrl+Shift+Insert", new iTerminal.Core.Commands.CopyPathCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Copy Name	Ctrl+Shift+N", new iTerminal.Core.Commands.CopyNameCommand(contentModelService), [], themeService));
+        // The panel has its own copy bound to the Menu key; this one is how to find it, and how to reach the menu on a
+        // terminal that never sends that key. It acts on the focused panel, or the last one.
+        AddMenuItem(new MenuItem("Context Menu\tMenu", new PanelContextMenuCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Copy Files\tF5",  new CopyDialogCommand(copyDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Move\tShift+F6",  new MoveDialogCommand(moveDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Rename\tF6",      new RenameDialogCommand(renameDialog, contentModelService), [], themeService));
