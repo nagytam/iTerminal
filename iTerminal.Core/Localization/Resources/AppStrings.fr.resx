@@ -865,6 +865,9 @@
   <data name="CmdDesc.43caa310" xml:space="preserve">
     <value>Ouvrir l'horloge : heure mondiale, alarmes, chronomètre et minuteurs.</value>
   </data>
+  <data name="CmdDesc.43cc5bd8" xml:space="preserve">
+    <value>Ouvrir le menu des actions possibles sur l'entrée sous le curseur.</value>
+  </data>
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Vérifie que chaque entrée du carnet correspond encore à son SHA-256 et à sa taille enregistrés.</value>
   </data>
@@ -1425,6 +1428,9 @@
   </data>
   <data name="CmdTitle.40bb50da" xml:space="preserve">
     <value>Descendre</value>
+  </data>
+  <data name="CmdTitle.41afe4cc" xml:space="preserve">
+    <value>Menu contextuel</value>
   </data>
   <data name="CmdTitle.424dc8eb" xml:space="preserve">
     <value>Convertisseur de devises</value>

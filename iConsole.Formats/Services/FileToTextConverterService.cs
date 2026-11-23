@@ -136,6 +136,9 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> MboxExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "mbox" };
 
+    private static readonly HashSet<string> ShellLinkExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "lnk" };
+
     /// <summary>
     /// Formats whose text is read from their structure rather than from the bytes as a code page: an RTF file carries
     /// its own code page, and an e-mail, e-book or XPS document its own charsets, so a code page chosen for it means
@@ -165,7 +168,8 @@ public class FileToTextConverterService : IFileToTextConverterService
         || OpenDocumentMasterExtensions.Contains(extension)
         || VCardExtensions.Contains(extension)
         || ICalendarExtensions.Contains(extension)
-        || MboxExtensions.Contains(extension);
+        || MboxExtensions.Contains(extension)
+        || ShellLinkExtensions.Contains(extension);
 
     private static void AddLines(ITextModel textModel, IReadOnlyList<string> lines)
     {
@@ -454,6 +458,10 @@ public class FileToTextConverterService : IFileToTextConverterService
             else if (MboxExtensions.Contains(url.Extension))
             {
                 await ReadBinaryFileAsync(url, fileSystem, textModel, MboxTextReader.Read);
+            }
+            else if (ShellLinkExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, ShellLinkReader.Read);
             }
             else
             {

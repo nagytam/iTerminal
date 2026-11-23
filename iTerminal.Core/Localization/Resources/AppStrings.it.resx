@@ -865,6 +865,9 @@
   <data name="CmdDesc.43caa310" xml:space="preserve">
     <value>Apri l'orologio: ora nel mondo, sveglie, cronometro e timer.</value>
   </data>
+  <data name="CmdDesc.43cc5bd8" xml:space="preserve">
+    <value>Apri il menu delle azioni possibili sulla voce sotto il cursore.</value>
+  </data>
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Verifica che ogni voce del taccuino corrisponda ancora al SHA-256 e alla dimensione registrati.</value>
   </data>
@@ -1425,6 +1428,9 @@
   </data>
   <data name="CmdTitle.40bb50da" xml:space="preserve">
     <value>Giù</value>
+  </data>
+  <data name="CmdTitle.41afe4cc" xml:space="preserve">
+    <value>Menu contestuale</value>
   </data>
   <data name="CmdTitle.424dc8eb" xml:space="preserve">
     <value>Convertitore di valute</value>

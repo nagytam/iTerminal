@@ -1,3 +1,4 @@
+using iTerminal.Core.Model.Git;
 using iTerminal.Core.Services.Git;
 
 namespace iTerminal.Core.Test.Services.Git;
@@ -204,6 +205,7 @@ public class GitServiceTest
 
             var log = await service.GetLogAsync(resolvedRoot, 10);
             Assert.IsTrue(log.Any(c => c.Subject == "add new file"));
+            Assert.IsTrue(log.All(c => c.Signature == GitSignature.None), "an unsigned commit reads as N");
         }
         finally
         {
@@ -631,6 +633,34 @@ public class GitServiceTest
         {
             TryDelete(root);
         }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ParseLog_ReadsTheSignatureLetterAsTheFifthField()
+    {
+        string us = ((char)0x1f).ToString();
+        string rs = ((char)0x1e).ToString();
+        string output = $"abc1234{us}fix: a bug{us}Ann{us}2 days ago{us}G{rs}" + Environment.NewLine + $"def5678{us}other{us}Bob{us}3 days ago{us}N{rs}";
+
+        IReadOnlyList<GitCommit> commits = GitService.ParseLog(output);
+
+        Assert.AreEqual(2, commits.Count);
+        Assert.AreEqual('G', commits[0].Signature);
+        Assert.AreEqual("fix: a bug", commits[0].Subject);
+        Assert.AreEqual('N', commits[1].Signature);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ParseLog_WithoutTheFifthFieldReadsAsUnsigned()
+    {
+        string us = ((char)0x1f).ToString();
+        string rs = ((char)0x1e).ToString();
+
+        IReadOnlyList<GitCommit> commits = GitService.ParseLog($"abc1234{us}subject{us}Ann{us}now{rs}");
+
+        Assert.AreEqual(GitSignature.None, commits.Single().Signature);
     }
 
     private static void TryDelete(string root)

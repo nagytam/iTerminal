@@ -865,6 +865,9 @@
   <data name="CmdDesc.43caa310" xml:space="preserve">
     <value>Die Uhr öffnen: Weltzeit, Wecker, Stoppuhr und Timer.</value>
   </data>
+  <data name="CmdDesc.43cc5bd8" xml:space="preserve">
+    <value>Das Menü der möglichen Aktionen für den Eintrag unter dem Cursor öffnen.</value>
+  </data>
   <data name="CmdDesc.45aa5ec6" xml:space="preserve">
     <value>Prüft, ob jeder Eintrag der Beweissammlung noch seinem gespeicherten SHA-256 und seiner Größe entspricht.</value>
   </data>
@@ -1425,6 +1428,9 @@
   </data>
   <data name="CmdTitle.40bb50da" xml:space="preserve">
     <value>Nach unten</value>
+  </data>
+  <data name="CmdTitle.41afe4cc" xml:space="preserve">
+    <value>Kontextmenü</value>
   </data>
   <data name="CmdTitle.424dc8eb" xml:space="preserve">
     <value>Währungsrechner</value>

@@ -95,6 +95,19 @@ public class GitDriveServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AnUnsignedCommitHasNoSignatureInItsDetailAndKeepsItsName()
+    {
+        var service = CreateService();
+
+        var entries = await service.ListAsync(GitDriveUrl.Build(Root), CancellationToken.None);
+
+        var commit = entries.Single(e => e.DisplayName.EndsWith("first commit", StringComparison.Ordinal));
+        Assert.AreEqual("first commit", commit.DisplayName[(commit.DisplayName.IndexOf(' ') + 1)..]);
+        Assert.IsFalse(((VirtualDriveEntry)commit).Detail!.Contains("signed", StringComparison.Ordinal));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ABranchWithASlashIsOneFolderNotTwo()
     {
         var service = CreateService();

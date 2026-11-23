@@ -3,6 +3,7 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Model.ContentModels;
+using iTerminal.Core.Model.Git;
 using iTerminal.Core.Services.Processes;
 using System.Globalization;
 
@@ -139,19 +140,21 @@ public sealed class GitDriveService(IExternalProcessRunner processRunner, ISetti
             cancellationToken,
             "log",
             $"-{RecentCommitCount}",
-            "--format=%H%x09%h%x09%ct%x09%s");
+            "--format=%H%x09%h%x09%ct%x09%G?%x09%s");
         if (log.Success)
         {
             foreach (var line in Lines(log.StandardOutput))
             {
-                if (!TrySplit(line, 4, out var fields))
+                // %G? sits before the subject so that the subject, which may hold a tab, stays the last field.
+                if (!TrySplit(line, 5, out var fields))
                 {
                     continue;
                 }
 
-                entries.Add(new VirtualDriveEntry(GitDriveUrl.Build(repositoryRoot, fields[0]), $"{fields[1]} {fields[3]}", "Commit", FromUnix(fields[2]))
+                string signature = fields[3].Length == 1 ? GitSignature.Describe(fields[3][0]) : string.Empty;
+                entries.Add(new VirtualDriveEntry(GitDriveUrl.Build(repositoryRoot, fields[0]), $"{fields[1]} {fields[4]}", "Commit", FromUnix(fields[2]))
                 {
-                    Detail = $"Commit {fields[1]}: {fields[3]}",
+                    Detail = $"Commit {fields[1]}: {fields[4]}" + signature,
                 });
             }
         }

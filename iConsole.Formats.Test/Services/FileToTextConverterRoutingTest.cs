@@ -86,6 +86,18 @@ public class FileToTextConverterRoutingTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task Lnk_IsReadAsAShortcutNotAsText()
+    {
+        Directory.CreateDirectory(_folder);
+        byte[] link = new byte[0x4C];
+        BitConverter.GetBytes(0x4Cu).CopyTo(link, 0);
+        File.WriteAllBytes(Path.Combine(_folder, "tool.lnk"), link);
+
+        Assert.AreEqual("Windows shortcut (read, not run)", (await ReadAsync("tool.lnk"))[0]);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Log_IsPlainTextAsBefore()
     {
         Write("server.log", "2026-03-01 10:00:01 INFO Server started\n");
