@@ -141,4 +141,37 @@ public class MimeMessageReaderTest
         CollectionAssert.Contains(lines, "[Attachment: report.pdf]");
         Assert.IsFalse(lines.Any(l => l.Contains("JVBER")), string.Join("\n", lines));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AuthenticationResults_AreShownAsTheReceiversRecordedChecks()
+    {
+        List<string> lines = Read("""
+            Authentication-Results: mx.example.org; spf=pass smtp.mailfrom=a@example.org;
+             dkim=pass header.d=example.org; dmarc=fail (p=reject) header.from=example.org
+            Authentication-Results: older.example.net; spf=softfail
+            From: Ann <ann@example.org>
+            Subject: Hello
+
+            Body
+            """);
+
+        CollectionAssert.Contains(lines, "Authentication-Results (as recorded by mx.example.org, not checked here): spf=pass, dkim=pass, dmarc=fail");
+        Assert.IsFalse(lines.Any(l => l.Contains("older.example.net")), "only the topmost header, the receiver's own, is read");
+        Assert.IsTrue(lines.IndexOf("Subject: Hello") < lines.FindIndex(l => l.StartsWith("Authentication-Results", StringComparison.Ordinal)));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void NoAuthenticationResultsHeader_AddsNoLine()
+    {
+        List<string> lines = Read("""
+            From: Ann <ann@example.org>
+            Subject: Hello
+
+            Body
+            """);
+
+        Assert.IsFalse(lines.Any(l => l.StartsWith("Authentication-Results", StringComparison.Ordinal)));
+    }
 }

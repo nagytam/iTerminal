@@ -243,7 +243,7 @@ public class GitClientDialog : SplitPaneDialog
         _commitsListBox = new ListBox<GitCommit>(
             new ListBoxModel<GitCommit>(_commitItems)
             {
-                TransformItem = (commit, ct) => new ListItem<GitCommit>(commit) { Value = $" {commit.ShortHash} {commit.Subject}", IsEnabled = true },
+                TransformItem = (commit, ct) => new ListItem<GitCommit>(commit) { Value = $" {commit.ShortHash} {GitSignature.Marker(commit.Signature)}{commit.Subject}", IsEnabled = true },
             },
             themeService);
         _stashesListBox = new ListBox<GitStash>(

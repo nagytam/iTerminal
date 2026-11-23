@@ -33,6 +33,7 @@ public static class MimeMessageReader
                 cc: message.Header("cc"),
                 date: message.Header("date"),
                 subject: message.Header("subject"),
+                authentication: AuthenticationResultsReader.FormatLine(message.Header("authentication-results")),
                 plainText: parts.PlainText,
                 html: parts.Html,
                 attachments: parts.Attachments);
@@ -297,7 +298,8 @@ internal static class MessageLines
         string? subject,
         string? plainText,
         string? html,
-        IReadOnlyList<string> attachments)
+        IReadOnlyList<string> attachments,
+        string? authentication = null)
     {
         List<string> lines = [];
         AddField(lines, "From", from);
@@ -305,6 +307,11 @@ internal static class MessageLines
         AddField(lines, "Cc", cc);
         AddField(lines, "Date", date);
         AddField(lines, "Subject", subject);
+        if (authentication is not null)
+        {
+            lines.Add(authentication);
+        }
+
         if (lines.Count > 0)
         {
             lines.Add(string.Empty);

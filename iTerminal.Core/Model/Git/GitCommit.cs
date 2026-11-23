@@ -1,4 +1,4 @@
 namespace iTerminal.Core.Model.Git;
 
-/// <summary>A single entry from <c>git log</c>.</summary>
-public sealed record GitCommit(string ShortHash, string Subject, string Author, string RelativeDate);
+/// <summary>One commit of the log. <paramref name="Signature"/> is the letter of git's <c>%G?</c> (see <see cref="GitSignature"/>).</summary>
+public sealed record GitCommit(string ShortHash, string Subject, string Author, string RelativeDate, char Signature = GitSignature.None);
