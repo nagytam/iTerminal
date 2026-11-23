@@ -222,6 +222,9 @@ public class DirectoryCompletionModelTest
 
         Assert.AreEqual(0, Match(model, @"C:\slow\").Count, "the first update gives up");
         Assert.AreEqual(0, Match(model, @"C:\slow\l").Count, "and so does the next while it is still running");
+        // The listing runs on the thread pool, so it may not have entered the lister yet: wait until it has, and only then
+        // count. A second start that is still queued is caught by the count at the end, once everything has finished.
+        SpinWait.SpinUntil(() => lister.Listed.Count > 0, TimeSpan.FromSeconds(20));
         Assert.AreEqual(1, lister.Listed.Count, "the running listing was waited on, not started again");
 
         release.Set();
