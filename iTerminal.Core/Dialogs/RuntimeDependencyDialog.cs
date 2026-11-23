@@ -50,8 +50,11 @@ public class RuntimeDependencyDialog : Dialog
         Title = iConsole.Localization.UiText.Get("Dialog.RuntimeDependencies", "Runtime dependencies");
     }
 
-    /// <summary>Whether anything is left to install or update.</summary>
-    public bool HasWork => _service.Statuses.Any(status => status.State != RuntimeDependencyState.Installed);
+    /// <summary>
+    /// Whether anything is left to install or update. False until the first build has landed, so the Tools
+    /// command that reads it never waits for the probe (which starts programs and walks the PATH).
+    /// </summary>
+    public bool HasWork => _service.IsReady && _service.Statuses.Any(status => status.State != RuntimeDependencyState.Installed);
 
     /// <summary>The dependencies that have something to install or update, in list order. The dialog lists only these.</summary>
     private List<RuntimeDependencyStatus> Actionable() =>

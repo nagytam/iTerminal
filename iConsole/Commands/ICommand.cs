@@ -15,6 +15,12 @@ public interface ICommand
     Key? ActiveKey { get; }
     ICommandLogger CommandLogger { get; set; }
 
+    /// <summary>
+    /// Whether the command can run now. It is called on the render thread each time a button bound to the
+    /// command is drawn, and on the input thread before every run, so answer from memory: no I/O, no process
+    /// and no wait. A check that needs the disk or a server belongs in <see cref="RunAsync"/>, or in a model
+    /// that already holds the answer (a listing).
+    /// </summary>
     bool CanExecute();
     Task<bool> HandleKeyEventAsync(KeyEvent keyEvent);
     Task<bool> RunAsync(object? args);

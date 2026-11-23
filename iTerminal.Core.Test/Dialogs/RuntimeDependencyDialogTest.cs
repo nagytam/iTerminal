@@ -12,6 +12,7 @@ public class RuntimeDependencyDialogTest
     private static Mock<IRuntimeDependencyService> NewService(RuntimeDependencyState state, bool busy = false)
     {
         var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.IsReady).Returns(true);
         RuntimeDependencyStatus status = state switch
         {
             RuntimeDependencyState.Missing => new RuntimeDependencyStatus("playwright", "Playwright", "Chromium for the quote indicator", null, "1.63.0", state),
@@ -159,6 +160,7 @@ public class RuntimeDependencyDialogTest
     private static Mock<IRuntimeDependencyService> NewTwoMissing()
     {
         var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.IsReady).Returns(true);
         service.SetupGet(s => s.Statuses).Returns(
         [
             new RuntimeDependencyStatus("playwright", "Playwright", "Chromium", null, "1.63.0", RuntimeDependencyState.Missing),
@@ -360,6 +362,7 @@ public class RuntimeDependencyDialogTest
     public async Task AnUpToDateComponentIsNeverOnTheDialogOrTheSummary()
     {
         var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.IsReady).Returns(true);
         service.SetupGet(s => s.Statuses).Returns(
         [
             new RuntimeDependencyStatus("playwright", "Playwright", "Chromium", "1.63.0", null, RuntimeDependencyState.Installed),
@@ -387,6 +390,7 @@ public class RuntimeDependencyDialogTest
     public async Task OnlyTheComponentsThatNeedWorkGetAPage()
     {
         var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.IsReady).Returns(true);
         service.SetupGet(s => s.Statuses).Returns(
         [
             new RuntimeDependencyStatus("playwright", "Playwright", "Chromium", "1.63.0", null, RuntimeDependencyState.Installed),
@@ -411,6 +415,7 @@ public class RuntimeDependencyDialogTest
     public async Task WithNothingToCheckTheFirstPageStillSaysSo()
     {
         var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.IsReady).Returns(true);
         service.SetupGet(s => s.Statuses).Returns([]);
         service.SetupGet(s => s.Log).Returns(new List<string>());
         service.SetupGet(s => s.IsBusy).Returns(false);

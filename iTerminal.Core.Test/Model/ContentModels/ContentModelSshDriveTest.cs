@@ -1,4 +1,4 @@
-using iConsole.Data;
+﻿using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Model.ContentModels;
@@ -154,5 +154,33 @@ public class ContentModelSshDriveTest
         model.SetUrl(new Url("ssh://user@host:/"));
 
         sshFileSystemService.Verify(s => s.Connect("host", "user", null, "/home/user/.ssh/id_ed25519"), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FileIsShown_AnswersFromTheListingWithoutAskingTheServer()
+    {
+        var sshFileSystemService = new Mock<ISshFileSystemService>();
+        var model = CreateModel(sshFileSystemService);
+        var fileUrl = new Url("ssh://user@host:/a.txt");
+        model.Entries.Add(new FileSystemEntry(fileUrl));
+
+        Assert.IsTrue(ContentModelListing.FileIsShown(model, fileUrl));
+        Assert.IsFalse(ContentModelListing.FileIsShown(model, new Url("ssh://user@host:/missing.txt")));
+        sshFileSystemService.Verify(s => s.ExistsFile(It.IsAny<Url>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void IsShown_ForAListedFolder_AnswersFromTheListingWithoutAskingTheServer()
+    {
+        var sshFileSystemService = new Mock<ISshFileSystemService>();
+        var model = CreateModel(sshFileSystemService);
+        var folderUrl = new Url("ssh://user@host:/dir/");
+        model.Entries.Add(new FileSystemEntry(folderUrl));
+
+        Assert.IsTrue(ContentModelListing.IsShown(model, folderUrl));
+        Assert.IsFalse(ContentModelListing.IsShown(model, new Url("ssh://user@host:/other/")));
+        sshFileSystemService.Verify(s => s.ExistsFolder(It.IsAny<Url>()), Times.Never);
     }
 }

@@ -1,4 +1,4 @@
-using iTerminal.Core.Commands;
+﻿using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.RuntimeDependencies;
 using Moq;
@@ -12,6 +12,7 @@ public class RuntimeDependencyDialogCommandTest
     private static RuntimeDependencyDialogCommand CommandFor(RuntimeDependencyState state)
     {
         var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.IsReady).Returns(true);
         service.SetupGet(s => s.Statuses).Returns(
         [
             new RuntimeDependencyStatus("playwright", "Playwright", "Chromium", state == RuntimeDependencyState.Installed ? "1.63.0" : null, "1.63.0", state),
@@ -19,6 +20,18 @@ public class RuntimeDependencyDialogCommandTest
         service.SetupGet(s => s.Log).Returns(new List<string>());
         service.SetupGet(s => s.IsBusy).Returns(false);
         return new RuntimeDependencyDialogCommand(new RuntimeDependencyDialog(service.Object, TestTheme()));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheCommandIsUnavailable_BeforeTheFirstBuildAndDoesNotWaitForIt()
+    {
+        var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.IsReady).Returns(false);
+        var command = new RuntimeDependencyDialogCommand(new RuntimeDependencyDialog(service.Object, TestTheme()));
+
+        Assert.IsFalse(command.CanExecute());
+        service.VerifyGet(s => s.Statuses, Times.Never);
     }
 
     [Timeout(60_000)]
