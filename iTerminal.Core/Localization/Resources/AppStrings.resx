@@ -7170,6 +7170,9 @@
   <data name="Menu.MarkbyPattern" xml:space="preserve">
     <value>Mark by Pattern</value>
   </data>
+  <data name="Menu.Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
   <data name="Menu.Move" xml:space="preserve">
     <value>Move</value>
   </data>

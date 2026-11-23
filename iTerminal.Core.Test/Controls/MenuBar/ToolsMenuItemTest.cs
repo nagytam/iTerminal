@@ -20,7 +20,7 @@ public class ToolsMenuItemTest
             .Select(m => m.Text.Split('\t')[0])
             .ToArray();
 
-        CollectionAssert.AreEqual(new[] { "Terminal", "Disk Manager", "Network Manager", "iPhone Browser", "Music Player", "Theme Manager", "Settings", "Task Manager", "Process Manager", "System Info" }, entries);
+        CollectionAssert.AreEqual(new[] { "Terminal", "Disk Manager", "Network Manager", "iPhone Browser", "Theme Manager", "Settings", "Task Manager", "Process Manager", "System Info", "Media" }, entries);
     }
 
     [Timeout(60_000)]

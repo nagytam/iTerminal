@@ -7028,6 +7028,9 @@
   <data name="Menu.MarkbyPattern" xml:space="preserve">
     <value>Nach Muster markieren</value>
   </data>
+  <data name="Menu.Media" xml:space="preserve">
+    <value>Medien</value>
+  </data>
   <data name="Menu.Move" xml:space="preserve">
     <value>Verschieben</value>
   </data>

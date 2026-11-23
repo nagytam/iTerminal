@@ -113,8 +113,8 @@ public static class WidgetsApplicationBuilderExtension
         AddToolsMenuEntry<iTerminal.Widgets.Dialogs.CurrencyConverter.CurrencyConverterDialog>(services, "office", dialog => new CurrencyConverterDialogCommand(dialog));
         AddToolsMenuEntry<WeatherDialog>(services, "office", dialog => new WeatherDialogCommand(dialog));
         AddToolsMenuEntry<iTerminal.Widgets.Dialogs.Encyclopedia.EncyclopediaDialog>(services, "office", dialog => new EncyclopediaDialogCommand(dialog));
-        AddToolsMenuEntry<iTerminal.Widgets.Dialogs.YouTube.YouTubeDialog>(services, "net", dialog => new YouTubeDialogCommand(dialog));
-        AddToolsMenuEntry<iTerminal.Widgets.Dialogs.Radio.OnlineRadioDialog>(services, "net", dialog => new OnlineRadioDialogCommand(dialog));
+        AddToolsMenuEntry<iTerminal.Widgets.Dialogs.YouTube.YouTubeDialog>(services, "media", dialog => new YouTubeDialogCommand(dialog));
+        AddToolsMenuEntry<iTerminal.Widgets.Dialogs.Radio.OnlineRadioDialog>(services, "media", dialog => new OnlineRadioDialogCommand(dialog));
 
         services.AddSingleton<IStatusBarHotKey>(provider => new WidgetHotKey(
             "Alt-F7-Stocks", 15, new StockBrowserDialogCommand(provider.GetRequiredService<StockBrowserDialog>())));

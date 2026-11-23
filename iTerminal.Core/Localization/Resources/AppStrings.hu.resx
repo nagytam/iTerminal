@@ -6964,6 +6964,9 @@
   <data name="Menu.MarkbyPattern" xml:space="preserve">
     <value>Jelölés mintával</value>
   </data>
+  <data name="Menu.Media" xml:space="preserve">
+    <value>Média</value>
+  </data>
   <data name="Menu.Move" xml:space="preserve">
     <value>Áthelyezés</value>
   </data>
