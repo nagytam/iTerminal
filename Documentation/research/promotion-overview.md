@@ -241,3 +241,20 @@ given below).
 - Linux Today: only with a published article URL; give a submitter name and email or skip.
 - It's FOSS News: open `https://itsfoss.com/contact-us-2` and use the form.
 - aloneguid/awesome-dotnet: find the list's current address, then open the issue; do not solicit likes.
+
+## Survey 5: 2026-11-23 (Facebook group "Old Computer Club")
+
+**Basis.** One web search. The group's rules could not be found or fetched (Facebook groups are not readable by the tool): **unverified**. Search snippets only showed that other retro groups vary from "self-promotion fine if not spam" (<https://lowendmac.com/groups/>) to outright bans. Latest release is v0.0.0.775 (2026-11-23). Nothing was posted.
+
+| # | Venue | Type | How to submit | Rule status | Content file | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 42 | Facebook group "Old Computer Club" | Social group, retro-computing hobbyists | Post in the group (needs a Facebook account and group membership) | Unverified: read the group's Rules tab; ask an admin if self-promotion is unclear | [old-computer-club-facebook.md](../Promotion/old-computer-club-facebook.md) | prepared; waiting for user (group rules check) |
+
+**Activity log, 2026-11-23.** Read the overview, the index, README, `LICENSE`, the six `Strings*.resx` files and the release assets. Searched the web once for the group's rules (nothing usable). No interface screenshots existed in the repository, so three were rendered from a Release build (see the content file). Wrote `Documentation/Promotion/old-computer-club-facebook.md` (English and Hungarian post, fact table, screenshot shot list) and indexed it. Nothing was committed.
+
+**Waiting for the user (Survey 5)**
+- Read the group's Rules tab; ask an admin if self-promotion is not clearly allowed.
+- Screenshots: six PNGs in `Documentation/Promotion/screenshots/` (pseudo-terminal renders of a Release build with demo data, not real terminal captures). Attach `two-panels-selection.png` and optionally `web-browser.png`, `music-player.png`, `splash-screen.png`, `f3-viewer.png`; do not post the startup prompt shot. No online radio shot: the dialog did not open in this build.
+- Post as yourself and stay in the thread.
+
+**Considered and skipped:** none besides the unreadable rules.

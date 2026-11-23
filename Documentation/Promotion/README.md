@@ -16,6 +16,7 @@ verification status, is in [promotion-overview.md](../research/promotion-overvie
 - [contributor-listings.md](contributor-listings.md): up-for-grabs.net project file and pull request text.
 - [linux-distribution-packaging.md](linux-distribution-packaging.md): how the tar.gz, deb and rpm can reach Debian, Ubuntu, Fedora, openSUSE, Arch, Alpine, Gentoo, NixOS, Flathub, Snap and others: reviewers, sponsors, rules, the .NET runtime question, and what the build must supply. No paste-ready text; it is a how-to.
 - [scoop-and-chocolatey.md](scoop-and-chocolatey.md): the Scoop `extras` request issue (rules verified), a note on Chocolatey (rules unverified, not drafted), and a pointer to the winget procedure in [../Distributions/winget.md](../Distributions/winget.md), which is already under way.
+- [old-computer-club-facebook.md](old-computer-club-facebook.md): short post (English and Hungarian), fact check and screenshot list for the Facebook group "Old Computer Club"; group rules unverified, screenshots rendered into `screenshots/` (see the content file for caveats).
 - [lemmy-news-forms-and-awesome-dotnet-issue.md](lemmy-news-forms-and-awesome-dotnet-issue.md): a post for Lemmy `commandline@lemmy.ml`, the Linux Today form entries, the corrected It's FOSS News route, and an issue for the aloneguid awesome-dotnet list (rules unverified).
 
 ## Before anything is sent
