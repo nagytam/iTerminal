@@ -6952,6 +6952,9 @@
   <data name="Menu.MarkbyPattern" xml:space="preserve">
     <value>Seleziona per modello</value>
   </data>
+  <data name="Menu.Media" xml:space="preserve">
+    <value>Multimedia</value>
+  </data>
   <data name="Menu.Move" xml:space="preserve">
     <value>Sposta</value>
   </data>
