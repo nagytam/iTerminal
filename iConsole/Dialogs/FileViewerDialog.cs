@@ -20,6 +20,7 @@ public class FileViewerDialog : Dialog
     public Url? Url { get; set; } = null;
     private readonly IContentModelService _contentModelService;
     private readonly IFileToTextConverterService _fileToTextConverterService;
+    private readonly ILogFileHistory? _logFileHistory;
     private readonly TextViewerControl _textViewerControl;
     private readonly ViewerStatusBar _statusBar;
     private readonly HexViewer _hexViewer;
@@ -217,11 +218,13 @@ public class FileViewerDialog : Dialog
         IFileToTextConverterService fileToTextConverterService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        ILogFileHistory? logFileHistory = null)
         : base(nameof(FileViewerDialog), themeService)
     {
         _contentModelService = contentModelService;
         _fileToTextConverterService = fileToTextConverterService;
+        _logFileHistory = logFileHistory;
         _textViewerControl = new TextViewerControl(false, themeService);
         _statusBar = new ViewerStatusBar(
             _textViewerControl.ScrollableModel,
@@ -238,10 +241,44 @@ public class FileViewerDialog : Dialog
         AddControl(_textViewerControl);
         AddControl(_hexViewer);
         AddControl(_statusBar);
+        AddCommand(new ViewerOlderLogCommand(this));
+        AddCommand(new ViewerNewerLogCommand(this));
     }
 
     /// <summary>True while the file is shown as a hex dump instead of text (F4 toggles).</summary>
     public bool IsHexMode => _hexMode;
+
+    /// <summary>True when the text shown is a local <c>.log</c> file: only such files enter the log history.</summary>
+    public bool IsShowingLog => !_hexMode && LocalPath is { } path && IsLogPath(path);
+
+    /// <summary>The log shown before this one in the history, or null. Only while a log is shown as text.</summary>
+    public Url? OlderLog => IsShowingLog && _logFileHistory is not null && Url is not null ? _logFileHistory.Older(Url) : null;
+
+    /// <summary>The log shown after this one in the history, or null. Only while a log is shown as text.</summary>
+    public Url? NewerLog => IsShowingLog && _logFileHistory is not null && Url is not null ? _logFileHistory.Newer(Url) : null;
+
+    private static bool IsLogPath(string path) => path.EndsWith(".log", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Shows another log from the history in place of the one on screen. Follow and the scroll position start again, as
+    /// they do for a file opened fresh; the switch is not recorded in the history, so the order of the history stays.
+    /// </summary>
+    public async Task ShowLogAsync(Url url)
+    {
+        CancelDisassembly();
+        CancelPdfSignatures();
+        _following = false;
+        _followBytes = -1;
+        Url = url;
+        await LoadFileAsync(recordInHistory: false);
+        iConsole.Model.IScrollableModel scrollable = _textViewerControl.ScrollableModel;
+        scrollable.CursorPosition.X = 0;
+        scrollable.CursorPosition.Y = 0;
+        scrollable.ScrollPosition.X = 0;
+        scrollable.ScrollPosition.Y = 0;
+        scrollable.Update();
+        StateHasChanged();
+    }
 
     /// <summary>The disassembly that is being built in the background, or null; exposed so tests can wait for it.</summary>
     public Task? DisassemblyTask => _disassembly;
@@ -446,9 +483,22 @@ public class FileViewerDialog : Dialog
 
     public override async Task OnInitializeAsync()
     {
-        var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
+        await LoadFileAsync(recordInHistory: true);
+        await base.OnInitializeAsync();
+    }
+
+    /// <summary>Reads <see cref="Url"/> into the text view and starts its background work; a log is recorded in the history when asked to.</summary>
+    private async Task LoadFileAsync(bool recordInHistory)
+    {
+        // Inside a dialog the focused model is null, so a log switched to from the keys needs the panel the dialog was opened from.
+        var fileSystem = (_contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel()) as IFileSystem;
         // The length is taken before the text is read: anything appended after this is followed, so nothing is missed.
         _followBytes = LocalPath is { } path && File.Exists(path) ? new FileInfo(path).Length : -1;
+        if (recordInHistory && IsShowingLog && Url is not null)
+        {
+            _logFileHistory?.Record(Url);
+        }
+
         // A debug symbol file (.pdb) is summarised here only; the preview and the editor read plain text.
         if (Url is not null && _fileToTextConverterService.HasPdbSummary(Url) && fileSystem is not null)
         {
@@ -462,8 +512,6 @@ public class FileViewerDialog : Dialog
         _textViewerControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
         StartDisassembly(fileSystem);
         StartPdfSignatures(fileSystem);
-
-        await base.OnInitializeAsync();
     }
 
     /// <summary>Starts checking the embedded signatures of a PDF in the background; the text is already on screen.</summary>

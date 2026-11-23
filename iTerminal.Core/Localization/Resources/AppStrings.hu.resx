@@ -1198,6 +1198,9 @@
   <data name="CmdDesc.e0da83ca" xml:space="preserve">
     <value>A színtéma kiválasztása.</value>
   </data>
+  <data name="CmdDesc.e33a8df1" xml:space="preserve">
+    <value>A megtekintő naplóelőzményeiben ez előtt megjelenített napló megjelenítése.</value>
+  </data>
   <data name="CmdDesc.e4ae0c07" xml:space="preserve">
     <value>A két panel mappáinak összehasonlítása és a különbségek átmásolása, miután megmutattuk, mi változna.</value>
   </data>
@@ -1248,6 +1251,9 @@
   </data>
   <data name="CmdDesc.f388f305" xml:space="preserve">
     <value>A kijelölt fájl MD5, SHA-1, SHA-256 és SHA-512 értékének kiszámítása és összehasonlítása egy ellenőrző összeggel.</value>
+  </data>
+  <data name="CmdDesc.f4742b58" xml:space="preserve">
+    <value>A megtekintő naplóelőzményeiben ez után megjelenített napló megjelenítése.</value>
   </data>
   <data name="CmdDesc.f51143b0" xml:space="preserve">
     <value>A panel összes sorának jelölését megszünteti.</value>
@@ -1549,6 +1555,9 @@
   <data name="CmdTitle.6ad50765" xml:space="preserve">
     <value>Hangerő csökkentése</value>
   </data>
+  <data name="CmdTitle.6c8bdcc8" xml:space="preserve">
+    <value>Újabb napló</value>
+  </data>
   <data name="CmdTitle.6c94221e" xml:space="preserve">
     <value>Balra</value>
   </data>
@@ -1608,6 +1617,9 @@
   </data>
   <data name="CmdTitle.7d9eb7ac" xml:space="preserve">
     <value>Bezárás</value>
+  </data>
+  <data name="CmdTitle.7f088537" xml:space="preserve">
+    <value>Régebbi napló</value>
   </data>
   <data name="CmdTitle.81233d97" xml:space="preserve">
     <value>Hangerő növelése</value>
