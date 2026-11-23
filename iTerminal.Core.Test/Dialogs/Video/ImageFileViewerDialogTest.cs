@@ -37,17 +37,17 @@ public class ImageFileViewerDialogTest
     /// <summary>Draws (which is what starts the load) and waits for the picture.</summary>
     private static async Task<string> DrawUntilLoadedAsync(ImageFileViewerDialog dialog)
     {
-        var buffer = new iConsole.Test.Core.MockBuffer(new Size(120, 40));
+        var buffer = new iConsole.Test.Core.ScreenBuffer(120, 40);
         try
         {
             dialog.Draw(buffer);
             await dialog.LoadTask;
-            buffer = new iConsole.Test.Core.MockBuffer(new Size(120, 40));
+            buffer = new iConsole.Test.Core.ScreenBuffer(120, 40);
             dialog.Draw(buffer);
         }
         catch (Exception exception)
         {
-            // Diagnostics for an intermittent NullReferenceException seen only on the Windows CI runner: the exception
+            // Drawn on a ScreenBuffer, the buffer the testing rules ask for. Diagnostics for an intermittent NullReferenceException seen only on the Windows CI runner: the exception
             // with its full stack trace, and the state the dialog was in. Printed to the test output, then rethrown.
             Console.WriteLine("DIAG ImageFileViewerDialogTest: draw threw " + exception.GetType().FullName);
             Console.WriteLine("DIAG exception: " + exception);
@@ -58,7 +58,7 @@ public class ImageFileViewerDialogTest
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
             throw;
         }
-        return buffer.ContentAsString;
+        return string.Join(Environment.NewLine, buffer.Lines);
     }
 
     [Timeout(60_000)]

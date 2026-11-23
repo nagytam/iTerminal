@@ -72,14 +72,36 @@ public class Control : INotifyPropertyChanged, IControl
     /// </summary>
     public string? ToolTipText { get; set; }
     private bool _hasStateChanged = true;
-    public virtual bool HasStateChanged 
+    // The thread that is inside Draw right now (0 when none), and whether another thread invalidated the control meanwhile.
+    // Render clears the change flag after Draw, which would swallow that invalidation: the layout of a resize, set by the
+    // renderer thread while the control renders, was never painted. An invalidation from the drawing thread itself is still
+    // swallowed, as before, so a control that touches its own state in Draw does not repaint for ever.
+    // The lock makes "was it invalidated during the draw, and if not clear the flag" one step against the setter's "is a draw
+    // running, and if so note it", so an invalidation cannot slip in between the two.
+    private readonly Lock _drawGate = new();
+    private volatile int _drawingThreadId;
+    private volatile bool _invalidatedWhileDrawing;
+
+    public virtual bool HasStateChanged
     {
-        get 
-        { 
-            return _hasStateChanged; 
+        get
+        {
+            return _hasStateChanged;
         }
         set
         {
+            int drawingThread = _drawingThreadId;
+            if (value && drawingThread != 0 && drawingThread != Environment.CurrentManagedThreadId)
+            {
+                lock (_drawGate)
+                {
+                    if (_drawingThreadId != 0)
+                    {
+                        _invalidatedWhileDrawing = true;
+                    }
+                }
+            }
+
             if (_hasStateChanged != value)
             {
                 // TODO
@@ -330,15 +352,28 @@ public class Control : INotifyPropertyChanged, IControl
         }
         if (HasStateChanged)
         {
+            _invalidatedWhileDrawing = false;
+            _drawingThreadId = Environment.CurrentManagedThreadId;
             try
             {
                 Draw(buffer);
                 isIdle = false;
-                HasStateChanged = false;
+                lock (_drawGate)
+                {
+                    _drawingThreadId = 0;
+                    if (!_invalidatedWhileDrawing)
+                    {
+                        HasStateChanged = false;
+                    }
+                }
             }
             catch (Exception exception)
             {
                 Debug.WriteLine("Error rendering {Message}", exception.Message);
+            }
+            finally
+            {
+                _drawingThreadId = 0;
             }
         }
 

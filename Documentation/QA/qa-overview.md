@@ -1,6 +1,6 @@
 # QA overview
 
-This document is the running record of the QA agent (`.claude/agents/qa.md`). Each run appends a section. Solved issues (QA-1, QA-2, QA-14, QA-16) have been removed from the document, and so have QA-3, QA-19, QA-20, QA-21, QA-22, QA-23, QA-25 and QA-26, fixed in #827. Issue IDs (`QA-n`) are unique across the whole document, and older sections are not edited. A later run records the new state of an earlier issue in its own "Status of earlier issues" list.
+This document is the running record of the QA agent (`.claude/agents/qa.md`). Each run appends a section. Solved issues (QA-1, QA-2, QA-14, QA-16) have been removed from the document, and so have QA-3, QA-19, QA-20, QA-21, QA-22, QA-23, QA-25 and QA-26, fixed in #827, QA-18, fixed in #826, QA-5 (the identity probe is gated; 30 of 30 runs of `SystemSamplerTest` pass), QA-6 (fixed in #785: the test waits for the exported file) and QA-8 (the two untested jobs, `ToDoReminderJob` and `CalendarIdentityJob`, have tests; the other files it named are covered by differently named tests, so the name-pairing count is not a measure of gaps) (the voice recorder has no hot key; `VoiceRecorderDialogCommand.Key` is null). Issue IDs (`QA-n`) are unique across the whole document, and older sections are not edited. A later run records the new state of an earlier issue in its own "Status of earlier issues" list.
 
 ## Q1 2026-11-21: all (pipeline, coverage, code review)
 
@@ -79,48 +79,21 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Area**: `iTerminal.Core.Test/Dialogs/Video/ImageFileViewerDialogTest.cs`
    - **Evidence**: runs 44915127385 and 44925547090, both Windows, `NullReferenceException` at `DrawUntilLoadedAsync` (`ImageFileViewerDialogTest.cs:41`). The test already carries diagnostic output ("intermittent NullReferenceException seen only on the Windows CI runner", lines 41-52 region); the second failure came after commit `df1be23b` (14:35, "Fix two Windows-only test failures"), so the fix did not stick. The full exception text is in the log of job 136911314693. The test draws on a `MockBuffer`, which the testing rules say to avoid in favour of `ScreenBuffer`.
    - **Impact**: a random red Windows run; the cause may be a real race in the dialog (`dialog.Picture` or `Parent` read before the load ends).
-   - **Suggested fix**: read the stack in the job log, fix the null source, and switch the test to `ScreenBuffer`.
+   - **Update (Q4)**: the test now draws on a `ScreenBuffer`, and keeps its diagnostic output. The cause is **not proven**: the CI log of job 136911314693 has expired, and the dialog code read in this run has no null source of its own (`PictureFolder.PicturesBeside` never returns null). A `MockBuffer` is the only thing the failing runs had that other tests do not. Open until the Windows runner has stayed green; the diagnostics print the stack if it recurs.
+   - **Suggested fix**: if it recurs, read the stack from the diagnostic output and fix the null source.
    - **Test that would catch it**: the same test, run in a loop.
 
-2. **QA-5 `Identity_IsReadOnce_UntilItAnswers` asserts on a timing result**
-   - **Severity**: Medium
-   - **Category**: flaky-test
-   - **Area**: `iTerminal.Core.Test/Services/SystemInfo/SystemSamplerTest.cs`
-   - **Evidence**: failed in runs 44897329529 and 44900935517 (Windows): "the first pass does not wait for identity, actual: false" at `Assert.IsTrue(first.CpuModel.State != ProbeState.Ok)` (`SystemSamplerTest.cs:167-181`). The assertion holds only if the identity probe has not answered by the time of the first snapshot.
-   - **Impact**: random red Windows runs.
-   - **Suggested fix**: hold the fake identity probe with a gate until after the first snapshot.
-   - **Test that would catch it**: the same test, after the gate.
-
-3. **QA-6 `F2InTheCsvViewerAsksForAFileNameAndWritesTheRowsOnScreen` wrote an empty file**
-   - **Severity**: Medium
-   - **Category**: flaky-test
-   - **Area**: `iTerminal.Test/EditorViewerAndPermissionsTest.cs:152`, CSV viewer export
-   - **Evidence**: run 44882901966 (Linux, 08:01): "expected: `tûrõ,név\r\nalma,3\r\n`, actual: `` (length 0)" when reading the target file; run 44905768469 (Windows, 12:49) failed the same test. The test reads the file right after Enter, so the write may not have finished (a missing wait) or the export may report success before it writes.
-   - **Impact**: either a flaky test or a user who presses Enter and gets an empty export.
-   - **Suggested fix**: wait for the "saved" footer text before reading the file; if the file is still empty after that, the export has a defect.
-   - **Test that would catch it**: the same test with the wait.
-   - **unverified** as to the cause.
-
-4. **QA-7 Windows end-to-end tests time out singly under load**
+2. **QA-7 Windows end-to-end tests time out singly under load**
    - **Severity**: Medium
    - **Category**: flaky-test
    - **Area**: `iTerminal.Test`
    - **Evidence**: `CtrlShiftDShowsTheFocusedFolderInTheOtherPanel` (44936425002, 30 s), `ShrinkingTheTerminalLeavesNothingOffScreen` (44924437491, 16 s), `CtrlShiftF8_AnyOtherKeyAfterTheFirstEnter_WithdrawsIt` ("Timed out waiting for 'Enter:continue'", 44942013183, `iTerminal.Test/SecureWipeAndSignaturesTest.cs:53`). Each failed once and passed on the next run. The Windows end-to-end step takes 9 to 10 min against 3.5 to 4.5 min on Linux, and the step limit is 20 min (`.github/workflows/build.yml`, step "Tests (including end-to-end suite)").
-   - **Update (Q3)**: `CtrlShiftF8_AnyOtherKeyAfterTheFirstEnter_WithdrawsIt` was not a load timeout but a real race in `SecureWipeDialog`: `UpdateLines` ran on both the key thread and the idle thread, so the idle thread could store stale "armed" lines after a key had withdrawn the arming (the failure screen in job 136961068636 shows the Choosing footer over the Armed body). Fixed by serializing `UpdateLines` and reading `Phase` once. `CtrlShiftDShowsTheFocusedFolderInTheOtherPanel` (job 136951812852) was also a real defect, not load: the right panel showed the left folder's path with only the `..` row. `ContentModelFileSystem.Refresh(forceRefresh: true)`, called by the file-watcher debounce, cancelled every refresh task for the URL, whichever panel owned it. With both panels on one folder, the left panel's watcher cancelled the right panel's listing, and nothing started it again. Fixed by cancelling only the tasks of the panel's own name; `AForcedRefresh_DoesNotCancelTheOtherPanelsListingOfTheSameFolder` fails without the fix. `ShrinkingTheTerminalLeavesNothingOffScreen` (job 136907314107, a test of the sample app in `iConsole.Test`, 60x12 screen with the hint row never drawn) is not analysed and stays open.
+   - **Update (Q3)**: `CtrlShiftF8_AnyOtherKeyAfterTheFirstEnter_WithdrawsIt` was not a load timeout but a real race in `SecureWipeDialog`: `UpdateLines` ran on both the key thread and the idle thread, so the idle thread could store stale "armed" lines after a key had withdrawn the arming (the failure screen in job 136961068636 shows the Choosing footer over the Armed body). Fixed by serializing `UpdateLines` and reading `Phase` once. `CtrlShiftDShowsTheFocusedFolderInTheOtherPanel` (job 136951812852) was also a real defect, not load: the right panel showed the left folder's path with only the `..` row. `ContentModelFileSystem.Refresh(forceRefresh: true)`, called by the file-watcher debounce, cancelled every refresh task for the URL, whichever panel owned it. With both panels on one folder, the left panel's watcher cancelled the right panel's listing, and nothing started it again. Fixed by cancelling only the tasks of the panel's own name; `AForcedRefresh_DoesNotCancelTheOtherPanelsListingOfTheSameFolder` fails without the fix. `ShrinkingTheTerminalLeavesNothingOffScreen` (job 136907314107, a test of the sample app in `iConsole.Test`, 60x12 screen with the hint row never drawn) was not reproduced in about 100 local runs, including 8 in parallel. The render code has one lost-update race that fits it: `Control.Render` cleared `HasStateChanged` after `Draw`, so a layout set by the renderer thread (a resize) while the control drew was never painted. `Control.Render` now keeps the flag when another thread invalidated the control during `Draw` (`ControlTest.AnInvalidationFromAnotherThreadDuringDraw_IsKeptForTheNextFrame` fails without it). This is a fix by reasoning, not a verified one; `ScrollView.Render` has the same pattern and is unchanged. Open until a run on the Windows runner stays green.
    - **Impact**: one random red Windows run per few merges; the Windows suite is 2 to 3 times slower than the Linux one.
    - **Suggested fix**: profile the Windows suite (the `profiler` agent) before raising any timeout.
    - **Test that would catch it**: none; these tests are the detectors.
 
-5. **QA-8 153 `iTerminal.Core` files have no test that names them**
-   - **Severity**: Medium
-   - **Category**: test-gap
-   - **Area**: `iTerminal.Core/Commands` (67 files), `Services` (42), `Dialogs` (13), `Model` (11), `Tasks` (5), `Jobs` (3)
-   - **Evidence**: pairing script output (see How to reproduce); `grep -rl` for `RecycleBinStores`, `FolderCopyPipeline`, `ContentModelFolderTransferTask`, `EvidenceCommands`, `SevenZipStreamWriter`, `CalendarIdentityJob`, `ToDoReminderJob`, `ChessEngine` finds no test file. These act on files or time: the recycle bin stores (`Services/Recycle/RecycleBinStores.cs`, 452 lines), the folder copy pipeline (`Tasks/FolderCopyPipeline.cs`, `Tasks/ContentModelFolderTransferTask.cs`), the evidence commands (558 lines), the Google Drive and OneDrive services (531 and 447 lines). The overall rate is 82.5% lines, so some are covered through other types; the per-file figure was not read.
-   - **Impact**: a regression in a destructive path (recycle, copy, wipe) is found only if an end-to-end scenario happens to touch it.
-   - **Suggested fix**: first read the Cobertura rate for the files above and add a unit test for the ones under 50% (recycle bin stores and the folder copy pipeline first).
-   - **Test that would catch it**: none; add one per file.
-
-6. **QA-9 `iConsole.Media.Audio` is 31.2% covered and its sinks have no tests**
+3. **QA-9 `iConsole.Media.Audio` is 31.2% covered and its sinks have no tests**
    - **Severity**: Medium
    - **Category**: test-gap
    - **Area**: `iConsole.Media.Audio/Sinks`
@@ -129,7 +102,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
    - **Suggested fix**: add sink tests against a fake process runner (the `AplayAudioOutputBackendTest` already does this for the backend) and un-skip the tests that need only a decoder.
    - **Test that would catch it**: none.
 
-7. **QA-10 605 of 627 BDD scenarios are skipped**
+4. **QA-10 605 of 627 BDD scenarios are skipped**
     - **Severity**: Medium
     - **Category**: test-gap
     - **Area**: `iTerminal.Specifications.Test`
@@ -138,7 +111,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
     - **Suggested fix**: bind the steps for one feature folder per improvement, starting with `Files` and `Archives`.
     - **Test that would catch it**: the scenarios themselves.
 
-8. **QA-11 `ReleaseArchive` silently skips archive entries that contain a colon, and has no test**
+5. **QA-11 `ReleaseArchive` silently skips archive entries that contain a colon, and has no test**
     - **Severity**: Medium
     - **Category**: defect
     - **Area**: `iTerminal.Core/Services/RuntimeDependencies/ReleaseArchive.cs`, `iTerminal.Core/Helper/ArchivePaths.cs`
@@ -148,7 +121,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
     - **Test that would catch it**: none; add a `ReleaseArchive` test with an entry `a:b.txt` and an entry `../x`.
     - **unverified** (read, not reproduced).
 
-9. **QA-12 Fix that did not stick: the picture dialog and the Tab completion**
+6. **QA-12 Fix that did not stick: the picture dialog and the Tab completion**
     - **Severity**: Low
     - **Category**: pipeline
     - **Area**: process
@@ -157,7 +130,7 @@ Test quality counts (grep): `[Ignore]` 6 (all in `iTerminal.Core.Test`; the reas
     - **Suggested fix**: none; track in the next run.
     - **Test that would catch it**: not applicable.
 
-10. **QA-13 No end-to-end scenario for the screen saver**
+7. **QA-13 No end-to-end scenario for the screen saver**
     - **Severity**: Low
     - **Category**: test-gap
     - **Area**: `iTerminal.Test`, `iTerminal.Core/ScreenSavers`
@@ -438,22 +411,7 @@ Suppressions: 7 `#pragma warning disable` (all in test code; 5 carry a reason, 2
 
 ### Quality issues
 
-1. **QA-18 Ctrl+Shift+X is bound to the voice recorder and to the password manager**
-   - **Severity**: High
-   - **Category**: input
-   - **Area**: `iTerminal.Core/Commands/VoiceRecorderDialogCommand.cs`, `iTerminal.Core/Commands/PasswordManagerDialogCommand.cs`
-   - **Evidence**: `VoiceRecorderDialogCommand.cs:13-14` sets `Key` to `new Key(ConsoleKey.X, true, false, true)` (Ctrl+Shift+X). `PasswordManagerDialogCommand.cs:19` sets `AlternateKey` to the same chord and handles it at `:25-28`; its comment says this is "the chord that always reaches it" because Ctrl+X cuts in a file panel. `HotKeyCollisionTest.cs:83` pins the password manager's alternate key to Ctrl+Shift+X, and the file's other tests exist because earlier collisions made a feature unreachable (design review finding 11, `Documentation/research/design-review-overview.md:729`). The test for the recorder (`VoiceRecorderDialogTest.cs:164`, `TheCommandIsCtrlShiftX`) asserts only its own key. `Documentation/architecture/dialogs.md:308` still says Ctrl+Shift+X is the password manager's, and `:739` gives it to the recorder. No end-to-end test presses Ctrl+Shift+X (`grep -rn ConsoleKey.X iTerminal.Test` finds nothing).
-   - **Impact**: one of the two dialogs does not open on its default chord, or the chord opens the wrong one; the footer and the command palette show a key that does something else. Which command wins depends on the order the key router offers the commands, which was not traced.
-   - **Suggested fix**: give the recorder a free chord (not Alt+letter, not Ctrl+M) and add a collision test next to `AddEvidenceAndThePasswordManagerHaveDifferentChords`; fix the sentence in `dialogs.md`.
-   - **Test that would catch it**: none; a `HotKeyCollisionTest` case comparing every command's `Key` and `AlternateKey` over the container (a generic duplicate-chord test would have caught finding 11 as well), plus a `DialogsTest` scenario that presses the recorder's chord.
-   - **unverified** as to which command wins; the duplicate itself was read in both files.
-
-
-
-
-
-
-2. **QA-24 Median run time of "Build and test" grew by a third**
+1. **QA-24 Median run time of "Build and test" grew by a third**
    - **Severity**: Low
    - **Category**: pipeline
    - **Area**: `.github/workflows` (Build and test)
@@ -464,7 +422,7 @@ Suppressions: 7 `#pragma warning disable` (all in test code; 5 carry a reason, 2
 
 
 
-3. **QA-27 Two suppressions without a reason, and obsolete `DataTestMethod` use**
+2. **QA-27 Two suppressions without a reason, and obsolete `DataTestMethod` use**
     - **Severity**: Low
     - **Category**: test-quality
     - **Area**: `iTerminal.Core.Test`
@@ -492,16 +450,13 @@ Suppressions: 7 `#pragma warning disable` (all in test code; 5 carry a reason, 2
 
 1. QA-18 (duplicate chord, one-line fix plus a collision test).
 2. QA-24 (re-check on the next run).
-3. Coverage: QA-8, QA-9, QA-10, QA-13 from Q1.
+3. Coverage: QA-9, QA-10, QA-13 from Q1.
 4. QA-11, QA-15, QA-17 from Q1/Q2, then QA-27.
 
 ### Status of earlier issues
 
-- **QA-4** (`Draw_LoadsThePictureAndShowsItAsAscii`): last failure run 44925547090; no failure in the 30 runs since. Open, watch.
-- **QA-5** (`Identity_IsReadOnce_UntilItAnswers`): not seen again, but its sibling in the same fixture failed in run 44981366585. The fixture is changed in #827 (identity read gated, probe budgets held); open until CI and later runs confirm it.
-- **QA-6** (CSV export empty file): no failure since 44905768469. Open, watch.
-- **QA-7**: `CtrlShiftF8_...` was fixed in #815; `CtrlShiftDShowsTheFocusedFolderInTheOtherPanel` was also fixed there (panel refresh cancelling the other panel's listing); `ShrinkingTheTerminalLeavesNothingOffScreen` not seen since 44924437491. The archive-listing timeout seen on Windows is fixed in #827. Partly fixed, open.
-- **QA-8** (untested `iTerminal.Core` files): name pairing now gives 173 (Q1: 153); coverage shows `RecycleBinStores` 80%, `ContentModelFolderTransferTask` 98% and `FolderCopyPipeline` 89%, so the original examples are covered. The remaining gaps (evidence and AI-tool error paths) are covered in #827. Open, narrowed.
+- **QA-4** (`Draw_LoadsThePictureAndShowsItAsAscii`): last failure run 44925547090; no failure in the 30 runs since. The test now uses a `ScreenBuffer` (Q4); the cause is not proven. Open, watch.
+- **QA-7**: `CtrlShiftF8_...` and `CtrlShiftDShowsTheFocusedFolderInTheOtherPanel` were real defects, fixed in #815 and #827; the archive-listing timeout is fixed in #827; `ShrinkingTheTerminalLeavesNothingOffScreen` has a render lost-update fix by reasoning (Q4), not reproduced. Open.
 - **QA-9** (audio coverage): 36.1% lines (Q1: 31.2%), 40 passed and 0 skipped on Linux; on Windows 19 of 40 are skipped. Open.
 - **QA-10** (605 of 627 BDD scenarios skipped): not re-measured.
 - **QA-11** (`ReleaseArchive` and a colon in an entry name): code unchanged (`ArchivePaths.cs:18` refuses `:` on every OS; `ReleaseArchive.cs:34` continues on null). The file is 95% covered, but no test with a colon entry was found by name. Open, unverified.

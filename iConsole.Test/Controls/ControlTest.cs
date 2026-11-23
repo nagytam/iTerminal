@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Display;
@@ -147,6 +148,64 @@ public class ControlTest
         hidden.IsVisible = true;
         root.Render(screen);
         Assert.IsTrue(screen.Contains("hidden"), "once shown it draws");
+    }
+
+    // A thread of its own: Task.Wait may run a queued task inline on the waiting thread, which would not be another thread.
+    private static void OnAnotherThread(Action action)
+    {
+        var thread = new Thread(() => action());
+        thread.Start();
+        thread.Join();
+    }
+
+    /// <summary>A control that runs a callback inside Draw, to change its own state while it is being drawn.</summary>
+    private sealed class DuringDrawControl(IThemeService themeService, Action<Control> duringDraw) : Control(themeService)
+    {
+        public override void Draw(IBuffer buffer) => duringDraw(this);
+    }
+
+    /// <summary>
+    /// The renderer thread lays the controls out on a resize while a control renders. Render cleared the change flag after
+    /// Draw, so that invalidation was lost and the new layout was never painted (QA-7).
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnInvalidationFromAnotherThreadDuringDraw_IsKeptForTheNextFrame()
+    {
+        var control = new DuringDrawControl(ThemeMock().Object, self => OnAnotherThread(() => self.HasStateChanged = true));
+        control.HasStateChanged = true;
+
+        control.Render(new ScreenBuffer(10, 2));
+
+        Assert.IsTrue(control.HasStateChanged, "the change made while it drew still has to be painted");
+    }
+
+    /// <summary>A control that touches its own state in Draw is not repainted for ever: that stays swallowed, as it always was.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnInvalidationFromTheDrawingThreadItself_IsStillSwallowed()
+    {
+        var control = new DuringDrawControl(ThemeMock().Object, self => self.HasStateChanged = true);
+        control.HasStateChanged = true;
+
+        control.Render(new ScreenBuffer(10, 2));
+
+        Assert.IsFalse(control.HasStateChanged);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnInvalidationBetweenFrames_IsNotMistakenForOneDuringDraw()
+    {
+        var control = new DuringDrawControl(ThemeMock().Object, _ => { });
+        control.HasStateChanged = true;
+        control.Render(new ScreenBuffer(10, 2));
+        Assert.IsFalse(control.HasStateChanged);
+
+        OnAnotherThread(() => control.HasStateChanged = true);
+        control.Render(new ScreenBuffer(10, 2));
+
+        Assert.IsFalse(control.HasStateChanged, "a flag set before the draw is cleared by it");
     }
 }
 
