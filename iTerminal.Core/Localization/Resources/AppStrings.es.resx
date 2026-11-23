@@ -6862,6 +6862,9 @@
   <data name="Menu.Compress" xml:space="preserve">
     <value>Comprimir</value>
   </data>
+  <data name="Menu.ContextMenu" xml:space="preserve">
+    <value>Menú contextual</value>
+  </data>
   <data name="Menu.Copy" xml:space="preserve">
     <value>Copiar</value>
   </data>

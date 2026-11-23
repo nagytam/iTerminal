@@ -1,14 +1,12 @@
 using iConsole.Localization;
 using iConsole.Commands;
+using iConsole.Controls;
 using iConsole.Interfaces;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services.FileAssociations;
 
 namespace iTerminal.Core.Controls.Contents;
-
-/// <summary>One row of the panel's right-click menu: what it says and what choosing it does.</summary>
-public sealed record ContextMenuItem(string Label, Func<Task> Run);
 
 /// <summary>
 /// What the right-click menu of a panel row offers, worked out from what the panel can already do —
@@ -99,10 +97,27 @@ public static class FileContextMenu
         // command can be in the list several times: one row each is enough.
         items = [.. items.DistinctBy(i => (i.Title, i.Key))];
 
-        var titleWidth = items.Max(i => i.Title.Length);
-        return [.. items.Select(i => new ContextMenuItem(
-            i.Key.Length == 0 ? i.Title : i.Title.PadRight(titleWidth + 2) + i.Key,
-            i.Run))];
+        return [.. items.Select(i => new ContextMenuItem(EscapeHotKey(i.Title))
+        {
+            Shortcut = i.Key,
+            Execute = () => RunContained(i.Run),
+        })];
+    }
+
+    /// <summary>A program or command name with an ampersand ("A&amp;B") must not be read as a hot key marker.</summary>
+    private static string EscapeHotKey(string title) => title.Replace("&", "&&", StringComparison.Ordinal);
+
+    /// <summary>A command contains its own failures; this only keeps a stray one off the input loop.</summary>
+    private static async Task RunContained(Func<Task> run)
+    {
+        try
+        {
+            await run();
+        }
+        catch
+        {
+            // Deliberately swallowed, as the menu always did.
+        }
     }
 
     /// <summary>

@@ -16,6 +16,7 @@ public static class KeyBindingText
         ["Del"] = ConsoleKey.Delete,
         ["Ins"] = ConsoleKey.Insert,
         ["Space"] = ConsoleKey.Spacebar,
+        ["Menu"] = ConsoleKey.Applications,
         ["PgUp"] = ConsoleKey.PageUp,
         ["PgDn"] = ConsoleKey.PageDown,
         ["Up"] = ConsoleKey.UpArrow,

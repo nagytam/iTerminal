@@ -77,7 +77,8 @@ public class FilePanelFactory(
     iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null,
     iConsole.Services.IPromptService? promptService = null,
     iConsole.Services.ITextClipboardService? textClipboard = null,
-    iConsole.Media.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
+    iConsole.Media.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null,
+    iConsole.Services.IPopoverService? popoverService = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -114,6 +115,7 @@ public class FilePanelFactory(
             promptService: promptService,
             textClipboard: textClipboard,
             microphoneCaptureFactory: microphoneCaptureFactory,
+            popoverService: popoverService,
             solutionViewerDialog: solutionViewerDialog,
             contentLenses: contentLenses,
             musicFileViewerDialog: musicFileViewerDialog,

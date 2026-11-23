@@ -90,6 +90,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iConsole.Services.IPromptService? _promptService { get; set; }
     private iConsole.Services.ITextClipboardService? _textClipboard { get; set; }
     private iConsole.Media.Speech.IMicrophoneCaptureFactory? _microphoneCaptureFactory { get; set; }
+    private IPopoverService? _popoverService { get; set; }
     private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
     private iTerminal.Core.Dialogs.Git.GitSyncDialog? _gitSyncDialog { get; set; }
     private readonly iConsole.Viewers.FileViewerRegistry? _fileViewers;
@@ -162,9 +163,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Services.ISettingsService? evidenceSettingsService = null,
         iConsole.Services.IPromptService? promptService = null,
         iConsole.Services.ITextClipboardService? textClipboard = null,
-        iConsole.Media.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null)
+        iConsole.Media.Speech.IMicrophoneCaptureFactory? microphoneCaptureFactory = null,
+        IPopoverService? popoverService = null)
         : base(themeService)
     {
+        _popoverService = popoverService;
         _evidenceNotebookService = evidenceNotebookService;
         _evidenceSettingsService = evidenceSettingsService;
         _promptService = promptService;
@@ -404,6 +407,12 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_propertiesDialog is not null)
         {
             AddCommand(new PropertiesDialogCommand(_propertiesDialog, ContentModelService));
+        }
+
+        if (_popoverService is not null)
+        {
+            // The Menu key: what the right mouse button does, for a keyboard.
+            AddCommand(new PanelContextMenuCommand(ContentModelService, this));
         }
         if (_checksumDialog is not null)
         {
@@ -1085,6 +1094,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     /// </summary>
     internal async Task ShowContextMenuAsync(Position position)
     {
+        if (_popoverService is null)
+        {
+            return;
+        }
+
         var items = FileContextMenu.Build(
             ContentModel,
             Commands.AsSnapshot(),
@@ -1095,41 +1109,47 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             return;
         }
 
-        Popup? popup = null;
-        var list = new PopupListView(ThemeService)
+        // Not this control's own ContextMenu: its entries depend on the row, and Shift+F10 is the user menu.
+        var menu = new iConsole.Controls.ContextMenu(_popoverService, ThemeService);
+        foreach (var item in items)
         {
-            Committed = index =>
-            {
-                popup?.Close();
-                _ = RunMenuItemAsync(items[index]);
-            },
-            Cancelled = () => popup?.Close(),
-        };
-        list.SetItems([.. items.Select(i => i.Label)]);
+            menu.Items.Add(item);
+        }
 
-        var width = items.Max(i => i.Label.Length) + 3;
-        popup = new Popup(ThemeService)
-        {
-            Placement = PopupPlacement.Manual,
-            Anchor = new Position(Math.Max(0, (int)position.X), Math.Max(0, (int)position.Y)),
-            HasBorder = true,
-            ViewSize = new Size(width + 2, items.Count + 2),
-        };
-        popup.SetContent(list);
-
-        await popup.ShowAsync(this);
+        await menu.OpenAtAsync(this, position);
     }
 
-    private static async Task RunMenuItemAsync(ContextMenuItem item)
+    /// <summary>
+    /// Opens the menu from the keyboard, at the row under the cursor — the Menu key, the palette and the Edit menu
+    /// come here. Does nothing without a row.
+    /// </summary>
+    internal Task ShowContextMenuAtCursorAsync() => ShowContextMenuAsync(CursorRowPoint());
+
+    /// <summary>
+    /// The screen cell just inside the cursor row's name, in the current layout: where a menu opened by a key
+    /// should appear, as a click on that row would have put it.
+    /// </summary>
+    internal Position CursorRowPoint()
     {
-        try
+        var model = ContentModel;
+        if (model is null)
         {
-            await item.Run();
+            return new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 1);
         }
-        catch
+
+        var columns = ScrollableModel.ColumnCountOf(model);
+        var cursor = (int)model.CursorPosition.Y;
+        var scroll = (int)model.ScrollPosition.Y;
+        if (columns <= 1)
         {
-            // A command contains its own failures; this only keeps a stray one off the input loop.
+            var row = Math.Max(0, cursor - scroll);
+            return new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 1 + row);
         }
+
+        var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
+        var cellWidth = Math.Max(1, innerWidth / columns);
+        var line = Math.Max(0, cursor / columns - scroll / columns);
+        return new Position(AbsolutePosition.X + 1 + cursor % columns * cellWidth, AbsolutePosition.Y + 1 + line);
     }
 
     /// <summary>Two clicks on one row within this long are a double-click.</summary>

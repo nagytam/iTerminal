@@ -16,6 +16,7 @@ public static class KeyChord
 {
     private static readonly Dictionary<string, (ConsoleKey Key, char Char)> NamedKeys = new(StringComparer.OrdinalIgnoreCase)
     {
+        ["Menu"] = (ConsoleKey.Applications, '\0'),
         ["Enter"] = (ConsoleKey.Enter, '\r'),
         ["Return"] = (ConsoleKey.Enter, '\r'),
         ["Esc"] = (ConsoleKey.Escape, '\u001b'),
