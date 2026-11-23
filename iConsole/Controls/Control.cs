@@ -76,6 +76,9 @@ public class Control : INotifyPropertyChanged, IControl
     // Render clears the change flag after Draw, which would swallow that invalidation: the layout of a resize, set by the
     // renderer thread while the control renders, was never painted. An invalidation from the drawing thread itself is still
     // swallowed, as before, so a control that touches its own state in Draw does not repaint for ever.
+    // The lock makes "was it invalidated during the draw, and if not clear the flag" one step against the setter's "is a draw
+    // running, and if so note it", so an invalidation cannot slip in between the two.
+    private readonly Lock _drawGate = new();
     private volatile int _drawingThreadId;
     private volatile bool _invalidatedWhileDrawing;
 
@@ -90,7 +93,13 @@ public class Control : INotifyPropertyChanged, IControl
             int drawingThread = _drawingThreadId;
             if (value && drawingThread != 0 && drawingThread != Environment.CurrentManagedThreadId)
             {
-                _invalidatedWhileDrawing = true;
+                lock (_drawGate)
+                {
+                    if (_drawingThreadId != 0)
+                    {
+                        _invalidatedWhileDrawing = true;
+                    }
+                }
             }
 
             if (_hasStateChanged != value)
@@ -349,10 +358,13 @@ public class Control : INotifyPropertyChanged, IControl
             {
                 Draw(buffer);
                 isIdle = false;
-                _drawingThreadId = 0;
-                if (!_invalidatedWhileDrawing)
+                lock (_drawGate)
                 {
-                    HasStateChanged = false;
+                    _drawingThreadId = 0;
+                    if (!_invalidatedWhileDrawing)
+                    {
+                        HasStateChanged = false;
+                    }
                 }
             }
             catch (Exception exception)

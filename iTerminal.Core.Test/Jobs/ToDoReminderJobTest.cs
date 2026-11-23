@@ -78,6 +78,8 @@ public class ToDoReminderJobTest
 
         // The job loops on the thread that starts it, as it does under the host, so it gets a thread of its own here.
         Task running = Task.Factory.StartNew(() => job.ExecuteAsync(cancellation.Token), TaskCreationOptions.LongRunning).Unwrap();
+        // Gives the job thread time to reach its hour-long wait, so the cancel has to release it (cancelling first would end the loop before it).
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
         await cancellation.CancelAsync();
 
         await running.WaitAsync(TimeSpan.FromSeconds(30));

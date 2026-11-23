@@ -46,15 +46,17 @@ public class CalendarIdentityJobTest
     [TestMethod]
     public async Task NothingIsWrittenWhenNoIdentityIsPending()
     {
+        // The first tick reads the list (the store loads it on first use), which shows that the job has checked at least once.
+        var checkedOnce = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         Mock<ISettingsService> settings = SettingsWith(null);
+        settings.Setup(s => s.Get(MeetingStore.SettingsKey)).Callback(() => checkedOnce.TrySetResult()).Returns((string?)null);
         var store = new MeetingStore(settings.Object);
         var job = new CalendarIdentityJob(store, Mock.Of<Serilog.ILogger>(), Tick);
         using var cancellation = new CancellationTokenSource();
 
         // The job loops on the thread that starts it, as it does under the host, so it gets a thread of its own here.
         Task running = Task.Factory.StartNew(() => job.ExecuteAsync(cancellation.Token), TaskCreationOptions.LongRunning).Unwrap();
-        // Several ticks go by; the job has nothing to save in any of them.
-        await Task.Delay(TimeSpan.FromMilliseconds(200));
+        await checkedOnce.Task.WaitAsync(Patience);
         await cancellation.CancelAsync();
         await running.WaitAsync(Patience);
 
@@ -103,6 +105,8 @@ public class CalendarIdentityJobTest
 
         // The job loops on the thread that starts it, as it does under the host, so it gets a thread of its own here.
         Task running = Task.Factory.StartNew(() => job.ExecuteAsync(cancellation.Token), TaskCreationOptions.LongRunning).Unwrap();
+        // Gives the job thread time to reach its hour-long wait, so the cancel has to release it (cancelling first would end the loop before it).
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
         await cancellation.CancelAsync();
 
         await running.WaitAsync(TimeSpan.FromSeconds(30));
