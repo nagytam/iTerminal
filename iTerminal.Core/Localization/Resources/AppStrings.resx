@@ -3032,6 +3032,9 @@
   <data name="DialogHint.DetectLanguage" xml:space="preserve">
     <value>Detect the language of the text</value>
   </data>
+  <data name="DialogHint.DiscardChanges" xml:space="preserve">
+    <value>Discard the changes</value>
+  </data>
   <data name="DialogHint.DiscardEntry" xml:space="preserve">
     <value>Discard the entry</value>
   </data>
@@ -3232,6 +3235,9 @@
   </data>
   <data name="DialogHint.KeepContact" xml:space="preserve">
     <value>Keep the contact</value>
+  </data>
+  <data name="DialogHint.KeepEditing" xml:space="preserve">
+    <value>Keep editing</value>
   </data>
   <data name="DialogHint.KeepEntry" xml:space="preserve">
     <value>Keep the entry</value>
@@ -8710,7 +8716,7 @@
     <value>The folder has control characters.</value>
   </data>
   <data name="Remote.HintForm" xml:space="preserve">
-    <value>Tab field  Space changes type/transport  Enter/Ctrl+S save  Esc:back</value>
+    <value>Tab field  Left/Right type  Enter/Ctrl+S save  Esc:back</value>
   </data>
   <data name="Remote.HintList" xml:space="preserve">
     <value>Enter connect  B browse files  N new  E edit  D delete  Esc:close</value>
@@ -8763,9 +8769,6 @@
   <data name="Remote.SessionFailed" xml:space="preserve">
     <value>The session did not start.</value>
   </data>
-  <data name="Remote.SpaceChanges" xml:space="preserve">
-    <value>  (Space changes)</value>
-  </data>
   <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
     <value>Only SSH, FTP and WebDAV connections can be browsed as a drive.</value>
   </data>
@@ -8774,6 +8777,9 @@
   </data>
   <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
     <value>Delete "{0}"? Press y to delete, anything else cancels.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDiscard" xml:space="preserve">
+    <value>Discard the changes? Press y to discard, anything else keeps editing.</value>
   </data>
   <data name="Remote.Status.Connecting" xml:space="preserve">
     <value>Connecting to {0}…</value>

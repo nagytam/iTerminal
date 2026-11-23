@@ -368,7 +368,10 @@ WebDAV** targets. Enter on an SSH or PowerShell entry lends the whole terminal t
 `IInteractiveShellService` — the same hand-over as Ctrl+O — so it is a real `ssh` or `Enter-PSSession` with
 its prompt, colours, full-screen programs and Ctrl+C; `exit` comes back to the manager. B opens an SSH
 connection in the active panel as the existing SFTP drive. N / E / D add, edit and delete (D asks y/n). On the
-form Space on the Type field cycles SSH, PowerShell, FTP, WebDAV (HTTP), WebDAV over HTTPS.
+form is a `FormPanel` of `TextBox`, `PasswordBox` and two `SegmentedControl`s, so the cursor, selection, copy and
+paste work in every field; Left/Right on the Type field choose SSH, PowerShell, FTP, WebDAV (HTTP) or WebDAV over
+HTTPS, and a field the type does not use is dimmed and skipped by Tab. Enter or Ctrl+S saves; Esc goes back at once,
+or asks y/n first when anything in the form changed. The form is attached to the dialog only while an entry is edited.
 
 - **FTP and WebDAV entries are drives, not shells.** Enter and B both open `ftp://user@host[:port]/folder` or
   `dav[s]://…` in the active panel (`RemoteConnection.DriveUrl`; the port is left off when it is the default). They

@@ -504,9 +504,9 @@ public class EditorViewerAndPermissionsTest
         await _app.PressAsync("n");
         await _app.TypeAsync("files");
         await _app.PressAsync("Tab");
-        await _app.PressAsync("Space");
-        await _app.PressAsync("Space");
-        await _app.WaitForTextAsync("FTP (FTPS when the server offers it)");
+        await _app.PressAsync("Right");
+        await _app.PressAsync("Right");
+        await _app.WaitForTextAsync("(default 21)");
         await _app.PressAsync("Tab");
         await _app.TypeAsync("ftp.example.com");
 

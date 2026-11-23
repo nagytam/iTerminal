@@ -2,6 +2,7 @@ using iConsole.Helper;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
+using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -32,20 +33,21 @@ public class RemoteConnectionManagerDialog : Dialog
         Edit,
     }
 
-    private enum FieldKind
-    {
-        Text,
-        Number,
-        Protocol,
-        Transport,
-        Secret,
-    }
+    /// <summary>The Type choices, in the order the segmented control shows them: WebDAV comes twice, over HTTP and over HTTPS.</summary>
+    private static readonly (RemoteProtocol Protocol, bool Secure, string Label)[] ProtocolChoices =
+    [
+        (RemoteProtocol.Ssh, false, "SSH"),
+        (RemoteProtocol.PowerShell, false, "PowerShell"),
+        (RemoteProtocol.Ftp, false, "FTP"),
+        (RemoteProtocol.WebDav, false, "WebDAV http"),
+        (RemoteProtocol.WebDav, true, "WebDAV https"),
+    ];
 
-    private sealed class Field(string label, FieldKind kind, string text = "")
+    /// <summary>A box that takes digits only, so a pasted "port 2200!" becomes 2200.</summary>
+    private sealed class PortBox(IBeepService beepService, IDateTimeProviderService dateTimeProviderService, IThemeService themeService)
+        : TextBox(beepService, dateTimeProviderService, themeService)
     {
-        public string Label { get; } = label;
-        public FieldKind Kind { get; } = kind;
-        public string Text { get; set; } = text;
+        protected override bool IsAllowedCharacter(char c) => char.IsAsciiDigit(c);
     }
 
     private const int DialogWidth = 84;
@@ -53,16 +55,7 @@ public class RemoteConnectionManagerDialog : Dialog
     private const int ListRows = 12;
     private const int MaxFieldLength = 300;
 
-    private const int NameField = 0;
-    private const int ProtocolField = 1;
-    private const int HostField = 2;
-    private const int PortField = 3;
-    private const int UserField = 4;
-    private const int KeyField = 5;
-    private const int TransportField = 6;
-    private const int NotesField = 7;
-    private const int PasswordField = 8;
-    private const int FolderField = 9;
+    private const int FormRows = 10;
 
     private readonly IRemoteConnectionService _connections;
     private readonly IInteractiveShellService _shellService;
@@ -75,12 +68,20 @@ public class RemoteConnectionManagerDialog : Dialog
     private string? _selectedId;
     private bool _confirmDelete;
 
-    private Field[] _fields = [];
-    private int _field;
-    private RemoteProtocol _editProtocol;
-    private PowerShellTransport _editTransport;
-    private bool _editSecure;
+    private readonly FormPanel _form;
+    private readonly TextBox _name;
+    private readonly SegmentedControl _type;
+    private readonly TextBox _host;
+    private readonly TextBox _port;
+    private readonly TextBox _user;
+    private readonly TextBox _keyFile;
+    private readonly SegmentedControl _transport;
+    private readonly TextBox _notes;
+    private readonly PasswordBox _password;
+    private readonly TextBox _folder;
     private RemoteConnection? _editing;
+    private string _baseline = string.Empty;
+    private bool _confirmDiscard;
 
     private string _status = string.Empty;
     private bool _statusIsError;
@@ -89,6 +90,8 @@ public class RemoteConnectionManagerDialog : Dialog
         IRemoteConnectionService connections,
         IInteractiveShellService shellService,
         IContentModelService contentModelService,
+        IBeepService beepService,
+        IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
         : base(nameof(RemoteConnectionManagerDialog), themeService)
     {
@@ -96,6 +99,34 @@ public class RemoteConnectionManagerDialog : Dialog
         _connections = connections;
         _shellService = shellService;
         _contentModelService = contentModelService;
+
+        // The edit form is built once, from the same controls every other form uses; it is attached to the dialog
+        // while an entry is being edited and taken off again for the list.
+        TextBox Box() => new(beepService, dateTimeProviderService, themeService) { MaxLength = MaxFieldLength };
+        _name = Box();
+        _type = new SegmentedControl(themeService) { Options = [.. ProtocolChoices.Select(c => c.Label)] };
+        _host = Box();
+        _port = new PortBox(beepService, dateTimeProviderService, themeService) { MaxLength = 5 };
+        _user = Box();
+        _keyFile = Box();
+        _transport = new SegmentedControl(themeService) { Options = ["WinRM (Windows)", "SSH (PowerShell 7)"] };
+        _notes = Box();
+        _password = new PasswordBox(beepService, dateTimeProviderService, themeService) { MaxLength = MaxFieldLength };
+        _folder = Box();
+        _type.SelectionChanged += (_, _) => UpdateFormFields();
+        _transport.SelectionChanged += (_, _) => UpdateFormFields();
+
+        _form = new FormPanel(themeService);
+        _form.AddField(UiText.Get("Remote.FieldName", "Name"), _name);
+        _form.AddField(UiText.Get("Remote.FieldType", "Type"), _type);
+        _form.AddField(UiText.Get("Remote.FieldHost", "Host"), _host);
+        _form.AddField(UiText.Get("Remote.FieldPort", "Port"), _port);
+        _form.AddField(UiText.Get("Remote.FieldUser", "User"), _user);
+        _form.AddField(UiText.Get("Remote.FieldKeyFile", "Key file"), _keyFile);
+        _form.AddField(UiText.Get("Remote.FieldTransport", "Transport"), _transport);
+        _form.AddField(UiText.Get("Remote.FieldNotes", "Notes"), _notes);
+        _form.AddField(UiText.Get("Remote.FieldPassword", "Password"), _password);
+        _form.AddField(UiText.Get("Remote.FieldFolder", "Folder"), _folder);
     }
 
     /// <summary>The session or panel navigation the last key started. Nothing waits on it; it exists so a test can.</summary>
@@ -105,7 +136,7 @@ public class RemoteConnectionManagerDialog : Dialog
     {
         lock (_sync)
         {
-            _mode = Mode.List;
+            LeaveEdit();
             _confirmDelete = false;
             Reload();
         }
@@ -120,15 +151,31 @@ public class RemoteConnectionManagerDialog : Dialog
             CenterInParent(new Size(DialogWidth, DialogHeight));
         }
 
+        LayoutForm();
         base.OnInitializeLayout();
+    }
+
+    /// <summary>The form sits under the heading row, inside the border, and leaves the two footer rows alone.</summary>
+    private void LayoutForm()
+    {
+        _form.Position = new Position(2, 3);
+        _form.ViewSize = new Size(Math.Max(1, ViewSize.Width - 4), FormRows);
     }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         if (_mode == Mode.Edit)
         {
+            if (_confirmDiscard)
+            {
+                yield return ("Y", UiText.Get("DialogHint.DiscardChanges", "Discard the changes"));
+                yield return ("Any other key", UiText.Get("DialogHint.KeepEditing", "Keep editing"));
+                yield break;
+            }
+
             yield return ("Ctrl+S / Enter", UiText.Get("DialogHint.SaveConnection", "Save the connection"));
-            yield return ("Tab / Up/Down", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+            yield return ("Tab / Shift+Tab", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+            yield return ("Left/Right", UiText.Get("Hint.ChoosePreviousNextSegment", "Choose the previous or next segment"));
             yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
             yield break;
         }
@@ -167,7 +214,13 @@ public class RemoteConnectionManagerDialog : Dialog
 
                     break;
                 case Mode.Edit:
-                    return HandleEditKey(keyEvent);
+                    // Enter, Ctrl+S and Esc are the dialog's; every other key goes to the field that has the focus.
+                    if (HandleEditKey(keyEvent))
+                    {
+                        return true;
+                    }
+
+                    break;
             }
         }
 
@@ -237,140 +290,102 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private bool HandleEditKey(KeyEvent keyEvent)
     {
-        if (keyEvent.ConsoleKey == ConsoleKey.Escape)
+        var plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
+        if (_confirmDiscard)
         {
-            _mode = Mode.List;
-            SetStatus(string.Empty, false);
-            StateHasChanged();
-            return true;
-        }
-
-        if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.S)
-        {
-            SaveEdit();
-            return true;
-        }
-
-        if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Control && !keyEvent.Alt)
-        {
-            SaveEdit();
-            return true;
-        }
-
-        return EditField(keyEvent);
-    }
-
-    /// <summary>Tab and the arrows move between fields; the field under the cursor takes the typing.</summary>
-    private bool EditField(KeyEvent keyEvent)
-    {
-        if (PasteHelper.IsDeleteWordKey(keyEvent) && _fields[_field].Kind is not (FieldKind.Protocol or FieldKind.Transport))
-        {
-            _fields[_field].Text = PasteHelper.DeleteLastWord(_fields[_field].Text);
-            StateHasChanged();
-            return true;
-        }
-
-        if (PasteHelper.IsPasteKey(keyEvent) && _fields[_field].Kind is not (FieldKind.Protocol or FieldKind.Transport))
-        {
-            Field target = _fields[_field];
-            PasteHelper.Paste(text =>
+            // Only y throws the edit away; any other key is the answer "no" and is not typed into a field.
+            _confirmDiscard = false;
+            if (plain && char.ToLowerInvariant(keyEvent.KeyChar) == 'y')
             {
-                string line = PasteHelper.SingleLine(text);
-                if (target.Kind == FieldKind.Number)
-                {
-                    line = new string([.. line.Where(char.IsAsciiDigit)]);
-                }
+                LeaveEdit();
+                SetStatus(string.Empty, false);
+            }
+            else
+            {
+                SetStatus(EditHint(), false);
+            }
 
-                target.Text = (target.Text + line) is { Length: > MaxFieldLength } longer ? longer[..MaxFieldLength] : target.Text + line;
-            }, StateHasChanged);
-            return true;
-        }
-
-        if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.U && _fields[_field].Kind is not (FieldKind.Protocol or FieldKind.Transport))
-        {
-            _fields[_field].Text = string.Empty;
             StateHasChanged();
             return true;
         }
 
-        switch (keyEvent.ConsoleKey)
+        if (keyEvent.ConsoleKey == ConsoleKey.Escape && plain)
         {
-            case ConsoleKey.Tab when !keyEvent.Shift:
-            case ConsoleKey.DownArrow:
-                _field = (_field + 1) % _fields.Length;
-                StateHasChanged();
-                return true;
-            case ConsoleKey.Tab:
-            case ConsoleKey.UpArrow:
-                _field = (_field - 1 + _fields.Length) % _fields.Length;
-                StateHasChanged();
-                return true;
-        }
+            if (IsEditDirty())
+            {
+                _confirmDiscard = true;
+                SetStatus(Say("Remote.Status.ConfirmDiscard", "Discard the changes? Press y to discard, anything else keeps editing."), true);
+            }
+            else
+            {
+                LeaveEdit();
+                SetStatus(string.Empty, false);
+            }
 
-        if (keyEvent.Control || keyEvent.Alt)
-        {
+            StateHasChanged();
             return true;
         }
 
-        var field = _fields[_field];
-        switch (field.Kind)
+        if ((keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.S)
+            || (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Control && !keyEvent.Alt))
         {
-            case FieldKind.Protocol:
-                if (IsSpace(keyEvent))
-                {
-                    // The other type's fields keep their text; they are just not used. WebDAV comes twice: HTTP, then HTTPS.
-                    switch (_editProtocol)
-                    {
-                        case RemoteProtocol.Ssh:
-                            _editProtocol = RemoteProtocol.PowerShell;
-                            break;
-                        case RemoteProtocol.PowerShell:
-                            _editProtocol = RemoteProtocol.Ftp;
-                            break;
-                        case RemoteProtocol.Ftp:
-                            _editProtocol = RemoteProtocol.WebDav;
-                            _editSecure = false;
-                            break;
-                        case RemoteProtocol.WebDav when !_editSecure:
-                            _editSecure = true;
-                            break;
-                        default:
-                            _editProtocol = RemoteProtocol.Ssh;
-                            _editSecure = false;
-                            break;
-                    }
-                }
-
-                break;
-            case FieldKind.Transport:
-                if (IsSpace(keyEvent) && _editProtocol == RemoteProtocol.PowerShell)
-                {
-                    _editTransport = _editTransport == PowerShellTransport.WinRm ? PowerShellTransport.Ssh : PowerShellTransport.WinRm;
-                }
-
-                break;
-            default:
-                if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
-                {
-                    if (field.Text.Length > 0)
-                    {
-                        field.Text = field.Text[..^1];
-                    }
-                }
-                else if (keyEvent.KeyChar != '\0' && !char.IsControl(keyEvent.KeyChar) && field.Text.Length < MaxFieldLength
-                         && (field.Kind != FieldKind.Number || char.IsAsciiDigit(keyEvent.KeyChar)))
-                {
-                    field.Text += keyEvent.KeyChar;
-                }
-
-                break;
+            SaveEdit();
+            return true;
         }
 
-        StateHasChanged();
-        return true;
+        return false;
     }
 
-    private static bool IsSpace(KeyEvent keyEvent) => keyEvent.ConsoleKey == ConsoleKey.Spacebar || keyEvent.KeyChar == ' ';
+    private string EditHint() => _editing is null
+        ? iConsole.Localization.UiText.Get("Remote.EditHintNew", "A new connection. Enter or Ctrl+S saves it, Esc goes back.")
+        : iConsole.Localization.UiText.Get("Remote.EditHint", "Enter or Ctrl+S saves, Esc goes back.");
+
+    private RemoteProtocol EditProtocol => ProtocolChoices[Math.Clamp(_type.SelectedIndex, 0, ProtocolChoices.Length - 1)].Protocol;
+
+    private bool EditSecure => ProtocolChoices[Math.Clamp(_type.SelectedIndex, 0, ProtocolChoices.Length - 1)].Secure;
+
+    private PowerShellTransport EditTransport => _transport.SelectedIndex == 0 ? PowerShellTransport.WinRm : PowerShellTransport.Ssh;
+
+    /// <summary>
+    /// What the type decides: the transport is for PowerShell, the key file for an SSH login, the password and the
+    /// folder for the file drives. A field that does not apply is dimmed and skipped by Tab; it keeps its text.
+    /// </summary>
+    private void UpdateFormFields()
+    {
+        var fileDrive = EditProtocol is RemoteProtocol.Ftp or RemoteProtocol.WebDav;
+        _transport.IsEnabled = EditProtocol == RemoteProtocol.PowerShell;
+        _keyFile.IsEnabled = !fileDrive && (EditProtocol == RemoteProtocol.Ssh || EditTransport == PowerShellTransport.Ssh);
+        _password.IsEnabled = fileDrive;
+        _folder.IsEnabled = fileDrive;
+
+        var onlyFileDrives = iConsole.Localization.UiText.Get("Remote.OnlyFileDrives", "only for FTP and WebDAV");
+        _password.Placeholder = !fileDrive ? onlyFileDrives
+            : _editing?.HasSavedCredential == true ? iConsole.Localization.UiText.Get("Remote.PasswordSaved", "(saved - type to replace)")
+            : iConsole.Localization.UiText.Get("Remote.PasswordNone", "(none: anonymous or asks nothing)");
+        _folder.Placeholder = fileDrive ? string.Empty : onlyFileDrives;
+        _port.Placeholder = string.Format(iConsole.Localization.UiText.Get("Remote.DefaultPort", "(default {0})"), DefaultPortFor());
+        StateHasChanged();
+    }
+
+    /// <summary>Every value the form holds, as one string: Esc asks only when this differs from what the form opened with.</summary>
+    private string FormSnapshot() => string.Join('\u001f',
+        _name.Text, _type.SelectedIndex, _host.Text, _port.Text, _user.Text, _keyFile.Text,
+        _transport.SelectedIndex, _notes.Text, _password.Text, _folder.Text);
+
+    private bool IsEditDirty() => FormSnapshot() != _baseline;
+
+    /// <summary>Takes the form off the dialog and returns to the list. Safe to call when the form is not up.</summary>
+    private void LeaveEdit()
+    {
+        _mode = Mode.List;
+        _confirmDiscard = false;
+        if (_form.Parent is not null)
+        {
+            RemoveControl(_form);
+        }
+
+        SetFocus();
+    }
 
     #endregion
 
@@ -543,44 +558,63 @@ public class RemoteConnectionManagerDialog : Dialog
     {
         _editing = connection;
         var source = connection ?? new RemoteConnection();
-        _editProtocol = source.Protocol;
-        _editTransport = source.Transport;
-        _editSecure = source.Secure;
-        _fields =
-        [
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldName", "Name"), FieldKind.Text, source.Name),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldType", "Type"), FieldKind.Protocol),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldHost", "Host"), FieldKind.Text, source.Host),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldPort", "Port"), FieldKind.Number, source.Port?.ToString() ?? string.Empty),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldUser", "User"), FieldKind.Text, source.Username),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldKeyFile", "Key file"), FieldKind.Text, source.PrivateKeyPath ?? string.Empty),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldTransport", "Transport"), FieldKind.Transport),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldNotes", "Notes"), FieldKind.Text, source.Notes ?? string.Empty),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldPassword", "Password"), FieldKind.Secret),
-            new Field(iConsole.Localization.UiText.Get("Remote.FieldFolder", "Folder"), FieldKind.Text, source.RemotePath ?? string.Empty),
-        ];
-        _field = 0;
+        SetBox(_name, source.Name);
+        _type.SelectedIndex = Math.Max(0, Array.FindIndex(ProtocolChoices, c => c.Protocol == source.Protocol && c.Secure == (source.Protocol == RemoteProtocol.WebDav && source.Secure)));
+        SetBox(_host, source.Host);
+        SetBox(_port, source.Port?.ToString() ?? string.Empty);
+        SetBox(_user, source.Username);
+        SetBox(_keyFile, source.PrivateKeyPath ?? string.Empty);
+        _transport.SelectedIndex = source.Transport == PowerShellTransport.WinRm ? 0 : 1;
+        SetBox(_notes, source.Notes ?? string.Empty);
+        SetBox(_password, string.Empty);
+        SetBox(_folder, source.RemotePath ?? string.Empty);
+        UpdateFormFields();
+        _baseline = FormSnapshot();
+        _confirmDiscard = false;
         _mode = Mode.Edit;
-        SetStatus(connection is null ? iConsole.Localization.UiText.Get("Remote.EditHintNew", "A new connection. Enter or Ctrl+S saves it, Esc goes back.") : iConsole.Localization.UiText.Get("Remote.EditHint", "Enter or Ctrl+S saves, Esc goes back."), false);
+        LayoutForm();
+        if (_form.Parent is null)
+        {
+            AddControl(_form);
+        }
+
+        // ShowAsync did these for the controls that were there when the dialog opened; a form attached later has
+        // to be given its layer, its layout and its visibility by hand, or the dialog's own fill covers it.
+        _form.OnInitializeZOrder();
+        _form.OnInitializeLayout();
+        _form.IsVisible = true;
+        foreach (var field in _form.Controls.AsArray())
+        {
+            field.IsVisible = true;
+        }
+
+        _name.SetFocus();
+        SetStatus(EditHint(), false);
         StateHasChanged();
+    }
+
+    private static void SetBox(TextBox box, string text)
+    {
+        box.Text = text;
+        box.Select(text.Length, 0);
     }
 
     private void SaveEdit()
     {
         var connection = _editing?.Clone() ?? new RemoteConnection();
-        connection.Name = _fields[NameField].Text.Trim();
-        connection.Protocol = _editProtocol;
-        connection.Host = _fields[HostField].Text.Trim();
-        connection.Username = _fields[UserField].Text.Trim();
-        connection.PrivateKeyPath = NullIfEmpty(_fields[KeyField].Text);
-        connection.Transport = _editTransport;
-        connection.Notes = NullIfEmpty(_fields[NotesField].Text);
-        connection.Secure = _editProtocol == RemoteProtocol.WebDav && _editSecure;
-        connection.RemotePath = NullIfEmpty(_fields[FolderField].Text);
+        connection.Name = _name.Text.Trim();
+        connection.Protocol = EditProtocol;
+        connection.Host = _host.Text.Trim();
+        connection.Username = _user.Text.Trim();
+        connection.PrivateKeyPath = NullIfEmpty(_keyFile.Text);
+        connection.Transport = EditTransport;
+        connection.Notes = NullIfEmpty(_notes.Text);
+        connection.Secure = EditProtocol == RemoteProtocol.WebDav && EditSecure;
+        connection.RemotePath = NullIfEmpty(_folder.Text);
         // Only an FTP or WebDAV entry has somewhere to keep a password; the others are asked on the terminal.
-        var password = _editProtocol is RemoteProtocol.Ftp or RemoteProtocol.WebDav ? _fields[PasswordField].Text : null;
+        var password = EditProtocol is RemoteProtocol.Ftp or RemoteProtocol.WebDav ? _password.Text : null;
 
-        var portText = _fields[PortField].Text.Trim();
+        var portText = _port.Text.Trim();
         if (portText.Length == 0)
         {
             connection.Port = null;
@@ -592,7 +626,7 @@ public class RemoteConnectionManagerDialog : Dialog
         else
         {
             SetStatus(Say("Remote.Status.PortRange", "The port must be between 1 and 65535."), true);
-            _field = PortField;
+            _port.SetFocus();
             StateHasChanged();
             return;
         }
@@ -601,32 +635,32 @@ public class RemoteConnectionManagerDialog : Dialog
         {
             _connections.Save(connection, password);
             _selectedId = connection.Id;
-            _mode = Mode.List;
+            LeaveEdit();
             Reload();
             SetStatus(Say("Remote.Status.Saved", "Saved \"{0}\".", connection.Name), false);
         }
         catch (InvalidOperationException exception)
         {
             SetStatus(exception.Message, true);
-            _field = FieldWithProblem(connection);
+            FieldWithProblem(connection).SetFocus();
         }
 
         StateHasChanged();
     }
 
-    private static int FieldWithProblem(RemoteConnection connection)
+    private TextBox FieldWithProblem(RemoteConnection connection)
     {
         if (connection.Name.Length == 0)
         {
-            return NameField;
+            return _name;
         }
 
         if (!RemoteConnection.IsValidHost(connection.Host))
         {
-            return HostField;
+            return _host;
         }
 
-        return connection.Port is null or (>= 1 and <= 65535) ? UserField : PortField;
+        return connection.Port is null or (>= 1 and <= 65535) ? _user : _port;
     }
 
     private static string? NullIfEmpty(string text) => string.IsNullOrWhiteSpace(text) ? null : text.Trim();
@@ -714,7 +748,7 @@ public class RemoteConnectionManagerDialog : Dialog
     {
         Mode.List => _confirmDelete ? iConsole.Localization.UiText.Get("Hint.ConfirmDelete", "y delete  any other key cancels")
             : iConsole.Localization.UiText.Get("Remote.HintList", "Enter connect  B browse files  N new  E edit  D delete  Esc close"),
-        _ => iConsole.Localization.UiText.Get("Remote.HintForm", "Tab field  Space changes type/transport  Enter/Ctrl+S save  Esc back"),
+        _ => iConsole.Localization.UiText.Get("Remote.HintForm", "Tab field  Left/Right type  Enter/Ctrl+S save  Esc:back"),
     };
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
@@ -775,48 +809,12 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private void DrawForm(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
+        // The fields are controls of their own; the dialog draws only the heading over them.
         Put(buffer, 1, 0, iw - 2, _editing is null ? iConsole.Localization.UiText.Get("Remote.NewConnection", "New connection") : iConsole.Localization.UiText.Get("Remote.EditConnection", "Edit connection"), colorScheme.Foreground, colorScheme.Background);
-        for (var i = 0; i < _fields.Length; i++)
-        {
-            var field = _fields[i];
-            var focused = i == _field;
-            var fileDrive = _editProtocol is RemoteProtocol.Ftp or RemoteProtocol.WebDav;
-            var unused = (i == TransportField && _editProtocol != RemoteProtocol.PowerShell)
-                         || (i == KeyField && (fileDrive || !(_editProtocol == RemoteProtocol.Ssh || _editTransport == PowerShellTransport.Ssh)))
-                         || ((i == PasswordField || i == FolderField) && !fileDrive);
-            var row = 2 + i;
-            Put(buffer, 1, row, 16, field.Label, focused ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
-            var value = field.Kind switch
-            {
-                FieldKind.Protocol => ProtocolLabel() + iConsole.Localization.UiText.Get("Remote.SpaceChanges", "  (Space changes)"),
-                FieldKind.Transport => _editProtocol == RemoteProtocol.PowerShell
-                    ? (_editTransport == PowerShellTransport.WinRm ? "WinRM (Windows)" : "SSH (PowerShell 7)") + iConsole.Localization.UiText.Get("Remote.SpaceChanges", "  (Space changes)")
-                    : iConsole.Localization.UiText.Get("Remote.OnlyPowerShell", "only for PowerShell"),
-                FieldKind.Secret => !fileDrive ? iConsole.Localization.UiText.Get("Remote.OnlyFileDrives", "only for FTP and WebDAV")
-                    : field.Text.Length > 0 ? new string('*', field.Text.Length)
-                    : _editing?.HasSavedCredential == true ? iConsole.Localization.UiText.Get("Remote.PasswordSaved", "(saved - type to replace)") : iConsole.Localization.UiText.Get("Remote.PasswordNone", "(none: anonymous or asks nothing)"),
-                FieldKind.Number when field.Text.Length == 0 => string.Format(iConsole.Localization.UiText.Get("Remote.DefaultPort", "(default {0})"), DefaultPortFor()),
-                _ => field.Text,
-            };
-            var editable = field.Kind is FieldKind.Text or FieldKind.Number or FieldKind.Secret;
-            Put(buffer, 17, row, iw - 18, value + (focused && editable ? "_" : string.Empty),
-                unused || (field.Kind == FieldKind.Number && field.Text.Length == 0)
-                    || (field.Kind == FieldKind.Secret && field.Text.Length == 0)
-                    ? colorScheme.DisabledForeground : colorScheme.Foreground,
-                focused ? colorScheme.SelectedBackground : colorScheme.Background);
-        }
     }
 
     private int DefaultPortFor() =>
-        new RemoteConnection { Protocol = _editProtocol, Transport = _editTransport, Secure = _editSecure }.DefaultPort;
-
-    private string ProtocolLabel() => _editProtocol switch
-    {
-        RemoteProtocol.Ssh => "SSH",
-        RemoteProtocol.Ftp => "FTP (FTPS when the server offers it)",
-        RemoteProtocol.WebDav => _editSecure ? "WebDAV over HTTPS (davs://)" : "WebDAV over HTTP (dav://)",
-        _ => "PowerShell remoting",
-    };
+        new RemoteConnection { Protocol = EditProtocol, Transport = EditTransport, Secure = EditSecure }.DefaultPort;
 
     private static string Ellipsize(string text, int width) => width > 1 && text.Length > width ? text[..(width - 1)] + "…" : text;
 
