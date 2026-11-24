@@ -3,7 +3,9 @@ using System.Runtime.InteropServices;
 namespace iConsole.Inputs.Posix.Interop;
 
 /// <summary>Minimal libc tty + stdin interop for Linux (glibc-style <c>termios</c>).</summary>
+#pragma warning disable S6640 // Required for the Linux terminal-input interop (termios) (unsafe block for termios).
 internal static unsafe class LinuxStdin
+#pragma warning restore S6640
 {
     private const string Libc = "libc.so.6";
 

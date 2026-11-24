@@ -95,7 +95,9 @@ public sealed class WinMmAudioSink : IAudioSink
                 out _handle,
                 deviceIndex,
                 ref waveFormat,
+                #pragma warning disable S3869 // The Win32 API requires the raw handle; the wait handle stays alive for the call.
                 _bufferDone.SafeWaitHandle.DangerousGetHandle(),
+                #pragma warning restore S3869
                 IntPtr.Zero,
                 CallbackEvent);
 

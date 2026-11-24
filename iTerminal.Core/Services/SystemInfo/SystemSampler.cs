@@ -520,7 +520,9 @@ public sealed class SystemSampler : ISystemSampler
     }
 
     /// <summary>A state that is not a value, carried over to another value type.</summary>
+    #pragma warning disable S2326 // The type argument documents the source state; the generic keeps the call sites explicit.
     private static Probed<TTo> Retag<TFrom, TTo>(ProbeState state) => new(state, default);
+    #pragma warning restore S2326
 
     private sealed class Watcher(SystemSampler owner) : IDisposable
     {

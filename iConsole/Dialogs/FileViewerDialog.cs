@@ -625,7 +625,10 @@ public class FileViewerDialog : Dialog
     public override void OnIdle()
     {
         TickFollow();
-        if (LandDisassembly() | LandPdfSignatures())
+        // Both run: each one lands its own kind of content, so neither may be skipped.
+        var landedDisassembly = LandDisassembly();
+        var landedPdfSignatures = LandPdfSignatures();
+        if (landedDisassembly || landedPdfSignatures)
         {
             StateHasChanged();
         }

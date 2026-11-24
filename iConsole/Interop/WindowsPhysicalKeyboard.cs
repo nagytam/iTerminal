@@ -29,7 +29,9 @@ public static class WindowsPhysicalKeyboard
         OperatingSystem.IsWindows()
         && (IsKeyDown(VK_LMENU) || IsKeyDown(VK_RMENU));
 
+    #pragma warning disable S4200 // A thin wrapper over a Win32 API: the native signature is declared here on purpose.
     private static bool IsKeyDown(int virtualKey) => (GetAsyncKeyState(virtualKey) & 0x8000) != 0;
+    #pragma warning restore S4200
 
     [DllImport("user32", EntryPoint = "GetAsyncKeyState", ExactSpelling = true)]
     private static extern short GetAsyncKeyState(int virtualKey);

@@ -26,7 +26,7 @@ namespace iTerminal.Core.Dialogs.Video;
 /// </summary>
 public class VideoFileViewerDialog : Dialog
 {
-    private readonly object _syncRoot = new();
+    private readonly Lock _syncRoot = new();
 
     private static readonly TimeSpan SeekStep = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan LongSeekStep = TimeSpan.FromSeconds(30);

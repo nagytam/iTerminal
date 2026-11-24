@@ -218,7 +218,9 @@ public sealed class PluginManagerService : IPluginManagerService
             }
 
             // A file that has gone is forgotten, unless the plug-in is loaded or on its way; a loaded one keeps its entry until it is unloaded.
+            #pragma warning disable S2971 // The collection is changed by Load and Unload while it is walked, so the copy is needed.
             foreach (Entry entry in _entries.Values.ToList().Where(entry => !files.Contains(entry.FileName) && entry.State is PluginState.Unloaded or PluginState.Failed))
+            #pragma warning restore S2971
             {
                 _entries.Remove(entry.FileName);
                 changed = true;

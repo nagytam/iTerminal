@@ -309,7 +309,7 @@ public static class ManagedArchiveWriter
         {
             if (size is null)
             {
-                var staged = Path.GetTempFileName();
+                var staged = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 try
                 {
                     await using (var stage = new FileStream(staged, FileMode.Create, FileAccess.Write))
@@ -438,7 +438,7 @@ public static class ManagedArchiveWriter
 
             // The entry is buffered: the reader cannot be read from while the writer is being fed
             // asynchronously by another entry's enumeration.
-            var buffer = new FileStream(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.None, 81920, FileOptions.DeleteOnClose);
+            var buffer = new FileStream(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()), FileMode.Create, FileAccess.ReadWrite, FileShare.None, 81920, FileOptions.DeleteOnClose);
             tar.CopyEntryContents(buffer);
             buffer.Position = 0;
             yield return new ExistingEntry(entry.Name, false, entry.ModTime.ToLocalTime(), entry.Size, buffer);
