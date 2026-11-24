@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace iTerminal.Core.Data;
 
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : DbContext(options)
+#pragma warning restore S101
 {
     public DbSet<PersistedSetting> Settings => Set<PersistedSetting>();
 

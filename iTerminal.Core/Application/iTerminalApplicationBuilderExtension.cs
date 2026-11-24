@@ -29,7 +29,9 @@ using iTerminal.Core.Tasks;
 
 namespace iTerminal.Core.Application;
 
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public static class iTerminalApplicationBuilderExtension
+#pragma warning restore S101
 {
     /// <summary>
     /// Configuration key naming the folder that holds the database. Unset in production, where the

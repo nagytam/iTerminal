@@ -100,11 +100,14 @@ public class MenuItem : PopUpWindow
             AddControl(menuItem);
         }
 
-        if (this is not MenuBar)
+        if (!IsMenuBar)
         {
             OnInitializeActionButtons();
         }
     }
+
+    /// <summary>True for the menu bar itself, which lays its entries out differently from a drop-down.</summary>
+    protected virtual bool IsMenuBar => false;
 
     public override void OnInitializeActionButtons()
     {
@@ -129,7 +132,7 @@ public class MenuItem : PopUpWindow
             .Where(c => c is MenuItem)
             .Cast<MenuItem>();
         long width = 0;
-        if (this is MenuBar)
+        if (IsMenuBar)
         {
             width = Parent?.ViewSize.Width ?? 0;
         }
@@ -163,7 +166,7 @@ public class MenuItem : PopUpWindow
     /// </summary>
     private int VisibleRowCount(int entryCount)
     {
-        if (this is MenuBar || entryCount == 0)
+        if (IsMenuBar || entryCount == 0)
         {
             return entryCount;
         }
@@ -275,7 +278,7 @@ public class MenuItem : PopUpWindow
     /// </summary>
     private void LiftAboveTheScreen()
     {
-        if (this is MenuBar)
+        if (IsMenuBar)
         {
             return;
         }
@@ -316,7 +319,7 @@ public class MenuItem : PopUpWindow
     public virtual void CloseMenu()
     {
         IsOpened = false;
-        if (this is not MenuBar)
+        if (!IsMenuBar)
         {
             ZOrder = 0;
         }
@@ -446,7 +449,7 @@ public class MenuItem : PopUpWindow
     /// </summary>
     internal async Task<bool> HandleDropDownClickAsync(MouseEvent mouseEvent)
     {
-        if (this is MenuBar || !IsOpened || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (IsMenuBar || !IsOpened || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return false;
         }
@@ -658,7 +661,7 @@ public class MenuItem : PopUpWindow
 
     public override void Draw(IBuffer buffer)
     {
-        if (!IsOpened || this is MenuBar)
+        if (!IsOpened || IsMenuBar)
         {
             var position = AbsolutePosition;
             var colorScheme = ThemeService.CurrentColorScheme;
@@ -670,7 +673,7 @@ public class MenuItem : PopUpWindow
             }
 
             ConxelString s;
-            if (this is MenuBar)
+            if (IsMenuBar)
             {
                 // Highlight each top-level item's Ctrl-hotkey letter (e.g. the 'F' in "File")
                 // so the menu advertises how it's opened from the keyboard.

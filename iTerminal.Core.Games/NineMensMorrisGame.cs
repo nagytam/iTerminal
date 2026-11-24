@@ -581,7 +581,7 @@ public class NineMensMorrisGame : GameBase
         }
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         _state = new MorrisState();

@@ -153,7 +153,7 @@ public class RiskGame : GameBase
         CheckElimination();
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         int[] order = Enumerable.Range(0, TerritoryCount).ToArray();

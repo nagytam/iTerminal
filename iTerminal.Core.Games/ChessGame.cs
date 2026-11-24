@@ -89,7 +89,7 @@ public class ChessGame : GameBase
         }
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Load(ChessState.Start());
         _cursorFile = 4;

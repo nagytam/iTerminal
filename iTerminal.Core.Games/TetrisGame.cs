@@ -170,7 +170,7 @@ public class TetrisGame : GameBase
         }
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Array.Clear(_board);
         _bag.Clear();

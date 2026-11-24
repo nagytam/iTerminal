@@ -277,7 +277,9 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
     private static extern uint PdhGetFormattedCounterArrayW(IntPtr counter, uint format, ref uint bufferSize, ref uint itemCount, IntPtr buffer);
 
     [StructLayout(LayoutKind.Sequential)]
+    #pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
     private struct FILETIME
+    #pragma warning restore S101
     {
         public uint dwLowDateTime;
         public uint dwHighDateTime;

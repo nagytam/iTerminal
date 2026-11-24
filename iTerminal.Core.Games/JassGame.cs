@@ -231,7 +231,7 @@ public class JassGame : GameBase
     internal JassSuit? Trump => _trump;
     internal int TricksPlayed => _tricksPlayed;
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         Array.Clear(_scores);

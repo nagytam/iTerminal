@@ -127,7 +127,7 @@ public class SnakeGame : GameBase
         _rivalHeading = heading;
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         // The head first, the body trailing to its left: the snake faces right, in the left-middle of the board.

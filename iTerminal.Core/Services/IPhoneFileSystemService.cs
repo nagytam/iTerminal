@@ -18,7 +18,9 @@ namespace iTerminal.Core.Services;
 /// request/response protocol, so every native call is serialized under <see cref="_lock"/>; awaited
 /// stream I/O during transfers happens outside the lock so listings can interleave between chunks.
 /// </summary>
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public sealed class IPhoneFileSystemService : IIPhoneFileSystemService, IDisposable
+#pragma warning restore S101
 {
     private const int ChunkSize = 64 * 1024;
 

@@ -3,7 +3,9 @@ using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Commands;
 
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public class IPhoneBrowserDialogCommand(IPhoneBrowserDialog iPhoneBrowserDialog)
+#pragma warning restore S101
     : ShowDialogCommand<IPhoneBrowserDialog>(iPhoneBrowserDialog)
 {
     public override string Title => "iPhone Browser";

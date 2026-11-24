@@ -64,7 +64,7 @@ public class TicTacToeGame : GameBase
         }
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         _board = new string(' ', 9).ToCharArray();
