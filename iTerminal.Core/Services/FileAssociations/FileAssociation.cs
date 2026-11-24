@@ -117,15 +117,23 @@ public sealed record FileAssociation(
     private static string Expand(string word, string filePath, ref bool namesTheFile)
     {
         var result = new System.Text.StringBuilder();
+        var skip = false;
         for (var i = 0; i < word.Length; i++)
         {
+            if (skip)
+            {
+                skip = false;
+                continue;
+            }
+
             if (word[i] != '%' || i + 1 >= word.Length)
             {
                 result.Append(word[i]);
                 continue;
             }
 
-            var next = word[++i];
+            var next = word[i + 1];
+            skip = true;
             switch (next)
             {
                 case 'f':

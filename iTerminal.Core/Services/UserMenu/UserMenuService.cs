@@ -35,15 +35,23 @@ public static class UserMenuMacros
     public static string Expand(string line, UserMenuContext context)
     {
         var result = new StringBuilder();
+        var skip = false;
         for (var i = 0; i < line.Length; i++)
         {
+            if (skip)
+            {
+                skip = false;
+                continue;
+            }
+
             if (line[i] != '%' || i + 1 >= line.Length)
             {
                 result.Append(line[i]);
                 continue;
             }
 
-            var next = line[++i];
+            var next = line[i + 1];
+            skip = true;
             switch (next)
             {
                 case 'f':
