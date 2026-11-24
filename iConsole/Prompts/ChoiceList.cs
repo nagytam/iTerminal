@@ -38,7 +38,7 @@ public sealed class ChoiceList<T>
     public bool IsMarked(int visibleIndex) => _marked.Contains(_visible[visibleIndex]);
 
     /// <summary>The marked choices, in the order they were offered.</summary>
-    public IReadOnlyList<T> MarkedItems => _marked.OrderBy(index => index).Select(index => _choices[index]).ToList();
+    public IReadOnlyList<T> MarkedItems() => _marked.OrderBy(index => index).Select(index => _choices[index]).ToList();
 
     /// <summary>Moves the highlight by <paramref name="delta"/> rows, stopping at the first and last.</summary>
     public void Move(int delta) => Cursor = Math.Clamp(Cursor + delta, 0, Math.Max(0, _visible.Count - 1));

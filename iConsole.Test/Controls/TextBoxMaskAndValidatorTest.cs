@@ -57,7 +57,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("(555", mask.Format("555"));
         Assert.AreEqual("(555) 1", mask.Format("5551"));
         Assert.AreEqual("(555) 123-4567", mask.Format("5551234567"));
-        Assert.AreEqual("(___) ___-____", mask.Template);
+        Assert.AreEqual("(___) ___-____", mask.Template());
     }
 
     [Timeout(60_000)]

@@ -184,17 +184,17 @@ public sealed class UserGroupManagerDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
-    private int VisibleCount => _listing == Listing.Users ? VisibleUsers.Count : VisibleGroups.Count;
+    private int VisibleCount => _listing == Listing.Users ? VisibleUsers().Count : VisibleGroups().Count;
 
-    private IReadOnlyList<LocalUser> VisibleUsers =>
+    private IReadOnlyList<LocalUser> VisibleUsers() =>
         _users.Where(user => Matches(user.Name, user.FullName)).ToArray();
 
-    private IReadOnlyList<LocalGroup> VisibleGroups =>
+    private IReadOnlyList<LocalGroup> VisibleGroups() =>
         _groups.Where(group => Matches(group.Name)).ToArray();
 
-    private LocalUser? SelectedUser => VisibleUsers.ElementAtOrDefault(_selectedIndex);
+    private LocalUser? SelectedUser => VisibleUsers().ElementAtOrDefault(_selectedIndex);
 
-    private LocalGroup? SelectedGroup => VisibleGroups.ElementAtOrDefault(_selectedIndex);
+    private LocalGroup? SelectedGroup => VisibleGroups().ElementAtOrDefault(_selectedIndex);
 
     private bool HandleFilterKey(KeyEvent keyEvent)
     {
@@ -433,8 +433,8 @@ public sealed class UserGroupManagerDialog : Dialog
         WriteRow(buffer, 1, $"{UiText.Get("UserGroup.Filter", "Filter")}: {_filter}", foreground, background, width);
 
         IReadOnlyList<string> items = _listing == Listing.Users
-            ? VisibleUsers.Select(user => $"{user.Name}  {user.FullName}").ToArray()
-            : VisibleGroups.Select(group => group.Name).ToArray();
+            ? VisibleUsers().Select(user => $"{user.Name}  {user.FullName}").ToArray()
+            : VisibleGroups().Select(group => group.Name).ToArray();
         for (int row = 0; row < rows; row++)
         {
             int index = _firstVisibleIndex + row;
@@ -477,7 +477,7 @@ public sealed class UserGroupManagerDialog : Dialog
     internal void ApplyPendingForTest() => OnIdle();
     internal bool IsBusyForTest => _busy;
     internal bool IsShowingGroupsForTest => _listing == Listing.Groups;
-    internal IReadOnlyList<LocalUser> VisibleUsersForTest => VisibleUsers;
-    internal IReadOnlyList<LocalGroup> VisibleGroupsForTest => VisibleGroups;
+    internal IReadOnlyList<LocalUser> VisibleUsersForTest => VisibleUsers();
+    internal IReadOnlyList<LocalGroup> VisibleGroupsForTest => VisibleGroups();
     internal string StatusForTest => _status;
 }

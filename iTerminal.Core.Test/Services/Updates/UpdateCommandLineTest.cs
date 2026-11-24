@@ -43,7 +43,7 @@ public class UpdateCommandLineTest
     {
         LaunchOptions options = LaunchOptions.Parse(["--udpate", "--wait-for-parent", "12"]);
 
-        CollectionAssert.AreEqual(new[] { "--udpate" }, options.UnknownSwitches.ToArray());
+        CollectionAssert.AreEqual(new[] { "--udpate" }, options.UnknownSwitches().ToArray());
         Assert.IsFalse(options.Update);
         Assert.AreEqual(12, options.ParentProcessId);
     }
@@ -51,9 +51,9 @@ public class UpdateCommandLineTest
     [TestMethod]
     public void KnownSwitchesAndWordsAreNotReportedAsUnknown()
     {
-        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse(["--update", "--help"]).UnknownSwitches.ToArray());
-        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse(["/some/path"]).UnknownSwitches.ToArray());
-        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse([]).UnknownSwitches.ToArray());
+        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse(["--update", "--help"]).UnknownSwitches().ToArray());
+        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse(["/some/path"]).UnknownSwitches().ToArray());
+        CollectionAssert.AreEqual(Array.Empty<string>(), LaunchOptions.Parse([]).UnknownSwitches().ToArray());
     }
 
     [TestMethod]

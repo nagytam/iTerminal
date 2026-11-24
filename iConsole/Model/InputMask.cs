@@ -227,7 +227,7 @@ public sealed class InputMask
     public int RequiredCount => _slotElement.Count(index => !_elements[index].Optional);
 
     /// <summary>The whole pattern as it looks empty: slots as <c>_</c>, literals as themselves.</summary>
-    public string Template => new(_elements.Select(e => e.Kind == SlotKind.Literal ? e.Literal : '_').ToArray());
+    public string Template() => new(_elements.Select(e => e.Kind == SlotKind.Literal ? e.Literal : '_').ToArray());
 
     /// <summary>Whether slot <paramref name="slot"/> takes <paramref name="c"/>.</summary>
     public bool Accepts(int slot, char c)
@@ -396,7 +396,7 @@ public sealed class InputMask
     /// <summary>The part of <see cref="Template"/> after the first <paramref name="typedLength"/> characters: what is still to type.</summary>
     public string TemplateAfter(int typedLength)
     {
-        string template = Template;
+        string template = Template();
         return typedLength >= template.Length ? string.Empty : template[Math.Max(0, typedLength)..];
     }
 }

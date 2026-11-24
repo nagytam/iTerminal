@@ -28,7 +28,7 @@ public partial class TextBox
                 string formatted = value.Format(value.ExtractRaw(Text));
                 Text = formatted;
                 ScrollableModel.CursorPosition.X = formatted.Length;
-                MaxLength = Math.Max(MaxLength, value.Template.Length);
+                MaxLength = Math.Max(MaxLength, value.Template().Length);
             }
 
             StateHasChanged();

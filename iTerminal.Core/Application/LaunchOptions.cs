@@ -54,7 +54,7 @@ public sealed class LaunchOptions
     public int ShowHelp() => _result.Invoke();
 
     /// <summary>The tokens that start with <c>-</c> and match no switch, in the order given.</summary>
-    public IReadOnlyList<string> UnknownSwitches =>
+    public IReadOnlyList<string> UnknownSwitches() =>
         _result.UnmatchedTokens.Where(token => token.StartsWith('-')).ToList();
 
     /// <summary>The process id given to <c>--wait-for-parent</c>, when it was given with a valid number.</summary>

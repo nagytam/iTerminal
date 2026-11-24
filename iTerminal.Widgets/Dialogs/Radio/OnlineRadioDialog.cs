@@ -115,7 +115,7 @@ public class OnlineRadioDialog : Dialog
         base.OnInitializeLayout();
     }
 
-    private IReadOnlyList<RadioStation> Visible => _view switch
+    private IReadOnlyList<RadioStation> Visible() => _view switch
     {
         ListView.Recent => _store.Recent().Where(s => s.Matches(_filter)).ToList(),
         _ => _store.Find(_filter, _view == ListView.Favourites),
@@ -125,7 +125,7 @@ public class OnlineRadioDialog : Dialog
     {
         get
         {
-            var visible = Visible;
+            var visible = Visible();
             return visible.FirstOrDefault(s => s.Id == _selectedId) ?? visible.FirstOrDefault();
         }
     }
@@ -218,7 +218,7 @@ public class OnlineRadioDialog : Dialog
             case ConsoleKey.Home when plain:
                 return SelectAt(0);
             case ConsoleKey.End when plain:
-                return SelectAt(Visible.Count - 1);
+                return SelectAt(Visible().Count - 1);
             case ConsoleKey.Enter when plain:
                 PlaySelected();
                 return true;
@@ -455,7 +455,7 @@ public class OnlineRadioDialog : Dialog
             return null;
         }
 
-        var visible = Visible;
+        var visible = Visible();
         int index = FirstVisibleIndex(visible) + (int)row;
         return index < visible.Count ? visible[index] : null;
     }
@@ -602,7 +602,7 @@ public class OnlineRadioDialog : Dialog
     /// <summary>Removes the highlighted station and moves the highlight to the one that took its row. A station on air keeps playing until it is stopped.</summary>
     private void DeleteSelected()
     {
-        var visible = Visible;
+        var visible = Visible();
         var station = Selected;
         if (station is null)
         {
@@ -611,7 +611,7 @@ public class OnlineRadioDialog : Dialog
 
         var index = visible.ToList().FindIndex(s => s.Id == station.Id);
         _store.Remove(station.Id);
-        var remaining = Visible;
+        var remaining = Visible();
         _selectedId = (remaining.ElementAtOrDefault(index) ?? remaining.ElementAtOrDefault(index - 1))?.Id;
         _notice = null;
         StateHasChanged();
@@ -619,13 +619,13 @@ public class OnlineRadioDialog : Dialog
 
     private bool MoveSelection(int delta)
     {
-        var index = Visible.ToList().FindIndex(s => s.Id == Selected?.Id);
+        var index = Visible().ToList().FindIndex(s => s.Id == Selected?.Id);
         return SelectAt(index + delta);
     }
 
     private bool SelectAt(int index)
     {
-        var visible = Visible;
+        var visible = Visible();
         if (visible.Count == 0)
         {
             return true;
@@ -685,7 +685,7 @@ public class OnlineRadioDialog : Dialog
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var total = _store.Count;
-        var shown = Visible.Count;
+        var shown = Visible().Count;
         var count = _filter.Length > 0 || _view != ListView.All
             ? string.Format(UiText.Get("Radio.CountFiltered", "{0} of {1} stations"), shown, total)
             : string.Format(UiText.Get("Radio.Count", "{0} stations"), total);
@@ -711,7 +711,7 @@ public class OnlineRadioDialog : Dialog
 
     private void DrawRows(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        var visible = Visible;
+        var visible = Visible();
         var selectedId = Selected?.Id;
         if (visible.Count == 0)
         {

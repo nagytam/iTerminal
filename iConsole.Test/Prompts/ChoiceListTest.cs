@@ -64,7 +64,7 @@ public class ChoiceListTest
         list.ToggleCurrent();          // Cherry
         list.Backspace();              // everything again
 
-        CollectionAssert.AreEqual(new[] { "Apple", "Cherry" }, list.MarkedItems.ToList());
+        CollectionAssert.AreEqual(new[] { "Apple", "Cherry" }, list.MarkedItems().ToList());
     }
 
     [Timeout(60_000)]
@@ -75,7 +75,7 @@ public class ChoiceListTest
         list.ToggleCurrent();
         list.ToggleCurrent();
 
-        Assert.AreEqual(0, list.MarkedItems.Count);
+        Assert.AreEqual(0, list.MarkedItems().Count);
     }
 
     [Timeout(60_000)]

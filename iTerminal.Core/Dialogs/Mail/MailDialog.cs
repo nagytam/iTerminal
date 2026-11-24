@@ -1175,7 +1175,7 @@ public class MailDialog : Dialog
     internal int DraftFieldForTest { get { lock (_sync) return _draftField; } }
     internal int SetupCursorForTest { get { lock (_sync) return _setupCursor; } }
     internal string DirectoryTermForTest { get { lock (_sync) return _directoryTerm; } }
-    internal IReadOnlyList<DirectoryPerson> PeopleForTest { get { lock (_sync) return _people.ToList(); } }
+    internal IReadOnlyList<DirectoryPerson> PeopleForTest() { lock (_sync) return _people.ToList(); }
     internal string SetupValueForTest(string label)
     {
         lock (_sync)

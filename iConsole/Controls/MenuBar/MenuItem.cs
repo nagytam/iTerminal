@@ -376,11 +376,11 @@ public class MenuItem : PopUpWindow
         closer.CloseMenu();
     }
 
-    private List<MenuItem> SelectableMenuItems => MenuItems.Where(m => m.Text != "-").ToList();
+    private List<MenuItem> SelectableMenuItems() => MenuItems.Where(m => m.Text != "-").ToList();
 
     private void MoveSelection(int direction)
     {
-        var siblings = SelectableMenuItems;
+        var siblings = SelectableMenuItems();
         if (siblings.Count == 0)
         {
             return;
@@ -394,7 +394,7 @@ public class MenuItem : PopUpWindow
     /// <summary>Selects the first or the last entry of this drop-down, skipping separators.</summary>
     private void SelectEdge(bool last)
     {
-        var siblings = SelectableMenuItems;
+        var siblings = SelectableMenuItems();
         if (siblings.Count > 0)
         {
             (last ? siblings[^1] : siblings[0]).SetSelected();
