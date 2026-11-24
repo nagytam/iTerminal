@@ -435,7 +435,7 @@ internal static class ElfAnalyzer
                     if (bind is 1 or 2 && (other & 3) == 0)
                     {
                         exported++;
-                        if (names.Count < MaxExportNames && stringsOk && nameIndex < (ulong)strtab.Size
+                        if (names.Count < MaxExportNames && stringsOk && nameIndex < strtab.Size
                             && file.ReadCString((long)strtab.Offset + nameIndex) is { Length: > 0 } name)
                         {
                             names.Add(name);

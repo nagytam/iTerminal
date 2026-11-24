@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace iTerminal.Core.Model.ContentModels;
 
-public class ContentModelFileSystem(
+public sealed class ContentModelFileSystem(
     string name,
     TaskManager taskManager,
     ISettingsService settingsService,

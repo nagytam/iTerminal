@@ -138,7 +138,7 @@ internal static class PeAnalyzer
             return default;
         }
 
-        int length = (int)Math.Min(directory.Size, 0x100);
+        int length = Math.Min(directory.Size, 0x100);
         byte[]? block = file.ReadBytes(offset, Math.Min(length, file.Length - offset), 0x100);
         if (block is null || block.Length < 4)
         {
