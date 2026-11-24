@@ -150,14 +150,13 @@ public sealed class RenderingDumpHelper : IRenderingDumpHelper
         var cursorVisible = TryGet(() => consoleDriver.IsCursorVisible, false);
 
         return string.Join(Environment.NewLine,
-        [
             $"driver={consoleDriver.GetType().FullName}",
             $"window-size={windowSize.Width}x{windowSize.Height}",
             $"foreground={foreground}",
             $"background={background}",
             $"cursor-visible={cursorVisible}",
             $"base-directory={AppContext.BaseDirectory}"
-        ]) + Environment.NewLine;
+        ) + Environment.NewLine;
     }
 
     public static int CountVisibleCharacters(BufferLayer layer)

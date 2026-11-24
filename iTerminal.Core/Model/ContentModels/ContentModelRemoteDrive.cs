@@ -82,7 +82,7 @@ public abstract class ContentModelRemoteDrive(
         }
         catch (Exception ex)
         {
-            logger.Error(FormatConnectionError(path, ex));
+            logger.Error(ex, FormatConnectionError(path, ex));
         }
         Entries.Clear();
         Url = path;

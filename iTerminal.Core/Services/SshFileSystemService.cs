@@ -185,9 +185,9 @@ public partial class SshFileSystemService : ISshFileSystemService
                     return freeDiskSpace;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.Error("GetAvailableDiskSpace error");
+                _logger.Error(ex, "GetAvailableDiskSpace error");
             }
         }
         return string.Empty;
@@ -251,9 +251,9 @@ public partial class SshFileSystemService : ISshFileSystemService
                         .ThenBy(a => a.Url.DisplayName)
                     ];
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.Error("List error");
+                _logger.Error(ex, "List error");
             }
         }
         return entries;

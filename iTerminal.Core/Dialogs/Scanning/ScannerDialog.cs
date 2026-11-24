@@ -628,22 +628,18 @@ public class ScannerDialog : Dialog
             // The action keys come first, so a narrow dialog drops the navigation hints and keeps the way out.
             string actions = _scanning
                 ? $"Esc:{UiText.Get("DialogHint.CancelScan", "Cancel the scan")}"
-                : string.Join("  ", new[]
-                {
+                : string.Join("  ",
                     $"Enter/S:{UiText.Get("DialogHint.Scan", "Scan")}",
                     $"W:{UiText.Get("DialogHint.Save", "Save the pages")}",
                     $"F5:{UiText.Get("DialogHint.RefreshScanners", "Read the scanners again")}",
-                    UiText.Get("Hint.Part.EscClose", "Esc:close"),
-                });
+                    UiText.Get("Hint.Part.EscClose", "Esc:close"));
             Put(buffer, 1, actionRow, textWidth, actions.FitHints(textWidth), colors.Foreground, colors.Background);
 
             if (!_scanning)
             {
-                string navigation = string.Join("  ", new[]
-                {
+                string navigation = string.Join("  ",
                     $"Up/Down:{UiText.Get("DialogHint.ChooseScanner", "Choose the scanner")}",
-                    $"[ / ]:{UiText.Get("DialogHint.PageStep", "Previous or next page")}",
-                });
+                    $"[ / ]:{UiText.Get("DialogHint.PageStep", "Previous or next page")}");
                 Put(buffer, 1, navigationRow, textWidth, navigation.FitHints(textWidth), colors.Foreground, colors.Background);
             }
         }

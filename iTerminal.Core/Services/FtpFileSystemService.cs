@@ -140,7 +140,7 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
                         $"Set {AllowPlainSetting} to true in the settings to allow plain FTP.", exception);
                 }
 
-                _logger?.Warning("{Host} offers no FTPS; continuing with plain FTP", host);
+                _logger?.Warning(exception, "{Host} offers no FTPS; continuing with plain FTP", host);
                 Disconnect();
                 _client = _clientFactory(name, port, user, secret, false);
                 _client.Connect();

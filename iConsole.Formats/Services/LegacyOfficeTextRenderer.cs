@@ -872,7 +872,7 @@ public static class LegacyOfficeTextRenderer
 
     /// <summary>A PowerPoint text run: its paragraphs are split on the carriage return and the vertical tab a line break uses.</summary>
     private static IEnumerable<string> Paragraphs(string text) =>
-        text.Split(['\r', '\v', '\n']).Select(Clean).Where(p => p.Length > 0);
+        text.Split('\r', '\v', '\n').Select(Clean).Where(p => p.Length > 0);
 
     private static string Clean(string text) => text.Replace('\u0000', ' ').Trim();
 

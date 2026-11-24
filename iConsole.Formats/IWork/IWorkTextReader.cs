@@ -248,7 +248,7 @@ public static class IWorkTextReader
         foreach (ReadOnlyMemory<byte> run in ProtobufWire.AllBytes(ProtobufWire.Parse(storage), 3))
         {
             string text = Encoding.UTF8.GetString(run.Span).Replace("￼", string.Empty).Replace('\u0007', ' ');
-            foreach (string line in text.Split(['\n', '\r', '\u2028', '\u2029']))
+            foreach (string line in text.Split('\n', '\r', '\u2028', '\u2029'))
             {
                 lines.Add(line.TrimEnd());
             }
