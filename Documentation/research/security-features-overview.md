@@ -662,3 +662,105 @@ These are the new items only, ranked by value to iTerminal.
 - Key storage on disk: item 16. Item 44 covers pages in RAM, a different risk.
 
 Totals after this survey: 46 items. Partly: 11 (7, 11, 12, 13, 16, 18, 20, 21, 23, 27, 30). Built: 1 (22). Missing: 34.
+
+### Survey 7: terminal escape sequences in file text, STIX indicators, PKCS #11 tokens, macOS code signing, systemd unit exposure, RPM package signatures and archive comparison
+
+Surveyed on 2026-11-24 on branch `fix/build-warnings-3` at commit `c5c693b3`. Topics: the escape-sequence weakness and the terminal controls it reaches, a threat-indicator format, hardware-token signing, the macOS code-signature and Gatekeeper checks, the systemd sandboxing audit, the RPM package signature check and a structured comparison of archives and binaries. Basis: official documentation (the MITRE CWE entry, the xterm control-sequence reference, the OASIS STIX 2.1 and PKCS #11 specifications, Apple's archived code-signing guide and its Gatekeeper page, the systemd-analyze and rpmkeys manual pages and the diffoscope project page), not run-time behaviour. Where a fetched page was cut off or did not load, the item says so and the claim is marked unverified. "Not found" means a case-insensitive grep of `iConsole/`, `iConsole.Formats/`, `iTerminal.Core/` and `iTerminal.Security/` (`*.cs`) on that branch and commit. `iTerminal.Security/` is added to the scope because CLAUDE.md names it and commit `4f1d9b53` moved the file-security code there.
+
+**Display**
+
+47. **Terminal escape neutralisation in displayed file text.**
+    - Present in part: the log view reads the colour and style codes and drops every other control sequence (`AnsiText` in `iConsole/Helper/LogHighlighting.cs`, used by `iConsole/Controls/LogView.cs`). Window titles and notifications are cleaned by `TerminalSequences.Sanitize` (`iConsole/Services/TerminalSequences.cs`), hyperlink targets are percent-encoded (`iConsole/Display/Hyperlinks.cs`), extracted document text loses its control characters (`iTerminal.Core/Documents/DocumentTextLimits.cs`), a paste into the text editor loses them (`iConsole/Controls/Editors/TextEditorControl.cs`), and the name mask flags control characters in file names (`iTerminal.Security/FileDisguise.cs`).
+    - Missing: nothing removes or shows the escape character in the F3 text viewer or its text model. `iConsole/Model/TextModel.cs` and the `TextViewerControl` files hold no control-character filter. The path from the file on disk to the draw call was not traced, so whether escape bytes reach the output is unverified. If they do, the terminal interprets them, which is the case CWE-150 describes.
+    - Fits: a pure function in `iConsole/Helper`, beside `TerminalSequences.Sanitize`, that gives each control character a visible form, applied when a viewer shows the text. It changes what is drawn and not the bytes on disk, so the editor's save path is unaffected. A test in `iConsole.Test` would cover it.
+    - Seen in: the MITRE entry for escape, meta or control sequences, CWE 5.0 (page dated 28 October 2026). Terminal ANSI codes are its best-known case, its effects run from colour changes to moving the cursor, clearing the screen and fake prompts, and an allowlist of printable characters is the recommended mitigation ([CWE-150](https://cwe.mitre.org/data/definitions/150.html)). The xterm control-sequence reference, updated for patch #411 (23 August 2026): an OSC string ends with BEL or ST, and OSC 52 sets the clipboard or, with a query, reads it. The control can be disabled by the `allowWindowOps` resource ([ctlseqs](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html)). The app writes OSC 52 itself (`iConsole/Services/Osc52TextClipboardService.cs`), so a file's sequence would reach the same clipboard path.
+    - Not found: `ansi injection`, and `IsControl` or `\u001b` in `iConsole/Model/TextModel.cs` and `iConsole/Controls/Viewers/`. The term `strip.*escape` matches three files, none of them a viewer.
+    - Unverified: the F3 draw path (not traced); the default of `allowWindowOps` (not reached in the fetched text); which terminals honour OSC 52.
+
+**Detection**
+
+48. **STIX 2.1 indicator reader.**
+    - Missing: nothing reads a STIX bundle, so a list of shared indicators cannot be matched against the SHA-256 of a file.
+    - Fits: a parser in `iConsole.Formats`, beside the CycloneDX, SPDX and SARIF readers (items 4, 34 and 25), that reads the indicator objects and the `hashes` of file observables. The file's digest comes from `ChecksumService`, and a hit is shown as a hint that names the indicator and its source, never as a verdict. A TAXII feed would be a network call and is outside this item.
+    - Seen in: the STIX 2.1 specification, an OASIS Standard incorporating draft 01 of Errata 01, dated 2 April 2025. Indicators are STIX domain objects, bundles wrap objects, and a file's hashes are a table keyed by the algorithm name, with SHA-256 recommended ([STIX 2.1](https://docs.oasis-open.org/cti/stix/v2.1/stix-v2.1.html)). The copyright is OASIS Open's, with copying allowed when the notices are kept.
+    - Not found: `stix`, `indicator of compromise`, `threat intel`, `taxii`, `misp`, `\bioc\b`. The word `indicator` matches only UI controls (`StepIndicator`, `ReadOnlyIndicator`).
+    - Unverified: the file-object section (the fetched text stopped before it, so an MD5 key was not seen); the approval of STIX 2.1 as an OASIS Standard on 10 June 2021, from a search summary ([OASIS](https://www.oasis-open.org/?p=7287)); whether a STIX 2.2 is in progress (not stated in the text read).
+
+**Signatures**
+
+49. **PKCS #11 signing with a key that stays on a token.**
+    - Present in part: Windows Authenticode signing selects a certificate from `Cert:\CurrentUser\My` by thumbprint (`iTerminal.Core/Services/Signing/SignatureService.cs`, lines 238 to 270), so a certificate that the Windows store holds can sign. Whether a smart-card certificate appears there was not tested (unverified). PEM signing reads a key file the user names.
+    - Missing: no PKCS #11 module is loaded, and no path exists on Linux or macOS. A key that cannot leave a hardware token therefore cannot sign for the in-process `.sig` format or for a publisher check, and the PIN is not handled anywhere.
+    - Fits: an `I*Service` in `iTerminal.Core/Services/Signing` that loads a module the user names (not shipped), opens a session, asks for the PIN through the password prompt and holds it in memory only, and signs the SHA-256 of the file with the token's key. The result has the shape the verifier already checks. A module installed on demand follows the runtime-dependency pattern (runtime-dependencies.md); a module the user installed does not need it.
+    - Seen in: the PKCS #11 Base Specification Version 3.0, an OASIS Standard dated 15 June 2020. It defines `C_Sign` and `C_Verify`, the user types for login and the private-key object ([PKCS #11 3.0](https://docs.oasis-open.org/pkcs11/pkcs11-base/v3.0/pkcs11-base-v3.0.html)). The copyright notice allows copying with the notices kept, under the RF on RAND Terms mode.
+    - Not found: `pkcs11`, `C_Sign`, `CKA_`, `smart card`, `SmartCard`, `\bpiv\b`, `hardware token`. The word `pkcs` matches only the PKCS #1, #7 and #12 uses in `SignatureService`, `Rfc3161`, `AuthenticodeCertificates`, `PdfSignatureReader` and `TlsCertificateFactory`.
+    - Unverified: the status of version 3.2. The committee specification 01 PDF did not read as text, and the search summary gives a public review in 2025 and no Standard status ([PKCS #11 3.2 CS01](https://docs.oasis-open.org/pkcs11/pkcs11-spec/v3.2/cs01/pkcs11-spec-v3.2-cs01.pdf)). The Windows store's handling of token certificates was not tested.
+
+50. **macOS code signature and Gatekeeper status (read-only).**
+    - Present in part: the Mach-O reader sets `Signed` when the code-signature load command is present (`iConsole.Formats/Executables/MachOAnalyzer.cs`, line 154), and the analysis result carries that flag. `FileOriginService` reads the `com.apple.quarantine` value, which Properties shows (file-operations.md, Mark of the Web).
+    - Missing: no check that a bundle's or a binary's signature is valid, and no Gatekeeper assessment. The presence flag is a fact about the file, not a valid signature. The word-bounded `\bcodesign\b` and `spctl` are not found.
+    - Fits: a macOS-only, read-only check in `iTerminal.Core/Services`, run through `IExternalProcessRunner` with a fixed argument list (a `codesign` verify call, then `spctl` for an app bundle), on a background task, with a row in Properties beside the quarantine row. The row shows the tool's own words and names the tool.
+    - Seen in: Apple's archived Code Signing Guide, the section on examining a code signature. It gives `codesign -v` as the check, a deep option that extends it to nested code, and what a successful check reports ([Code Signing Guide](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html)); the guide is dated 2016. Apple's Gatekeeper page, published 19 December 2024, says downloaded software needs a Developer ID signature or an App Store origin, notarization and no alteration since signing ([Gatekeeper](https://support.apple.com/guide/security/gatekeeper-and-runtime-protection-sec5599b66df/web)).
+    - Not found: `\bcodesign\b`, `spctl`, `gatekeeper`, `notariz`. The code-signature load command is read as the number 0x1D, not by name.
+    - Unverified: the current `codesign` and `spctl` options, because the official man pages did not load. The `--strict` option comes from an unofficial mirror of the man page dated 2011 ([codesign mirror](https://keith.github.io/xcode-man-pages/codesign.1.html)). Whether `spctl --assess` needs an app bundle is from a secondary summary.
+
+**Hardening**
+
+51. **systemd unit exposure audit (`systemd-analyze security`, Linux, read-only).**
+    - Missing: nothing reads unit files, and no `systemd-analyze` or `systemctl` call exists. The persistence review in security-tools 3.6 lists unit files but not their sandboxing settings.
+    - Fits: a Linux row or page in the persistence review (security-tools 3.6), with one `IExternalProcessRunner` call and a fixed argument list, run on a background task. It shows each unit's exposure value as the tool prints it. The value estimates how little the unit restricts itself; a high value is not a claim that the service is vulnerable.
+    - Seen in: the systemd-analyze man page for systemd 262. The `security` verb estimates an exposure value from 0.0 to 10.0 for the settings systemd enforces, and a high value means little sandboxing. The page says that a high value does not prove a weakness and that protections inside a service's own code are not counted. `--offline` reads unit files without PID 1, and `--json` gives the table in machine form ([systemd-analyze](https://www.freedesktop.org/software/systemd/man/latest/systemd-analyze.html)).
+    - Not found: `systemd-analyze`, `systemctl`, `NoNewPrivileges`, `ProtectSystem`, `/etc/systemd`, `list-units`.
+    - Unverified: the rating labels (MEDIUM, EXPOSED and UNSAFE are from a search summary; the fetched page names only OK, as an example); whether system units need root (not stated on the page).
+
+52. **RPM package signature check (`rpmkeys --checksig`).**
+    - Missing: nothing checks the digests and signatures of a `.rpm` file. The package-manager dialog (`iTerminal.Core/Dialogs/PackageManager/`) holds no `rpm` term. Item 36 is a different check, installed files against the package database.
+    - Fits: a read-only action on a `.rpm` file, from Properties (Ctrl+F12) or the package dialog, through the runner the package dialog already uses, with a fixed argument list. The keys come from the RPM database, which the user fills with the import command, and never from beside the package, as file-operations.md requires for publisher keys. The verdict is rpm's own OK or NOT OK, with its per-class letters. No local equivalent for `.deb` files was found in the sources read, so this item does not cover them.
+    - Seen in: the rpmkeys(8) page for RPM 6.1.0, dated 20 August 2026. `--checksig` checks the digests and signatures in a package file. Each class prints in lower case when it passes and in upper case when it fails, and the package gets OK or NOT OK. An expired signature or one with a legacy algorithm is ignored unless no trusted signature remains. `--import` takes ASCII-armoured keys, and `--verbose` lists each check with a result such as OK, NOKEY or BAD ([rpmkeys](https://rpm.org/docs/6.1.x/man/rpmkeys.8)).
+    - Not found: `rpmkeys`, `rpm -K`, `debsig`, `dpkg-sig`. The term `checksig` matches only method names with `CheckSignature` in the timestamp and PDF readers, not an rpm call.
+    - Unverified: the exact argument form (not run); the default `%_pkgverify_level` macro (not read); the rpm licence (not read).
+
+**Integrity**
+
+53. **Structured comparison of archives and binaries (diffoscope).**
+    - Present in part: a byte-level comparison (`iTerminal.Core/Dialogs/BinaryDiffView.cs`), a text diff (`iTerminal.Core/Dialogs/FileDiffDialog.cs`) and a folder comparison by name, size and date (`CompareFoldersDialog`). Security-tools 3.7 proposes a folder comparison by hash.
+    - Missing: nothing unpacks an archive to compare its members, and nothing converts a binary (ELF, PE, class file or PDF) into readable form before comparing. The compare dialogs hold no archive reader (`ZipArchive` is not found in `FileDiffDialog.cs`, `CompareFoldersDialog.cs` or `BinaryDiffView.cs`).
+    - Fits: a comparison service in `iConsole.Formats` for the in-app readers, or a diffoscope call installed on demand through `SystemToolRuntimeDependency`, as `RarRuntimeDependency` is (runtime-dependencies.md). Either shows its result in `FileDiffDialog`. Unpacking an archive is the risky part. It runs out of process with a time limit, uses the archive safety checks of security-tools 3.2 (paths that leave the folder and size ceilings), and never runs or opens what it unpacks.
+    - Seen in: the diffoscope project page, latest release 339 dated 13 November 2026, licensed GPL-3.0-or-later. It unpacks archives recursively (ZIP, tar, ar, cpio, RPM, ISO 9660 and compressed streams), converts binary formats (ELF, PE32, Java class files and WebAssembly among them), and is developed under the Reproducible Builds effort ([diffoscope](https://diffoscope.org/)).
+    - Not found: `diffoscope`, `reproducible`, `ArchiveCompare`.
+    - Unverified: the full format list (taken from the page summary, not the documentation); availability in winget and Homebrew (not checked; distribution packages appear in search results only); the GPL licence means the tool is run as a separate program and never linked, which the maintainer should confirm against the project's policy.
+
+**Suggested order**
+
+These are the new items only, ranked by value to iTerminal.
+
+1. Terminal escape neutralisation (47): it closes a path from a file to the terminal, and it is a pure function with a viewer change.
+2. systemd unit exposure audit (51): read-only, one call, and it fits the persistence review.
+3. RPM package signature check (52): read-only, and it reuses the package dialog.
+4. macOS code signature and Gatekeeper status (50): read-only and macOS only, and it extends the Mach-O flag.
+5. STIX indicator reader (48): a pure parser, but it needs an indicator source the user chooses.
+6. diffoscope comparison (53): useful, but it unpacks untrusted archives and adds a runtime dependency.
+7. PKCS #11 signing (49): the largest, with a native module, PIN handling and a platform split.
+
+**Already covered, or considered and not added**
+
+- YARA and ClamAV: security-tools 3.2. Lynis: security-tools 3.6. gitleaks: security-tools 3.4. OSV-scanner: security-tools 3.6.
+- SLH-DSA and ML-KEM: item 3. Sigstore Rekor transparency log: items 19 and 38.
+- journalctl sealing: item 46. `rpm --verify` and `debsums` for installed files: item 36. signify: item 39.
+- Executable analysis of PE, ELF and Mach-O: security-tools section 2 (Have). Authenticode checks of updates: present (`AuthenticodeVerifier`).
+- Git signature letters: item 10. Windows certificate-store signing: partly present, item 49.
+- A hardware-key passkey signing extension: found in a search result only, not read. Item 32 covers passkeys.
+- Windows trusted root store audit: not researched in this survey.
+- Linux audit rule status (auditd): not researched in this survey.
+- Debian `.deb` signature check: no local check found in the sources read, so not added.
+- Google Tink hardware-token support: the search returned nothing, so not added.
+
+#### Status after the pull of 2026-11-24
+
+- Items 1 to 46 were re-checked by a term sweep of the terms in each "Not found" list, on commit `c5c693b3`. No status change was found. Items 4, 13, 21 and 30 were checked by hand: item 4 is still a writer (`iTerminal.Core/Dialogs/Dotnet/SolutionViewerDialog.cs`, `iTerminal.Core/Model/Dotnet/SbomResult.cs`); item 21 still has no Landlock, `no_new_privs` or `prctl` call, and the bubblewrap code is in `SessionSandboxes.cs` and `ProcessContainerSandbox.cs`; item 30 still has its one `FixedTimeEquals` call (`FileShareRequestHandler.cs`); item 13's reader is `iConsole.Formats/Services/AuthenticationResultsReader.cs`.
+- Item 10 is still Partly: `iTerminal.Core/Model/Git/GitSignature.cs` reads `%G?`, and `%GS` is not found. Item 12 is still Partly: `iTerminal.Security/FileDisguise.cs` holds no script or confusable term.
+- Text correction to item 44: the survey 6 text says `ProtectedData` appears in `PasswordManager`. It does not. The file uses `Microsoft.AspNetCore.DataProtection` (`IDataProtector`, `iTerminal.Core/Services/PasswordManager.cs`, lines 5, 225 and 387), and no `ProtectedData` type is referenced. Item 44 stays Missing.
+- The open issue on default-on RFC 3161 stamping still matches the source. The registration is at `iTerminal.Core/Application/iTerminalApplicationBuilderExtension.cs` line 377 (it was line 381), and `StampAsync` in `EvidenceNotebookService.cs` still checks only that a stamper is registered.
+- Path change: `iTerminal.Core/Services/Executables/ElfAnalyzer.cs` no longer exists; the analyser is `iConsole.Formats/Executables/ElfAnalyzer.cs`, as survey 5 recorded.
+- Totals were recounted from the status lines. Survey 5's consolidation listed 11 Partly and left out items 5 and 10, whose own status lines say Partly. Item 13's status line reads "Built for the topmost header", and its status block says Partly, so it is counted as Partly here. Before this survey: Partly 13 (5, 7, 10, 11, 12, 13, 16, 18, 20, 21, 23, 27, 30), Built 1 (22), Missing 32.
+- Totals after this survey: 53 items. Partly: 17 (5, 7, 10, 11, 12, 13, 16, 18, 20, 21, 23, 27, 30, 47, 49, 50, 53). Built: 1 (22). Missing: 35.
