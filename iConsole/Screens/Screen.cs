@@ -13,6 +13,7 @@ public class Screen : Control, IScreen
 
     public string Title
     {
+        get => _consoleDriver.Title;
         set => _consoleDriver.Title = value;
     }
 

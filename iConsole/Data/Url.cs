@@ -81,7 +81,7 @@ public partial class Url
     public static char DirectorySeparatorSlashChar => '/';
     public const string Folder = "Folder";
 
-    public string _displayName = string.Empty;
+    private readonly string _displayName = string.Empty;
     public string DisplayName => _displayName;
     private readonly string _name = string.Empty;
     public string Name => _name;
