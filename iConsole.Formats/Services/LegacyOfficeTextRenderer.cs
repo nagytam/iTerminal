@@ -598,7 +598,7 @@ public static class LegacyOfficeTextRenderer
                 byte flags = cursor.ReadByte();
                 int runs = (flags & 0x08) != 0 ? cursor.ReadUInt16() : 0;
                 uint extended = (flags & 0x04) != 0 ? cursor.ReadUInt32() : 0;
-                strings.Add(cursor.ReadCharacters(characters, (flags & BiffWideFlag) != 0));
+                strings.Add(cursor.ReadCharacterRun(characters, (flags & BiffWideFlag) != 0));
                 cursor.Skip(runs * 4 + (int)extended);
             }
         }
@@ -675,7 +675,7 @@ public static class LegacyOfficeTextRenderer
         /// Reads the characters of one string. When a CONTINUE record starts in the middle of them, its first byte is
         /// the wide flag for the rest of the characters.
         /// </summary>
-        public string ReadCharacters(int characters, bool wide)
+        public string ReadCharacterRun(int characters, bool wide)
         {
             StringBuilder text = new(characters);
             while (text.Length < characters)

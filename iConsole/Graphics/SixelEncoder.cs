@@ -151,7 +151,7 @@ public static class SixelEncoder
     {
         public int Start;
         public int End;
-        public long Population;
+        public long Weight;
     }
 
     /// <summary>Median cut: the used histogram bins are split into boxes of equal population, each box becoming one palette colour.</summary>
@@ -167,14 +167,14 @@ public static class SixelEncoder
         }
 
         int[] bins = [.. used];
-        List<Box> boxes = [new Box { Start = 0, End = bins.Length, Population = Population(histogram, bins, 0, bins.Length) }];
+        List<Box> boxes = [new Box { Start = 0, End = bins.Length, Weight = Population(histogram, bins, 0, bins.Length) }];
 
         while (boxes.Count < MaxColors)
         {
             int pick = -1;
             for (int i = 0; i < boxes.Count; i++)
             {
-                if (boxes[i].End - boxes[i].Start >= 2 && (pick < 0 || boxes[i].Population > boxes[pick].Population))
+                if (boxes[i].End - boxes[i].Start >= 2 && (pick < 0 || boxes[i].Weight > boxes[pick].Weight))
                 {
                     pick = i;
                 }
@@ -193,7 +193,7 @@ public static class SixelEncoder
                 return diff != 0 ? diff : a - b;
             }));
 
-            long half = box.Population / 2;
+            long half = box.Weight / 2;
             long running = 0;
             int split = box.Start + 1;
             for (int i = box.Start; i < box.End - 1; i++)
@@ -206,8 +206,8 @@ public static class SixelEncoder
                 }
             }
 
-            boxes[pick] = new Box { Start = box.Start, End = split, Population = Population(histogram, bins, box.Start, split) };
-            boxes.Add(new Box { Start = split, End = box.End, Population = box.Population - boxes[pick].Population });
+            boxes[pick] = new Box { Start = box.Start, End = split, Weight = Population(histogram, bins, box.Start, split) };
+            boxes.Add(new Box { Start = split, End = box.End, Weight = box.Weight - boxes[pick].Weight });
         }
 
         (byte R, byte G, byte B)[] palette = new (byte, byte, byte)[boxes.Count];

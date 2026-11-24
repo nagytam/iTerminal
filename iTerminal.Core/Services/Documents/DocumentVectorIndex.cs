@@ -37,7 +37,7 @@ public sealed class DocumentVectorIndex
     public readonly record struct Match(string Path, int ChunkStart, double Score);
 
     /// <summary>One passage's vector, ready to compare.</summary>
-    private sealed record Passage(string Path, int ChunkStart, float[] Vector, float Norm);
+    private sealed record Passage(string FilePath, int ChunkStart, float[] Vector, float Norm);
 
     private sealed record Snapshot(string Model, IReadOnlyList<Passage> Passages);
 
@@ -180,9 +180,9 @@ public sealed class DocumentVectorIndex
             }
 
             double score = Dot(passage.Vector, query) / (passage.Norm * queryNorm);
-            if (!best.TryGetValue(passage.Path, out Match current) || score > current.Score)
+            if (!best.TryGetValue(passage.FilePath, out Match current) || score > current.Score)
             {
-                best[passage.Path] = new Match(passage.Path, passage.ChunkStart, score);
+                best[passage.FilePath] = new Match(passage.FilePath, passage.ChunkStart, score);
             }
         }
 
