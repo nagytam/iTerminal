@@ -320,7 +320,7 @@ public class RiskGame : GameBase
                 return null;
             }
 
-            Action? action = ChooseAction(owner, armies, phase, reinforcements, random);
+            Action? action = ChooseAction(owner, armies, phase, random);
             if (action is null)
             {
                 return null;
@@ -337,7 +337,7 @@ public class RiskGame : GameBase
         };
     }
 
-    private Action? ChooseAction(int[] owner, int[] armies, RiskPhase phase, int reinforcements, Random random)
+    private Action? ChooseAction(int[] owner, int[] armies, RiskPhase phase, Random random)
     {
         const int computer = ComputerSide;
         switch (phase)

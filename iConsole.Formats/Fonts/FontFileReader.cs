@@ -116,7 +116,7 @@ public static class FontFileReader
             License: names.Get(13),
             UnitsPerEm: unitsPerEm,
             GlyphCount: glyphs,
-            CharacterCount: CharacterCount(bytes, Table(bytes, tables, "cmap")),
+            CharacterCount: CharacterCount(Table(bytes, tables, "cmap")),
             Weight: weight,
             WidthClass: widthClass,
             Bold: bold,
@@ -197,7 +197,7 @@ public static class FontFileReader
     }
 
     /// <summary>The number of code points the character map's ranges cover, from its format 12 or format 4 subtable.</summary>
-    private static int CharacterCount(byte[] bytes, ReadOnlySpan<byte> cmap)
+    private static int CharacterCount(ReadOnlySpan<byte> cmap)
     {
         if (cmap.Length < 4)
         {

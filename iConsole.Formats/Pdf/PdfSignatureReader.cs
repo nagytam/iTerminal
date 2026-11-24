@@ -166,8 +166,8 @@ internal static partial class PdfSignatureReader
         byte[] pdf, int keyStart, long[] range, int number, Action<X509ChainPolicy>? configureChain, CancellationToken cancellationToken)
     {
         long a = range[0], b = range[1], c = range[2], d = range[3];
-        string subFilter = Clean(Capture(Window(pdf, keyStart, c, d), SubFilterPattern()));
-        string name = Clean(DecodePdfString(Capture(Window(pdf, keyStart, c, d), NamePattern())));
+        string subFilter = Clean(Capture(Window(pdf, keyStart, c), SubFilterPattern()));
+        string name = Clean(DecodePdfString(Capture(Window(pdf, keyStart, c), NamePattern())));
 
         PdfSignature Unreadable() => new(number, name, string.Empty, null, subFilter, PdfSignatureIntegrity.Unreadable, false, PdfSignerTrust.Unknown);
 
@@ -312,7 +312,7 @@ internal static partial class PdfSignatureReader
     }
 
     /// <summary>The bytes around a signature dictionary where its plain-text entries sit: just before /ByteRange and after /Contents.</summary>
-    private static string Window(byte[] pdf, int keyStart, long c, long d)
+    private static string Window(byte[] pdf, int keyStart, long c)
     {
         // Both sides stop at the edge of the indirect object, so the entries of a neighbouring signature are never read.
         int before = Math.Max(0, keyStart - 2048);

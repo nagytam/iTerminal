@@ -317,7 +317,7 @@ public class RuntimeDependencyDialog : Dialog
 
         foreach (RuntimeDependencyStatus status in Actionable())
         {
-            (string glyph, Color glyphColor) = StateMarker(status, scheme);
+            (string glyph, Color glyphColor) = StateMarker(status);
             rows.Add(($"{status.Name} - {status.Purpose}", scheme.Foreground));
             rows.Add(($"{glyph} {RuntimeDependencyStepPage.StateText(status)}", glyphColor));
             rows.Add(status.Problem is not null
@@ -376,7 +376,7 @@ public class RuntimeDependencyDialog : Dialog
         }
     }
 
-    private static (string Glyph, Color Color) StateMarker(RuntimeDependencyStatus status, ColorScheme scheme)
+    private static (string Glyph, Color Color) StateMarker(RuntimeDependencyStatus status)
     {
         if (status.Problem is not null) return (Alert.GlyphFor(BadgeKind.Error).ToString(), Color.DarkRed);
         if (status.State == RuntimeDependencyState.Installed) return ("✓", Color.DarkGreen);

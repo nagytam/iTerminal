@@ -553,12 +553,6 @@ internal static class GoComputer
     {
         byte opponent = GoRules.Other(color);
         byte[] territory = GoRules.Territory(board, size, null);
-        bool[] hasStone = new bool[board.Length];
-        for (int i = 0; i < board.Length; i++)
-        {
-            hasStone[i] = board[i] != GoRules.Empty;
-        }
-
         int best = -1;
         double bestScore = double.MinValue;
         for (int index = 0; index < board.Length; index++)
@@ -569,7 +563,7 @@ internal static class GoComputer
                 continue;
             }
 
-            double score = Score(board, result, size, color, opponent, index, captured, territory, lastMove, moveCount, hasStone) + random.NextDouble() * 1.5;
+            double score = Score(board, result, size, color, opponent, index, captured, territory, lastMove, moveCount) + random.NextDouble() * 1.5;
             if (score > bestScore)
             {
                 bestScore = score;
@@ -592,7 +586,7 @@ internal static class GoComputer
         return bestScore < 0.5 || moveCount > size * size * 3 ? -1 : best;
     }
 
-    private static double Score(byte[] board, byte[] result, int size, byte color, byte opponent, int index, int captured, byte[] territory, int lastMove, int moveCount, bool[] hasStone)
+    private static double Score(byte[] board, byte[] result, int size, byte color, byte opponent, int index, int captured, byte[] territory, int lastMove, int moveCount)
     {
         double score = captured * 12;
         (List<int> stones, HashSet<int> liberties) = GoRules.Group(result, size, index);

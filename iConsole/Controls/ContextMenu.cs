@@ -287,7 +287,7 @@ public class ContextMenu : Popup
 
             string text = item.IsSeparator
                 ? new string('─', inner)
-                : FormatRow(item, checkWidth, titleWidth, rightWidth, inner);
+                : FormatRow(item, checkWidth, titleWidth, inner);
             ConxelString line = new(text, foreground, background);
             if (!item.IsSeparator)
             {
@@ -328,7 +328,7 @@ public class ContextMenu : Popup
         return (check, title, right);
     }
 
-    private static string FormatRow(ContextMenuItem item, int checkWidth, int titleWidth, int rightWidth, int inner)
+    private static string FormatRow(ContextMenuItem item, int checkWidth, int titleWidth, int inner)
     {
         string check = checkWidth == 0 ? string.Empty : item.IsChecked switch { true => "✓ ", _ => "  " };
         string row = " " + check + item.Text.PadRight(titleWidth);

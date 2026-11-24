@@ -118,7 +118,7 @@ public class SynchronizeFoldersDialog : Dialog
         (IContentModel? leftModel, IContentModel? rightModel) = Panels();
         if (leftModel?.Url is null || rightModel?.Url is null)
         {
-            SetStatus(Say("Folders.Status.BothFolders", "Both panels must show a folder."), isError: true);
+            SetStatus(Say("Folders.Status.BothFolders", "Both panels must show a folder."));
             return;
         }
 
@@ -130,7 +130,7 @@ public class SynchronizeFoldersDialog : Dialog
         }
         catch (Exception exception)
         {
-            SetStatus(exception.Message, isError: true);
+            SetStatus(exception.Message);
             return;
         }
 
@@ -143,7 +143,7 @@ public class SynchronizeFoldersDialog : Dialog
         _shown = null;
         _rows.ReplaceAll([]);
         _confirmingDeletes = false;
-        SetStatus(Say("Folders.Status.Comparing", "Comparing…"), isError: false);
+        SetStatus(Say("Folders.Status.Comparing", "Comparing…"));
 
         _work = Task.Run(async () =>
         {
@@ -174,20 +174,20 @@ public class SynchronizeFoldersDialog : Dialog
 
         if (preview.Plan.IsEmpty)
         {
-            SetStatus(Say("Folders.Status.NothingToSync", "Nothing to synchronise: the folders match."), isError: false);
+            SetStatus(Say("Folders.Status.NothingToSync", "Nothing to synchronise: the folders match."));
             return;
         }
 
         if (preview.Plan.Deletes > 0 && !_confirmingDeletes)
         {
             _confirmingDeletes = true;
-            SetStatus(Say("Folders.Status.SyncWithRecycle", "{0} Deletions go to the recycle bin where there is one. Enter again to run.", preview.Plan.Summary()), isError: true);
+            SetStatus(Say("Folders.Status.SyncWithRecycle", "{0} Deletions go to the recycle bin where there is one. Enter again to run.", preview.Plan.Summary()));
             return;
         }
 
         if (_taskManager is null || _progressWindowFactory is null)
         {
-            SetStatus(Say("Folders.Status.NotHere", "Synchronising is not available here."), isError: true);
+            SetStatus(Say("Folders.Status.NotHere", "Synchronising is not available here."));
             return;
         }
 
@@ -201,7 +201,7 @@ public class SynchronizeFoldersDialog : Dialog
         }
         catch (Exception exception)
         {
-            SetStatus(Say("Folders.Status.CouldNotSync", "Could not synchronise: {0}", exception.Message), isError: true);
+            SetStatus(Say("Folders.Status.CouldNotSync", "Could not synchronise: {0}", exception.Message));
         }
     }
 
@@ -239,7 +239,7 @@ public class SynchronizeFoldersDialog : Dialog
         _rows.ReplaceAll([]);
         _confirmingDeletes = false;
         UpdateOptionsLine();
-        SetStatus(Say("Folders.Status.OptionsChanged", "Options changed. Press p to compare again."), isError: false);
+        SetStatus(Say("Folders.Status.OptionsChanged", "Options changed. Press p to compare again."));
     }
 
     private static string DescribeDirection(SyncDirection direction) => direction switch
@@ -263,7 +263,7 @@ public class SynchronizeFoldersDialog : Dialog
     /// <summary>A text in the chosen language, with its arguments filled in.</summary>
     private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
-    private void SetStatus(string text, bool isError)
+    private void SetStatus(string text)
     {
         _statusLabel.Text = " " + text;
         StateHasChanged();
@@ -279,7 +279,7 @@ public class SynchronizeFoldersDialog : Dialog
         if (_failure is { } failure)
         {
             _failure = null;
-            SetStatus(Say("Folders.Status.CouldNotCompare", "Could not compare: {0}", failure), isError: true);
+            SetStatus(Say("Folders.Status.CouldNotCompare", "Could not compare: {0}", failure));
         }
 
         if (_ready is { } ready && !IsBusy)
@@ -287,7 +287,7 @@ public class SynchronizeFoldersDialog : Dialog
             _ready = null;
             _shown = ready;
             _rows.ReplaceAll([.. ready.Plan.Actions.Select(a => a.Describe())]);
-            SetStatus(ready.Plan.IsEmpty ? Say("Folders.Status.Match", "The folders match: nothing to synchronise.") : Say("Folders.Status.EnterRuns", "{0} Enter runs it.", ready.Plan.Summary()), isError: false);
+            SetStatus(ready.Plan.IsEmpty ? Say("Folders.Status.Match", "The folders match: nothing to synchronise.") : Say("Folders.Status.EnterRuns", "{0} Enter runs it.", ready.Plan.Summary()));
         }
         else if (IsBusy && _progress.Length > 0)
         {
