@@ -96,7 +96,7 @@ public class ArchiveFileSystemService : IArchiveFileSystemService
         using var archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read);
         var entry = archive.GetEntry(url.FullName.TrimStart('/'))
             ?? throw new FileNotFoundException($"Archive entry not found: {url.FullUrl}");
-        using var entryStream = entry.Open();
+        using var entryStream = await entry.OpenAsync();
         await StreamCopyHelper.CopyWithProgressAsync(entryStream, destination, progress, cancellationToken);
     }
 

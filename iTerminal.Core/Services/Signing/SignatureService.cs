@@ -119,7 +119,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         {
             using var stream = File.OpenRead(signaturePath);
             var buffer = new byte[Math.Min(256, stream.Length)];
-            stream.ReadExactly(buffer);
+            await stream.ReadExactlyAsync(buffer);
             head = Encoding.Latin1.GetString(buffer);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
@@ -172,7 +172,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
                     break;
                 }
 
-                buffer.Write(chunk, 0, read);
+                await buffer.WriteAsync(chunk.AsMemory(0, read), cancellationToken);
             }
 
             OpenPgpSignatureReport report = OpenPgpSignatureReader.Read(buffer.ToArray());

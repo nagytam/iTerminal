@@ -109,7 +109,9 @@ public partial class UpdateDialog : FormDialog
 
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && plain)
         {
+            #pragma warning disable S6966 // Install starts the installer on its own task, so the key handler returns at once.
             Install();
+            #pragma warning restore S6966
             return true;
         }
 

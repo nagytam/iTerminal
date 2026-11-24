@@ -655,7 +655,7 @@ public class FileToTextConverterService : IFileToTextConverterService
                 var expectedPath = url.Path + ".expected.txt";
                 if (File.Exists(expectedPath))
                 {
-                    var lines = File.ReadAllLines(expectedPath, Encoding.UTF8);
+                    var lines = await File.ReadAllLinesAsync(expectedPath, Encoding.UTF8);
                     foreach (var line in lines)
                         textModel.Lines.Add(line);
                     return;
@@ -701,7 +701,7 @@ public class FileToTextConverterService : IFileToTextConverterService
                 var expectedPath = url.Path + ".expected.txt";
                 if (File.Exists(expectedPath))
                 {
-                    var lines = File.ReadAllLines(expectedPath, Encoding.UTF8);
+                    var lines = await File.ReadAllLinesAsync(expectedPath, Encoding.UTF8);
                     foreach (var line in lines)
                         textModel.Lines.Add(line);
                     return;
