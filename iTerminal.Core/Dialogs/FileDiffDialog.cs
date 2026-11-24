@@ -97,8 +97,6 @@ public class FileDiffDialog : Dialog
         _ignoreCase = false;
         _leftLines = null;
         _rightLines = null;
-        _leftBytes = null;
-        _rightBytes = null;
         _binary = null;
         _hexMode = false;
         Result = null;
@@ -129,8 +127,6 @@ public class FileDiffDialog : Dialog
                 var leftBytes = await ReadAsync(left, leftFileSystem, token);
                 var rightBytes = await ReadAsync(right, rightFileSystem, token);
                 var binary = BinaryComparer.Compare(leftBytes, rightBytes);
-                _leftBytes = leftBytes;
-                _rightBytes = rightBytes;
                 _binary = binary;
                 _hexView.SetData(leftBytes, rightBytes, binary);
 

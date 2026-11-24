@@ -55,7 +55,6 @@ public class TerminalWindow : Window
         IThemeService themeService) 
         : base(themeService)
     {
-        _contentModelService = contentModelService;
         _terminalModel = terminalModel ?? new TerminalModel(new iConsole.Tasks.TaskManager(), null!);
         _terminalModel.PropertyChanged += OnPropertyChanged;
         CanFocus = true;

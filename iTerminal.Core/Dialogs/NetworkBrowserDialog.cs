@@ -85,8 +85,6 @@ public class NetworkBrowserDialog : SplitPaneDialog
         _networkProfileService = networkProfileService;
         _passwordManager = passwordManager;
         _contentModelService = contentModelService;
-        _beepService = beepService;
-        _dateTimeProviderService = dateTimeProviderService;
         Title = iConsole.Localization.UiText.Get("Dialog.NetworkBrowser", "Network Browser");
 
         _hostListBox = new HostListBox(

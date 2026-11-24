@@ -67,7 +67,6 @@ public class FileTransferDialog : Dialog
     public void Begin(IReadOnlyList<Url> selection)
     {
         ArgumentNullException.ThrowIfNull(selection);
-        _selectionCount = selection.Count;
         _selection.Text = UiText.Get("FileTransfer.Selection", "Selected: {0}").Replace("{0}", selection.Count.ToString(), StringComparison.Ordinal);
 
         if (selection.Count == 0)

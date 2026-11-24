@@ -61,7 +61,6 @@ public sealed class PulseAudioSink : IAudioSink
 
         lock (_syncLock)
         {
-            _format = format;
             _stopped = false;
 
             var spec = new SampleSpec

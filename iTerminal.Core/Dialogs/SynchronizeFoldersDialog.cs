@@ -266,7 +266,6 @@ public class SynchronizeFoldersDialog : Dialog
     private void SetStatus(string text, bool isError)
     {
         _statusLabel.Text = " " + text;
-        _statusIsError = isError;
         StateHasChanged();
     }
 

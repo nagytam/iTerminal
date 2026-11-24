@@ -329,7 +329,6 @@ public class PropertiesDialog : FormDialog
     /// <summary>Sets the local file or folder; call before showing the dialog.</summary>
     public void Load(string path)
     {
-        _path = path;
         _measure = null;
         _measureComplete = false;
         _errorLabel.Text = string.Empty;

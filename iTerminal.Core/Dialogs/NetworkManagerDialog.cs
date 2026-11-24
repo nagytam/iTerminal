@@ -38,7 +38,6 @@ public class NetworkManagerDialog : Dialog
         : base(nameof(NetworkManagerDialog), themeService)
     {
         _backgroundStart = backgroundStart;
-        _taskManager = taskManager ?? new TaskManager();
         _networkInfoModel = networkInfoModel ?? new NetworkInfoModel();
 
         Title = UiText.Get("Dialog.NetworkManager", "Network manager");
