@@ -20,7 +20,6 @@ public class TerminalWindow : Window
     //public override bool IsEnabled 
     //    get  
     //        try
-    //        {
     //            var contentModel = _contentModelService.GetLastContentModel();
     //            if (contentModel != null)
     //            {

@@ -79,7 +79,7 @@ public sealed class ContentModelFileSystem(
 
     public override string GetFooter() => EntryCountFooter();
 
-    protected FileSystemWatcher? FolderWatcher { get; private set; }
+    private FileSystemWatcher? FolderWatcher { get; set; }
 
     private TaskManager _taskManager { get; set; } = taskManager;
     private FolderHistoryService _folderHistoryService { get; set; } = folderHistoryService;
