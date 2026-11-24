@@ -79,7 +79,7 @@ public class FilePanelRefreshTask : BackgroundTask
 
     public override async Task ExecuteAsync()
     {
-        _logger.Information(nameof(FilePanelRefreshTask) + $" {Url.FullUrl} started");
+        _logger.Information($"FilePanelRefreshTask {Url.FullUrl} started");
 
         var key = Key + Url.FullUrl;
         var phases = _stopwatchFactory is not null ? new Dictionary<string, TimeSpan>() : null;
@@ -214,7 +214,7 @@ ON CONFLICT(Path) DO UPDATE SET
         PhaseDurations = phases;
 
         var finishedCount = entries?.Count ?? _contentModel?.Entries.Count ?? 0;
-        _logger.Information(nameof(FilePanelRefreshTask) + $" {Url.FullUrl} with {finishedCount} entries finished");
+        _logger.Information($"FilePanelRefreshTask {Url.FullUrl} with {finishedCount} entries finished");
     }
 
     /// <summary>

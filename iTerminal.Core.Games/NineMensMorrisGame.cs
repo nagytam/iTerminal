@@ -409,7 +409,9 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
                     continue;
                 }
 
+                #pragma warning disable S2234 // Negamax passes the window with the bounds swapped on purpose: the caller's alpha becomes the callee's beta.
                 int score = -Negamax(state.Apply(move), remaining - 1, -beta, -alpha, ply + 1);
+                #pragma warning restore S2234
                 if (score >= beta)
                 {
                     return beta;

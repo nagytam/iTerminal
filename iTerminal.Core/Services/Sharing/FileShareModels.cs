@@ -16,7 +16,9 @@ public enum FileShareStatus
 /// The share's state, replaced whole on every change. The dialog reads it on the idle pass and paints the matrix in
 /// its draw; nothing in it is a live object the worker keeps changing.
 /// </summary>
+#pragma warning disable S2368 // A square module grid is the natural shape here; a jagged array would make the code harder to read.
 public sealed record FileShareState(FileShareStatus Status, string? Url, bool[,]? QrModules, int Requests, string? Message)
+#pragma warning restore S2368
 {
     public static FileShareState Stopped { get; } = new(FileShareStatus.Stopped, null, null, 0, null);
 }

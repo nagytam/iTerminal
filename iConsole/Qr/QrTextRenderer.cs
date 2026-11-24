@@ -12,7 +12,9 @@ public static class QrTextRenderer
 {
     public const int DefaultQuietZone = 4;
 
+    #pragma warning disable S2368 // A square module grid is the natural shape here; a jagged array would make the code harder to read.
     public static IReadOnlyList<string> Render(bool[,] modules, int quietZone = DefaultQuietZone)
+    #pragma warning restore S2368
     {
         ArgumentNullException.ThrowIfNull(modules);
         ArgumentOutOfRangeException.ThrowIfNegative(quietZone);

@@ -564,7 +564,9 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
         Order(state, successors);
         foreach ((_, ChessState next) in successors)
         {
+            #pragma warning disable S2234 // Negamax passes the window with the bounds swapped on purpose: the caller's alpha becomes the callee's beta.
             int score = -Negamax(next, depth - 1, -beta, -alpha, ply + 1);
+            #pragma warning restore S2234
             if (score >= beta)
             {
                 return beta;
@@ -595,7 +597,9 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
         Order(state, captures);
         foreach ((_, ChessState next) in captures)
         {
+            #pragma warning disable S2234 // Negamax passes the window with the bounds swapped on purpose: the caller's alpha becomes the callee's beta.
             int score = -Quiesce(next, -beta, -alpha, depth + 1);
+            #pragma warning restore S2234
             if (score >= beta)
             {
                 return beta;

@@ -181,7 +181,9 @@ public static class QrEncoder
     }
 
     /// <summary>The penalty score of a matrix (rules N1 to N4), which picks the mask.</summary>
+    #pragma warning disable S2368 // A square module grid is the natural shape here; a jagged array would make the code harder to read.
     public static int Penalty(bool[,] modules)
+    #pragma warning restore S2368
     {
         ArgumentNullException.ThrowIfNull(modules);
         int size = modules.GetLength(0);

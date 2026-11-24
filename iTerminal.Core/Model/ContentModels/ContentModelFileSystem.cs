@@ -226,7 +226,7 @@ public class ContentModelFileSystem(
         var hasTask = _taskManager.GetTasks<FilePanelRefreshTask>(t => t.ContentModelName == Name && t.Url.FullUrl == Url.FullUrl && !t.CancellationTokenSource.IsCancellationRequested).Any();
         if (!hasTask)
         {
-            logger.Information($"Refresh task is started for {Url.FullUrl}");
+            logger.Information("Refresh task is started for {Url}", Url.FullUrl);
             // Add refresh task for the current folder (updates UI). This is the high-priority,
             // visible work and is enqueued synchronously so navigation reflects immediately.
             var refreshTask = new FilePanelRefreshTask(this, memoryCacheService, logger, _dbContextFactory, _stopwatchFactory);
@@ -244,7 +244,7 @@ public class ContentModelFileSystem(
         }
         else
         {
-            logger.Information($"Refresh task is running already for {Url.FullUrl}");
+            logger.Information("Refresh task is running already for {Url}", Url.FullUrl);
         }
     }
 
