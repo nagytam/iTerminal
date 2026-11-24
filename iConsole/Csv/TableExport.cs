@@ -62,9 +62,11 @@ public static class TableExport
         {
             string name = string.IsNullOrEmpty(headers[column]) ? "column_" + (column + 1) : headers[column];
             string candidate = name;
-            for (int suffix = 2; used.Contains(candidate); suffix++)
+            int suffix = 2;
+            while (used.Contains(candidate))
             {
                 candidate = name + "_" + suffix;
+                suffix++;
             }
 
             used.Add(candidate);

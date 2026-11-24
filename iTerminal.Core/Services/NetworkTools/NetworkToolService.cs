@@ -172,7 +172,8 @@ public sealed class NetworkToolService : INetworkToolService
     private static async Task WhoisAsync(string query, Action<string> writeLine, CancellationToken cancellationToken)
     {
         string server = WhoisRegistry;
-        for (int referral = 0; ; referral++)
+        int referral = 0;
+        while (true)
         {
             writeLine($"Asking {server} about {query}…");
             string response = await QueryWhoisAsync(server, query, cancellationToken);
@@ -184,6 +185,7 @@ public sealed class NetworkToolService : INetworkToolService
             }
 
             server = next;
+            referral++;
         }
     }
 

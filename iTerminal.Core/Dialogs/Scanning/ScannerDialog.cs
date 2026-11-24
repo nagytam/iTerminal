@@ -518,7 +518,8 @@ public class ScannerDialog : Dialog
     /// </summary>
     private static string UniqueStem(string folder, string stem, string extension, int count)
     {
-        for (int attempt = 1; ; attempt++)
+        int attempt = 1;
+        while (true)
         {
             string candidate = attempt == 1 ? stem : $"{stem}-{attempt}";
             bool taken = Enumerable.Range(0, count).Any(i => File.Exists(Path.Combine(folder, FileName(candidate, i, count, extension))));
@@ -526,6 +527,7 @@ public class ScannerDialog : Dialog
             {
                 return candidate;
             }
+            attempt++;
         }
     }
 
