@@ -378,5 +378,17 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
         }, cancellationToken);
     }
 
-    public void Dispose() => Disconnect();
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Disconnect();
+        }
+    }
 }

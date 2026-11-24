@@ -528,5 +528,17 @@ public class WebDavFileSystemService : IWebDavFileSystemService, IFolderListingF
         public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
-    public void Dispose() => Disconnect();
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Disconnect();
+        }
+    }
 }
