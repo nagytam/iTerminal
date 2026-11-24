@@ -571,14 +571,7 @@ public class MenuItem : PopUpWindow
             }
         }
 
-        foreach (var child in concrete.Controls.AsArray())
-        {
-            if (IsBoundToACommand(child, keyEvent))
-            {
-                return true;
-            }
-        }
-        return false;
+        return concrete.Controls.AsArray().Any(child => IsBoundToACommand(child, keyEvent));
     }
 
     public override Task TriggerHotKeyAsync()

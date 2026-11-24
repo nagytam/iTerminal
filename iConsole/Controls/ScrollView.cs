@@ -284,15 +284,7 @@ public class ScrollView : Control
             return true;
         }
 
-        foreach (IControl child in control.Controls.AsSnapshot())
-        {
-            if (child is not null && SubtreeChanged(child))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return control.Controls.AsSnapshot().Any(child => child is not null && SubtreeChanged(child));
     }
 
     private static void ClearChanged(IControl control)

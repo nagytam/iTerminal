@@ -231,15 +231,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
 
         // The file name is in the haystack because an untagged track has nothing else to be found by.
         var haystack = $"{track.Artist} {track.Album} {track.Title} {System.IO.Path.GetFileNameWithoutExtension(track.Path)}";
-        foreach (var token in tokens)
-        {
-            if (!haystack.Contains(token, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return tokens.All(token => !haystack.Contains(token, StringComparison.OrdinalIgnoreCase));
     }
 
     private void BuildTransportEntries(List<IEntry> entries)

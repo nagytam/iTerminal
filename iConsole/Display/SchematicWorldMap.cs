@@ -61,15 +61,7 @@ public static class SchematicWorldMap
     /// <summary>Whether the point at <paramref name="longitude"/>, <paramref name="latitude"/> (degrees) is inside one of the outlines.</summary>
     public static bool IsLand(double longitude, double latitude)
     {
-        foreach ((double Longitude, double Latitude)[] outline in Landmasses)
-        {
-            if (InsideOutline(outline, longitude, latitude))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return Landmasses.Any(outline => InsideOutline(outline, longitude, latitude));
     }
 
     /// <summary>

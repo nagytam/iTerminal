@@ -397,15 +397,7 @@ public class SystemConsoleDriver : IConsoleDriver
 
     private static bool NeedsAnsi(List<Conxel> list)
     {
-        foreach (var conxel in list)
-        {
-            if (AnsiRenderer.NeedsAnsi(conxel))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return list.Any(conxel => AnsiRenderer.NeedsAnsi(conxel));
     }
 
     private void WriteAnsi(int x, int y, ConxelString s)
