@@ -563,13 +563,7 @@ public class MenuItem : PopUpWindow
             return false;
         }
 
-        foreach (var command in concrete.Commands.AsSnapshot())
-        {
-            if (command.ActiveKey is not null && command.ActiveKey.IsIdentical(keyEvent))
-            {
-                return true;
-            }
-        }
+        if (concrete.Commands.AsSnapshot().Any(command => command.ActiveKey is not null && command.ActiveKey.IsIdentical(keyEvent))) return true;
 
         return concrete.Controls.AsArray().Any(child => IsBoundToACommand(child, keyEvent));
     }

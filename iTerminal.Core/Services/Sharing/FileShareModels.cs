@@ -54,12 +54,9 @@ public sealed class NetworkInterfaceAddressSource : IFileShareAddressSource
             IPInterfaceProperties properties = networkInterface.GetIPProperties();
             bool gateway = properties.GatewayAddresses.Any(entry =>
                 entry.Address.AddressFamily == AddressFamily.InterNetwork && !entry.Address.Equals(IPAddress.Any));
-            foreach (UnicastIPAddressInformation unicast in properties.UnicastAddresses)
+            foreach (UnicastIPAddressInformation unicast in properties.UnicastAddresses.Where(unicast => unicast.Address.AddressFamily == AddressFamily.InterNetwork))
             {
-                if (unicast.Address.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    result.Add(new LanAddress(unicast.Address, gateway));
-                }
+                result.Add(new LanAddress(unicast.Address, gateway));
             }
         }
 

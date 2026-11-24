@@ -188,13 +188,7 @@ internal sealed class BoundedFileReader : IDisposable
                 return false;
             }
 
-            foreach (byte[] needle in needles)
-            {
-                if (buffer.AsSpan(0, take).IndexOf(needle) >= 0)
-                {
-                    return true;
-                }
-            }
+            if (needles.Any(needle => buffer.AsSpan(0, take).IndexOf(needle) >= 0)) return true;
 
             if (position + take >= end)
             {

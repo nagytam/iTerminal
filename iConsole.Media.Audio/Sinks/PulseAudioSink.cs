@@ -280,12 +280,8 @@ public sealed class PulseAudioSink : IAudioSink
 
     private static string? GetDefaultSinkName()
     {
-        foreach (var line in RunLines("pactl", ["info"]).Where(line => line.StartsWith("Default Sink:", StringComparison.OrdinalIgnoreCase)))
-        {
-            return line["Default Sink:".Length..].Trim();
-        }
-
-        return null;
+        var defaultSink = RunLines("pactl", ["info"]).FirstOrDefault(candidate => candidate.StartsWith("Default Sink:", StringComparison.OrdinalIgnoreCase));
+        return defaultSink is null ? null : defaultSink["Default Sink:".Length..].Trim();
     }
 
     /// <summary>Turns "alsa_output.pci-0000_00_1f.3.analog-stereo" into something readable.</summary>

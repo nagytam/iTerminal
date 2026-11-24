@@ -57,12 +57,9 @@ internal sealed class FileShareRequestHandler
 
         // Each segment is decoded once. A decoded separator, NUL or dot segment is refused.
         string[] segments = raw[1..].Select(Uri.UnescapeDataString).ToArray();
-        foreach (string segment in segments)
+        if (segments.Any(segment => segment.Contains('/') || segment.Contains('\\') || segment.Contains('\0') || segment is "." or ".."))
         {
-            if (segment.Contains('/') || segment.Contains('\\') || segment.Contains('\0') || segment is "." or "..")
-            {
-                return await WriteStatusAsync(output, 404, "Not Found", null, cancellationToken);
-            }
+            return await WriteStatusAsync(output, 404, "Not Found", null, cancellationToken);
         }
 
         if (segments.Length == 0)
