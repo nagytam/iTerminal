@@ -82,7 +82,9 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
 
             int port = ((IPEndPoint)listener.LocalEndpoint).Port;
             string token = FileShareToken.Create();
+            #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
             string url = $"http://{address}:{port}/{token}/";
+            #pragma warning restore S5332
             bool[,] qr = QrEncoder.Encode(Encoding.UTF8.GetBytes(url));
 
             CancellationTokenSource cancellation = new();

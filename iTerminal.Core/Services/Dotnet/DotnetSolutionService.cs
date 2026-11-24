@@ -276,7 +276,9 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
     private static byte[] BuildCycloneDxXml(
         string solutionName, IReadOnlyList<SbomComponent> components, string serialNumber, DateTimeOffset timestamp)
     {
+        #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
         XNamespace ns = "http://cyclonedx.org/schema/bom/1.6";
+        #pragma warning restore S5332
         var document = new XDocument(
             new XDeclaration("1.0", "utf-8", null),
             new XElement(ns + "bom",

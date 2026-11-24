@@ -456,7 +456,9 @@ public sealed class GitService : IGitService
         {
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = "git",
+                #pragma warning restore S4036
                 WorkingDirectory = workingDirectory,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

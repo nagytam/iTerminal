@@ -48,7 +48,9 @@ public sealed class AplayAudioSink : IAudioSink
 
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = Executable,
+                #pragma warning restore S4036
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -266,7 +268,9 @@ public sealed class AplayAudioSink : IAudioSink
         {
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = Executable,
+                #pragma warning restore S4036
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,

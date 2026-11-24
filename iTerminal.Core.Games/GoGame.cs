@@ -523,7 +523,9 @@ public class GoGame : GameBase
         int seed = Random.Next();
         return token =>
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             int choice = GoComputer.Choose(board, size, GoRules.White, previous, lastMove, opponentPassed, moves, new Random(seed), token);
+            #pragma warning restore S2245
             return () =>
             {
                 if (version != Version)

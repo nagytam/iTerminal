@@ -81,7 +81,9 @@ public class WeatherJob(WeatherService weatherService, ICacheService cacheServic
 
     private static async Task<WeatherLocation?> GetWeatherLocationAsync(CancellationToken cancellationToken)
     {
+        #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
         using var response = await _httpClient.GetAsync("http://ip-api.com/json/?fields=status,message,city,countryCode,lat,lon", cancellationToken);
+        #pragma warning restore S5332
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
         return ParseWeatherLocation(json);

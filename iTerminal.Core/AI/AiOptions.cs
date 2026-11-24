@@ -31,7 +31,9 @@ public class AiOptions
     public string ApiKeyEnvVar { get; set; } = "ANTHROPIC_API_KEY";
 
     /// <summary>The password manager entry the key is kept under when the environment variable is not set.</summary>
+    #pragma warning disable S2068 // Not a credential: an identifier or a fixed placeholder, not a secret.
     public const string ApiKeyPasswordId = "ai:api-key";
+    #pragma warning restore S2068
     public string ApiBaseUrl { get; set; } = "https://api.anthropic.com/v1/";
     public int BarHeight { get; set; } = 5;
     // When true, the Ollama provider asks for no reasoning (reasoning_effort "none") so reasoning models

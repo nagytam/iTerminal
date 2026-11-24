@@ -96,7 +96,9 @@ public interface IGame
 /// <summary>What the games share: the mode flag and a random source the tests can fix.</summary>
 public abstract class GameBase(Random? random) : IGame
 {
+    #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
     protected Random Random { get; } = random ?? new Random();
+    #pragma warning restore S2245
 
     /// <summary>Counts every change to the position, so a computer move chosen for an old one is dropped.</summary>
     protected int Version { get; set; }

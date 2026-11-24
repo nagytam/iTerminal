@@ -43,7 +43,9 @@ public sealed class WindowsUserGroupService(IExternalProcessRunner runner) : IUs
             return Task.FromResult(InvalidInput());
         }
 
+        #pragma warning disable S2068 // Not a credential: an identifier or a fixed placeholder, not a secret.
         string script = $"$password = [Console]::In.ReadLine(); if ($null -eq $password) {{ throw 'Password input was not received.' }}; " +
+        #pragma warning restore S2068
             $"$securePassword = ConvertTo-SecureString $password -AsPlainText -Force; " +
             $"New-LocalUser -Name {Literal(name)} -FullName {Literal(fullName)} -Password $securePassword | Out-Null";
         return RunPasswordScriptAsync(script, password, $"{name} was created.", cancellationToken);
@@ -62,7 +64,9 @@ public sealed class WindowsUserGroupService(IExternalProcessRunner runner) : IUs
             return Task.FromResult(InvalidInput());
         }
 
+        #pragma warning disable S2068 // Not a credential: an identifier or a fixed placeholder, not a secret.
         string script = $"$password = [Console]::In.ReadLine(); if ($null -eq $password) {{ throw 'Password input was not received.' }}; " +
+        #pragma warning restore S2068
             $"$securePassword = ConvertTo-SecureString $password -AsPlainText -Force; " +
             $"Set-LocalUser -Name {Literal(name)} -Password $securePassword";
         return RunPasswordScriptAsync(script, password, $"The password for {name} was changed.", cancellationToken);

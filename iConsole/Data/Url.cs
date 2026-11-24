@@ -32,7 +32,9 @@ public partial class Url
     private static partial Regex RegexSshUrl();
 
     // ftp://user@host/path  (with credentials)
+    #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
     [GeneratedRegex("ftp://([^@/:]*)@([a-zA-Z0-9.\\-]*(?::[0-9]+)?)(\\/.*)")]
+    #pragma warning restore S5332
     private static partial Regex RegexFtpUrlWithUser();
 
     // ftp://host/path  (anonymous / no credentials)

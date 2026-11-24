@@ -242,7 +242,9 @@ internal static partial class PdfSignatureReader
             try
             {
                 // adbe.pkcs7.sha1 carries the SHA-1 of the signed bytes as the content the CMS signs.
+                #pragma warning disable S4790 // The digest is the one the file format or service names; it is used to read that format, not to make new trust decisions.
                 intact = !sha1Flavour || cmsMessage.ContentInfo.Content.AsSpan().SequenceEqual(SHA1.HashData(signed));
+                #pragma warning restore S4790
                 if (intact)
                 {
                     cmsMessage.CheckSignature(verifySignatureOnly: true);

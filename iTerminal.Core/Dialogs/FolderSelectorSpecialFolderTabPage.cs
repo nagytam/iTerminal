@@ -145,7 +145,9 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
         string? tempPath = null;
         try
         {
+            #pragma warning disable S5443 // A system temporary folder that the app only reads or writes its own files in; not a security boundary here.
             tempPath = System.IO.Path.GetTempPath();
+            #pragma warning restore S5443
         }
         catch
         {

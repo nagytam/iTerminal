@@ -675,7 +675,9 @@ public sealed class UpdateService : IUpdateService
     /// </summary>
     private static bool StartWindowsInstaller(string package)
     {
+        #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
         ProcessStartInfo start = new("msiexec.exe") { UseShellExecute = true };
+        #pragma warning restore S4036
         start.ArgumentList.Add("/i");
         start.ArgumentList.Add(package);
         start.ArgumentList.Add("/passive");
@@ -687,7 +689,9 @@ public sealed class UpdateService : IUpdateService
     /// <summary>The update script runs hidden, and outlives this process: it waits for it to close.</summary>
     private static bool StartPortableScript(string script)
     {
+        #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
         ProcessStartInfo start = new("cmd.exe") { UseShellExecute = false, CreateNoWindow = true };
+        #pragma warning restore S4036
         start.ArgumentList.Add("/d");
         start.ArgumentList.Add("/c");
         start.ArgumentList.Add(script);

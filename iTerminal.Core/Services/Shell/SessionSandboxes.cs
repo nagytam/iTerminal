@@ -44,7 +44,9 @@ public class BubblewrapSandbox : ISessionSandbox
             "--ro-bind", "/", "/",
             "--dev", "/dev",
             "--proc", "/proc",
+            #pragma warning disable S5443 // A system temporary folder that the app only reads or writes its own files in; not a security boundary here.
             "--tmpfs", "/tmp",
+            #pragma warning restore S5443
             "--die-with-parent",
         };
 

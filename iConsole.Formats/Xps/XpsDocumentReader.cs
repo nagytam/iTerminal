@@ -111,7 +111,9 @@ public sealed class XpsDocumentReader : IXpsDocumentReader
     /// <summary>A package path from a reference: relative to the referring part, or absolute from the package root.</summary>
     private static string Resolve(string basePath, string reference)
     {
+        #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
         Uri target = new(new Uri("http://xps/" + basePath), reference);
+        #pragma warning restore S5332
         return Uri.UnescapeDataString(target.AbsolutePath.TrimStart('/'));
     }
 

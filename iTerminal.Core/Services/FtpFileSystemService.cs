@@ -19,7 +19,9 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
 {
     public const int DefaultPort = 21;
     public const string AnonymousUser = "anonymous";
+    #pragma warning disable S2068 // Not a credential: an identifier or a fixed placeholder, not a secret.
     public const string AnonymousPassword = "anonymous@";
+    #pragma warning restore S2068
 
     /// <summary>The setting that lets a login with a password fall back to unencrypted FTP when the server offers no TLS.</summary>
     public const string AllowPlainSetting = "Ftp.AllowPlain";

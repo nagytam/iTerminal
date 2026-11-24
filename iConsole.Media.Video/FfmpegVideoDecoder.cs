@@ -75,7 +75,9 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
 
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = FfmpegExecutable,
+                #pragma warning restore S4036
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = true,

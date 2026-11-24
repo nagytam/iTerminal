@@ -469,21 +469,27 @@ public class ContentModelFileSystem(
         // "powershell … -File name.ps1"), so cmd runs it as typed; wrapping it again broke the script.
         if (OperatingSystem.IsWindows())
         {
+            #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
             process.StartInfo.FileName = "cmd.exe";
+            #pragma warning restore S4036
             process.StartInfo.Arguments = "/C " + terminalModel.Command.Command;
         }
         else if (OperatingSystem.IsLinux()
                  && terminalModel.Command.Command.EndsWith(".ps1",
                      StringComparison.CurrentCultureIgnoreCase))
         {
+            #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
             process.StartInfo.FileName = "powershell";
+            #pragma warning restore S4036
             process.StartInfo.Arguments = "-f " + terminalModel.Command.Command;
         }
         else if (OperatingSystem.IsLinux()
                  && terminalModel.Command.Command.EndsWith(".sh",
                      StringComparison.InvariantCultureIgnoreCase))
         {
+            #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
             process.StartInfo.FileName = "bash";
+            #pragma warning restore S4036
             process.StartInfo.Arguments = "-c ./" + terminalModel.Command.Command;
         }
         else if (OperatingSystem.IsLinux())

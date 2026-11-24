@@ -318,7 +318,9 @@ public class ChessGame : GameBase
         int budget = SearchMilliseconds;
         return token =>
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             ChessMove? move = new ChessSearch(new Random(seed), token, budget, 6).Best(snapshot);
+            #pragma warning restore S2245
             return move is null ? null : () =>
             {
                 if (version == Version)

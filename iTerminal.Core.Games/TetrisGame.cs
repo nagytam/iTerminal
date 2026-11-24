@@ -66,7 +66,9 @@ public class TetrisGame : GameBase
         _isRival = isRival;
         if (!isRival)
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             _rival = new TetrisGame(new Random(Random.Next()), isRival: true);
+            #pragma warning restore S2245
         }
 
         NewGame();

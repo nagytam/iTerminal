@@ -186,7 +186,9 @@ public class TicTacToeGame : GameBase
         int seed = Random.Next();
         return _ =>
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             int move = BestMove(snapshot, 'O', new Random(seed));
+            #pragma warning restore S2245
             return move < 0 ? null : () =>
             {
                 if (version == Version)
