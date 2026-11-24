@@ -48,7 +48,7 @@ public static class PipelinedFileCopyHelper
             catch (Exception ex)
             {
                 error = ex;
-                linkedCts.Cancel();
+                await linkedCts.CancelAsync();
                 throw;
             }
             finally
@@ -68,7 +68,7 @@ public static class PipelinedFileCopyHelper
             catch (Exception ex)
             {
                 error = ex;
-                linkedCts.Cancel();
+                await linkedCts.CancelAsync();
                 throw;
             }
             finally

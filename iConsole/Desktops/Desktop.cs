@@ -191,7 +191,7 @@ public class Desktop : IHostedService, IDesktop
             {
                 using CancellationTokenSource graceTimer = CancellationTokenSource.CreateLinkedTokenSource(CancellationTokenSource.Token);
                 await Task.WhenAny(renderer.FirstFrameRendered, Task.Delay(BackgroundJobsGracePeriod, graceTimer.Token));
-                graceTimer.Cancel();
+                _ = graceTimer.CancelAsync();
             }
 
             // Quit while waiting: the jobs would only start to be stopped again.

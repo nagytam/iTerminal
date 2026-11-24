@@ -572,7 +572,7 @@ public class PackageManagerDialog : SplitPaneDialog
                 ScrollOutput(10);
                 return true;
             case ConsoleKey.Escape:
-                _runCts?.Cancel();
+                if (_runCts is not null) await _runCts.CancelAsync();
                 Close();
                 return true;
         }

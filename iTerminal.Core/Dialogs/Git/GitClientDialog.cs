@@ -581,7 +581,7 @@ public class GitClientDialog : SplitPaneDialog
         }
 
         _detailShowsError = false;
-        _diffCts?.Cancel();
+        if (_diffCts is not null) await _diffCts.CancelAsync();
         var cts = new CancellationTokenSource();
         _diffCts = cts;
 

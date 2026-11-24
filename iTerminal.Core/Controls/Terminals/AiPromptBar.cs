@@ -298,7 +298,7 @@ public class AiPromptBar : Window, IBottomBar
                 return true;
 
             case ConsoleKey.Escape:
-                _cts?.Cancel();
+                if (_cts is not null) await _cts.CancelAsync();
                 _speech?.Cancel();
                 _model.Input = string.Empty;
                 _historyIndex = -1;
@@ -398,7 +398,7 @@ public class AiPromptBar : Window, IBottomBar
 
     private async Task SendAsync()
     {
-        _cts?.Cancel();
+        if (_cts is not null) await _cts.CancelAsync();
         _cts?.Dispose();
         _cts = new CancellationTokenSource();
         await _chatService.SendMessageAsync(_model, _cts.Token);

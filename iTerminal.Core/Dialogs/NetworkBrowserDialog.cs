@@ -567,7 +567,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
                 BeginBrowse();
                 return true;
             }
-            _scanCts?.Cancel();
+            if (_scanCts is not null) await _scanCts.CancelAsync();
             Close();
             return true;
         }

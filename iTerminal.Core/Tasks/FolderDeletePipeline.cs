@@ -82,7 +82,7 @@ internal static class FolderDeletePipeline
                         if (!shouldContinue)
                         {
                             Interlocked.Exchange(ref userCancelledAfterError, 1);
-                            linkedCts.Cancel();
+                            await linkedCts.CancelAsync();
                             throw new OperationCanceledException("Cancelled after an error.", ex);
                         }
                         lock (failedItemsLock)

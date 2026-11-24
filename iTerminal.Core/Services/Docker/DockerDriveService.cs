@@ -266,7 +266,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
         // Done reading, early or not: a docker cp still writing is stopped rather than drained.
         if (!producer.IsCompleted)
         {
-            producerCancellation.Cancel();
+            await producerCancellation.CancelAsync();
         }
 
         await pipe.Reader.CompleteAsync();

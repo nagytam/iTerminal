@@ -97,7 +97,7 @@ public class CertificateViewerDialog : Dialog
     {
         await base.OnInitializeAsync();
         // The dialog is shared: a new show starts from nothing, and the last request's read is cancelled.
-        _cancellation?.Cancel();
+        if (_cancellation is not null) await _cancellation.CancelAsync();
         _cancellation?.Dispose();
         _cancellation = new CancellationTokenSource();
         _picker.SetItems([]);

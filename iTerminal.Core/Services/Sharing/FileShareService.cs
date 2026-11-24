@@ -121,7 +121,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
             _gate.Release();
         }
 
-        cancellation?.Cancel();
+        if (cancellation is not null) await cancellation.CancelAsync();
         listener?.Stop();
         if (acceptLoop is not null)
         {

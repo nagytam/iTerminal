@@ -667,7 +667,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.Escape:
-                _runCts?.Cancel();
+                if (_runCts is not null) await _runCts.CancelAsync();
                 Close();
                 return true;
             case ConsoleKey.Spacebar:
