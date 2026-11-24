@@ -45,7 +45,6 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
 
     private readonly INetworkDiscoveryService _networkDiscoveryService;
     private readonly INetworkProfileService _networkProfileService;
-    private readonly IContentModelService _contentModelService;
     private readonly IPasswordManager _passwordManager;
     private readonly IPromptService? _promptService;
 
@@ -94,7 +93,6 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     {
         _networkDiscoveryService = networkDiscoveryService;
         _networkProfileService = networkProfileService;
-        _contentModelService = contentModelService;
         _passwordManager = passwordManager;
         _promptService = promptService;
 
@@ -106,7 +104,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         };
         _statusLabel = new Label(string.Empty, themeService);
         _signedInLabel = new Label(string.Empty, themeService);
-        _selectCommand = new SelectSmbCommand(_contentModelService);
+        _selectCommand = new SelectSmbCommand(contentModelService);
         _selectButton = new Button(UiText.Get("Button.SelectFolder", "Select folder"), _selectCommand, themeService)
         {
             HotKeyChar = 'S'

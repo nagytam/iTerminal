@@ -22,7 +22,6 @@ public class MarkPatternDialog : FormDialog
     private readonly Button _applyButton;
     private readonly Button _cancelButton;
     private readonly Label _errorLabel;
-    private readonly ApplyCommand _applyCommand;
 
     /// <summary>The panel to mark in; set by the command that opens the dialog.</summary>
     public IContentModel? Target { get; set; }
@@ -53,8 +52,8 @@ public class MarkPatternDialog : FormDialog
         : base(nameof(MarkPatternDialog), themeService)
     {
         Title = iConsole.Localization.UiText.Get("Menu.Mark", "Mark");
-        _applyCommand = new ApplyCommand(() => Marking);
-        AddCommand(_applyCommand);
+        var applyCommand = new ApplyCommand(() => Marking);
+        AddCommand(applyCommand);
 
         _textBoxPattern = new TextBox(beepService, dateTimeProviderService, themeService)
         {
@@ -71,7 +70,7 @@ public class MarkPatternDialog : FormDialog
             HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.FoldersToo", "Folders too"), 'F')
         };
         // Built from the command alone, so its caption follows the command's title: Mark or Unmark.
-        _applyButton = new Button(_applyCommand, themeService) { HotKeyChar = 'M' };
+        _applyButton = new Button(applyCommand, themeService) { HotKeyChar = 'M' };
         _cancelButton = new CancelDialogButton(themeService);
         _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxPattern);
