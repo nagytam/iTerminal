@@ -251,12 +251,12 @@ public class FileSystemService : IFileSystemService, IFreeSpaceFileSystem
 
     public bool ExistsFile(Url url)
     {
-        return File.Exists(url.Path); // TODO
+        return File.Exists(url.Path);
     }
 
     public bool ExistsFolder(Url url)
     {
-        return Directory.Exists(url.Path); // TODO
+        return Directory.Exists(url.Path);
     }
 
     public Task CreateFolderAsync(Url url)

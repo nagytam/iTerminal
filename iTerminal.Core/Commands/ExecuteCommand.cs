@@ -43,7 +43,7 @@ public class ExecuteCommand(
         var entry = contentModel.FilteredEntries[(int)contentModel.CursorPosition.Y];
 
         terminalModel.Command.Command = ProgramFile.CommandFor(entry.Name);
-        terminalModel.Command.WorkingDirectoryUrl = Path.GetDirectoryName(entry.FullName) ?? string.Empty; // TODO entry.Directory
+        terminalModel.Command.WorkingDirectoryUrl = Path.GetDirectoryName(entry.FullName) ?? string.Empty;
         var executeCommandTask = new ExecuteCommandTask()
         {
             // Without the panel the task has nothing to run: it completes at once and the command never starts.

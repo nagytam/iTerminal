@@ -23,7 +23,9 @@ public class Meter(IThemeService themeService) : Control(themeService)
         set
         {
             var clamped = double.IsNaN(value) ? 0.0 : Math.Clamp(value, 0.0, 1.0);
+            #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
             if (_value != clamped)
+            #pragma warning restore S1244
             {
                 _value = clamped;
                 StateHasChanged();

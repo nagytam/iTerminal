@@ -104,7 +104,7 @@ public class Control : INotifyPropertyChanged, IControl
 
             if (_hasStateChanged != value)
             {
-                // TODO
+
                 OnHasStateChangedChange(value);
                 _hasStateChanged = value;
             }

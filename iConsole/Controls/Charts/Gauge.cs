@@ -21,7 +21,9 @@ public class Gauge(IThemeService themeService) : Control(themeService)
         set
         {
             double clamped = double.IsNaN(value) ? 0 : Math.Clamp(value, 0.0, 1.0);
+            #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
             if (_value != clamped)
+            #pragma warning restore S1244
             {
                 _value = clamped;
                 StateHasChanged();

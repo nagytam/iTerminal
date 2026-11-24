@@ -84,7 +84,9 @@ public sealed class MapStore(ISettingsService settingsService)
         lock (_lock)
         {
             var places = Loaded();
+            #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
             if (places.RemoveAll(p => p.Name == place.Name && p.Latitude == place.Latitude && p.Longitude == place.Longitude) > 0)
+            #pragma warning restore S1244
             {
                 Save(places);
             }

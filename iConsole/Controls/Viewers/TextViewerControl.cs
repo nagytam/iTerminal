@@ -1003,7 +1003,7 @@ public partial class TextViewerControl : Control
 
         if (ViewSize.IsEmpty)
         {
-            return; // TODO
+            return;
         }
 
         _verticalScrollBar.Marks = SearchMarks();

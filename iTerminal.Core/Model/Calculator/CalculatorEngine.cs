@@ -273,7 +273,9 @@ public class CalculatorEngine
                 break;
             case "exp": result = Math.Exp(value); break;
             case "fact":
+                #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
                 if (value < 0 || value != Math.Truncate(value) || value > 170)
+                #pragma warning restore S1244
                 {
                     SetError();
                     return;

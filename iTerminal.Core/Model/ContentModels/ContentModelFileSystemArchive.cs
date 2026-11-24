@@ -37,7 +37,7 @@ public class ContentModelFileSystemArchive(
 
     public override string GetFooter() => EntryCountFooter();
 
-    public string ArchivePath { get; private set; } = string.Empty; // TODO
+    public string ArchivePath { get; private set; } = string.Empty;
     public override Url Url { get; protected set; } = new(Directory.GetCurrentDirectory());
 
     private TaskManager _taskManager { get; set; } = taskManager;
