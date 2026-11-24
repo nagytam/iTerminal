@@ -475,7 +475,7 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
     private const int Mate = 100_000;
     private static readonly int[] Values = [0, 100, 320, 330, 500, 900, 0];
 
-    private sealed class TimeUp : Exception;
+    public sealed class TimeUp : Exception;
 
     private readonly Stopwatch _clock = Stopwatch.StartNew();
     private bool _mayAbort;

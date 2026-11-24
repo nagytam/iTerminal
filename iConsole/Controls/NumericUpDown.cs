@@ -312,7 +312,7 @@ public class NumericUpDown : Control, IReadOnly
 
         // Input well — shares TextBox's editable-field colours so inputs look consistent.
         var wellForeground = IsEnabled ? Color.Green : colorScheme.DisabledForeground;
-        var wellBackground = colorScheme.Background;
+        Color wellBackground;
         if (!IsEnabled) wellBackground = colorScheme.DisabledBackground;
         else wellBackground = IsReadOnly ? Color.DarkYellow : Color.Yellow;
 
@@ -358,7 +358,6 @@ public class NumericUpDown : Control, IReadOnly
                 foreground = colorScheme.SelectedFocusedForeground;
                 background = colorScheme.Background;
                 break;
-            case VisualState.Normal:
             default:
                 foreground = colorScheme.Foreground;
                 background = colorScheme.Background;

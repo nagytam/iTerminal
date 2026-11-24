@@ -216,7 +216,7 @@ public partial class SshFileSystemService : ISshFileSystemService
                         if (name != ".")
                         {
                             var folderPostFix = listEntry.StartsWith('d') ? "/" : string.Empty;
-                            var size = match.Groups[1].Value.ToFileSize(); ;
+                            var size = match.Groups[1].Value.ToFileSize();
                             var date = match.Groups[2].Value.Replace("  ", " ");
                             var time = match.Groups[3].Value;
                             var dateTime = DateTime.ParseExact(

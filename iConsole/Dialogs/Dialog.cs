@@ -26,6 +26,7 @@ public class Dialog : PopUpWindow
 
     public override void OnInitializeActionButtons()
     {
+        // The dialog has no action buttons of its own; subclasses add theirs.
     }
 
     public override void OnInitializeLayout()

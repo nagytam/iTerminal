@@ -320,7 +320,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
 {
     private const int Win = 100_000;
 
-    private sealed class TimeUp : Exception;
+    public sealed class TimeUp : Exception;
 
     private readonly System.Diagnostics.Stopwatch _clock = System.Diagnostics.Stopwatch.StartNew();
     private bool _mayAbort;

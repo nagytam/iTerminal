@@ -5,6 +5,8 @@ namespace iConsole.Inputs.Windows.Jobs;
 
 internal partial class NativeMethods
 {
+    private NativeMethods() { }
+
     public const Int32 STD_INPUT_HANDLE = -10;
 
     public const Int32 ENABLE_MOUSE_INPUT = 0x0010;

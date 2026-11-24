@@ -51,7 +51,7 @@ public abstract class GamesDialog : SplitPaneDialog
     private bool _confirmingNewGame;
 
     /// <summary>Each game opens in a dialog of its own: the concrete dialogs pass their one game here. With several games the dialog also shows a game list.</summary>
-    protected internal GamesDialog(string dialogName, string title, IGame[] games, IThemeService themeService, ITimeProvider? timeProvider = null)
+    private protected GamesDialog(string dialogName, string title, IGame[] games, IThemeService themeService, ITimeProvider? timeProvider = null)
         : base(dialogName, themeService)
     {
         _games = games;

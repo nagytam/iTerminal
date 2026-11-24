@@ -752,7 +752,6 @@ public static class SyntaxHighlighter
             char c = line[i];
             if (language.BlockComment is { } block && string.CompareOrdinal(line, i, block.Start, 0, block.Start.Length) == 0)
             {
-                inBlockComment = true;
                 int close = line.IndexOf(block.End, i + block.Start.Length, StringComparison.Ordinal);
                 int stop = close < 0 ? length : close + block.End.Length;
                 spans.Add(new SyntaxSpan(i, stop - i, SyntaxKind.Comment));

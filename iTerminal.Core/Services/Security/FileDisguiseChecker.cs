@@ -6,6 +6,7 @@ namespace iTerminal.Core.Services.Security;
 /// Reads the first bytes of a local file and records the kind they show in <see cref="FileDisguiseCache"/>.
 /// This is I/O: call it on a background task, never from a key handler or Draw.
 /// </summary>
+#pragma warning disable S1118 // Registered with the container and handed around as an instance, so it keeps its implicit public constructor.
 public class FileDisguiseChecker
 {
     public static async Task<FileKind> DetectAsync(string path, CancellationToken cancellationToken = default)
@@ -39,3 +40,4 @@ public class FileDisguiseChecker
         return kind;
     }
 }
+#pragma warning restore S1118

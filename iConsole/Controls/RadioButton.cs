@@ -148,7 +148,6 @@ public class RadioButton : Control, IReadOnly
                 foreground = colorScheme.DisabledForeground;
                 background = colorScheme.DisabledBackground;
                 break;
-            case VisualState.Normal:
             default:
                 foreground = colorScheme.Foreground;
                 background = colorScheme.Background;

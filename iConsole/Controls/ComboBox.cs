@@ -318,7 +318,6 @@ public class ComboBox<T> : Control, IReadOnly
                 foreground = colorScheme.SelectedFocusedForeground;
                 background = colorScheme.Background;
                 break;
-            case VisualState.Normal:
             default:
                 foreground = colorScheme.Foreground;
                 background = colorScheme.Background;
