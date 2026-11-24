@@ -78,6 +78,16 @@ public class Date : StatusBarItem, IDisposable
     #region IDisposable
     public void Dispose()
     {
+        Dispose(true);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
         if (_isDisposed)
         {
             return;

@@ -46,6 +46,16 @@ public abstract class BitmapStillDecoder : IVideoDecoder
 
     public void Dispose()
     {
+        Dispose(true);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
         if (_bitmap.IsValueCreated)
         {
             _bitmap.Value.Dispose();

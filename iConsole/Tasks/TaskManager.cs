@@ -194,6 +194,16 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
 
     public void Dispose()
     {
+        Dispose(true);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
         if (_schedulerCancellationTokenSource.IsCancellationRequested)
         {
             return;

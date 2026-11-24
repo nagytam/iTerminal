@@ -107,6 +107,16 @@ public class ContentModelService(
     /// </summary>
     public void Dispose()
     {
+        Dispose(true);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
         foreach (IContentModel contentModel in ContentModels.ToList())
         {
             (contentModel as IDisposable)?.Dispose();
