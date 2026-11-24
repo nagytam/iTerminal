@@ -92,7 +92,7 @@ public sealed class OpenMeteoForecastProvider : IForecastProvider
         var hourChance = hourly.GetProperty("precipitation_probability");
         var hourCodes = hourly.GetProperty("weather_code");
         var hours = new List<HourlyPoint>();
-        var hourStart = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, 0, 0);
+        var hourStart = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, 0, 0, DateTimeKind.Unspecified);
         for (var i = 0; i < hourTimes.GetArrayLength(); i++)
         {
             if (hourTimes[i].ValueKind != JsonValueKind.String)
