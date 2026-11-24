@@ -327,7 +327,7 @@ public class ScrollView : Control
         _content.Position = new Position(0, 0);
         _content.ViewSize = m.Extent;
         _content.OnInitializeZOrder();
-        FollowFocus(m);
+        FollowFocus();
         ClampOffsets();
 
         if (m.Extent.IsEmpty)
@@ -359,7 +359,7 @@ public class ScrollView : Control
     }
 
     /// <summary>Scrolls to a control that has just taken the focus. Only a change of focus does, so the wheel is not undone by every repaint.</summary>
-    private void FollowFocus(Measurement m)
+    private void FollowFocus()
     {
         IControl? focused = FocusedInContent();
         if (ReferenceEquals(focused, _lastFocused))

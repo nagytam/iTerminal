@@ -1050,7 +1050,7 @@ public partial class TextViewerControl : Control
                 ApplyDecorations(conxelLine, (int)indexY, positionX, isCursorLine);
                 ApplySpelling(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 DecorateText(conxelLine, (int)indexY, positionX, isCursorLine, colorScheme);
-                HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
+                HighlightSearchResults(conxelLine, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
                 MarkWhitespace(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 MarkLineEnd(conxelLine, TextModel.Lines[(int)indexY], positionX, colorScheme);
@@ -1212,7 +1212,7 @@ public partial class TextViewerControl : Control
         return _searchMarks;
     }
 
-    private void HighlightSearchResults(ConxelString conxelLine, int x, int y)
+    private void HighlightSearchResults(ConxelString conxelLine, int y)
     {
         var colorScheme = ThemeService.CurrentColorScheme;
         var matchingLines = SearchModel.Hits.AsSnapshot().Where(h => h.Y == y);

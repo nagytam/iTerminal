@@ -27,8 +27,8 @@ public class UpdateCheckJobTest
         var notifications = new Mock<INotificationService>();
         var job = new UpdateCheckJob(Updates(canInstall: false).Object, notifications.Object, Mock.Of<IServiceProvider>(), TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
-        await job.OfferAsync(openDialog: true, CancellationToken.None);
-        await job.OfferAsync(openDialog: false, CancellationToken.None);
+        await job.OfferAsync(openDialog: true);
+        await job.OfferAsync(openDialog: false);
 
         notifications.Verify(n => n.Notify("iTerminal 1.2.0 is available", It.IsAny<string>(), It.IsAny<NotificationSeverity>(), It.IsAny<TimeSpan?>()), Times.Once);
     }
@@ -42,7 +42,7 @@ public class UpdateCheckJobTest
         var notifications = new Mock<INotificationService>();
         var job = new UpdateCheckJob(updates.Object, notifications.Object, Mock.Of<IServiceProvider>(), TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
-        await job.OfferAsync(openDialog: true, CancellationToken.None);
+        await job.OfferAsync(openDialog: true);
 
         notifications.VerifyNoOtherCalls();
     }

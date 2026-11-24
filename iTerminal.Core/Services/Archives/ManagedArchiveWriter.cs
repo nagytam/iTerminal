@@ -99,7 +99,7 @@ public static class ManagedArchiveWriter
                             name,
                             item.Modified,
                             knownSize,
-                            (s, ct) => item.WriteToAsync(new ProgressStream(s, tracker.BytesOf(item)), ct),
+                            (s, ct) => item.WriteToAsync(new ProgressStream(s, tracker.BytesOf()), ct),
                             cancellationToken);
                         added++;
                     }
@@ -159,7 +159,7 @@ public static class ManagedArchiveWriter
 
                 Stream compressor = (Stream?)gzip ?? bzip2!;
                 tracker.Start(item);
-                await item.WriteToAsync(new ProgressStream(compressor, tracker.BytesOf(item)), cancellationToken);
+                await item.WriteToAsync(new ProgressStream(compressor, tracker.BytesOf()), cancellationToken);
 
                 // Closing finishes the stream (the gzip footer, or bzip2's last block) and leaves the output open.
                 compressor.Close();
@@ -477,7 +477,7 @@ public static class ManagedArchiveWriter
             Report(0);
         }
 
-        public IProgress<long> BytesOf(ArchiveItem item) => new SynchronousProgress<long>(Report);
+        public IProgress<long> BytesOf() => new SynchronousProgress<long>(Report);
 
         public void Finish(ArchiveItem item)
         {

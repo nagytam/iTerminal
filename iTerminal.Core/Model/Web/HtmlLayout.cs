@@ -405,7 +405,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
                 return;
             }
 
-            (_flow ??= new Flow(owner, width)).Field(fieldId, field.DisplayWidth(width), style, link);
+            (_flow ??= new Flow(owner, width)).Field(fieldId, field.DisplayWidth(width), style);
         }
 
         private void Heading(HtmlNode node, WebStyle style, int link)
@@ -538,7 +538,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
             }
         }
 
-        public void Field(int fieldId, int fieldWidth, WebStyle style, int link)
+        public void Field(int fieldId, int fieldWidth, WebStyle style)
         {
             var needed = fieldWidth + (_space && _length > 0 ? 1 : 0);
             if (_length > 0 && _length + needed > width)
@@ -891,7 +891,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
 
         for (var r = 0; r < rows.Count; r++)
         {
-            var composed = ComposeRow(rows[r], columns, widths, activeColumns, separator, style, link, bordered);
+            var composed = ComposeRow(rows[r], columns, widths, activeColumns, separator, style, link);
             if (composed.Count == 0)
             {
                 continue;
@@ -916,7 +916,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
         return new WebLine([new WebSpan(text.Length > limit ? text[..limit] : text, WebStyle.Dim)]);
     }
 
-    private List<WebLine> ComposeRow(List<Cell> row, int columns, int[] widths, List<int> active, string separator, WebStyle style, int link, bool bordered)
+    private List<WebLine> ComposeRow(List<Cell> row, int columns, int[] widths, List<int> active, string separator, WebStyle style, int link)
     {
         // One block of lines per cell, with the width of the columns it covers.
         List<(List<WebLine> Lines, int Width)> blocks = [];

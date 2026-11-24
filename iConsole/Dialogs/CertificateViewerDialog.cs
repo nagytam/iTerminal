@@ -150,7 +150,7 @@ public class CertificateViewerDialog : Dialog
         if (task.IsFaulted)
         {
             // Load catches what it expects; anything else is an unexpected fault, reported rather than hidden.
-            BeginFallback(_url?.FullUrl, UiText.Get("Certificate.Fallback.Failed", "Could not open the file"), task.Exception?.GetBaseException().Message);
+            BeginFallback(UiText.Get("Certificate.Fallback.Failed", "Could not open the file"), task.Exception?.GetBaseException().Message);
             return;
         }
 
@@ -162,7 +162,7 @@ public class CertificateViewerDialog : Dialog
 
         if (load.Outcome == CertificateLoadOutcome.Fallback)
         {
-            BeginFallback(load.FullUrl, load.Reason, null);
+            BeginFallback(load.Reason, null);
             return;
         }
 
@@ -177,7 +177,7 @@ public class CertificateViewerDialog : Dialog
     /// Closes the viewer and runs the text fallback. A read that failed says why as a notification; a file with no
     /// certificate and no fallback wired says so too, so F3 never does nothing silently.
     /// </summary>
-    private void BeginFallback(string? fullUrl, string? reason, string? detail)
+    private void BeginFallback(string? reason, string? detail)
     {
         Func<Task>? fallback = OnFallback;
         Close();
