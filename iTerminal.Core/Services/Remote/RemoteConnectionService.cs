@@ -125,14 +125,11 @@ public sealed class RemoteConnectionService(
             saved.HasSavedCredential = true;
         }
 
-        if (string.IsNullOrEmpty(saved.Username))
+        // Anonymous: the drives look a profile up by user name, so there is nothing to find and nothing to keep.
+        if (string.IsNullOrEmpty(saved.Username) && saved.HasSavedCredential)
         {
-            // Anonymous: the drives look a profile up by user name, so there is nothing to find and nothing to keep.
-            if (saved.HasSavedCredential)
-            {
-                passwordManager?.DeleteSecret(saved.Id);
-                saved.HasSavedCredential = false;
-            }
+            passwordManager?.DeleteSecret(saved.Id);
+            saved.HasSavedCredential = false;
         }
 
         networkProfiles?.Save(new NetworkConnectionProfile
