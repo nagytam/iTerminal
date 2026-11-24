@@ -61,7 +61,7 @@ public class FileInformationRefreshTask
             var item = Entries.FirstOrDefault();
             if (item.Key is not null)
             {
-                Logger.Information($"FileInformationRefreshTask refresh {item.Key} ({Entries.Count})");
+                Logger.Information("FileInformationRefreshTask refresh {Key} ({Count})", item.Key, Entries.Count);
                 try
                 {
                     CurrentEntry = item.Value.Item1;

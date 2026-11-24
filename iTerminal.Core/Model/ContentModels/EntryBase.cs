@@ -25,18 +25,8 @@ public abstract record EntryBase : IEntry
         }
         set { fileSize = value; }
     }
-    protected string date = string.Empty;
-    public virtual string Date
-    {
-        get { return date; }
-        set { date = value; }
-    }
-    protected string time = string.Empty;
-    public virtual string Time 
-    {
-        get { return time; }
-        set { time = value; }
-    }
+    public virtual string Date { get; set; } = string.Empty;
+    public virtual string Time { get; set; } = string.Empty;
     public virtual string FullName => Url.FullName;
     public virtual string DisplayName => Url.DisplayName;
     public virtual string Name => Url.Name;

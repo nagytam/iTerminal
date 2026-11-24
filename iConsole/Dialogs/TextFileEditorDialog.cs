@@ -51,7 +51,6 @@ public class TextFileEditorDialog : Dialog
     /// The file was opened as bytes because the text editor does not take it. Leaving the hex view is allowed only when the
     /// bytes read back as the same text, so a binary is never saved as the text of its decoding.
     /// </summary>
-    private bool _binaryFile;
 
     /// <summary>The file's bytes as last known, or null when they must be read again.</summary>
     private byte[]? _fileBytes;
@@ -60,11 +59,7 @@ public class TextFileEditorDialog : Dialog
     public bool IsHexMode => _hexMode;
 
     /// <summary>Set before the dialog is shown for a file the text editor does not take: the editor opens in the hex view.</summary>
-    public bool OpenAsHex
-    {
-        get => _binaryFile;
-        set => _binaryFile = value;
-    }
+    public bool OpenAsHex { get; set; }
 
     public TextFileEditorDialog(
         IContentModelService contentModelService,
@@ -217,7 +212,7 @@ public class TextFileEditorDialog : Dialog
         }
 
         // A binary is read as bytes, never through the text converter, which would give its decoding, not the file.
-        if (_hexMode || _binaryFile)
+        if (_hexMode || OpenAsHex)
         {
             try
             {
@@ -257,7 +252,7 @@ public class TextFileEditorDialog : Dialog
         }
 
         // The view changed while the file was read, so what was read is the wrong kind: the next check reads it again.
-        if ((_hexMode || _binaryFile) != (pending.Bytes is not null))
+        if ((_hexMode || OpenAsHex) != (pending.Bytes is not null))
         {
             _pending = null;
             return;
@@ -408,7 +403,7 @@ public class TextFileEditorDialog : Dialog
         HexEditorControl.IsVisible = false;
         TextEditorControl.IsVisible = true;
         TextEditorControl.SetFocus();
-        if (_binaryFile)
+        if (OpenAsHex)
         {
             await EnterHexAsync();
         }
@@ -418,7 +413,7 @@ public class TextFileEditorDialog : Dialog
     {
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         _fileSystem = fileSystem;
-        if (_binaryFile)
+        if (OpenAsHex)
         {
             // A binary is shown as bytes: its text is never read, and no backup is kept of it.
             _textStale = true;
@@ -479,7 +474,7 @@ public class TextFileEditorDialog : Dialog
     /// </summary>
     private async Task<bool> LeaveHexAsync()
     {
-        if (_hexChanged || _binaryFile)
+        if (_hexChanged || OpenAsHex)
         {
             var encoding = TextEditorControl.TextModel.Encoding;
             if (!TryDecodeExactly(HexEditorControl.Data, encoding, TextEditorControl.TextModel.LineEnding, out string[] lines, out string lineEnding))
@@ -683,7 +678,7 @@ public class TextFileEditorDialog : Dialog
     {
         var store = _backups;
         // The text is backed up only when it is what the file would be saved as: not while bytes are shown or edited, or a binary.
-        if (store is null || !TextEditorControl.IsDirty || TextEditorControl.IsReadOnly || _hexMode || _hexChanged || _binaryFile)
+        if (store is null || !TextEditorControl.IsDirty || TextEditorControl.IsReadOnly || _hexMode || _hexChanged || OpenAsHex)
         {
             return;
         }
