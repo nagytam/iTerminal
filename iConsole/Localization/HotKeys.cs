@@ -22,10 +22,8 @@ public static class HotKeys
         string[] words = caption.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         for (int word = words.Length - 1; word >= 0; word--)
         {
-            foreach (char letter in words[word].Where(letter => char.IsLetter(letter)))
-            {
-                return letter;
-            }
+            var letter = words[word].FirstOrDefault(candidate => char.IsLetter(candidate));
+            if (letter != '\0') return letter;
         }
 
         return preferred;

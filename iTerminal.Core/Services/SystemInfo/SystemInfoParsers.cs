@@ -13,14 +13,12 @@ public static class SystemInfoParsers
     /// <summary>The model name of the first processor in a <c>/proc/cpuinfo</c> text; null when it has none (ARM).</summary>
     public static string? ParseCpuModel(string cpuinfo)
     {
-        foreach (string line in cpuinfo.Split('\n').Where(line => line.StartsWith("model name", StringComparison.Ordinal)))
-        {
-            int colon = line.IndexOf(':');
-            string model = colon < 0 ? string.Empty : line[(colon + 1)..].Trim();
-            return model.Length == 0 ? null : model;
-        }
+        var modelLine = cpuinfo.Split('\n').FirstOrDefault(candidate => candidate.StartsWith("model name", StringComparison.Ordinal));
+        if (modelLine is null) return null;
 
-        return null;
+        int colon = modelLine.IndexOf(':');
+        string model = colon < 0 ? string.Empty : modelLine[(colon + 1)..].Trim();
+        return model.Length == 0 ? null : model;
     }
 
     /// <summary>The aggregate <c>cpu</c> line of <c>/proc/stat</c>: idle time (including I/O wait) and all time, in jiffies.</summary>

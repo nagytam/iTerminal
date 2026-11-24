@@ -28,9 +28,10 @@ public static class ShellKinds
 
     public static bool TryParse(string? text, out ShellKind kind)
     {
-        foreach (var candidate in All.Where(candidate => string.Equals(Name(candidate), text?.Trim(), StringComparison.OrdinalIgnoreCase)))
+        Func<ShellKind, bool> matches = candidate => string.Equals(Name(candidate), text?.Trim(), StringComparison.OrdinalIgnoreCase);
+        if (All.Any(matches))
         {
-            kind = candidate;
+            kind = All.First(matches);
             return true;
         }
 

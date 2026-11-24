@@ -632,11 +632,11 @@ public class TetrisGame : GameBase
             .ToArray();
 
         // A turn next to a wall or a stack may push the piece aside by a cell or two to fit.
-        foreach (int kick in new[] { 0, -1, 1, -2, 2 }.Where(kick => !Collides(turned, _left + kick, _top)))
+        var kick = new int?[] { 0, -1, 1, -2, 2 }.FirstOrDefault(candidate => candidate is { } offset && !Collides(turned, _left + offset, _top));
+        if (kick is { } shift)
         {
             _cells = turned;
-            _left += kick;
-            return;
+            _left += shift;
         }
     }
 

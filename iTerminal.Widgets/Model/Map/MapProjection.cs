@@ -68,10 +68,8 @@ public static class MapProjection
         }
 
         var magnitude = Math.Pow(10, Math.Floor(Math.Log10(meters)));
-        foreach (var step in new[] { 5.0, 2.0, 1.0 }.Where(step => step * magnitude <= meters))
-        {
-            return step * magnitude;
-        }
+        var step = new[] { 5.0, 2.0, 1.0 }.FirstOrDefault(candidate => candidate * magnitude <= meters);
+        if (step > 0) return step * magnitude;
 
         return magnitude;
     }

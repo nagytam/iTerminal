@@ -217,10 +217,8 @@ public static partial class ICalendarTextReader
 
     private static string? Value(Component component, string name)
     {
-        foreach (ContentLine property in component.Properties.Where(property => property.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-        {
-            return ContentLines.Unescape(property.Value);
-        }
+        Func<ContentLine, bool> matches = candidate => candidate.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
+        if (component.Properties.Any(matches)) return ContentLines.Unescape(component.Properties.First(matches).Value);
 
         return null;
     }
