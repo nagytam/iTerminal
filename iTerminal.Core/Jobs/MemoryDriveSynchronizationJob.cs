@@ -94,14 +94,14 @@ public class MemoryDriveSynchronizationJob
     {
         try
         {
-            foreach (var file in _memoryDriveService.Root.Files)
+            foreach (var value in _memoryDriveService.Root.Files.Select(file => file.Value))
             {
-                var fileInfo = new FileInfo(Path.Combine(SyncPath, file.Value.FileName.Replace(Container.MEMORY_DRIVE, string.Empty)));
-                var dateMemory = file.Value.CreationTime;
+                var fileInfo = new FileInfo(Path.Combine(SyncPath, value.FileName.Replace(Container.MEMORY_DRIVE, string.Empty)));
+                var dateMemory = value.CreationTime;
                 var dateDisk = fileInfo.LastWriteTime;
                 if (!fileInfo.Exists || dateDisk.CompareTo(dateMemory) < 0)
                 {
-                    File.WriteAllBytes(fileInfo.FullName, file.Value.Content!);
+                    File.WriteAllBytes(fileInfo.FullName, value.Content!);
                     fileInfo.LastWriteTime = dateMemory;
                 }
             }

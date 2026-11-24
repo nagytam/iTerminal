@@ -122,15 +122,11 @@ public class NetworkDiscoveryService(ISmbFileSystemService smbFileSystemService)
             {
                 continue;
             }
-            foreach (var unicast in nic.GetIPProperties().UnicastAddresses)
+            foreach (var address in (nic.GetIPProperties().UnicastAddresses.Where(unicast => unicast.Address.AddressFamily == AddressFamily.InterNetwork)).Select(unicast => unicast.Address))
             {
-                if (unicast.Address.AddressFamily != AddressFamily.InterNetwork)
-                {
-                    continue;
-                }
                 // This machine's own address first, so its shares are listed even when no other host answers.
-                addresses.Add(unicast.Address);
-                addresses.AddRange(EnumerateLocalSubnet(unicast.Address));
+                addresses.Add(address);
+                addresses.AddRange(EnumerateLocalSubnet(address));
             }
         }
         if (addresses.Count == 0)

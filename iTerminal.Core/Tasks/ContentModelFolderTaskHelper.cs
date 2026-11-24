@@ -54,12 +54,8 @@ internal static class ContentModelFolderTaskHelper
             case ContainerType.SshFileSystem:
                 {
                     var sshFileSystemService = (ISshFileSystemService)fileSystem;
-                    foreach (var entry in sshFileSystemService.List(folderUrl))
+                    foreach (var entry in sshFileSystemService.List(folderUrl).Where(entry => !(entry.Url.DisplayName == "..")))
                     {
-                        if (entry.Url.DisplayName == "..")
-                        {
-                            continue;
-                        }
                         yield return entry.Url;
                     }
                     break;

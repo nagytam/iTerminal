@@ -767,16 +767,16 @@ internal static class SmbBrowserRows
         var rows = new List<FolderSelectorSmbTabPage.SmbEntry>();
         var listed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var host in found.Where(h => h.SmbAvailable))
+        foreach (var ipAddress in (found.Where(h => h.SmbAvailable)).Select(host => host.IPAddress))
         {
-            var address = host.IPAddress.ToString();
+            var address = ipAddress.ToString();
             if (!listed.Add(address))
             {
                 continue;
             }
             var saved = savedProfiles.Any(p => string.Equals(p.Host, address, StringComparison.OrdinalIgnoreCase));
             var login = LoginFor(address, loginList);
-            var thisMachine = NetworkDiscoveryService.IsLocalAddress(host.IPAddress)
+            var thisMachine = NetworkDiscoveryService.IsLocalAddress(ipAddress)
                 ? ", " + UiText.Get("FolderSelector.Smb.ThisMachine", "this machine")
                 : string.Empty;
             string label;
@@ -791,13 +791,9 @@ internal static class SmbBrowserRows
             rows.Add(new(login.Host, null, null, $"{login.Host} (SMB, {LoggedIn(login.Username)})"));
         }
 
-        foreach (var profile in savedProfiles)
+        foreach (var profileHost in savedProfiles.Where(profile => listed.Add(profile.Host)).Select(profile => profile.Host))
         {
-            if (!listed.Add(profile.Host))
-            {
-                continue;
-            }
-            rows.Add(new(profile.Host, null, null, $"{profile.Host} (SMB, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"));
+            rows.Add(new(profileHost, null, null, $"{profileHost} (SMB, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"));
         }
 
         return rows;

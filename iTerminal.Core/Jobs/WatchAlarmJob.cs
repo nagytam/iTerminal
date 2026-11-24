@@ -65,9 +65,9 @@ public class WatchAlarmJob(
             store.MarkRung(alarm.Uid, DateOnly.FromDateTime(now));
         }
 
-        foreach (var timer in timers.TakeFinished(now))
+        foreach (var label in timers.TakeFinished(now).Select(timer => timer.Label))
         {
-            notificationService.Notify(timer.Label.Length == 0 ? DefaultTimerLabel() : timer.Label, UiText.Get("Watch.TimerFinished", "Time is up"));
+            notificationService.Notify(label.Length == 0 ? DefaultTimerLabel() : label, UiText.Get("Watch.TimerFinished", "Time is up"));
         }
     }
 

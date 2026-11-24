@@ -362,16 +362,16 @@ public static class LegacyOfficeTextRenderer
 
     private static IEnumerable<BoundSheet> ReadBoundSheets(List<BiffRecord> records)
     {
-        foreach (BiffRecord record in records.Where(r => r.Type == BiffBoundSheet))
+        foreach (var data in (records.Where(r => r.Type == BiffBoundSheet)).Select(record => record.Data))
         {
             // lbPlyPos, hsState, dt (0 is a worksheet; charts and macro sheets are not shown), then the name.
-            if (record.Data.Length < 8 || record.Data[5] != 0)
+            if (data.Length < 8 || data[5] != 0)
             {
                 continue;
             }
 
-            uint streamOffset = BinaryPrimitives.ReadUInt32LittleEndian(record.Data);
-            ReadShortString(record.Data, 6, out string name, out _);
+            uint streamOffset = BinaryPrimitives.ReadUInt32LittleEndian(data);
+            ReadShortString(data, 6, out string name, out _);
             yield return new BoundSheet(name, (int)streamOffset);
         }
     }
@@ -549,10 +549,10 @@ public static class LegacyOfficeTextRenderer
     private static bool[] ReadDateFormats(List<BiffRecord> records)
     {
         Dictionary<int, string> custom = [];
-        foreach (BiffRecord record in records.Where(r => r.Type == BiffFormat && r.Data.Length >= 4))
+        foreach (var data in (records.Where(r => r.Type == BiffFormat && r.Data.Length >= 4)).Select(record => record.Data))
         {
-            ReadUnicodeString(record.Data, 2, out string code, out _);
-            custom[BinaryPrimitives.ReadUInt16LittleEndian(record.Data)] = code;
+            ReadUnicodeString(data, 2, out string code, out _);
+            custom[BinaryPrimitives.ReadUInt16LittleEndian(data)] = code;
         }
 
         return [.. records.Where(r => r.Type == BiffExtendedFormat && r.Data.Length >= 4).Select(record =>

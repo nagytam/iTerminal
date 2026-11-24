@@ -141,10 +141,10 @@ public class Wizard : Control
         long width = ViewSize.Width;
         long height = ViewSize.Height;
         long contentHeight = height > ChromeRows ? height - ChromeRows : 0;
-        foreach (WizardStep step in _steps)
+        foreach (var content in _steps.Select(step => step.Content))
         {
-            step.Content.Position = new Position(0, 1);
-            step.Content.ViewSize = new Size(width, contentHeight);
+            content.Position = new Position(0, 1);
+            content.ViewSize = new Size(width, contentHeight);
         }
 
         long errorRow = height > 1 ? height - 2 : 0;
