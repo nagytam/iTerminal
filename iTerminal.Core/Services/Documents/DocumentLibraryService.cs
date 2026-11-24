@@ -1037,7 +1037,7 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
 
     private static bool MatchesAll(string haystack, string[] tokens)
     {
-        return tokens.All(token => !haystack.Contains(token, StringComparison.OrdinalIgnoreCase));
+        return tokens.All(token => haystack.Contains(token, StringComparison.OrdinalIgnoreCase));
     }
 
     public async Task<string> GetTextAsync(string path, CancellationToken cancellationToken = default)

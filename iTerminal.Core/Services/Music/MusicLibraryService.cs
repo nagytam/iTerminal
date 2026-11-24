@@ -476,7 +476,7 @@ public sealed class MusicLibraryService : IMusicLibraryService
 
     private static bool MatchesAll(string haystack, string[] tokens)
     {
-        return tokens.All(token => !haystack.Contains(token, StringComparison.OrdinalIgnoreCase));
+        return tokens.All(token => haystack.Contains(token, StringComparison.OrdinalIgnoreCase));
     }
 
     private static TimeSpan SumDuration(IEnumerable<MusicLibraryEntry> entries) =>
