@@ -50,7 +50,7 @@ public sealed class TranslationService : ITranslationService
         List<ITranslationProvider> candidates = Candidates(engine);
         if (candidates.Count == 0)
         {
-            return engine == TranslationEngine.Api ? "no translation API is registered" : engine == TranslationEngine.Llm ? "no AI model is registered" : "no translation engine is registered";
+            return engine switch { TranslationEngine.Api => "no translation API is registered", TranslationEngine.Llm => "no AI model is registered", _ => "no translation engine is registered" };
         }
 
         if (candidates.Any(provider => provider.UnavailableReason is null))

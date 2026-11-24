@@ -731,11 +731,12 @@ public class WeatherDialog : SplitPaneDialog
         }
 
         var forecast = _forecasts.GetForecast(place);
-        var updated = forecast is null
-            ? string.Empty
-            : " · " + (_time.GetUtcNow() - forecast.FetchedAt > ForecastService.MaxAge
-                ? string.Format(UiText.Get("Weather.Updated.Old", "old, updated {0:g}"), forecast.FetchedAt.LocalDateTime)
-                : string.Format(UiText.Get("Weather.Updated.At", "updated {0:HH:mm}"), forecast.FetchedAt.LocalDateTime));
+        var updated = string.Empty;
+        if (forecast is not null)
+        {
+            var stale = _time.GetUtcNow() - forecast.FetchedAt > ForecastService.MaxAge;
+            updated = " · " + (stale ? string.Format(UiText.Get("Weather.Updated.Old", "old, updated {0:g}"), forecast.FetchedAt.LocalDateTime) : string.Format(UiText.Get("Weather.Updated.At", "updated {0:HH:mm}"), forecast.FetchedAt.LocalDateTime));
+        }
         var home = place.Key == _forecasts.Home?.Key ? " ⌂" : string.Empty;
         return PlaceTitle(place) + home + updated;
     }

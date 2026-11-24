@@ -195,9 +195,8 @@ public sealed class LanguageDetector : ILanguageDetector
         string[] words = Words(text);
         int bulgarian = words.Count(word => word is "и" or "на" or "да" or "се" or "от" or "за" or "със" or "които" or "това" or "е");
         int russian = words.Count(word => word is "и" or "в" or "не" or "на" or "что" or "он" or "с" or "это" or "как" or "по" or "но" or "из" or "от");
-        return bulgarian > russian && text.Contains('ъ', StringComparison.OrdinalIgnoreCase)
-            ? new LanguageDetection("bg", confidence * 0.8)
-            : new LanguageDetection("ru", russian == 0 && bulgarian == 0 ? confidence * 0.7 : confidence);
+        if (bulgarian > russian && text.Contains('ъ', StringComparison.OrdinalIgnoreCase)) return new LanguageDetection("bg", confidence * 0.8);
+        return new LanguageDetection("ru", russian == 0 && bulgarian == 0 ? confidence * 0.7 : confidence);
     }
 
     private static LanguageDetection? DetectLatin(string text)

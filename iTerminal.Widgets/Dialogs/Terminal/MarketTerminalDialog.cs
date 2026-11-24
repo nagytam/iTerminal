@@ -661,9 +661,9 @@ public class MarketTerminalDialog : SplitPaneDialog
 
         if (ih >= MonitorTopRows + SecurityBlockHeight + 1)
         {
-            var heading = UiText.Get("Market.Security", "Security") + (_security is { } shown
-                ? "  " + shown.Symbol + (IsWatched(shown.Symbol) ? "  · " + UiText.Get("Market.Watched", "watched") : string.Empty)
-                : string.Empty);
+            var securityNote = string.Empty;
+            if (_security is { } shown) securityNote = "  " + shown.Symbol + (IsWatched(shown.Symbol) ? "  · " + UiText.Get("Market.Watched", "watched") : string.Empty);
+            var heading = UiText.Get("Market.Security", "Security") + securityNote;
             DrawSectionHeader(buffer, ix, iy + ih - SecurityBlockHeight, iw, heading, false, colorScheme);
             DrawSecurity(buffer, ix, iy + ih - SecurityBlockHeight + 1, iw, colorScheme);
         }

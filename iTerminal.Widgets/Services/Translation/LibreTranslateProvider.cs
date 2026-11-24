@@ -32,10 +32,15 @@ public sealed class LibreTranslateProvider : ITranslationProvider
     // LibreTranslate refuses requests over its character limit (5000 by default).
     public int MaxChunkLength => 4000;
 
-    public string? UnavailableReason =>
-        _baseUrl.Length == 0 ? "no translation API set up (Translation:ApiUrl)" :
-        Uri.TryCreate(_baseUrl, UriKind.Absolute, out Uri? uri) && uri.Scheme is "http" or "https" ? null :
-        "the translation API URL is not an http(s) address (Translation:ApiUrl)";
+    public string? UnavailableReason
+    {
+        get
+        {
+            if (_baseUrl.Length == 0) return "no translation API set up (Translation:ApiUrl)";
+            if (Uri.TryCreate(_baseUrl, UriKind.Absolute, out Uri? uri) && uri.Scheme is "http" or "https") return null;
+            return "the translation API URL is not an http(s) address (Translation:ApiUrl)";
+        }
+    }
 
     public async Task<TranslationResult> TranslateAsync(string text, string? sourceCode, string targetCode, CancellationToken cancellationToken = default)
     {

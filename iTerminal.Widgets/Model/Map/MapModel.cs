@@ -351,9 +351,12 @@ public sealed class MapModel : IDisposable
         return null;
     }
 
-    private static MapCell Placeholder(int column, int row, TileState state) => state == TileState.Unavailable
-        ? new MapCell(((column + row) & 1) == 0 ? '/' : ' ', Color.DarkGray)
-        : new MapCell(((column + row) & 1) == 0 ? '.' : ' ', Color.DarkGray);
+    private static MapCell Placeholder(int column, int row, TileState state)
+    {
+        var even = ((column + row) & 1) == 0;
+        if (state == TileState.Unavailable) return new MapCell(even ? '/' : ' ', Color.DarkGray);
+        return new MapCell(even ? '.' : ' ', Color.DarkGray);
+    }
 
     private bool IsUnavailable(MapTileKey key)
     {

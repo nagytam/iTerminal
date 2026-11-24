@@ -819,9 +819,9 @@ public class MapDialog : Dialog
             return string.Empty;
         }
 
-        return frame.Loading > 0 ? string.Format(iConsole.Localization.UiText.Get("Map.Loading", "[{0} loading]"), frame.Loading)
-            : frame.Unavailable > 0 ? string.Format(iConsole.Localization.UiText.Get("Map.Missing", "[{0} missing]"), frame.Unavailable)
-            : string.Empty;
+        if (frame.Loading > 0) return string.Format(iConsole.Localization.UiText.Get("Map.Loading", "[{0} loading]"), frame.Loading);
+        if (frame.Unavailable > 0) return string.Format(iConsole.Localization.UiText.Get("Map.Missing", "[{0} missing]"), frame.Unavailable);
+        return string.Empty;
     }
 
     /// <summary>A scale bar for the current zoom: "|----| 2 km", as long as a round distance fits in 20 characters.</summary>
@@ -851,7 +851,8 @@ public class MapDialog : Dialog
             return string.Empty;
         }
 
-        return text.Length <= max ? text : max <= 1 ? text[..max] : text[..(max - 1)] + "…";
+        if (text.Length <= max) return text;
+        return max <= 1 ? text[..max] : text[..(max - 1)] + "…";
     }
 
     #endregion

@@ -52,9 +52,12 @@ public static class MapProjection
         156543.03392804097 * Math.Cos(ClampLatitude(latitude) * Math.PI / 180) / Math.Pow(2, zoom);
 
     /// <summary>"1.2 km" / "350 m" for a distance in metres.</summary>
-    public static string FormatDistance(double meters) => meters >= 1000
-        ? (meters >= 10000 ? $"{meters / 1000:0} km" : $"{meters / 1000:0.#} km")
-        : $"{meters:0} m";
+    public static string FormatDistance(double meters)
+    {
+        if (meters >= 10000) return $"{meters / 1000:0} km";
+        if (meters >= 1000) return $"{meters / 1000:0.#} km";
+        return $"{meters:0} m";
+    }
 
     /// <summary>The largest 1, 2 or 5 × 10ⁿ metre distance not longer than <paramref name="meters"/>.</summary>
     public static double NiceDistance(double meters)

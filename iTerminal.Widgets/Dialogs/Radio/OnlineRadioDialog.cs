@@ -743,9 +743,9 @@ public class OnlineRadioDialog : Dialog
             var highlighted = station.Id == selectedId;
             var onAir = IsOnAir(station);
             // The station on air is green even when the highlight is elsewhere, and its arrow stays with it.
-            var foreground = highlighted
-                ? colorScheme.SelectedFocusedForeground
-                : onAir ? Color.Green : colorScheme.Foreground;
+            var foreground = colorScheme.Foreground;
+            if (highlighted) foreground = colorScheme.SelectedFocusedForeground;
+            else if (onAir) foreground = Color.Green;
             var background = highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
             var marker = (station.IsFavourite ? "★" : " ")
                 + (onAir ? "▶" : " ")
