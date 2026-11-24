@@ -365,7 +365,9 @@ public static class RtfTextReader
         };
     }
 
+    #pragma warning disable S3398 // A private helper of the reader, kept beside the code that calls it.
     private static IReadOnlyList<string> Lines(string text)
+    #pragma warning restore S3398
     {
         List<string> lines = [];
         foreach (string line in text.Split('\n'))

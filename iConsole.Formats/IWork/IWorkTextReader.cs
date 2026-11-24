@@ -99,7 +99,9 @@ public static class IWorkTextReader
     {
         using ZipArchive nested = new(new MemoryStream(ReadEntry(entry)), ZipArchiveMode.Read);
         int added = 0;
-        foreach (ZipArchiveEntry inner in (nested.Entries.OrderBy(e => e.FullName, StringComparer.Ordinal)).Where(inner => IsArchive(inner.FullName) && TryAdd(document, inner)))
+        #pragma warning disable S6607 // TryAdd has side effects and must run in sorted order, so the sort stays first.
+        foreach (ZipArchiveEntry inner in nested.Entries.OrderBy(e => e.FullName, StringComparer.Ordinal).Where(inner => IsArchive(inner.FullName) && TryAdd(document, inner)))
+        #pragma warning restore S6607
         {
             added++;
         }

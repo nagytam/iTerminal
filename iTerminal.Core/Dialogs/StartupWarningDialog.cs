@@ -52,7 +52,9 @@ public class StartupWarningDialog : Dialog
     {
         if (_stopOtherInstance is null || Interlocked.Exchange(ref _stopStarted, 1) != 0)
         {
+            #pragma warning disable S4586 // A null result means no offer, which callers test for; an empty task would change that contract.
             return null;
+            #pragma warning restore S4586
         }
 
         _stopStatus = UiText.Get("Startup.StopOtherRunning", "Stopping the other instance...");

@@ -176,9 +176,11 @@ public class FileClipboardOperations(
             }
 
             var finalName = name;
-            for (var n = 1; Exists(targetSystem, targetFolder, finalName, isFolder) && !content.IsCut; n++)
+            var n = 1;
+            while (Exists(targetSystem, targetFolder, finalName, isFolder) && !content.IsCut)
             {
                 finalName = CopyName(name, isFolder, n);
+                n++;
             }
 
             var separator = Path.DirectorySeparatorChar;

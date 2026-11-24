@@ -45,7 +45,6 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
 
     private readonly INetworkDiscoveryService _networkDiscoveryService;
     private readonly INetworkProfileService _networkProfileService;
-    private readonly IContentModelService _contentModelService;
     private readonly IPasswordManager _passwordManager;
     private readonly IPromptService? _promptService;
 
@@ -94,7 +93,6 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     {
         _networkDiscoveryService = networkDiscoveryService;
         _networkProfileService = networkProfileService;
-        _contentModelService = contentModelService;
         _passwordManager = passwordManager;
         _promptService = promptService;
 
@@ -106,7 +104,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         };
         _statusLabel = new Label(string.Empty, themeService);
         _signedInLabel = new Label(string.Empty, themeService);
-        _selectCommand = new SelectSmbCommand(_contentModelService);
+        _selectCommand = new SelectSmbCommand(contentModelService);
         _selectButton = new Button(UiText.Get("Button.SelectFolder", "Select folder"), _selectCommand, themeService)
         {
             HotKeyChar = 'S'
@@ -767,16 +765,16 @@ internal static class SmbBrowserRows
         var rows = new List<FolderSelectorSmbTabPage.SmbEntry>();
         var listed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var host in found.Where(h => h.SmbAvailable))
+        foreach (var ipAddress in (found.Where(h => h.SmbAvailable)).Select(host => host.IPAddress))
         {
-            var address = host.IPAddress.ToString();
+            var address = ipAddress.ToString();
             if (!listed.Add(address))
             {
                 continue;
             }
             var saved = savedProfiles.Any(p => string.Equals(p.Host, address, StringComparison.OrdinalIgnoreCase));
             var login = LoginFor(address, loginList);
-            var thisMachine = NetworkDiscoveryService.IsLocalAddress(host.IPAddress)
+            var thisMachine = NetworkDiscoveryService.IsLocalAddress(ipAddress)
                 ? ", " + UiText.Get("FolderSelector.Smb.ThisMachine", "this machine")
                 : string.Empty;
             string label;
@@ -791,13 +789,9 @@ internal static class SmbBrowserRows
             rows.Add(new(login.Host, null, null, $"{login.Host} (SMB, {LoggedIn(login.Username)})"));
         }
 
-        foreach (var profile in savedProfiles)
+        foreach (var profileHost in savedProfiles.Where(profile => listed.Add(profile.Host)).Select(profile => profile.Host))
         {
-            if (!listed.Add(profile.Host))
-            {
-                continue;
-            }
-            rows.Add(new(profile.Host, null, null, $"{profile.Host} (SMB, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"));
+            rows.Add(new(profileHost, null, null, $"{profileHost} (SMB, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"));
         }
 
         return rows;

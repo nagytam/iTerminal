@@ -362,16 +362,16 @@ public static class LegacyOfficeTextRenderer
 
     private static IEnumerable<BoundSheet> ReadBoundSheets(List<BiffRecord> records)
     {
-        foreach (BiffRecord record in records.Where(r => r.Type == BiffBoundSheet))
+        foreach (var data in (records.Where(r => r.Type == BiffBoundSheet)).Select(record => record.Data))
         {
             // lbPlyPos, hsState, dt (0 is a worksheet; charts and macro sheets are not shown), then the name.
-            if (record.Data.Length < 8 || record.Data[5] != 0)
+            if (data.Length < 8 || data[5] != 0)
             {
                 continue;
             }
 
-            uint streamOffset = BinaryPrimitives.ReadUInt32LittleEndian(record.Data);
-            ReadShortString(record.Data, 6, out string name, out _);
+            uint streamOffset = BinaryPrimitives.ReadUInt32LittleEndian(data);
+            ReadShortString(data, 6, out string name, out _);
             yield return new BoundSheet(name, (int)streamOffset);
         }
     }
@@ -549,10 +549,10 @@ public static class LegacyOfficeTextRenderer
     private static bool[] ReadDateFormats(List<BiffRecord> records)
     {
         Dictionary<int, string> custom = [];
-        foreach (BiffRecord record in records.Where(r => r.Type == BiffFormat && r.Data.Length >= 4))
+        foreach (var data in (records.Where(r => r.Type == BiffFormat && r.Data.Length >= 4)).Select(record => record.Data))
         {
-            ReadUnicodeString(record.Data, 2, out string code, out _);
-            custom[BinaryPrimitives.ReadUInt16LittleEndian(record.Data)] = code;
+            ReadUnicodeString(data, 2, out string code, out _);
+            custom[BinaryPrimitives.ReadUInt16LittleEndian(data)] = code;
         }
 
         return [.. records.Where(r => r.Type == BiffExtendedFormat && r.Data.Length >= 4).Select(record =>
@@ -598,7 +598,7 @@ public static class LegacyOfficeTextRenderer
                 byte flags = cursor.ReadByte();
                 int runs = (flags & 0x08) != 0 ? cursor.ReadUInt16() : 0;
                 uint extended = (flags & 0x04) != 0 ? cursor.ReadUInt32() : 0;
-                strings.Add(cursor.ReadCharacters(characters, (flags & BiffWideFlag) != 0));
+                strings.Add(cursor.ReadCharacterRun(characters, (flags & BiffWideFlag) != 0));
                 cursor.Skip(runs * 4 + (int)extended);
             }
         }
@@ -611,12 +611,11 @@ public static class LegacyOfficeTextRenderer
     }
 
     /// <summary>A short string (one length byte) as used by BOUNDSHEET; returns the offset after it.</summary>
-    private static int ReadShortString(byte[] data, int offset, out string text, out int next)
+    private static void ReadShortString(byte[] data, int offset, out string text, out int next)
     {
         int characters = data[offset];
         byte flags = data[offset + 1];
         text = ReadCharacters(data, offset + 2, characters, (flags & BiffWideFlag) != 0, out next);
-        return next;
     }
 
     /// <summary>A string with a two-byte length (XLUnicodeString): BIFF8 LABEL, STRING and FORMAT records.</summary>
@@ -675,7 +674,7 @@ public static class LegacyOfficeTextRenderer
         /// Reads the characters of one string. When a CONTINUE record starts in the middle of them, its first byte is
         /// the wide flag for the rest of the characters.
         /// </summary>
-        public string ReadCharacters(int characters, bool wide)
+        public string ReadCharacterRun(int characters, bool wide)
         {
             StringBuilder text = new(characters);
             while (text.Length < characters)

@@ -14,7 +14,9 @@ namespace iTerminal.Core.Jobs;
 public class InternetConnectivityJob(InternetConnectivityService connectivityService) : Job
 {
     /// <summary>Public endpoints to reach; one that accepts a connection is enough.</summary>
+    #pragma warning disable S1313 // Fixed public DNS resolvers on purpose: connectivity should not depend on resolving a name.
     internal static readonly (string Host, int Port)[] Endpoints = [("1.1.1.1", 443), ("8.8.8.8", 53)];
+    #pragma warning restore S1313
 
     internal static readonly TimeSpan ProbeTimeout = TimeSpan.FromSeconds(3);
     internal static readonly TimeSpan OnlineInterval = TimeSpan.FromSeconds(60);

@@ -979,9 +979,11 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
         var path = Path.Combine(downloadDirectory, name);
         var stem = Path.GetFileNameWithoutExtension(name);
         var extension = Path.GetExtension(name);
-        for (var i = 1; File.Exists(path); i++)
+        var i = 1;
+        while (File.Exists(path))
         {
             path = Path.Combine(downloadDirectory, $"{stem} ({i}){extension}");
+            i++;
         }
 
         File.WriteAllBytes(path, response.Content);

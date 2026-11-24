@@ -499,15 +499,14 @@ public class MailDialog : Dialog
                 return true;
             case ConsoleKey.Tab:
             case ConsoleKey.DownArrow:
-                _setupCursor = (_setupCursor + 1) % _setup.Length;
-                StateHasChanged();
-                return true;
-            case ConsoleKey.UpArrow:
-                _setupCursor = (_setupCursor - 1 + _setup.Length) % _setup.Length;
-                StateHasChanged();
-                return true;
             case ConsoleKey.Enter:
                 _setupCursor = (_setupCursor + 1) % _setup.Length;
+                StateHasChanged();
+                return true;
+            #pragma warning disable S1871 // A guarded case cannot share a label with this one, so the identical bodies stay separate.
+            case ConsoleKey.UpArrow:
+            #pragma warning restore S1871
+                _setupCursor = (_setupCursor - 1 + _setup.Length) % _setup.Length;
                 StateHasChanged();
                 return true;
         }
@@ -1175,7 +1174,7 @@ public class MailDialog : Dialog
     internal int DraftFieldForTest { get { lock (_sync) return _draftField; } }
     internal int SetupCursorForTest { get { lock (_sync) return _setupCursor; } }
     internal string DirectoryTermForTest { get { lock (_sync) return _directoryTerm; } }
-    internal IReadOnlyList<DirectoryPerson> PeopleForTest { get { lock (_sync) return _people.ToList(); } }
+    internal IReadOnlyList<DirectoryPerson> PeopleForTest() { lock (_sync) return _people.ToList(); }
     internal string SetupValueForTest(string label)
     {
         lock (_sync)

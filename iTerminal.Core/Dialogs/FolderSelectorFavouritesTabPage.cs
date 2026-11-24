@@ -204,15 +204,11 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransient
         _favourites.Clear();
         if (favourites is not null)
         {
-            foreach (var favourite in FolderListCodec.Split(favourites))
+            // An empty entry is what a wiped setting splits into; a Url built from it points at
+            // nothing and Enter on that row would navigate the panel to nowhere.
+            foreach (var favourite in FolderListCodec.Split(favourites).Where(favourite => !string.IsNullOrWhiteSpace(favourite) && !_favourites.Any(f => f.FullUrl == favourite)))
             {
-                // An empty entry is what a wiped setting splits into; a Url built from it points at
-                // nothing and Enter on that row would navigate the panel to nowhere.
-                if (!string.IsNullOrWhiteSpace(favourite)
-                    && !_favourites.Any(f => f.FullUrl == favourite))
-                {
-                    _favourites.Add(new Url(favourite));
-                }
+                _favourites.Add(new Url(favourite));
             }
         }
         return base.OnInitializeAsync();

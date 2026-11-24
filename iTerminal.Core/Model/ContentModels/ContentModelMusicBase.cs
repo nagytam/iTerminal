@@ -19,7 +19,9 @@ namespace iTerminal.Core.Model.ContentModels;
 /// process already holds and a library search runs against an in-memory copy of the index, so
 /// neither can approach the 200 ms key-handler budget and neither needs a background task.</para>
 /// </summary>
+#pragma warning disable S3881 // Subclassed by the viewers, so the class stays unsealed and keeps the shared Dispose(bool).
 public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentModel, IDisposable
+#pragma warning restore S3881
 {
     private static readonly TimeSpan SeekStep = TimeSpan.FromSeconds(5);
 
@@ -140,10 +142,10 @@ public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentMod
         SetUrl(new Url(string.IsNullOrWhiteSpace(stored) ? UrlScheme : stored));
     }
 
-    public override void SetUrl(Url path)
+    public override void SetUrl(Url url)
     {
-        _settingsService.Set(Name, path);
-        _folderHistoryService?.Add(path);
+        _settingsService.Set(Name, url);
+        _folderHistoryService?.Add(url);
         StatusMessage = string.Empty;
 
         // Going somewhere ends the search that led there — the same thing a file panel does. On
@@ -152,7 +154,7 @@ public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentMod
         Filter = null;
 
         Entries.Clear();
-        Url = path;
+        Url = url;
         ResetNavigation();
         Refresh();
     }

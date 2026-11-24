@@ -114,14 +114,11 @@ public class SettingsService : ISettingsService
             Dictionary<string, PersistedSetting> existingSettings = context.Settings
                 .ToDictionary(item => item.Key, StringComparer.Ordinal);
 
-            foreach (KeyValuePair<string, PersistedSetting> existingSetting in existingSettings)
+            // Reserved rows are dropped rather than kept: this is what clears a stamp left in
+            // this table by an older version, which would otherwise be republished for ever.
+            foreach (var existingSetting in existingSettings.Where(existing => !_settings.ContainsKey(existing.Key)))
             {
-                // Reserved rows are dropped rather than kept: this is what clears a stamp left in
-                // this table by an older version, which would otherwise be republished for ever.
-                if (!_settings.ContainsKey(existingSetting.Key))
-                {
-                    context.Settings.Remove(existingSetting.Value);
-                }
+                context.Settings.Remove(existingSetting.Value);
             }
 
             foreach (KeyValuePair<string, string> setting in _settings)

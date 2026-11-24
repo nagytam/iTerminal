@@ -209,21 +209,28 @@ public static partial class MimeParser
     {
         text ??= string.Empty;
         var bytes = new List<byte>(text.Length);
+        var skip = 0;
         for (var i = 0; i < text.Length; i++)
         {
+            if (skip > 0)
+            {
+                skip--;
+                continue;
+            }
+
             var c = text[i];
             if (c == '=')
             {
                 if (i + 1 < text.Length && (text[i + 1] == '\r' || text[i + 1] == '\n'))
                 {
-                    i += text[i + 1] == '\r' && i + 2 < text.Length && text[i + 2] == '\n' ? 2 : 1;
+                    skip = text[i + 1] == '\r' && i + 2 < text.Length && text[i + 2] == '\n' ? 2 : 1;
                     continue;
                 }
 
                 if (i + 2 < text.Length && Uri.IsHexDigit(text[i + 1]) && Uri.IsHexDigit(text[i + 2]))
                 {
                     bytes.Add(Convert.ToByte(text.Substring(i + 1, 2), 16));
-                    i += 2;
+                    skip = 2;
                     continue;
                 }
             }

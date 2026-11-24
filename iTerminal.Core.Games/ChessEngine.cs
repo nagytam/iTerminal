@@ -475,7 +475,9 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
     private const int Mate = 100_000;
     private static readonly int[] Values = [0, 100, 320, 330, 500, 900, 0];
 
+    #pragma warning disable S3871 // The engine throws this to unwind its search; callers outside the engine never see it.
     public sealed class TimeUpException : Exception;
+    #pragma warning restore S3871
 
     private readonly Stopwatch _clock = Stopwatch.StartNew();
     private bool _mayAbort;

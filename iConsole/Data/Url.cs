@@ -81,7 +81,7 @@ public partial class Url
     public static char DirectorySeparatorSlashChar => '/';
     public const string Folder = "Folder";
 
-    public string _displayName = string.Empty;
+    private readonly string _displayName = string.Empty;
     public string DisplayName => _displayName;
     private readonly string _name = string.Empty;
     public string Name => _name;
@@ -1022,7 +1022,9 @@ public partial class Url
         {
             // A name the file system cannot represent ("a|b" on Windows) throws on the first property read, and it reaches here from the
             // validation of a name being typed: such a name is simply not an existing file, and the dialog says it is not a valid name.
+            #pragma warning disable S3220 // The overload matches the characters given on purpose.
             string name = path.Split('/', '\\')[^1];
+            #pragma warning restore S3220
             cachedFileInfo = new CachedFileInfo(name, string.Empty, path, DateTime.MinValue, false, 0);
         }
 

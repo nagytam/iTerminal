@@ -5,7 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace iConsole.Tasks;
 
+#pragma warning disable S3881 // Tests mock this class and it is subclassed there, so it stays unsealed with the shared Dispose(bool).
 public class TaskManager : INotifyPropertyChanged, IDisposable
+#pragma warning restore S3881
 {
     private readonly Lock _queueLock = new();
     /// <summary>The tasks waiting for a worker. A pending task is picked by priority, then by its place in the queue.</summary>
@@ -194,6 +196,16 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
 
     public void Dispose()
     {
+        Dispose(true);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
         if (_schedulerCancellationTokenSource.IsCancellationRequested)
         {
             return;

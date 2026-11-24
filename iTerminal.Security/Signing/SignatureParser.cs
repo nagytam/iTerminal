@@ -92,7 +92,7 @@ public static partial class SignatureParser
             var parts = line.Split('|', 3);
             if (parts.Length == 3
                 && ThumbprintPattern().IsMatch(parts[0])
-                && DateTime.TryParse(parts[1], null, System.Globalization.DateTimeStyles.RoundtripKind, out var expires))
+                && DateTime.TryParse(parts[1], System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind, out var expires))
             {
                 certificates.Add(new SigningCertificate(parts[0].ToUpperInvariant(), parts[2], expires));
             }

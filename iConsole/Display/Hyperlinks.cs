@@ -73,16 +73,7 @@ public static class Hyperlinks
     internal static string Sanitize(string? target)
     {
         target ??= string.Empty;
-        bool clean = true;
-        foreach (char c in target)
-        {
-            if (c < 0x21 || c > 0x7E)
-            {
-                clean = false;
-                break;
-            }
-        }
-
+        var clean = target.All(c => c is >= (char)0x21 and <= (char)0x7E);
         if (clean)
         {
             return target;

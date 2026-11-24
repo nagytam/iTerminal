@@ -37,7 +37,6 @@ public class MultiRenameDialog : FormDialog
     private readonly ListBox<string> _previewList;
     private readonly Label _countLabel;
     private readonly Label _errorLabel;
-    private readonly MultiRenameCommand _renameCommand;
     private readonly Button _renameButton;
     private readonly CancelDialogButton _cancelButton;
     private IReadOnlyList<string> _folderNames = [];
@@ -58,8 +57,8 @@ public class MultiRenameDialog : FormDialog
     {
         Title = UiText.Get("Dialog.MultiRename", "Multi-rename");
 
-        _renameCommand = new MultiRenameCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService, renameUndo);
-        AddCommand(_renameCommand);
+        var renameCommand = new MultiRenameCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService, renameUndo);
+        AddCommand(renameCommand);
 
         _patternBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
@@ -90,7 +89,7 @@ public class MultiRenameDialog : FormDialog
         _previewList.CanFocus = false;
         _countLabel = new Label(string.Empty, themeService);
         _errorLabel = new Label(string.Empty, themeService);
-        _renameButton = new Button(UiText.Get("Menu.Rename", "Rename"), _renameCommand, themeService)
+        _renameButton = new Button(UiText.Get("Menu.Rename", "Rename"), renameCommand, themeService)
         {
             HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(UiText.Get("Menu.Rename", "Rename"), 'R'),
         };

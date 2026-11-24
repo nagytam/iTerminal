@@ -105,9 +105,11 @@ public class RecycleBinService(IRecycleBinStore store) : IRecycleBinService
         foreach (var item in items.OrderBy(i => i.Deleted).ThenBy(i => i.Key, StringComparer.Ordinal))
         {
             var name = item.Name;
-            for (var number = 2; !taken.Add(name); number++)
+            var number = 2;
+            while (!taken.Add(name))
             {
                 name = $"{Path.GetFileNameWithoutExtension(item.Name)} ({number}){Path.GetExtension(item.Name)}";
+                number++;
             }
 
             named.Add((name, item));

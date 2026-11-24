@@ -333,7 +333,9 @@ public class PasswordManagerDialog : Dialog
                 _field = (_field + 1) % _fields.Length;
                 StateHasChanged();
                 return true;
+            #pragma warning disable S1871 // A guarded case cannot share a label with this one, so the identical bodies stay separate.
             case ConsoleKey.UpArrow:
+            #pragma warning restore S1871
                 _field = (_field - 1 + _fields.Length) % _fields.Length;
                 StateHasChanged();
                 return true;

@@ -57,13 +57,15 @@ public static class FileConflictPolicy
         var parent = targetUrl.FullUrl[..(targetUrl.FullUrl.Length - name.Length)];
         var stem = Path.GetFileNameWithoutExtension(name);
         var extension = Path.GetExtension(name);
-        for (var number = 2; ; number++)
+        var number = 2;
+        while (true)
         {
             var candidate = new Url(parent + $"{stem} ({number}){extension}");
             if (!exists(candidate))
             {
                 return candidate;
             }
+            number++;
         }
     }
 

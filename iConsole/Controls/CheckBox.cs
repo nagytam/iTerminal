@@ -125,6 +125,7 @@ public class CheckBox : Control, IReadOnly
                     break;
                 }
             case VisualState.Disabled:
+            case VisualState.SelectedDisabled:
                 {
                     foreground = colorScheme.DisabledForeground;
                     background = colorScheme.DisabledBackground;
@@ -134,12 +135,6 @@ public class CheckBox : Control, IReadOnly
                 {
                     foreground = colorScheme.SelectedForeground;
                     background = colorScheme.SelectedBackground;
-                    break;
-                }
-            case VisualState.SelectedDisabled:
-                {
-                    foreground = colorScheme.DisabledForeground;
-                    background = colorScheme.DisabledBackground;
                     break;
                 }
         }

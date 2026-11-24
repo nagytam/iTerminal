@@ -204,7 +204,7 @@ public class MailDialogTest
         await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.L, 'l', control: true));
         await TypeAsync(fixture.Dialog, "ada");
         await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
-        await WaitUntilAsync(() => fixture.Dialog.PeopleForTest.Count == 1, "the address book to answer");
+        await WaitUntilAsync(() => fixture.Dialog.PeopleForTest().Count == 1, "the address book to answer");
         await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
 
         Assert.AreEqual("Compose", fixture.Dialog.ModeForTest);
@@ -456,7 +456,7 @@ public class MailDialogTest
         await PressKeyAsync(fixture.Dialog, ConsoleKey.L, 'l', control: true);
         await TypeAsync(fixture.Dialog, "p");
         await PressKeyAsync(fixture.Dialog, ConsoleKey.Enter, (char)13);
-        await WaitUntilAsync(() => fixture.Dialog.PeopleForTest.Count == 6, "the people to be found");
+        await WaitUntilAsync(() => fixture.Dialog.PeopleForTest().Count == 6, "the people to be found");
 
         await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 2));
         Assert.AreEqual(2, fixture.Dialog.PersonCursorForTest);

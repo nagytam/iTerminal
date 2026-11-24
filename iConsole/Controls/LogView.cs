@@ -200,8 +200,15 @@ public class LogView : Control
 
         var entries = new List<LogEntry>();
         int lineStart = 0;
+        var skipLineFeed = false;
         for (int i = 0; i <= plain.Length; i++)
         {
+            if (skipLineFeed)
+            {
+                skipLineFeed = false;
+                continue;
+            }
+
             bool atEnd = i == plain.Length;
             if (!atEnd && plain[i] is not ('\r' or '\n'))
             {
@@ -230,10 +237,13 @@ public class LogView : Control
             entries.Add(new LogEntry(line, level, spans.Count == 0 ? null : spans));
             if (!atEnd && plain[i] == '\r' && i + 1 < plain.Length && plain[i + 1] == '\n')
             {
-                i++;
+                skipLineFeed = true;
+                lineStart = i + 2;
             }
-
-            lineStart = i + 1;
+            else
+            {
+                lineStart = i + 1;
+            }
         }
 
         lock (_gate)

@@ -38,6 +38,7 @@ public class AiChatModel : INotifyPropertyChanged
     /// </summary>
     public Func<string> ModelInfoSource
     {
+        get => _modelInfoSource ?? (() => string.Empty);
         set { _modelInfoSource = value; OnPropertyChanged(nameof(ModelInfo)); }
     }
 

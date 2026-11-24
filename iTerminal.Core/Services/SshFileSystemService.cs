@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace iTerminal.Core.Services;
 
-public partial class SshFileSystemService : ISshFileSystemService
+public sealed partial class SshFileSystemService : ISshFileSystemService, IDisposable
 {
     [GeneratedRegex("[\\w-]{10}[ ]*[0-9]*[ ]*[\\w]*[ ]*[\\w]*[ ]*(?<size>[0-9]*)[ ]*(?<date>[\\w]{3}[ ]*[0-9]*)[ ]*(?<time>[0-9]*:[0-9]*)[ ]*(?<name>[\\w-?.]*)")]
     private static partial Regex RegexLs();

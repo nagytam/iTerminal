@@ -79,7 +79,9 @@ public class WorkspaceManagerDialog : Dialog
     internal IReadOnlyList<string> NamesForTest => [.. _list.Select(w => w.Name)];
 
     /// <summary>The name the cursor is on. Exposed for tests.</summary>
+    #pragma warning disable S4275 // The getter reads the source's current value on purpose; it is not a field copy.
     internal string? SelectedName => Selected?.Name;
+    #pragma warning restore S4275
 
     /// <summary>The restore the last key started, so a test can wait for it.</summary>
     internal Task PendingOperation { get; private set; } = Task.CompletedTask;

@@ -11,24 +11,24 @@ public record FileSystemEntry : EntryBase
     {
         Url = new Url(url);
         fileSize = Url.FileSize;
-        date = Url.Date;
-        time = Url.Time;
+        Date = Url.Date;
+        Time = Url.Time;
     }
 
     public FileSystemEntry(string name, string url)
     {
         Url = new Url(url, name);
         fileSize = Url.FileSize;
-        date = Url.Date;
-        time = Url.Time;
+        Date = Url.Date;
+        Time = Url.Time;
     }
 
     public FileSystemEntry(Url url)
     {
         Url = url;
         fileSize = Url.FileSize;
-        date = Url.Date;
-        time = Url.Time;
+        Date = Url.Date;
+        Time = Url.Time;
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public record FileSystemEntry : EntryBase
     {
         Url = new Url(info);
         fileSize = Url.FileSize;
-        date = Url.Date;
-        time = Url.Time;
+        Date = Url.Date;
+        Time = Url.Time;
     }
 }

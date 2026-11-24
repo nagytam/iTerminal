@@ -113,10 +113,6 @@ public class RenameDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        //var targetFolder = _contentModelService.NonFocusedFolderUrl;
-        //ArgumentNullException.ThrowIfNull(url);
-        //SourceUrl = url;
-        //TargetUrl = new Url(targetFolder).Combine(url.Name);
         _textBoxName.ScrollableModel.Reset();
         _textBoxName.ScrollableModel.ScrollableSize = new Size(_textBoxName.Text.Length, 1);
 

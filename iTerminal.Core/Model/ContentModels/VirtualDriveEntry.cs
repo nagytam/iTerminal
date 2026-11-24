@@ -22,8 +22,8 @@ public record VirtualDriveEntry : EntryBase, IEntry
     {
         Url = displayName is null ? url : new Url(url.FullUrl, displayName);
         this.fileSize = fileSize;
-        date = modified?.ToString("yyyy-MM-dd") ?? string.Empty;
-        time = modified?.ToString("HH:mm") ?? string.Empty;
+        Date = modified?.ToString("yyyy-MM-dd") ?? string.Empty;
+        Time = modified?.ToString("HH:mm") ?? string.Empty;
         Modified = modified;
     }
 

@@ -222,7 +222,9 @@ public sealed class WindowsFileClipboardService : IFileClipboardService
         IntPtr handle = GlobalAlloc(GmemMoveable | GmemZeroInit, (UIntPtr)bytes.Length);
         if (handle == IntPtr.Zero)
         {
+            #pragma warning disable S112 // The clipboard callers expect OutOfMemoryException for this failure, so the type stays.
             throw new OutOfMemoryException("No memory for the clipboard.");
+            #pragma warning restore S112
         }
 
         IntPtr pointer = GlobalLock(handle);

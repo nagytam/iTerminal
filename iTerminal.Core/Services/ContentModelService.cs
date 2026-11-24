@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 
 namespace iTerminal.Core.Services;
 
-public class ContentModelService(
+public sealed class ContentModelService(
     TaskManager taskManager,
     ISettingsService settingsService,
     IFileSystemService fileSystemService,
@@ -107,6 +107,16 @@ public class ContentModelService(
     /// </summary>
     public void Dispose()
     {
+        Dispose(true);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
         foreach (IContentModel contentModel in ContentModels.ToList())
         {
             (contentModel as IDisposable)?.Dispose();
@@ -119,7 +129,7 @@ public class ContentModelService(
 
     public event EventHandler? ModelChanged;
 
-    protected virtual void OnModelChanged(EventArgs e)
+    private void OnModelChanged(EventArgs e)
     {
         ModelChanged?.Invoke(this, e);
     }

@@ -202,7 +202,9 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
     private bool ReadOnePass(byte[] buffer)
     {
         int n;
+        #pragma warning disable S6640 // Required for the Linux terminal-input interop (termios) (unsafe block for termios).
         unsafe
+        #pragma warning restore S6640
         {
             fixed (byte* p = buffer)
             {

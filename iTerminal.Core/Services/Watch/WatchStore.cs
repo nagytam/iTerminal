@@ -31,7 +31,9 @@ public sealed class WatchStore(ISettingsService settingsService)
             lock (_gate)
             {
                 EnsureLoaded();
+                #pragma warning disable S2365 // Callers read a snapshot taken under the lock; a property would copy on every read.
                 return _alarms.ToList();
+                #pragma warning restore S2365
             }
         }
     }
@@ -43,7 +45,9 @@ public sealed class WatchStore(ISettingsService settingsService)
             lock (_gate)
             {
                 EnsureLoaded();
+                #pragma warning disable S2365 // Callers read a snapshot taken under the lock; a property would copy on every read.
                 return _worldClocks.ToList();
+                #pragma warning restore S2365
             }
         }
     }

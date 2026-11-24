@@ -340,23 +340,31 @@ public sealed class PdfTextExtractor : IDocumentTextExtractor
         }
 
         int depth = 0;
+        var skip = false;
         for (int index = close + 1; index >= 1; index--)
         {
+            if (skip)
+            {
+                skip = false;
+                continue;
+            }
+
             if (raw[index] == '>' && raw[index - 1] == '>')
             {
                 depth++;
-                index--;
+                skip = true;
                 continue;
             }
 
             if (raw[index] == '<' && raw[index - 1] == '<')
             {
                 depth--;
-                index--;
                 if (depth == 0)
                 {
-                    return raw[index..(close + 2)];
+                    return raw[(index - 1)..(close + 2)];
                 }
+
+                skip = true;
             }
         }
 

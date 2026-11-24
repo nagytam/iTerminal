@@ -26,7 +26,9 @@ public partial class AiPanelTools
     /// <summary>The most paths <c>find_files</c> returns.</summary>
     internal const int MaxFoundFiles = 100;
 
+    #pragma warning disable S2325 // The tool factory reads instance services, so the method cannot be static.
     private IReadOnlyList<AITool> CreateMorePanelTools() =>
+    #pragma warning restore S2325
     [
         AIFunctionFactory.Create(GoToPath, "go_to_path",
             "Navigate a panel to a folder path or URL (C:\\Users, /home/me, zip://..., ftp://...). Credentials never go in a URL."),

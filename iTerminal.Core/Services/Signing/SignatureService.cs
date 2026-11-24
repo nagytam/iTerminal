@@ -375,7 +375,9 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             {
                 using var rsa = RSA.Create();
                 rsa.ImportFromPem(pem);
+                #pragma warning disable S5542 // The verifier expects PKCS#1 v1.5 padding for this signature format; the scheme is fixed by the format.
                 signature = rsa.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                #pragma warning restore S5542
                 algorithm = "rsa";
             }
 

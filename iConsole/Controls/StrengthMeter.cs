@@ -38,10 +38,14 @@ public class StrengthMeter : Control
     public PasswordStrength Strength => _strength;
 
     /// <summary>The password to rate; set it again whenever it changes. Only the resulting <see cref="Strength"/> is kept.</summary>
+    private string _password = string.Empty;
+
     public string Password
     {
+        get => _password;
         set
         {
+            _password = value;
             PasswordStrength rated = Rate(value);
             if (rated != _strength)
             {

@@ -64,7 +64,9 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
         }
     }
 
+    #pragma warning disable S4275 // The getter reads the source's current value on purpose; it is not a field copy.
     public IReadOnlyList<RuntimeDependencyStatus> Statuses => Current;
+    #pragma warning restore S4275
 
     /// <summary>Set by the first build, whether it found anything or failed; never waits.</summary>
     public bool IsReady => _initialBuild.IsCompleted;
@@ -75,7 +77,9 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
         {
             lock (_gate)
             {
+                #pragma warning disable S2365 // Callers read a snapshot taken under the lock; a property would copy on every read.
                 return _log.ToList();
+                #pragma warning restore S2365
             }
         }
     }

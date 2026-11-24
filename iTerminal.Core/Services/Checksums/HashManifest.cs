@@ -363,9 +363,11 @@ public static class HashManifest
         public override long Length => inner.Length;
         public override long Position { get => inner.Position; set => throw new NotSupportedException(); }
 
-        public override void Write(byte[] buffer, int offset, int count) => Write(buffer.AsSpan(offset, count));
+        #pragma warning disable S3218 // Overrides Stream.Write, so the name is fixed by the base class.
+        public override void Write(byte[] buffer, int offset, int count) => WriteBytes(buffer.AsSpan(offset, count));
+        #pragma warning restore S3218
 
-        public override void Write(ReadOnlySpan<byte> buffer)
+        public void WriteBytes(ReadOnlySpan<byte> buffer)
         {
             if (inner.Length + buffer.Length > limit)
             {
@@ -377,13 +379,13 @@ public static class HashManifest
 
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            Write(buffer.Span);
+            WriteBytes(buffer.Span);
             return ValueTask.CompletedTask;
         }
 
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            Write(buffer.AsSpan(offset, count));
+            WriteBytes(buffer.AsSpan(offset, count));
             return Task.CompletedTask;
         }
 

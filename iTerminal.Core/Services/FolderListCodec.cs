@@ -30,21 +30,28 @@ public static class FolderListCodec
     private static string Unescape(string entry)
     {
         var builder = new StringBuilder(entry.Length);
+        var skip = 0;
         for (int i = 0; i < entry.Length; i++)
         {
+            if (skip > 0)
+            {
+                skip--;
+                continue;
+            }
+
             if (entry[i] == '%' && i + 2 < entry.Length)
             {
                 var code = entry.Substring(i + 1, 2);
                 if (code == "25")
                 {
                     builder.Append('%');
-                    i += 2;
+                    skip = 2;
                     continue;
                 }
                 if (code == "3B")
                 {
                     builder.Append(Separator);
-                    i += 2;
+                    skip = 2;
                     continue;
                 }
             }

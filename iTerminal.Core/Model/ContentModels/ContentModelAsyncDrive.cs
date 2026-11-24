@@ -122,16 +122,16 @@ public abstract class ContentModelAsyncDrive : ContentModelBase, IFileSystemProv
         SetUrl(new Url(string.IsNullOrWhiteSpace(stored) || !stored.StartsWith(Scheme, StringComparison.Ordinal) ? Scheme : stored));
     }
 
-    public override void SetUrl(Url path)
+    public override void SetUrl(Url url)
     {
-        _settingsService.Set(Name, path);
-        _folderHistoryService?.Add(path);
+        _settingsService.Set(Name, url);
+        _folderHistoryService?.Add(url);
         StatusMessage = string.Empty;
         Filter = null;
 
-        Url = path;
+        Url = url;
         ResetNavigation();
-        Entries.ReplaceAll([ParentEntry(path)]);
+        Entries.ReplaceAll([ParentEntry(url)]);
         Refresh();
     }
 

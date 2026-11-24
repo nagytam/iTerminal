@@ -61,8 +61,8 @@ public record MusicEntry : EntryBase, IEntry
     {
         Kind = kind;
         Url = new Url(url, displayName);
-        date = string.Empty.PadRight(AlbumColumnWidth);
-        time = string.Empty.PadRight(TimeColumnWidth);
+        Date = string.Empty.PadRight(AlbumColumnWidth);
+        Time = string.Empty.PadRight(TimeColumnWidth);
 
         // A folder row with no count would make ItemInformation schedule a recursive file count
         // against a path that does not exist on disk. Every music folder already knows its size.

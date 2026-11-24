@@ -188,6 +188,7 @@ public class Buffer : IBuffer
             }
             else
             {
+                // Nothing to merge: the layer has no visible cells here.
             }
         }
 

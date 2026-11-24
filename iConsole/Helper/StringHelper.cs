@@ -112,11 +112,6 @@ public static class StringHelper
     }
 
 
-    public static string Expand(this string value, int width)
-    {
-        return Expand(value, " ", width);
-    }
-
     /// <summary>The most padding any of the Expand methods writes: a width past a screen's is a mistake, and padding to int.MaxValue ran out of memory.</summary>
     private const int MaxPadding = 100_000;
 
@@ -146,6 +141,11 @@ public static class StringHelper
             });
         }
         return c.Repeat(left) + value + c.Repeat(right);
+    }
+
+    public static string Expand(this string value, int width)
+    {
+        return Expand(value, " ", width);
     }
 
     public static string Expand(this string value, int left, int right)

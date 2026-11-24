@@ -11,7 +11,7 @@ namespace iConsole.Controls.Experimental;
 /// parent; <see cref="Dispose"/> stops that task. The task is optional (<c>autoStart: false</c>) so that
 /// <see cref="Step"/> can be driven by hand.
 /// </summary>
-public class BouncingLabel : Label, IDisposable
+public sealed class BouncingLabel : Label, IDisposable
 {
     private const int StepInterval = 100;
 

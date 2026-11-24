@@ -10,7 +10,7 @@ public interface ISearchModel : INotifyPropertyChanged
 
     /// <summary>Whether <see cref="Search"/> is a regular expression.</summary>
     bool UseRegex { get => false; set {
-        // Intentionally empty: there is nothing to do for this case.
+        _ = value; // Intentionally ignored: this accessor has no state to change.
     } }
 
     /// <summary>Whether upper and lower case must match.</summary>

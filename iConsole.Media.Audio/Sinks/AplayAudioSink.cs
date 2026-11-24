@@ -198,11 +198,7 @@ public sealed class AplayAudioSink : IAudioSink
         }
     }
 
-    public void Dispose()
-    {
-        _stopped = true;
-        Close();
-    }
+    public void Dispose() => Stop();
 
     internal static bool IsAvailable()
     {

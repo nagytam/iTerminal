@@ -38,7 +38,9 @@ public class ValidationModel<T>
         {
             Model.PropertyChanged += OnModelPropertyChanged;
         }
+        #pragma warning disable S1699 // The hook must run during construction so the view is ready when it is first shown.
         Validate(DateTime.Now);
+        #pragma warning restore S1699
         ValidationResult ??= new ValidationResult(DateTime.MinValue, true, string.Empty);
     }
 

@@ -166,8 +166,10 @@ public class DatabaseInitializationHostedService(
 
             if (dbPath is not null && databaseLocation?.IsInMemory != true)
             {
-                foreach (var side in new[] { dbPath + "-wal", dbPath + "-shm" })
-                    if (File.Exists(side)) File.Delete(side);
+                foreach (var side in new[] { dbPath + "-wal", dbPath + "-shm" }.Where(File.Exists))
+                {
+                    File.Delete(side);
+                }
                 if (File.Exists(dbPath)) File.Delete(dbPath);
             }
 

@@ -430,6 +430,45 @@ public static class ImageMetadataWriter
                 Collect(entry.Child!, into);
             }
         }
+
+        private static int TypeSize(ushort type) => type switch
+        {
+            1 or 2 or 6 or 7 => 1,
+            3 or 8 => 2,
+            4 or 9 or 11 => 4,
+            5 or 10 or 12 => 8,
+            _ => 0,
+        };
+
+        private static ushort ReadUInt16(ReadOnlySpan<byte> bytes, bool big) =>
+            big ? BinaryPrimitives.ReadUInt16BigEndian(bytes) : BinaryPrimitives.ReadUInt16LittleEndian(bytes);
+
+        private static uint ReadUInt32(ReadOnlySpan<byte> bytes, bool big) =>
+            big ? BinaryPrimitives.ReadUInt32BigEndian(bytes) : BinaryPrimitives.ReadUInt32LittleEndian(bytes);
+
+        private static void WriteUInt16(Span<byte> bytes, ushort value, bool big)
+        {
+            if (big)
+            {
+                BinaryPrimitives.WriteUInt16BigEndian(bytes, value);
+            }
+            else
+            {
+                BinaryPrimitives.WriteUInt16LittleEndian(bytes, value);
+            }
+    }
+
+    private static void WriteUInt32(Span<byte> bytes, uint value, bool big)
+    {
+        if (big)
+        {
+            BinaryPrimitives.WriteUInt32BigEndian(bytes, value);
+        }
+        else
+        {
+            BinaryPrimitives.WriteUInt32LittleEndian(bytes, value);
+        }
+    }
     }
 
     private sealed record TiffEntry(ushort Tag, ushort Type, uint Count, byte[] Value, TiffDirectory? Child);
@@ -589,42 +628,4 @@ public static class ImageMetadataWriter
 
     #endregion
 
-    private static int TypeSize(ushort type) => type switch
-    {
-        1 or 2 or 6 or 7 => 1,
-        3 or 8 => 2,
-        4 or 9 or 11 => 4,
-        5 or 10 or 12 => 8,
-        _ => 0,
-    };
-
-    private static ushort ReadUInt16(ReadOnlySpan<byte> bytes, bool big) =>
-        big ? BinaryPrimitives.ReadUInt16BigEndian(bytes) : BinaryPrimitives.ReadUInt16LittleEndian(bytes);
-
-    private static uint ReadUInt32(ReadOnlySpan<byte> bytes, bool big) =>
-        big ? BinaryPrimitives.ReadUInt32BigEndian(bytes) : BinaryPrimitives.ReadUInt32LittleEndian(bytes);
-
-    private static void WriteUInt16(Span<byte> bytes, ushort value, bool big)
-    {
-        if (big)
-        {
-            BinaryPrimitives.WriteUInt16BigEndian(bytes, value);
-        }
-        else
-        {
-            BinaryPrimitives.WriteUInt16LittleEndian(bytes, value);
-        }
-    }
-
-    private static void WriteUInt32(Span<byte> bytes, uint value, bool big)
-    {
-        if (big)
-        {
-            BinaryPrimitives.WriteUInt32BigEndian(bytes, value);
-        }
-        else
-        {
-            BinaryPrimitives.WriteUInt32LittleEndian(bytes, value);
-        }
-    }
 }

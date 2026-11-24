@@ -53,29 +53,25 @@ public class ArchiveFileSystemService : IArchiveFileSystemService
 
         var children = new List<Url>();
         var seenFolders = new HashSet<string>();
-        foreach (var entry in archive.Entries)
+        foreach (var entry in archive.Entries.Where(entry => !(!entry.FullName.StartsWith(prefix, StringComparison.Ordinal))))
         {
-            if (!entry.FullName.StartsWith(prefix, StringComparison.Ordinal))
-            {
-                continue;
-            }
             var remainder = entry.FullName[prefix.Length..];
             if (string.IsNullOrEmpty(remainder))
             {
-                continue;
+            continue;
             }
             var slashIndex = remainder.IndexOf('/');
             if (slashIndex < 0)
             {
-                children.Add(new Url(Container.ZIP_ARCHIVE + folderUrl.ContainerFilePath + "@/" + prefix + remainder));
+            children.Add(new Url(Container.ZIP_ARCHIVE + folderUrl.ContainerFilePath + "@/" + prefix + remainder));
             }
             else
             {
-                var folderName = remainder[..(slashIndex + 1)];
-                if (seenFolders.Add(folderName))
-                {
-                    children.Add(new Url(Container.ZIP_ARCHIVE + folderUrl.ContainerFilePath + "@/" + prefix + folderName));
-                }
+            var folderName = remainder[..(slashIndex + 1)];
+            if (seenFolders.Add(folderName))
+            {
+                children.Add(new Url(Container.ZIP_ARCHIVE + folderUrl.ContainerFilePath + "@/" + prefix + folderName));
+            }
             }
         }
         return children;

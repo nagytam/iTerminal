@@ -185,9 +185,11 @@ public sealed class VoiceRecorderService(
     private static string UniquePath(string directory, string stamp, string extension)
     {
         string path = Path.Combine(directory, $"voice-{stamp}{extension}");
-        for (int n = 2; File.Exists(path) || File.Exists(Path.ChangeExtension(path, ".txt")); n++)
+        int n = 2;
+        while (File.Exists(path) || File.Exists(Path.ChangeExtension(path, ".txt")))
         {
             path = Path.Combine(directory, $"voice-{stamp}-{n}{extension}");
+            n++;
         }
 
         return path;

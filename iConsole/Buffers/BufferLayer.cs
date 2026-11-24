@@ -170,6 +170,7 @@ public class BufferLayer
                     }
                     else
                     {
+                        // Nothing to copy: the source has no cells in this span.
                     }
                 }
             }

@@ -75,10 +75,10 @@ public class StreamAttributeService : IStreamAttributeService
     {
         if (OperatingSystem.IsWindows())
         {
-            return new StreamListing(WindowsNative.List(path));
+            return new StreamListing(WindowsNative.ListStreams(path));
         }
 
-        return IsUnix ? new StreamListing(UnixNative.List(path)) : new StreamListing([], Unsupported());
+        return IsUnix ? new StreamListing(UnixNative.ListStreams(path)) : new StreamListing([], Unsupported());
     }
 
     private static StreamData Read(string path, string name, int maxBytes)
@@ -90,10 +90,10 @@ public class StreamAttributeService : IStreamAttributeService
 
         if (OperatingSystem.IsWindows())
         {
-            return WindowsNative.Read(path, name, maxBytes);
+            return WindowsNative.ReadStream(path, name, maxBytes);
         }
 
-        return IsUnix ? UnixNative.Read(path, name, maxBytes) : new StreamData([], 0, Unsupported());
+        return IsUnix ? UnixNative.ReadStream(path, name, maxBytes) : new StreamData([], 0, Unsupported());
     }
 
     private static StreamResult Delete(string path, string name)
@@ -190,7 +190,7 @@ public class StreamAttributeService : IStreamAttributeService
 
         private static string StreamPath(string path, string name) => Own(path) + ":" + name;
 
-        public static IReadOnlyList<StreamItem> List(string path)
+        public static IReadOnlyList<StreamItem> ListStreams(string path)
         {
             List<StreamItem> items = [];
             IntPtr handle = FindFirstStreamW(Own(path), 0, out FindStreamData data, 0);
@@ -225,7 +225,7 @@ public class StreamAttributeService : IStreamAttributeService
             return items;
         }
 
-        public static StreamData Read(string path, string name, int maxBytes)
+        public static StreamData ReadStream(string path, string name, int maxBytes)
         {
             using SafeFileHandle handle = CreateFileW(StreamPath(path, name), GenericRead, ShareAll, IntPtr.Zero, OpenExisting, BackupSemantics | OpenReparsePoint, IntPtr.Zero);
             if (handle.IsInvalid)
@@ -293,7 +293,7 @@ public class StreamAttributeService : IStreamAttributeService
 
         private static Win32Exception Failure() => new(Marshal.GetLastPInvokeError());
 
-        public static IReadOnlyList<StreamItem> List(string path)
+        public static IReadOnlyList<StreamItem> ListStreams(string path)
         {
             // The list can grow between asking its size and reading it (ERANGE): ask again.
             for (int attempt = 0; attempt < 4; attempt++)
@@ -334,7 +334,7 @@ public class StreamAttributeService : IStreamAttributeService
             throw new IOException(UiText.Get("Streams.Error.Changing", "The attributes keep changing; try again."));
         }
 
-        public static StreamData Read(string path, string name, int maxBytes)
+        public static StreamData ReadStream(string path, string name, int maxBytes)
         {
             nint size = GetCall(path, name, null);
             if (size < 0)

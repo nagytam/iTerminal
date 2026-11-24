@@ -75,13 +75,15 @@ public sealed class WorkspaceService(
         lock (_lock)
         {
             var names = Read().Select(w => w.Name).ToList();
-            for (var n = 1; ; n++)
+            var n = 1;
+            while (true)
             {
                 var candidate = $"Workspace {n}";
                 if (!names.Any(name => Same(name, candidate)))
                 {
                     return candidate;
                 }
+                n++;
             }
         }
     }

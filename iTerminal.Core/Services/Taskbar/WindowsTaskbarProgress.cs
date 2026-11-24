@@ -21,13 +21,12 @@ public sealed class WindowsTaskbarProgress : ITaskbarProgress, IDisposable
     private const int TbpfPaused = 0x8;
 
     private readonly BlockingCollection<(TaskbarState State, long Percentage)> _updates = new();
-    private readonly Thread _thread;
 
     public WindowsTaskbarProgress()
     {
-        _thread = new Thread(Run) { IsBackground = true, Name = "Taskbar progress" };
-        _thread.SetApartmentState(ApartmentState.STA);
-        _thread.Start();
+        var thread = new Thread(Run) { IsBackground = true, Name = "Taskbar progress" };
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
     }
 
     /// <summary>Queues the indicator to show <paramref name="state"/> at <paramref name="percentage"/>. Returns at once.</summary>

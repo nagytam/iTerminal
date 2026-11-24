@@ -9,6 +9,7 @@ using iConsole.Localization;
 using iConsole.Services;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 
 namespace iConsole.Controls;
 
@@ -102,7 +103,9 @@ public class MenuItem : PopUpWindow
 
         if (!IsMenuBar)
         {
+            #pragma warning disable S1699 // The hook must run during construction so the view is ready when it is first shown.
             OnInitializeActionButtons();
+            #pragma warning restore S1699
         }
     }
 
@@ -376,11 +379,11 @@ public class MenuItem : PopUpWindow
         closer.CloseMenu();
     }
 
-    private List<MenuItem> SelectableMenuItems => MenuItems.Where(m => m.Text != "-").ToList();
+    private List<MenuItem> SelectableMenuItems() => MenuItems.Where(m => m.Text != "-").ToList();
 
     private void MoveSelection(int direction)
     {
-        var siblings = SelectableMenuItems;
+        var siblings = SelectableMenuItems();
         if (siblings.Count == 0)
         {
             return;
@@ -394,7 +397,7 @@ public class MenuItem : PopUpWindow
     /// <summary>Selects the first or the last entry of this drop-down, skipping separators.</summary>
     private void SelectEdge(bool last)
     {
-        var siblings = SelectableMenuItems;
+        var siblings = SelectableMenuItems();
         if (siblings.Count > 0)
         {
             (last ? siblings[^1] : siblings[0]).SetSelected();
@@ -682,17 +685,17 @@ public class MenuItem : PopUpWindow
             }
             else
             {
-                var text = string.Empty;
+                var text = new StringBuilder();
                 foreach (var menuItem in MenuItems)
                 {
-                    if (!string.IsNullOrEmpty(text))
+                    if (text.Length > 0)
                     {
-                        text += " ";
+                        text.Append(' ');
                     }
-                    text += menuItem.Text;
+                    text.Append(menuItem.Text);
                 }
-                text = text.ExpandRight((int)ViewSize.Width);
-                s = new ConxelString(text, colorScheme.Foreground, colorScheme.Background);
+                var label = text.ToString().ExpandRight((int)ViewSize.Width);
+                s = new ConxelString(label, colorScheme.Foreground, colorScheme.Background);
             }
             buffer.Write(ZOrder, position, ViewSize, s);
         }

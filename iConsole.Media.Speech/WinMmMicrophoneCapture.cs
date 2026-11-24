@@ -48,7 +48,9 @@ internal sealed class WinMmMicrophoneCapture : IMicrophoneCapture
                 Size = 0,
             };
 
+            #pragma warning disable S3869 // The Win32 API requires the raw handle; the wait handle stays alive for the call.
             int result = waveInOpen(out _handle, WaveMapper, ref format, _signal.SafeWaitHandle.DangerousGetHandle(), IntPtr.Zero, CallbackEvent);
+            #pragma warning restore S3869
             if (result != 0)
             {
                 ReleaseSignal();

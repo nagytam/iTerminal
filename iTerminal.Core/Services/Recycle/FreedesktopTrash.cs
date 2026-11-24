@@ -245,7 +245,8 @@ public sealed class FreedesktopTrash : ITrashService
 
         string name = baseName;
         string recordPath;
-        for (var attempt = 2; ; attempt++)
+        var attempt = 2;
+        while (true)
         {
             recordPath = Path.Combine(info, name + InfoExtension);
             if (!File.Exists(Path.Combine(files, name)) && !Directory.Exists(Path.Combine(files, name)) && TryReserve(recordPath, record))
@@ -254,6 +255,7 @@ public sealed class FreedesktopTrash : ITrashService
             }
 
             name = baseName + "." + attempt.ToString(CultureInfo.InvariantCulture);
+            attempt++;
         }
 
         var target = Path.Combine(files, name);

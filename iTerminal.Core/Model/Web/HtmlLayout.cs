@@ -240,7 +240,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
                     Image(node, style, link);
                     return;
                 case "input" or "button" or "select" or "textarea":
-                    FieldControl(node, style, link);
+                    FieldControl(node, style);
                     return;
                 case "iframe" or "frame":
                     Frame(node, style);
@@ -392,7 +392,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
             }
         }
 
-        private void FieldControl(HtmlNode node, WebStyle style, int link)
+        private void FieldControl(HtmlNode node, WebStyle style)
         {
             if (!owner._document.FieldOf.TryGetValue(node, out var fieldId))
             {

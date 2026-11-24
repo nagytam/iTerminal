@@ -314,7 +314,7 @@ public sealed class MultiSelectionPromptDialog<T> : ChoicePromptDialog<T, IReadO
 
     protected override void OnEnter()
     {
-        var marked = List.MarkedItems;
+        var marked = List.MarkedItems();
         if (marked.Count < _minimum)
         {
             Message = string.Format(UiText.Get("Prompt.MarkAtLeast", "Mark at least {0}."), _minimum);

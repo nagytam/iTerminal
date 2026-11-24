@@ -226,7 +226,9 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
         return handle;
     }
 
+    #pragma warning disable S4200 // A thin wrapper over a Win32 API: the native signature is declared here on purpose.
     private static bool ReadPowerStatus(out SystemPowerStatus status) => GetSystemPowerStatus(out status) && status.BatteryFlag != 128;
+    #pragma warning restore S4200
 
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     private static extern SafeFileHandle CreateFileW(string fileName, uint desiredAccess, uint shareMode, IntPtr securityAttributes, uint creationDisposition, uint flagsAndAttributes, IntPtr templateFile);

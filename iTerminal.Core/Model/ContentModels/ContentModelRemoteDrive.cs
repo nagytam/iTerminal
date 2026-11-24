@@ -64,28 +64,28 @@ public abstract class ContentModelRemoteDrive(
 
     public override string GetFooter() => EntryCountFooter();
 
-    public override void SetUrl(Url path)
+    public override void SetUrl(Url url)
     {
         // A panel always shows a folder, but "ftp://host/pub" typed without the slash parses as a
         // file — and then nothing built on the panel's URL (a new file or folder, a copy target)
         // could be put inside it.
-        if (path.PathType != PathType.Folder && !path.FullUrl.EndsWith('/'))
+        if (url.PathType != PathType.Folder && !url.FullUrl.EndsWith('/'))
         {
-            path = new Url(path.FullUrl + "/");
+            url = new Url(url.FullUrl + "/");
         }
 
-        settingsService.Set(Name, path);
-        folderHistoryService.Add(path);
+        settingsService.Set(Name, url);
+        folderHistoryService.Add(url);
         try
         {
-            Connect(path);
+            Connect(url);
         }
         catch (Exception ex)
         {
-            logger.Error(ex, FormatConnectionError(path, ex));
+            logger.Error(ex, FormatConnectionError(url, ex));
         }
         Entries.Clear();
-        Url = path;
+        Url = url;
         ResetNavigation();
 
         Refresh();

@@ -122,11 +122,18 @@ public sealed class ElevationService(IInteractiveShellService shellService) : IE
         }
 
         // Drop the switch together with the process id that follows it: the relaunch adds a new pair.
+        var skipNext = false;
         for (int i = 1; i < commandLine.Length; i++)
         {
+            if (skipNext)
+            {
+                skipNext = false;
+                continue;
+            }
+
             if (commandLine[i] == WaitForParentArgument)
             {
-                i++;
+                skipNext = true;
                 continue;
             }
 

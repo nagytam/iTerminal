@@ -2,6 +2,7 @@ using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Model;
 using iConsole.Model.Validations;
+using System.Text;
 
 namespace iConsole.Controls;
 
@@ -28,7 +29,7 @@ public partial class TextBox
                 string formatted = value.Format(value.ExtractRaw(Text));
                 Text = formatted;
                 ScrollableModel.CursorPosition.X = formatted.Length;
-                MaxLength = Math.Max(MaxLength, value.Template.Length);
+                MaxLength = Math.Max(MaxLength, value.Template().Length);
             }
 
             StateHasChanged();
@@ -211,22 +212,23 @@ public partial class TextBox
 
         slot = Math.Min(slot, raw.Length);
         string tail = raw[slot..];
-        string head = raw[..slot];
+        var head = new StringBuilder(raw[..slot]);
         foreach (char c in ClipboardKeys.NormalizeLineBreaks(text))
         {
             if (head.Length < _mask.SlotCount && _mask.Accepts(head.Length, c))
             {
-                head += _mask.Normalize(head.Length, c);
+                head.Append(_mask.Normalize(head.Length, c));
             }
         }
 
-        string result = head + tail;
+        string pasted = head.ToString();
+        string result = pasted + tail;
         if (!_mask.IsValidRaw(result))
         {
             // The old tail no longer fits the slots it was pushed to: keep only what was pasted.
-            result = head;
+            result = pasted;
         }
 
-        SetMaskedRaw(result, head.Length);
+        SetMaskedRaw(result, pasted.Length);
     }
 }

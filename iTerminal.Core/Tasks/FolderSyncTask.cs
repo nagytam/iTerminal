@@ -6,6 +6,7 @@ using iConsole.Tasks;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Services.Compare;
+using System.Text;
 
 namespace iTerminal.Core.Tasks;
 
@@ -116,18 +117,18 @@ public sealed class FolderSyncTask(
 
     private string Describe()
     {
-        var text = $"Synchronised: {Summarise()}.";
+        var text = new StringBuilder($"Synchronised: {Summarise()}.");
         foreach (var failure in _failures.Take(5))
         {
-            text += Environment.NewLine + failure.Shrink(76);
+            text.Append(Environment.NewLine).Append(failure.Shrink(76));
         }
 
         if (_failures.Count > 5)
         {
-            text += Environment.NewLine + $"… and {_failures.Count - 5} more";
+            text.Append(Environment.NewLine).Append($"… and {_failures.Count - 5} more");
         }
 
-        return text;
+        return text.ToString();
     }
 
     private void Delete(SyncAction action)

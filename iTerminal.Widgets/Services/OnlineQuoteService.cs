@@ -5,7 +5,7 @@ namespace iTerminal.Widgets.Services;
 
 public class OnlineQuoteService
 {
-    public ConcurrentDictionary<string, Instrument> Instruments = [];
+    public ConcurrentDictionary<string, Instrument> Instruments { get; } = [];
 
     /// <summary>
     /// Indicates whether the current instruments data is from cache (true) or freshly fetched (false)

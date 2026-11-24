@@ -81,7 +81,9 @@ public class SmbFileSystemService : ISmbFileSystemService
         }
         try
         {
+            #pragma warning disable S3011 // Reflection is the only way to reach the library's dialect field; the access is read-only and guarded.
             var dialect = typeof(SMB2Client).GetField("m_dialect", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(client);
+            #pragma warning restore S3011
             var code = dialect is null ? 0 : Convert.ToInt32(dialect);
             return code switch
             {

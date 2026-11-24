@@ -488,12 +488,12 @@ public class DuplicateFinderDialog : Dialog
     public void MarkAllButOne(bool keepOldest)
     {
         _marked.Clear();
-        foreach (var group in _groups)
+        foreach (var files in _groups.Select(group => group.Files))
         {
             var keep = keepOldest
-                ? group.Files.OrderBy(f => f.Modified).ThenBy(f => f.Path, StringComparer.OrdinalIgnoreCase).First()
-                : group.Files.OrderByDescending(f => f.Modified).ThenBy(f => f.Path, StringComparer.OrdinalIgnoreCase).First();
-            foreach (var file in group.Files.Where(f => f != keep))
+                ? files.OrderBy(f => f.Modified).ThenBy(f => f.Path, StringComparer.OrdinalIgnoreCase).First()
+                : files.OrderByDescending(f => f.Modified).ThenBy(f => f.Path, StringComparer.OrdinalIgnoreCase).First();
+            foreach (var file in files.Where(f => f != keep))
             {
                 _marked.Add(file.Path);
             }

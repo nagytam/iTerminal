@@ -22,17 +22,17 @@ public sealed class QuitWithConfirmationCommand(TaskManager? taskManager, IPromp
     // A second F10 while the question is up is the same question, not a second one.
     private int _asking;
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         int running = CountRunningTasks();
         if (running == 0 || promptService is null)
         {
-            return base.ExecuteAsync(arg);
+            return base.ExecuteAsync(args);
         }
 
         if (Interlocked.Exchange(ref _asking, 1) == 0)
         {
-            _ = AskThenQuitAsync(running, arg);
+            _ = AskThenQuitAsync(running, args);
         }
 
         return Task.CompletedTask;

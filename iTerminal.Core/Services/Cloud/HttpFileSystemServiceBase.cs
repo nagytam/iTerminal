@@ -82,7 +82,9 @@ public abstract class HttpFileSystemServiceBase(HttpMessageHandler? handler, ILo
         CancellationToken cancellationToken = default)
     {
         var refreshedToken = false;
+        #pragma warning disable S1994 // The loop ends through a return or a throw inside the body, not the counter.
         for (var attempt = 1; ; attempt++)
+        #pragma warning restore S1994
         {
             using var request = build();
             await AuthorizeAsync(request, cancellationToken).ConfigureAwait(false);
@@ -310,9 +312,17 @@ public abstract class HttpFileSystemServiceBase(HttpMessageHandler? handler, ILo
         public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
-    public virtual void Dispose()
+    public void Dispose()
     {
-        _http.Dispose();
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _http.Dispose();
+        }
     }
 }

@@ -73,8 +73,15 @@ public class ContextMenuItem
 
         StringBuilder text = new(title.Length);
         int hotKeyIndex = -1;
+        var skipNext = false;
         for (int i = 0; i < title.Length; i++)
         {
+            if (skipNext)
+            {
+                skipNext = false;
+                continue;
+            }
+
             char c = title[i];
             if (c == '&' && i + 1 < title.Length)
             {
@@ -82,7 +89,7 @@ public class ContextMenuItem
                 if (next == '&')
                 {
                     text.Append('&');
-                    i++;
+                    skipNext = true;
                     continue;
                 }
 
