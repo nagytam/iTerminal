@@ -71,7 +71,7 @@ public sealed class TwainScannerBackend : IScannerBackend
 }
 
 /// <summary>A TWAIN operation that failed, with the sentence the dialog shows.</summary>
-internal sealed class TwainException(string message) : Exception(message);
+public sealed class TwainException(string message) : Exception(message);
 
 /// <summary>What one wait for a picture ended with.</summary>
 internal enum TransferOutcome

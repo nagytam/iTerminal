@@ -12,13 +12,11 @@ public static class AnsiRenderer
     private const char   ESCAPE = '\x1B';
     private const string CSI = "\x1B["; // Control Sequence Introducer
     private const char   SEMICOLON = ';';
-    private const char   BRACKET_OPEN = '[';
     private const char   END = 'm';
     private const char   BOLD = '1';
     private const char   ITALIC = '3';
     private const char   UNDERLINE = '4';
     private const char   BLINK = '5';
-    private const string DOUBLE_UNDERLINE = "21";
     private const char   STRIKE_THROUGH = '9';
     private const char   H = 'H';
     private const string RESET = "[0m";
@@ -64,41 +62,9 @@ public static class AnsiRenderer
         15, // White
     ];
 
-    private const string FOREGROUND_BLACK = "30";
-    private const string FOREGROUND_RED = "31";
-    private const string FOREGROUND_GREEN = "32";
-    private const string FOREGROUND_YELLOW = "33";
-    private const string FOREGROUND_BLUE = "34";
-    private const string FOREGROUND_MAGENTA = "35";
-    private const string FOREGROUND_CYAN = "36";
-    private const string FOREGROUND_WHITE = "37";
 
-    private const string BACKGROUND_BLACK = "40";
-    private const string BACKGROUND_RED = "41";
-    private const string BACKGROUND_GREEN = "42";
-    private const string BACKGROUND_YELLOW = "43";
-    private const string BACKGROUND_BLUE = "44";
-    private const string BACKGROUND_MAGENTA = "45";
-    private const string BACKGROUND_CYAN = "46";
-    private const string BACKGROUND_WHITE = "47";
 
-    private const string FOREGROUND_BLACK_BRIGHT = "90";
-    private const string FOREGROUND_RED_BRIGHT = "91";
-    private const string FOREGROUND_GREEN_BRIGHT = "92";
-    private const string FOREGROUND_YELLOW_BRIGHT = "93";
-    private const string FOREGROUND_BLUE_BIGHT = "94";
-    private const string FOREGROUND_MAGENTA_BRIGHT = "95";
-    private const string FOREGROUND_CYAN_BRIGHT = "96";
-    private const string FOREGROUND_WHITE_BRIGHT = "97";
 
-    private const string BACKGROUND_BLACK_BRIGHT = "100";
-    private const string BACKGROUND_RED_BRIGHT = "101";
-    private const string BACKGROUND_GREEN_BRIGHT = "102";
-    private const string BACKGROUND_YELLOW_BRIGHT = "103";
-    private const string BACKGROUND_BLUE_BRIGHT = "104";
-    private const string BACKGROUND_MAGENTA_BRIGHT = "105";
-    private const string BACKGROUND_CYAN_BRIGHT = "106";
-    private const string BACKGROUND_WHITE_BRIGHT = "107";
 
     // O(1) lookup tables indexed by Color enum ordinal (mirrors ConsoleColor 0-15).
     // Avoids the large switch chains that the JIT cannot easily optimise into a jump table.

@@ -297,7 +297,9 @@ public class DuplicateFinderDialog : Dialog
             var isCursor = _fileRows.Count > 0 && i == _fileRows[Math.Min(_cursor, _fileRows.Count - 1)];
             var mark = _marked.Contains(row.File.Path) ? "x" : " ";
             var text = $"{(isCursor ? "▶" : " ")} [{mark}] {row.File.Path.Cut(pathWidth).ExpandRight(pathWidth)}  {row.File.Modified:yyyy-MM-dd HH:mm}";
-            Color? color = isCursor ? Color.Yellow : _marked.Contains(row.File.Path) ? Color.Red : null;
+            Color? color = null;
+            if (isCursor) color = Color.Yellow;
+            else if (_marked.Contains(row.File.Path)) color = Color.Red;
             lines.Add(new(text, color));
         }
 

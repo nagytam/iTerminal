@@ -36,7 +36,7 @@ public sealed class PowerShellRuntimeDependency : IRuntimeDependency
     private readonly IReadOnlyList<string> _systemDirectories;
     private readonly Func<string, TimeSpan, Task<string?>> _readVersion;
     private readonly bool _isWindows;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private (string Path, DateTime Stamp, string? Version)? _cached;
 
     public PowerShellRuntimeDependency(string rootDirectory)
@@ -302,7 +302,7 @@ public sealed class PowerShellRuntimeDependency : IRuntimeDependency
     }
 
     private static string PlatformName() =>
-        $"{(OperatingSystem.IsWindows() ? "Windows" : OperatingSystem.IsMacOS() ? "macOS" : "Linux")} {RuntimeInformation.ProcessArchitecture}";
+        $"{(OperatingSystem.IsWindows(), OperatingSystem.IsMacOS()) switch { (true, _) => "Windows", (_, true) => "macOS", _ => "Linux" }} {RuntimeInformation.ProcessArchitecture}";
 
     /// <summary>The usual folders a system PowerShell 7 is installed in, per platform.</summary>
     internal static IEnumerable<string> DefaultSystemDirectories()
@@ -360,11 +360,13 @@ public sealed class PowerShellRuntimeDependency : IRuntimeDependency
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return null;
             }
 
-            Match match = Regex.Match(await output + " " + await errors, @"\d+\.\d+\.\d+");
+            Match match = Regex.Match(await output + " " + await errors, @"\d+\.\d+\.\d+", RegexOptions.None, TimeSpan.FromSeconds(1));
             return match.Success ? match.Value : null;
         }
         catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception or IOException)
@@ -447,6 +449,7 @@ public sealed class PowerShellRuntimeDependency : IRuntimeDependency
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 }

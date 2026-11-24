@@ -259,8 +259,8 @@ public class CommandPaletteDialog : Dialog
         /// <summary>The item drawn under <paramref name="position"/>, if there is one.</summary>
         public bool TryGetIndexAt(Position position, out int index)
         {
-            long column = (long)position.X - (long)AbsolutePosition.X;
-            long row = (long)position.Y - (long)AbsolutePosition.Y;
+            long column = position.X - AbsolutePosition.X;
+            long row = position.Y - AbsolutePosition.Y;
             index = -1;
             if (column < 0 || column >= ViewSize.Width || row < 0 || row >= ViewSize.Height)
             {

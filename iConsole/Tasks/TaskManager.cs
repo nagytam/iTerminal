@@ -39,7 +39,7 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
         _workers = new Task[workerCount];
         for (var index = 0; index < workerCount; index++)
         {
-            _workers[index] = Task.Run(ProcessQueueAsync);
+            _workers[index] = Task.Run(ProcessQueueAsync, CancellationToken.None);
         }
     }
 
@@ -182,6 +182,7 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
             finally
             {
@@ -210,6 +211,7 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         _pendingSignal.Dispose();

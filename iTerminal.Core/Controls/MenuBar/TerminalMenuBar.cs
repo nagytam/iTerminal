@@ -36,7 +36,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     private bool _isOnlineIndicatorEnabled = true;
     private readonly ILocalizer? _localizer;
     private volatile bool _languageChanged;
-    private IReadOnlyList<IMenuBarIndicator> _indicators = [];
+    private readonly IReadOnlyList<IMenuBarIndicator> _indicators = [];
     private bool[] _indicatorStates = [];
 
     public TerminalMenuBar(

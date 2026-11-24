@@ -388,6 +388,6 @@ public sealed class ValidatorPipeline(Func<string> textSource) : IValidationMode
 
             Interlocked.Increment(ref _version);
             Completed?.Invoke();
-        });
+        }, CancellationToken.None);
     }
 }

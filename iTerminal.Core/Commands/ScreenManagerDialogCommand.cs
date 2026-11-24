@@ -13,7 +13,7 @@ public class ScreenManagerDialogCommand(IThemeService themeService) : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F12, false, false, false);
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var dialog = new ScreenManagerDialog(themeService);
         if (Control is not null)

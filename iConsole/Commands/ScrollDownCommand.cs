@@ -12,7 +12,7 @@ public class ScrollDownCommand(IScrollableModel scrollableModel) : Command
     public override Key? Key { get; init; } = 
         new Key(ConsoleKey.DownArrow, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         Debug.Assert(!scrollableModel.ViewSize.IsEmpty);
         // One line down: with several columns the cursor moves to the same column of the next row.

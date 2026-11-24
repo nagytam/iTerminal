@@ -104,8 +104,8 @@ public class VoiceRecorderDialog : Dialog
         {
             // The height is fixed when the dialog opens, so it leaves room for the longest content the dialog can show
             // (a full transcript), not for the rows that exist at that moment.
-            int width = (int)Math.Max(20, Math.Min(PreferredWidth, (long)Parent.ViewSize.Width));
-            int height = (int)Math.Max(10, Math.Min(PreferredHeight, (long)Parent.ViewSize.Height));
+            int width = (int)Math.Max(20, Math.Min(PreferredWidth, Parent.ViewSize.Width));
+            int height = (int)Math.Max(10, Math.Min(PreferredHeight, Parent.ViewSize.Height));
             CenterInParent(new Size(width, height));
         }
 
@@ -206,7 +206,7 @@ public class VoiceRecorderDialog : Dialog
             {
                 _recorder.Discard();
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void StopRecording()
@@ -270,7 +270,7 @@ public class VoiceRecorderDialog : Dialog
                     Changed();
                 }
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Esc during a recording: the audio is dropped and nothing is saved.</summary>
@@ -496,7 +496,7 @@ public class VoiceRecorderDialog : Dialog
         return rows.Select(row => (row.Text.Length > innerWidth ? row.Text.Cut(innerWidth) : row.Text, row.Color)).ToList();
     }
 
-    private string OptionText(bool transcribe, bool model)
+    private static string OptionText(bool transcribe, bool model)
     {
         string value = transcribe
             ? UiText.Get("Voice.Recorder.TranscriptionOn", "on")

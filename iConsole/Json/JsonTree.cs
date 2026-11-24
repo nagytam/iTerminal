@@ -19,7 +19,7 @@ public static class JsonTree
     /// <summary>Deepest nesting read; a document nested deeper is reported as not valid JSON.</summary>
     public const int MaxDepth = 256;
 
-    private static readonly Regex Whitespace = new(@"\s+", RegexOptions.Compiled);
+    private static readonly Regex Whitespace = new(@"\s+", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     /// <summary>The root row of the document, with its children.</summary>
     public static JsonNodeItem Build(JsonDocument document)
@@ -65,7 +65,8 @@ public static class JsonTree
     /// </summary>
     public static string Label(string? key, JsonElement value)
     {
-        string prefix = key is null ? string.Empty : key.StartsWith('[') ? $"{key}: " : $"{Quote(key)}: ";
+        string prefix = string.Empty;
+        if (key is not null) prefix = key.StartsWith('[') ? $"{key}: " : $"{Quote(key)}: ";
         return prefix + value.ValueKind switch
         {
             JsonValueKind.Object => $"{{ {value.EnumerateObject().Count():N0} }}",

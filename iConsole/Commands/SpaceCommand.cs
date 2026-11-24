@@ -19,7 +19,7 @@ public class SpaceCommand : Command
             return;
         }
         button.StartPress();
-        if (!await button.Commands.First().RunAsync(args))
+        if (!await button.Commands[0].RunAsync(args))
         {
             button.StopPress();
         }

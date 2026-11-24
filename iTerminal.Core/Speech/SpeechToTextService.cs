@@ -17,7 +17,7 @@ public sealed class SpeechToTextService : ISpeechToTextService
     private readonly INotificationService? _notifications;
     private readonly ILogger? _logger;
     private readonly TimeSpan _maxRecording;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
 
     private SpeechState _state = SpeechState.Idle;
     private int _generation;
@@ -100,7 +100,7 @@ public sealed class SpeechToTextService : ISpeechToTextService
             TaskCompletionSource stop = _stop;
             // A cancelled session may still be releasing the microphone: the new one waits for it.
             Task previous = _task;
-            _task = Task.Run(() => RunAsync(previous, generation, stop, token));
+            _task = Task.Run(() => RunAsync(previous, generation, stop, token), CancellationToken.None);
         }
 
         RaiseChanged();
@@ -150,10 +150,11 @@ public sealed class SpeechToTextService : ISpeechToTextService
         // with the microphone open. Bounded, because a shutdown does not wait for ever.
         try
         {
-            task.Wait(TimeSpan.FromSeconds(3));
+            task.Wait(TimeSpan.FromSeconds(3), CancellationToken.None);
         }
         catch (AggregateException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 

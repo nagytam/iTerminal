@@ -250,7 +250,7 @@ public sealed class TorrentService : ITorrentService, IAsyncDisposable, IDisposa
         Torrent torrent;
         try
         {
-            torrent = Torrent.Load(bytes);
+            torrent = await Torrent.LoadAsync(bytes);
         }
         catch (Exception exception) when (exception is TorrentException or ArgumentException or FormatException or IOException)
         {

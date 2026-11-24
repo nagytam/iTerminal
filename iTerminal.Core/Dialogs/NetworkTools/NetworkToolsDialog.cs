@@ -211,6 +211,7 @@ public class NetworkToolsDialog : Dialog
         _written = 0;
         while (_pending.TryDequeue(out _))
         {
+            // Reading to the end is the whole job; there is nothing to do per item.
         }
 
         _finishedStatus = null;
@@ -245,7 +246,7 @@ public class NetworkToolsDialog : Dialog
             }
 
             _finishedStatus = outcome;
-        });
+        }, CancellationToken.None);
     }
 
     private void CancelRun()

@@ -9,6 +9,8 @@ namespace iConsole.Controls;
 [DebuggerDisplay("{Name} {AbsolutePosition} {ViewSize}")]
 public class MenuBar : MenuItem
 {
+    protected override bool IsMenuBar => true;
+
     public MenuBar(IEnumerable<MenuItem> menuItems, IThemeService themeService)
         : base("MenuBar", null, menuItems, themeService)
     {
@@ -20,11 +22,6 @@ public class MenuBar : MenuItem
     {
         base.OnInitializeZOrder();
         ZOrder = 0;
-    }
-
-    public override void Draw(IBuffer buffer)
-    {
-        base.Draw(buffer);
     }
 
     /// <summary>

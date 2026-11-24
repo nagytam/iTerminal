@@ -7,7 +7,7 @@ namespace iConsole.Drivers;
 
 public class SystemConsoleDriver : IConsoleDriver
 {
-    private Position _windowPosition = new(0, 0);
+    private Position _windowPosition;
 
     private string _title = string.Empty;
     public string Title
@@ -27,9 +27,11 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
                 catch (ArgumentOutOfRangeException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }
@@ -73,9 +75,11 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
                 catch (ArgumentOutOfRangeException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }  
@@ -99,6 +103,7 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (System.IO.IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }
@@ -122,6 +127,7 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (System.IO.IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }
@@ -165,6 +171,7 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -184,9 +191,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         RefreshWindowSize();
@@ -224,9 +233,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -258,9 +269,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -298,31 +311,10 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
-    public void Write(int x, int y, Conxel conxel)
-    {
-        // The second column of a wide character: the wide character before it already covered it.
-        if (conxel.Char == TextWidth.Continuation)
-        {
-            return;
-        }
-
-        try
-        {
-            SetCursorPosition(x, y);
-            ForegroundColor = conxel.ForegroundColor;
-            BackgroundColor = conxel.BackgroundColor;
-            Console.Write(conxel.Char);
-        }
-        catch (IOException)
-        {
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-        }
-    }
 
     // Reused across frames to avoid per-write allocations. Write is only ever called from the
     // single console-renderer thread, so a shared, non-synchronized builder is safe here.
@@ -371,23 +363,42 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
+        }
+    }
+
+    public void Write(int x, int y, Conxel conxel)
+    {
+        // The second column of a wide character: the wide character before it already covered it.
+        if (conxel.Char == TextWidth.Continuation)
+        {
+            return;
+        }
+
+        try
+        {
+            SetCursorPosition(x, y);
+            ForegroundColor = conxel.ForegroundColor;
+            BackgroundColor = conxel.BackgroundColor;
+            Console.Write(conxel.Char);
+        }
+        catch (IOException)
+        {
+            // Intentionally empty: there is nothing to do for this case.
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
     private static bool NeedsAnsi(List<Conxel> list)
     {
-        foreach (var conxel in list)
-        {
-            if (AnsiRenderer.NeedsAnsi(conxel))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return list.Any(conxel => AnsiRenderer.NeedsAnsi(conxel));
     }
 
     private void WriteAnsi(int x, int y, ConxelString s)
@@ -404,9 +415,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 

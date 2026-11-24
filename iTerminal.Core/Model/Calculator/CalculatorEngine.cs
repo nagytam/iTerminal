@@ -273,7 +273,9 @@ public class CalculatorEngine
                 break;
             case "exp": result = Math.Exp(value); break;
             case "fact":
+                #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
                 if (value < 0 || value != Math.Truncate(value) || value > 170)
+                #pragma warning restore S1244
                 {
                     SetError();
                     return;
@@ -394,7 +396,9 @@ public class CalculatorEngine
             case "xor": return (long)a ^ (long)b;
             // A count outside 0..63 shifts everything out; the machine would take it modulo 64 (1 << 64 gave 1).
             case "shl": return b is < 0 or > 63 ? 0 : (long)a << (int)b;
-            case "shr": return b is < 0 or > 63 ? ((long)a < 0 ? -1 : 0) : (long)a >> (int)b;
+            case "shr":
+                if (b is < 0 or > 63) return (long)a < 0 ? -1L : 0L;
+                return (long)a >> (int)b;
             default: return b;
         }
     }
@@ -440,12 +444,9 @@ public class CalculatorEngine
     private static int DigitCount(string text)
     {
         var count = 0;
-        foreach (var c in text)
+        foreach (var c in text.Where(c => char.IsLetterOrDigit(c)))
         {
-            if (char.IsLetterOrDigit(c))
-            {
-                count++;
-            }
+            count++;
         }
         return count;
     }

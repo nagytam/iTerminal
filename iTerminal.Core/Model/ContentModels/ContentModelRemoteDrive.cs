@@ -7,6 +7,7 @@ using iConsole.Services;
 using iTerminal.Core.Services;
 using Serilog;
 using System.Diagnostics;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Model.ContentModels;
 
@@ -63,28 +64,28 @@ public abstract class ContentModelRemoteDrive(
 
     public override string GetFooter() => EntryCountFooter();
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
         // A panel always shows a folder, but "ftp://host/pub" typed without the slash parses as a
         // file — and then nothing built on the panel's URL (a new file or folder, a copy target)
         // could be put inside it.
-        if (url.PathType != PathType.Folder && !url.FullUrl.EndsWith('/'))
+        if (path.PathType != PathType.Folder && !path.FullUrl.EndsWith('/'))
         {
-            url = new Url(url.FullUrl + "/");
+            path = new Url(path.FullUrl + "/");
         }
 
-        settingsService.Set(Name, url);
-        folderHistoryService.Add(url);
+        settingsService.Set(Name, path);
+        folderHistoryService.Add(path);
         try
         {
-            Connect(url);
+            Connect(path);
         }
         catch (Exception ex)
         {
-            logger.Error(FormatConnectionError(url, ex));
+            logger.Error(ex, FormatConnectionError(path, ex));
         }
         Entries.Clear();
-        Url = url;
+        Url = path;
         ResetNavigation();
 
         Refresh();

@@ -103,9 +103,8 @@ public static class AsciiArt
             // Rec. 601 luma in integers, 0..255.
             var luma = (r * 299 + g * 587 + b * 114) / 1000;
             frame.Characters[i] = Ramp[luma * last / 255];
-            frame.Foregrounds[i] = mode == AsciiColorMode.Color
-                ? ColorOf(r, g, b)
-                : luma >= 128 ? Color.White : Color.Gray;
+            if (mode == AsciiColorMode.Color) frame.Foregrounds[i] = ColorOf(r, g, b);
+            else frame.Foregrounds[i] = luma >= 128 ? Color.White : Color.Gray;
         }
     }
 
@@ -125,7 +124,8 @@ public static class AsciiArt
         // the channel bits are the colour. With every channel present the colour is a grey.
         if (bits == 7)
         {
-            return max >= 200 ? Color.White : max >= BrightLevel ? Color.Gray : Color.DarkGray;
+            if (max >= 200) return Color.White;
+            return max >= BrightLevel ? Color.Gray : Color.DarkGray;
         }
 
         return (Color)(bits | (max >= BrightLevel ? 8 : 0));

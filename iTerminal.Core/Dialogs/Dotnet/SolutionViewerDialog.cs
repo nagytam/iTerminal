@@ -75,7 +75,7 @@ public class SolutionViewerDialog : SplitPaneDialog
     // VSTest console summary line, e.g. "Passed!  - Failed: 0, Passed: 42, Skipped: 0, Total: 42, Duration: 1 s - Foo.dll"
     private static readonly Regex TestSummaryLineRegex = new(
         @"^(?:Passed|Failed)!\s*-\s*Failed:\s*(\d+),\s*Passed:\s*(\d+),\s*Skipped:\s*(\d+),\s*Total:\s*(\d+)",
-        RegexOptions.Compiled);
+        RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     private readonly IDotnetSolutionService _dotnetSolutionService;
     private IReadOnlyList<DotnetSdk> _sdks = [];
@@ -83,7 +83,7 @@ public class SolutionViewerDialog : SplitPaneDialog
 
     private readonly ConcurrentObservableCollection<ProjectRow> _projectItems = new();
     private readonly ConcurrentObservableCollection<string> _outputItems = new();
-    private readonly object _outputLock = new();
+    private readonly Lock _outputLock = new();
     private readonly List<string> _output = [];
 
     private readonly DotnetProjectListBox _projectListBox;
@@ -260,7 +260,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         _selectedProjects.Clear();
 
         // The SDKs are listed off the UI thread (dotnet --list-sdks takes a moment), and the newest stable one is selected.
-        _sdks = await Task.Run(() => _dotnetSolutionService.ListSdks().ToList());
+        _sdks = await Task.Run(() => _dotnetSolutionService.ListSdks().ToList(), CancellationToken.None);
         DotnetSdk? defaultSdk = DotnetSdk.Default(_sdks);
         _sdkIndex = defaultSdk is null ? -1 : _sdks.ToList().IndexOf(defaultSdk);
 
@@ -460,7 +460,7 @@ public class SolutionViewerDialog : SplitPaneDialog
             ReportRunOutcome(verb, targets.Count, overallExitCode, cts.IsCancellationRequested);
             _busy = false;
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Sets the final <see cref="_status"/>/<see cref="_statusSeverity"/> for a finished run, appending a
@@ -629,7 +629,7 @@ public class SolutionViewerDialog : SplitPaneDialog
             _status = message;
             _statusSeverity = severity;
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>f: switches the SBOM between XML and JSON. Takes effect on the next s.</summary>
@@ -667,7 +667,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.Escape:
-                _runCts?.Cancel();
+                if (_runCts is not null) await _runCts.CancelAsync();
                 Close();
                 return true;
             case ConsoleKey.Spacebar:
@@ -863,7 +863,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         else
         {
             _sdkIndex = (_sdkIndex + 1) % _sdks.Count;
-            _status = string.Format(iConsole.Localization.UiText.Get("Solution.UsingSdk", "Using .NET SDK {0}."), SelectedSdk!.IsPrerelease ? string.Format(iConsole.Localization.UiText.Get("Solution.SdkPreview", "{0} (preview)"), SelectedSdk!.Version) : SelectedSdk!.Version);
+            _status = string.Format(iConsole.Localization.UiText.Get("Solution.UsingSdk", "Using .NET SDK {0}."), SelectedSdk!.IsPrerelease ? string.Format(iConsole.Localization.UiText.Get("Solution.SdkPreview", "{0} (preview)"), SelectedSdk.Version) : SelectedSdk.Version);
         }
 
         _statusSeverity = StatusSeverity.Info;

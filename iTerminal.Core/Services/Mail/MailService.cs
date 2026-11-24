@@ -70,7 +70,9 @@ public sealed class MailService : IMailService
             throw new InvalidOperationException("The message has no recipient.");
         }
 
+        #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
         using var smtp = new SmtpClient(account.SmtpHost, account.SmtpPort)
+        #pragma warning restore S5332
         {
             EnableSsl = account.SmtpTls,
             Timeout = SmtpTimeoutMilliseconds,

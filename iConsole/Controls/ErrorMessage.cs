@@ -21,9 +21,11 @@ public class ErrorMessage(
     /// </summary>
     public override string Text
     {
-        get => validationModel.ErrorMessage is { Length: > 0 } message
-            ? string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), message)
-            : _failure.Length > 0 ? string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), _failure) : string.Empty;
+        get
+        {
+            if (validationModel.ErrorMessage is { Length: > 0 } message) return string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), message);
+            return _failure.Length > 0 ? string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), _failure) : string.Empty;
+        }
 
         // What a command that failed says: the validation model knows nothing of it. It was once
         // dropped, so a copy that threw left the dialog open with no word why. Validation's own

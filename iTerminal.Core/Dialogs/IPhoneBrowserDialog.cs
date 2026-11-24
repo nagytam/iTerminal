@@ -19,7 +19,9 @@ namespace iTerminal.Core.Dialogs;
 /// <see cref="IContentModelService.SetUrlAsync(Url)"/>). Device enumeration runs off the render thread
 /// through <see cref="IIPhoneDeviceService"/>; the key handler never blocks on native calls.
 /// </summary>
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public class IPhoneBrowserDialog : Dialog
+#pragma warning restore S101
 {
     private readonly IIPhoneDeviceService _deviceService;
     private readonly IContentModelService _contentModelService;

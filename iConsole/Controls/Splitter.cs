@@ -57,7 +57,9 @@ public class Splitter : Control
         set
         {
             double clamped = double.IsNaN(value) ? 0.5 : Math.Clamp(value, 0, 1);
+            #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
             if (clamped != _ratio)
+            #pragma warning restore S1244
             {
                 _ratio = clamped;
                 OnSplitChanged();
@@ -186,9 +188,8 @@ public class Splitter : Control
     /// <summary>A double arrow across the divider, and nothing special elsewhere.</summary>
     public override PointerShape PointerShapeAt(Position position)
     {
-        return IsOnDivider(position)
-            ? (IsSideBySide ? PointerShape.ResizeHorizontal : PointerShape.ResizeVertical)
-            : PointerShape.Default;
+        if (!IsOnDivider(position)) return PointerShape.Default;
+        return IsSideBySide ? PointerShape.ResizeHorizontal : PointerShape.ResizeVertical;
     }
 
     private bool IsOnDivider(Position position)

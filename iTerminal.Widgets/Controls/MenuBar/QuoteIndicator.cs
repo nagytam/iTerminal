@@ -103,9 +103,8 @@ public class QuoteIndicator(string instrumentName, OnlineQuoteService onlineQuot
         }
 
         var isCached = _onlineQuoteService.IsFromCache;
-        var cached = isCached
-            ? CachedMarker + (_onlineQuoteService.IsRefreshing ? $"{ProgressChar()} " : " ")
-            : string.Empty;
+        var cached = string.Empty;
+        if (isCached) cached = CachedMarker + (_onlineQuoteService.IsRefreshing ? $"{ProgressChar()} " : " ");
 
         // Grouped, two decimals: "82953.0000" read as a phone number more than a price.
         var price = lastValue.Value.ToString("N2") + direction;
@@ -120,8 +119,11 @@ public class QuoteIndicator(string instrumentName, OnlineQuoteService onlineQuot
         return (Fit(text, width), background);
     }
 
-    private static string Fit(string text, int width) =>
-        width <= 0 ? string.Empty : (text.Length > width ? text[^width..] : text).ExpandRight(width);
+    private static string Fit(string text, int width)
+    {
+        if (width <= 0) return string.Empty;
+        return (text.Length > width ? text[^width..] : text).ExpandRight(width);
+    }
 
     public override void Draw(IBuffer buffer)
     {

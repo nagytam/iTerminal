@@ -246,7 +246,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             {
                 _isBusy = false;
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F5: refreshes the monitor and the security on screen.</summary>
@@ -286,7 +286,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             {
                 _isBusy = false;
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Only the newest lookup may park its result: an older one that lands late is dropped.</summary>
@@ -401,7 +401,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             }
 
             ParkHistory(generation, bars);
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Applies a parked history on the UI thread.</summary>
@@ -521,7 +521,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             {
                 _isBusy = false;
             }
-        });
+        }, CancellationToken.None);
     }
 
     #endregion
@@ -661,9 +661,9 @@ public class MarketTerminalDialog : SplitPaneDialog
 
         if (ih >= MonitorTopRows + SecurityBlockHeight + 1)
         {
-            var heading = UiText.Get("Market.Security", "Security") + (_security is { } shown
-                ? "  " + shown.Symbol + (IsWatched(shown.Symbol) ? "  · " + UiText.Get("Market.Watched", "watched") : string.Empty)
-                : string.Empty);
+            var securityNote = string.Empty;
+            if (_security is { } shown) securityNote = "  " + shown.Symbol + (IsWatched(shown.Symbol) ? "  · " + UiText.Get("Market.Watched", "watched") : string.Empty);
+            var heading = UiText.Get("Market.Security", "Security") + securityNote;
             DrawSectionHeader(buffer, ix, iy + ih - SecurityBlockHeight, iw, heading, false, colorScheme);
             DrawSecurity(buffer, ix, iy + ih - SecurityBlockHeight + 1, iw, colorScheme);
         }

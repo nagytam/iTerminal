@@ -17,7 +17,7 @@ public sealed class LogFileHistoryService(ISettingsService settingsService) : IL
     public const int MinimumCapacity = 1;
     public const int MaximumCapacity = 100;
 
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private readonly List<Url> _logs = [];
 
     /// <summary>How many logs are kept: the setting, clamped to 1..100, or 10 when it is missing or not a number.</summary>

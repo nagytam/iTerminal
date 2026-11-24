@@ -275,7 +275,7 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             try
             {
-                await Task.Delay(SearchDebounce);
+                await Task.Delay(SearchDebounce, CancellationToken.None);
                 if (generation != Volatile.Read(ref _searchGeneration))
                 {
                     // Superseded while waiting: the newer keystroke's task will do the work, and
@@ -296,7 +296,7 @@ public class DocumentManagerDialog : SplitPaneDialog
                 }
                 else
                 {
-                    hits = await _documentLibraryService.SearchAsync(query, MaxResults);
+                    hits = await _documentLibraryService.SearchAsync(query, MaxResults, CancellationToken.None);
                 }
 
                 if (generation != Volatile.Read(ref _searchGeneration))
@@ -322,7 +322,7 @@ public class DocumentManagerDialog : SplitPaneDialog
             {
                 StateHasChanged();
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>
@@ -374,14 +374,13 @@ public class DocumentManagerDialog : SplitPaneDialog
         if (query.Trim().Length == 0)
         {
             int total = _documentLibraryService.DocumentCount;
-            return total == 0
-                ? iConsole.Localization.UiText.Get("Documents.NothingIndexed", "Nothing indexed yet — Ctrl+R scans the documents folder.")
-                : string.Format(total == 1 ? iConsole.Localization.UiText.Get("Documents.IndexedOne", "{0} document indexed, {1} with searchable text.") : iConsole.Localization.UiText.Get("Documents.Indexed", "{0} documents indexed, {1} with searchable text."), total, _documentLibraryService.IndexedTextCount);
+        if (total == 0) return iConsole.Localization.UiText.Get("Documents.NothingIndexed", "Nothing indexed yet — Ctrl+R scans the documents folder.");
+        return string.Format(total == 1 ? iConsole.Localization.UiText.Get("Documents.IndexedOne", "{0} document indexed, {1} with searchable text.") : iConsole.Localization.UiText.Get("Documents.Indexed", "{0} documents indexed, {1} with searchable text."), total, _documentLibraryService.IndexedTextCount);
         }
 
-        return count == 0
-            ? string.Format(UiText.Get("Documents.NoMatch", "No document matches \"{0}\"."), query.Trim())
-            : string.Format(count == 1 ? UiText.Get("Documents.MatchOne", "{0} match.") : UiText.Get("Documents.MatchMany", "{0} matches."), count + (count >= MaxResults ? "+" : string.Empty));
+        if (count == 0) return string.Format(UiText.Get("Documents.NoMatch", "No document matches \"{0}\"."), query.Trim());
+        var noun = count == 1 ? UiText.Get("Documents.MatchOne", "{0} match.") : UiText.Get("Documents.MatchMany", "{0} matches.");
+        return string.Format(noun, count + (count >= MaxResults ? "+" : string.Empty));
     }
 
     private void ApplyResults(IReadOnlyList<DocumentSearchHit> hits, bool preserveSelection = false)
@@ -500,7 +499,7 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             try
             {
-                string text = await _documentLibraryService.GetTextAsync(path);
+                string text = await _documentLibraryService.GetTextAsync(path, CancellationToken.None);
                 if (generation != Volatile.Read(ref _previewGeneration))
                 {
                     return;
@@ -523,7 +522,7 @@ public class DocumentManagerDialog : SplitPaneDialog
             {
                 StateHasChanged();
             }
-        });
+        }, CancellationToken.None);
     }
 
     private static string DescribeMissingText(DocumentEntry entry)
@@ -628,7 +627,7 @@ public class DocumentManagerDialog : SplitPaneDialog
             {
                 StartSearch(_query, preserveSelection: true);
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void CancelRescan()
@@ -943,9 +942,10 @@ public class DocumentManagerDialog : SplitPaneDialog
     {
         // Only a scan this dialog started can be stopped from it; advertising Ctrl+X over the
         // periodic indexer's scan offered a key that did nothing.
-        string scanKey = OwnsRunningScan
-            ? UiText.Get("Hint.Part.StopScan", "Ctrl+X:stop scan")
-            : _documentLibraryService.IsIndexing ? UiText.Get("Hint.Part.Scanning", "scanning…") : UiText.Get("Hint.Part.Rescan", "Ctrl+R:rescan");
+        string scanKey;
+        if (OwnsRunningScan) scanKey = UiText.Get("Hint.Part.StopScan", "Ctrl+X:stop scan");
+        else if (_documentLibraryService.IsIndexing) scanKey = UiText.Get("Hint.Part.Scanning", "scanning…");
+        else scanKey = UiText.Get("Hint.Part.Rescan", "Ctrl+R:rescan");
         string escKey = _query.Length > 0 ? UiText.Get("Hint.Part.EscClear", "Esc:clear") : UiText.Get("Hint.Part.EscClose", "Esc:close");
         // The meaning-search chord is listed in the Shift+F1 hints rather than here: on a 140-column
         // screen it pushed the capability line ("Suche: … · Bilder: …") out of view.
@@ -959,9 +959,9 @@ public class DocumentManagerDialog : SplitPaneDialog
         string capability = _documentLibraryService.CapabilityMessage ?? string.Empty;
         string fittedKeys = keys.FitHints(width);
         int room = width - fittedKeys.Length - 5;
-        string text = capability.Length > 0 && fittedKeys.Length + 5 + Math.Min(capability.Length, 12) <= width
-            ? $"{fittedKeys}   │ {(capability.Length > room ? capability[..Math.Max(1, room - 1)] + "…" : capability)}"
-            : fittedKeys;
+        string text = fittedKeys;
+        if (capability.Length > 0 && fittedKeys.Length + 5 + Math.Min(capability.Length, 12) <= width)
+            text = $"{fittedKeys}   │ {(capability.Length > room ? capability[..Math.Max(1, room - 1)] + "…" : capability)}";
         WriteLine(buffer, x, y, width, text, colorScheme.Foreground, colorScheme.Background);
     }
 

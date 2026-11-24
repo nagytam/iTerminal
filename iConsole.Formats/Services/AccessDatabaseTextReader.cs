@@ -46,9 +46,10 @@ public static class AccessDatabaseTextReader
     {
         StringTableResult result = reader.ReadTableAsStrings(table, RowsPerTable);
         OfficeTextRenderer.AppendHeading(lines, $"Table: {table}");
+        var rowWord = result.RowCount == 1 ? "row" : "rows";
         lines.Add(result.RowCount > result.Rows.Count
             ? $"{result.RowCount} rows (the first {result.Rows.Count} are shown)"
-            : $"{result.RowCount} {(result.RowCount == 1 ? "row" : "rows")}");
+            : $"{result.RowCount} {rowWord}");
 
         if (result.Headers.Count == 0)
         {

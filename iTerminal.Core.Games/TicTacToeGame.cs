@@ -59,11 +59,12 @@ public class TicTacToeGame : GameBase
                 return string.Format(GameText.Get("Games.Wins", "{0} wins!"), winner);
             }
 
-            return IsOver ? GameText.Get("Games.Draw", "A draw.") : string.Format(GameText.Get("Games.ToMove", "{0} to move."), _xToMove ? 'X' : 'O');
+            if (IsOver) return GameText.Get("Games.Draw", "A draw.");
+            return string.Format(GameText.Get("Games.ToMove", "{0} to move."), _xToMove ? 'X' : 'O');
         }
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         _board = new string(' ', 9).ToCharArray();
@@ -151,8 +152,8 @@ public class TicTacToeGame : GameBase
                     int index = y * 3 + x;
                     char mark = _board[index];
                     bool winning = _winningLine?.Contains(index) == true;
-                    Color? foreground = mark == 'X' ? Color.Cyan : mark == 'O' ? Color.Yellow : Color.DarkGray;
-                    string text = line == 1 ? $"   {(mark == ' ' ? '·' : mark)}   " : "       ";
+                    Color? foreground = mark switch { 'X' => Color.Cyan, 'O' => Color.Yellow, _ => Color.DarkGray };
+                    string text = line == 1 ? $"   {(mark switch { ' ' => '·', _ => mark })}   " : "       ";
                     GameCell cell = new(text, foreground, winning ? Color.DarkGreen : null);
                     row.Add(index == _cursor ? cell.WithCursor() : cell);
                     if (x < 2)
@@ -185,7 +186,9 @@ public class TicTacToeGame : GameBase
         int seed = Random.Next();
         return _ =>
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             int move = BestMove(snapshot, 'O', new Random(seed));
+            #pragma warning restore S2245
             return move < 0 ? null : () =>
             {
                 if (version == Version)

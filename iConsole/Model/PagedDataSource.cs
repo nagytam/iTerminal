@@ -178,7 +178,7 @@ public sealed class PagedDataSource<T> : IVirtualDataSource<T>, IDisposable
         foreach ((int page, int generation, CancellationToken token) in toLoad)
         {
             // On the thread pool, not inline: the delegate may block, and this is called from Draw.
-            _ = Task.Run(() => LoadAsync(page, generation, token));
+            _ = Task.Run(() => LoadAsync(page, generation, token), CancellationToken.None);
         }
     }
 
@@ -268,6 +268,7 @@ public sealed class PagedDataSource<T> : IVirtualDataSource<T>, IDisposable
         }
         catch (OperationCanceledException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (Exception exception)
         {

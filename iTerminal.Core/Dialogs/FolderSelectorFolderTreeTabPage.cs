@@ -81,9 +81,5 @@ public class FolderSelectorFolderTreeTabPage : FolderSelectorTabPage
         base.OnInitializeLayout();
     }
 
-    public override void Draw(IBuffer buffer)
-    {
-        base.Draw(buffer);
-    }
 }
 

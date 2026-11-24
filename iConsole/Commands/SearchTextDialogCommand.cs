@@ -25,7 +25,7 @@ public class SearchTextDialogCommand(
         return true;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         _searchTextDialog = new SearchTextDialog(
             searchModel, 

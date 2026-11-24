@@ -86,7 +86,7 @@ public class PackageManagerDialog : SplitPaneDialog
 
     private readonly ConcurrentObservableCollection<PackageInfo> _packageItems = new();
     private readonly ConcurrentObservableCollection<string> _outputItems = new();
-    private readonly object _outputLock = new();
+    private readonly Lock _outputLock = new();
     private readonly List<string> _output = [];
 
     private readonly PackageListBox _packageListBox;
@@ -239,7 +239,7 @@ public class PackageManagerDialog : SplitPaneDialog
     private void StartRefreshInstalled() =>
         StartQuery(
             string.Format(UiText.Get("Packages.LoadingInstalled", "Loading installed packages from {0}…"), _packageManagerService.DisplayName),
-            ct => _packageManagerService.GetInstalledPackagesAsync(),
+            ct => _packageManagerService.GetInstalledPackagesAsync(CancellationToken.None),
             packages =>
             {
                 _installed = packages;
@@ -257,7 +257,7 @@ public class PackageManagerDialog : SplitPaneDialog
         _searchQuery = query;
         StartQuery(
             $"Searching for \"{query}\"…",
-            ct => _packageManagerService.SearchPackagesAsync(query),
+            ct => _packageManagerService.SearchPackagesAsync(query, CancellationToken.None),
             packages =>
             {
                 _searchResults = packages;
@@ -318,7 +318,7 @@ public class PackageManagerDialog : SplitPaneDialog
             // showing is a moment in which Enter acts on a row that is about to be replaced.
             _loading = false;
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private void SyncPackageList()
@@ -441,15 +441,15 @@ public class PackageManagerDialog : SplitPaneDialog
 
             _busy = false;
             var cancelled = cts.IsCancellationRequested;
-            _status = cancelled ? "Cancelled." : exitCode == 0 ? "Done." : $"Failed (exit {exitCode}).";
-            _statusSeverity = cancelled ? StatusSeverity.Info : exitCode == 0 ? StatusSeverity.Success : StatusSeverity.Error;
+            _status = cancelled ? "Cancelled." : exitCode switch { 0 => "Done.", _ => $"Failed (exit {exitCode})." };
+            _statusSeverity = cancelled ? StatusSeverity.Info : exitCode switch { 0 => StatusSeverity.Success, _ => StatusSeverity.Error };
             StateHasChanged();
 
             if (!cancelled && exitCode == 0)
             {
                 StartRefreshInstalled();
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void Cancel()
@@ -572,7 +572,7 @@ public class PackageManagerDialog : SplitPaneDialog
                 ScrollOutput(10);
                 return true;
             case ConsoleKey.Escape:
-                _runCts?.Cancel();
+                if (_runCts is not null) await _runCts.CancelAsync();
                 Close();
                 return true;
         }
@@ -770,7 +770,7 @@ public class PackageManagerDialog : SplitPaneDialog
             return;
         }
 
-        var activity = _busy ? "  (working…)" : _loading ? "  (loading…)" : string.Empty;
+        var activity = (_busy, _loading) switch { (true, _) => "  (working…)", (false, true) => "  (loading…)", _ => string.Empty };
         WriteLine(buffer, x, y, w, $"{_packageManagerService.DisplayName}{activity}", Color.Cyan, colorScheme.Background);
     }
 

@@ -196,7 +196,8 @@ public class BoxPanel : Control
 
         _titleRoom = room;
         TimeSpan elapsed = TimeSpan.FromMilliseconds(TickSource() - _titleStarted);
-        string text = _title.Length <= room ? _title : ScrollTitle ? Marquee.Window(_title, room, elapsed) : _title[..room];
+        string text = _title;
+        if (_title.Length > room) text = ScrollTitle ? Marquee.Window(_title, room, elapsed) : _title[..room];
         _drawnTitleOffset = ScrollTitle ? Marquee.Offset(_title.Length, room, elapsed) : 0;
         string label = " " + text + " ";
         int start = _titleAlignment switch

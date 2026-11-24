@@ -11,7 +11,9 @@ namespace iTerminal.Core.Services;
 /// Every native call is guarded — no device, no driver, or an unpaired phone simply produces an
 /// empty result, matching the "never throw" contract of the interface.
 /// </summary>
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public sealed class IPhoneDeviceService : IIPhoneDeviceService
+#pragma warning restore S101
 {
     public IReadOnlyList<IPhoneDeviceInfo> GetDevices()
     {

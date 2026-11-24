@@ -1,6 +1,7 @@
 using iTerminal.Core.Services;
 using System.Globalization;
 using System.Text.Json;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Widgets.Services.Map;
 
@@ -21,7 +22,7 @@ public sealed class MapStore(ISettingsService settingsService)
     public static readonly MapPlace Home = new("Budapest", 47.4979, 19.0402);
     public const int HomeZoom = 12;
 
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private List<MapPlace>? _places;
 
     /// <summary>The tile address template; <c>{z}</c>, <c>{x}</c> and <c>{y}</c> stand for the tile.</summary>
@@ -83,7 +84,9 @@ public sealed class MapStore(ISettingsService settingsService)
         lock (_lock)
         {
             var places = Loaded();
+            #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
             if (places.RemoveAll(p => p.Name == place.Name && p.Latitude == place.Latitude && p.Longitude == place.Longitude) > 0)
+            #pragma warning restore S1244
             {
                 Save(places);
             }

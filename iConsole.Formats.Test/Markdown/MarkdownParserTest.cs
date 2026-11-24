@@ -144,7 +144,7 @@ public class MarkdownParserTest
         var spans = MarkdownInline.Parse("use * alone and a `stray tick");
 
         Assert.AreEqual("use * alone and a `stray tick", string.Concat(spans.Select(s => s.Text)));
-        Assert.IsTrue(spans.All(s => s.Style == MarkdownStyle.Plain));
+        Assert.IsTrue(spans.All(s => s.Style == MarkdownStyle.None));
     }
 
     [Timeout(60_000)]

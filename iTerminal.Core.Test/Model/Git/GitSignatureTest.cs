@@ -17,7 +17,7 @@ public class GitSignatureTest
     }
 
     [Timeout(60_000)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow('G', "[G] ")]
     [DataRow('B', "[B] ")]
     [DataRow('U', "[U] ")]

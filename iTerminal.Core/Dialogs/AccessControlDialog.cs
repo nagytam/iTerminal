@@ -425,7 +425,7 @@ public class AccessControlDialog : Dialog
         _field = adding ? 0 : EditFields().IndexOf(EditField.Rights);
         _mode = Mode.Edit;
         SetStatus(adding
-            ? (info.SupportsDeny ? Say("Access.Hint.TypeWindows", "Type a user or group, such as Users or DOMAIN\\name.") : Say("Access.Hint.TypePosix", "A user, or group:name. Bare owner, group, other and mask work too."))
+            ? AddHint(info)
             : Say("Access.Hint.EditRights", "Space or ←/→ changes the rights. Enter saves, Esc goes back."), false);
         StateHasChanged();
     }
@@ -520,17 +520,51 @@ public class AccessControlDialog : Dialog
 
     private void CyclePreset(KeyEvent keyEvent, AclInfo info)
     {
-        var step = keyEvent.ConsoleKey == ConsoleKey.LeftArrow ? -1 : IsSpace(keyEvent) || keyEvent.ConsoleKey == ConsoleKey.RightArrow ? 1 : 0;
+        var step = keyEvent.ConsoleKey switch
+        {
+            ConsoleKey.LeftArrow => -1,
+            ConsoleKey.RightArrow => 1,
+            _ => IsSpace(keyEvent) ? 1 : 0,
+        };
         if (step != 0)
         {
             _preset = (_preset + step + info.Presets.Count) % info.Presets.Count;
         }
     }
 
+    private static string AddHint(AclInfo info) => info.SupportsDeny
+        ? Say("Access.Hint.TypeWindows", "Type a user or group, such as Users or DOMAIN\\name.")
+        : Say("Access.Hint.TypePosix", "A user, or group:name. Bare owner, group, other and mask work too.");
+
+    private string ListHints() =>
+        UiText.Get("Access.HintList", "A add  Enter change  Del remove  O owner") + (_info is { CanChangeInheritance: true } ? "  " + UiText.Get("Access.HintInherit", "I inherit") : string.Empty) + "  " + UiText.Get("Access.HintListEnd", "R reread  Esc close");
+
+    private static string InheritanceHint(AclInfo info)
+    {
+        if (info.CanChangeInheritance)
+        {
+            return info.Inherits
+                ? Say("Access.Inheriting", "Inheriting entries from the parent folder")
+                : Say("Access.NotInheriting", "Not inheriting: only the entries below apply");
+        }
+
+        return info.IsFolder ? Say("Access.FolderDefaults", "A folder's default entries are what new items start with") : string.Empty;
+    }
+
+    private string AppliesToText(AclInfo info)
+    {
+        if (!_inheritToChildren)
+        {
+            return "this folder only";
+        }
+
+        return info.SupportsDeny ? "this folder, subfolders and files" : "this folder, and new items (default entry)";
+    }
+
     private static bool IsSpace(KeyEvent keyEvent) => keyEvent.ConsoleKey == ConsoleKey.Spacebar || keyEvent.KeyChar == ' ';
 
     /// <summary>Typing, Backspace, Ctrl+U, Ctrl+W and a paste, for the text field under the cursor.</summary>
-    private string EditText(string text, KeyEvent keyEvent)
+    private static string EditText(string text, KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
         {
@@ -797,8 +831,7 @@ public class AccessControlDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.List => _confirmDelete ? UiText.Get("Access.HintConfirm", "y remove  any other key cancels")
-            : UiText.Get("Access.HintList", "A add  Enter change  Del remove  O owner") + (_info is { CanChangeInheritance: true } ? "  " + UiText.Get("Access.HintInherit", "I inherit") : string.Empty) + "  " + UiText.Get("Access.HintListEnd", "R reread  Esc close"),
+        Mode.List => _confirmDelete ? UiText.Get("Access.HintConfirm", "y remove  any other key cancels") : ListHints(),
         Mode.Edit => UiText.Get("Access.HintEdit", "Tab field  Space/←→ change  Enter save  Esc back"),
         _ => UiText.Get("Access.HintOwner", "Tab field  Enter save  Esc back"),
     };
@@ -815,9 +848,7 @@ public class AccessControlDialog : Dialog
         var ownerLine = info.Group is null ? $"Owner: {info.Owner}" : $"Owner: {info.Owner}   Group: {info.Group}";
         Put(buffer, 1, 1, iw - 2, ownerLine, colors.Foreground, colors.Background);
         Put(buffer, 1, 2, iw - 2,
-            info.CanChangeInheritance
-                ? (info.Inherits ? Say("Access.Inheriting", "Inheriting entries from the parent folder") : Say("Access.NotInheriting", "Not inheriting: only the entries below apply"))
-                : (info.IsFolder ? Say("Access.FolderDefaults", "A folder's default entries are what new items start with") : string.Empty),
+            InheritanceHint(info),
             colors.DisabledForeground, colors.Background);
         Put(buffer, 1, ListTop, iw - 2, "  " + (info.SupportsDeny ? "Type  " : string.Empty) + "Who".PadRight(26) + "Rights".PadRight(22) + "Applies to", colors.DisabledForeground, colors.Background);
         if (info.Entries.Count == 0)
@@ -836,16 +867,18 @@ public class AccessControlDialog : Dialog
 
             var entry = info.Entries[index];
             var highlighted = index == _cursor;
-            var scope = entry.Inherited ? "inherited" + (entry.Scope is null ? string.Empty : ", " + entry.Scope) : entry.Scope ?? string.Empty;
+            var scope = entry.Scope ?? string.Empty;
+            if (entry.Inherited) scope = entry.Scope is null ? "inherited" : "inherited, " + entry.Scope;
+            var kindLabel = entry.Kind == AclKind.Allow ? "Allow " : "Deny  ";
             var line = (highlighted ? "> " : "  ")
-                + (info.SupportsDeny ? (entry.Kind == AclKind.Allow ? "Allow " : "Deny  ") : string.Empty)
+                + (info.SupportsDeny ? kindLabel : string.Empty)
                 + Clip(entry.Principal, 24).PadRight(26)
                 + Clip(entry.Rights, 20).PadRight(22)
                 + scope;
-            var foreground = highlighted ? colors.SelectedFocusedForeground
-                : entry.Kind == AclKind.Deny ? colors.Error
-                : entry.Inherited ? colors.DisabledForeground
-                : colors.Foreground;
+            var foreground = colors.Foreground;
+            if (highlighted) foreground = colors.SelectedFocusedForeground;
+            else if (entry.Kind == AclKind.Deny) foreground = colors.Error;
+            else if (entry.Inherited) foreground = colors.DisabledForeground;
             Put(buffer, 1, ListTop + 1 + i, iw - 2, line, foreground, highlighted ? colors.SelectedFocusedBackground : colors.Background);
         }
     }
@@ -863,10 +896,7 @@ public class AccessControlDialog : Dialog
                 EditField.Who => ("Who", _principal, _adding),
                 EditField.Type => ("Type", (_kind == AclKind.Allow ? "Allow" : "Deny") + "  (Space changes)", false),
                 EditField.Rights => ("Rights", info.Presets[_preset] + "  (Space or ←/→ changes)", false),
-                _ => ("Applies to",
-                    (_inheritToChildren
-                        ? (info.SupportsDeny ? "this folder, subfolders and files" : "this folder, and new items (default entry)")
-                        : "this folder only") + "  (Space changes)", false),
+                _ => ("Applies to", AppliesToText(info) + "  (Space changes)", false),
             };
             var row = 2 + i * 2;
             Put(buffer, 1, row, 14, label, focused ? Color.Cyan : colors.DisabledForeground, colors.Background);

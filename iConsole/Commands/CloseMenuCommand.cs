@@ -27,7 +27,7 @@ public class CloseMenuCommand : Command
         return FindOpenedMenuItem(Control) is not null;
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         FindOpenedMenuItem(Control)?.CloseMenu();
         return Task.CompletedTask;

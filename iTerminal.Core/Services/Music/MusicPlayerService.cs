@@ -25,7 +25,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
     private readonly IAudioDeviceService _deviceService;
     private readonly Serilog.ILogger? _logger;
 
-    private readonly object _requestLock = new();
+    private readonly Lock _requestLock = new();
     private readonly AutoResetEvent _wakeUp = new(false);
 
     private Thread? _pumpThread;
@@ -508,6 +508,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
 
             try
@@ -516,6 +517,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
     }
@@ -539,12 +541,9 @@ public sealed class MusicPlayerService : IMusicPlayerService
                 }
             }
 
-            if (_requestedPause)
+            if (_requestedPause && !WaitWhilePaused(sink))
             {
-                if (!WaitWhilePaused(sink))
-                {
-                    return false;
-                }
+                return false;
             }
 
             TimeSpan? seek;
@@ -764,6 +763,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         InterruptDecoder(_currentDecoder);
@@ -777,6 +777,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         _wakeUp.Dispose();

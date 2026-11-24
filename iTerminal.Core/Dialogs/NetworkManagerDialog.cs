@@ -26,7 +26,6 @@ public class NetworkManagerDialog : Dialog
     private const int MinimumNameWidth = 8;
     private const int MinimumDescriptionWidth = 4;
 
-    private readonly TaskManager _taskManager;
     private readonly NetworkInfoModel _networkInfoModel;
     private readonly Table<NetworkInfo> _table;
     private readonly ScrollBar _scrollBar;
@@ -39,7 +38,6 @@ public class NetworkManagerDialog : Dialog
         : base(nameof(NetworkManagerDialog), themeService)
     {
         _backgroundStart = backgroundStart;
-        _taskManager = taskManager ?? new TaskManager();
         _networkInfoModel = networkInfoModel ?? new NetworkInfoModel();
 
         Title = UiText.Get("Dialog.NetworkManager", "Network manager");

@@ -97,7 +97,14 @@ public sealed class ProgressTask
     /// <summary>How much is done, 0 to 1.</summary>
     public double Fraction
     {
-        get { lock (_gate) { return _maxValue <= 0 ? (_state == ProgressState.Succeeded ? 1 : 0) : _value / _maxValue; } }
+        get
+        {
+            lock (_gate)
+            {
+                if (_maxValue <= 0) return _state == ProgressState.Succeeded ? 1 : 0;
+                return _value / _maxValue;
+            }
+        }
     }
 
     /// <summary>Time since the task was added, or the time it ran for when finished.</summary>
@@ -308,10 +315,8 @@ public class ProgressGroup : Control
     /// <summary>Formats a speed with the fewest digits that are still useful ("12/s", "3.5 MB/s", "0.25/s").</summary>
     public static string FormatSpeed(double perSecond, string unit)
     {
-        string number = perSecond >= 100 ? perSecond.ToString("F0", CultureInfo.InvariantCulture)
-            : perSecond >= 10 ? perSecond.ToString("F0", CultureInfo.InvariantCulture)
-            : perSecond >= 1 ? perSecond.ToString("0.#", CultureInfo.InvariantCulture)
-            : perSecond.ToString("0.##", CultureInfo.InvariantCulture);
+        string format = perSecond switch { >= 10 => "F0", >= 1 => "0.#", _ => "0.##" };
+        string number = perSecond.ToString(format, CultureInfo.InvariantCulture);
         return (unit.Length > 0 ? number + " " + unit : number) + "/s";
     }
 
@@ -381,7 +386,7 @@ public class ProgressGroup : Control
     private sealed record RowView(
         string Description, ProgressState State, bool Indeterminate, double Fraction, double Speed, TimeSpan Elapsed, TimeSpan? Remaining, bool IsOverall);
 
-    private RowView ViewOf(ProgressTask task)
+    private static RowView ViewOf(ProgressTask task)
     {
         string text = task.Description;
         if (task.Message.Length > 0)
@@ -399,9 +404,14 @@ public class ProgressGroup : Control
         TimeSpan elapsed = tasks.Max(t => t.Elapsed);
         double speed = elapsed.TotalSeconds > 0 ? done / elapsed.TotalSeconds : 0;
         bool finished = tasks.All(t => t.IsFinished);
-        ProgressState state = !finished ? ProgressState.Running : tasks.Any(t => t.State == ProgressState.Failed) ? ProgressState.Failed : ProgressState.Succeeded;
+        ProgressState state = ProgressState.Succeeded;
+        if (!finished) state = ProgressState.Running;
+        else if (tasks.Any(t => t.State == ProgressState.Failed)) state = ProgressState.Failed;
         TimeSpan? remaining = !finished && max > 0 && speed > 0 ? TimeSpan.FromSeconds((max - done) / speed) : null;
-        return new RowView("Total", state, false, max <= 0 ? (finished ? 1 : 0) : done / max, speed, elapsed, remaining, true);
+        double fraction;
+        if (max <= 0) fraction = finished ? 1 : 0;
+        else fraction = done / max;
+        return new RowView("Total", state, false, fraction, speed, elapsed, remaining, true);
     }
 
     private int DescriptionWidth(ProgressTask[] tasks, int width)

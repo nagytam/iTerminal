@@ -209,6 +209,8 @@ internal sealed class FakeFocus : ITerminalFocusService
         }
 
         regained?.TrySetResult();
+        FocusChanged?.Invoke(hasFocus);
+        if (hasFocus) FocusRegained?.Invoke();
     }
 
     public void Report(bool hasFocus) => SetFocus(hasFocus);

@@ -255,7 +255,8 @@ public class Slider : Control, IReadOnly
         char[] track = new char[trackWidth];
         for (int i = 0; i < trackWidth; i++)
         {
-            track[i] = i < thumb ? '━' : i == thumb ? '●' : '─';
+            if (i < thumb) track[i] = '━';
+            else track[i] = i == thumb ? '●' : '─';
         }
 
         string line = new string(track);
@@ -267,7 +268,7 @@ public class Slider : Control, IReadOnly
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(line, foreground, background));
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         if (IsReadOnly)
         {
@@ -277,16 +278,16 @@ public class Slider : Control, IReadOnly
         switch (visualState)
         {
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Focused:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.Background;
                 break;
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

@@ -15,7 +15,7 @@ public abstract class ContentPanel : Window
     private ContentBrowser? _contentBrowser { get; set; }
     private ItemInformation? _itemInformation { get; set; }
 
-    public ContentPanel(
+    protected ContentPanel(
         ISettingsService settingsService,
         ContentBrowser contentBrowser, 
         ItemInformation itemInformation, 

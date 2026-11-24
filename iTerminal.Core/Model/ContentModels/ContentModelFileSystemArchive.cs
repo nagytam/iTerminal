@@ -7,6 +7,7 @@ using iConsole.Tasks;
 using iTerminal.Core.Services;
 using System.Diagnostics;
 using System.IO.Compression;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Model.ContentModels;
 
@@ -36,19 +37,19 @@ public class ContentModelFileSystemArchive(
 
     public override string GetFooter() => EntryCountFooter();
 
-    public string ArchivePath { get; private set; } = string.Empty; // TODO
+    public string ArchivePath { get; private set; } = string.Empty;
     public override Url Url { get; protected set; } = new(Directory.GetCurrentDirectory());
 
     private TaskManager _taskManager { get; set; } = taskManager;
     private FolderHistoryService _folderHistoryService { get; set; } = folderHistoryService;
     private ISettingsService _settingsService { get; set; } = settingsService;
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
-        _settingsService.Set(Name, url.FullUrl);
-        _folderHistoryService.Add(url);
+        _settingsService.Set(Name, path.FullUrl);
+        _folderHistoryService.Add(path);
         Entries.Clear();
-        ArchivePath = url.Path;
+        ArchivePath = path.Path;
         ResetNavigation();
 
         Refresh();
@@ -89,7 +90,7 @@ public class ContentModelFileSystemArchive(
             }
 
             ReplaceEntriesAndRestoreFocus(entries, isComplete: true);
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Splits the panel's location into the archive's file and the folder inside it ("" at the top, "sub/" below).</summary>

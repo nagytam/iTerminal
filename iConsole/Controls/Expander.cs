@@ -181,7 +181,8 @@ public class Expander : Control
     {
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         int width = (int)ViewSize.Width;
-        Color foreground = IsEnabled ? IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground : colorScheme.DisabledForeground;
+        Color foreground = colorScheme.DisabledForeground;
+        if (IsEnabled) foreground = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
         Color background = IsEnabled && IsFocused ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
         string header = ((_isExpanded ? "▼ " : "▶ ") + Header).PadRight(width);
         buffer.Write(ZOrder, AbsolutePosition, new Size(ViewSize.Width, 1), new ConxelString(header[..width], foreground, background));

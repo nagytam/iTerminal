@@ -284,7 +284,7 @@ public class CalendarDialog : Dialog
             case ConsoleKey.Enter:
                 CommitEntry();
                 break;
-            case ConsoleKey.Backspace when _entry!.Length > 0:
+            case ConsoleKey.Backspace when _entry is { Length: > 0 }:
                 _entry = _entry[..^1];
                 _entryError = null;
                 break;

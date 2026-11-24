@@ -11,7 +11,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
     private const int STD_OUTPUT_HANDLE = -11;
     private const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
     private readonly bool _supportsVirtualTerminalProcessing;
-    private Position _windowPosition = new(0, 0);
+    private Position _windowPosition;
 
     private string _title = string.Empty;
     public string Title
@@ -139,7 +139,6 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
             }
         }
 
-        // AnsiRenderer.Test();
     }
 
     public void RefreshWindowSize()
@@ -195,6 +194,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
             }
             catch (IOException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
     }
@@ -218,6 +218,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
             }
             catch (IOException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
 
@@ -296,8 +297,6 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
 
     public void SetCursorPosition(int x, int y)
     {
-        //Debug.Assert(x >= 0 && x < WindowSize.Width);
-        //Debug.Assert(y >= 0 && y < WindowSize.Height);
         x = x.Range(0, Math.Max(0, (int)WindowSize.Width - 1));
         y = y.Range(0, Math.Max(0, (int)WindowSize.Height - 1));
         var bufferPosition = ConsoleWindowSizeHelper.GetBufferPosition(new Position(x, y), _windowPosition);
@@ -307,6 +306,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
 
         }
     }

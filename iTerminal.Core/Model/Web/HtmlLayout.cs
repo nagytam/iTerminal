@@ -132,7 +132,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
         return lines;
     }
 
-    private bool IsHidden(HtmlNode node) =>
+    private static bool IsHidden(HtmlNode node) =>
         Hidden.Contains(node.Tag)
         || node.HasAttr("hidden")
         || (node.Attr("style") is { Length: > 0 } css && HiddenStyleRegex().IsMatch(css));
@@ -210,7 +210,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
                 return;
             }
 
-            if (owner.IsHidden(node))
+            if (HtmlLayout.IsHidden(node))
             {
                 return;
             }
@@ -405,7 +405,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
                 return;
             }
 
-            (_flow ??= new Flow(owner, width)).Field(fieldId, field.DisplayWidth(width), style, link);
+            (_flow ??= new Flow(owner, width)).Field(fieldId, field.DisplayWidth(width), style);
         }
 
         private void Heading(HtmlNode node, WebStyle style, int link)
@@ -456,7 +456,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
             {
                 if (child.Tag == "li")
                 {
-                    if (owner.IsHidden(child))
+                    if (HtmlLayout.IsHidden(child))
                     {
                         continue;
                     }
@@ -538,7 +538,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
             }
         }
 
-        public void Field(int fieldId, int fieldWidth, WebStyle style, int link)
+        public void Field(int fieldId, int fieldWidth, WebStyle style)
         {
             var needed = fieldWidth + (_space && _length > 0 ? 1 : 0);
             if (_length > 0 && _length + needed > width)
@@ -891,7 +891,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
 
         for (var r = 0; r < rows.Count; r++)
         {
-            var composed = ComposeRow(rows[r], columns, widths, activeColumns, separator, style, link, bordered);
+            var composed = ComposeRow(rows[r], columns, widths, activeColumns, separator, style, link);
             if (composed.Count == 0)
             {
                 continue;
@@ -916,7 +916,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
         return new WebLine([new WebSpan(text.Length > limit ? text[..limit] : text, WebStyle.Dim)]);
     }
 
-    private List<WebLine> ComposeRow(List<Cell> row, int columns, int[] widths, List<int> active, string separator, WebStyle style, int link, bool bordered)
+    private List<WebLine> ComposeRow(List<Cell> row, int columns, int[] widths, List<int> active, string separator, WebStyle style, int link)
     {
         // One block of lines per cell, with the width of the columns it covers.
         List<(List<WebLine> Lines, int Width)> blocks = [];
@@ -953,7 +953,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
                 {
                     spans.AddRange(lines[y].Spans);
                     length = lines[y].Length;
-                    anchors = lines[y].Anchors is { } a ? anchors is null ? a : [.. anchors, .. a] : anchors;
+                    if (lines[y].Anchors is { } a) anchors = anchors is null ? a : [.. anchors, .. a];
                 }
 
                 if (b < blocks.Count - 1)
@@ -977,13 +977,10 @@ internal sealed partial class HtmlLayout(WebDocument document)
             {
                 case "tr":
                     List<Cell> cells = [];
-                    foreach (var cell in child.Children)
+                    foreach (var cell in child.Children.Where(cell => cell.Tag is "td" or "th"))
                     {
-                        if (cell.Tag is "td" or "th")
-                        {
-                            var span = int.TryParse(cell.Attr("colspan"), out var parsed) ? Math.Clamp(parsed, 1, 40) : 1;
-                            cells.Add(new Cell(cell, span, cell.Tag == "th"));
-                        }
+                        var span = int.TryParse(cell.Attr("colspan"), out var parsed) ? Math.Clamp(parsed, 1, 40) : 1;
+                        cells.Add(new Cell(cell, span, cell.Tag == "th"));
                     }
 
                     rows.Add(cells);

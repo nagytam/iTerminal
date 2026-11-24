@@ -13,7 +13,6 @@ namespace iTerminal.Core.Dialogs;
 
 public class RenameDialog : FormDialog
 {
-    private readonly IContentModelService _contentModelService;
     public Url SourceUrl { get; set; } = null!;
     public Url TargetUrl
     {
@@ -83,7 +82,6 @@ public class RenameDialog : FormDialog
         ) 
         : base(nameof(RenameDialog), themeService)
     {
-        _contentModelService = contentModelService;
         Title = iConsole.Localization.UiText.Get("Menu.Rename", "Rename");
 
         _renameCommand = new RenameCommand(contentModelService, renameUndo);
@@ -115,8 +113,6 @@ public class RenameDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        //BaseUrl = _contentModelService.Url;
-        //var url = _contentModelService.FocusedFileUrl;
         //var targetFolder = _contentModelService.NonFocusedFolderUrl;
         //ArgumentNullException.ThrowIfNull(url);
         //SourceUrl = url;

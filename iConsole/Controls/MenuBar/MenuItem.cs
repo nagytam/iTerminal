@@ -15,7 +15,7 @@ namespace iConsole.Controls;
 [DebuggerDisplay("{Text}")]
 public class MenuItem : PopUpWindow
 {
-    public string Text { get; set; } = string.Empty;
+    public string Text { get; set; }
     protected ConcurrentList<MenuItem> MenuItems { get; private set; }
 
     public bool IsOpened { get; private set; } = false;
@@ -100,11 +100,14 @@ public class MenuItem : PopUpWindow
             AddControl(menuItem);
         }
 
-        if (this is not MenuBar)
+        if (!IsMenuBar)
         {
             OnInitializeActionButtons();
         }
     }
+
+    /// <summary>True for the menu bar itself, which lays its entries out differently from a drop-down.</summary>
+    protected virtual bool IsMenuBar => false;
 
     public override void OnInitializeActionButtons()
     {
@@ -129,7 +132,7 @@ public class MenuItem : PopUpWindow
             .Where(c => c is MenuItem)
             .Cast<MenuItem>();
         long width = 0;
-        if (this is MenuBar)
+        if (IsMenuBar)
         {
             width = Parent?.ViewSize.Width ?? 0;
         }
@@ -163,7 +166,7 @@ public class MenuItem : PopUpWindow
     /// </summary>
     private int VisibleRowCount(int entryCount)
     {
-        if (this is MenuBar || entryCount == 0)
+        if (IsMenuBar || entryCount == 0)
         {
             return entryCount;
         }
@@ -212,7 +215,7 @@ public class MenuItem : PopUpWindow
             }
             column += menuItem.Text.Length + 1;
         }
-        var screenWidth = (long)ViewSize.Width;
+        var screenWidth = ViewSize.Width;
         if (screenWidth > 0 && column + dropDownWidth > screenWidth)
         {
             column = Math.Max(0, screenWidth - dropDownWidth);
@@ -275,7 +278,7 @@ public class MenuItem : PopUpWindow
     /// </summary>
     private void LiftAboveTheScreen()
     {
-        if (this is MenuBar)
+        if (IsMenuBar)
         {
             return;
         }
@@ -316,7 +319,7 @@ public class MenuItem : PopUpWindow
     public virtual void CloseMenu()
     {
         IsOpened = false;
-        if (this is not MenuBar)
+        if (!IsMenuBar)
         {
             ZOrder = 0;
         }
@@ -446,7 +449,7 @@ public class MenuItem : PopUpWindow
     /// </summary>
     internal async Task<bool> HandleDropDownClickAsync(MouseEvent mouseEvent)
     {
-        if (this is MenuBar || !IsOpened || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (IsMenuBar || !IsOpened || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return false;
         }
@@ -568,19 +571,11 @@ public class MenuItem : PopUpWindow
             }
         }
 
-        foreach (var child in concrete.Controls.AsArray())
-        {
-            if (IsBoundToACommand(child, keyEvent))
-            {
-                return true;
-            }
-        }
-        return false;
+        return concrete.Controls.AsArray().Any(child => IsBoundToACommand(child, keyEvent));
     }
 
     public override Task TriggerHotKeyAsync()
     {
-        // base.TriggerHotKey();
 
         if (!IsOpened)
         {
@@ -659,7 +654,7 @@ public class MenuItem : PopUpWindow
 
     public override void Draw(IBuffer buffer)
     {
-        if (!IsOpened || this is MenuBar)
+        if (!IsOpened || IsMenuBar)
         {
             var position = AbsolutePosition;
             var colorScheme = ThemeService.CurrentColorScheme;
@@ -671,7 +666,7 @@ public class MenuItem : PopUpWindow
             }
 
             ConxelString s;
-            if (this is MenuBar)
+            if (IsMenuBar)
             {
                 // Highlight each top-level item's Ctrl-hotkey letter (e.g. the 'F' in "File")
                 // so the menu advertises how it's opened from the keyboard.
@@ -710,7 +705,6 @@ public class MenuItem : PopUpWindow
         else
         {
             var colorScheme = ThemeService.CurrentColorScheme;
-            var visualState = GetVisualState();
             var headerLine = " " + Title + " ";
 
             var actionButtons = GetActionButtons();
@@ -758,7 +752,9 @@ public class MenuItem : PopUpWindow
                         );
                 }
                 // A "▲" / "▼" in the right border says the list goes on beyond the screen.
-                var rightEdge = y == 1 && hiddenAbove ? "▲" : y == ViewSize.Height - 2 && hiddenBelow ? "▼" : Border.Vertical;
+                var rightEdge = Border.Vertical;
+                if (y == 1 && hiddenAbove) rightEdge = "▲";
+                else if (y == ViewSize.Height - 2 && hiddenBelow) rightEdge = "▼";
                 s = new ConxelString(rightEdge, colorScheme.Foreground, colorScheme.Background);
                 buffer.Write(ZOrder,
                     new Position(AbsolutePosition.X + ViewSize.Width - 1, y + AbsolutePosition.Y), 

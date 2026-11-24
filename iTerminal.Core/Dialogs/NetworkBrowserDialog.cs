@@ -50,8 +50,6 @@ public class NetworkBrowserDialog : SplitPaneDialog
     private readonly INetworkProfileService _networkProfileService;
     private readonly IPasswordManager _passwordManager;
     private readonly IContentModelService _contentModelService;
-    private readonly IBeepService _beepService;
-    private readonly IDateTimeProviderService _dateTimeProviderService;
 
     private readonly ConcurrentObservableCollection<HostRow> _hostItems = new();
     private readonly HostListBox _hostListBox;
@@ -87,8 +85,6 @@ public class NetworkBrowserDialog : SplitPaneDialog
         _networkProfileService = networkProfileService;
         _passwordManager = passwordManager;
         _contentModelService = contentModelService;
-        _beepService = beepService;
-        _dateTimeProviderService = dateTimeProviderService;
         Title = iConsole.Localization.UiText.Get("Dialog.NetworkBrowser", "Network Browser");
 
         _hostListBox = new HostListBox(
@@ -224,6 +220,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {
@@ -417,13 +414,14 @@ public class NetworkBrowserDialog : SplitPaneDialog
             return;
         }
 
+        var sshMethod = string.IsNullOrEmpty(secret) ? SshAuthMethod.PrivateKey : SshAuthMethod.Password;
         var profile = new NetworkConnectionProfile
         {
             Protocol = isSmb ? NetworkProtocol.Smb : NetworkProtocol.Ssh,
             Host = row.Host,
             Username = username,
             ShareName = isSmb ? shareName : null,
-            SshAuthMethod = isSmb ? null : (string.IsNullOrEmpty(secret) ? SshAuthMethod.PrivateKey : SshAuthMethod.Password),
+            SshAuthMethod = isSmb ? null : sshMethod,
             PrivateKeyPath = null,
             HasSavedCredential = _saveConnectionCheckBox.IsChecked && !string.IsNullOrEmpty(secret),
         };
@@ -569,7 +567,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
                 BeginBrowse();
                 return true;
             }
-            _scanCts?.Cancel();
+            if (_scanCts is not null) await _scanCts.CancelAsync();
             Close();
             return true;
         }

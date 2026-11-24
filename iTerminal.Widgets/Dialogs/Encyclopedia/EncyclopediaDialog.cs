@@ -289,7 +289,7 @@ public class EncyclopediaDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, OutcomeKind.Message, Text: string.Format(UiText.Get("Encyclopedia.SearchFailed", "The search failed: {0}"), exception.Message), IsError: true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Fetches an article for the hit on a background task; the introduction unless the whole is wanted.</summary>
@@ -318,7 +318,7 @@ public class EncyclopediaDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, OutcomeKind.Message, Text: string.Format(UiText.Get("Encyclopedia.ReadFailed", "The article could not be read: {0}"), exception.Message), IsError: true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Enter on a result, or F3: the whole article of the result under the cursor (F3 again goes back to the introduction).</summary>
@@ -330,7 +330,7 @@ public class EncyclopediaDialog : SplitPaneDialog
             return;
         }
 
-        bool full = toggle ? !_articleIsFull || _articleTitle != hit.Title : true;
+        bool full = !toggle || !_articleIsFull || _articleTitle != hit.Title;
         _requestedIndex = SelectedIndex();
         StartArticle(hit, full);
     }
@@ -360,11 +360,11 @@ public class EncyclopediaDialog : SplitPaneDialog
         int generation = _generation;
         RequestTask = Task.Run(async () =>
         {
-            LaunchOutcome outcome = await _launcher.OpenUrlAsync(url);
+            LaunchOutcome outcome = await _launcher.OpenUrlAsync(url, CancellationToken.None);
             Land(new Outcome(generation, OutcomeKind.Message,
                 Text: outcome.Started ? string.Format(UiText.Get("Encyclopedia.Opened", "Opened {0} in the browser."), url) : outcome.Failure ?? UiText.Get("Encyclopedia.OpenFailed", "The browser could not be started."),
                 IsError: !outcome.Started));
-        });
+        }, CancellationToken.None);
     }
 
     private int BeginRequest(string status)

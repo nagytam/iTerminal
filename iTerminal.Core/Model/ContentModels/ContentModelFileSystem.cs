@@ -124,14 +124,14 @@ public class ContentModelFileSystem(
         return new Url(Directory.GetCurrentDirectory());
     }
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
-        if (!fileSystemService.ExistsFolder(url))
+        if (!fileSystemService.ExistsFolder(path))
         {
-            url = NearestExistingFolder(url);
+            path = NearestExistingFolder(path);
         }
-        _settingsService.Set(Name, url.FullUrl);
-        _folderHistoryService.Add(url);
+        _settingsService.Set(Name, path.FullUrl);
+        _folderHistoryService.Add(path);
         // Cancel any in-flight prefetch scheduling for the previous folder before
         // the task sweep below, so stale tasks cannot be added afterwards.
         var oldPrefetchCts = Interlocked.Exchange(ref _prefetchScheduleCts, new CancellationTokenSource());
@@ -143,22 +143,22 @@ public class ContentModelFileSystem(
         }
         Entries.Clear();
         Filter = null;
-        Url = url;
+        Url = path;
         ResetNavigation();
-        if (url.Path != Path.GetPathRoot(url.Path))
+        if (path.Path != Path.GetPathRoot(path.Path))
         {
-            Entries.Add(new FileSystemEntry("..", url.ParentPath));
+            Entries.Add(new FileSystemEntry("..", path.ParentPath));
         }
 
         #region
 
         if (FolderWatcher is not null)
         {
-            FolderWatcher.Path = url.Path;
+            FolderWatcher.Path = path.Path;
         }
         else
         {
-            FolderWatcher = new FileSystemWatcher(url.Path)
+            FolderWatcher = new FileSystemWatcher(path.Path)
             {
                 NotifyFilter = NotifyFilters.Attributes
                                | NotifyFilters.CreationTime
@@ -226,7 +226,7 @@ public class ContentModelFileSystem(
         var hasTask = _taskManager.GetTasks<FilePanelRefreshTask>(t => t.ContentModelName == Name && t.Url.FullUrl == Url.FullUrl && !t.CancellationTokenSource.IsCancellationRequested).Any();
         if (!hasTask)
         {
-            logger.Information($"Refresh task is started for {Url.FullUrl}");
+            logger.Information("Refresh task is started for {Url}", Url.FullUrl);
             // Add refresh task for the current folder (updates UI). This is the high-priority,
             // visible work and is enqueued synchronously so navigation reflects immediately.
             var refreshTask = new FilePanelRefreshTask(this, memoryCacheService, logger, _dbContextFactory, _stopwatchFactory);
@@ -240,11 +240,11 @@ public class ContentModelFileSystem(
             // SchedulePrefetch starts, the token is already cancelled and it returns immediately.
             var prefetchUrl = Url;
             var prefetchToken = _prefetchScheduleCts?.Token ?? CancellationToken.None;
-            Task.Run(() => SchedulePrefetch(prefetchUrl, prefetchToken));
+            Task.Run(() => SchedulePrefetch(prefetchUrl, prefetchToken), CancellationToken.None);
         }
         else
         {
-            logger.Information($"Refresh task is running already for {Url.FullUrl}");
+            logger.Information("Refresh task is running already for {Url}", Url.FullUrl);
         }
     }
 
@@ -314,10 +314,6 @@ public class ContentModelFileSystem(
             .Select(t => t.Url.FullUrl)
             .ToHashSet();
 
-    private bool HasPendingTaskFor(Url url) =>
-        _taskManager.GetTasks<FilePanelRefreshTask>(
-            t => t.Url.FullUrl == url.FullUrl && !t.CancellationTokenSource.IsCancellationRequested).Any();
-
     private void OnError(object sender, ErrorEventArgs e)
     {
         if (sender is FileSystemWatcher)
@@ -385,6 +381,7 @@ public class ContentModelFileSystem(
             }
             catch (TaskCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             finally
             {
@@ -398,7 +395,7 @@ public class ContentModelFileSystem(
 
                 cancellationTokenSource.Dispose();
             }
-        });
+        }, CancellationToken.None);
     }
 
     public override void Delete(Url url, bool recursive, bool moveToRecycleBin)
@@ -468,21 +465,27 @@ public class ContentModelFileSystem(
         // "powershell … -File name.ps1"), so cmd runs it as typed; wrapping it again broke the script.
         if (OperatingSystem.IsWindows())
         {
+            #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
             process.StartInfo.FileName = "cmd.exe";
+            #pragma warning restore S4036
             process.StartInfo.Arguments = "/C " + terminalModel.Command.Command;
         }
         else if (OperatingSystem.IsLinux()
                  && terminalModel.Command.Command.EndsWith(".ps1",
                      StringComparison.CurrentCultureIgnoreCase))
         {
+            #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
             process.StartInfo.FileName = "powershell";
+            #pragma warning restore S4036
             process.StartInfo.Arguments = "-f " + terminalModel.Command.Command;
         }
         else if (OperatingSystem.IsLinux()
                  && terminalModel.Command.Command.EndsWith(".sh",
                      StringComparison.InvariantCultureIgnoreCase))
         {
+            #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
             process.StartInfo.FileName = "bash";
+            #pragma warning restore S4036
             process.StartInfo.Arguments = "-c ./" + terminalModel.Command.Command;
         }
         else if (OperatingSystem.IsLinux())

@@ -132,17 +132,14 @@ internal sealed class MorrisState
         QuietMoves = QuietMoves,
     };
 
-    public byte Color(int side) => (byte)(side + 1);
+    public static byte Color(int side) => (byte)(side + 1);
 
     public int OnBoard(int side)
     {
         int count = 0;
-        foreach (byte point in Board)
+        foreach (byte point in Board.Where(point => point == side + 1))
         {
-            if (point == side + 1)
-            {
-                count++;
-            }
+            count++;
         }
 
         return count;
@@ -199,7 +196,7 @@ internal sealed class MorrisState
     {
         List<MorrisMove> moves = [];
         int side = state.Turn;
-        byte color = state.Color(side);
+        byte color = MorrisState.Color(side);
         if (state.Placing(side))
         {
             for (int to = 0; to < 24; to++)
@@ -245,7 +242,7 @@ internal sealed class MorrisState
 
     private static void AddWithRemovals(MorrisState state, List<MorrisMove> moves, int from, int to)
     {
-        byte color = state.Color(state.Turn);
+        byte color = MorrisState.Color(state.Turn);
         if (!MorrisBoard.FormsMill(state.Board, from, to, color))
         {
             moves.Add(new MorrisMove(from, to, -1));
@@ -323,7 +320,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
 {
     private const int Win = 100_000;
 
-    private sealed class TimeUp : Exception;
+    public sealed class TimeUpException : Exception;
 
     private readonly System.Diagnostics.Stopwatch _clock = System.Diagnostics.Stopwatch.StartNew();
     private bool _mayAbort;
@@ -369,7 +366,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
                     break;
                 }
             }
-            catch (TimeUp)
+            catch (TimeUpException)
             {
                 break;
             }
@@ -385,14 +382,15 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
             token.ThrowIfCancellationRequested();
             if (_mayAbort && _clock.ElapsedMilliseconds > budgetMilliseconds)
             {
-                throw new TimeUp();
+                throw new TimeUpException();
             }
         }
 
         int winner = state.Winner();
         if (winner >= 0)
         {
-            return winner == 2 ? 0 : winner == state.Turn ? Win - ply : -(Win - ply);
+            if (winner == 2) return 0;
+            return winner == state.Turn ? Win - ply : -(Win - ply);
         }
 
         if (remaining <= 0)
@@ -411,7 +409,9 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
                     continue;
                 }
 
+                #pragma warning disable S2234 // Negamax passes the window with the bounds swapped on purpose: the caller's alpha becomes the callee's beta.
                 int score = -Negamax(state.Apply(move), remaining - 1, -beta, -alpha, ply + 1);
+                #pragma warning restore S2234
                 if (score >= beta)
                 {
                     return beta;
@@ -437,7 +437,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
 
     private static int Mobility(MorrisState state, int side)
     {
-        byte color = state.Color(side);
+        byte color = MorrisState.Color(side);
         int room = 0;
         for (int point = 0; point < 24; point++)
         {
@@ -461,7 +461,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
     /// <summary>Mills with two of a side's men and the third point empty.</summary>
     private static int PotentialMills(MorrisState state, int side)
     {
-        byte color = state.Color(side);
+        byte color = MorrisState.Color(side);
         int count = 0;
         foreach (int[] mill in MorrisBoard.Mills)
         {
@@ -581,7 +581,7 @@ public class NineMensMorrisGame : GameBase
         }
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         _state = new MorrisState();
@@ -658,7 +658,7 @@ public class NineMensMorrisGame : GameBase
         {
             _selected = -1;
         }
-        else if (_state.Board[_cursor] == _state.Color(side))
+        else if (_state.Board[_cursor] == MorrisState.Color(side))
         {
             _selected = _cursor;
             if (!MorrisState.Moves(_state).Any(m => m.From == _cursor))
@@ -852,7 +852,7 @@ public class NineMensMorrisGame : GameBase
             board[_movedFrom] = 0;
         }
 
-        board[_placed] = _state.Color(_state.Turn);
+        board[_placed] = MorrisState.Color(_state.Turn);
         return board;
     }
 
@@ -872,7 +872,9 @@ public class NineMensMorrisGame : GameBase
         int budget = SearchMilliseconds;
         return token =>
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             MorrisMove? move = new MorrisSearch(new Random(seed), token, 10, budget).Best(snapshot);
+            #pragma warning restore S2245
             return move is null ? null : () =>
             {
                 if (version != Version)

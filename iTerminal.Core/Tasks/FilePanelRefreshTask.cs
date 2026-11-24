@@ -79,7 +79,7 @@ public class FilePanelRefreshTask : BackgroundTask
 
     public override async Task ExecuteAsync()
     {
-        _logger.Information(nameof(FilePanelRefreshTask) + $" {Url.FullUrl} started");
+        _logger.Information($"FilePanelRefreshTask {Url.FullUrl} started");
 
         var key = Key + Url.FullUrl;
         var phases = _stopwatchFactory is not null ? new Dictionary<string, TimeSpan>() : null;
@@ -105,7 +105,7 @@ public class FilePanelRefreshTask : BackgroundTask
                     try
                     {
                         using var ctx = _dbContextFactory.CreateDbContext();
-                        var entity = ctx.FolderContentsCacheEntries.Find(Url.Path);
+                        var entity = await ctx.FolderContentsCacheEntries.FindAsync(Url.Path);
                         if (entity is not null)
                         {
                             var age = DateTimeOffset.UtcNow - entity.SavedAtUtc;
@@ -123,12 +123,14 @@ public class FilePanelRefreshTask : BackgroundTask
                     }
                     catch
                     {
+                        // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                     }
                 }
             }
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
         finally
         {
@@ -174,11 +176,11 @@ public class FilePanelRefreshTask : BackgroundTask
                 try
                 {
                     using var ctx = _dbContextFactory.CreateDbContext();
-                    ctx.Database.EnsureCreated();
+                    await ctx.Database.EnsureCreatedAsync();
                     var dtos = entries.Select(e => new CachedEntryDto(e is FileSystemEntry f ? f.Url.DisplayName : e.Url.DisplayName, e.Url.FullUrl)).ToList();
                     var json = JsonSerializer.Serialize(dtos);
                     var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                    ctx.Database.ExecuteSql($@"
+                    await ctx.Database.ExecuteSqlAsync($@"
 INSERT INTO FolderContentsCache(Path, SavedAtUtc, ContentJson)
 VALUES ({Url.Path}, {nowMs}, {json})
 ON CONFLICT(Path) DO UPDATE SET
@@ -188,11 +190,13 @@ ON CONFLICT(Path) DO UPDATE SET
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
             }
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         if (!CancellationToken.IsCancellationRequested && _contentModel is not null && IsCurrentUrl())
@@ -203,13 +207,14 @@ ON CONFLICT(Path) DO UPDATE SET
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
 
         PhaseDurations = phases;
 
-        var finishedCount = entries is not null ? entries.Count : (_contentModel is not null ? _contentModel.Entries.Count : 0);
-        _logger.Information(nameof(FilePanelRefreshTask) + $" {Url.FullUrl} with {finishedCount} entries finished");
+        var finishedCount = entries?.Count ?? _contentModel?.Entries.Count ?? 0;
+        _logger.Information($"FilePanelRefreshTask {Url.FullUrl} with {finishedCount} entries finished");
     }
 
     /// <summary>

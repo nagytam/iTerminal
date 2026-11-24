@@ -20,9 +20,8 @@ public class TreeView : Control
     /// Gets or sets the root node of the tree.
     /// </summary>
     public IHierarchicalItemModel Root { get; set; }
-        = new HierarchicalItemModel(null, string.Empty);
 
-    private bool _isInitializing;
+    private readonly bool _isInitializing;
 
     /// <summary>
     /// Initializes a new instance of the TreeView class.
@@ -158,7 +157,7 @@ public class TreeView : Control
     /// Toggles the expanded/collapsed state of a specific item.
     /// </summary>
     /// <param name="item">The item to toggle.</param>
-    public void ToggleItem(IHierarchicalItemModel item)
+    public static void ToggleItem(IHierarchicalItemModel item)
     {
         if (item.Children.Any())
         {
@@ -180,7 +179,7 @@ public class TreeView : Control
     /// </summary>
     /// <param name="item">The item to get the depth for.</param>
     /// <returns>The depth of the item, starting from 0 for the root.</returns>
-    public int GetItemDepth(IHierarchicalItemModel item)
+    public static int GetItemDepth(IHierarchicalItemModel item)
     {
         int depth = 0;
         var current = item.Parent;
@@ -210,9 +209,8 @@ public class TreeView : Control
     /// </summary>
     public static string FormatRow(IHierarchicalItemModel item, int depth)
     {
-        var glyph = item.Children.Any()
-            ? (item.IsOpened ? ExpandedGlyph : CollapsedGlyph)
-            : " ";
+        var glyph = " ";
+        if (item.Children.Any()) glyph = item.IsOpened ? ExpandedGlyph : CollapsedGlyph;
         return new string(' ', Math.Max(0, depth) * IndentWidth) + glyph + " " + item.Name;
     }
 
@@ -325,9 +323,10 @@ public class TreeView : Control
 
         var rows = GetVisibleRows();
         var current = rows.FindIndex(row => row.Item.IsFocused);
-        var target = step == int.MinValue ? 0
-            : step == int.MaxValue ? rows.Count - 1
-            : Math.Clamp((current < 0 ? 0 : current) + step.Value, 0, rows.Count - 1);
+        int target;
+        if (step == int.MinValue) target = 0;
+        else if (step == int.MaxValue) target = rows.Count - 1;
+        else target = Math.Clamp(Math.Max(0, current) + step.Value, 0, rows.Count - 1);
         if (target != current)
         {
             if (current >= 0)
@@ -376,8 +375,8 @@ public class TreeView : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-        long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        long relativeX = mouseEvent.Position.X - AbsolutePosition.X;
+        long relativeY = mouseEvent.Position.Y - AbsolutePosition.Y;
         if (relativeX < 0 || relativeX >= ViewSize.Width || relativeY < 0 || relativeY >= ViewSize.Height)
         {
             return isHandled;

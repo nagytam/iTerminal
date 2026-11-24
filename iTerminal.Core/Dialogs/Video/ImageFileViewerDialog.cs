@@ -484,7 +484,9 @@ public class ImageFileViewerDialog : Dialog
             if (scroll is int step)
             {
                 int last = Math.Max(0, MetadataLines().Count - Area().Rows);
-                _metadataScroll = step == int.MinValue ? 0 : step == int.MaxValue ? last : Math.Clamp(_metadataScroll + step, 0, last);
+                if (step == int.MinValue) _metadataScroll = 0;
+                else if (step == int.MaxValue) _metadataScroll = last;
+                else _metadataScroll = Math.Clamp(_metadataScroll + step, 0, last);
                 StateHasChanged();
                 return true;
             }
@@ -581,9 +583,8 @@ public class ImageFileViewerDialog : Dialog
             : string.Empty;
         string suffix = $"   {metadata}{editHint}";
         int pathWidth = Math.Max(0, iw - suffix.Length - 1);
-        string path = FilePath.Length <= pathWidth
-            ? FilePath
-            : pathWidth <= 1 ? new string('…', pathWidth) : "…" + FilePath[^(pathWidth - 1)..];
+        string path = FilePath;
+        if (FilePath.Length > pathWidth) path = pathWidth <= 1 ? new string('…', pathWidth) : "…" + FilePath[^(pathWidth - 1)..];
         string header = $" {path}{suffix}";
         buffer.Write(ZOrder, new Position((uint)ix, (uint)iy), size, new ConxelString(Fit(header, iw), colorScheme.Foreground, colorScheme.Background));
 
@@ -696,7 +697,9 @@ public class ImageFileViewerDialog : Dialog
         AsciiFrame? ascii = picture is null ? null : ConvertToAscii(picture);
         var left = ascii is null ? 0 : Math.Max(0, (width - ascii.Columns) / 2);
         var top = ascii is null ? 0 : Math.Max(0, (height - ascii.Rows) / 2);
-        var message = !string.IsNullOrEmpty(error) ? error : loading ? "Opening…" : string.Empty;
+        var message = string.Empty;
+        if (!string.IsNullOrEmpty(error)) message = error;
+        else if (loading) message = "Opening…";
         var blank = new Conxel(' ', Color.White, Color.Black);
 
         for (var row = 0; row < height; row++)

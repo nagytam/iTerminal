@@ -17,7 +17,7 @@ public sealed class AplayAudioSink : IAudioSink
 {
     private const string Executable = "aplay";
 
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
 
     private Process? _process;
     private Stream? _input;
@@ -48,7 +48,9 @@ public sealed class AplayAudioSink : IAudioSink
 
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = Executable,
+                #pragma warning restore S4036
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -111,6 +113,7 @@ public sealed class AplayAudioSink : IAudioSink
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
     }
 
@@ -164,6 +167,7 @@ public sealed class AplayAudioSink : IAudioSink
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
 
             if (process is null)
@@ -180,6 +184,7 @@ public sealed class AplayAudioSink : IAudioSink
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
 
             try
@@ -188,6 +193,7 @@ public sealed class AplayAudioSink : IAudioSink
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
     }
@@ -262,7 +268,9 @@ public sealed class AplayAudioSink : IAudioSink
         {
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = Executable,
+                #pragma warning restore S4036
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -291,6 +299,7 @@ public sealed class AplayAudioSink : IAudioSink
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
                 return [];
             }

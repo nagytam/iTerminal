@@ -25,7 +25,7 @@ public class FileInformationRefreshTask
     private DateTime _lastModelProgressUpdate = DateTime.MinValue;
     private static readonly TimeSpan ModelProgressUpdateInterval = TimeSpan.FromMilliseconds(500);
     private readonly uint _reportBatchSize;
-    private readonly object _countLock = new();
+    private readonly Lock _countLock = new();
     private bool _countFinished;
 
     public FileInformationRefreshTask(
@@ -55,13 +55,13 @@ public class FileInformationRefreshTask
 
     public override Task ExecuteAsync()
     {
-        Logger.Information(nameof(FileInformationRefreshTask) + " started");
+        Logger.Information("FileInformationRefreshTask started");
         while (!Entries.IsEmpty && !CancellationToken.IsCancellationRequested)
         {
             var item = Entries.FirstOrDefault();
             if (item.Key is not null)
             {
-                Logger.Information(nameof(FileInformationRefreshTask) + $" refresh {item.Key} ({Entries.Count})");
+                Logger.Information($"FileInformationRefreshTask refresh {item.Key} ({Entries.Count})");
                 try
                 {
                     CurrentEntry = item.Value.Item1;
@@ -90,7 +90,7 @@ public class FileInformationRefreshTask
                 }
                 catch (Exception exception)
                 {
-                    Logger.Warning(exception, nameof(FileInformationRefreshTask) + " could not count {Url}", item.Value.Item1.Url?.FullUrl);
+                    Logger.Warning(exception, "FileInformationRefreshTask could not count {Url}", item.Value.Item1.Url?.FullUrl);
                 }
                 finally
                 {
@@ -102,7 +102,7 @@ public class FileInformationRefreshTask
                 }
             }
         }
-        Logger.Information(nameof(FileInformationRefreshTask) + " finished");
+        Logger.Information("FileInformationRefreshTask finished");
         return Task.CompletedTask;
     }
 
@@ -151,7 +151,7 @@ public class FileInformationRefreshTask
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
-            Logger.Debug(exception, nameof(FileInformationRefreshTask) + " could not read {Folder}", fullName);
+            Logger.Debug(exception, "FileInformationRefreshTask could not read {Folder}", fullName);
             return false;
         }
     }

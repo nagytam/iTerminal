@@ -24,9 +24,9 @@ public static class ListingInfo
             return [new ListingInfoRow(text("Listing.Entry"), text("Listing.NoEntry"))];
         }
 
-        var type = url.IsLink
-            ? text("Listing.TypeLink")
-            : url.PathType == iConsole.Data.PathType.Folder ? text("Listing.TypeFolder") : text("Listing.TypeFile");
+        var type = text("Listing.TypeFile");
+        if (url.IsLink) type = text("Listing.TypeLink");
+        else if (url.PathType == iConsole.Data.PathType.Folder) type = text("Listing.TypeFolder");
         var attributes = EntryBaseAttributes(url);
 
         var rows = new List<ListingInfoRow>

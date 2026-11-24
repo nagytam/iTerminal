@@ -39,7 +39,6 @@ public interface IControl
     void SetFocus();
     void OnWindowResize(Size size);
     void ResetFocus();
-    void Refresh(int zOrder);
     Task OnInitializeAsync();
     void OnInitializeZOrder();
     void OnInitializeCommands();
@@ -50,6 +49,8 @@ public interface IControl
     void OnHandleTabForward();
     void OnHandleTabBackward();
     void Refresh();
+
+    void Refresh(int zOrder);
     void GetControlsToRender(HashSet<IControl> controlsToRender, IEnumerable<int> layersToRefresh);
     Task ShowDialogAsync(Dialog dialog, IControl? parent = null);
     void Close();

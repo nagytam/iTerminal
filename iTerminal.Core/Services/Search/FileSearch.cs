@@ -212,15 +212,7 @@ public static class FileSearch
 
     internal static bool MatchesName(string name, IReadOnlyList<string> expressions)
     {
-        foreach (var expression in expressions)
-        {
-            if (FileSystemName.MatchesSimpleExpression(expression, name, ignoreCase: true))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return expressions.Any(expression => FileSystemName.MatchesSimpleExpression(expression, name, ignoreCase: true));
     }
 
     /// <summary>
@@ -245,6 +237,7 @@ public static class FileSearch
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         return null;

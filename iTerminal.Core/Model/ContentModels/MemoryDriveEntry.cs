@@ -2,11 +2,12 @@
 using iConsole.Helper;
 using iConsole.Interfaces;
 using System.Diagnostics;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Model.ContentModels;
 
 [DebuggerDisplay("{FullName}")]
-public record MemoryDriveEntry : EntryBase, IEntry
+public record MemoryDriveEntry : EntryBase
 {
     public MemoryDriveEntry(MemoryFile memoryFile)
     {

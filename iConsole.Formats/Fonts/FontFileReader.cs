@@ -116,7 +116,7 @@ public static class FontFileReader
             License: names.Get(13),
             UnitsPerEm: unitsPerEm,
             GlyphCount: glyphs,
-            CharacterCount: CharacterCount(bytes, Table(bytes, tables, "cmap")),
+            CharacterCount: CharacterCount(Table(bytes, tables, "cmap")),
             Weight: weight,
             WidthClass: widthClass,
             Bold: bold,
@@ -189,7 +189,7 @@ public static class FontFileReader
             string text = platform is 0 or 3
                 ? Encoding.BigEndianUnicode.GetString(raw).Trim('\0', ' ')
                 : Encoding.Latin1.GetString(raw).Trim('\0', ' ');
-            int rank = platform == 3 && language == 0x0409 ? 3 : platform == 3 ? 2 : platform == 0 ? 1 : 0;
+            int rank = platform switch { 3 when language == 0x0409 => 3, 3 => 2, 0 => 1, _ => 0 };
             result.Offer(nameId, text, rank);
         }
 
@@ -197,7 +197,7 @@ public static class FontFileReader
     }
 
     /// <summary>The number of code points the character map's ranges cover, from its format 12 or format 4 subtable.</summary>
-    private static int CharacterCount(byte[] bytes, ReadOnlySpan<byte> cmap)
+    private static int CharacterCount(ReadOnlySpan<byte> cmap)
     {
         if (cmap.Length < 4)
         {
@@ -223,7 +223,7 @@ public static class FontFileReader
             }
 
             int format = BinaryPrimitives.ReadUInt16BigEndian(cmap[offset..]);
-            int rank = format == 12 ? 3 : format == 4 && platform == 3 ? 2 : format == 4 ? 1 : 0;
+            int rank = format switch { 12 => 3, 4 when platform == 3 => 2, 4 => 1, _ => 0 };
             if (rank <= bestRank || (format != 4 && format != 12))
             {
                 continue;

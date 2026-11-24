@@ -7,7 +7,7 @@ public static class SqliteFileTypes
         new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".sqlite", ".sqlite3", ".db", ".db3" };
 
     /// <summary>The first 16 bytes of every SQLite database: "SQLite format 3" and a NUL.</summary>
-    public static readonly byte[] Header = "SQLite format 3\0"u8.ToArray();
+    internal static readonly byte[] Header = "SQLite format 3\0"u8.ToArray();
 
     public static bool IsSqliteFile(string path) =>
         !string.IsNullOrEmpty(path) && Extensions.Contains(Path.GetExtension(path));

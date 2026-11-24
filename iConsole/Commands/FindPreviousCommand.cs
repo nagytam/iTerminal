@@ -17,7 +17,7 @@ public class FindPreviousCommand(ISearchModel searchModel, IScrollableModel scro
         return canExecute;
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var cursorPosition = scrollableModel.CursorPosition;
         if (searchModel != null && searchModel.Hits.Any())
@@ -33,7 +33,7 @@ public class FindPreviousCommand(ISearchModel searchModel, IScrollableModel scro
             }
             else
             {
-                previousPosition = searchModel.Hits.Last();
+                previousPosition = searchModel.Hits[^1];
             }
             if (reveal is not null)
             {

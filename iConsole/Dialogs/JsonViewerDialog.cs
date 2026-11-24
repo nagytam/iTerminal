@@ -290,7 +290,7 @@ public class JsonViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(JsonViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

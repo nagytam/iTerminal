@@ -15,7 +15,7 @@ public class ViewerWrapLinesCommand(TextViewerControl viewer, Key? key = null) :
     /// <summary>Only in the text view: the hex dump has no lines to wrap.</summary>
     public override bool CanExecute() => base.CanExecute() && viewer.IsVisible;
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         long line = viewer.CursorLine - 1;
         long column = viewer.ScrollableModel.CursorPosition.X;

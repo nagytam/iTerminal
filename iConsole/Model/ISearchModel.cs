@@ -9,10 +9,14 @@ public interface ISearchModel : INotifyPropertyChanged
     ConcurrentObservableCollection<Position> Hits { get; }
 
     /// <summary>Whether <see cref="Search"/> is a regular expression.</summary>
-    bool UseRegex { get => false; set { } }
+    bool UseRegex { get => false; set {
+        // Intentionally empty: there is nothing to do for this case.
+    } }
 
     /// <summary>Whether upper and lower case must match.</summary>
-    bool MatchCase { get => true; set { } }
+    bool MatchCase { get => true; set {
+        _ = value; // Intentionally ignored: this accessor has no state to change.
+    } }
 
     /// <summary>How many characters the hit at <paramref name="hit"/> covers: for plain text the length of <see cref="Search"/>, for a regular expression what it matched.</summary>
     int LengthAt(Position hit) => Search.Length;

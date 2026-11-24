@@ -146,7 +146,9 @@ public class Rating : Control, IReadOnly
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         bool disabled = IsReadOnly || !IsEnabled;
         Color filled = disabled ? colorScheme.DisabledForeground : Color.Yellow;
-        Color empty = disabled ? colorScheme.DisabledForeground : IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+        Color empty = colorScheme.Foreground;
+        if (disabled) empty = colorScheme.DisabledForeground;
+        else if (IsFocused) empty = colorScheme.SelectedFocusedForeground;
         ConxelString line = new(string.Empty, colorScheme.Foreground, colorScheme.Background);
         for (int i = 0; i < _maximum; i++)
         {

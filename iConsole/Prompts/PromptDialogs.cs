@@ -242,7 +242,9 @@ public abstract class ChoicePromptDialog<T, TResult> : PromptDialog<TResult>
 
             var highlighted = index == List.Cursor;
             var marker = highlighted ? "› " : "  ";
-            var text = marker + (MarksChoices ? (List.IsMarked(index) ? "[x] " : "[ ] ") : string.Empty) + List.LabelAt(index);
+            string checkMark = string.Empty;
+            if (MarksChoices) checkMark = List.IsMarked(index) ? "[x] " : "[ ] ";
+            var text = marker + checkMark + List.LabelAt(index);
             var scheme = ThemeService.CurrentColorScheme;
             var fg = highlighted ? scheme.SelectedFocusedForeground : scheme.Foreground;
             var bg = highlighted ? scheme.SelectedFocusedBackground : scheme.Background;

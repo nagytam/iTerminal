@@ -158,7 +158,7 @@ public class SqliteViewerDialog : Dialog
             }
 
             return new GridSchema("SQLite database", tables);
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Starts a query over the database. It returns at once; the result lands on a later idle pass.</summary>
@@ -177,7 +177,7 @@ public class SqliteViewerDialog : Dialog
         // The reader opens the file, so the whole call runs on a worker thread, never on the key or render path.
         _pendingHolder = new ResultHolder();
         ResultHolder holder = _pendingHolder;
-        _query = Task.Run(async () => await QueryWindowAsync(path, sql, token, holder));
+        _query = Task.Run(async () => await QueryWindowAsync(path, sql, token, holder), CancellationToken.None);
     }
 
     /// <summary>
@@ -313,7 +313,7 @@ public class SqliteViewerDialog : Dialog
         StateHasChanged();
     }
 
-    private string StatusFor(SqlTable table)
+    private static string StatusFor(SqlTable table)
     {
         string status = string.Format(UiText.Get("Sqlite.Status.Rows", "{0:N0} row(s), {1} column(s)"), table.Rows.Count, table.Headers.Count);
         if (table.Truncated)
@@ -461,7 +461,7 @@ public class SqliteViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(SqliteViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

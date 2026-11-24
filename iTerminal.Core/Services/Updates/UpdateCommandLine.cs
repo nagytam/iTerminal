@@ -29,44 +29,44 @@ public static class UpdateCommandLine
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             // Cancelled (Ctrl+C): nothing is reported as installed, and the download is left as a .partial file.
-            output.WriteLine("The update was cancelled. Nothing was installed.");
+            await output.WriteLineAsync("The update was cancelled. Nothing was installed.", CancellationToken.None);
             return Failed;
         }
     }
 
     private static async Task<int> RunCoreAsync(IUpdateService updates, TextWriter output, CancellationToken cancellationToken)
     {
-        output.WriteLine($"iTerminal {updates.CurrentVersion}: looking for a newer release...");
+        await output.WriteLineAsync($"iTerminal {updates.CurrentVersion}: looking for a newer release...", CancellationToken.None);
         UpdateInfo? update = await updates.CheckAsync(cancellationToken);
         if (cancellationToken.IsCancellationRequested)
         {
-            output.WriteLine("The update was cancelled. Nothing was installed.");
+            await output.WriteLineAsync("The update was cancelled. Nothing was installed.", CancellationToken.None);
             return Failed;
         }
 
         if (update is null)
         {
-            output.WriteLine("iTerminal is up to date, or GitHub could not be reached.");
+            await output.WriteLineAsync("iTerminal is up to date, or GitHub could not be reached.", CancellationToken.None);
             return Success;
         }
 
         if (updates.InstallKind == UpdateInstallKind.PackageManager)
         {
-            output.WriteLine($"iTerminal {update.Version} is available. WinGet installed this copy and updates it: run winget upgrade {UpdateService.WinGetPackageId}");
+            await output.WriteLineAsync($"iTerminal {update.Version} is available. WinGet installed this copy and updates it: run winget upgrade {UpdateService.WinGetPackageId}", CancellationToken.None);
             return Failed;
         }
 
         if (!updates.CanInstall)
         {
-            output.WriteLine($"iTerminal {update.Version} is available, but this copy cannot update itself. Download it from {updates.ReleasesAddress}");
+            await output.WriteLineAsync($"iTerminal {update.Version} is available, but this copy cannot update itself. Download it from {updates.ReleasesAddress}", CancellationToken.None);
             return Failed;
         }
 
-        output.WriteLine($"Installing iTerminal {update.Version}...");
+        await output.WriteLineAsync($"Installing iTerminal {update.Version}...", CancellationToken.None);
         bool started = await updates.InstallAsync(cancellationToken);
         foreach (string line in updates.Log)
         {
-            output.WriteLine(line);
+            await output.WriteLineAsync(line, CancellationToken.None);
         }
 
         return started ? Success : Failed;

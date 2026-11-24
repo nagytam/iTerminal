@@ -71,8 +71,12 @@ public static class MapAsciiRenderer
         var isGreen = !isWater && green > red + 4 && green > blue + 8;
         var isRoad = warm * 4 >= count;
 
-        var baseChar = isWater ? '~' : isGreen ? '"' : ' ';
-        var color = isWater ? Color.Blue : isGreen ? Color.Green : Color.Gray;
+        var baseChar = ' ';
+        if (isWater) baseChar = '~';
+        else if (isGreen) baseChar = '"';
+        var color = Color.Gray;
+        if (isWater) color = Color.Blue;
+        else if (isGreen) color = Color.Green;
         var ink = ' ';
         foreach (var (limit, c) in Steps)
         {

@@ -141,7 +141,8 @@ internal static class GoRules
                 }
             }
 
-            byte regionOwner = touchesBlack == touchesWhite ? Empty : touchesBlack ? Black : White;
+            byte regionOwner = Empty;
+            if (touchesBlack != touchesWhite) regionOwner = touchesBlack ? Black : White;
             foreach (int point in region)
             {
                 owner[point] = regionOwner;
@@ -470,7 +471,9 @@ public class GoGame : GameBase
                     bool dead = _dead[index] && IsOver;
                     // Black stones are filled and white ones hollow, so the sides differ without colour as well.
                     Color color = stone == GoRules.Black ? Color.Black : Color.White;
-                    string glyph = dead ? "x" : stone == GoRules.Black ? "●" : "○";
+            string glyph = "○";
+            if (dead) glyph = "x";
+            else if (stone == GoRules.Black) glyph = "●";
                     cell = new GameCell(glyph + tail, dead ? Color.Red : color, index == _lastMove ? Color.DarkRed : wood);
                 }
                 else if (IsOver && territory[index] != GoRules.Empty)
@@ -520,7 +523,9 @@ public class GoGame : GameBase
         int seed = Random.Next();
         return token =>
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             int choice = GoComputer.Choose(board, size, GoRules.White, previous, lastMove, opponentPassed, moves, new Random(seed), token);
+            #pragma warning restore S2245
             return () =>
             {
                 if (version != Version)
@@ -548,12 +553,6 @@ internal static class GoComputer
     {
         byte opponent = GoRules.Other(color);
         byte[] territory = GoRules.Territory(board, size, null);
-        bool[] hasStone = new bool[board.Length];
-        for (int i = 0; i < board.Length; i++)
-        {
-            hasStone[i] = board[i] != GoRules.Empty;
-        }
-
         int best = -1;
         double bestScore = double.MinValue;
         for (int index = 0; index < board.Length; index++)
@@ -564,7 +563,7 @@ internal static class GoComputer
                 continue;
             }
 
-            double score = Score(board, result, size, color, opponent, index, captured, territory, lastMove, moveCount, hasStone) + random.NextDouble() * 1.5;
+            double score = Score(board, result, size, color, opponent, index, captured, territory, lastMove, moveCount) + random.NextDouble() * 1.5;
             if (score > bestScore)
             {
                 bestScore = score;
@@ -587,7 +586,7 @@ internal static class GoComputer
         return bestScore < 0.5 || moveCount > size * size * 3 ? -1 : best;
     }
 
-    private static double Score(byte[] board, byte[] result, int size, byte color, byte opponent, int index, int captured, byte[] territory, int lastMove, int moveCount, bool[] hasStone)
+    private static double Score(byte[] board, byte[] result, int size, byte color, byte opponent, int index, int captured, byte[] territory, int lastMove, int moveCount)
     {
         double score = captured * 12;
         (List<int> stones, HashSet<int> liberties) = GoRules.Group(result, size, index);

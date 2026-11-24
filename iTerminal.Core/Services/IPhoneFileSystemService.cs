@@ -6,6 +6,7 @@ using iMobileDevice.Afc;
 using iMobileDevice.iDevice;
 using iTerminal.Core.Model.ContentModels;
 using System.Globalization;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Services;
 
@@ -17,7 +18,9 @@ namespace iTerminal.Core.Services;
 /// request/response protocol, so every native call is serialized under <see cref="_lock"/>; awaited
 /// stream I/O during transfers happens outside the lock so listings can interleave between chunks.
 /// </summary>
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public sealed class IPhoneFileSystemService : IIPhoneFileSystemService, IDisposable
+#pragma warning restore S101
 {
     private const int ChunkSize = 64 * 1024;
 
@@ -369,15 +372,21 @@ public sealed class IPhoneFileSystemService : IIPhoneFileSystemService, IDisposa
         {
             if (_afcClient is not null)
             {
-                try { afc.afc_file_close(_afcClient, handle); } catch { }
+                try { afc.afc_file_close(_afcClient, handle); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
             }
         }
     }
 
     private void DisposeSession()
     {
-        try { _afcClient?.Dispose(); } catch { }
-        try { _deviceHandle?.Dispose(); } catch { }
+        try { _afcClient?.Dispose(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
+        try { _deviceHandle?.Dispose(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
         _afcClient = null;
         _deviceHandle = null;
         _connectedUdid = null;

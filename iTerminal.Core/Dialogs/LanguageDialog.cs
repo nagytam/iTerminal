@@ -121,10 +121,10 @@ public class LanguageDialog : Dialog
         }
 
         if (mouseEvent.LeftClicked
-            && (long)mouseEvent.Position.X >= (long)_lines.AbsolutePosition.X
-            && (long)mouseEvent.Position.X < (long)_lines.AbsolutePosition.X + _lines.ViewSize.Width)
+            && mouseEvent.Position.X >= _lines.AbsolutePosition.X
+            && mouseEvent.Position.X < _lines.AbsolutePosition.X + _lines.ViewSize.Width)
         {
-            int row = (int)((long)mouseEvent.Position.Y - (long)_lines.AbsolutePosition.Y);
+            int row = (int)(mouseEvent.Position.Y - _lines.AbsolutePosition.Y);
             if (row >= 0 && row < Languages.Count)
             {
                 _cursor = row;

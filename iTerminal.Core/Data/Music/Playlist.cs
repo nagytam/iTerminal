@@ -10,7 +10,7 @@ namespace iTerminal.Core.Data.Music;
 /// </summary>
 public sealed class Playlist
 {
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
     private readonly List<MusicTrack> _tracks = [];
     private readonly List<int> _playOrder = [];
     private readonly Random _random = new();
@@ -242,12 +242,9 @@ public sealed class Playlist
         lock (_syncLock)
         {
             _tracks.Clear();
-            foreach (var track in tracks ?? [])
+            foreach (var track in (tracks ?? []).Where(track => track is not null && !_tracks.Contains(track)))
             {
-                if (track is not null && !_tracks.Contains(track))
-                {
-                    _tracks.Add(track);
-                }
+                _tracks.Add(track);
             }
 
             _currentIndex = -1;

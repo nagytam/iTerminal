@@ -16,14 +16,14 @@ public class CreateFolderCommand(
 
     public override bool CanExecute()
     {
-        if (Control?.Parent is CreateFolderDialog createFolderDialog)
+        if (Control?.Parent is CreateFolderDialog)
         {
             return folderValidator.EnsureCurrent();
         }
         return base.CanExecute();
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (Control?.Parent is CreateFolderDialog createFolderDialog)
         {

@@ -132,7 +132,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     {
         public override string Title => "Log out of an SMB host";
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is FolderSelectorSmbTabPage page)
             {
@@ -146,7 +146,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     {
         public override string Title => "Log in to an SMB host";
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is FolderSelectorSmbTabPage page)
             {
@@ -161,7 +161,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         public override Key? Key { get; init; } = new Key(ConsoleKey.Enter, false, false, false);
         public override string Title => "Select SMB host or share";
 
-        public override async Task ExecuteAsync(object? arg)
+        public override async Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is not FolderSelectorSmbTabPage page)
             {
@@ -237,11 +237,10 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     private void RefreshSignedIn()
     {
         var host = SelectedEntry?.Host ?? _hostFilter;
-        var text = host is null
-            ? string.Empty
-            : LoginsFor(host) is { Count: > 0 } logins
-                ? string.Format(UiText.Get("FolderSelector.Smb.SignedIn", "Logged in to {0} as {1}."), host, UsersOf(logins))
-                : string.Format(UiText.Get("FolderSelector.Smb.Anonymous", "Browsing {0} anonymously. L logs in."), host);
+        string text;
+        if (host is null) text = string.Empty;
+        else if (LoginsFor(host) is { Count: > 0 } logins) text = string.Format(UiText.Get("FolderSelector.Smb.SignedIn", "Logged in to {0} as {1}."), host, UsersOf(logins));
+        else text = string.Format(UiText.Get("FolderSelector.Smb.Anonymous", "Browsing {0} anonymously. L logs in."), host);
         if (host is not null && SmbVersionOf(host) is > 0 and var version)
         {
             text += "  " + string.Format(UiText.Get("FolderSelector.Smb.Version", "SMB {0} in use."), version);
@@ -331,6 +330,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {
@@ -567,13 +567,13 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         }
 
         // The prompts are answered on the UI thread; nothing below touches the control tree after an await.
-        var username = await _promptService.AskAsync(UsernamePrompt(host));
+        var username = await _promptService.AskAsync(UsernamePrompt(host), CancellationToken.None);
         if (string.IsNullOrWhiteSpace(username))
         {
             Interlocked.Exchange(ref _loginBusy, 0);
             return;
         }
-        var password = await _promptService.AskAsync(PasswordPrompt(username, host));
+        var password = await _promptService.AskAsync(PasswordPrompt(username, host), CancellationToken.None);
         if (password is null)
         {
             Interlocked.Exchange(ref _loginBusy, 0);
@@ -588,7 +588,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         SmbListing? listing = null;
         try
         {
-            listing = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password);
+            listing = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password, CancellationToken.None);
         }
         catch (Exception)
         {
@@ -779,20 +779,16 @@ internal static class SmbBrowserRows
             var thisMachine = NetworkDiscoveryService.IsLocalAddress(host.IPAddress)
                 ? ", " + UiText.Get("FolderSelector.Smb.ThisMachine", "this machine")
                 : string.Empty;
-            var label = saved
-                ? $"{address} (SMB{thisMachine}, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"
-                : login is not null
-                    ? $"{address} (SMB{thisMachine}, {LoggedIn(login.Username)})"
-                    : $"{address} (SMB{thisMachine})";
+            string label;
+            if (saved) label = $"{address} (SMB{thisMachine}, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")";
+            else if (login is not null) label = $"{address} (SMB{thisMachine}, {LoggedIn(login.Username)})";
+            else label = $"{address} (SMB{thisMachine})";
             rows.Add(new(address, null, null, label));
         }
 
-        foreach (var login in loginList)
+        foreach (var login in loginList.Where(login => listed.Add(login.Host)))
         {
-            if (listed.Add(login.Host))
-            {
-                rows.Add(new(login.Host, null, null, $"{login.Host} (SMB, {LoggedIn(login.Username)})"));
-            }
+            rows.Add(new(login.Host, null, null, $"{login.Host} (SMB, {LoggedIn(login.Username)})"));
         }
 
         foreach (var profile in savedProfiles)

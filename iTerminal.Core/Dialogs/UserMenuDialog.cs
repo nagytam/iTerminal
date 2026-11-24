@@ -187,10 +187,10 @@ public class UserMenuDialog : Dialog
         }
 
         if (mouseEvent.LeftClicked
-            && (long)mouseEvent.Position.X >= (long)_lines.AbsolutePosition.X
-            && (long)mouseEvent.Position.X < (long)_lines.AbsolutePosition.X + _lines.ViewSize.Width)
+            && mouseEvent.Position.X >= _lines.AbsolutePosition.X
+            && mouseEvent.Position.X < _lines.AbsolutePosition.X + _lines.ViewSize.Width)
         {
-            var row = (int)((long)mouseEvent.Position.Y - (long)_lines.AbsolutePosition.Y);
+            var row = (int)(mouseEvent.Position.Y - _lines.AbsolutePosition.Y);
             var index = _top + row;
             if (row >= 0 && row < _lines.ViewSize.Height && index < _items.Count)
             {

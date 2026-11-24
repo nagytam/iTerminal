@@ -28,7 +28,7 @@ public class SaveCommand(
         return canExecute;
     }
 
-        public override async Task ExecuteAsync(object? arg)
+        public override async Task ExecuteAsync(object? args)
         {
             // Find the nearest TextFileEditorDialog in the parent chain. Tests create the
             // TextEditorControl and set its Parent to the dialog directly, so checking

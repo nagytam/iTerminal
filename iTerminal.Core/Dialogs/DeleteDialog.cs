@@ -214,7 +214,8 @@ public class DeleteDialog : FormDialog
         var canRecycle = CanRecycle(url);
         _checkBoxRecycleBin.IsEnabled = canRecycle;
         _checkBoxRecycleBin.IsChecked = canRecycle;
-        _checkBoxRecycleBin.Label = !canRecycle ? NoRecycleBinLabel : OperatingSystem.IsLinux() ? TrashLabel : RecycleBinLabel;
+        if (!canRecycle) _checkBoxRecycleBin.Label = NoRecycleBinLabel;
+        else _checkBoxRecycleBin.Label = OperatingSystem.IsLinux() ? TrashLabel : RecycleBinLabel;
     }
 
     public void Reset()

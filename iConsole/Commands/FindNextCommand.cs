@@ -17,7 +17,7 @@ public class FindNextCommand(ISearchModel searchModel, IScrollableModel scrollab
         return canExecute;
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var cursorPosition = scrollableModel.CursorPosition;
         if (searchModel != null && searchModel.Hits.Any())
@@ -33,7 +33,7 @@ public class FindNextCommand(ISearchModel searchModel, IScrollableModel scrollab
             }
             else
             {
-                nextPosition = searchModel.Hits.First();
+                nextPosition = searchModel.Hits[0];
             }
             if (reveal is not null)
             {

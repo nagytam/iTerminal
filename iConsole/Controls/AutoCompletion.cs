@@ -26,7 +26,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
     private readonly ScrollBar.ScrollBar _scrollBar;
     private readonly Popup _popup;
 
-    private readonly object _updateGate = new();
+    private readonly Lock _updateGate = new();
     private CancellationTokenSource? _updateCts;
     private int _suppressVisibilityUpdates;
     private int _generation;
@@ -123,7 +123,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
             // whichever update reaches it first, and would be left set if this one lost to a Hide.)
             var generation = CurrentGeneration;
             long sequence = StartUpdate();
-            _ = Task.Run(() => UpdateMatches(value, generation, sequence, keepListDown: true));
+            _ = Task.Run(() => UpdateMatches(value, generation, sequence, keepListDown: true), CancellationToken.None);
             return;
         }
 
@@ -271,7 +271,7 @@ public class AutoCompletion : Window, ITransientOverlayHost
         _listBox.UpdateModel();
         if (_listBox.ListModel.UpdateTask is not null)
         {
-            _listBox.ListModel.UpdateTask.Wait();
+            _listBox.ListModel.UpdateTask.Wait(CancellationToken.None);
         }
 
         // The generation is checked and acted on under the lock Hide takes to move it on. Checking

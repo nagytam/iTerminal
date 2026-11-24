@@ -29,7 +29,7 @@ public sealed class ExternalProcessRunner : IExternalProcessRunner
         CancellationToken cancellationToken = default) =>
         await RunCoreAsync(fileName, arguments, workingDirectory, writeStandardInput, cancellationToken);
 
-    private async Task<ProcessOutput> RunCoreAsync(
+    private static async Task<ProcessOutput> RunCoreAsync(
         string fileName,
         IReadOnlyList<string> arguments,
         string? workingDirectory,

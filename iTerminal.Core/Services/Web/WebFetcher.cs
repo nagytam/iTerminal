@@ -119,7 +119,7 @@ public sealed class WebFetcher : IWebFetcher, IDisposable
             int read;
             while ((read = await stream.ReadAsync(chunk, cancellationToken)) > 0)
             {
-                buffer.Write(chunk, 0, read);
+                await buffer.WriteAsync(chunk.AsMemory(0, read), cancellationToken);
                 if (buffer.Length > MaxBytes)
                 {
                     throw new WebFetchException($"The page is larger than {MaxBytes / (1024 * 1024)} MB and was not loaded.");

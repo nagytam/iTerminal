@@ -8,8 +8,11 @@ internal static class PackageManagerProcess
     public readonly record struct ProcessResult(bool Success, string StandardOutput, string StandardError);
 
     /// <summary>Picks the first non-blank of stderr/stdout as an error message, or the fallback.</summary>
-    public static string FirstNonEmpty(string first, string second, string fallback) =>
-        !string.IsNullOrWhiteSpace(first) ? first.Trim() : !string.IsNullOrWhiteSpace(second) ? second.Trim() : fallback;
+    public static string FirstNonEmpty(string first, string second, string fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(first)) return first.Trim();
+        return !string.IsNullOrWhiteSpace(second) ? second.Trim() : fallback;
+    }
 
     /// <summary>
     /// Runs <paramref name="fileName"/> with <paramref name="arguments"/> and reads the whole of
@@ -49,7 +52,9 @@ internal static class PackageManagerProcess
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return new ProcessResult(false, string.Empty, $"{fileName} command timed out");
             }
 
@@ -123,7 +128,9 @@ internal static class PackageManagerProcess
         }
         catch (OperationCanceledException)
         {
-            try { process.Kill(entireProcessTree: true); } catch { }
+            try { process.Kill(entireProcessTree: true); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
             onOutputLine("(cancelled)");
             return -1;
         }

@@ -163,12 +163,9 @@ public class WorkspaceManagerDialog : Dialog
 
             if (!(keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift))
             {
-                if (HandleListKey(keyEvent, out toRestore))
+                if (HandleListKey(keyEvent, out toRestore) && toRestore is null)
                 {
-                    if (toRestore is null)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             else if (_pending != Pending.None)
@@ -467,7 +464,7 @@ public class WorkspaceManagerDialog : Dialog
 
     private void AskUpdate()
     {
-        if (Selected is not { } selected)
+        if (Selected is null)
         {
             SetStatus(Say("Workspaces.Status.NothingToUpdate", "Nothing to update yet. S saves the screen as a new workspace."), true);
             return;
@@ -607,19 +604,28 @@ public class WorkspaceManagerDialog : Dialog
         };
     }
 
-    private string Hints() => _mode == Mode.Name
-        ? (_renaming is null ? iConsole.Localization.UiText.Get("Workspaces.HintSave", "Enter save  Esc cancel") : iConsole.Localization.UiText.Get("Workspaces.HintRename", "Enter rename  Esc cancel"))
-        : _pending != Pending.None
+    private string Hints()
+    {
+        if (_mode == Mode.Name)
+        {
+            return _renaming is null
+                ? iConsole.Localization.UiText.Get("Workspaces.HintSave", "Enter save  Esc cancel")
+                : iConsole.Localization.UiText.Get("Workspaces.HintRename", "Enter rename  Esc cancel");
+        }
+
+        return _pending != Pending.None
             ? iConsole.Localization.UiText.Get("Workspaces.HintConfirm", "y confirm  Esc keep")
             : iConsole.Localization.UiText.Get("Workspaces.HintList", "Enter switch  1-9 jump  S save  U update  R rename  D delete  Esc close");
+    }
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        var summary = _workspaces.ActiveName is null
-            ? Say("Workspaces.NotSaved", "The screen is not saved as a workspace.")
-            : Selected is not null && _activeName is not null && _list.FirstOrDefault(w => w.Name == _activeName) is { } active
-                ? Say("Workspaces.OnScreen", "On screen: {0}", active.Name) + (_now is not null && active.Layout.SameScreenAs(_now) ? string.Empty : Say("Workspaces.ScreenChanged", "  (the screen has changed since)"))
-                : Say("Workspaces.NotSaved", "The screen is not saved as a workspace.");
+        var summary = Say("Workspaces.NotSaved", "The screen is not saved as a workspace.");
+        if (_workspaces.ActiveName is not null && Selected is not null && _activeName is not null
+            && _list.FirstOrDefault(w => w.Name == _activeName) is { } active)
+        {
+            summary = Say("Workspaces.OnScreen", "On screen: {0}", active.Name) + (_now is not null && active.Layout.SameScreenAs(_now) ? string.Empty : Say("Workspaces.ScreenChanged", "  (the screen has changed since)"));
+        }
         Put(buffer, 1, 0, iw - 2, Say("Workspaces.SavedCount", "{0} saved  ·  {1}", _list.Count, summary), colorScheme.Foreground, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, Say("Workspaces.Header", "     # Name                      Left panel  →  Right panel"), colorScheme.DisabledForeground, colorScheme.Background);
 
@@ -649,9 +655,11 @@ public class WorkspaceManagerDialog : Dialog
 
             var workspace = _list[index];
             var highlighted = index == _cursor;
-            var mark = workspace.Name == _activeName
-                ? (_now is not null && workspace.Layout.SameScreenAs(_now) ? "●" : "○")
-                : " ";
+            var mark = " ";
+            if (workspace.Name == _activeName)
+            {
+                mark = _now is not null && workspace.Layout.SameScreenAs(_now) ? "●" : "○";
+            }
             var number = index < 9 ? (index + 1).ToString() : " ";
             var line = $"{(highlighted ? ">" : " ")} {mark}  {number} {Clip(workspace.Name, 25),-25} {Clip(Short(workspace.Layout.LeftUrl), folderWidth).PadRight(folderWidth)} → {Clip(Short(workspace.Layout.RightUrl), folderWidth)}";
             Put(buffer, 1, 2 + i, iw - 2, line,
@@ -730,8 +738,12 @@ public class WorkspaceManagerDialog : Dialog
         return path.Length > 0 ? path : url;
     }
 
-    private static string Clip(string text, int width) =>
-        width <= 0 ? string.Empty : text.Length <= width ? text : width == 1 ? text[..1] : text[..(width - 1)] + "…";
+    private static string Clip(string text, int width)
+    {
+        if (width <= 0) return string.Empty;
+        if (text.Length <= width) return text;
+        return width == 1 ? text[..1] : text[..(width - 1)] + "…";
+    }
 
     private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)
     {
@@ -740,7 +752,10 @@ public class WorkspaceManagerDialog : Dialog
             return;
         }
 
-        var clipped = text.Length > width ? (width > 1 ? text[..(width - 1)] + "…" : text[..width]) : text.PadRight(width);
+        string clipped;
+        if (text.Length <= width) clipped = text.PadRight(width);
+        else if (width > 1) clipped = text[..(width - 1)] + "…";
+        else clipped = text[..width];
         buffer.Write(
             ZOrder,
             new Position(AbsolutePosition.X + 1 + x, AbsolutePosition.Y + 1 + y),

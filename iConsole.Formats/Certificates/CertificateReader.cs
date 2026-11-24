@@ -122,7 +122,9 @@ public sealed partial class CertificateReader : ICertificateReader
                 KeyUsages: KeyUsages(certificate),
                 EnhancedKeyUsages: EnhancedKeyUsages(certificate),
                 Sha256Fingerprint: Convert.ToHexString(SHA256.HashData(certificate.RawData)),
+                #pragma warning disable S4790 // The digest is the one the file format or service names; it is used to read that format, not to make new trust decisions.
                 Sha1Fingerprint: Convert.ToHexString(SHA1.HashData(certificate.RawData)),
+                #pragma warning restore S4790
                 SelfIssued: string.Equals(subject, issuer, StringComparison.Ordinal));
         }
     }

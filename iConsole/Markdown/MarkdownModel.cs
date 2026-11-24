@@ -4,7 +4,7 @@ namespace iConsole.Markdown;
 [Flags]
 public enum MarkdownStyle
 {
-    Plain = 0,
+    None = 0,
     Bold = 1,
     Italic = 2,
     Code = 4,
@@ -12,7 +12,7 @@ public enum MarkdownStyle
 }
 
 /// <summary>A run of text with one style.</summary>
-public sealed record MarkdownSpan(string Text, MarkdownStyle Style = MarkdownStyle.Plain);
+public sealed record MarkdownSpan(string Text, MarkdownStyle Style = MarkdownStyle.None);
 
 public enum MarkdownBlockKind
 {

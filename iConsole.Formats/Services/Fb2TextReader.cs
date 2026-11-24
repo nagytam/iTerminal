@@ -9,7 +9,7 @@ namespace iConsole.Formats.Services;
 /// </summary>
 public static class Fb2TextReader
 {
-    private static readonly Regex Spaces = new(@"\s+", RegexOptions.Compiled);
+    private static readonly Regex Spaces = new(@"\s+", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     public static IReadOnlyList<string> Read(byte[] content)
     {

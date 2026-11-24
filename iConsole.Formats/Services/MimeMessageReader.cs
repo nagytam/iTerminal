@@ -11,7 +11,7 @@ namespace iConsole.Formats.Services;
 /// </summary>
 public static class MimeMessageReader
 {
-    private static readonly Regex EncodedWord = new(@"=\?([^?\s]+)\?([BbQq])\?([^?\s]*)\?=", RegexOptions.Compiled);
+    private static readonly Regex EncodedWord = new(@"=\?([^?\s]+)\?([BbQq])\?([^?\s]*)\?=", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     static MimeMessageReader()
     {
@@ -88,7 +88,7 @@ public static class MimeMessageReader
     /// <summary>Decodes an RFC 2047 header value: encoded words become text, and the space between two of them is dropped.</summary>
     internal static string DecodeHeader(string value)
     {
-        string joined = Regex.Replace(value, @"\?=\s+=\?", "?==?");
+        string joined = Regex.Replace(value, @"\?=\s+=\?", "?==?", RegexOptions.None, TimeSpan.FromSeconds(1));
         return EncodedWord.Replace(joined, match =>
         {
             byte[] bytes = match.Groups[2].Value.Equals("B", StringComparison.OrdinalIgnoreCase)
@@ -254,7 +254,7 @@ public static class MimeMessageReader
             }
 
             string delimiter = "--" + boundary;
-            string[] sections = Regex.Split(_body, @"(?:\r?\n|^)" + Regex.Escape(delimiter));
+            string[] sections = Regex.Split(_body, @"(?:\r?\n|^)" + Regex.Escape(delimiter), RegexOptions.None, TimeSpan.FromSeconds(1));
             foreach (string section in sections.Skip(1))
             {
                 if (section.StartsWith("--", StringComparison.Ordinal))

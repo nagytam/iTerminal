@@ -288,12 +288,13 @@ public sealed class PasswordManager : IPasswordManager
         {
             RequireUnlocked();
             var existing = _entries!.GetValueOrDefault(profileId);
+            var category = profileId.StartsWith(MailPrefix, StringComparison.Ordinal) ? PasswordCategory.Mail : PasswordCategory.Network;
             Save(existing is null
                 ? new PasswordEntry
                 {
                     Id = profileId,
                     Title = "Saved login",
-                    Category = profileId.StartsWith(MailPrefix, StringComparison.Ordinal) ? PasswordCategory.Mail : PasswordCategory.Network,
+                    Category = category,
                     Password = secret,
                 }
                 : existing with { Password = secret });

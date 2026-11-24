@@ -12,7 +12,7 @@ public class CheckForUpdatesCommand(UpdateCheckJob updateCheckJob) : Command
     public override string Title => "Check for updates";
     public override string Description => "Look for a newer iTerminal release now and offer to install it.";
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         updateCheckJob.CheckNow();
         return Task.CompletedTask;

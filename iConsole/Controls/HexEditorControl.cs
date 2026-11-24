@@ -144,7 +144,7 @@ public class HexEditorControl : HexViewer
         }
 
         long index = CursorIndex;
-        long visibleRow = index / BytesPerRow - (long)ScrollableModel.ScrollPosition.Y;
+        long visibleRow = index / BytesPerRow - ScrollableModel.ScrollPosition.Y;
         if (visibleRow < 0 || visibleRow >= ViewSize.Height)
         {
             return;

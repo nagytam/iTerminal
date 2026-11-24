@@ -13,7 +13,7 @@ public class HelpDialogCommand(HelpDialog helpDialog) : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F1, false, false, false);
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (Control is null) return;
         _helpDialog.ContextControl = Control.GetRootControl();

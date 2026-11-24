@@ -303,9 +303,8 @@ public class TranslatorDialog : SplitPaneDialog
             try
             {
                 TranslationResult result = await _service.TranslateAsync(text, source, target, engine, token);
-                string from = source == TranslationLanguages.Auto
-                    ? (result.DetectedSource is { } detected ? Say("Translator.DetectedName", "{0} (detected)", TranslationLanguages.NameOf(detected)) : Say("Translator.UnknownLanguage", "unknown language"))
-                    : TranslationLanguages.NameOf(source);
+                string from = TranslationLanguages.NameOf(source);
+                if (source == TranslationLanguages.Auto) from = result.DetectedSource is { } detected ? Say("Translator.DetectedName", "{0} (detected)", TranslationLanguages.NameOf(detected)) : Say("Translator.UnknownLanguage", "unknown language");
                 Land(new Outcome(generation, $"{from} → {TranslationLanguages.NameOf(target)} · {result.EngineName}", false, result.Text, result.DetectedSource, result.EngineName));
             }
             catch (OperationCanceledException)
@@ -320,7 +319,7 @@ public class TranslatorDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, Say("Translator.Failed", "Translation failed: {0}", exception.Message), true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F7: finds the language of the text — offline when that is sure, otherwise by asking the engine.</summary>
@@ -354,7 +353,7 @@ public class TranslatorDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, Say("Translator.DetectFailed", "Detection failed: {0}", exception.Message), true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F6: swaps the languages and makes the translation the new text, so a translation can be checked by translating it back.</summary>
@@ -580,9 +579,10 @@ public class TranslatorDialog : SplitPaneDialog
                 ? _service.DetectOffline(string.Join('\n', _input.TextModel.Lines.AsSnapshot().Take(40)))
                 : null;
             string? code = _detectedSource ?? offline?.Code;
+            var lookLikeText = _detectedSource is null ? iConsole.Localization.UiText.Get("Translator.LooksLikeGuess", " Looks like {0} (a guess).") : iConsole.Localization.UiText.Get("Translator.LooksLike", " Looks like {0}.");
             return code is null
                 ? iConsole.Localization.UiText.Get("Translator.DetectNote", " The source language is detected when you translate.")
-                : string.Format(_detectedSource is null ? iConsole.Localization.UiText.Get("Translator.LooksLikeGuess", " Looks like {0} (a guess).") : iConsole.Localization.UiText.Get("Translator.LooksLike", " Looks like {0}."), TranslationLanguages.NameOf(code));
+                : string.Format(lookLikeText, TranslationLanguages.NameOf(code));
         }
 
         return string.Empty;

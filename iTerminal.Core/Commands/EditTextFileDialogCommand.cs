@@ -112,9 +112,9 @@ public class EditTextFileDialogCommand(
                 dialog => Control?.ShowDialogAsync(dialog) ?? Task.CompletedTask,
                 fallbackUrl =>
                 {
-                    textFileEditorDialog.Url = fallbackUrl;
-                    textFileEditorDialog.OpenAsHex = false;
-                    return Control?.ShowDialogAsync(textFileEditorDialog) ?? Task.CompletedTask;
+                    Dialog.Url = fallbackUrl;
+                    Dialog.OpenAsHex = false;
+                    return Control?.ShowDialogAsync(Dialog) ?? Task.CompletedTask;
                 }));
         }
         else

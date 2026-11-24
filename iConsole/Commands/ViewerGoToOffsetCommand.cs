@@ -18,7 +18,7 @@ public class ViewerGoToOffsetCommand(
     /// <summary>Only in the hex dump; in the text view F5 is go to line.</summary>
     public override bool CanExecute() => base.CanExecute() && hexViewer.IsVisible;
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var dialog = new GoToOffsetDialog(hexViewer, beepService, dateTimeProviderService, themeService);
         if (Control is not null)

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace iConsole.Application;
 
+#pragma warning disable S101 // Brand name: the lowercase 'i' prefix is the product's naming, used across every project.
 public class iConsoleApplicationBuilder
 {
     private readonly ServiceCollection _services = new();
@@ -32,3 +33,4 @@ public class iConsoleApplicationBuilder
         return application;
     }
 }
+#pragma warning restore S101

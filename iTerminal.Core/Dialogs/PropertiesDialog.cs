@@ -194,12 +194,13 @@ public class PropertiesDialog : FormDialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
                 // A file whose mark cannot be read shows none.
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Ctrl+F, or the button: asks whether to remove the mark. Nothing is asked of a file that has none.</summary>
@@ -240,12 +241,13 @@ public class PropertiesDialog : FormDialog
                 }
                 catch (OperationCanceledException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
                 catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
                 {
                     _removeError = string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message);
                 }
-            });
+            }, CancellationToken.None);
         }
 
         UpdateLines();
@@ -323,12 +325,10 @@ public class PropertiesDialog : FormDialog
 
     public string AccessedText { get => _textBoxAccessed.Text ?? string.Empty; set => _textBoxAccessed.Text = value ?? string.Empty; }
 
-    private string _path = string.Empty;
 
     /// <summary>Sets the local file or folder; call before showing the dialog.</summary>
     public void Load(string path)
     {
-        _path = path;
         _measure = null;
         _measureComplete = false;
         _errorLabel.Text = string.Empty;
@@ -405,12 +405,13 @@ public class PropertiesDialog : FormDialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
                 _measureComplete = true;
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary><see cref="Progress{T}"/> posts to a synchronization context; this reports where it is called.</summary>
@@ -506,9 +507,13 @@ public class PropertiesDialog : FormDialog
     private static string Row(string caption, string value) => Caption(caption).PadRight(CaptionWidth) + value;
 
     /// <summary>"3 files" in the chosen language, with its own singular and plural.</summary>
-    private static string Counted(long count, string noun) =>
-        string.Format(UiText.Get(count == 1 ? $"Properties.{noun}.One" : $"Properties.{noun}.Many", noun == "Files" ? (count == 1 ? "{0} file" : "{0} files") : (count == 1 ? "{0} folder" : "{0} folders")),
-            count.ToString("N0", CultureInfo.InvariantCulture));
+    private static string Counted(long count, string noun)
+    {
+        var key = $"Properties.{noun}.{(count == 1 ? "One" : "Many")}";
+        var singular = noun == "Files" ? "{0} file" : "{0} folder";
+        var plural = noun == "Files" ? "{0} files" : "{0} folders";
+        return string.Format(UiText.Get(key, count == 1 ? singular : plural), count.ToString("N0", CultureInfo.InvariantCulture));
+    }
 
     private static string Date(DateTime time) => time.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
@@ -522,9 +527,9 @@ public class PropertiesDialog : FormDialog
 
         var valueWidth = Math.Max(10, (int)_info.ViewSize.Width - CaptionWidth);
         var isLink = properties.LinkTarget is not null;
-        var kind = isLink
-            ? (properties.IsFolder ? UiText.Get("Properties.Kind.LinkFolder", "Link to a folder") : UiText.Get("Properties.Kind.LinkFile", "Link to a file"))
-            : (properties.IsFolder ? UiText.Get("Properties.Kind.Folder", "Folder") : UiText.Get("Properties.Kind.File", "File"));
+        string kind;
+        if (isLink) kind = properties.IsFolder ? UiText.Get("Properties.Kind.LinkFolder", "Link to a folder") : UiText.Get("Properties.Kind.LinkFile", "Link to a file");
+        else kind = properties.IsFolder ? UiText.Get("Properties.Kind.Folder", "Folder") : UiText.Get("Properties.Kind.File", "File");
         var lines = new List<InfoLines.Line>
         {
             new(Row("Name", FileDisguise.Mask(properties.Name).Shrink(valueWidth) ?? string.Empty)),
@@ -598,9 +603,9 @@ public class PropertiesDialog : FormDialog
     {
         if (_origin is { } origin)
         {
-            string marked = origin.ZoneId is { } zone
-                ? $"{origin.ZoneName} (zone {zone})"
-                : origin.Quarantine is not null ? UiText.Get("Field.OriginQuarantined", "Quarantined") : UiText.Get("Field.OriginDownloaded", "Downloaded");
+            string marked;
+            if (origin.ZoneId is { } zone) marked = $"{origin.ZoneName} (zone {zone})";
+            else marked = origin.Quarantine is not null ? UiText.Get("Field.OriginQuarantined", "Quarantined") : UiText.Get("Field.OriginDownloaded", "Downloaded");
             lines.Add(new(Row(UiText.Get("Field.OriginMarked", "Marked"), marked.Shrink(valueWidth) ?? string.Empty), origin.ZoneId is < 3 ? null : ThemeService.CurrentColorScheme.Error));
             if (origin.Source is { } source)
             {

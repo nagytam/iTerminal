@@ -114,7 +114,7 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
         base.OnInitializeLayout();
     }
 
-    private IEnumerable<Drive> FilterAndSortItems(IEnumerable<Drive> items, CancellationToken cancellationToken)
+    private static IEnumerable<Drive> FilterAndSortItems(IEnumerable<Drive> items, CancellationToken cancellationToken)
     {
         return items.OrderBy(d => !d.IsEnabled).ThenBy(d => d.Name);
     }
@@ -128,7 +128,7 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
         return transformedItem;
     }
 
-    private bool IsEnabledItem(Drive item, CancellationToken cancellationToken)
+    private static bool IsEnabledItem(Drive item, CancellationToken cancellationToken)
     {
         return item.IsEnabled;
     }

@@ -37,7 +37,7 @@ public class GroupBox : Control
     }
 
     /// <summary>Top-left of the area inside the border, where hosted content is laid out.</summary>
-    public Position ContentPosition => new(1, 1);
+    public static Position ContentPosition => new(1, 1);
 
     /// <summary>Size of the area inside the border.</summary>
     public Size ContentSize => new(

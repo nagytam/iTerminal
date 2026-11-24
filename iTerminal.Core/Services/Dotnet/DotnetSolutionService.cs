@@ -137,7 +137,7 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
 
     private static bool IsProjectPath(string? value) =>
         !string.IsNullOrWhiteSpace(value)
-        && ProjectExtensions.Any(extension => value!.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
+        && ProjectExtensions.Any(extension => value.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
 
     public SbomResult GenerateSbom(SolutionInfo solution, SbomFormat format)
     {
@@ -276,7 +276,9 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
     private static byte[] BuildCycloneDxXml(
         string solutionName, IReadOnlyList<SbomComponent> components, string serialNumber, DateTimeOffset timestamp)
     {
+        #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
         XNamespace ns = "http://cyclonedx.org/schema/bom/1.6";
+        #pragma warning restore S5332
         var document = new XDocument(
             new XDeclaration("1.0", "utf-8", null),
             new XElement(ns + "bom",
@@ -346,7 +348,9 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
         {
             // Cancel before killing: killing raises the exit event at once, and that would finish the run as an exit code.
             exited.TrySetCanceled(cancellationToken);
-            try { process.Kill(entireProcessTree: true); } catch { }
+            try { process.Kill(entireProcessTree: true); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
         });
 
         try
@@ -355,7 +359,7 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
 
             // The process has exited, but a child it left running (MSBuild keeps a build node alive) can hold the
             // output open. Wait for the last lines a short while, not for the child to finish.
-            await Task.WhenAny(Task.Run(() => process.WaitForExit()), Task.Delay(OutputGracePeriod));
+            await Task.WhenAny(Task.Run(() => process.WaitForExit(), cancellationToken), Task.Delay(OutputGracePeriod, cancellationToken));
             return exitCode;
         }
         catch (OperationCanceledException)

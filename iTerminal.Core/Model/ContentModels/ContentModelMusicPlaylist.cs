@@ -7,6 +7,7 @@ using iConsole.Services;
 using iTerminal.Core.Data.Music;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Music;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Model.ContentModels;
 
@@ -230,15 +231,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
 
         // The file name is in the haystack because an untagged track has nothing else to be found by.
         var haystack = $"{track.Artist} {track.Album} {track.Title} {System.IO.Path.GetFileNameWithoutExtension(track.Path)}";
-        foreach (var token in tokens)
-        {
-            if (!haystack.Contains(token, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return tokens.All(token => haystack.Contains(token, StringComparison.OrdinalIgnoreCase));
     }
 
     private void BuildTransportEntries(List<IEntry> entries)
@@ -447,12 +440,9 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
     {
         var tokens = FilterTokens();
         var matches = 0;
-        foreach (var track in Player.Playlist.Tracks)
+        foreach (var track in Player.Playlist.Tracks.Where(track => Matches(track, tokens)))
         {
-            if (Matches(track, tokens))
-            {
-                matches++;
-            }
+            matches++;
         }
 
         return matches;

@@ -36,7 +36,7 @@ public class NavigateToArchiveCommand(
 
     public override bool CanExecute() => base.CanExecute() && FocusedArchive() is not null;
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var contentModel = contentModelService.GetFocusedModel();
         if (contentModel is not null && FocusedArchive() is { } archive)

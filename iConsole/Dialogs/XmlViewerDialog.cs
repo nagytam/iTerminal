@@ -255,11 +255,11 @@ public class XmlViewerDialog : Dialog
             _query = null;
             XmlXPathOutcome outcome = query.Result;
             _resultsModel.Items.ReplaceAll([.. outcome.Results]);
-            _statusLabel.Text = outcome.Error is not null
-                ? string.Format(UiText.Get("Viewer.XPathError", "XPath error: {0}"), outcome.Error)
-                : outcome.Total == 0 ? UiText.Get("Viewer.NoMatches", "No matches")
-                : outcome.Total == outcome.Results.Count ? string.Format(UiText.Get("Viewer.Matches", "{0:N0} match(es)"), outcome.Total)
-                : string.Format(UiText.Get("Viewer.ShowingMatches", "Showing {0:N0} of {1:N0} matches"), outcome.Results.Count, outcome.Total);
+            if (outcome.Error is not null)
+                _statusLabel.Text = string.Format(UiText.Get("Viewer.XPathError", "XPath error: {0}"), outcome.Error);
+            else if (outcome.Total == 0) _statusLabel.Text = UiText.Get("Viewer.NoMatches", "No matches");
+            else if (outcome.Total == outcome.Results.Count) _statusLabel.Text = string.Format(UiText.Get("Viewer.Matches", "{0:N0} match(es)"), outcome.Total);
+            else _statusLabel.Text = string.Format(UiText.Get("Viewer.ShowingMatches", "Showing {0:N0} of {1:N0} matches"), outcome.Results.Count, outcome.Total);
             StateHasChanged();
         }
 
@@ -278,15 +278,15 @@ public class XmlViewerDialog : Dialog
         _resultsModel.Items.ReplaceAll([.. issues.Select(issue => new XmlXPathResult(
             issue.Line > 0 ? Tree?.ItemAtLine(issue.Line) ?? Tree?.Root : Tree?.Root,
             issue.Line > 0
-                ? $"{(issue.IsError ? "error" : "warning")} at line {issue.Line}, column {issue.Column}"
+                ? $"{(issue.IsError switch { true => "error", _ => "warning" })} at line {issue.Line}, column {issue.Column}"
                 : "note",
             issue.Message))]);
 
         int errors = issues.Count(i => i.IsError);
         int warnings = issues.Count(i => !i.IsError && i.Line > 0);
-        _statusLabel.Text = issues.Count == 0 ? UiText.Get("Viewer.Valid", "Valid")
-            : issues is [{ Line: 0, IsError: false } note] ? note.Message
-            : string.Format(UiText.Get("Viewer.ErrorsWarnings", "{0:N0} error(s), {1:N0} warning(s)"), errors, warnings);
+        if (issues.Count == 0) _statusLabel.Text = UiText.Get("Viewer.Valid", "Valid");
+        else if (issues is [{ Line: 0, IsError: false } note]) _statusLabel.Text = note.Message;
+        else _statusLabel.Text = string.Format(UiText.Get("Viewer.ErrorsWarnings", "{0:N0} error(s), {1:N0} warning(s)"), errors, warnings);
     }
 
     private XmlXPathResult? CursorResult()
@@ -401,7 +401,7 @@ public class XmlViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(XmlViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

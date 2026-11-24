@@ -5,6 +5,7 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iTerminal.Core.Model.ContentModels;
 using Serilog;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Services;
 
@@ -18,7 +19,9 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
 {
     public const int DefaultPort = 21;
     public const string AnonymousUser = "anonymous";
+    #pragma warning disable S2068 // Not a credential: an identifier or a fixed placeholder, not a secret.
     public const string AnonymousPassword = "anonymous@";
+    #pragma warning restore S2068
 
     /// <summary>The setting that lets a login with a password fall back to unencrypted FTP when the server offers no TLS.</summary>
     public const string AllowPlainSetting = "Ftp.AllowPlain";
@@ -137,7 +140,7 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
                         $"Set {AllowPlainSetting} to true in the settings to allow plain FTP.", exception);
                 }
 
-                _logger?.Warning("{Host} offers no FTPS; continuing with plain FTP", host);
+                _logger?.Warning(exception, "{Host} offers no FTPS; continuing with plain FTP", host);
                 Disconnect();
                 _client = _clientFactory(name, port, user, secret, false);
                 _client.Connect();
@@ -214,9 +217,10 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
                 || (item.Type == FtpObjectType.Link && item.LinkObject?.Type == FtpObjectType.Directory);
             var childUrl = new Url(folderUrl + item.Name + (isFolder ? "/" : string.Empty), item.Name);
             var modified = item.Modified == DateTime.MinValue ? DateTime.MinValue : item.Modified;
+            var sizeText = item.Size < 0 ? string.Empty : item.Size.ToFileSize();
             rows.Add(new FileSystemEntry(childUrl)
             {
-                FileSize = isFolder ? Url.Folder : (item.Size < 0 ? string.Empty : item.Size.ToFileSize()),
+                FileSize = isFolder ? Url.Folder : sizeText,
                 Date = modified == DateTime.MinValue ? string.Empty : modified.ToString("yyyy-MM-dd"),
                 Time = modified == DateTime.MinValue ? string.Empty : modified.ToString("HH:mm"),
             });

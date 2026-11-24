@@ -329,7 +329,7 @@ internal static class Woff2Transforms
     private static (int Dx, int Dy) DecodeTriplet(byte rawFlag, ByteCursor glyphs, out int consumed)
     {
         int flag = rawFlag & 0x7F;
-        consumed = flag < 84 ? 1 : flag < 120 ? 2 : flag < 124 ? 3 : 4;
+        consumed = flag switch { < 84 => 1, < 120 => 2, < 124 => 3, _ => 4 };
         if (consumed > glyphs.Remaining)
         {
             throw new FormatException("the glyph data is cut short");

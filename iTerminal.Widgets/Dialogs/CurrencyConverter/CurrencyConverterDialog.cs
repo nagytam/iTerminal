@@ -238,7 +238,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, null, exception.Message));
             }
-        });
+        }, CancellationToken.None);
     }
 
     private int NextGeneration()

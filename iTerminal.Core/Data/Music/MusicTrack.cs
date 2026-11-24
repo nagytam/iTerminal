@@ -26,12 +26,15 @@ public sealed record MusicTrack(string Path)
     public string FileName => System.IO.Path.GetFileName(Path);
 
     /// <summary>Title if tagged, otherwise the bare file name — never empty for a real path.</summary>
-    public string DisplayTitle =>
-        !string.IsNullOrWhiteSpace(Title)
-            ? Title
-            : System.IO.Path.GetFileNameWithoutExtension(Path) is { Length: > 0 } name
-                ? name
-                : Path;
+    public string DisplayTitle
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(Title)) return Title;
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(Path);
+            return string.IsNullOrEmpty(fileName) ? Path : fileName;
+        }
+    }
 
     /// <summary>"Artist - Title" when the artist is known, otherwise just the title.</summary>
     public string DisplayName =>

@@ -29,7 +29,7 @@ public sealed class WatchRun
 
     public void Stop(DateTime now)
     {
-        if (_startedAt is { } startedAt)
+        if (_startedAt is not null)
         {
             _accumulated = Elapsed(now);
             _startedAt = null;

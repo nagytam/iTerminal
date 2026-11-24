@@ -213,11 +213,13 @@ public class SystemSettingsDialog : Dialog
                 BuildComputer(body, scheme);
                 break;
             case SettingsSection.Environment:
+                var environmentScopeName = _scope == EnvironmentScope.User ? UiText.Get("SysSettings.ScopeUser", "User") : UiText.Get("SysSettings.ScopeMachine", "Machine (all users)");
+                var environmentVariableCount = _variablesLoaded ? _variables.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) : UiText.Get("SysSettings.Reading", "reading");
                 AddHeaderWrapped(
                     lines,
                     _service.SupportsEnvironment(_scope)
-                        ? string.Format(UiText.Get("SysSettings.Scope", "Scope: {0}  -  {1} variables"), (_scope == EnvironmentScope.User ? UiText.Get("SysSettings.ScopeUser", "User") : UiText.Get("SysSettings.ScopeMachine", "Machine (all users)")), (_variablesLoaded ? _variables.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) : UiText.Get("SysSettings.Reading", "reading")))
-                        : UiText.Get("SysSet.EnvUnsupported", "Environment variables cannot be changed on this system."),
+                        ? string.Format(UiText.Get("SysSettings.Scope", "Scope: {0}  -  {1} variables"), environmentScopeName, environmentVariableCount)
+                        : UiText.Get("SysSettings.EnvUnsupported", "Environment variables cannot be changed on this system."),
                     scheme.DisabledForeground);
                 _headerRows = lines.Count;
                 BuildEnvironment(body, scheme);
@@ -286,7 +288,9 @@ public class SystemSettingsDialog : Dialog
             var (label, value, editable) = rows[i];
             var pointer = i == _cursors[0] ? "▶" : " ";
             var shown = value.Length == 0 ? UiText.Get("SysSettings.NotSet", "(not set)") : value;
-            var color = i == _cursors[0] ? Color.Yellow : editable ? (Color?)null : scheme.DisabledForeground;
+            Color? color = scheme.DisabledForeground;
+            if (i == _cursors[0]) color = Color.Yellow;
+            else if (editable) color = null;
             body.Add(new($"{pointer} {label.PadRight(labelWidth)}: {shown}{(editable ? string.Empty : "   " + UiText.Get("SysSettings.ReadOnly", "(read-only)"))}", color));
         }
 

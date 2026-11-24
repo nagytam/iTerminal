@@ -103,7 +103,7 @@ public class DatabaseInitializationHostedService(
 
         // Housekeeping only: every reader of these caches judges the age of an entry itself, so the clean-up waits
         // until the application is up instead of compiling three queries on the start-up path.
-        _ = Task.Run(() => CleanUpObsoleteCacheEntriesAsync(_stopping.Token));
+        _ = Task.Run(() => CleanUpObsoleteCacheEntriesAsync(_stopping.Token), cancellationToken);
     }
 
     /// <summary>How long after start-up the obsolete cache entries are removed.</summary>

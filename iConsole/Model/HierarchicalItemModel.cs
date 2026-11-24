@@ -127,7 +127,7 @@ public class HierarchicalItemModel : IHierarchicalItemModel
         // If this node is open and has children, descend into the first child.
         if (IsOpened && Children.Any())
         {
-            return Children.AsSnapshot().First();
+            return Children.AsSnapshot()[0];
         }
 
         // Otherwise walk up ancestors looking for the next sibling.
@@ -171,7 +171,7 @@ public class HierarchicalItemModel : IHierarchicalItemModel
     {
         if (item.IsOpened && item.Children.Any())
         {
-            return GetLastVisibleDescendant(item.Children.AsSnapshot().Last());
+            return GetLastVisibleDescendant(item.Children.AsSnapshot()[^1]);
         }
         return item;
     }

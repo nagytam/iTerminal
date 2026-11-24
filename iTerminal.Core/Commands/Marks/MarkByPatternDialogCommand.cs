@@ -40,9 +40,9 @@ public class MarkByPatternDialogCommand : ShowDialogCommand<MarkPatternDialog>
     {
         get
         {
-            var model = _ownModel is null
-                ? _contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel()
-                : ReferenceEquals(_contentModelService.GetFocusedModel(), _ownModel) ? _ownModel : null;
+            IContentModel? model;
+            if (_ownModel is null) model = _contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel();
+            else model = ReferenceEquals(_contentModelService.GetFocusedModel(), _ownModel) ? _ownModel : null;
             return model is IMarkableContentModel { CanMark: true } ? model : null;
         }
     }

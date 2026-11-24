@@ -184,6 +184,7 @@ public class SignatureDialog : Dialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {
@@ -196,7 +197,7 @@ public class SignatureDialog : Dialog
                     _busy = string.Empty;
                 }
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void RefreshPanels()
@@ -315,12 +316,12 @@ public class SignatureDialog : Dialog
             created);
     }
 
-    private static string PacketSigner(OpenPgpSignaturePacket packet) =>
-        packet.Fingerprint is { } fingerprint
-            ? string.Format(CultureInfo.CurrentCulture, UiText.Get("Sign.Packet.SignerFingerprint", "signer fingerprint {0}"), fingerprint)
-            : packet.KeyId is { } keyId
-                ? string.Format(CultureInfo.CurrentCulture, UiText.Get("Sign.Packet.SignerKeyId", "signer key ID {0}"), keyId)
-                : UiText.Get("Sign.Packet.SignerNone", "signer not named");
+    private static string PacketSigner(OpenPgpSignaturePacket packet)
+    {
+        if (packet.Fingerprint is { } fingerprint) return string.Format(CultureInfo.CurrentCulture, UiText.Get("Sign.Packet.SignerFingerprint", "signer fingerprint {0}"), fingerprint);
+        if (packet.KeyId is { } keyId) return string.Format(CultureInfo.CurrentCulture, UiText.Get("Sign.Packet.SignerKeyId", "signer key ID {0}"), keyId);
+        return UiText.Get("Sign.Packet.SignerNone", "signer not named");
+    }
 
     private static string MethodName(SignatureMethod method) => method switch
     {

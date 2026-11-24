@@ -27,7 +27,7 @@ public class BouncingLabel : Label, IDisposable
         Position = new Position(position.X, position.Y);
         if (autoStart)
         {
-            Task.Run(Bounce);
+            Task.Run(Bounce, CancellationToken.None);
         }
     }
 
@@ -62,7 +62,7 @@ public class BouncingLabel : Label, IDisposable
             var parent = Parent;
             if (parent is not null)
             {
-                Step((long)parent.ViewSize.Width, (long)parent.ViewSize.Height);
+                Step(parent.ViewSize.Width, parent.ViewSize.Height);
             }
 
             if (stop.WaitHandle.WaitOne(StepInterval))

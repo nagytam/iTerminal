@@ -157,7 +157,9 @@ public static class HarEntryDetails
     /// <summary>The bytes a base64 string decodes to, worked out from its length so that a binary body is not decoded.</summary>
     private static long Base64Size(string text)
     {
-        int padding = text.EndsWith("==", StringComparison.Ordinal) ? 2 : text.EndsWith('=') ? 1 : 0;
+        int padding = 0;
+        if (text.EndsWith("==", StringComparison.Ordinal)) padding = 2;
+        else if (text.EndsWith('=')) padding = 1;
         return text.Length / 4 * 3L - padding;
     }
 

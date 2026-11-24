@@ -387,7 +387,8 @@ internal static class ChessRules
             captured = -piece;
         }
 
-        board[move.To] = move.Promotion != 0 ? (sbyte)((white ? 1 : -1) * move.Promotion) : (sbyte)piece;
+        int promotionSign = white ? 1 : -1;
+        board[move.To] = move.Promotion != 0 ? (sbyte)(promotionSign * move.Promotion) : (sbyte)piece;
 
         if (type == Piece.King && Math.Abs((move.To & 7) - (move.From & 7)) == 2)
         {
@@ -474,7 +475,7 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
     private const int Mate = 100_000;
     private static readonly int[] Values = [0, 100, 320, 330, 500, 900, 0];
 
-    private sealed class TimeUp : Exception;
+    public sealed class TimeUpException : Exception;
 
     private readonly Stopwatch _clock = Stopwatch.StartNew();
     private bool _mayAbort;
@@ -518,7 +519,7 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
                     break;
                 }
             }
-            catch (TimeUp)
+            catch (TimeUpException)
             {
                 break;
             }
@@ -537,7 +538,7 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
         token.ThrowIfCancellationRequested();
         if (_mayAbort && _clock.ElapsedMilliseconds > budgetMilliseconds)
         {
-            throw new TimeUp();
+            throw new TimeUpException();
         }
     }
 
@@ -563,7 +564,9 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
         Order(state, successors);
         foreach ((_, ChessState next) in successors)
         {
+            #pragma warning disable S2234 // Negamax passes the window with the bounds swapped on purpose: the caller's alpha becomes the callee's beta.
             int score = -Negamax(next, depth - 1, -beta, -alpha, ply + 1);
+            #pragma warning restore S2234
             if (score >= beta)
             {
                 return beta;
@@ -594,7 +597,9 @@ internal sealed class ChessSearch(Random random, CancellationToken token, int bu
         Order(state, captures);
         foreach ((_, ChessState next) in captures)
         {
+            #pragma warning disable S2234 // Negamax passes the window with the bounds swapped on purpose: the caller's alpha becomes the callee's beta.
             int score = -Quiesce(next, -beta, -alpha, depth + 1);
+            #pragma warning restore S2234
             if (score >= beta)
             {
                 return beta;

@@ -29,7 +29,9 @@ using iTerminal.Core.Tasks;
 
 namespace iTerminal.Core.Application;
 
+#pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
 public static class iTerminalApplicationBuilderExtension
+#pragma warning restore S101
 {
     /// <summary>
     /// Configuration key naming the folder that holds the database. Unset in production, where the
@@ -510,12 +512,11 @@ public static class iTerminalApplicationBuilderExtension
         // The system clipboard, for Ctrl+C/X/V on files; the in-process one answers where it cannot be reached.
         services.AddSingleton<iTerminal.Core.Services.Clipboard.IFileClipboardService>(provider =>
         {
-            iTerminal.Core.Services.Clipboard.IFileClipboardService system = OperatingSystem.IsWindows()
-                ? new iTerminal.Core.Services.Clipboard.WindowsFileClipboardService()
-                : OperatingSystem.IsLinux()
-                    ? new iTerminal.Core.Services.Clipboard.LinuxFileClipboardService(
-                        provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())
-                    : new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService();
+            iTerminal.Core.Services.Clipboard.IFileClipboardService system;
+            if (OperatingSystem.IsWindows()) system = new iTerminal.Core.Services.Clipboard.WindowsFileClipboardService();
+            else if (OperatingSystem.IsLinux()) system = new iTerminal.Core.Services.Clipboard.LinuxFileClipboardService(
+                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>());
+            else system = new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService();
             return new iTerminal.Core.Services.Clipboard.FallbackFileClipboardService(
                 system, new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService());
         });

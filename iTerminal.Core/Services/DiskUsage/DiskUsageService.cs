@@ -99,7 +99,7 @@ public sealed class DiskUsageScan
                 IsComplete = true;
                 DisposeCancellation();
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>The walk is over, so its source is disposed; a later <see cref="Cancel"/> does nothing.</summary>

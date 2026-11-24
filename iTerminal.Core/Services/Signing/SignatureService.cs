@@ -119,7 +119,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         {
             using var stream = File.OpenRead(signaturePath);
             var buffer = new byte[Math.Min(256, stream.Length)];
-            stream.ReadExactly(buffer);
+            await stream.ReadExactlyAsync(buffer, cancellationToken);
             head = Encoding.Latin1.GetString(buffer);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
@@ -172,7 +172,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
                     break;
                 }
 
-                buffer.Write(chunk, 0, read);
+                await buffer.WriteAsync(chunk.AsMemory(0, read), cancellationToken);
             }
 
             OpenPgpSignatureReport report = OpenPgpSignatureReader.Read(buffer.ToArray());
@@ -290,7 +290,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
 
     // ---- PEM (in-process) ----
 
-    private async Task<SignatureVerdict> VerifyPemAsync(string filePath, string signaturePath, string? publicKeyPath, CancellationToken cancellationToken)
+    private static async Task<SignatureVerdict> VerifyPemAsync(string filePath, string signaturePath, string? publicKeyPath, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(publicKeyPath))
         {
@@ -340,7 +340,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         return (ecdsa.VerifyHash(hash, signature), Fingerprint(ecdsa.ExportSubjectPublicKeyInfo()));
     }
 
-    private async Task<SignResult> SignPemAsync(string filePath, string? keyPath, CancellationToken cancellationToken)
+    private static async Task<SignResult> SignPemAsync(string filePath, string? keyPath, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(keyPath) || !File.Exists(keyPath))
         {

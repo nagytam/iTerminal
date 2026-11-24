@@ -7,6 +7,7 @@ using SMBLibrary;
 using SMBLibrary.Client;
 using System.Reflection;
 using FileAttributes = SMBLibrary.FileAttributes;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Services;
 
@@ -60,7 +61,9 @@ public class SmbFileSystemService : ISmbFileSystemService
         }
         finally
         {
-            try { client.Disconnect(); } catch { }
+            try { client.Disconnect(); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
         }
     }
 
@@ -117,7 +120,9 @@ public class SmbFileSystemService : ISmbFileSystemService
             _username = username;
         }
         // The tree connection to the previous share is closed rather than left open on the session.
-        try { _fileStore?.Disconnect(); } catch { }
+        try { _fileStore?.Disconnect(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
         _fileStore = _client.TreeConnect(share, out var treeStatus);
         if (treeStatus != NTStatus.STATUS_SUCCESS || _fileStore is null)
         {
@@ -127,9 +132,15 @@ public class SmbFileSystemService : ISmbFileSystemService
 
     public void Disconnect()
     {
-        try { _fileStore?.Disconnect(); } catch { }
-        try { _client?.Logoff(); } catch { }
-        try { _client?.Disconnect(); } catch { }
+        try { _fileStore?.Disconnect(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
+        try { _client?.Logoff(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
+        try { _client?.Disconnect(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
         _fileStore = null;
         _client = null;
         _host = null;
@@ -456,6 +467,7 @@ public class SmbFileSystemService : ISmbFileSystemService
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
         return string.Empty;
     }

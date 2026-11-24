@@ -32,7 +32,7 @@ public class ExecuteCommand(
         return base.CanExecute() && ProgramFile.IsRunnable(FileAssociationRunner.LocalFilePath(entry.Url));
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         // A command already running (typed, or another program) owns the command line and the session: this one waits.
         if (terminalModel.IsRunning || terminalModel.ShellSessions is { IsBusy: true })
@@ -43,7 +43,7 @@ public class ExecuteCommand(
         var entry = contentModel.FilteredEntries[(int)contentModel.CursorPosition.Y];
 
         terminalModel.Command.Command = ProgramFile.CommandFor(entry.Name);
-        terminalModel.Command.WorkingDirectoryUrl = Path.GetDirectoryName(entry.FullName) ?? string.Empty; // TODO entry.Directory
+        terminalModel.Command.WorkingDirectoryUrl = Path.GetDirectoryName(entry.FullName) ?? string.Empty;
         var executeCommandTask = new ExecuteCommandTask()
         {
             // Without the panel the task has nothing to run: it completes at once and the command never starts.

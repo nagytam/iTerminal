@@ -22,7 +22,7 @@ public class SelectFavouriteCommand(
         return base.CanExecute() && GetFocusedFavourite() is not null;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var url = GetFocusedFavourite();
         if (url is null)

@@ -19,7 +19,7 @@ public sealed class UserGroupManagerDialog : Dialog
 
     private const int DialogWidth = 78;
     private const int DialogHeight = 24;
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
     private IReadOnlyList<LocalUser> _users = [];
     private IReadOnlyList<LocalGroup> _groups = [];
     private Listing _listing;
@@ -438,15 +438,14 @@ public sealed class UserGroupManagerDialog : Dialog
         for (int row = 0; row < rows; row++)
         {
             int index = _firstVisibleIndex + row;
-            string text = index < items.Count
-                ? (index == _selectedIndex ? "› " : "  ") + items[index]
-                : index == 0 && items.Count == 0
-                    ? _filter.Length > 0
-                        ? UiText.Get("UserGroup.NoMatches", "No accounts match the filter.")
-                        : _listing == Listing.Users
-                            ? UiText.Get("UserGroup.NoUsers", "No local users.")
-                            : UiText.Get("UserGroup.NoGroups", "No local groups.")
-                    : string.Empty;
+            string text;
+            if (index < items.Count) text = (index == _selectedIndex ? "› " : "  ") + items[index];
+            else if (index == 0 && items.Count == 0)
+            {
+                if (_filter.Length > 0) text = UiText.Get("UserGroup.NoMatches", "No accounts match the filter.");
+                else text = _listing == Listing.Users ? UiText.Get("UserGroup.NoUsers", "No local users.") : UiText.Get("UserGroup.NoGroups", "No local groups.");
+            }
+            else text = string.Empty;
             Color rowForeground = index == _selectedIndex && index < items.Count
                 ? ThemeService.CurrentColorScheme.SelectedFocusedForeground
                 : hint;

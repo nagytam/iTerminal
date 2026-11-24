@@ -75,13 +75,14 @@ public interface IGitService
 
     Task<GitResult> FetchAsync(string repositoryRoot, CancellationToken cancellationToken = default);
 
-    Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default);
 
     /// <summary>Pulls the upstream and replays the local commits on top of it (<c>git pull --rebase</c>) instead of merging.</summary>
     Task<GitResult> PullRebaseAsync(string repositoryRoot, CancellationToken cancellationToken = default);
 
     /// <summary>Pulls the upstream with the reconciliation the caller picked: rebase, merge, or fast-forward only.</summary>
     Task<GitResult> PullAsync(string repositoryRoot, GitPullMode mode, CancellationToken cancellationToken = default);
+
+    Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Pushes the current branch. With <paramref name="setUpstream"/> the branch is published to the

@@ -9,6 +9,7 @@ using iTerminal.Core.Helper;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Checksums;
 using iTerminal.Core.Tasks;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Commands;
 

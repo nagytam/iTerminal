@@ -101,7 +101,7 @@ internal sealed class DocumentSearchIndex
     /// next full rescan re-extracted every PDF from scratch, which is minutes of work to rebuild
     /// something that takes seconds.</para>
     /// </summary>
-    private void RebuildIfEmpty(iTerminalDbContext context)
+    private static void RebuildIfEmpty(iTerminalDbContext context)
     {
         try
         {

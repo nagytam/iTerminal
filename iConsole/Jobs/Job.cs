@@ -13,15 +13,16 @@ public abstract class Job : IJob
         Desktop = desktop;
     }
 
-    public async Task ExecuteAsync(CancellationToken cancellationToken)
+    public async Task ExecuteAsync(CancellationToken token)
     {
         OnStart();
         try
         {
-            await RunAsync(cancellationToken);
+            await RunAsync(token);
         }
         catch 
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
         OnStop();
     }

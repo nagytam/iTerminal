@@ -485,12 +485,12 @@ public class RulesInvariantsTest
         // Black (side 1) has four men in a row along the top, and every point they could slide to is White's.
         foreach (int point in new[] { 0, 1, 2, 3 })
         {
-            state.Board[point] = state.Color(1);
+            state.Board[point] = MorrisState.Color(1);
         }
 
         foreach (int point in new[] { 7, 9, 4, 11 })
         {
-            state.Board[point] = state.Color(0);
+            state.Board[point] = MorrisState.Color(0);
         }
 
         state.InHand[0] = 0;

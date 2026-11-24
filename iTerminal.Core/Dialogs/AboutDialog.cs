@@ -215,7 +215,10 @@ public class AboutDialog : Dialog
             }
 
             // A line wider than the dialog ends on an ellipsis: cut at the edge, "the hot key b" stopped mid-word.
-            var text = lines[i].Length <= innerWidth ? lines[i].Expand(innerWidth) : innerWidth > 1 ? lines[i][..(innerWidth - 1)] + "…" : lines[i].Cut(innerWidth);
+            string text;
+            if (lines[i].Length <= innerWidth) text = lines[i].Expand(innerWidth);
+            else if (innerWidth > 1) text = lines[i][..(innerWidth - 1)] + "…";
+            else text = lines[i].Cut(innerWidth);
             var foreground = i == 0 ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
             buffer.Write(
                 ZOrder,

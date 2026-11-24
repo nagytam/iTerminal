@@ -3,7 +3,7 @@ namespace iConsole.Media.Speech;
 /// <summary>A recording's bytes, thread-safe and never larger than <see cref="Pcm.MaxBytes"/>: what does not fit is dropped.</summary>
 internal sealed class PcmBuffer
 {
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private readonly MemoryStream _bytes = new();
 
     public void Append(ReadOnlySpan<byte> chunk)

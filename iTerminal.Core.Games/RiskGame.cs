@@ -153,7 +153,7 @@ public class RiskGame : GameBase
         CheckElimination();
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Version++;
         int[] order = Enumerable.Range(0, TerritoryCount).ToArray();
@@ -253,7 +253,9 @@ public class RiskGame : GameBase
             {
                 int index = Index(column, row);
                 bool source = index == _selected;
-                Color background = source ? Color.Yellow : _owner[index] == 0 ? Color.Blue : Color.Red;
+                Color background = Color.Red;
+                if (source) background = Color.Yellow;
+                else if (_owner[index] == 0) background = Color.Blue;
                 Color foreground = source ? Color.Black : Color.White;
                 string text = _armies[index].ToString().PadLeft(3) + "    ";
                 cells.Add(new GameCell(text, foreground, background, index == _cursor));
@@ -307,7 +309,6 @@ public class RiskGame : GameBase
         int[] owner = (int[])_owner.Clone();
         int[] armies = (int[])_armies.Clone();
         RiskPhase phase = _phase;
-        int reinforcements = _reinforcements;
         int version = Version;
         Random random = new(Random.Next());
 
@@ -318,7 +319,7 @@ public class RiskGame : GameBase
                 return null;
             }
 
-            Action? action = ChooseAction(owner, armies, phase, reinforcements, random);
+            Action? action = ChooseAction(owner, armies, phase, random);
             if (action is null)
             {
                 return null;
@@ -335,7 +336,7 @@ public class RiskGame : GameBase
         };
     }
 
-    private Action? ChooseAction(int[] owner, int[] armies, RiskPhase phase, int reinforcements, Random random)
+    private Action? ChooseAction(int[] owner, int[] armies, RiskPhase phase, Random random)
     {
         const int computer = ComputerSide;
         switch (phase)

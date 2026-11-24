@@ -44,7 +44,7 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
     public static void ResetProbeAvailability() => _isProbeAvailable = null;
 
     private readonly string _path;
-    private readonly object _processLock = new();
+    private readonly Lock _processLock = new();
 
     private Process? _process;
     private Stream? _output;
@@ -75,7 +75,9 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
 
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = FfmpegExecutable,
+                #pragma warning restore S4036
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
@@ -170,6 +172,7 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         try
@@ -178,6 +181,7 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
     }
 
@@ -298,6 +302,7 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
 
                 return false;

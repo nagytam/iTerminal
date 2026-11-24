@@ -98,9 +98,8 @@ public class ReplaceTextDialog : Dialog
         _editor.LastReplacement = ReplacementValue;
         _editor.LastMatchCase = MatchCase;
         _editor.LastUseRegex = UseRegex;
-        ReplacedCount = all
-            ? _editor.ReplaceAll(FindValue, ReplacementValue, MatchCase, UseRegex)
-            : _editor.ReplaceNext(FindValue, ReplacementValue, MatchCase, UseRegex) ? 1 : 0;
+        if (all) ReplacedCount = _editor.ReplaceAll(FindValue, ReplacementValue, MatchCase, UseRegex);
+        else ReplacedCount = _editor.ReplaceNext(FindValue, ReplacementValue, MatchCase, UseRegex) ? 1 : 0;
         if (ReplacedCount == 0)
         {
             SetMessage(string.Format(iConsole.Localization.UiText.Get("Msg.NothingToReplace", "Nothing to replace: \"{0}\" was not found."), FindValue));
@@ -155,7 +154,7 @@ public class ReplaceTextDialog : Dialog
 
         public override Key? Key { get; init; } = all ? null : new Key(ConsoleKey.Enter, false, false, false);
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             dialog.Replace(all);
             return Task.CompletedTask;

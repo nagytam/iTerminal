@@ -119,39 +119,38 @@ public class RadioButton : Control, IReadOnly
         var line = (IsSelected ? SelectedGlyph : UnselectedGlyph) + Label;
         line = line.PadRight((int)ViewSize.Width);
 
-        var visualState = !IsEnabled || IsReadOnly
-            ? VisualState.Disabled
-            : IsFocused || IsHighlighted ? VisualState.Focused : VisualState.Normal;
+        var visualState = VisualState.Normal;
+        if (!IsEnabled || IsReadOnly) visualState = VisualState.Disabled;
+        else if (IsFocused || IsHighlighted) visualState = VisualState.Focused;
         GetColor(colorScheme, visualState, out var foreground, out var background);
 
         var lineString = new ConxelString(line, foreground, background, isStrikeThrough: !IsEnabled);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, lineString);
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Focused:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.Background;
                 break;
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Selected:
-                foregroundColor = colorScheme.SelectedForeground;
-                backgroundColor = colorScheme.SelectedBackground;
+                foreground = colorScheme.SelectedForeground;
+                background = colorScheme.SelectedBackground;
                 break;
             case VisualState.SelectedDisabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
-            case VisualState.Normal:
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

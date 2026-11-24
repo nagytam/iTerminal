@@ -214,7 +214,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     public ConcurrentObservableCollection<IEntry> Entries { get; private set; } = [];
     public abstract bool IsReadOnly { get; }
 
-    public ContentModelBase(
+    protected ContentModelBase(
         string name,
         IFrequentExecutionGuardService frequentExecutionGuardService
     )
@@ -407,6 +407,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
         return focusedEntry;
     }

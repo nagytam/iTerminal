@@ -40,7 +40,7 @@ public sealed partial class FfmpegRuntimeDependency : IRuntimeDependency
     private readonly bool _isWindows;
     private readonly bool _isMac;
     private readonly bool _isPrivileged;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private (string Path, DateTime Stamp, string? Version)? _cached;
 
     public FfmpegRuntimeDependency()
@@ -281,7 +281,9 @@ public sealed partial class FfmpegRuntimeDependency : IRuntimeDependency
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return null;
             }
 

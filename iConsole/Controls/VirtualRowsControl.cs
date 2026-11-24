@@ -176,7 +176,7 @@ public abstract class VirtualRowsControl<T> : Control
 
         if (relativeY < HeaderRows)
         {
-            return mouseEvent.LeftClicked && OnHeaderClick((int)relativeX) ? true : isHandled;
+            return (mouseEvent.LeftClicked && OnHeaderClick((int)relativeX)) || isHandled;
         }
 
         if (Source.Count == 0)
@@ -252,9 +252,9 @@ public abstract class VirtualRowsControl<T> : Control
                 {
                     text = RowText(item, index);
                     // A disabled list greys its rows, the cursor row included, like every other disabled control.
-                    VisualState state = !IsEnabled ? VisualState.Disabled
-                        : isCursor ? (IsFocused ? VisualState.Focused : VisualState.Selected)
-                        : VisualState.Normal;
+                    VisualState state = VisualState.Normal;
+                    if (!IsEnabled) state = VisualState.Disabled;
+                    else if (isCursor) state = IsFocused ? VisualState.Focused : VisualState.Selected;
                     GetColor(colorScheme, state, out foreground, out background);
                 }
                 else
@@ -270,25 +270,25 @@ public abstract class VirtualRowsControl<T> : Control
         }
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Focused:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.SelectedFocusedBackground;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.SelectedFocusedBackground;
                 break;
             case VisualState.Selected:
-                foregroundColor = colorScheme.SelectedForeground;
-                backgroundColor = colorScheme.SelectedBackground;
+                foreground = colorScheme.SelectedForeground;
+                background = colorScheme.SelectedBackground;
                 break;
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

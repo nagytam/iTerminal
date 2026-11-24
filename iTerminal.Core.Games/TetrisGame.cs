@@ -66,7 +66,9 @@ public class TetrisGame : GameBase
         _isRival = isRival;
         if (!isRival)
         {
+            #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
             _rival = new TetrisGame(new Random(Random.Next()), isRival: true);
+            #pragma warning restore S2245
         }
 
         NewGame();
@@ -168,7 +170,7 @@ public class TetrisGame : GameBase
         }
     }
 
-    public override void NewGame()
+    public sealed override void NewGame()
     {
         Array.Clear(_board);
         _bag.Clear();
@@ -630,14 +632,11 @@ public class TetrisGame : GameBase
             .ToArray();
 
         // A turn next to a wall or a stack may push the piece aside by a cell or two to fit.
-        foreach (int kick in new[] { 0, -1, 1, -2, 2 })
+        var kick = new int?[] { 0, -1, 1, -2, 2 }.FirstOrDefault(candidate => candidate is { } offset && !Collides(turned, _left + offset, _top));
+        if (kick is { } shift)
         {
-            if (!Collides(turned, _left + kick, _top))
-            {
-                _cells = turned;
-                _left += kick;
-                return;
-            }
+            _cells = turned;
+            _left += shift;
         }
     }
 

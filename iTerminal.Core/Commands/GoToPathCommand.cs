@@ -29,7 +29,7 @@ public class GoToPathCommand(
             && pathValidator.EnsureCurrent();
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (Control?.Parent is not FolderSelectorPathTabPage pathTabPage)
         {

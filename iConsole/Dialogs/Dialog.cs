@@ -24,15 +24,9 @@ public class Dialog : PopUpWindow
         await base.OnInitializeAsync();
     }
 
-    public override void OnInitializeZOrder()
-    {
-        var zOrder = (Parent?.ZOrder + 1) ?? 1;
-        base.OnInitializeZOrder();
-    }
-
     public override void OnInitializeActionButtons()
     {
-        // AddActionButton(new ActionButton("Close", "[X]", new CloseCommand(), ThemeService));
+        // The dialog has no action buttons of its own; subclasses add theirs.
     }
 
     public override void OnInitializeLayout()

@@ -107,8 +107,8 @@ public class DocumentVectorIndexTest
         using iTerminalDbContext context = Context();
         index.Replace(context, "/docs/a.txt", "m", [(0, "passage", [1f, 0f])]);
 
-        CollectionAssert.AreEqual(new[] { "/docs/b.txt", "/docs/c.txt" }, index.Pending(context, "m"));
-        CollectionAssert.AreEqual(new[] { "/docs/a.txt", "/docs/b.txt", "/docs/c.txt" }, index.Pending(context, "other-model"));
+        CollectionAssert.AreEqual(new[] { "/docs/b.txt", "/docs/c.txt" }, DocumentVectorIndex.Pending(context, "m"));
+        CollectionAssert.AreEqual(new[] { "/docs/a.txt", "/docs/b.txt", "/docs/c.txt" }, DocumentVectorIndex.Pending(context, "other-model"));
     }
 
     [TestMethod]
@@ -120,8 +120,8 @@ public class DocumentVectorIndexTest
 
         index.Replace(context, "/docs/empty.txt", "m", []);
 
-        CollectionAssert.DoesNotContain(index.Pending(context, "m"), "/docs/empty.txt");
-        Assert.AreEqual(1, index.Count(context, "m"));
+        CollectionAssert.DoesNotContain(DocumentVectorIndex.Pending(context, "m"), "/docs/empty.txt");
+        Assert.AreEqual(1, DocumentVectorIndex.Count(context, "m"));
     }
 
     [TestMethod]
@@ -134,7 +134,7 @@ public class DocumentVectorIndexTest
 
         index.Remove(context, ["/docs/a.txt"]);
 
-        Assert.AreEqual(1, index.Count(context, "m"));
+        Assert.AreEqual(1, DocumentVectorIndex.Count(context, "m"));
         CollectionAssert.AreEqual(new[] { "/docs/b.txt" }, index.Search(context, "m", [1f, 0f], limit: 10).Select(match => match.Path).ToArray());
     }
 
@@ -159,7 +159,7 @@ public class DocumentVectorIndexTest
         using iTerminalDbContext context = Context();
         index.Replace(context, "/docs/a.txt", "m", [(0, "first", [1f, 0f]), (800, "💡second", [0f, 1f])]);
 
-        Assert.AreEqual("💡second", index.ReadPassage(context, "/docs/a.txt", 800));
-        Assert.AreEqual(string.Empty, index.ReadPassage(context, "/docs/a.txt", 1600));
+        Assert.AreEqual("💡second", DocumentVectorIndex.ReadPassage(context, "/docs/a.txt", 800));
+        Assert.AreEqual(string.Empty, DocumentVectorIndex.ReadPassage(context, "/docs/a.txt", 1600));
     }
 }

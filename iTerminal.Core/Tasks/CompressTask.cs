@@ -105,6 +105,7 @@ public sealed class CompressTask(
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
             }
         }
@@ -173,7 +174,7 @@ public sealed class CompressTask(
             return;
         }
 
-        var size = isLocal && File.Exists(localPath) ? new FileInfo(localPath!).Length : url.Length;
+        var size = isLocal && File.Exists(localPath) ? new FileInfo(localPath).Length : url.Length;
         items.Add(new ArchiveItem(
             entryName,
             false,
@@ -194,6 +195,7 @@ public sealed class CompressTask(
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         return DateTime.TryParse($"{url.Date} {url.Time}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsed)

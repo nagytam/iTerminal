@@ -387,7 +387,7 @@ public class ScannerDialog : Dialog
                 }
 
                 AcceptResult(generation, result);
-            });
+            }, CancellationToken.None);
         }
     }
 
@@ -482,7 +482,7 @@ public class ScannerDialog : Dialog
                     SetStatus(string.Format(UiText.Get("Scan.SavingPage", "Saving page {0} of {1}…"), i + 1, pages.Count), false);
                 }
 
-                SaveResult saved = await service.SaveAsync(pages[i], Path.Combine(folder, FileName(target, i, pages.Count, extension)), format);
+                SaveResult saved = await service.SaveAsync(pages[i], Path.Combine(folder, FileName(target, i, pages.Count, extension)), format, CancellationToken.None);
                 if (!saved.Success)
                 {
                     failure = saved.Message;
@@ -509,7 +509,7 @@ public class ScannerDialog : Dialog
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>
@@ -628,22 +628,18 @@ public class ScannerDialog : Dialog
             // The action keys come first, so a narrow dialog drops the navigation hints and keeps the way out.
             string actions = _scanning
                 ? $"Esc:{UiText.Get("DialogHint.CancelScan", "Cancel the scan")}"
-                : string.Join("  ", new[]
-                {
+                : string.Join("  ",
                     $"Enter/S:{UiText.Get("DialogHint.Scan", "Scan")}",
                     $"W:{UiText.Get("DialogHint.Save", "Save the pages")}",
                     $"F5:{UiText.Get("DialogHint.RefreshScanners", "Read the scanners again")}",
-                    UiText.Get("Hint.Part.EscClose", "Esc:close"),
-                });
+                    UiText.Get("Hint.Part.EscClose", "Esc:close"));
             Put(buffer, 1, actionRow, textWidth, actions.FitHints(textWidth), colors.Foreground, colors.Background);
 
             if (!_scanning)
             {
-                string navigation = string.Join("  ", new[]
-                {
+                string navigation = string.Join("  ",
                     $"Up/Down:{UiText.Get("DialogHint.ChooseScanner", "Choose the scanner")}",
-                    $"[ / ]:{UiText.Get("DialogHint.PageStep", "Previous or next page")}",
-                });
+                    $"[ / ]:{UiText.Get("DialogHint.PageStep", "Previous or next page")}");
                 Put(buffer, 1, navigationRow, textWidth, navigation.FitHints(textWidth), colors.Foreground, colors.Background);
             }
         }

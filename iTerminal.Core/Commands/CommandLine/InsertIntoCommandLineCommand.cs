@@ -96,7 +96,7 @@ public class InsertIntoCommandLineCommand(
 
     public override bool CanExecute() => OwnPanelHasFocus && Text() is not null && !terminalModel.IsRunning;
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         if (Text() is { } text && terminalModel.InsertText(text))
         {

@@ -428,9 +428,9 @@ public class ContactManagerDialog : Dialog
         if (!contact.Validate(out var error))
         {
             _error = error;
-            _field = error.Contains("email", StringComparison.OrdinalIgnoreCase) ? 1
-                : error.Contains("phone", StringComparison.OrdinalIgnoreCase) ? 2
-                : 0;
+            if (error.Contains("email", StringComparison.OrdinalIgnoreCase)) _field = 1;
+            else if (error.Contains("phone", StringComparison.OrdinalIgnoreCase)) _field = 2;
+            else _field = 0;
             return;
         }
 
@@ -600,9 +600,9 @@ public class ContactManagerDialog : Dialog
         {
             var label = Fit(FieldLabels[i] + ":", LabelWidth);
             var inForm = _mode == Mode.Form;
-            var value = inForm
-                ? _values[i] + (i == _field ? "_" : string.Empty)
-                : contact is null ? string.Empty : FieldOf(contact, i);
+            string value;
+            if (inForm) value = _values[i] + (i == _field ? "_" : string.Empty);
+            else value = contact is null ? string.Empty : FieldOf(contact, i);
             var active = inForm && i == _field;
             Put(buffer, 1, FieldsTop + i, LabelWidth, label, colorScheme.DisabledForeground, colorScheme.Background);
             Put(buffer, 1 + LabelWidth, FieldsTop + i, iw - 2 - LabelWidth, value,

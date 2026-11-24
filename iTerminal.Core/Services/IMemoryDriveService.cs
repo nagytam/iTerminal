@@ -21,8 +21,12 @@ public interface IMemoryDriveService : IFileSystem
     /// </summary>
     event EventHandler? MirrorLoaded
     {
-        add { }
-        remove { }
+        add {
+            _ = value; // Intentionally ignored: this accessor has no state to change.
+        }
+        remove {
+            _ = value; // Intentionally ignored: this accessor has no state to change.
+        }
     }
 
     /// <summary>Raises <see cref="MirrorLoaded"/>.</summary>

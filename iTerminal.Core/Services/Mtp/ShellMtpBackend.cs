@@ -261,6 +261,7 @@ public sealed class ShellMtpBackend(IExternalProcessRunner processRunner, string
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 }

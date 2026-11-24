@@ -140,7 +140,7 @@ public partial class AiPanelTools(
         return true;
     }
 
-    private static string PanelLabel(IContentModel model) => model.Name == Content.Left ? "left" : model.Name == Content.Right ? "right" : model.Name;
+    private static string PanelLabel(IContentModel model) => model.Name switch { Content.Left => "left", Content.Right => "right", _ => model.Name };
 
     #endregion
 
@@ -370,7 +370,7 @@ public partial class AiPanelTools(
 
         int last = Math.Max(0, model.FilteredEntries.Count - 1);
         long current = model.CursorPosition.Y;
-        long target = where!.Trim().ToLowerInvariant() switch
+        long target = where.Trim().ToLowerInvariant() switch
         {
             "first" or "top" or "home" => 0,
             "last" or "bottom" or "end" => last,
@@ -499,7 +499,7 @@ public partial class AiPanelTools(
         }
 
         return marks.SetMark(entry, marked)
-            ? $"{(marked ? "Marked" : "Unmarked")} {entry.DisplayName?.Trim()}. {marks.MarkedCount} marked in total."
+            ? $"{(marked switch { true => "Marked", _ => "Unmarked" })} {entry.DisplayName?.Trim()}. {marks.MarkedCount} marked in total."
             : $"{entry.DisplayName?.Trim()} was left as it was.";
     }
 
@@ -853,7 +853,7 @@ public partial class AiPanelTools(
     }
 
     /// <summary>The explicitly named entries, else the marked ones, else the one under the cursor.</summary>
-    private IReadOnlyList<Url> ResolveTargets(IContentModel model, string? names, out string problem)
+    private static IReadOnlyList<Url> ResolveTargets(IContentModel model, string? names, out string problem)
     {
         problem = string.Empty;
         if (!string.IsNullOrWhiteSpace(names))
@@ -897,7 +897,7 @@ public partial class AiPanelTools(
         }
 
         List<IEntry> entries = [.. model.FilteredEntries.Where(e => !FocusedEntry.IsParentEntry(e) || wanted == FocusedEntry.ParentEntryName)];
-        string NameOf(IEntry e) => (e.DisplayName ?? e.Name ?? string.Empty).Trim().TrimEnd('/', '\\');
+        static string NameOf(IEntry e) => (e.DisplayName ?? e.Name ?? string.Empty).Trim().TrimEnd('/', '\\');
 
         IEntry? exact = entries.FirstOrDefault(e => NameOf(e) == wanted);
         if (exact is not null)

@@ -476,8 +476,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         foreach (var page in pdf.GetPages())
         {
             var text = ContentOrderTextExtractor.GetText(page);
-            var otherText = string.Join(" ", page.GetWords());
-            var rawText = page.Text;
+
 
             var lines = text.Split(Environment.NewLine);
             foreach (var line in lines)
@@ -656,7 +655,7 @@ public class FileToTextConverterService : IFileToTextConverterService
                 var expectedPath = url.Path + ".expected.txt";
                 if (File.Exists(expectedPath))
                 {
-                    var lines = File.ReadAllLines(expectedPath, Encoding.UTF8);
+                    var lines = await File.ReadAllLinesAsync(expectedPath, Encoding.UTF8);
                     foreach (var line in lines)
                         textModel.Lines.Add(line);
                     return;
@@ -702,7 +701,7 @@ public class FileToTextConverterService : IFileToTextConverterService
                 var expectedPath = url.Path + ".expected.txt";
                 if (File.Exists(expectedPath))
                 {
-                    var lines = File.ReadAllLines(expectedPath, Encoding.UTF8);
+                    var lines = await File.ReadAllLinesAsync(expectedPath, Encoding.UTF8);
                     foreach (var line in lines)
                         textModel.Lines.Add(line);
                     return;
@@ -798,7 +797,9 @@ public class FileToTextConverterService : IFileToTextConverterService
         }
         finally
         {
-            try { bitmap.Dispose(); } catch { }
+            try { bitmap.Dispose(); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
         }
     }
 

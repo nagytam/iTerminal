@@ -635,12 +635,13 @@ public class StockBrowserDialog : SplitPaneDialog
     private void DrawHeader(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
         var updated = _stockService.LastUpdated;
+        var liveText = updated is { } time ? string.Format(UiText.Get("Stocks.Live", "live, updated {0}"), time.ToString("HH:mm:ss")) : UiText.Get("Stocks.Waiting", "waiting for the first quotes…");
         var text = _adding
             ? UiText.Get("Stocks.HeaderAdd", "Stocks — add a stock")
             : FitParts(
                 [
                     string.Format(UiText.Get("Stocks.HeaderCount", "Stocks — {0} on the list"), _rowItems.Count),
-                    updated is { } time ? string.Format(UiText.Get("Stocks.Live", "live, updated {0}"), time.ToString("HH:mm:ss")) : UiText.Get("Stocks.Waiting", "waiting for the first quotes…"),
+                    liveText,
                 ],
                 w);
         WriteLine(buffer, x, y, w, text, Color.Cyan, colorScheme.Background);

@@ -208,8 +208,9 @@ public class Toolbar : Control
         {
             ToolbarItem item = _items[i];
             bool active = i == _active && IsFocused && IsEnabled;
-            Color foreground = !item.IsEnabled || !IsEnabled ? colorScheme.DisabledForeground
-                : active ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+            Color foreground = colorScheme.Foreground;
+            if (!item.IsEnabled || !IsEnabled) foreground = colorScheme.DisabledForeground;
+            else if (active) foreground = colorScheme.SelectedFocusedForeground;
             Color background = active ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
             line.Append(Cell(i), foreground, background);
             line.Append(" ", colorScheme.Foreground, colorScheme.Background);

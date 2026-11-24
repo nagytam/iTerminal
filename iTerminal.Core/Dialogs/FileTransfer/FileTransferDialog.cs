@@ -30,7 +30,6 @@ public class FileTransferDialog : Dialog
 
     private FileShareState? _shown;
     private string? _failureKey;
-    private int _selectionCount;
 
     public FileTransferDialog(IFileShareService service, IThemeService themeService)
         : base(nameof(FileTransferDialog), themeService)
@@ -68,7 +67,6 @@ public class FileTransferDialog : Dialog
     public void Begin(IReadOnlyList<Url> selection)
     {
         ArgumentNullException.ThrowIfNull(selection);
-        _selectionCount = selection.Count;
         _selection.Text = UiText.Get("FileTransfer.Selection", "Selected: {0}").Replace("{0}", selection.Count.ToString(), StringComparison.Ordinal);
 
         if (selection.Count == 0)

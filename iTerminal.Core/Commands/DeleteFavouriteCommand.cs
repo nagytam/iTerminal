@@ -15,7 +15,7 @@ public class DeleteFavouriteCommand(
         return favourites.Any();
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var contentModel = contentModelService.GetLastContentModel();
         if (contentModel is not null)

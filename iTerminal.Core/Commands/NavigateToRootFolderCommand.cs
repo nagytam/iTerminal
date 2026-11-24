@@ -12,7 +12,7 @@ public class NavigateToRootFolderCommand(IContentModel contentModel) : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Oem5, false, false, true);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var url = contentModel.Url;
         var rootPath = url.RootUrl;

@@ -47,7 +47,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         TextBoxHost.ValidationModel = new HostValidationModel(TextBoxHost.TextModel, dateTimeProviderService);
         _errorMessage = new ErrorMessage(TextBoxHost.ValidationModel, themeService);
 
-        var hostValidator = (HostValidationModel)TextBoxHost.ValidationModel!;
+        var hostValidator = (HostValidationModel)TextBoxHost.ValidationModel;
 
         _connectCommand = new ConnectRemoteShellCommand(hostValidator, contentModelService);
         _buttonConnect = new Button(iConsole.Localization.UiText.Get("Button.Connect", "Connect"), _connectCommand, themeService)
@@ -83,11 +83,6 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         _buttonConnect.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), 1);
 
         base.OnInitializeLayout();
-    }
-
-    public override void Draw(IBuffer buffer)
-    {
-        base.Draw(buffer);
     }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()

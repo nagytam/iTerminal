@@ -79,8 +79,8 @@ public class PerformanceBenchmarkDialog : Dialog
     {
         if (Parent is not null)
         {
-            int width = (int)Math.Max(20, Math.Min(PreferredWidth, (long)Parent.ViewSize.Width));
-            int height = (int)Math.Max(10, Math.Min(Rows(Math.Max(1, width - 2), ThemeService.CurrentColorScheme).Count + 4, (long)Parent.ViewSize.Height));
+            int width = (int)Math.Max(20, Math.Min(PreferredWidth, Parent.ViewSize.Width));
+            int height = (int)Math.Max(10, Math.Min(Rows(Math.Max(1, width - 2), ThemeService.CurrentColorScheme).Count + 4, Parent.ViewSize.Height));
             CenterInParent(new Size(width, height));
         }
 
@@ -124,7 +124,7 @@ public class PerformanceBenchmarkDialog : Dialog
                     _running = null;
                 }
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Stops the run that is going. The scores measured so far stay on screen.</summary>
@@ -254,7 +254,7 @@ public class PerformanceBenchmarkDialog : Dialog
         return rows.Select(row => (row.Text.Length > innerWidth ? row.Text.Cut(innerWidth) : row.Text, row.Color)).ToList();
     }
 
-    private (string Text, Color Color) ProbeRow(IBenchmarkProbe probe, BenchmarkResult? result, string? running, RunState state, ColorScheme scheme)
+    private static (string Text, Color Color) ProbeRow(IBenchmarkProbe probe, BenchmarkResult? result, string? running, RunState state, ColorScheme scheme)
     {
         string label = SpaceSeparator + ProbeName(probe).PadRight(24);
         if (result is not null && result.Score is { } score)
@@ -297,7 +297,7 @@ public class PerformanceBenchmarkDialog : Dialog
 
     private static string ScoreText(double? score) => score is { } value ? value.ToString("N0") : "-";
 
-    private static string FormatValue(double value) => value >= 100 ? value.ToString("N0") : value >= 10 ? value.ToString("N1") : value.ToString("N2");
+    private static string FormatValue(double value) => value switch { >= 100 => value.ToString("N0"), >= 10 => value.ToString("N1"), _ => value.ToString("N2") };
 
     public override void Draw(IBuffer buffer)
     {

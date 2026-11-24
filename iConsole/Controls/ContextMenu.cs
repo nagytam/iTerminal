@@ -277,7 +277,7 @@ public class ContextMenu : Popup
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         int inner = (int)ContentSize.Width;
-        (int checkWidth, int titleWidth, int rightWidth) = Measure();
+        (int checkWidth, int titleWidth, _) = Measure();
         for (int i = 0; i < _items.Count && i < ContentSize.Height; i++)
         {
             ContextMenuItem item = _items[i];
@@ -287,7 +287,7 @@ public class ContextMenu : Popup
 
             string text = item.IsSeparator
                 ? new string('─', inner)
-                : FormatRow(item, checkWidth, titleWidth, rightWidth, inner);
+                : FormatRow(item, checkWidth, titleWidth, inner);
             ConxelString line = new(text, foreground, background);
             if (!item.IsSeparator)
             {
@@ -328,9 +328,9 @@ public class ContextMenu : Popup
         return (check, title, right);
     }
 
-    private static string FormatRow(ContextMenuItem item, int checkWidth, int titleWidth, int rightWidth, int inner)
+    private static string FormatRow(ContextMenuItem item, int checkWidth, int titleWidth, int inner)
     {
-        string check = checkWidth == 0 ? string.Empty : item.IsChecked == true ? "✓ " : "  ";
+        string check = checkWidth == 0 ? string.Empty : item.IsChecked switch { true => "✓ ", _ => "  " };
         string row = " " + check + item.Text.PadRight(titleWidth);
         string right = item.HasSubmenu ? "▶" : item.Shortcut;
         if (right.Length > 0)

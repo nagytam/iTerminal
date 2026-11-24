@@ -177,7 +177,7 @@ public class MarkdownViewerControl : Control
             // Pad the rest of the row so a shorter line does not leave the tail of the one before it on screen.
             if (x < width)
             {
-                WriteSpan(buffer, row, x, new string(' ', width - x), MarkdownBlockKind.Paragraph, MarkdownStyle.Plain);
+                WriteSpan(buffer, row, x, new string(' ', width - x), MarkdownBlockKind.Paragraph, MarkdownStyle.None);
             }
         }
     }

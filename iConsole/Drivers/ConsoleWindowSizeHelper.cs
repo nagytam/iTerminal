@@ -75,6 +75,7 @@ public static class ConsoleWindowSizeHelper
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         return size;
@@ -121,6 +122,7 @@ public static class ConsoleWindowSizeHelper
     private static readonly Size defaultSize = new(80, 24);
     private static readonly Position defaultPosition = new(0, 0);
 
+#pragma warning disable S101 // Win32 ABI: the native structure names are kept so the layouts can be checked against the SDK.
     [StructLayout(LayoutKind.Sequential)]
     private struct COORD
     {
@@ -146,6 +148,7 @@ public static class ConsoleWindowSizeHelper
         public SMALL_RECT srWindow;
         public COORD dwMaximumWindowSize;
     }
+#pragma warning restore S101
 
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern IntPtr GetStdHandle(int nStdHandle);

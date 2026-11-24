@@ -16,7 +16,9 @@ public interface ITextModel : INotifyPropertyChanged
     string LineEnding
     {
         get => Environment.NewLine;
-        set { }
+        set {
+            _ = value; // Intentionally ignored: this accessor has no state to change.
+        }
     }
 
     void TriggerPropertyChanged();

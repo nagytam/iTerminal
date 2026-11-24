@@ -84,7 +84,7 @@ public abstract class WatchTabPage : TabPage
 
     protected Color DimColour => ThemeService.CurrentColorScheme.DisabledForeground;
 
-    protected Color ErrorColour => Color.Red;
+    protected static Color ErrorColour => Color.Red;
 
     /// <summary>The page's surface draws the page; this is the one place the page's rows are written.</summary>
     private sealed class PageSurface(WatchTabPage page, IThemeService themeService) : Control(themeService)

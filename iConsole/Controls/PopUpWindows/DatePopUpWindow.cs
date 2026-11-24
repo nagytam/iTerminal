@@ -30,7 +30,7 @@ public class DatePopUpWindow : PopUpWindow
         : base(UiText.Get(TitleKey, TitleFallback), themeService)
     {
         _themeService = themeService;
-        Hide();
+        base.Hide();
     }
 
     /// <summary>The zone the local lines, the offset and the map describe. A test sets a fixed one; it defaults to the system's zone.</summary>
@@ -47,7 +47,9 @@ public class DatePopUpWindow : PopUpWindow
     public override string Title
     {
         get => UiText.Get(TitleKey, TitleFallback);
-        set { }
+        set {
+            _ = value; // Intentionally ignored: this accessor has no state to change.
+        }
     }
 
     public override void OnInitializeLayout()

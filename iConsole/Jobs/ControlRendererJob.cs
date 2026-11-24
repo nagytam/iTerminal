@@ -39,6 +39,7 @@ public class ControlRendererJob() : Job
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
         return Task.CompletedTask;
@@ -105,7 +106,6 @@ public class ControlRendererJob() : Job
                         isIdle = isIdle && controlIdle;
                     }
 #if DEBUG
-                    // BufferHelper.DumpBufferToHtml(Desktop.Buffer.Layers.First(), $"c:\\temp\\iConsole\\{DateTime.Now:yyyy-MM-dd_HH-mm-ss_fff}.html");
 #endif
 
                 }

@@ -17,14 +17,14 @@ public class CreateFileCommand(
 
     public override bool CanExecute()
     {
-        if (Control?.Parent is CreateFileDialog createFileDialog)
+        if (Control?.Parent is CreateFileDialog)
         {
             return newFileValidator.EnsureCurrent();
         }
         return base.CanExecute();
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (Control?.Parent is CreateFileDialog createFileDialog)
         {

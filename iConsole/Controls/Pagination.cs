@@ -181,7 +181,9 @@ public class Pagination : Control
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
-        Color active = !IsEnabled ? colorScheme.DisabledForeground : IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+        Color active = colorScheme.Foreground;
+        if (!IsEnabled) active = colorScheme.DisabledForeground;
+        else if (IsFocused) active = colorScheme.SelectedFocusedForeground;
         Color text = IsEnabled ? colorScheme.Foreground : colorScheme.DisabledForeground;
         Color dim = colorScheme.DisabledForeground;
         ConxelString line = new(string.Empty, colorScheme.Foreground, colorScheme.Background);

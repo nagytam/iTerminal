@@ -39,8 +39,15 @@ public sealed class BluetoothService : IBluetoothService
     private readonly BluetoothBackend backend;
 
     public BluetoothService(IExternalProcessRunner processRunner)
-        : this(processRunner, OperatingSystem.IsLinux() ? BluetoothBackend.BlueZ : OperatingSystem.IsWindows() ? BluetoothBackend.Windows : BluetoothBackend.None)
+        : this(processRunner, DefaultBackend())
     {
+    }
+
+    private static BluetoothBackend DefaultBackend()
+    {
+        if (OperatingSystem.IsLinux()) return BluetoothBackend.BlueZ;
+        if (OperatingSystem.IsWindows()) return BluetoothBackend.Windows;
+        return BluetoothBackend.None;
     }
 
     /// <summary>For tests: picks the backend instead of reading the operating system, so both run on any machine.</summary>

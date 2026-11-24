@@ -37,12 +37,9 @@ public sealed class LayeredTextClipboardService(
     {
         await inProcess.SetTextAsync(text, cancellationToken);
 
-        if (preferTerminal)
+        if (preferTerminal && await TryTerminalAsync(text, cancellationToken))
         {
-            if (await TryTerminalAsync(text, cancellationToken))
-            {
-                return;
-            }
+            return;
         }
 
         if (!_systemFailed && await TrySystemAsync(text, cancellationToken))

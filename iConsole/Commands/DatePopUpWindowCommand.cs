@@ -23,7 +23,7 @@ public class DatePopUpWindowCommand(DatePopUpWindow datePopUpWindow)
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F1, true, true, false);
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var window = _datePopUpWindow;
         await window.ShowAsync();

@@ -41,7 +41,7 @@ public class AuthenticationResultsReaderTest
     }
 
     [Timeout(60_000)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(null)]
     [DataRow("")]
     [DataRow("   ")]

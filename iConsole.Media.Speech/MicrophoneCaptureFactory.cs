@@ -35,12 +35,12 @@ public sealed class MicrophoneCaptureFactory(Func<string, string?> findOnPath) :
         List<RecorderCommand> commands = [];
         if (find("parecord") is { } parecord)
         {
-            commands.Add(new RecorderCommand(parecord, ProcessMicrophoneCapture.ParecordArguments()));
+            commands.Add(new RecorderCommand(parecord, ProcessMicrophoneCapture.ParecordArguments));
         }
 
         if (find("arecord") is { } arecord)
         {
-            commands.Add(new RecorderCommand(arecord, ProcessMicrophoneCapture.ArecordArguments()));
+            commands.Add(new RecorderCommand(arecord, ProcessMicrophoneCapture.ArecordArguments));
         }
 
         return commands;

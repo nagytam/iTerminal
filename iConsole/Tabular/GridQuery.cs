@@ -521,7 +521,7 @@ public static class GridQuery
         private string ReadAxisName()
         {
             Token token = Next("an axis name such as axis1");
-            if (token.Kind != Kind.Word || !System.Text.RegularExpressions.Regex.IsMatch(token.Value, "^axis[0-9]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            if (token.Kind != Kind.Word || !System.Text.RegularExpressions.Regex.IsMatch(token.Value, "^axis[0-9]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1)))
             {
                 throw Unexpected("an axis name such as axis1", token);
             }

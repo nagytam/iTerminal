@@ -209,25 +209,23 @@ public static partial class ICalendarTextReader
         }
 
         string time = $"{match.Groups["hour"].Value}:{match.Groups["minute"].Value}";
-        string zone = match.Groups["utc"].Success ? " UTC" : timeZone.Length > 0 ? $" {timeZone}" : string.Empty;
+        string zone = string.Empty;
+        if (match.Groups["utc"].Success) zone = " UTC";
+        else if (timeZone.Length > 0) zone = $" {timeZone}";
         return $"{date} {time}{zone}";
     }
 
     private static string? Value(Component component, string name)
     {
-        foreach (ContentLine property in component.Properties)
-        {
-            if (property.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-            {
-                return ContentLines.Unescape(property.Value);
-            }
-        }
+        Func<ContentLine, bool> matches = candidate => candidate.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
+        if (component.Properties.Any(matches)) return ContentLines.Unescape(component.Properties.First(matches).Value);
 
         return null;
     }
 
-    private static string Label(string name) =>
-        Labels.TryGetValue(name, out string? label) ? label
-        : name.StartsWith("X-", StringComparison.OrdinalIgnoreCase) ? name[2..]
-        : name;
+    private static string Label(string name)
+    {
+        if (Labels.TryGetValue(name, out string? label)) return label;
+        return name.StartsWith("X-", StringComparison.OrdinalIgnoreCase) ? name[2..] : name;
+    }
 }

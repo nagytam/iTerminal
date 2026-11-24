@@ -837,7 +837,7 @@ public static class OfficeTextRenderer
             return null;
         }
 
-        System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(value, @"^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.\d+)?S)?$");
+        System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(value, @"^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.\d+)?S)?$", System.Text.RegularExpressions.RegexOptions.None, TimeSpan.FromSeconds(1));
         return match.Success
             ? string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}", Group(1), Group(2), Group(3))
             : value;

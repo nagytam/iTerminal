@@ -106,12 +106,9 @@ public class MemoryDriveSynchronizationJob
                 }
             }
             var files = Directory.EnumerateFiles(SyncPath);
-            foreach (var file in files)
+            foreach (var file in files.Where(file => !_memoryDriveService.Root.Files.Any(f => f.Key == Path.GetFileName(file))))
             {
-                if (!_memoryDriveService.Root.Files.Any(f => f.Key == Path.GetFileName(file)))
-                {
-                    File.Delete(file);
-                }
+                File.Delete(file);
             }
 
         }

@@ -97,9 +97,11 @@ public sealed class WindowsTaskbarProgress : ITaskbarProgress, IDisposable
 
     [ComImport]
     [Guid("56FDF344-FD6D-11d0-958A-006097C9A090")]
+    #pragma warning disable S3260 // A COM coclass: the cast to ITaskbarList3 needs the class to stay as the runtime declares it.
     private class TaskbarListClass
     {
     }
+    #pragma warning restore S3260
 
     /// <summary>
     /// The parts of <c>ITaskbarList3</c> used here, declared in the shell's vtable order: the base interfaces' methods come

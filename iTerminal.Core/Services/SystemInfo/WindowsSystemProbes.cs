@@ -59,7 +59,7 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
             return result;
         }
 
-        foreach (string subKey in cls.GetSubKeyNames().Where(name => Regex.IsMatch(name, "^[0-9]{4}$")).OrderBy(name => name, StringComparer.Ordinal))
+        foreach (string subKey in cls.GetSubKeyNames().Where(name => Regex.IsMatch(name, "^[0-9]{4}$", RegexOptions.None, TimeSpan.FromSeconds(1))).OrderBy(name => name, StringComparer.Ordinal))
         {
             using RegistryKey? card = cls.OpenSubKey(subKey);
             if (card?.GetValue("DriverDesc") is not string name)
@@ -168,7 +168,7 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
         }
     }
 
-    private readonly object _diskNameLock = new();
+    private readonly Lock _diskNameLock = new();
     private IReadOnlyList<string>? _diskNames;
     private int _diskNameReads;
     private const int DiskScanEvery = 30;
@@ -277,7 +277,9 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
     private static extern uint PdhGetFormattedCounterArrayW(IntPtr counter, uint format, ref uint bufferSize, ref uint itemCount, IntPtr buffer);
 
     [StructLayout(LayoutKind.Sequential)]
+    #pragma warning disable S101 // The name is the product's own naming (iTerminal, iPhone) or the Win32 name the structure mirrors; renaming it would hide the link.
     private struct FILETIME
+    #pragma warning restore S101
     {
         public uint dwLowDateTime;
         public uint dwHighDateTime;

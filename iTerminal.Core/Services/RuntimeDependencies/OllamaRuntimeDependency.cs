@@ -284,7 +284,7 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
                 return null;
             }
 
-            Match match = Regex.Match(output.GetAwaiter().GetResult() + " " + error.GetAwaiter().GetResult(), @"\d+\.\d+\.\d+");
+            Match match = Regex.Match(output.GetAwaiter().GetResult() + " " + error.GetAwaiter().GetResult(), @"\d+\.\d+\.\d+", RegexOptions.None, TimeSpan.FromSeconds(1));
             return match.Success ? match.Value : null;
         }
         catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception or IOException)
@@ -498,7 +498,7 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
     }
 
     private static string PlatformName() =>
-        $"{(OperatingSystem.IsWindows() ? "Windows" : OperatingSystem.IsMacOS() ? "macOS" : "Linux")} {RuntimeInformation.ProcessArchitecture}";
+        $"{(OperatingSystem.IsWindows(), OperatingSystem.IsMacOS()) switch { (true, _) => "Windows", (_, true) => "macOS", _ => "Linux" }} {RuntimeInformation.ProcessArchitecture}";
 
     private bool IsVersionDirectory(string directory) =>
         Version.TryParse(Path.GetFileName(directory), out Version? version) && IsCompatible(version);
@@ -512,12 +512,9 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
             return;
         }
 
-        foreach (string directory in Directory.EnumerateDirectories(_root).Where(IsVersionDirectory))
+        foreach (string directory in Directory.EnumerateDirectories(_root).Where(IsVersionDirectory).Where(directory => Version.Parse(Path.GetFileName(directory)) < current))
         {
-            if (Version.Parse(Path.GetFileName(directory)) < current)
-            {
-                DeleteDirectory(directory);
-            }
+            DeleteDirectory(directory);
         }
     }
 
@@ -556,6 +553,7 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 }

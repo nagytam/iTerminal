@@ -152,7 +152,7 @@ public abstract class XYChart(IThemeService themeService) : Control(themeService
             }
 
             int centre = x0 + (int)Math.Round(Math.Clamp(fraction, 0, 1) * (plotWidth - 1));
-            int start = fraction <= 0 ? x0 : fraction >= 1 ? centre - text.Length + 1 : centre - (text.Length / 2);
+            int start = fraction switch { <= 0 => x0, >= 1 => centre - text.Length + 1, _ => centre - (text.Length / 2) };
             canvas.Text(Math.Max(x0, start), y, text, scheme.DisabledForeground);
         }
     }

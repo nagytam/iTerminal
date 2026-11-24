@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace iConsole.Inputs.Windows.Data;
 
+#pragma warning disable S101, S1104 // Win32 ABI: the native names and the public field layout are part of the interop contract.
 [DebuggerDisplay("EventType: {EventType}")]
 [StructLayout(LayoutKind.Explicit)]
 public struct INPUT_RECORD
@@ -16,3 +17,4 @@ public struct INPUT_RECORD
     [FieldOffset(4)]
     public int SetFocus;
 }
+#pragma warning restore S101, S1104

@@ -33,7 +33,7 @@ public class NavigateToFolderCommand(
         return canExecute;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (contentModel is ContentModelFileSystem)
         {

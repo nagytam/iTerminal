@@ -35,8 +35,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     /// <summary>Completes once the first frame has reached the terminal. The desktop starts its background jobs after it.</summary>
     public Task FirstFrameRendered => _firstFrameRendered.Task;
 
-    private Color ConsoleForegroundColor;
-    private Color ConsoleBackgroundColor;
     private readonly Lock _dumpLock = new();
     private int _dumpFrameIndex;
     private long _renderIterations;
@@ -73,8 +71,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         _watchDog = watchDog;
         _sixelOverlay = sixelOverlay;
         _consoleDriver = consoleDriver ?? Services.NullConsoleDriver.Instance;
-        ConsoleForegroundColor = _consoleDriver.ForegroundColor;
-        ConsoleBackgroundColor = _consoleDriver.BackgroundColor;
         Buffer = buffer ?? new Buffers.Buffer(Services.NullConsoleDriver.Instance);
         LastBuffer = new BufferLayer(0, Buffer.Size, Color.White, Color.Black);
         LastBufferCursor = new Cursor(Buffer.Size);
@@ -175,6 +171,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             }
             catch (Exception exception) when (exception is IOException or ObjectDisposedException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             finally
             {
@@ -281,7 +278,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             }
             lock (Buffer.SyncLock)
             {
-                // Debug.Assert(!Buffer.IsLocked);
                 if (LastBuffer.Size != Buffer.Size)
                 {
                     shouldClearConsole = true;
@@ -295,10 +291,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                     _shownPicture = null;
                 }
 
-                //if (Buffer.IsDirty)
-                //{
-                //    Buffer.IsDirty = false;
-                //}
                 var layer = Buffer.MergedLayer;
                 layerToDump = layer;
                 pictureToDraw = PreparePicture(layer);
@@ -381,10 +373,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             }
         }
 
-        //if (Buffer.IsDirty)
-        //{
-        //    isIdle = false;
-        //}
 
         return isIdle;
     }
@@ -484,7 +472,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         }
     }
 
-    private string RenderLine(
+    private static string RenderLine(
         int y,
         int minX,
         int maxX,
@@ -494,7 +482,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         ICollection<ConsoleDisplayWrite>? displayWrites,
         bool captureTrace)
     {
-        DebugConsoleOutput(y, source, last);
         var changedCharacters = RenderByCharacters(y, minX, maxX, source, last, pendingWrites, displayWrites);
         return captureTrace
             ? $"line={y};mode=chars;changed={changedCharacters};text=|{GetLineText(source)}|"
@@ -529,7 +516,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         conxel.HasUnderlineColor != lastConxel.HasUnderlineColor ||
         conxel.LinkId           != lastConxel.LinkId;
 
-    private int RenderByCharacters(
+    private static int RenderByCharacters(
         int y,
         int minX,
         int maxX,
@@ -769,22 +756,13 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
     }
 
     private static int CountVisibleCharacters(BufferLayer layer)
         => RenderingDumpHelper.CountVisibleCharacters(layer);
 
-    private static string GetLineText(IReadOnlyList<Conxel> line)
-        => RenderingDumpHelper.GetLineText(line);
-
     private static string GetLineText(Span<Conxel> line)
         => RenderingDumpHelper.GetLineText(line.ToArray());
-
-    private static void DebugConsoleOutput(int y, Span<Conxel> source, Span<Conxel> last)
-    {
-        //var sourceString = new ConxelString(source);
-        //var lastString = new ConxelString(last);
-        // Debug.WriteLine($"Update line {y}:{Environment.NewLine}<<<{lastString.Text}>>>{Environment.NewLine}<<<{sourceString.Text}>>>");
-    }
 }

@@ -15,7 +15,7 @@ public class ToggleTerminalCommand(Content? content) : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.O, true, false, true);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         content?.ToggleTerminalPanel();
         return Task.CompletedTask;

@@ -8,7 +8,7 @@ public class ConsoleHandle : SafeHandleMinusOneIsInvalid
 
     protected override bool ReleaseHandle()
     {
-        return true; // TODO release handle
+        return true; // Not owned: the constructor passes ownsHandle = false, so there is nothing to release.
     }
 }
 

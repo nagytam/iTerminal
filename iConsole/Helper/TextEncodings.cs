@@ -100,9 +100,9 @@ public static class TextEncodings
     {
         int index = IndexOf(current);
         int count = Available.Count;
-        int next = index < 0
-            ? (backwards ? count - 1 : 0)
-            : (index + (backwards ? count - 1 : 1)) % count;
+        int next;
+        if (index < 0) next = backwards ? count - 1 : 0;
+        else next = (index + (backwards ? count - 1 : 1)) % count;
         return Available[next];
     }
 

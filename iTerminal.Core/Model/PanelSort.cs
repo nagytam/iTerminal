@@ -34,7 +34,7 @@ public readonly record struct PanelSort(PanelSortMode Mode, bool Descending = fa
 
     /// <summary>For a panel's footer: "size ↓", "name ↑" — empty for the drive's own order, which needs no saying.</summary>
     public string Describe() =>
-        IsAsListed ? string.Empty : $"{DisplayName(Mode).ToLowerInvariant()} {(Descending ? "↓" : "↑")}";
+        IsAsListed ? string.Empty : $"{DisplayName(Mode).ToLowerInvariant()} {(Descending switch { true => "↓", _ => "↑" })}";
 
     /// <summary>The form kept in the settings: <c>Size,desc</c>.</summary>
     public string Serialize() => $"{Mode}{(Descending ? ",desc" : string.Empty)}";
@@ -122,7 +122,8 @@ public readonly record struct PanelSort(PanelSortMode Mode, bool Descending = fa
                 _ => CompareNames(x, y),
             };
 
-            return byKey != 0 ? byKey * direction : CompareNames(x, y) * (mode == PanelSortMode.Name ? direction : 1);
+            if (byKey != 0) return byKey * direction;
+            return CompareNames(x, y) * (mode == PanelSortMode.Name ? direction : 1);
         });
 
         sorted.AddRange(rest);

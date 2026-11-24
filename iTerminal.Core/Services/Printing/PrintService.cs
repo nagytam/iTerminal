@@ -191,10 +191,12 @@ public sealed partial class PrintService : IPrintService
     }
 
     /// <summary>The reason <paramref name="printer"/> may not be handed to a tool, or null.</summary>
-    private static string? CheckPrinter(string printer) =>
-        string.IsNullOrWhiteSpace(printer) ? UiText.Get("Print.ChoosePrinter", "Choose a printer first.")
-        : printer.StartsWith('-') || printer.Any(char.IsControl) ? UiText.Get("Print.NotPrinter", "That is not a printer name.")
-        : null;
+    private static string? CheckPrinter(string printer)
+    {
+        if (string.IsNullOrWhiteSpace(printer)) return UiText.Get("Print.ChoosePrinter", "Choose a printer first.");
+        if (printer.StartsWith('-') || printer.Any(char.IsControl)) return UiText.Get("Print.NotPrinter", "That is not a printer name.");
+        return null;
+    }
 
     private static string Describe(ProcessOutput output) =>
         output.ExitCode == -1 && output.StandardError.Length > 0 ? output.StandardError : output.FirstErrorLine;
@@ -239,14 +241,16 @@ public sealed partial class PrintService : IPrintService
                 e.TryGetProperty("Size", out var size) && size.ValueKind == JsonValueKind.Number ? size.GetInt64() : 0,
                 WindowsState(Text(e, "Status"))))];
 
-    internal static PrintJobState WindowsState(string status) =>
-        status.Contains("Paused", StringComparison.OrdinalIgnoreCase) ? PrintJobState.Held
-        : status.Contains("Error", StringComparison.OrdinalIgnoreCase)
+    internal static PrintJobState WindowsState(string status)
+    {
+        if (status.Contains("Paused", StringComparison.OrdinalIgnoreCase)) return PrintJobState.Held;
+        if (status.Contains("Error", StringComparison.OrdinalIgnoreCase)
             || status.Contains("Offline", StringComparison.OrdinalIgnoreCase)
             || status.Contains("PaperOut", StringComparison.OrdinalIgnoreCase)
-            || status.Contains("Blocked", StringComparison.OrdinalIgnoreCase) ? PrintJobState.Error
-        : status.Contains("Printing", StringComparison.OrdinalIgnoreCase) ? PrintJobState.Printing
-        : PrintJobState.Queued;
+            || status.Contains("Blocked", StringComparison.OrdinalIgnoreCase)) return PrintJobState.Error;
+        if (status.Contains("Printing", StringComparison.OrdinalIgnoreCase)) return PrintJobState.Printing;
+        return PrintJobState.Queued;
+    }
 
     internal static IReadOnlyList<Printer> ParseCupsPrinters(string output)
     {
@@ -264,11 +268,13 @@ public sealed partial class PrintService : IPrintService
         return [.. printers.OrderByDescending(p => p.IsDefault).ThenBy(p => p.Name, StringComparer.CurrentCultureIgnoreCase)];
     }
 
-    private static string CupsStatus(string rest) =>
-        rest.Contains("disabled", StringComparison.OrdinalIgnoreCase) ? "disabled"
-        : rest.Contains("now printing", StringComparison.OrdinalIgnoreCase) ? "printing"
-        : rest.Contains("idle", StringComparison.OrdinalIgnoreCase) ? "idle"
-        : rest.Trim().TrimEnd('.');
+    private static string CupsStatus(string rest)
+    {
+        if (rest.Contains("disabled", StringComparison.OrdinalIgnoreCase)) return "disabled";
+        if (rest.Contains("now printing", StringComparison.OrdinalIgnoreCase)) return "printing";
+        if (rest.Contains("idle", StringComparison.OrdinalIgnoreCase)) return "idle";
+        return rest.Trim().TrimEnd('.');
+    }
 
     /// <summary>
     /// <c>lpstat -l -o</c>: a header line per job (<c>name-id owner size date</c>) followed by indented lines.

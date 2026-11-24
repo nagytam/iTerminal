@@ -9,6 +9,7 @@ using System.Formats.Tar;
 using System.IO.Pipelines;
 using System.Globalization;
 using System.Text.RegularExpressions;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Services.Docker;
 
@@ -70,8 +71,9 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
             }
 
             var state = fields[1].ToLowerInvariant();
+            var createdText = fields[4].Length >= 19 ? fields[4][..19] : fields[4];
             DateTime? created = DateTime.TryParseExact(
-                fields[4].Length >= 19 ? fields[4][..19] : fields[4],
+                createdText,
                 "yyyy-MM-dd HH:mm:ss",
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.AssumeLocal,
@@ -238,7 +240,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
                 await pipe.Writer.CompleteAsync(exception);
                 throw;
             }
-        });
+        }, cancellationToken);
 
         var found = false;
         Exception? readerFailure = null;
@@ -264,7 +266,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
         // Done reading, early or not: a docker cp still writing is stopped rather than drained.
         if (!producer.IsCompleted)
         {
-            producerCancellation.Cancel();
+            await producerCancellation.CancelAsync();
         }
 
         await pipe.Reader.CompleteAsync();
@@ -422,7 +424,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
 
     public bool ExistsFolder(Url url)
     {
-        var (container, path) = Split(url);
+        var (container, _) = Split(url);
         return container.Length == 0 || Test(url, "-d");
     }
 

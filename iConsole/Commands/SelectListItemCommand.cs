@@ -12,7 +12,7 @@ public class SelectListItemCommand<T>(IScrollableModel scrollableModel, IListBox
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Enter, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var cursorY = (int)scrollableModel.CursorPosition.Y;
         var items = listBoxModel.ListItems.ToList();

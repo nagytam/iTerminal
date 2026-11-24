@@ -16,7 +16,7 @@ public class CsvExportCommand(CsvViewerDialog viewer) : Command
     /// The question is asked without being awaited: this command runs on the input thread, and the prompt's answer arrives
     /// through that same thread, so waiting here would block the answer (the evidence commands do the same).
     /// </summary>
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         _ = viewer.ExportAsync();
         return Task.CompletedTask;

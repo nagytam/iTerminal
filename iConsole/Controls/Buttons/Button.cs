@@ -172,9 +172,10 @@ public class Button : Control
             backgroundColor = Brighten(backgroundColor);
         }
         var inner = Math.Max(0, (int)ViewSize.Width - 2);
-        var title = inner == 0
-            ? string.Empty
-            : EllipsisWhenClipped && inner > 1 && Title.Length > inner ? (Title[..(inner - 1)] + "…").Expand(inner) : Title.Cut(inner).Expand(inner);
+        string title;
+        if (inner == 0) title = string.Empty;
+        else if (EllipsisWhenClipped && inner > 1 && Title.Length > inner) title = (Title[..(inner - 1)] + "…").Expand(inner);
+        else title = Title.Cut(inner).Expand(inner);
         var titleLine = new ConxelString(Border.Start + title + Border.End, foregroundColor, backgroundColor);
         titleLine.HighlightHotKey(HotConsoleKey, HotKeyChar, hotKeyColor, backgroundColor);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, titleLine);
@@ -206,27 +207,27 @@ public class Button : Control
         _ => color,
     };
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Normal:
             default:
                 {
-                    foregroundColor = colorScheme.Foreground;
-                    backgroundColor = colorScheme.ButtonBackground;
+                    foreground = colorScheme.Foreground;
+                    background = colorScheme.ButtonBackground;
                     break;
                 }
             case VisualState.Disabled:
                 {
-                    foregroundColor = colorScheme.DisabledForeground;
-                    backgroundColor = colorScheme.DisabledButtonBackground;
+                    foreground = colorScheme.DisabledForeground;
+                    background = colorScheme.DisabledButtonBackground;
                     break;
                 }
             case VisualState.Focused:
                 {
-                    foregroundColor = colorScheme.SelectedFocusedForeground;
-                    backgroundColor = colorScheme.ButtonBackground;
+                    foreground = colorScheme.SelectedFocusedForeground;
+                    background = colorScheme.ButtonBackground;
                     break;
                 }
         }

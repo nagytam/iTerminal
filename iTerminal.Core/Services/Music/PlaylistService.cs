@@ -169,7 +169,7 @@ public sealed class PlaylistService : IPlaylistService
     /// </summary>
     public IReadOnlyList<MusicTrack> LoadLast() => Load(LastPlaylistPath);
 
-    private IReadOnlyList<MusicTrack> ScanFolder(string folder, bool recursive)
+    private static IReadOnlyList<MusicTrack> ScanFolder(string folder, bool recursive)
     {
         var files = new List<string>();
         CollectAudioFiles(folder, recursive, MaxFolderScanDepth, files);
@@ -190,12 +190,9 @@ public sealed class PlaylistService : IPlaylistService
     {
         try
         {
-            foreach (var file in Directory.EnumerateFiles(folder))
+            foreach (var file in Directory.EnumerateFiles(folder).Where(file => AudioDecoderFactory.IsAudioFile(file)))
             {
-                if (AudioDecoderFactory.IsAudioFile(file))
-                {
-                    files.Add(file);
-                }
+                files.Add(file);
             }
 
             if (!recursive || depthBudget <= 0)

@@ -308,6 +308,7 @@ public partial class ChecksumService : IChecksumService
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
 

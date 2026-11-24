@@ -53,9 +53,12 @@ public static class XmlXPathQuery
                 return new XmlXPathOutcome(results, total, null);
             }
 
-            string text = value is double number
-                ? number.ToString(CultureInfo.InvariantCulture)
-                : value is bool flag ? (flag ? "true" : "false") : value.ToString() ?? string.Empty;
+            string text = value switch
+            {
+                double number => number.ToString(CultureInfo.InvariantCulture),
+                bool flag => flag ? "true" : "false",
+                _ => value.ToString() ?? string.Empty,
+            };
             return new XmlXPathOutcome([new XmlXPathResult(null, string.Empty, text)], 1, null);
         }
         catch (XPathException exception)
@@ -85,7 +88,7 @@ public static class XmlXPathQuery
 
     private static XmlXPathResult? Describe(XmlTree tree, object selected) => selected switch
     {
-        XDocument document => new XmlXPathResult(tree.Root, "/", string.Empty),
+        XDocument => new XmlXPathResult(tree.Root, "/", string.Empty),
         XElement element => Result(tree, element, PathOf(element), XmlTree.Shorten(element.Value)),
         XAttribute attribute => Result(tree, attribute.Parent!, PathOf(attribute.Parent!) + "/@" + XmlTree.AttributeName(attribute), attribute.Value),
         XText text => Result(tree, text.Parent!, PathOf(text.Parent!) + "/text()", XmlTree.Shorten(text.Value)),

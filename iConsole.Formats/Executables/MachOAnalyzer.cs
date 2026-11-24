@@ -16,7 +16,6 @@ internal static class MachOAnalyzer
     private const int MaxSymbols = 1_000_000;
     private const int MaxExportNames = 25;
     private const int MaxLibraries = 128;
-    private const int MaxStringTable = 4 * 1024 * 1024;
     private const int MaxSlices = 30;
 
     public static ExecutableReport Analyze(BoundedFileReader file, CancellationToken cancellationToken)
@@ -168,7 +167,7 @@ internal static class MachOAnalyzer
                     subsystem = $"{PlatformName(BoundedFileReader.U32(body, 8, be))} {Version(BoundedFileReader.U32(body, 12, be))}+";
                     break;
                 case 0x24 or 0x25 or 0x2F or 0x30 when size >= 12 && subsystem.Length == 0:
-                    subsystem = $"{(cmd == 0x24 ? "macOS" : cmd == 0x25 ? "iOS" : cmd == 0x2F ? "tvOS" : "watchOS")} {Version(BoundedFileReader.U32(body, 8, be))}+";
+                    subsystem = $"{(cmd switch { 0x24 => "macOS", 0x25 => "iOS", 0x2F => "tvOS", _ => "watchOS" })} {Version(BoundedFileReader.U32(body, 8, be))}+";
                     break;
             }
 
@@ -193,7 +192,7 @@ internal static class MachOAnalyzer
         List<ExecutableFlag> hardening =
         [
             new("PIE", fileType == 2 ? pie : null),
-            new("NX heap", (flags & 0x1000000) != 0 ? true : is64 ? null : false),
+            new("NX heap", (flags & 0x1000000) != 0 ? true : is64 switch { true => null, _ => false }),
             new("NX stack", (flags & 0x20000) == 0),
             new("Stack canary", canary),
         ];

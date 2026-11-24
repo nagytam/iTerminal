@@ -15,13 +15,10 @@ namespace iTerminal.Core.Controls.Terminals;
 
 public class TerminalWindow : Window
 {
-    private IContentModelService _contentModelService;
     private TerminalModel _terminalModel { get; set; }
 
     //public override bool IsEnabled 
-    //{ 
     //    get  
-    //    {
     //        try
     //        {
     //            var contentModel = _contentModelService.GetLastContentModel();
@@ -57,7 +54,6 @@ public class TerminalWindow : Window
         IThemeService themeService) 
         : base(themeService)
     {
-        _contentModelService = contentModelService;
         _terminalModel = terminalModel ?? new TerminalModel(new iConsole.Tasks.TaskManager(), null!);
         _terminalModel.PropertyChanged += OnPropertyChanged;
         CanFocus = true;

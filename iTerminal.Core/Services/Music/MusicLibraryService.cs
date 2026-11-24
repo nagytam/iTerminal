@@ -476,15 +476,7 @@ public sealed class MusicLibraryService : IMusicLibraryService
 
     private static bool MatchesAll(string haystack, string[] tokens)
     {
-        foreach (string token in tokens)
-        {
-            if (!haystack.Contains(token, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return tokens.All(token => haystack.Contains(token, StringComparison.OrdinalIgnoreCase));
     }
 
     private static TimeSpan SumDuration(IEnumerable<MusicLibraryEntry> entries) =>
@@ -593,12 +585,9 @@ public sealed class MusicLibraryService : IMusicLibraryService
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        foreach (string file in Enumerate(() => Directory.EnumerateFiles(folder, "*", DiscoveryOptions)))
+        foreach (string file in (Enumerate(() => Directory.EnumerateFiles(folder, "*", DiscoveryOptions))).Where(file => AudioDecoderFactory.IsAudioFile(file)))
         {
-            if (AudioDecoderFactory.IsAudioFile(file))
-            {
-                files.Add(file);
-            }
+            files.Add(file);
         }
 
         onFolderScanned?.Invoke();

@@ -263,8 +263,6 @@ public sealed class GitService : IGitService
     public Task<GitResult> FetchAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
         RunWriteAsync(repositoryRoot, cancellationToken, "fetch", "--all", "--prune");
 
-    public Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
-        RunWriteAsync(repositoryRoot, cancellationToken, "pull");
 
     public Task<GitResult> PullRebaseAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
         RunWriteAsync(repositoryRoot, cancellationToken, "pull", "--rebase");
@@ -277,6 +275,9 @@ public sealed class GitService : IGitService
             GitPullMode.FastForwardOnly => RunWriteAsync(repositoryRoot, cancellationToken, "pull", "--ff-only"),
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
         };
+
+    public Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
+        RunWriteAsync(repositoryRoot, cancellationToken, "pull");
 
     public async Task<GitResult> PushAsync(string repositoryRoot, bool setUpstream = false, CancellationToken cancellationToken = default)
     {
@@ -345,9 +346,8 @@ public sealed class GitService : IGitService
         try
         {
             var result = await RunAsync(repositoryRoot, cancellationToken, args);
-            return result.Success
-                ? GitResult.Ok(result.StandardOutput)
-                : GitResult.Fail(string.IsNullOrWhiteSpace(result.StandardError) ? result.StandardOutput : result.StandardError);
+            if (result.Success) return GitResult.Ok(result.StandardOutput);
+            return GitResult.Fail(string.IsNullOrWhiteSpace(result.StandardError) ? result.StandardOutput : result.StandardError);
         }
         finally
         {
@@ -457,7 +457,9 @@ public sealed class GitService : IGitService
         {
             var startInfo = new ProcessStartInfo
             {
+                #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
                 FileName = "git",
+                #pragma warning restore S4036
                 WorkingDirectory = workingDirectory,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -488,7 +490,9 @@ public sealed class GitService : IGitService
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return new ProcessResult(false, string.Empty, "git command timed out");
             }
 

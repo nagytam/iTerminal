@@ -24,7 +24,7 @@ public sealed class XmlTree
     /// <summary>Longest text shown on one node; a longer run is cut with an ellipsis.</summary>
     public const int MaxTextLength = 120;
 
-    private static readonly Regex Spaces = new(@"\s+", RegexOptions.Compiled);
+    private static readonly Regex Spaces = new(@"\s+", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     private readonly Dictionary<XObject, XmlNodeItem> _items = new(ReferenceEqualityComparer.Instance);
 

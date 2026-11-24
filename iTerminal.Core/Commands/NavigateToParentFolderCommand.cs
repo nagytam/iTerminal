@@ -15,7 +15,7 @@ public class NavigateToParentFolderCommand(
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.PageUp, shift: false, alt: false, control: true);
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         await contentModelService.SetUrlAsync(contentModel.Name, contentModel.Url.ParentUrl);
     }

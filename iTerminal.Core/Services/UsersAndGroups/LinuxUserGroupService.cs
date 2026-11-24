@@ -6,7 +6,7 @@ namespace iTerminal.Core.Services.UsersAndGroups;
 
 public sealed class LinuxUserGroupService(IExternalProcessRunner runner) : IUserGroupService
 {
-    private static readonly Regex AccountNamePattern = new("^[A-Za-z_][A-Za-z0-9_.-]*[$]?$", RegexOptions.CultureInvariant);
+    private static readonly Regex AccountNamePattern = new("^[A-Za-z_][A-Za-z0-9_.-]*[$]?$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
     public async Task<IReadOnlyList<LocalUser>> ListUsersAsync(CancellationToken cancellationToken = default)
     {

@@ -284,15 +284,7 @@ public class ScrollView : Control
             return true;
         }
 
-        foreach (IControl child in control.Controls.AsSnapshot())
-        {
-            if (child is not null && SubtreeChanged(child))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return control.Controls.AsSnapshot().Any(child => child is not null && SubtreeChanged(child));
     }
 
     private static void ClearChanged(IControl control)
@@ -302,12 +294,9 @@ public class ScrollView : Control
             c.HasStateChanged = false;
         }
 
-        foreach (IControl child in control.Controls.AsSnapshot())
+        foreach (IControl child in control.Controls.AsSnapshot().Where(child => child is not null))
         {
-            if (child is not null)
-            {
-                ClearChanged(child);
-            }
+            ClearChanged(child);
         }
     }
 
@@ -330,7 +319,7 @@ public class ScrollView : Control
         _content.Position = new Position(0, 0);
         _content.ViewSize = m.Extent;
         _content.OnInitializeZOrder();
-        FollowFocus(m);
+        FollowFocus();
         ClampOffsets();
 
         if (m.Extent.IsEmpty)
@@ -362,7 +351,7 @@ public class ScrollView : Control
     }
 
     /// <summary>Scrolls to a control that has just taken the focus. Only a change of focus does, so the wheel is not undone by every repaint.</summary>
-    private void FollowFocus(Measurement m)
+    private void FollowFocus()
     {
         IControl? focused = FocusedInContent();
         if (ReferenceEquals(focused, _lastFocused))

@@ -19,6 +19,14 @@ public record ArchiveEntry : EntryBase, IEntry
     public ZipArchiveEntry? ZipArchiveEntry { get; set; }
     public override bool Exists => ZipArchiveEntry != null;
 
+
+    private readonly string? _label;
+
+    public ArchiveEntry(ZipArchiveEntry zipArchiveEntry)
+    {
+        ZipArchiveEntry = zipArchiveEntry;
+    }
+
     /// <summary>A row that is not a zip entry of its own: the ".." row, or a folder implied by the entries under it.</summary>
     /// <remarks>The label is what the row shows and what <see cref="FocusedEntry.IsParentEntry"/> matches, so it must be given: the
     /// URL's own name is the folder's, which is why ".." used to show as "tmp" and was not recognised as the parent row.</remarks>
@@ -26,13 +34,6 @@ public record ArchiveEntry : EntryBase, IEntry
     {
         _label = displayName;
         Url = new Url(url, displayName);
-    }
-
-    private readonly string? _label;
-
-    public ArchiveEntry(ZipArchiveEntry zipArchiveEntry)
-    {
-        ZipArchiveEntry = zipArchiveEntry;
     }
 
     public override string GetName(int width)

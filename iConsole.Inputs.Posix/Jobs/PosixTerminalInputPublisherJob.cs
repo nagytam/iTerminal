@@ -70,6 +70,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         _focusReporting = false;
@@ -107,6 +108,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         _kittyPushed = false;
@@ -183,6 +185,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
 
                 _mouseEnabled = false;
@@ -340,7 +343,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         return LinuxStdin.TcSetAttr(LinuxStdin.StdinFd, LinuxStdin.TcsaNow, ref _original) == 0;
     }
 
-    private bool TrySetNonBlockingStdin(bool enable)
+    private static bool TrySetNonBlockingStdin(bool enable)
     {
         var flags = LinuxStdin.fcntl(LinuxStdin.StdinFd, LinuxStdin.FGetFl, 0);
         if (flags < 0)

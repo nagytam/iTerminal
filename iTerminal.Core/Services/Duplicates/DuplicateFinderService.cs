@@ -108,7 +108,7 @@ public sealed class DuplicateScan
                 IsComplete = true;
                 DisposeCancellation();
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>The scan is over, so its source is disposed; a later <see cref="Cancel"/> does nothing.</summary>

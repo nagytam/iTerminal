@@ -31,7 +31,7 @@ public class RunCommandLineCommand(
         && !string.IsNullOrWhiteSpace(terminalModel.Command.Command)
         && isCommandLineVisible();
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         if (ownModel.Url is not null)
         {

@@ -25,7 +25,7 @@ public sealed partial class GitRuntimeDependency : IRuntimeDependency
     private readonly bool _isWindows;
     private readonly bool _isMac;
     private readonly bool _isPrivileged;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private (string Path, DateTime Stamp, string? Version)? _cached;
 
     public GitRuntimeDependency()
@@ -251,7 +251,9 @@ public sealed partial class GitRuntimeDependency : IRuntimeDependency
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return null;
             }
 
@@ -330,9 +332,10 @@ internal sealed record GitInstallPlan(
                 return new GitInstallPlan(display, tool, arguments, environment, false);
             }
 
+            string[] noninteractiveEnv = nonInteractive ? new[] { "env", "DEBIAN_FRONTEND=noninteractive" } : [];
             return findOnPath("sudo") is null
                 ? new GitInstallPlan(display, tool, arguments, environment, false)
-                : new GitInstallPlan(display, "sudo", ["-n", .. (nonInteractive ? new[] { "env", "DEBIAN_FRONTEND=noninteractive" } : []), tool, .. arguments], null, true, $"sudo {tool} {string.Join(' ', arguments)}");
+                : new GitInstallPlan(display, "sudo", ["-n", .. noninteractiveEnv, tool, .. arguments], null, true, $"sudo {tool} {string.Join(' ', arguments)}");
         }
 
         return null;

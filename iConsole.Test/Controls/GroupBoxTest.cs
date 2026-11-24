@@ -28,8 +28,8 @@ public class GroupBoxTest
 
         Assert.AreEqual(18, (int)groupBox.ContentSize.Width);
         Assert.AreEqual(4, (int)groupBox.ContentSize.Height);
-        Assert.AreEqual(1, (int)groupBox.ContentPosition.X);
-        Assert.AreEqual(1, (int)groupBox.ContentPosition.Y);
+        Assert.AreEqual(1, (int)GroupBox.ContentPosition.X);
+        Assert.AreEqual(1, (int)GroupBox.ContentPosition.Y);
     }
 
     [Timeout(60_000)]

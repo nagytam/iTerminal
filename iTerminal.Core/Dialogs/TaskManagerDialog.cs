@@ -63,7 +63,7 @@ public class TaskManagerDialog : Dialog
             bool plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
             if (plain && (keyEvent.ConsoleKey == ConsoleKey.Delete || char.ToLowerInvariant(keyEvent.KeyChar) == 'y'))
             {
-                asked.CancellationTokenSource.Cancel();
+                await asked.CancellationTokenSource.CancelAsync();
             }
 
             StateHasChanged();

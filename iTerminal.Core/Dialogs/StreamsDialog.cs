@@ -176,6 +176,7 @@ public class StreamsDialog : Dialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {
@@ -187,7 +188,7 @@ public class StreamsDialog : Dialog
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private void StartPreview()
@@ -216,10 +217,11 @@ public class StreamsDialog : Dialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private async Task ReadPreviewAsync(string path, string name, int generation, CancellationToken token)
@@ -492,7 +494,7 @@ public class StreamsDialog : Dialog
 
             StartList();
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private void SetStatus(string text, bool isError)
@@ -547,6 +549,7 @@ public class StreamsDialog : Dialog
             }
             catch (ArgumentException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
 
@@ -672,9 +675,9 @@ public class StreamsDialog : Dialog
                 header += "  " + string.Format(UiText.Get("Streams.Truncated", "first {0} of {1}"), Compact(_content.Bytes.Length), Compact(_content.TotalSize));
             }
 
-            lines = _content.Bytes.Length == 0
-                ? [UiText.Get("Streams.Empty", "(empty)")]
-                : hex ? HexLines(_content.Bytes, rows) : TextLines(_content.Bytes.AsSpan(0, Math.Min(_content.Bytes.Length, rows * iw * 4)).ToArray(), rows); // Only what can be seen is decoded.
+            if (_content.Bytes.Length == 0) lines = [UiText.Get("Streams.Empty", "(empty)")];
+            else if (hex) lines = HexLines(_content.Bytes, rows);
+            else lines = TextLines(_content.Bytes.AsSpan(0, Math.Min(_content.Bytes.Length, rows * iw * 4)).ToArray(), rows); // Only what can be seen is decoded.
         }
 
         Put(buffer, 1, top - 1, iw - 2, header, colors.DisabledForeground, colors.Background);
@@ -700,8 +703,6 @@ public class StreamsDialog : Dialog
     }
 
     private static string Compact(long bytes) => bytes.ToFileSize().Trim().Replace("  ", " ");
-
-    private static string Clip(string text, int width) => text.Length <= width ? text : text[..Math.Max(0, width - 1)] + "…";
 
     #endregion
 

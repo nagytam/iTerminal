@@ -465,6 +465,7 @@ public sealed class EvidenceNotebookService : IEvidenceNotebookService
         }
         catch (UnauthorizedAccessException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 

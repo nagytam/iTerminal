@@ -186,7 +186,9 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
         {
             var index = _driveInfoModel.Drives.IndexOf(oldDrive);
             // The bar moves with the free space even where the rounded text does not, so a change in either replaces the row.
+            #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
             if (oldDrive.Name != drive.Name || oldDrive.UsedFraction != drive.UsedFraction)
+            #pragma warning restore S1244
             {
                 _driveInfoModel.Drives.ReplaceAt(index, drive);
             }

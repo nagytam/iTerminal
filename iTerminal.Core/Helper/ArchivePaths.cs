@@ -21,8 +21,7 @@ internal static class ArchivePaths
         }
 
         string full = Path.GetFullPath(Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar)));
-        return full.StartsWith(root, OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal)
-            ? full
-            : null;
+        var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        return full.StartsWith(root, comparison) ? full : null;
     }
 }

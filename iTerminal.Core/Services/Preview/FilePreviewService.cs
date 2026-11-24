@@ -311,9 +311,11 @@ public sealed class FilePreviewService(
         }
         catch (CappedStream.LimitReachedException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (Exception exception) when (exception.InnerException is CappedStream.LimitReachedException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (NotImplementedException)
         {
@@ -447,6 +449,7 @@ public sealed class FilePreviewService(
             }
             catch (DecoderFallbackException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
 

@@ -26,7 +26,7 @@ public class ItemInformation : iConsole.Controls.Control
     private string? _pendingFolderInformationRefreshUrl;
     private IContentModel? _pendingFolderInformationRefreshModel;
     private string? _lastFocusedInformationUrl;
-    private IMemoryCacheService _memoryCacheService;
+    private readonly IMemoryCacheService _memoryCacheService;
     private readonly FileDisguiseChecker? _disguiseChecker;
     private CancellationTokenSource? _disguiseCancellation;
     private string? _lastDisguiseUrl;
@@ -229,7 +229,7 @@ public class ItemInformation : iConsole.Controls.Control
         {
             try
             {
-                await _disguiseChecker.DetectAsync(path, source.Token);
+                await FileDisguiseChecker.DetectAsync(path, source.Token);
                 // Stale-result guard: the cursor must still be on the file that was read.
                 if (!source.IsCancellationRequested
                     && ReferenceEquals(ContentModel, expectedModel)
@@ -247,7 +247,7 @@ public class ItemInformation : iConsole.Controls.Control
             {
                 _logger?.Warning(ex, "File type check failed for {Url}", expectedUrl);
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void CancelPendingFolderInformationRefresh()
@@ -348,7 +348,7 @@ public class ItemInformation : iConsole.Controls.Control
 
                 cancellationTokenSource.Dispose();
             }
-        });
+        }, CancellationToken.None);
     }
 
     public override void OnInitializeCommands()
@@ -358,11 +358,6 @@ public class ItemInformation : iConsole.Controls.Control
         // -= first: this can run again, and a second subscription would refresh the line twice.
         ContentModel.PropertyChanged -= OnContentModelPropertyChanged;
         ContentModel.PropertyChanged += OnContentModelPropertyChanged;
-    }
-
-    public override void OnInitializeLayout()
-    {
-        base.OnInitializeLayout();
     }
 
     public override void Draw(IBuffer buffer)

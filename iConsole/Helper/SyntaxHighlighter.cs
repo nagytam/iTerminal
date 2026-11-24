@@ -752,7 +752,6 @@ public static class SyntaxHighlighter
             char c = line[i];
             if (language.BlockComment is { } block && string.CompareOrdinal(line, i, block.Start, 0, block.Start.Length) == 0)
             {
-                inBlockComment = true;
                 int close = line.IndexOf(block.End, i + block.Start.Length, StringComparison.Ordinal);
                 int stop = close < 0 ? length : close + block.End.Length;
                 spans.Add(new SyntaxSpan(i, stop - i, SyntaxKind.Comment));
@@ -979,20 +978,11 @@ public static class SyntaxHighlighter
 
     private static bool StartsLineComment(SyntaxLanguage language, string line, int index)
     {
-        foreach (string marker in language.LineComments)
-        {
-            if (string.Compare(line, index, marker, 0, marker.Length, StringComparison.OrdinalIgnoreCase) == 0)
-            {
-                // "rem" must start the line's first word; the symbol markers may sit anywhere.
-                if (char.IsLetter(marker[0]))
-                {
-                    return line.AsSpan(0, index).Trim().IsEmpty;
-                }
+        var marker = language.LineComments.FirstOrDefault(candidate => string.Compare(line, index, candidate, 0, candidate.Length, StringComparison.OrdinalIgnoreCase) == 0);
+        if (marker is null) return false;
 
-                return true;
-            }
-        }
-
-        return false;
+        // "rem" must start the line's first word; the symbol markers may sit anywhere.
+        if (char.IsLetter(marker[0])) return line.AsSpan(0, index).Trim().IsEmpty;
+        return true;
     }
 }

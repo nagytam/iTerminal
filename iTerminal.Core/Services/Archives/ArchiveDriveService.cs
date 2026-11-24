@@ -12,6 +12,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text;
 using ZstdSharp;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Services.Archives;
 
@@ -162,11 +163,12 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
             return cached.Index;
         }
 
-        var entries = EndingOf(archivePath, ZipEndings) is not null ? await Task.Run(() => ReadZipIndex(archivePath), cancellationToken)
-            : EndingOf(archivePath, TarEndings) is { } ending ? await Task.Run(() => ReadTarIndex(archivePath, ending, cancellationToken), cancellationToken)
-            : EndingOf(archivePath, SingleFileEndings) is { } singleEnding ? await Task.Run(() => ReadSingleFileIndex(archivePath, singleEnding, cancellationToken), cancellationToken)
-            : IsRar(archivePath) && _sevenZip.Value is null ? (await _unrar.ListAsync(archivePath, cancellationToken)).ToList()
-            : await ReadSevenZipIndexAsync(archivePath, cancellationToken);
+        List<ArchiveIndexEntry> entries;
+        if (EndingOf(archivePath, ZipEndings) is not null) entries = await Task.Run(() => ReadZipIndex(archivePath), cancellationToken);
+        else if (EndingOf(archivePath, TarEndings) is { } ending) entries = await Task.Run(() => ReadTarIndex(archivePath, ending, cancellationToken), cancellationToken);
+        else if (EndingOf(archivePath, SingleFileEndings) is { } singleEnding) entries = await Task.Run(() => ReadSingleFileIndex(archivePath, singleEnding, cancellationToken), cancellationToken);
+        else if (IsRar(archivePath) && _sevenZip.Value is null) entries = (await _unrar.ListAsync(archivePath, cancellationToken)).ToList();
+        else entries = await ReadSevenZipIndexAsync(archivePath, cancellationToken);
         var index = WithImpliedFolders(entries);
         _indexes[archivePath] = (info.Length, info.LastWriteTimeUtc, index);
         return index;
@@ -312,9 +314,9 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
 
         void Flush()
         {
-            var path = fields.TryGetValue("Path", out var listed) && listed.Length > 0 ? listed
-                : singleStreamName is not null && fields.ContainsKey("Method") ? singleStreamName
-                : null;
+            string? path = null;
+            if (fields.TryGetValue("Path", out var listed) && listed.Length > 0) path = listed;
+            else if (singleStreamName is not null && fields.ContainsKey("Method")) path = singleStreamName;
             if (path is not null)
             {
                 var isFolder = fields.TryGetValue("Folder", out var folder) ? folder == "+"

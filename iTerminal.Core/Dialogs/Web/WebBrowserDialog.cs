@@ -262,7 +262,7 @@ public class WebBrowserDialog : Dialog
                 // Esc stops a load that replaces a page; with nothing on screen yet there is nothing to keep, so it closes.
                 if (tab.IsLoading && tab.Current is not null)
                 {
-                    _model.Stop(tab);
+                    WebBrowserModel.Stop(tab);
                 }
                 else if (_findQuery.Length > 0)
                 {
@@ -282,7 +282,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace when !key.Shift && !key.Control && !key.Alt:
                 if (!_model.GoBack(tab))
                 {
-                    _model.Say(tab, UiText.Get("Web.NoEarlier", "There is no earlier page."));
+                    WebBrowserModel.Say(tab, UiText.Get("Web.NoEarlier", "There is no earlier page."));
                 }
 
                 return true;
@@ -290,7 +290,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace when key.Shift:
                 if (!_model.GoForward(tab))
                 {
-                    _model.Say(tab, UiText.Get("Web.NoLater", "There is no later page."));
+                    WebBrowserModel.Say(tab, UiText.Get("Web.NoLater", "There is no later page."));
                 }
 
                 return true;
@@ -346,7 +346,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Tab when !key.Alt:
                 if (!tab.MoveFocus(!key.Shift, ViewHeight))
                 {
-                    _model.Say(tab, UiText.Get("Web.NoLinks", "There are no links on this page."));
+                    WebBrowserModel.Say(tab, UiText.Get("Web.NoLinks", "There are no links on this page."));
                 }
 
                 return true;
@@ -367,7 +367,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.LeftArrow or ConsoleKey.RightArrow when !key.Control && !key.Alt:
                 if (FocusedField() is { Kind: WebFieldKind.Select } select)
                 {
-                    _model.CycleOption(tab, select, key.ConsoleKey == ConsoleKey.RightArrow ? 1 : -1);
+                    WebBrowserModel.CycleOption(tab, select, key.ConsoleKey == ConsoleKey.RightArrow ? 1 : -1);
                     return true;
                 }
 
@@ -578,14 +578,14 @@ public class WebBrowserDialog : Dialog
 
         if (PasteHelper.IsDeleteWordKey(key))
         {
-            _model.SetValue(tab, field, PasteHelper.DeleteLastWord(field.Value));
+            WebBrowserModel.SetValue(tab, field, PasteHelper.DeleteLastWord(field.Value));
             return true;
         }
 
         if (PasteHelper.IsPasteKey(key))
         {
             PasteHelper.Paste(
-                text => _model.SetValue(tab, field, field.Value + (field.Kind == WebFieldKind.TextArea ? text.Replace("\r\n", "\n").Replace('\r', '\n') : PasteHelper.SingleLine(text))),
+                text => WebBrowserModel.SetValue(tab, field, field.Value + (field.Kind == WebFieldKind.TextArea ? text.Replace("\r\n", "\n").Replace('\r', '\n') : PasteHelper.SingleLine(text))),
                 StateHasChanged);
             return true;
         }
@@ -604,7 +604,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Enter:
                 if (field.Kind == WebFieldKind.TextArea)
                 {
-                    _model.SetValue(tab, field, field.Value + "\n");
+                    WebBrowserModel.SetValue(tab, field, field.Value + "\n");
                     return true;
                 }
 
@@ -615,18 +615,18 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace:
                 if (field.Value.Length > 0)
                 {
-                    _model.SetValue(tab, field, field.Value[..^1]);
+                    WebBrowserModel.SetValue(tab, field, field.Value[..^1]);
                 }
 
                 return true;
             case ConsoleKey.U when key.Control:
-                _model.SetValue(tab, field, string.Empty);
+                WebBrowserModel.SetValue(tab, field, string.Empty);
                 return true;
         }
 
         if (ConsoleKeyHelper.IsTypingKey(key))
         {
-            _model.SetValue(tab, field, field.Value + key.KeyChar);
+            WebBrowserModel.SetValue(tab, field, field.Value + key.KeyChar);
             return true;
         }
 
@@ -753,11 +753,11 @@ public class WebBrowserDialog : Dialog
         var url = tab.Url;
         if (url.Length == 0 || url.StartsWith("about:", StringComparison.OrdinalIgnoreCase))
         {
-            _model.Say(tab, UiText.Get("Web.NoBookmark", "This page cannot be bookmarked."));
+            WebBrowserModel.Say(tab, UiText.Get("Web.NoBookmark", "This page cannot be bookmarked."));
             return;
         }
 
-        _model.Say(tab, _model.Store.ToggleBookmark(url, tab.Title) ? UiText.Get("Web.Bookmarked", "Bookmarked.") : UiText.Get("Web.BookmarkRemoved", "Bookmark removed."));
+        WebBrowserModel.Say(tab, _model.Store.ToggleBookmark(url, tab.Title) ? UiText.Get("Web.Bookmarked", "Bookmarked.") : UiText.Get("Web.BookmarkRemoved", "Bookmark removed."));
     }
 
     private void ToggleSource()
@@ -780,11 +780,11 @@ public class WebBrowserDialog : Dialog
         var tab = _model.Active;
         try
         {
-            _model.Say(tab, string.Format(UiText.Get("Web.SavedTo", "Saved to {0}"), _model.Save(tab)));
+            WebBrowserModel.Say(tab, string.Format(UiText.Get("Web.SavedTo", "Saved to {0}"), _model.Save(tab)));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
-            _model.Say(tab, string.Format(UiText.Get("Web.SaveFailed", "Could not save: {0}"), exception.Message));
+            WebBrowserModel.Say(tab, string.Format(UiText.Get("Web.SaveFailed", "Could not save: {0}"), exception.Message));
         }
     }
 
@@ -845,7 +845,7 @@ public class WebBrowserDialog : Dialog
     private WebField? FocusedField()
     {
         var tab = _model.Active;
-        return tab.FocusedWebItem is { IsField: true } item ? _model.FieldOf(tab, item) : null;
+        return tab.FocusedWebItem is { IsField: true } item ? WebBrowserModel.FieldOf(tab, item) : null;
     }
 
     /// <summary>Enter on the focused item. With nothing focused the first link or control on screen is taken, as Tab would.</summary>
@@ -859,7 +859,7 @@ public class WebBrowserDialog : Dialog
 
         if (item.IsField)
         {
-            if (_model.FieldOf(tab, item) is { } field)
+            if (WebBrowserModel.FieldOf(tab, item) is { } field)
             {
                 ActivateField(field);
             }
@@ -885,22 +885,22 @@ public class WebBrowserDialog : Dialog
                 _mode = Mode.Field;
                 break;
             case WebFieldKind.Checkbox or WebFieldKind.Radio:
-                _model.Toggle(tab, field);
+                WebBrowserModel.Toggle(tab, field);
                 break;
             case WebFieldKind.Select:
-                _model.CycleOption(tab, field, 1);
+                WebBrowserModel.CycleOption(tab, field, 1);
                 break;
             case WebFieldKind.Submit:
                 _ = _model.SubmitAsync(tab, field);
                 break;
             case WebFieldKind.Reset:
-                _model.ResetForm(tab, field);
+                WebBrowserModel.ResetForm(tab, field);
                 break;
             case WebFieldKind.Button:
-                _model.Say(tab, UiText.Get("Web.NeedsScript", "This button needs JavaScript, which the Web Browser does not run."));
+                WebBrowserModel.Say(tab, UiText.Get("Web.NeedsScript", "This button needs JavaScript, which the Web Browser does not run."));
                 break;
             case WebFieldKind.File:
-                _model.Say(tab, UiText.Get("Web.NoUpload", "Uploading files is not supported."));
+                WebBrowserModel.Say(tab, UiText.Get("Web.NoUpload", "Uploading files is not supported."));
                 break;
         }
     }
@@ -922,7 +922,8 @@ public class WebBrowserDialog : Dialog
 
             // A new search starts on the line at the top of the screen; "next" and "previous" start beside it.
             var count = page.Lines.Count;
-            var start = entry.Scroll + (inclusive ? 0 : forward ? 1 : -1);
+            var direction = forward ? 1 : -1;
+            var start = entry.Scroll + (inclusive ? 0 : direction);
             for (var i = 0; i < count; i++)
             {
                 var line = ((forward ? start + i : start - i) % count + count) % count;
@@ -1000,7 +1001,7 @@ public class WebBrowserDialog : Dialog
             {
                 if (tab.IsLoading)
                 {
-                    _model.Stop(tab);
+                    WebBrowserModel.Stop(tab);
                 }
                 else
                 {
@@ -1113,7 +1114,7 @@ public class WebBrowserDialog : Dialog
             _mode = Mode.Browse;
             if (item.IsField)
             {
-                if (_model.FieldOf(tab, item) is { } field)
+                if (WebBrowserModel.FieldOf(tab, item) is { } field)
                 {
                     ActivateField(field);
                 }
@@ -1173,7 +1174,7 @@ public class WebBrowserDialog : Dialog
                 DrawHelp(buffer, scheme, _screenX, _screenY + 2, width, _contentHeight);
                 break;
             default:
-                _model.EnsureLayout(tab, _contentWidth);
+                WebBrowserModel.EnsureLayout(tab, _contentWidth);
                 DrawPage(buffer, scheme, tab, _screenX, _screenY + 2, width, _contentHeight);
                 break;
         }
@@ -1254,7 +1255,8 @@ public class WebBrowserDialog : Dialog
         }
 
         var background = editing ? Color.White : scheme.ButtonBackground;
-        var foreground = editing ? Color.Black : tab.Url.Length == 0 ? scheme.DisabledForeground : scheme.Foreground;
+        var foreground = editing ? Color.Black : scheme.Foreground;
+        if (!editing && tab.Url.Length == 0) foreground = scheme.DisabledForeground;
         cells.Append("[", scheme.Foreground, scheme.Background);
         cells.Append(text.PadRight(inner), foreground, background);
         cells.Append("]", scheme.Foreground, scheme.Background);
@@ -1275,7 +1277,14 @@ public class WebBrowserDialog : Dialog
             document = entry?.Document;
             scroll = entry?.Scroll ?? 0;
             focusedIndex = entry?.FocusedItem ?? -1;
-            notice = tab.IsLoading && entry is null ? string.Format(UiText.Get("Web.Loading", "Loading {0}…"), tab.LoadingUrl) : entry is null ? UiText.Get("Web.EnterAddress", "Press Ctrl+L to enter an address, or F1 for help.") : UiText.Get("Web.Layout", "Laying out the page…");
+            if (tab.IsLoading && entry is null)
+            {
+                notice = string.Format(UiText.Get("Web.Loading", "Loading {0}…"), tab.LoadingUrl);
+            }
+            else
+            {
+                notice = entry is null ? UiText.Get("Web.EnterAddress", "Press Ctrl+L to enter an address, or F1 for help.") : UiText.Get("Web.Layout", "Laying out the page…");
+            }
         }
 
         WebItem? focus = page is not null && focusedIndex >= 0 && focusedIndex < page.Items.Count ? page.Items[focusedIndex] : null;
@@ -1354,8 +1363,10 @@ public class WebBrowserDialog : Dialog
                 var field = document.Fields[span.Field];
                 var editing = _mode == Mode.Field && ReferenceEquals(_editing, field);
                 text = field.Render(span.Text.Length, editing);
-                foreground = editing ? Color.Black : field.IsButton ? Color.White : scheme.Foreground;
-                background = editing ? Color.White : field.IsButton ? Color.DarkBlue : scheme.ButtonBackground;
+                foreground = editing ? Color.Black : scheme.Foreground;
+                if (field.IsButton && !editing) foreground = Color.White;
+                background = editing ? Color.White : scheme.ButtonBackground;
+                if (field.IsButton && !editing) background = Color.DarkBlue;
                 if (field.Disabled)
                 {
                     foreground = scheme.DisabledForeground;
@@ -1461,7 +1472,8 @@ public class WebBrowserDialog : Dialog
             }
             else
             {
-                text = row == 0 && _list.Count == 0 ? (_mode == Mode.Bookmarks ? " No bookmarks yet. Press Ctrl+D on a page to add one." : " Nothing visited yet.") : string.Empty;
+                text = string.Empty;
+                if (row == 0 && _list.Count == 0) text = _mode == Mode.Bookmarks ? " No bookmarks yet. Press Ctrl+D on a page to add one." : " Nothing visited yet.";
                 foreground = scheme.DisabledForeground;
                 background = scheme.Background;
             }
@@ -1539,7 +1551,10 @@ public class WebBrowserDialog : Dialog
                     color = scheme.DisabledForeground;
                 }
 
-                var right = total == 0 ? string.Empty : total <= ViewHeight ? " All " : $" {Math.Min(100, (scroll + ViewHeight) * 100 / total)}% ";
+                string right;
+                if (total == 0) right = string.Empty;
+                else if (total <= ViewHeight) right = " All ";
+                else right = $" {Math.Min(100, (scroll + ViewHeight) * 100 / total)}% ";
                 left = Shorten(left, Math.Max(1, width - right.Length)).PadRight(Math.Max(0, width - right.Length)) + right;
                 break;
         }
@@ -1588,7 +1603,8 @@ public class WebBrowserDialog : Dialog
             return string.Empty;
         }
 
-        return text.Length <= max ? text : max <= 1 ? text[..max] : text[..(max - 1)] + "…";
+        if (text.Length <= max) return text;
+        return max <= 1 ? text[..max] : text[..(max - 1)] + "…";
     }
 
     #endregion

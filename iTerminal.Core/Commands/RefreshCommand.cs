@@ -12,7 +12,7 @@ public class RefreshCommand(IContentModel contentModel) : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.R, false, false, true);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         contentModel?.Refresh(true);
         return Task.CompletedTask;

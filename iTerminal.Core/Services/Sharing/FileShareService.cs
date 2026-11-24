@@ -82,14 +82,16 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
 
             int port = ((IPEndPoint)listener.LocalEndpoint).Port;
             string token = FileShareToken.Create();
+            #pragma warning disable S5332 // The address is fixed by the protocol, the service or the data it points at; it is not a choice the app makes.
             string url = $"http://{address}:{port}/{token}/";
+            #pragma warning restore S5332
             bool[,] qr = QrEncoder.Encode(Encoding.UTF8.GetBytes(url));
 
             CancellationTokenSource cancellation = new();
             FileShareRequestHandler handler = new(selectedPaths, token);
             _listener = listener;
             _cancellation = cancellation;
-            _acceptLoop = Task.Run(() => AcceptLoopAsync(listener, handler, cancellation.Token));
+            _acceptLoop = Task.Run(() => AcceptLoopAsync(listener, handler, cancellation.Token), cancellationToken);
             SetState(FileShareStatus.Running, url, qr, null);
             return new FileShareStartResult(true, url, null);
         }
@@ -104,7 +106,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
         TcpListener? listener;
         CancellationTokenSource? cancellation;
         Task? acceptLoop;
-        await _gate.WaitAsync();
+        await _gate.WaitAsync(CancellationToken.None);
         try
         {
             listener = _listener;
@@ -119,12 +121,12 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
             _gate.Release();
         }
 
-        cancellation?.Cancel();
+        if (cancellation is not null) await cancellation.CancelAsync();
         listener?.Stop();
         if (acceptLoop is not null)
         {
             // The accept loop ends when the listener stops. A read that cannot be cancelled is not awaited.
-            await Task.WhenAny(acceptLoop, Task.Delay(StopWait));
+            await Task.WhenAny(acceptLoop, Task.Delay(StopWait, CancellationToken.None));
         }
 
         cancellation?.Dispose();
@@ -181,13 +183,13 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
                 break;
             }
 
-            if (!connections.Wait(0))
+            if (!await connections.WaitAsync(0, cancellationToken))
             {
                 client.Dispose();
                 continue;
             }
 
-            _ = Task.Run(() => ServeAsync(client, handler, cancellationToken))
+            _ = Task.Run(() => ServeAsync(client, handler, cancellationToken), cancellationToken)
                 .ContinueWith(_ => connections.Release(), TaskScheduler.Default);
         }
     }
@@ -206,10 +208,10 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
                         await handler.WriteResponseAsync(read.Request.Method, read.Request.Target, stream, cancellationToken);
                         break;
                     case HttpReadStatus.TooLarge:
-                        await handler.WriteErrorAsync(stream, 413, cancellationToken);
+                        await FileShareRequestHandler.WriteErrorAsync(stream, 413, cancellationToken);
                         break;
                     case HttpReadStatus.Malformed:
-                        await handler.WriteErrorAsync(stream, 400, cancellationToken);
+                        await FileShareRequestHandler.WriteErrorAsync(stream, 400, cancellationToken);
                         break;
                 }
 

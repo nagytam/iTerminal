@@ -511,8 +511,8 @@ public partial class TextViewerControl : Control
     private void ExtendSelectionTo(Position pointer)
     {
         var (cursorRow, cursorColumn) = ClampedCursor();
-        long column = (long)pointer.X - (long)AbsolutePosition.X;
-        long row = (long)pointer.Y - (long)AbsolutePosition.Y;
+        long column = pointer.X - AbsolutePosition.X;
+        long row = pointer.Y - AbsolutePosition.Y;
         var viewWidth = ViewSize.Width - 1;
         var viewHeight = ViewSize.Height - 1;
 
@@ -524,7 +524,7 @@ public partial class TextViewerControl : Control
             IReadOnlyList<TextRow> screenRows = ScreenRows;
             if (row >= 0 && row < viewHeight)
             {
-                TextRow under = screenRows[(int)Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, screenRows.Count - 1)];
+                TextRow under = screenRows[(int)Math.Clamp(ScrollableModel.ScrollPosition.Y + row, 0, screenRows.Count - 1)];
                 newRow = under.Line;
                 rowStart = under.Start;
             }
@@ -535,16 +535,16 @@ public partial class TextViewerControl : Control
         }
         else
         {
-            newRow = row < 0 ? cursorRow - 1
-                : row >= viewHeight ? cursorRow + 1
-                : (long)ScrollableModel.ScrollPosition.Y + row;
+            if (row < 0) newRow = cursorRow - 1;
+            else if (row >= viewHeight) newRow = cursorRow + 1;
+            else newRow = ScrollableModel.ScrollPosition.Y + row;
         }
 
         newRow = Math.Clamp(newRow, 0, TextModel.Lines.Count - 1);
-        var newColumn = column < 0 ? cursorColumn - 1
-            : column >= viewWidth ? cursorColumn + 1
-            : RowMode ? rowStart + Math.Max(0, column - GutterWidth)
-            : (long)ScrollableModel.ScrollPosition.X + column;
+        var newColumn = ScrollableModel.ScrollPosition.X + column;
+        if (RowMode) newColumn = rowStart + Math.Max(0, column - GutterWidth);
+        if (column < 0) newColumn = cursorColumn - 1;
+        else if (column >= viewWidth) newColumn = cursorColumn + 1;
         newColumn = Math.Clamp(newColumn, 0, TextModel.Lines[(int)newRow].Length);
 
         ScrollableModel.CursorPosition.Y = newRow;
@@ -934,8 +934,8 @@ public partial class TextViewerControl : Control
         if (mouseEvent.LeftClicked && mouseEvent.WheelDelta == 0)
         {
             ClearSelection();
-            long column = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-            long row = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+            long column = mouseEvent.Position.X - AbsolutePosition.X;
+            long row = mouseEvent.Position.Y - AbsolutePosition.Y;
             if (column >= ViewSize.Width - 1 || row >= ViewSize.Height - 1)
             {
                 return false;
@@ -946,12 +946,12 @@ public partial class TextViewerControl : Control
                 SetFocus();
             }
 
-            long line = Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, TextModel.Lines.Count - 1);
+            long line = Math.Clamp(ScrollableModel.ScrollPosition.Y + row, 0, TextModel.Lines.Count - 1);
             long lineStart = 0;
             if (RowMode && ScreenRows.Count > 0)
             {
                 // A wrapped row is part of a line: the click lands on that line, at its place in the row.
-                TextRow clicked = ScreenRows[(int)Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, ScreenRows.Count - 1)];
+                TextRow clicked = ScreenRows[(int)Math.Clamp(ScrollableModel.ScrollPosition.Y + row, 0, ScreenRows.Count - 1)];
                 line = clicked.Line;
                 lineStart = clicked.Start;
                 if (_enableFolding && column < GutterWidth && lineStart == 0 && CanFold((int)line))
@@ -966,7 +966,7 @@ public partial class TextViewerControl : Control
             if (_isCursorEnabled)
             {
                 ScrollableModel.CursorPosition.Y = line;
-                ScrollableModel.CursorPosition.X = Math.Clamp(lineStart + (RowMode ? -GutterWidth : (long)ScrollableModel.ScrollPosition.X) + column, 0, TextModel.Lines[(int)line].Length);
+                ScrollableModel.CursorPosition.X = Math.Clamp(lineStart + (RowMode ? -GutterWidth : ScrollableModel.ScrollPosition.X) + column, 0, TextModel.Lines[(int)line].Length);
                 _selectionAnchor = ClampedCursor();
                 _dragSelecting = true;
             }
@@ -1003,7 +1003,7 @@ public partial class TextViewerControl : Control
 
         if (ViewSize.IsEmpty)
         {
-            return; // TODO
+            return;
         }
 
         _verticalScrollBar.Marks = SearchMarks();
@@ -1042,7 +1042,6 @@ public partial class TextViewerControl : Control
                 line = line[positionX..]
                     .PadRight(Math.Max(0, (int)ViewSize.Width - 2));
                 var conxelLine = new ConxelString(line, foregroundColor, backgroundColor);
-                var highlightPositionX = (int)(positionX - ScrollableModel.ScrollPosition.X);
                 bool isCursorLine = ScrollableModel.CursorPosition.Y == indexY;
                 // The cursor's row keeps the cursor colours; the others are coloured by what the text is.
                 ColorizeSyntax(conxelLine, TextModel.Lines[(int)indexY], inComment, positionX, out inComment, isCursorLine);
@@ -1050,7 +1049,7 @@ public partial class TextViewerControl : Control
                 ApplyDecorations(conxelLine, (int)indexY, positionX, isCursorLine);
                 ApplySpelling(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 DecorateText(conxelLine, (int)indexY, positionX, isCursorLine, colorScheme);
-                HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
+                HighlightSearchResults(conxelLine, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
                 MarkWhitespace(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 MarkLineEnd(conxelLine, TextModel.Lines[(int)indexY], positionX, colorScheme);
@@ -1202,7 +1201,7 @@ public partial class TextViewerControl : Control
             return _searchMarks;
         }
 
-        var key = (count, SearchModel.Search, (long)TextModel.Lines.Count, hits.First().Y);
+        var key = (count, SearchModel.Search, (long)TextModel.Lines.Count, hits[0].Y);
         if (_searchMarksKey != key)
         {
             _searchMarks = hits.Select(hit => hit.Y).Distinct().OrderBy(line => line).ToArray();
@@ -1212,7 +1211,7 @@ public partial class TextViewerControl : Control
         return _searchMarks;
     }
 
-    private void HighlightSearchResults(ConxelString conxelLine, int x, int y)
+    private void HighlightSearchResults(ConxelString conxelLine, int y)
     {
         var colorScheme = ThemeService.CurrentColorScheme;
         var matchingLines = SearchModel.Hits.AsSnapshot().Where(h => h.Y == y);

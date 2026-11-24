@@ -25,6 +25,7 @@ public sealed class TerminalInputUtf8Decoder
     {
         while (TryConsumeOne(emitKey, emitMouse))
         {
+            // Reading to the end is the whole job; there is nothing to do per item.
         }
     }
 

@@ -38,8 +38,6 @@ public class FileDiffDialog : Dialog
 
     private readonly DiffView _view;
     private readonly BinaryDiffView _hexView;
-    private byte[]? _leftBytes;
-    private byte[]? _rightBytes;
     private volatile BinaryDiffResult? _binary;
     private volatile bool _hexMode;
     private CancellationTokenSource? _cancellation;
@@ -99,8 +97,6 @@ public class FileDiffDialog : Dialog
         _ignoreCase = false;
         _leftLines = null;
         _rightLines = null;
-        _leftBytes = null;
-        _rightBytes = null;
         _binary = null;
         _hexMode = false;
         Result = null;
@@ -131,8 +127,6 @@ public class FileDiffDialog : Dialog
                 var leftBytes = await ReadAsync(left, leftFileSystem, token);
                 var rightBytes = await ReadAsync(right, rightFileSystem, token);
                 var binary = BinaryComparer.Compare(leftBytes, rightBytes);
-                _leftBytes = leftBytes;
-                _rightBytes = rightBytes;
                 _binary = binary;
                 _hexView.SetData(leftBytes, rightBytes, binary);
 
@@ -160,7 +154,7 @@ public class FileDiffDialog : Dialog
             {
                 SetStatus(Say("FileDiff.Status.CouldNotRead", "Could not read the files: {0}", exception.Message), isError: true);
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F4: switches between a text file's lines and its bytes. A binary file has no lines, so it stays in hex.</summary>
@@ -441,7 +435,7 @@ public class FileDiffDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
-    private void RecomputeInBackground() => LoadTask = Task.Run(Recompute);
+    private void RecomputeInBackground() => LoadTask = Task.Run(Recompute, CancellationToken.None);
 
     private void Scroll(int rows)
     {
@@ -488,7 +482,7 @@ public class FileDiffDialog : Dialog
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
         var inner = Math.Max(0, width - 2);
-        var column = _view.ColumnWidth(inner);
+        var column = FileDiffDialog.DiffView.ColumnWidth(inner);
 
         void Write(int x, int row, string text, int length, Color color) =>
             buffer.Write(ZOrder, new Position(AbsolutePosition.X + x, AbsolutePosition.Y + row), new Size(length, 1),
@@ -517,7 +511,8 @@ public class FileDiffDialog : Dialog
         Write(1, (int)ViewSize.Height - 2, " " + _status + position + options, inner, _statusIsError ? colorScheme.Error : foreground);
 
         // F4 only means something where there are lines to go back to.
-        var toggle = _leftLines is null ? string.Empty : _hexMode ? "  F4:text" : "  F4:hex";
+        var toggle = string.Empty;
+        if (_leftLines is not null) toggle = _hexMode ? "  F4:text" : "  F4:hex";
         var hints = _hexMode
             ? $" N/P:next/prev difference{toggle}  ↑↓ PgUp PgDn wheel  Esc:close ".FitHints(Math.Max(0, width - 4))
             : $" N/P:next/prev difference  W:whitespace  C:case{toggle}  ↑↓ PgUp PgDn wheel ←→:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
@@ -547,7 +542,7 @@ public class FileDiffDialog : Dialog
             }
         }
 
-        public int ColumnWidth(int totalWidth) => Math.Max(1, (totalWidth - 1) / 2);
+        public static int ColumnWidth(int totalWidth) => Math.Max(1, (totalWidth - 1) / 2);
 
         public void SetResult(TextDiffResult? result)
         {

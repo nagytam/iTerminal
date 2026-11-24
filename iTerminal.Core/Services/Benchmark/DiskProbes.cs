@@ -122,7 +122,9 @@ public sealed class DiskRandomReadProbe : IBenchmarkProbe
         }
 
         // A fixed seed: every run reads the same places, so two runs differ by the machine and not by the luck of the draw.
+        #pragma warning disable S2245 // Seeded for repeatable play or tests; not a security use.
         var random = new Random(12345);
+        #pragma warning restore S2245
         long blocks = file.Length / BlockBytes;
         byte[] buffer = new byte[BlockBytes];
         using SafeFileHandle handle = File.OpenHandle(file.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, FileOptions.RandomAccess);

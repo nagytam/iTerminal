@@ -124,7 +124,7 @@ public class ParquetViewerDialog : Dialog
         CancellationToken token = _cancellation.Token;
         string path = Url.Path;
         // The reader opens the file, so the whole call runs on a worker thread.
-        _read = Task.Run(() => _reader.ReadPreviewAsync(path, MaxRows, MaxColumns, MaxCells, token));
+        _read = Task.Run(() => _reader.ReadPreviewAsync(path, MaxRows, MaxColumns, MaxCells, token), CancellationToken.None);
     }
 
     /// <summary>Puts finished work on screen: a read, a query or an AI draft. A cancelled one is dropped without a word; a failed one keeps the grid.</summary>
@@ -423,7 +423,7 @@ public class ParquetViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(ParquetViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

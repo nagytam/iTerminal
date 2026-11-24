@@ -67,7 +67,7 @@ public class ComboBox<T> : Control, IReadOnly
         _items.AddRange(items);
         _selectedIndex = _items.Count == 0
             ? -1
-            : Math.Clamp(_selectedIndex < 0 ? 0 : _selectedIndex, 0, _items.Count - 1);
+            : Math.Clamp(Math.Max(0, _selectedIndex), 0, _items.Count - 1);
         StateHasChanged();
     }
 
@@ -278,9 +278,9 @@ public class ComboBox<T> : Control, IReadOnly
         line.Append(Fit(selectedText, innerWidth), wellForeground, wellBackground);
         line.Append(Border.End, wellForeground, wellBackground);
 
-        var glyphForeground = IsReadOnly
-            ? colorScheme.DisabledForeground
-            : IsFocused ? colorScheme.SelectedFocusedForeground : foreground;
+        var glyphForeground = foreground;
+        if (IsReadOnly) glyphForeground = colorScheme.DisabledForeground;
+        else if (IsFocused) glyphForeground = colorScheme.SelectedFocusedForeground;
         line.Append(DropDownGlyph, glyphForeground, background);
 
         if (line.Count < width)
@@ -301,7 +301,7 @@ public class ComboBox<T> : Control, IReadOnly
         return text.Length > width ? text[..width] : text.PadRight(width);
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         if (IsReadOnly)
         {
@@ -311,17 +311,16 @@ public class ComboBox<T> : Control, IReadOnly
         switch (visualState)
         {
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Focused:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.Background;
                 break;
-            case VisualState.Normal:
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

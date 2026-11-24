@@ -99,12 +99,9 @@ public static class IWorkTextReader
     {
         using ZipArchive nested = new(new MemoryStream(ReadEntry(entry)), ZipArchiveMode.Read);
         int added = 0;
-        foreach (ZipArchiveEntry inner in nested.Entries.OrderBy(e => e.FullName, StringComparer.Ordinal))
+        foreach (ZipArchiveEntry inner in (nested.Entries.OrderBy(e => e.FullName, StringComparer.Ordinal)).Where(inner => IsArchive(inner.FullName) && TryAdd(document, inner)))
         {
-            if (IsArchive(inner.FullName) && TryAdd(document, inner))
-            {
-                added++;
-            }
+            added++;
         }
 
         return added;
@@ -251,7 +248,7 @@ public static class IWorkTextReader
         foreach (ReadOnlyMemory<byte> run in ProtobufWire.AllBytes(ProtobufWire.Parse(storage), 3))
         {
             string text = Encoding.UTF8.GetString(run.Span).Replace("￼", string.Empty).Replace('\u0007', ' ');
-            foreach (string line in text.Split(['\n', '\r', '\u2028', '\u2029']))
+            foreach (string line in text.Split('\n', '\r', '\u2028', '\u2029'))
             {
                 lines.Add(line.TrimEnd());
             }

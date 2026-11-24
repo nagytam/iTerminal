@@ -31,7 +31,6 @@ public class HashManifestDialog : Dialog
     private readonly FormPanel _form;
     private readonly ComboBox<ChecksumAlgorithm> _comboAlgorithm;
     private readonly ResultList _list;
-    private readonly Lock _lock = new();
     private CancellationTokenSource? _cancellation;
     private volatile string _status = string.Empty;
     private volatile bool _statusIsError;
@@ -240,7 +239,7 @@ public class HashManifestDialog : Dialog
                 _progress = null;
                 StateHasChanged();
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F3: checks the folder against a manifest and lists every row as OK, changed, missing or extra.</summary>
@@ -292,7 +291,7 @@ public class HashManifestDialog : Dialog
                 _progress = null;
                 StateHasChanged();
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>The conventional manifest in the folder, if there is one: <c>SHA256SUMS</c> first, then the others.</summary>
@@ -312,6 +311,7 @@ public class HashManifestDialog : Dialog
                 }
                 catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or NotSupportedException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }

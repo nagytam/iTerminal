@@ -23,7 +23,9 @@ public class Meter(IThemeService themeService) : Control(themeService)
         set
         {
             var clamped = double.IsNaN(value) ? 0.0 : Math.Clamp(value, 0.0, 1.0);
+            #pragma warning disable S1244 // Exact on purpose: the values are copies of the same number (a change check) or a test for a whole number.
             if (_value != clamped)
+            #pragma warning restore S1244
             {
                 _value = clamped;
                 StateHasChanged();
@@ -72,22 +74,22 @@ public class Meter(IThemeService themeService) : Control(themeService)
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(line, fg, bg));
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Focused:
             case VisualState.Selected:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.SelectedFocusedBackground;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.SelectedFocusedBackground;
                 break;
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

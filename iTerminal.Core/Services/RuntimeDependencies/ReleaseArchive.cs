@@ -102,6 +102,7 @@ internal static class ReleaseArchive
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 }

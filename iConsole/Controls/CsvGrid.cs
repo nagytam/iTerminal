@@ -271,8 +271,10 @@ public class CsvGrid : Control
             }
 
             bool cursorRow = row == _cursorRow;
-            Color background = cursorRow && IsFocused ? scheme.SelectedFocusedBackground : cursorRow ? scheme.SelectedBackground : scheme.Background;
-            Color foreground = cursorRow && IsFocused ? scheme.SelectedFocusedForeground : cursorRow ? scheme.SelectedForeground : text;
+            Color background = scheme.Background;
+            if (cursorRow) background = IsFocused ? scheme.SelectedFocusedBackground : scheme.SelectedBackground;
+            Color foreground = text;
+            if (cursorRow) foreground = IsFocused ? scheme.SelectedFocusedForeground : scheme.SelectedForeground;
             string mark = _marked.Contains(row) ? MarkedCell : UnmarkedCell;
             WriteLine(buffer, y, width, mark + Compose(_firstColumn, last, column => Display(Field(_rows[row], column))), foreground, background);
             if (cursorRow && IsFocused)

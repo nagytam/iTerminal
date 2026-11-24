@@ -49,9 +49,9 @@ public sealed record ShellLaunch(string FileName, IReadOnlyList<string> Argument
 
         if (OperatingSystem.IsWindows())
         {
-            return FindOnPath("pwsh.exe") is { } pwsh
-                ? new ShellLaunch(pwsh, ["-NoLogo"], folder, folder)
-                : new ShellLaunch(Environment.GetEnvironmentVariable("ComSpec") is { Length: > 0 } comSpec ? comSpec : "cmd.exe", [], folder, folder);
+            if (FindOnPath("pwsh.exe") is { } pwsh) return new ShellLaunch(pwsh, ["-NoLogo"], folder, folder);
+            var comSpecShell = Environment.GetEnvironmentVariable("ComSpec") is { Length: > 0 } comSpec ? comSpec : "cmd.exe";
+            return new ShellLaunch(comSpecShell, [], folder, folder);
         }
 
         var shell = Environment.GetEnvironmentVariable("SHELL");

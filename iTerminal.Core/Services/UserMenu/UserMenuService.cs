@@ -256,8 +256,9 @@ public class UserMenuService(string filePath, IInteractiveShellService shellServ
             await File.WriteAllTextAsync(script, body.ToString(), cancellationToken);
 
             var folder = Directory.Exists(context.Folder) ? context.Folder : null;
+            var windowsShell = Environment.GetEnvironmentVariable("ComSpec") is { Length: > 0 } comSpec ? comSpec : "cmd.exe";
             var launch = OperatingSystem.IsWindows()
-                ? new ShellLaunch(Environment.GetEnvironmentVariable("ComSpec") is { Length: > 0 } comSpec ? comSpec : "cmd.exe", ["/c", script], folder, context.Folder)
+                ? new ShellLaunch(windowsShell, ["/c", script], folder, context.Folder)
                 : new ShellLaunch("/bin/sh", [script], folder, context.Folder);
             var outcome = await shellService.RunAsync(launch with { Banner = string.Empty }, cancellationToken);
 
@@ -285,6 +286,7 @@ public class UserMenuService(string filePath, IInteractiveShellService shellServ
             }
             catch (IOException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
     }

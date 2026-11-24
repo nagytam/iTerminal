@@ -21,7 +21,7 @@ public class SearchTextCommand(ISearchModel searchModel, ITextModel textModel, I
         return true;
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var searchTextDialog = Control?.Parent as SearchTextDialog;
         string search = searchTextDialog?.SearchValue ?? string.Empty;
@@ -42,7 +42,7 @@ public class SearchTextCommand(ISearchModel searchModel, ITextModel textModel, I
         _searchModel.SetHits(hits);
         if (_searchModel.Hits.Count > 0)
         {
-            var hit = _searchModel.Hits.First();
+            var hit = _searchModel.Hits[0];
             _scrollableModel.CursorPosition = hit;
             _scrollableModel.ScrollToVisible();
             searchTextDialog?.Close();

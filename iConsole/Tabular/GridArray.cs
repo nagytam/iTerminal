@@ -71,7 +71,7 @@ public sealed class GridArrayView
     public static GridArrayView Open(IGridArraySource source)
     {
         int rank = source.Shape.Count;
-        int rowAxis = rank == 0 ? -1 : rank == 1 ? 0 : rank - 2;
+        int rowAxis = rank switch { 0 => -1, 1 => 0, _ => rank - 2 };
         int columnAxis = rank >= 2 ? rank - 1 : -1;
         return new GridArrayView(source, new long[rank], rowAxis, columnAxis);
     }
@@ -148,7 +148,10 @@ public sealed class GridArrayView
         IReadOnlyList<string> fields = _source.Fields;
         bool byField = ColumnAxis < 0 && fields.Count > 0;
         long rowsAvailable = RowAxis >= 0 ? Shape[RowAxis] : 1;
-        long columnsAvailable = ColumnAxis >= 0 ? Shape[ColumnAxis] : byField ? fields.Count : 1;
+        long columnsAvailable;
+        if (ColumnAxis >= 0) columnsAvailable = Shape[ColumnAxis];
+        else if (byField) columnsAvailable = fields.Count;
+        else columnsAvailable = 1;
         if (rowsAvailable == 0 || columnsAvailable == 0)
         {
             // Nothing to read, but the columns are still named: a file with headers and no rows keeps its headers.
@@ -166,7 +169,9 @@ public sealed class GridArrayView
         for (int axis = 0; axis < Rank; axis++)
         {
             start[axis] = axis == RowAxis || axis == ColumnAxis ? 0 : _index[axis];
-            count[axis] = axis == RowAxis ? rows : axis == ColumnAxis ? columns : 1;
+            if (axis == RowAxis) count[axis] = rows;
+            else if (axis == ColumnAxis) count[axis] = columns;
+            else count[axis] = 1;
         }
 
         IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, count, cancellationToken);
@@ -219,7 +224,7 @@ public sealed class GridArrayView
     }
 
     /// <summary>The axis clause of a query (<c>AT</c>, <c>ROWS</c>, <c>COLUMNS</c>), or null when it has none or does not parse.</summary>
-    public GridAxisClause? AxisClauseOf(string text) => GridQuery.AxisClauseOf(text);
+    public static GridAxisClause? AxisClauseOf(string text) => GridQuery.AxisClauseOf(text);
 
     /// <summary>
     /// Runs a query over a window of the array: the rows and columns are the axes the clause names (or the array's own), each fixed axis
@@ -253,7 +258,7 @@ public sealed class GridArrayView
         }
 
         GridTable table = await window.MaterializeAsync(int.MaxValue, int.MaxValue, (int)Math.Min(int.MaxValue, DefaultChunkCells), cancellationToken, withRowNumbers: false);
-        GridQueryResult shaped = GridQuery.Execute(table.Headers, table.Rows, GridQuery.Parse(text, table.Headers));
+        GridQueryResult shaped = GridQuery.Execute(table.Headers, table.Rows, GridQuery.Parse(text, table.Headers), cancellationToken);
         return shaped with { Truncated = table.RowsTruncated || table.ColumnsTruncated };
     }
 
@@ -290,10 +295,20 @@ public sealed class GridArrayView
     private async Task<GridQueryResult> QueryRowsAsync(string text, long chunkCells, int maxMatches, CancellationToken cancellationToken)
     {
         IReadOnlyList<string> fields = _source.Fields;
-        int width = Rank == 1 ? (fields.Count > 0 ? fields.Count : 1) : (int)Shape[1];
-        IReadOnlyList<string> headers = Rank == 1
-            ? (fields.Count > 0 ? fields : ["value"])
-            : (_source.ColumnNames.Count == width ? _source.ColumnNames : [.. Enumerable.Range(0, width).Select(column => column.ToString(System.Globalization.CultureInfo.InvariantCulture))]);
+        int width = Rank == 1 ? Math.Max(1, fields.Count) : (int)Shape[1];
+        IReadOnlyList<string> headers;
+        if (Rank == 1)
+        {
+            headers = fields.Count > 0 ? fields : ["value"];
+        }
+        else if (_source.ColumnNames.Count == width)
+        {
+            headers = _source.ColumnNames;
+        }
+        else
+        {
+            headers = [.. Enumerable.Range(0, width).Select(column => column.ToString(System.Globalization.CultureInfo.InvariantCulture))];
+        }
         GridQueryPlan plan = GridQuery.Parse(text, headers);
         GridQueryPlan filter = new(plan.From, null, plan.Where, null, false, null);
         var matched = new List<string[]>();
@@ -329,7 +344,7 @@ public sealed class GridArrayView
                 }
             }
 
-            foreach (string[] line in GridQuery.Execute(headers, lines, filter).Rows)
+            foreach (string[] line in GridQuery.Execute(headers, lines, filter, cancellationToken).Rows)
             {
                 if (matched.Count >= maxMatches)
                 {
@@ -341,7 +356,7 @@ public sealed class GridArrayView
             }
         }
 
-        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit));
+        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit), cancellationToken);
         return shaped with { Matched = matched.Count, Truncated = truncated };
     }
 
@@ -387,7 +402,7 @@ public sealed class GridArrayView
             }
 
             IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, count, cancellationToken);
-            foreach (string[] row in GridQuery.Execute(headers, LongRows(start, count, cells), filter).Rows)
+            foreach (string[] row in GridQuery.Execute(headers, LongRows(start, count, cells), filter, cancellationToken).Rows)
             {
                 if (matched.Count >= maxMatches)
                 {
@@ -401,7 +416,7 @@ public sealed class GridArrayView
             more = Advance(index, split);
         }
 
-        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit));
+        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit), cancellationToken);
         return shaped with { Matched = matched.Count, Truncated = truncated };
     }
 
@@ -448,26 +463,6 @@ public sealed class GridArrayView
     /// <summary>The headers of the long form: <c>axis0</c> ... one per axis, then <c>value</c>.</summary>
     public IReadOnlyList<string> LongFormHeaders =>
         [.. Enumerable.Range(0, Rank).Select(axis => "axis" + axis.ToString(System.Globalization.CultureInfo.InvariantCulture)), "value"];
-
-    /// <summary>The largest rectangle, cut from the first axis inward, of at most <paramref name="budget"/> cells: a prefix of the array in row-major order.</summary>
-    private static long[] Rectangle(IReadOnlyList<long> shape, long budget)
-    {
-        var count = new long[shape.Count];
-        long remaining = budget;
-        for (int axis = 0; axis < shape.Count; axis++)
-        {
-            long inner = 1;
-            for (int rest = axis + 1; rest < shape.Count; rest++)
-            {
-                inner *= shape[rest];
-            }
-
-            count[axis] = Math.Max(1, Math.Min(shape[axis], remaining / inner));
-            remaining = Math.Max(1, remaining / Math.Max(1, count[axis]));
-        }
-
-        return count;
-    }
 
     /// <summary>The headers of a window of <paramref name="columns"/> columns: the names the source gives, or the numbers, field names or <c>value</c>.</summary>
     private IReadOnlyList<string> Headers(int columns, bool byField, IReadOnlyList<string> fields, bool withRowNumbers)

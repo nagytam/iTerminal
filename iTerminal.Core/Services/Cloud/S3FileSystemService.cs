@@ -6,6 +6,7 @@ using iConsole.Data;
 using iConsole.Interfaces;
 using iTerminal.Core.Model.ContentModels;
 using Serilog;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Services.Cloud;
 
@@ -76,12 +77,13 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
             _secretAccessKey = _accessKeyId is null ? null : secretAccessKey;
             _sessionToken = string.IsNullOrEmpty(sessionToken) ? null : sessionToken;
             _region = string.IsNullOrWhiteSpace(region) ? "us-east-1" : region.Trim();
-            _endpoint = !string.IsNullOrWhiteSpace(endpoint) && Uri.TryCreate(
-                    endpoint.Contains("://", StringComparison.Ordinal) ? endpoint.Trim() : "https://" + endpoint.Trim(),
-                    UriKind.Absolute,
-                    out var parsed)
-                ? parsed
-                : null;
+            Uri? parsedEndpoint = null;
+            if (!string.IsNullOrWhiteSpace(endpoint))
+            {
+                var endpointText = endpoint.Contains("://", StringComparison.Ordinal) ? endpoint.Trim() : "https://" + endpoint.Trim();
+                if (Uri.TryCreate(endpointText, UriKind.Absolute, out var parsed)) parsedEndpoint = parsed;
+            }
+            _endpoint = parsedEndpoint;
             if (_key != key)
             {
                 _bucketRegions.Clear();
@@ -155,11 +157,10 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
             }
         }
 
-        var path = !pathStyle
-            ? "/" + EscapeKey(key)
-            : bucket.Length == 0
-                ? "/"
-                : "/" + Uri.EscapeDataString(bucket) + "/" + EscapeKey(key);
+        string path;
+        if (!pathStyle) path = "/" + EscapeKey(key);
+        else if (bucket.Length == 0) path = "/";
+        else path = "/" + Uri.EscapeDataString(bucket) + "/" + EscapeKey(key);
 
         query ??= [];
         var queryText = query.Count == 0
@@ -197,12 +198,9 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
             ["host"] = info.Host,
             ["x-amz-date"] = now.ToString("yyyyMMdd'T'HHmmss'Z'", CultureInfo.InvariantCulture),
         };
-        foreach (var header in request.Headers)
+        foreach (var header in request.Headers.Where(header => header.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase)))
         {
-            if (header.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-            {
-                headers[header.Key] = string.Join(',', header.Value);
-            }
+            headers[header.Key] = string.Join(',', header.Value);
         }
 
         var payloadHash = headers.GetValueOrDefault("x-amz-content-sha256") ?? AwsSignatureV4.EmptyPayloadHash;
@@ -270,7 +268,7 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
 
     // --- listing ------------------------------------------------------------------------------
 
-    private string BucketRoot(Url url, string bucket)
+    private static string BucketRoot(Url url, string bucket)
     {
         var user = string.IsNullOrEmpty(url.Username) ? string.Empty : url.Username + "@";
         return Container.S3 + user + bucket + "/";

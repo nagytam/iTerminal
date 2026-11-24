@@ -26,6 +26,8 @@ namespace iTerminal.Core.Dialogs.Video;
 /// </summary>
 public class VideoFileViewerDialog : Dialog
 {
+    private readonly object _syncRoot = new();
+
     private static readonly TimeSpan SeekStep = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan LongSeekStep = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan ButtonSeekStep = TimeSpan.FromSeconds(10);
@@ -152,7 +154,7 @@ public class VideoFileViewerDialog : Dialog
                 player = new VideoPlayer(_decoderFactory.Create(path));
 
                 var (columns, rows) = PictureSize(player.Info);
-                lock (this)
+                lock (_syncRoot)
                 {
                     if (generation != Volatile.Read(ref _generation))
                     {
@@ -184,7 +186,7 @@ public class VideoFileViewerDialog : Dialog
     private void DisposePlayer()
     {
         VideoPlayer? player;
-        lock (this)
+        lock (_syncRoot)
         {
             Interlocked.Increment(ref _generation);
             player = _player;
@@ -474,7 +476,8 @@ public class VideoFileViewerDialog : Dialog
             return _isOpening ? "Opening…" : string.Empty;
         }
 
-        return !string.IsNullOrEmpty(player.Error) ? player.Error : player.Frame is null ? "Decoding…" : string.Empty;
+        if (!string.IsNullOrEmpty(player.Error)) return player.Error;
+        return player.Frame is null ? "Decoding…" : string.Empty;
     }
 
     /// <summary>Converts a frame once, not on every repaint: the dialog repaints more often than frames arrive.</summary>

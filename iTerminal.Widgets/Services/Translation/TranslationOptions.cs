@@ -23,7 +23,9 @@ public class TranslationOptions
     public string ApiKeyEnvVar { get; set; } = "LIBRETRANSLATE_API_KEY";
 
     /// <summary>The password manager entry the key is kept under when the environment variable is not set.</summary>
+    #pragma warning disable S2068 // Not a credential: an identifier or a fixed placeholder, not a secret.
     public const string ApiKeyPasswordId = "translation:api-key";
+    #pragma warning restore S2068
 
     /// <summary>The language a text is translated into when none was chosen yet.</summary>
     public string DefaultTargetLanguage { get; set; } = "en";

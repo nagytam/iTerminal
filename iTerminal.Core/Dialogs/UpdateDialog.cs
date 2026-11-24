@@ -80,8 +80,8 @@ public partial class UpdateDialog : FormDialog
     {
         if (Parent is not null)
         {
-            int width = (int)Math.Max(20, Math.Min(PreferredWidth, (long)Parent.ViewSize.Width));
-            int height = (int)Math.Max(5, Math.Min(Rows, (long)Parent.ViewSize.Height));
+            int width = (int)Math.Max(20, Math.Min(PreferredWidth, Parent.ViewSize.Width));
+            int height = (int)Math.Max(5, Math.Min(Rows, Parent.ViewSize.Height));
             CenterInParent(new Size(width, height));
         }
 
@@ -109,7 +109,9 @@ public partial class UpdateDialog : FormDialog
 
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && plain)
         {
+            #pragma warning disable S6966 // Install starts the installer on its own task, so the key handler returns at once.
             Install();
+            #pragma warning restore S6966
             return true;
         }
 
@@ -172,9 +174,7 @@ public partial class UpdateDialog : FormDialog
         List<(string Text, Color Color)> rows =
         [
             (string.Format(iConsole.Localization.UiText.Get("Update.Available", "iTerminal {0} is available. You have {1}."), latest, _service.CurrentVersion), scheme.Foreground),
-            (_service.CanInstall
-                ? _service.Available?.Installer is null ? NoDownloadText() : ClosesDuringText()
-                : ManualUpdateText(), scheme.DisabledForeground),
+            (InstallText(), scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
         ];
 
@@ -207,11 +207,19 @@ public partial class UpdateDialog : FormDialog
         ? iConsole.Localization.UiText.Get("Update.NoPortableArchive", "This release has no portable archive yet.")
         : iConsole.Localization.UiText.Get("Update.NoInstaller", "This release has no Windows installer yet.");
 
-    private string ClosesDuringText() => _service.InstallKind != UpdateInstallKind.PortableArchive
-        ? iConsole.Localization.UiText.Get("Update.ClosesDuring", "iTerminal closes while the installer runs.")
-        : OperatingSystem.IsWindows()
+    private string InstallText()
+    {
+        if (!_service.CanInstall) return ManualUpdateText();
+        return _service.Available?.Installer is null ? NoDownloadText() : ClosesDuringText();
+    }
+
+    private string ClosesDuringText()
+    {
+        if (_service.InstallKind != UpdateInstallKind.PortableArchive) return iConsole.Localization.UiText.Get("Update.ClosesDuring", "iTerminal closes while the installer runs.");
+        return OperatingSystem.IsWindows()
             ? iConsole.Localization.UiText.Get("Update.ClosesDuringPortable", "iTerminal closes while its files are replaced, then starts again.")
             : iConsole.Localization.UiText.Get("Update.ClosesDuringPortableLinux", "iTerminal closes while its files are replaced. Start it again to run the new release.");
+    }
 
     /// <summary>"Working..." while something runs and nothing can be shown as progress yet; the bar says it all otherwise.</summary>
     internal string Hint => _service.IsBusy && ParseProgress(_service.Log) is null ? "Working..." : string.Empty;

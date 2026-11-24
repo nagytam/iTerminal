@@ -44,7 +44,7 @@ public class ContentModelMemoryDrive(
 
     private bool _listensForMirror;
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
         if (!_listensForMirror)
         {
@@ -60,10 +60,10 @@ public class ContentModelMemoryDrive(
             };
         }
 
-        _settingsService.Set(Name, url);
-        _folderHistoryService.Add(url);
+        _settingsService.Set(Name, path);
+        _folderHistoryService.Add(path);
         Entries.Clear();
-        Url = url;
+        Url = path;
         ResetNavigation();
 
         Refresh();

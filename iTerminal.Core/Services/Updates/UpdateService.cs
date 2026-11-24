@@ -423,7 +423,6 @@ public sealed class UpdateService : IUpdateService
         string executable = Path.Combine(installDirectory, ExecutableName);
         string logPath = BatchPath(log);
         return string.Join("\r\n",
-        [
             "@echo off",
             "chcp 65001 >nul",
             $"set \"PID={processId}\"",
@@ -446,8 +445,8 @@ public sealed class UpdateService : IUpdateService
             ":start",
             $"start \"\" {BatchPath(executable)}",
             "(goto) 2>nul & del \"%~f0\"",
-            string.Empty,
-        ]);
+            string.Empty
+        );
     }
 
     /// <summary>
@@ -459,7 +458,6 @@ public sealed class UpdateService : IUpdateService
     /// </summary>
     internal static string ShellUpdateScript(int processId, string source, string installDirectory, string archive, string staging, string backup, string log) =>
         string.Join("\n",
-        [
             "#!/bin/sh",
             $"exec >{ShellQuote(log)} 2>&1 </dev/null",
             $"PID={processId}",
@@ -482,8 +480,8 @@ public sealed class UpdateService : IUpdateService
             "  echo \"The install folder could not be backed up; nothing was changed.\"",
             "fi",
             "rm -f \"$0\"",
-            string.Empty,
-        ]);
+            string.Empty
+        );
 
     /// <summary>Quotes a value for a POSIX shell: single quotes, with any single quote written as <c>'\''</c>.</summary>
     internal static string ShellQuote(string value) => "'" + value.Replace("'", "'\\''", StringComparison.Ordinal) + "'";
@@ -507,6 +505,7 @@ public sealed class UpdateService : IUpdateService
                 string probe = Path.Combine(target, $".write-test-{Guid.NewGuid():N}");
                 using (File.Create(probe))
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
 
                 File.Delete(probe);
@@ -674,7 +673,9 @@ public sealed class UpdateService : IUpdateService
     /// </summary>
     private static bool StartWindowsInstaller(string package)
     {
+        #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
         ProcessStartInfo start = new("msiexec.exe") { UseShellExecute = true };
+        #pragma warning restore S4036
         start.ArgumentList.Add("/i");
         start.ArgumentList.Add(package);
         start.ArgumentList.Add("/passive");
@@ -686,7 +687,9 @@ public sealed class UpdateService : IUpdateService
     /// <summary>The update script runs hidden, and outlives this process: it waits for it to close.</summary>
     private static bool StartPortableScript(string script)
     {
+        #pragma warning disable S4036 // The tool is resolved from PATH on purpose: it is the program the user installed.
         ProcessStartInfo start = new("cmd.exe") { UseShellExecute = false, CreateNoWindow = true };
+        #pragma warning restore S4036
         start.ArgumentList.Add("/d");
         start.ArgumentList.Add("/c");
         start.ArgumentList.Add(script);

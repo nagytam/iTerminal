@@ -355,7 +355,7 @@ public class GitClientDialog : SplitPaneDialog
         base.OnInitializeLayout();
     }
 
-    private int LeftColumnWidth(int interiorWidth) => Math.Max(24, interiorWidth * 42 / 100);
+    private static int LeftColumnWidth(int interiorWidth) => Math.Max(24, interiorWidth * 42 / 100);
 
     /// <summary>
     /// Sizes the five sections from what they actually hold, rather than giving each a fixed fifth of
@@ -485,7 +485,7 @@ public class GitClientDialog : SplitPaneDialog
 
     private const string CleanWorkingTreeText = "  (working tree clean)";
     private static string NoRepositoryText => UiText.Get("Git.NoRepoHint", "Open a folder inside a repository in the panel, then press Ctrl+G again.");
-    private void StartRefresh(bool reloadLog) => PendingOperation = Task.Run(() => RefreshAllAsync(reloadLog));
+    private void StartRefresh(bool reloadLog) => PendingOperation = Task.Run(() => RefreshAllAsync(reloadLog), CancellationToken.None);
 
     private async Task RefreshAllAsync(bool reloadLog)
     {
@@ -494,7 +494,7 @@ public class GitClientDialog : SplitPaneDialog
 
         try
         {
-            var root = await _gitService.GetRepositoryRootAsync(_startDirectory);
+            var root = await _gitService.GetRepositoryRootAsync(_startDirectory, CancellationToken.None);
             if (root is null)
             {
                 _root = null;
@@ -509,13 +509,13 @@ public class GitClientDialog : SplitPaneDialog
 
             _root = root;
             _unstagedListBox.EmptyText = CleanWorkingTreeText;
-            _status = await _gitService.GetStatusAsync(root);
-            _branches = await _gitService.GetBranchesAsync(root, includeRemotes: true);
-            _stashes = await _gitService.GetStashesAsync(root);
-            _mergeInProgress = await _gitService.IsMergeInProgressAsync(root);
+            _status = await _gitService.GetStatusAsync(root, CancellationToken.None);
+            _branches = await _gitService.GetBranchesAsync(root, includeRemotes: true, CancellationToken.None);
+            _stashes = await _gitService.GetStashesAsync(root, CancellationToken.None);
+            _mergeInProgress = await _gitService.IsMergeInProgressAsync(root, CancellationToken.None);
             if (reloadLog)
             {
-                _commits = await _gitService.GetLogAsync(root, MaxCommits);
+                _commits = await _gitService.GetLogAsync(root, MaxCommits, CancellationToken.None);
             }
 
             SyncListModels(reloadLog);
@@ -571,7 +571,7 @@ public class GitClientDialog : SplitPaneDialog
     /// Loads the detail pane off the calling thread. Every caller is a key handler, a focus change or
     /// the render loop's idle pass, none of which may pay for starting a git process.
     /// </summary>
-    private void StartLoadDiff() => _ = Task.Run(LoadDiffAsync);
+    private void StartLoadDiff() => _ = Task.Run(LoadDiffAsync, CancellationToken.None);
 
     private async Task LoadDiffAsync()
     {
@@ -581,7 +581,7 @@ public class GitClientDialog : SplitPaneDialog
         }
 
         _detailShowsError = false;
-        _diffCts?.Cancel();
+        if (_diffCts is not null) await _diffCts.CancelAsync();
         var cts = new CancellationTokenSource();
         _diffCts = cts;
 
@@ -668,20 +668,23 @@ public class GitClientDialog : SplitPaneDialog
                 return [];
             }
 
-            return branch.IsRemote
-                ?
+            if (branch.IsRemote)
+            {
+                return
                 [
                     string.Format(UiText.Get("Git.Detail.RemoteBranch", "remote branch {0}"), branch.Name),
                     string.Empty,
                     UiText.Get("Git.Detail.RemoteKeys", "Space/Enter creates a local branch tracking it."),
-                ]
-                :
-                [
-                    string.Format(UiText.Get("Git.Detail.Branch", "branch {0}"), branch.Name) + (branch.IsCurrent ? "  " + UiText.Get("Git.Detail.Current", "(current)") : string.Empty),
-                    branch.Upstream is null ? UiText.Get("Git.Detail.NoUpstream", "upstream: (none)") : string.Format(UiText.Get("Git.Detail.Upstream", "upstream: {0}"), branch.Upstream),
-                    string.Empty,
-                    UiText.Get("Git.Detail.BranchKeys", "Space/Enter checkout   m merge   D delete   n new"),
                 ];
+            }
+
+            return
+            [
+                string.Format(UiText.Get("Git.Detail.Branch", "branch {0}"), branch.Name) + (branch.IsCurrent ? "  " + UiText.Get("Git.Detail.Current", "(current)") : string.Empty),
+                branch.Upstream is null ? UiText.Get("Git.Detail.NoUpstream", "upstream: (none)") : string.Format(UiText.Get("Git.Detail.Upstream", "upstream: {0}"), branch.Upstream),
+                string.Empty,
+                UiText.Get("Git.Detail.BranchKeys", "Space/Enter checkout   m merge   D delete   n new"),
+            ];
         }
 
         var head = CursorItem(_commitsListBox);
@@ -726,7 +729,7 @@ public class GitClientDialog : SplitPaneDialog
         {
             // Staging a conflicted file is how git spells "I resolved this", so say so rather than
             // letting it look like an ordinary stage.
-            RunAction(string.Format(UiText.Get("Git.Act.MarkingResolved", "Marking {0} resolved"), file.Path), string.Format(UiText.Get("Git.Act.Resolved", "Resolved {0}"), file.Path), root => _gitService.StageAsync(root, file.Path), reloadLog: false);
+            RunAction(string.Format(UiText.Get("Git.Act.MarkingResolved", "Marking {0} resolved"), file.Path), string.Format(UiText.Get("Git.Act.Resolved", "Resolved {0}"), file.Path), root => _gitService.StageAsync(root, file.Path, CancellationToken.None), reloadLog: false);
             return;
         }
 
@@ -735,7 +738,7 @@ public class GitClientDialog : SplitPaneDialog
         RunAction(
             staged ? string.Format(UiText.Get("Git.Act.Unstaging", "Unstaging {0}"), file.Path) : string.Format(UiText.Get("Git.Act.Staging", "Staging {0}"), file.Path),
             staged ? string.Format(UiText.Get("Git.Act.Unstaged", "Unstaged {0}"), file.Path) : string.Format(UiText.Get("Git.Act.Staged", "Staged {0}"), file.Path),
-            root => staged ? _gitService.UnstageAsync(root, file.Path) : _gitService.StageAsync(root, file.Path),
+            root => staged ? _gitService.UnstageAsync(root, file.Path, CancellationToken.None) : _gitService.StageAsync(root, file.Path, CancellationToken.None),
             reloadLog: false);
     }
 
@@ -745,7 +748,7 @@ public class GitClientDialog : SplitPaneDialog
         {
             if (_status.Staged.Count > 0)
             {
-                RunAction(UiText.Get("Git.Act.UnstagingAll", "Unstaging everything..."), UiText.Get("Git.Act.UnstagedAll", "Unstaged everything."), root => _gitService.UnstageAllAsync(root), reloadLog: false);
+                RunAction(UiText.Get("Git.Act.UnstagingAll", "Unstaging everything..."), UiText.Get("Git.Act.UnstagedAll", "Unstaged everything."), root => _gitService.UnstageAllAsync(root, CancellationToken.None), reloadLog: false);
             }
 
             return;
@@ -753,7 +756,7 @@ public class GitClientDialog : SplitPaneDialog
 
         if (_activeSection == Section.Unstaged && _status.Unstaged.Count > 0)
         {
-            RunAction(UiText.Get("Git.Act.StagingAll", "Staging everything..."), string.Format(UiText.Get("Git.Act.StagedCount", "Staged {0} file(s)."), _status.Unstaged.Count), root => _gitService.StageAllAsync(root), reloadLog: false);
+            RunAction(UiText.Get("Git.Act.StagingAll", "Staging everything..."), string.Format(UiText.Get("Git.Act.StagedCount", "Staged {0} file(s)."), _status.Unstaged.Count), root => _gitService.StageAllAsync(root, CancellationToken.None), reloadLog: false);
         }
     }
 
@@ -770,7 +773,7 @@ public class GitClientDialog : SplitPaneDialog
         RunAction(
             amend ? UiText.Get("Git.Act.Amending", "Amending...") : UiText.Get("Git.Act.Committing", "Committing..."),
             amend ? UiText.Get("Git.Act.Amended", "Amended.") : UiText.Get("Git.Act.Committed", "Committed."),
-            root => _gitService.CommitAsync(root, message, amend));
+            root => _gitService.CommitAsync(root, message, amend, CancellationToken.None));
     }
 
     /// <summary>
@@ -816,7 +819,7 @@ public class GitClientDialog : SplitPaneDialog
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private static string FirstLine(string text)
@@ -844,11 +847,11 @@ public class GitClientDialog : SplitPaneDialog
             RunAction(
                 string.Format(UiText.Get("Git.CheckingOut", "Checking out {0}"), branch.Name),
                 string.Format(UiText.Get("Git.NowTracking", "Now on a local branch tracking {0}."), branch.Name),
-                root => _gitService.CheckoutRemoteBranchAsync(root, branch.Name));
+                root => _gitService.CheckoutRemoteBranchAsync(root, branch.Name, CancellationToken.None));
             return;
         }
 
-        RunAction(string.Format(UiText.Get("Git.CheckingOut", "Checking out {0}"), branch.Name), string.Format(UiText.Get("Git.On", "On {0}."), branch.Name), root => _gitService.CheckoutBranchAsync(root, branch.Name));
+        RunAction(string.Format(UiText.Get("Git.CheckingOut", "Checking out {0}"), branch.Name), string.Format(UiText.Get("Git.On", "On {0}."), branch.Name), root => _gitService.CheckoutBranchAsync(root, branch.Name, CancellationToken.None));
     }
 
     private void CreateBranchFromInputText(string name)
@@ -859,7 +862,7 @@ public class GitClientDialog : SplitPaneDialog
             return;
         }
 
-        RunAction(string.Format(UiText.Get("Git.Creating", "Creating {0}"), name), string.Format(UiText.Get("Git.Created", "Created and checked out {0}."), name), root => _gitService.CreateBranchAsync(root, name));
+        RunAction(string.Format(UiText.Get("Git.Creating", "Creating {0}"), name), string.Format(UiText.Get("Git.Created", "Created and checked out {0}."), name), root => _gitService.CreateBranchAsync(root, name, CancellationToken.None));
     }
 
     private void MergeSelected()
@@ -870,7 +873,7 @@ public class GitClientDialog : SplitPaneDialog
             return;
         }
 
-        RunAction(string.Format(UiText.Get("Git.Act.Merging", "Merging {0}"), branch.Name), string.Format(UiText.Get("Git.Act.Merged", "Merged {0}."), branch.Name), root => _gitService.MergeBranchAsync(root, branch.Name));
+        RunAction(string.Format(UiText.Get("Git.Act.Merging", "Merging {0}"), branch.Name), string.Format(UiText.Get("Git.Act.Merged", "Merged {0}."), branch.Name), root => _gitService.MergeBranchAsync(root, branch.Name, CancellationToken.None));
     }
 
     private void BeginDeleteBranch()
@@ -882,14 +885,14 @@ public class GitClientDialog : SplitPaneDialog
         }
 
         BeginConfirm(string.Format(UiText.Get("Git.ConfirmDeleteBranch", "Delete branch {0}, merged or not? (y/n)"), branch.Name),
-            () => RunAction(string.Format(UiText.Get("Git.Deleting", "Deleting {0}"), branch.Name), string.Format(UiText.Get("Git.Deleted", "Deleted {0}."), branch.Name), root => _gitService.DeleteBranchAsync(root, branch.Name, force: true)));
+            () => RunAction(string.Format(UiText.Get("Git.Deleting", "Deleting {0}"), branch.Name), string.Format(UiText.Get("Git.Deleted", "Deleted {0}."), branch.Name), root => _gitService.DeleteBranchAsync(root, branch.Name, force: true, CancellationToken.None)));
     }
 
-    private void AbortMerge() => RunAction(UiText.Get("Git.AbortingMerge", "Aborting merge..."), UiText.Get("Git.MergeAborted", "Merge aborted."), root => _gitService.AbortMergeAsync(root));
+    private void AbortMerge() => RunAction(UiText.Get("Git.AbortingMerge", "Aborting merge..."), UiText.Get("Git.MergeAborted", "Merge aborted."), root => _gitService.AbortMergeAsync(root, CancellationToken.None));
 
-    private void Fetch() => RunAction(UiText.Get("Git.Act.Fetching", "Fetching..."), UiText.Get("Git.Act.Fetched", "Fetched."), root => _gitService.FetchAsync(root));
+    private void Fetch() => RunAction(UiText.Get("Git.Act.Fetching", "Fetching..."), UiText.Get("Git.Act.Fetched", "Fetched."), root => _gitService.FetchAsync(root, CancellationToken.None));
 
-    private void Pull() => RunAction(UiText.Get("Git.Act.Pulling", "Pulling..."), UiText.Get("Git.Act.Pulled", "Pulled."), root => _gitService.PullAsync(root));
+    private void Pull() => RunAction(UiText.Get("Git.Act.Pulling", "Pulling..."), UiText.Get("Git.Act.Pulled", "Pulled."), root => _gitService.PullAsync(root, CancellationToken.None));
 
     /// <summary>
     /// Pushes the current branch, publishing it first when it has no upstream — which is the case a
@@ -901,7 +904,7 @@ public class GitClientDialog : SplitPaneDialog
         RunAction(
             needsUpstream ? UiText.Get("Git.Publishing", "Publishing branch...") : UiText.Get("Git.Pushing", "Pushing..."),
             needsUpstream ? string.Format(UiText.Get("Git.Published", "Published {0} and set its upstream."), _status.Branch) : UiText.Get("Git.Pushed", "Pushed."),
-            root => _gitService.PushAsync(root, setUpstream: needsUpstream));
+            root => _gitService.PushAsync(root, setUpstream: needsUpstream, CancellationToken.None));
     }
 
     private void BeginStashPush()
@@ -917,14 +920,14 @@ public class GitClientDialog : SplitPaneDialog
     }
 
     private void StashPushFromInput(string message) =>
-        RunAction(UiText.Get("Git.Stashing", "Stashing changes..."), UiText.Get("Git.Stashed", "Stashed."), root => _gitService.StashPushAsync(root, message));
+        RunAction(UiText.Get("Git.Stashing", "Stashing changes..."), UiText.Get("Git.Stashed", "Stashed."), root => _gitService.StashPushAsync(root, message, CancellationToken.None));
 
     private void StashPop()
     {
         var stash = CursorItem(_stashesListBox);
         if (stash is not null)
         {
-            RunAction(string.Format(UiText.Get("Git.Popping", "Popping {0}"), $"stash@{{{stash.Index}}}"), string.Format(UiText.Get("Git.Popped", "Popped {0}."), $"stash@{{{stash.Index}}}"), root => _gitService.StashPopAsync(root, stash.Index));
+            RunAction(string.Format(UiText.Get("Git.Popping", "Popping {0}"), $"stash@{{{stash.Index}}}"), string.Format(UiText.Get("Git.Popped", "Popped {0}."), $"stash@{{{stash.Index}}}"), root => _gitService.StashPopAsync(root, stash.Index, CancellationToken.None));
         }
     }
 
@@ -933,7 +936,7 @@ public class GitClientDialog : SplitPaneDialog
         var stash = CursorItem(_stashesListBox);
         if (stash is not null)
         {
-            RunAction(string.Format(UiText.Get("Git.Applying", "Applying {0}"), $"stash@{{{stash.Index}}}"), string.Format(UiText.Get("Git.Applied", "Applied {0}."), $"stash@{{{stash.Index}}}"), root => _gitService.StashApplyAsync(root, stash.Index));
+            RunAction(string.Format(UiText.Get("Git.Applying", "Applying {0}"), $"stash@{{{stash.Index}}}"), string.Format(UiText.Get("Git.Applied", "Applied {0}."), $"stash@{{{stash.Index}}}"), root => _gitService.StashApplyAsync(root, stash.Index, CancellationToken.None));
         }
     }
 
@@ -946,7 +949,7 @@ public class GitClientDialog : SplitPaneDialog
         }
 
         BeginConfirm(string.Format(UiText.Get("Git.ConfirmDrop", "Drop {0} for good? (y/n)"), $"stash@{{{stash.Index}}}"),
-            () => RunAction(string.Format(UiText.Get("Git.Dropping", "Dropping {0}"), $"stash@{{{stash.Index}}}"), string.Format(UiText.Get("Git.Dropped", "Dropped {0}."), $"stash@{{{stash.Index}}}"), root => _gitService.StashDropAsync(root, stash.Index)));
+            () => RunAction(string.Format(UiText.Get("Git.Dropping", "Dropping {0}"), $"stash@{{{stash.Index}}}"), string.Format(UiText.Get("Git.Dropped", "Dropped {0}."), $"stash@{{{stash.Index}}}"), root => _gitService.StashDropAsync(root, stash.Index, CancellationToken.None)));
     }
 
     #endregion
@@ -1262,7 +1265,7 @@ public class GitClientDialog : SplitPaneDialog
         var root = _root;
         PendingOperation = Task.Run(async () =>
         {
-            var previous = await _gitService.GetLastCommitMessageAsync(root);
+            var previous = await _gitService.GetLastCommitMessageAsync(root, CancellationToken.None);
             if (previous.Length == 0)
             {
                 SetMessage(UiText.Get("Msg.NothingToAmend", "Nothing to amend — there is no commit yet."), MessageSeverity.Info);
@@ -1272,7 +1275,7 @@ public class GitClientDialog : SplitPaneDialog
 
             // Keep the subject: the input is one line, and pre-filling a body would silently drop it.
             ShowInput(UiText.Get("Git.AmendPrompt", "Amend last commit"), FirstLine(previous), message => CommitStagedFromInput(message, amend: true));
-        });
+        }, CancellationToken.None);
     }
 
     private void BeginNewBranch() => ShowInput(UiText.Get("Git.NewBranch", "New branch"), string.Empty, CreateBranchFromInputText);
@@ -1377,7 +1380,7 @@ public class GitClientDialog : SplitPaneDialog
             ? string.Format(UiText.Get("Git.ConfirmDeleteUntracked", "Delete untracked file {0}? (y/n)"), file.Path)
             : string.Format(UiText.Get("Git.ConfirmDiscard", "Throw away your changes to {0}? (y/n)"), file.Path);
         BeginConfirm(prompt,
-            () => RunAction(string.Format(UiText.Get("Git.Act.Discarding", "Discarding {0}"), file.Path), string.Format(UiText.Get("Git.Act.Discarded", "Discarded {0}."), file.Path), root => _gitService.DiscardAsync(root, file.Path, file.IsUntracked)));
+            () => RunAction(string.Format(UiText.Get("Git.Act.Discarding", "Discarding {0}"), file.Path), string.Format(UiText.Get("Git.Act.Discarded", "Discarded {0}."), file.Path), root => _gitService.DiscardAsync(root, file.Path, file.IsUntracked, CancellationToken.None)));
     }
 
     /// <summary>The item under the cursor in <paramref name="box"/>, or null if the cursor is out of range.</summary>

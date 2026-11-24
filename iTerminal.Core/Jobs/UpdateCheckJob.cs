@@ -60,7 +60,7 @@ public class UpdateCheckJob(
             }
 
             await updates.CheckAsync(cancellationToken);
-            await OfferAsync(openDialog: true, manual, cancellationToken);
+            await OfferAsync(openDialog: true, manual);
 
             Task wait;
             lock (_gate)
@@ -81,10 +81,10 @@ public class UpdateCheckJob(
         return Task.WhenAny(Task.Delay(Interval, cancellationToken), wake);
     }
 
-    internal Task OfferAsync(bool openDialog, CancellationToken cancellationToken) =>
-        OfferAsync(openDialog, manual: false, cancellationToken);
+    internal Task OfferAsync(bool openDialog) =>
+        OfferAsync(openDialog, manual: false);
 
-    private async Task OfferAsync(bool openDialog, bool manual, CancellationToken cancellationToken)
+    private async Task OfferAsync(bool openDialog, bool manual)
     {
         UpdateInfo? update = updates.Available;
         if (update is null || updates.IsSkipped)

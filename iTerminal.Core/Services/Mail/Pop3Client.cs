@@ -106,8 +106,8 @@ public sealed class Pop3Client : IAsyncDisposable
     private async Task<string> CommandAsync(string command)
     {
         var bytes = Encoding.UTF8.GetBytes(command + "\r\n");
-        await _stream.WriteAsync(bytes);
-        await _stream.FlushAsync();
+        await _stream.WriteAsync(bytes, CancellationToken.None);
+        await _stream.FlushAsync(CancellationToken.None);
 
         var reply = await ReadLineAsync();
         if (!reply.StartsWith("+OK", StringComparison.Ordinal))

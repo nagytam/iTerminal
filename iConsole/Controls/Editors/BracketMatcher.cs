@@ -69,7 +69,8 @@ public static class BracketMatcher
             }
 
             string text = lines[line];
-            int from = line == start.Line ? start.Column + step : (forward ? 0 : text.Length - 1);
+            int from = forward ? 0 : text.Length - 1;
+            if (line == start.Line) from = start.Column + step;
             for (int column = from; column >= 0 && column < text.Length; column += step)
             {
                 if (++scanned > MaxCharactersScanned)

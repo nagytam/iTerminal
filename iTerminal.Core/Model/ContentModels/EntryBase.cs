@@ -13,11 +13,16 @@ namespace iTerminal.Core.Model.ContentModels;
 public abstract record EntryBase : IEntry
 {
     protected string fileSize = string.Empty;
-    public virtual string FileSize //=> Url.FileSize;
+    public virtual string FileSize
     {
         // The folder marker is stored as the constant everything compares against and shown in the chosen language; the
         // abbreviations fit the size column, which is six cells wide.
-        get { return fileSize == iConsole.Data.Url.Folder ? UiText.Get("Listing.FolderMark", "Folder") : fileSize == "Up" && DisplayName == ".." ? UiText.Get("Listing.UpMark", "Up") : fileSize; }
+        get
+        {
+            if (fileSize == iConsole.Data.Url.Folder) return UiText.Get("Listing.FolderMark", "Folder");
+            if (fileSize == "Up" && DisplayName == "..") return UiText.Get("Listing.UpMark", "Up");
+            return fileSize;
+        }
         set { fileSize = value; }
     }
     protected string date = string.Empty;
@@ -127,8 +132,11 @@ public abstract record EntryBase : IEntry
             : DisguiseFindings.None;
 
     /// <summary>The cell between the name and the size: a bar, "}" for a cut name, "!" for a suspicious file.</summary>
-    private string NameSeparator(bool nameFits) =>
-        !nameFits ? "}" : Disguise != DisguiseFindings.None ? "!" : Border.VerticalSingle.ToString();
+    private string NameSeparator(bool nameFits)
+    {
+        if (!nameFits) return "}";
+        return Disguise != DisguiseFindings.None ? "!" : Border.VerticalSingle.ToString();
+    }
 
     public Color GetForegroundColor(ColorScheme colorScheme, bool cursor, VisualState visualState)
     {
@@ -166,7 +174,7 @@ public abstract record EntryBase : IEntry
         return color;
     }
 
-    public Color GetBackgroundColor(ColorScheme colorScheme, bool cursor, VisualState visualState)
+    public static Color GetBackgroundColor(ColorScheme colorScheme, bool cursor, VisualState visualState)
     {
         var color = colorScheme.Background;
         if (cursor)

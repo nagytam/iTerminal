@@ -122,7 +122,7 @@ public static class ImageMetadataWriter
     private static byte[] WriteJpeg(byte[] content, ImageMetadataEdit edit)
     {
         List<Segment> segments = SplitJpeg(content, out int scanStart);
-        bool isExif(Segment s) => s.Marker == 0xE1 && s.Payload.AsSpan().StartsWith("Exif\0\0"u8);
+        static bool isExif(Segment s) => s.Marker == 0xE1 && s.Payload.AsSpan().StartsWith("Exif\0\0"u8);
         byte[]? exifTiff = segments.FirstOrDefault(isExif) is { } exif ? exif.Payload[6..] : null;
         byte[]? newTiff = BuildExifTiff(exifTiff, edit);
 

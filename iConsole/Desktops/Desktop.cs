@@ -70,7 +70,7 @@ public class Desktop : IHostedService, IDesktop
     {
         Diagnostics.StartupTrace.Mark("desktop-start");
         _timerResolution = new TimerResolution(1);
-        _runTask = Task.Run(RunAsync);
+        _runTask = Task.Run(RunAsync, cancellationToken);
         return Task.CompletedTask;
     }
 
@@ -100,6 +100,7 @@ public class Desktop : IHostedService, IDesktop
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         foreach (var job in Jobs)
@@ -190,7 +191,7 @@ public class Desktop : IHostedService, IDesktop
             {
                 using CancellationTokenSource graceTimer = CancellationTokenSource.CreateLinkedTokenSource(CancellationTokenSource.Token);
                 await Task.WhenAny(renderer.FirstFrameRendered, Task.Delay(BackgroundJobsGracePeriod, graceTimer.Token));
-                graceTimer.Cancel();
+                _ = graceTimer.CancelAsync();
             }
 
             // Quit while waiting: the jobs would only start to be stopped again.
@@ -268,7 +269,7 @@ public class Desktop : IHostedService, IDesktop
 
     private void OnWindowSizeChanged(object? sender, Size e)
     {
-        Screens.First().OnWindowSizeChanged(sender, e);
+        Screens[0].OnWindowSizeChanged(sender, e);
         RenderInitialState();
     }
 
@@ -363,6 +364,7 @@ public class Desktop : IHostedService, IDesktop
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
     }

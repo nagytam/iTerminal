@@ -176,7 +176,7 @@ public partial class SshFileSystemService : ISshFileSystemService
             try
             {
                 using SshCommand cmd = _client.RunCommand("df -h");
-                var diskSpace = cmd.Result.Split("\n").First(l => l.EndsWith("/"));
+                var diskSpace = cmd.Result.Split("\n").First(l => l.EndsWith('/'));
                 var regex = RegexDf();
                 var match = regex.Match(diskSpace);
                 if (match.Success)
@@ -185,9 +185,9 @@ public partial class SshFileSystemService : ISshFileSystemService
                     return freeDiskSpace;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.Error("GetAvailableDiskSpace error");
+                _logger.Error(ex, "GetAvailableDiskSpace error");
             }
         }
         return string.Empty;
@@ -215,8 +215,8 @@ public partial class SshFileSystemService : ISshFileSystemService
                         }
                         if (name != ".")
                         {
-                            var folderPostFix = listEntry.StartsWith("d") ? "/" : string.Empty;
-                            var size = match.Groups[1].Value.ToFileSize(); ;
+                            var folderPostFix = listEntry.StartsWith('d') ? "/" : string.Empty;
+                            var size = match.Groups[1].Value.ToFileSize();
                             var date = match.Groups[2].Value.Replace("  ", " ");
                             var time = match.Groups[3].Value;
                             var dateTime = DateTime.ParseExact(
@@ -225,8 +225,7 @@ public partial class SshFileSystemService : ISshFileSystemService
                                 CultureInfo.InvariantCulture,
                                 DateTimeStyles.None);
                             var displayName = name;
-                            // name = (name == "..") ? string.Empty : name;
-                            var fullUrl = url.FullUrl;
+
                             Url childUrl;
                             if (displayName == ".." && _url.Path == "/")
                             {
@@ -252,9 +251,9 @@ public partial class SshFileSystemService : ISshFileSystemService
                         .ThenBy(a => a.Url.DisplayName)
                     ];
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.Error("List error");
+                _logger.Error(ex, "List error");
             }
         }
         return entries;
@@ -311,7 +310,7 @@ public partial class SshFileSystemService : ISshFileSystemService
 
     public async Task CreateFolderAsync(Url url)
     {
-        var folderName = url.Directory;
+
         using SshCommand command = _client!.CreateCommand(SshCommands.MakeFolder(url.Path));
         await command.ExecuteAsync(CancellationToken.None);
     }

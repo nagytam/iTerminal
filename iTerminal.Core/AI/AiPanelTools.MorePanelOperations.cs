@@ -123,14 +123,13 @@ public partial class AiPanelTools
     #region Reading metadata
 
     /// <summary>The entry named <paramref name="name"/>, else the one under the cursor, as a local path.</summary>
-    private bool TryLocalEntry(IContentModel model, string? name, out IEntry entry, out string localPath, out string error)
+    private static bool TryLocalEntry(IContentModel model, string? name, out IEntry entry, out string localPath, out string error)
     {
         entry = null!;
         localPath = string.Empty;
         IEntry? found = string.IsNullOrWhiteSpace(name) ? model.GetFocusedEntry() : FindEntry(model, name, out error);
-        error = found is null
-            ? (string.IsNullOrWhiteSpace(name) ? "Nothing is under the cursor." : $"Error: no entry named '{name}' is listed.")
-            : string.Empty;
+        if (found is not null) error = string.Empty;
+        else error = string.IsNullOrWhiteSpace(name) ? "Nothing is under the cursor." : $"Error: no entry named '{name}' is listed.";
         if (found is null)
         {
             return false;

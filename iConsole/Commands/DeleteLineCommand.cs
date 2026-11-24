@@ -22,7 +22,7 @@ public class DeleteLineCommand(ITextModel textModel, IScrollableModel scrollable
         return base.CanExecute();
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         if (textModel.Lines.Count == 0)
         {

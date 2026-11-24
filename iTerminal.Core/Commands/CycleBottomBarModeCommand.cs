@@ -12,7 +12,7 @@ public class CycleBottomBarModeCommand(Content? content) : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.B, false, false, true);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         content?.CycleBottomBarMode();
         return Task.CompletedTask;

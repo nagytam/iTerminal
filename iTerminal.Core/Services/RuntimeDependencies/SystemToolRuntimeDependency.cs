@@ -27,7 +27,7 @@ internal abstract class SystemToolRuntimeDependency : IRuntimeDependency
     private readonly bool _isWindows;
     private readonly bool _isMac;
     private readonly bool _isPrivileged;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private (string Path, DateTime Stamp, string? Version)? _cached;
 
     protected SystemToolRuntimeDependency(
@@ -232,7 +232,9 @@ internal abstract class SystemToolRuntimeDependency : IRuntimeDependency
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return null;
             }
 
@@ -290,7 +292,7 @@ internal sealed class RarRuntimeDependency : SystemToolRuntimeDependency
     }
 
     /// <summary>The banner <c>rar</c> prints with no arguments: "RAR 7.23   Copyright (c) 1993-2026 Alexander Roshal".</summary>
-    private static readonly Regex VersionPattern = new(@"^\s*RAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant);
+    private static readonly Regex VersionPattern = new(@"^\s*RAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 }
 
 /// <summary>RARLAB's <c>unrar</c>: reads RAR archives on a machine without 7-Zip. Its Windows program is <c>UnRAR.exe</c>.</summary>
@@ -335,5 +337,5 @@ internal sealed class UnrarRuntimeDependency : SystemToolRuntimeDependency
     }
 
     /// <summary>The banner <c>unrar</c> prints with no arguments: "UNRAR 7.23 freeware      Copyright (c) 1993-2026 Alexander Roshal".</summary>
-    private static readonly Regex VersionPattern = new(@"^\s*UNRAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant);
+    private static readonly Regex VersionPattern = new(@"^\s*UNRAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 }
