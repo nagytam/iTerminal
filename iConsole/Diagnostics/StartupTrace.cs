@@ -72,7 +72,9 @@ public static class StartupTrace
         try
         {
             using Process process = Process.GetCurrentProcess();
+            #pragma warning disable S6561 // The process start time is reported in local time only, so the local clock is the right comparison.
             return Math.Max(0, (DateTime.Now - process.StartTime).TotalMilliseconds);
+            #pragma warning restore S6561
         }
         catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception or NotSupportedException)
         {

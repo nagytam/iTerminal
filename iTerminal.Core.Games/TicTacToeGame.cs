@@ -213,7 +213,9 @@ public class TicTacToeGame : GameBase
 
             board[i] = side;
             int score = -Negamax(board, Opponent(side), 1);
+            #pragma warning disable S4143 // The cell is restored to the value it had before the trial move; the index is intended.
             board[i] = ' ';
+            #pragma warning restore S4143
             if (score > bestScore)
             {
                 bestScore = score;

@@ -561,7 +561,7 @@ public class HotKeys : StatusBarItem
             // The sync has nothing to do outside a working tree, so its key is not offered there.
             if (match && command is GitSyncCommand sync && !sync.CanExecute())
                 match = false;
-            if (match is true)
+            if (match)
                 visible.Add(button);
         }
 
