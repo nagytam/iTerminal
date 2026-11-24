@@ -367,8 +367,15 @@ public sealed class GitService : IGitService
         // -z separates records with NUL. Rename/copy entries are followed by a second NUL
         // field holding the original path, which we skip.
         var records = output.Split('\0');
+        var skipField = false;
         for (var i = 0; i < records.Length; i++)
         {
+            if (skipField)
+            {
+                skipField = false;
+                continue;
+            }
+
             var record = records[i];
             if (record.Length == 0)
             {
@@ -393,7 +400,7 @@ public sealed class GitService : IGitService
             // A rename/copy on either side consumes the following original-path field.
             if (!isUntracked && (code[0] is 'R' or 'C' || code[1] is 'R' or 'C'))
             {
-                i++;
+                skipField = true;
             }
 
             var entry = new GitFileStatus(path, code, isUntracked);

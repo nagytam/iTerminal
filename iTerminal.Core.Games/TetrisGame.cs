@@ -678,7 +678,8 @@ public class TetrisGame : GameBase
     private int ClearRows()
     {
         int cleared = 0;
-        for (int y = Rows - 1; y >= 0; y--)
+        int y = Rows - 1;
+        while (y >= 0)
         {
             bool full = true;
             for (int x = 0; x < Columns && full; x++)
@@ -688,6 +689,7 @@ public class TetrisGame : GameBase
 
             if (!full)
             {
+                y--;
                 continue;
             }
 
@@ -706,8 +708,8 @@ public class TetrisGame : GameBase
                 col++;
             }
 
+            // The rows above moved down into this one, so it is looked at again rather than moving on.
             cleared++;
-            y++; // the rows moved down: look at this one again
         }
 
         return cleared;

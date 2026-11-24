@@ -537,19 +537,16 @@ public static class QrEncoder
     {
         int totalBits = codewords.Length * 8;
         int index = 0;
-        for (int right = size - 1; right >= 1; right -= 2)
+        int right = size - 1;
+        while (right >= 1)
         {
-            if (right == 6)
-            {
-                right = 5;
-            }
-
+            int rightEdge = right == 6 ? 5 : right;
             for (int vertical = 0; vertical < size; vertical++)
             {
                 for (int column = 0; column < 2; column++)
                 {
-                    int x = right - column;
-                    bool upward = ((right + 1) & 2) == 0;
+                    int x = rightEdge - column;
+                    bool upward = ((rightEdge + 1) & 2) == 0;
                     int y = upward ? size - 1 - vertical : vertical;
                     if (isFunction[x, y])
                     {
@@ -562,6 +559,7 @@ public static class QrEncoder
                     index++;
                 }
             }
+            right = rightEdge - 2;
         }
     }
 
