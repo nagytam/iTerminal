@@ -541,7 +541,7 @@ public class VoiceRecorderDialog : Dialog
             }
             else if (line.Length + 1 + piece.Length <= width)
             {
-                line += " " + piece;
+                line = string.Join(" ", line, piece);
             }
             else
             {

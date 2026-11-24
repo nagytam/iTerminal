@@ -9,6 +9,7 @@ using iConsole.Localization;
 using iConsole.Services;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 
 namespace iConsole.Controls;
 
@@ -682,17 +683,17 @@ public class MenuItem : PopUpWindow
             }
             else
             {
-                var text = string.Empty;
+                var text = new StringBuilder();
                 foreach (var menuItem in MenuItems)
                 {
-                    if (!string.IsNullOrEmpty(text))
+                    if (text.Length > 0)
                     {
-                        text += " ";
+                        text.Append(' ');
                     }
-                    text += menuItem.Text;
+                    text.Append(menuItem.Text);
                 }
-                text = text.ExpandRight((int)ViewSize.Width);
-                s = new ConxelString(text, colorScheme.Foreground, colorScheme.Background);
+                var label = text.ToString().ExpandRight((int)ViewSize.Width);
+                s = new ConxelString(label, colorScheme.Foreground, colorScheme.Background);
             }
             buffer.Write(ZOrder, position, ViewSize, s);
         }

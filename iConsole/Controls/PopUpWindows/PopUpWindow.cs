@@ -231,12 +231,7 @@ public class PopUpWindow : Window
 
     protected string GetActionButtons()
     {
-        var actionButtons = string.Empty;
-        foreach (var actionButton in Controls.ToList().Where(c => c is ActionButton).Cast<ActionButton>())
-        {
-            actionButtons += actionButton.ActionView;
-        }
-        return actionButtons;
+        return string.Concat(Controls.ToList().Where(c => c is ActionButton).Cast<ActionButton>().Select(actionButton => actionButton.ActionView));
     }
 
     /// <summary>
