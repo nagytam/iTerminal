@@ -46,8 +46,15 @@ public sealed class InputMask
         ExpandedPattern = Expand(Pattern);
         string source = ExpandedPattern;
         CaseMode mode = CaseMode.None;
+        var skip = false;
         for (int i = 0; i < source.Length; i++)
         {
+            if (skip)
+            {
+                skip = false;
+                continue;
+            }
+
             char c = source[i];
             switch (c)
             {
@@ -55,7 +62,8 @@ public sealed class InputMask
                 case '<': mode = CaseMode.Lower; continue;
                 case '|': mode = CaseMode.None; continue;
                 case '\\' when i + 1 < source.Length:
-                    _elements.Add(new Element(SlotKind.Literal, source[++i], false, CaseMode.None));
+                    _elements.Add(new Element(SlotKind.Literal, source[i + 1], false, CaseMode.None));
+                    skip = true;
                     continue;
             }
 
@@ -189,12 +197,20 @@ public sealed class InputMask
     private static string MakeOptional(string unit)
     {
         var text = new StringBuilder(unit.Length);
+        var skip = false;
         for (int i = 0; i < unit.Length; i++)
         {
+            if (skip)
+            {
+                skip = false;
+                continue;
+            }
+
             char c = unit[i];
             if (c == '\\' && i + 1 < unit.Length)
             {
-                text.Append(c).Append(unit[++i]);
+                text.Append(c).Append(unit[i + 1]);
+                skip = true;
                 continue;
             }
 
