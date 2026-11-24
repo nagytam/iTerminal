@@ -721,8 +721,6 @@ public class TorrentManagerDialog : Dialog
             new ConxelString(clipped, foreground, background));
     }
 
-    private static string Clip(string text, int width) => text.Length <= width ? text : text[..(width - 1)] + "…";
-
     #endregion
 
     #region Test seams

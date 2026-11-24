@@ -314,10 +314,6 @@ public class ContentModelFileSystem(
             .Select(t => t.Url.FullUrl)
             .ToHashSet();
 
-    private bool HasPendingTaskFor(Url url) =>
-        _taskManager.GetTasks<FilePanelRefreshTask>(
-            t => t.Url.FullUrl == url.FullUrl && !t.CancellationTokenSource.IsCancellationRequested).Any();
-
     private void OnError(object sender, ErrorEventArgs e)
     {
         if (sender is FileSystemWatcher)

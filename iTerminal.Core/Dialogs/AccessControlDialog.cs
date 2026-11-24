@@ -532,14 +532,14 @@ public class AccessControlDialog : Dialog
         }
     }
 
-    private string AddHint(AclInfo info) => info.SupportsDeny
+    private static string AddHint(AclInfo info) => info.SupportsDeny
         ? Say("Access.Hint.TypeWindows", "Type a user or group, such as Users or DOMAIN\\name.")
         : Say("Access.Hint.TypePosix", "A user, or group:name. Bare owner, group, other and mask work too.");
 
     private string ListHints() =>
         UiText.Get("Access.HintList", "A add  Enter change  Del remove  O owner") + (_info is { CanChangeInheritance: true } ? "  " + UiText.Get("Access.HintInherit", "I inherit") : string.Empty) + "  " + UiText.Get("Access.HintListEnd", "R reread  Esc close");
 
-    private string InheritanceHint(AclInfo info)
+    private static string InheritanceHint(AclInfo info)
     {
         if (info.CanChangeInheritance)
         {

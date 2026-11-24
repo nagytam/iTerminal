@@ -5,7 +5,7 @@ using System.Text;
 
 namespace iConsole.Model;
 
-public class TextModel : ITextModel, INotifyPropertyChanged
+public class TextModel : ITextModel
 {
     public ConcurrentList<string> Lines { get; set; } = [];
 

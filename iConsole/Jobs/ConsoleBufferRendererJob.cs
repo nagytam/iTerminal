@@ -472,7 +472,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         }
     }
 
-    private string RenderLine(
+    private static string RenderLine(
         int y,
         int minX,
         int maxX,

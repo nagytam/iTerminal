@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace iConsole.Model;
 
-public class ScrollableModel : IColumnScrollableModel, INotifyPropertyChanged
+public class ScrollableModel : IColumnScrollableModel
 {
     private int _columnCount = 1;
     public int ColumnCount

@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace iTerminal.Core.Model.ContentModels;
 
 [DebuggerDisplay("{FullName}")]
-public record FileSystemEntry : EntryBase, IEntry
+public record FileSystemEntry : EntryBase
 {
     public FileSystemEntry(string url)
     {

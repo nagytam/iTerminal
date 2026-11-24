@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace iTerminal.Core.Model.ContentModels;
 
 [DebuggerDisplay("{FullName}")]
-public record MemoryDriveEntry : EntryBase, IEntry
+public record MemoryDriveEntry : EntryBase
 {
     public MemoryDriveEntry(MemoryFile memoryFile)
     {

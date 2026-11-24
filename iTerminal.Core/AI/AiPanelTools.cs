@@ -897,7 +897,7 @@ public partial class AiPanelTools(
         }
 
         List<IEntry> entries = [.. model.FilteredEntries.Where(e => !FocusedEntry.IsParentEntry(e) || wanted == FocusedEntry.ParentEntryName)];
-        string NameOf(IEntry e) => (e.DisplayName ?? e.Name ?? string.Empty).Trim().TrimEnd('/', '\\');
+        static string NameOf(IEntry e) => (e.DisplayName ?? e.Name ?? string.Empty).Trim().TrimEnd('/', '\\');
 
         IEntry? exact = entries.FirstOrDefault(e => NameOf(e) == wanted);
         if (exact is not null)

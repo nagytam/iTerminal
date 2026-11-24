@@ -704,8 +704,6 @@ public class StreamsDialog : Dialog
 
     private static string Compact(long bytes) => bytes.ToFileSize().Trim().Replace("  ", " ");
 
-    private static string Clip(string text, int width) => text.Length <= width ? text : text[..Math.Max(0, width - 1)] + "…";
-
     #endregion
 
     #region Test seams
