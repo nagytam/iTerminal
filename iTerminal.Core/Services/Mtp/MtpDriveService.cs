@@ -71,17 +71,6 @@ public sealed class MtpDriveService(IMtpBackend backend) : IMtpDriveService
         return (device, path);
     }
 
-    private static (string Device, string Path) RequireStorage(Url url)
-    {
-        var (device, path) = Split(url);
-        if (device.Length == 0 || path.Length == 0)
-        {
-            throw new IOException("Open a device and its storage first: the root lists devices, not files.");
-        }
-
-        return (device, path);
-    }
-
     #endregion
 
     #region Listing
