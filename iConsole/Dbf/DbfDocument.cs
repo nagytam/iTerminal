@@ -190,7 +190,7 @@ public sealed record DbfDocument(
         }
 
         // Julian day 1,721,426 is 1 January 0001 in the proleptic Gregorian calendar, the first day DateTime holds.
-        DateTime date = new DateTime(1, 1, 1).AddDays(julianDay - 1721426);
+        DateTime date = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Unspecified).AddDays(julianDay - 1721426);
         return date.AddMilliseconds(milliseconds).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
     }
 

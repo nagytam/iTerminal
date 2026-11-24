@@ -139,7 +139,8 @@ public sealed class InputMask
 
     private static int? FindGroupEnd(string pattern, int start)
     {
-        for (int i = start; i < pattern.Length; i++)
+        int i = start;
+        while (i < pattern.Length)
         {
             if (pattern[i] == '\\')
             {
@@ -149,6 +150,7 @@ public sealed class InputMask
             {
                 return i;
             }
+            i++;
         }
 
         return null;

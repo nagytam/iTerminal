@@ -188,11 +188,11 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
             if (when.Contains(':'))
             {
                 var parts = when.Split(':');
-                var date = new DateTime(now.Year, monthIndex + 1, dayOfMonth, int.Parse(parts[0]), int.Parse(parts[1]), 0);
+                var date = new DateTime(now.Year, monthIndex + 1, dayOfMonth, int.Parse(parts[0]), int.Parse(parts[1]), 0, DateTimeKind.Unspecified);
                 return date > now.AddDays(1) ? date.AddYears(-1) : date;
             }
 
-            return new DateTime(int.Parse(when), monthIndex + 1, dayOfMonth);
+            return new DateTime(int.Parse(when), monthIndex + 1, dayOfMonth, 0, 0, 0, DateTimeKind.Unspecified);
         }
         catch (ArgumentOutOfRangeException)
         {

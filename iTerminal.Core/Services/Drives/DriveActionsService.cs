@@ -174,15 +174,8 @@ public sealed partial class DriveActionsService : IDriveActionsService
         }
 
         var inUse = foldersInUse.Append(AppContext.BaseDirectory).Append(Environment.CurrentDirectory);
-        foreach (var folder in inUse)
-        {
-            if (!string.IsNullOrEmpty(folder)
-                && folder.StartsWith(drive, StringComparison.OrdinalIgnoreCase))
-            {
-                return $"{letter}: is in use ({Path.TrimEndingDirectorySeparator(folder)}). Leave it first.";
-            }
-        }
-
+        var folder = inUse.FirstOrDefault(candidate => !string.IsNullOrEmpty(candidate) && candidate.StartsWith(drive, StringComparison.OrdinalIgnoreCase));
+        if (folder is not null) return $"{letter}: is in use ({Path.TrimEndingDirectorySeparator(folder)}). Leave it first.";
         return null;
     }
 

@@ -418,12 +418,9 @@ public sealed class TorrentService : ITorrentService, IAsyncDisposable, IDisposa
             entries = [.. _entries];
         }
 
-        foreach (Entry entry in entries)
+        foreach (Entry entry in entries.Where(entry => entry.Manager.State != TorrentState.Stopped))
         {
-            if (entry.Manager.State != TorrentState.Stopped)
-            {
-                await entry.Manager.StopAsync();
-            }
+            await entry.Manager.StopAsync();
         }
 
         await _engine.StopAllAsync();

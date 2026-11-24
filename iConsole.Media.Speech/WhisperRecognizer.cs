@@ -36,12 +36,9 @@ public sealed class WhisperRecognizer(IWhisperModelLocator model) : ISpeechRecog
             await using WhisperProcessor processor = factory.CreateBuilder().WithLanguage("auto").Build();
 
             var text = new StringBuilder();
-            await foreach (SegmentData segment in processor.ProcessAsync(samples, cancellationToken))
+            await foreach (SegmentData segment in processor.ProcessAsync(samples, cancellationToken).Where(segment => !IsNonSpeech(segment.Text)))
             {
-                if (!IsNonSpeech(segment.Text))
-                {
-                    text.Append(segment.Text);
-                }
+                text.Append(segment.Text);
             }
 
             return text.ToString();

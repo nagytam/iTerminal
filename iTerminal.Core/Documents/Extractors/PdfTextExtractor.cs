@@ -1043,13 +1043,9 @@ public sealed class PdfTextExtractor : IDocumentTextExtractor
         }
 
         int plausible = 0;
-        foreach (char character in text)
+        foreach (char character in text.Where(character => char.IsLetterOrDigit(character) || char.IsWhiteSpace(character) || char.IsPunctuation(character) || char.IsSymbol(character)))
         {
-            if (char.IsLetterOrDigit(character) || char.IsWhiteSpace(character) || char.IsPunctuation(character)
-                || char.IsSymbol(character))
-            {
-                plausible++;
-            }
+            plausible++;
         }
 
         return (double)plausible / text.Length >= MinimumTextRatio;

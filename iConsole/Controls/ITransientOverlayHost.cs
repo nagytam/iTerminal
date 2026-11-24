@@ -33,13 +33,7 @@ public interface ITransientOverlayHost
     /// </summary>
     static bool TryCloseInnermostOverlay(IControl control)
     {
-        foreach (var child in control.Controls.AsSnapshot().Reverse())
-        {
-            if (TryCloseInnermostOverlay(child))
-            {
-                return true;
-            }
-        }
+        if (control.Controls.AsSnapshot().Reverse().Any(child => TryCloseInnermostOverlay(child))) return true;
 
         if (control is ITransientOverlayHost host && host.IsOverlayOpen)
         {

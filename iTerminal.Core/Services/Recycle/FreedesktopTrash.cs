@@ -121,7 +121,8 @@ public sealed class FreedesktopTrash : ITrashService
         }
 
         var builder = new StringBuilder();
-        for (var i = 0; i < text.Length; i++)
+        var i = 0;
+        while (i < text.Length)
         {
             if (text[i] == '\\' && IsOctal(text, i + 1))
             {
@@ -132,6 +133,7 @@ public sealed class FreedesktopTrash : ITrashService
             {
                 builder.Append(text[i]);
             }
+            i++;
         }
 
         return builder.ToString();
