@@ -119,7 +119,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         {
             using var stream = File.OpenRead(signaturePath);
             var buffer = new byte[Math.Min(256, stream.Length)];
-            await stream.ReadExactlyAsync(buffer);
+            await stream.ReadExactlyAsync(buffer, cancellationToken);
             head = Encoding.Latin1.GetString(buffer);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)

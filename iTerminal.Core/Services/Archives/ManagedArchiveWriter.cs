@@ -276,7 +276,7 @@ public static class ManagedArchiveWriter
                 entry.Size = known;
             }
 
-            await _zip.PutNextEntryAsync(entry);
+            await _zip.PutNextEntryAsync(entry, cancellationToken);
             await write(new ProgressStream(_zip, null), cancellationToken);
             _zip.CloseEntry();
         }
