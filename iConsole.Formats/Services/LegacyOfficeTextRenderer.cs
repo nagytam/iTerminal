@@ -611,12 +611,11 @@ public static class LegacyOfficeTextRenderer
     }
 
     /// <summary>A short string (one length byte) as used by BOUNDSHEET; returns the offset after it.</summary>
-    private static int ReadShortString(byte[] data, int offset, out string text, out int next)
+    private static void ReadShortString(byte[] data, int offset, out string text, out int next)
     {
         int characters = data[offset];
         byte flags = data[offset + 1];
         text = ReadCharacters(data, offset + 2, characters, (flags & BiffWideFlag) != 0, out next);
-        return next;
     }
 
     /// <summary>A string with a two-byte length (XLUnicodeString): BIFF8 LABEL, STRING and FORMAT records.</summary>

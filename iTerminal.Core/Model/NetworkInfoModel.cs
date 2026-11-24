@@ -10,7 +10,9 @@ public class NetworkInfoModel : INotifyPropertyChanged
     public iConsole.Data.ConcurrentObservableCollection<NetworkInfo> Networks { get; private set; } = [];
 
     /// <summary>Set once <see cref="Jobs.NetworkInfoJob"/> has finished its first pass: until then an empty list means "not read yet", not "no interfaces".</summary>
-    public volatile bool IsLoaded;
+    private volatile bool _isLoaded;
+
+    public bool IsLoaded { get => _isLoaded; set => _isLoaded = value; }
 
     #region INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;

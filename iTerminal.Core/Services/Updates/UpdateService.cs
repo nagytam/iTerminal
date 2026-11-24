@@ -142,7 +142,9 @@ public sealed class UpdateService : IUpdateService
         {
             lock (_gate)
             {
+                #pragma warning disable S2365 // Callers read a snapshot taken under the lock; a property would copy on every read.
                 return _log.ToList();
+                #pragma warning restore S2365
             }
         }
     }

@@ -3,7 +3,7 @@ using iConsole.Services;
 
 namespace iConsole.Controls.StatusBar;
 
-public class Date : StatusBarItem, IDisposable
+public sealed class Date : StatusBarItem, IDisposable
 {
     // Increase interval to reduce cross-thread UI updates during tests and heavy IO operations.
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(1);
@@ -81,7 +81,7 @@ public class Date : StatusBarItem, IDisposable
         Dispose(true);
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!disposing)
         {
@@ -95,7 +95,6 @@ public class Date : StatusBarItem, IDisposable
 
         _isDisposed = true;
         _timer.Dispose();
-        GC.SuppressFinalize(this);
     }
     #endregion
 }

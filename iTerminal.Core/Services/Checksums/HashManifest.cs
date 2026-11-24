@@ -363,7 +363,9 @@ public static class HashManifest
         public override long Length => inner.Length;
         public override long Position { get => inner.Position; set => throw new NotSupportedException(); }
 
+        #pragma warning disable S3218 // Overrides Stream.Write, so the name is fixed by the base class.
         public override void Write(byte[] buffer, int offset, int count) => WriteBytes(buffer.AsSpan(offset, count));
+        #pragma warning restore S3218
 
         public void WriteBytes(ReadOnlySpan<byte> buffer)
         {

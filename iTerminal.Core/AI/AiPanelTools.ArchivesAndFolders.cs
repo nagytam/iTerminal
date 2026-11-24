@@ -26,7 +26,9 @@ public partial class AiPanelTools
     /// <summary>The most differences or plan steps a tool lists back.</summary>
     internal const int MaxListedDifferences = 100;
 
+    #pragma warning disable S2325 // The tool factory reads instance services, so the method cannot be static.
     private IReadOnlyList<AITool> CreateArchiveAndFolderTools() =>
+    #pragma warning restore S2325
     [
         AIFunctionFactory.Create(CompressEntries, "compress_entries",
             "Pack the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) into a new archive in the other panel's folder (or the same folder when intoOtherPanel=false). format: zip (default), 7z, tar.gz, tar.bz2, tar, tar.xz, gz, bz2 or xz; the archive name gets the right ending. gz, bz2 and xz hold exactly one item, and tar.xz, gz, bz2 and xz replace an existing archive rather than adding to it (addToExisting=true replaces it). Refuses to touch an archive that already exists unless addToExisting=true. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),

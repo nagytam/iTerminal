@@ -90,9 +90,9 @@ public abstract record EntryBase : IEntry
 
     public virtual string GetDisplayFileSize(int width)
     {
-        var fileSize = (Url.PathType == PathType.File) ? UiText.Get("Info.FileSize", "File size:") + " " : string.Empty;
-        fileSize += GetFileSize(width);
-        return fileSize;
+        var sizeText = (Url.PathType == PathType.File) ? UiText.Get("Info.FileSize", "File size:") + " " : string.Empty;
+        sizeText += GetFileSize(width);
+        return sizeText;
     }
 
     public virtual string GetFileSize(int width)

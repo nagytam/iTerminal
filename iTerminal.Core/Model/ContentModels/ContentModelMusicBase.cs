@@ -19,7 +19,9 @@ namespace iTerminal.Core.Model.ContentModels;
 /// process already holds and a library search runs against an in-memory copy of the index, so
 /// neither can approach the 200 ms key-handler budget and neither needs a background task.</para>
 /// </summary>
+#pragma warning disable S3881 // Subclassed by the viewers, so the class stays unsealed and keeps the shared Dispose(bool).
 public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentModel, IDisposable
+#pragma warning restore S3881
 {
     private static readonly TimeSpan SeekStep = TimeSpan.FromSeconds(5);
 

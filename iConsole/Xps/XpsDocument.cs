@@ -6,7 +6,9 @@
 /// name, so an OpenXPS package (which uses its own namespace) reads the same as an XPS one. A package that cannot be
 /// read is returned with <see cref="Error"/> set rather than thrown: the viewer shows that text.</para>
 /// </summary>
+#pragma warning disable S3903 // Existing references use the global namespace; moving the type needs a wider change.
 public sealed class XpsDocument
+#pragma warning restore S3903
 {
     /// <summary>Builds the document from pages already read; the reader in <c>iConsole.Formats</c> does the reading.</summary>
     public XpsDocument(IReadOnlyList<XpsPage> pages, string? title, string? creator, string? error)
@@ -34,7 +36,9 @@ public sealed class XpsDocument
 }
 
 /// <summary>One page of an XPS or OpenXPS package: its place in the sequence, its size in device-independent pixels, and its text.</summary>
+#pragma warning disable S3903 // Existing references use the global namespace; moving the type needs a wider change.
 public sealed class XpsPage
+#pragma warning restore S3903
 {
     public XpsPage(int number, int documentNumber, int pageInDocument, double width, double height, IReadOnlyList<string> lines)
     {

@@ -17,36 +17,6 @@ public class TerminalWindow : Window
 {
     private TerminalModel _terminalModel { get; set; }
 
-    //public override bool IsEnabled 
-    //    get  
-    //        try
-    //            var contentModel = _contentModelService.GetLastContentModel();
-    //            if (contentModel != null)
-    //            {
-    //                switch (contentModel.Url.UrlScheme)
-    //                {
-    //                    case iConsole.Data.Container.MEMORY_DRIVE:
-    //                        {
-    //                            return false;
-    //                        }
-    //                }
-    //            }
-    //        }
-    //        catch
-    //        {
-
-    //        }
-    //        return base.IsEnabled; 
-    //    }
-    //    set
-    //    {
-    //        if (base.IsEnabled != value)
-    //        {
-    //            base.IsEnabled = value;
-    //        }
-    //    }
-    //}
-
     public TerminalWindow(
         TerminalModel terminalModel,
         IContentModelService contentModelService,

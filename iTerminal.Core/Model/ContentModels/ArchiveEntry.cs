@@ -9,7 +9,9 @@ namespace iTerminal.Core.Model.ContentModels;
 [DebuggerDisplay("{FullName}")]
 public record ArchiveEntry : EntryBase, IEntry
 {
+    #pragma warning disable S4275 // The getter reads the source's current value on purpose; it is not a field copy.
     public override string FileSize => ZipArchiveEntry?.Length.ToFileSize() ?? string.Empty;
+    #pragma warning restore S4275
     public override string Date => ZipArchiveEntry?.LastWriteTime.ToString("yyyy-MM-dd") ?? string.Empty;
     public override string Time => ZipArchiveEntry?.LastWriteTime.ToString("HH:mm:ss") ?? string.Empty;
     public override string FullName => ZipArchiveEntry?.FullName ?? Url.FullName;

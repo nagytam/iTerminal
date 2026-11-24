@@ -83,7 +83,7 @@ public sealed class CsvDocumentParser : ICsvDocumentParser
         bool fieldStarted = false;
         int i = 0;
         int n = text.Length;
-        SearchValues<char> special = SearchValues.Create([delimiter, '\r', '\n', '"']);
+        SearchValues<char> special = SearchValues.Create($"{delimiter}\r\n\"");
 
         void EndField()
         {

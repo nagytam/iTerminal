@@ -153,7 +153,9 @@ public sealed class TerminalInputUtf8Decoder
             return true;
         }
 
+        #pragma warning disable S1199 // The decoder's state machine reads more clearly as one block.
         {
+        #pragma warning restore S1199
             var ch = (char)b[1];
             emitKey(KeyFromChar(ch, alt: true));
             RemovePrefix(2);

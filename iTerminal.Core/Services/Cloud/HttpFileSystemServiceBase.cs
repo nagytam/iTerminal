@@ -82,7 +82,9 @@ public abstract class HttpFileSystemServiceBase(HttpMessageHandler? handler, ILo
         CancellationToken cancellationToken = default)
     {
         var refreshedToken = false;
+        #pragma warning disable S1994 // The loop ends through a return or a throw inside the body, not the counter.
         for (var attempt = 1; ; attempt++)
+        #pragma warning restore S1994
         {
             using var request = build();
             await AuthorizeAsync(request, cancellationToken).ConfigureAwait(false);

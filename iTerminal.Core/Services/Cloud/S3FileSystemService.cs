@@ -223,7 +223,9 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
         HttpCompletionOption completion = HttpCompletionOption.ResponseContentRead,
         CancellationToken cancellationToken = default)
     {
+        #pragma warning disable S1994 // The loop ends through a return or a throw inside the body, not the counter.
         for (var pass = 0; ; pass++)
+        #pragma warning restore S1994
         {
             var region = RegionOf(bucket);
             var response = await SendAsync(() => build(region), completion, cancellationToken).ConfigureAwait(false);

@@ -80,7 +80,9 @@ public class Control : INotifyPropertyChanged, IControl
     // running, and if so note it", so an invalidation cannot slip in between the two.
     private readonly Lock _drawGate = new();
     private volatile int _drawingThreadId;
+    #pragma warning disable S1450 // Read on the draw thread and on the invalidation path, so it must stay a field.
     private volatile bool _invalidatedWhileDrawing;
+    #pragma warning restore S1450
 
     public virtual bool HasStateChanged
     {
@@ -541,12 +543,9 @@ public class Control : INotifyPropertyChanged, IControl
                 StateHasChanged();
             }
         }
-        else if (HasFocusableControl(out var focusableControl))
+        else if (HasFocusableControl(out var focusableControl) && focusableControl is not null && !focusableControl.IsFocused)
         {
-            if ((focusableControl is not null) && (!focusableControl.IsFocused))
-            {
-                focusableControl.SetFocus();
-            }
+            focusableControl.SetFocus();
         }
         OnFocusChanged();
     }
@@ -948,14 +947,12 @@ public class Control : INotifyPropertyChanged, IControl
 
     public virtual async Task<bool> HandleHotKeyEventAsync(KeyEvent keyEvent)
     {
-        if (HotKeyChar is not null)
+        if (HotKeyChar is not null
+            && HotKeyChar.Value.ToString().Equals(keyEvent.ConsoleKey.ToString(), StringComparison.InvariantCultureIgnoreCase)
+            && keyEvent.Control)
         {
-            if ((HotKeyChar.Value.ToString()).Equals(keyEvent.ConsoleKey.ToString(), StringComparison.InvariantCultureIgnoreCase)
-                && keyEvent.Control)
-            {
-                await TriggerHotKeyAsync();
-                return true;
-            }
+            await TriggerHotKeyAsync();
+            return true;
         }
         return false;
     }
@@ -1088,6 +1085,7 @@ public class Control : INotifyPropertyChanged, IControl
         switch (visualState)
         {
             case VisualState.Normal:
+            default:
                 {
                     foreground = colorScheme.Foreground;
                     background = colorScheme.Background;
@@ -1110,12 +1108,6 @@ public class Control : INotifyPropertyChanged, IControl
                 {
                     foreground = colorScheme.DisabledForeground;
                     background = colorScheme.DisabledBackground;
-                    break;
-                }
-            default:
-                {
-                    foreground = colorScheme.Foreground;
-                    background = colorScheme.Background;
                     break;
                 }
         }

@@ -103,7 +103,9 @@ public class MenuItem : PopUpWindow
 
         if (!IsMenuBar)
         {
+            #pragma warning disable S1699 // The hook must run during construction so the view is ready when it is first shown.
             OnInitializeActionButtons();
+            #pragma warning restore S1699
         }
     }
 

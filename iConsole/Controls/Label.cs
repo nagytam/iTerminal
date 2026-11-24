@@ -36,8 +36,8 @@ public class Label(string text, IThemeService themeService)
         base.Draw(buffer);
         // Pad to the full width: nothing clears a layer between frames, so a label whose text got
         // shorter ("Loading…" → "Done") would otherwise keep the tail of the old text on screen.
-        var text = (Text ?? string.Empty).PadRight((int)ViewSize.Width);
-        var s = new ConxelString(text, ForegroundColor, BackgroundColor, IsBold, IsItalic, IsUnderline, IsStrikeThrough);
+        var padded = (Text ?? string.Empty).PadRight((int)ViewSize.Width);
+        var s = new ConxelString(padded, ForegroundColor, BackgroundColor, IsBold, IsItalic, IsUnderline, IsStrikeThrough);
         s.Edit(0, s.Count, conxel =>
         {
             conxel.IsDim = IsDim;

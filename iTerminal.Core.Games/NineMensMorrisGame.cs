@@ -320,7 +320,9 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
 {
     private const int Win = 100_000;
 
+    #pragma warning disable S3871 // The engine throws this to unwind its search; callers outside the engine never see it.
     public sealed class TimeUpException : Exception;
+    #pragma warning restore S3871
 
     private readonly System.Diagnostics.Stopwatch _clock = System.Diagnostics.Stopwatch.StartNew();
     private bool _mayAbort;
@@ -536,7 +538,9 @@ public class NineMensMorrisGame : GameBase
 
     internal int Winner => _winner;
 
+    #pragma warning disable S2292 // The setter keeps the cursor inside the board; the field is shared with the board logic.
     internal int CursorPoint
+    #pragma warning restore S2292
     {
         get => _cursor;
         set => _cursor = value;
@@ -667,12 +671,9 @@ public class NineMensMorrisGame : GameBase
                 _message = GameText.Get("Games.Nmm.CannotMoveMan", "That man cannot move.");
             }
         }
-        else if (_selected >= 0)
+        else if (_selected >= 0 && !PlayMove(new MorrisMove(_selected, _cursor, -1)))
         {
-            if (!PlayMove(new MorrisMove(_selected, _cursor, -1)))
-            {
-                _message = GameText.Get("Games.Nmm.Slide", "A man slides to a neighbouring empty point.");
-            }
+            _message = GameText.Get("Games.Nmm.Slide", "A man slides to a neighbouring empty point.");
         }
     }
 

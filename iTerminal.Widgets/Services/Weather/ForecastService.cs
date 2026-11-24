@@ -142,7 +142,9 @@ public sealed class ForecastService : IForecastService
         {
             forecast = await _provider.FetchAsync(place, cancellationToken);
         }
+        #pragma warning disable S2139 // Logged here with the place name and rethrown so the caller can show the failure.
         catch (Exception exception)
+        #pragma warning restore S2139
         {
             _logger?.Warning(exception, "Forecast for {Place} could not be fetched", place.Name);
             throw;

@@ -7,7 +7,9 @@ namespace iConsole.Media.Video;
 /// made on first use and kept, so a reopen at another size does not decode the file again. Like the SVG decoder, every
 /// frame after the first reports the end of the stream.
 /// </summary>
+#pragma warning disable S3881 // Subclassed by the viewers, so the class stays unsealed and keeps the shared Dispose(bool).
 public abstract class BitmapStillDecoder : IVideoDecoder
+#pragma warning restore S3881
 {
     private readonly Lazy<SKBitmap> _bitmap;
     private int _columns = 1;

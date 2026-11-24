@@ -61,7 +61,9 @@ public sealed class PluginManagerService : IPluginManagerService
         {
             lock (_gate)
             {
+                #pragma warning disable S2365 // Callers read a snapshot taken under the lock; a property would copy on every read.
                 return _entries.Values
+                #pragma warning restore S2365
                     .OrderBy(entry => entry.FileName, StringComparer.OrdinalIgnoreCase)
                     .Select(entry => new PluginInfo(entry.FileName, entry.State, entry.Viewers.Count, entry.Editors.Count, entry.Error))
                     .ToList();

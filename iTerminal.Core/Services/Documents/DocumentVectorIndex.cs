@@ -37,7 +37,7 @@ public sealed class DocumentVectorIndex
     public readonly record struct Match(string Path, int ChunkStart, double Score);
 
     /// <summary>One passage's vector, ready to compare.</summary>
-    private sealed record Passage(string FilePath, int ChunkStart, float[] Vector, float Norm);
+    private sealed record Passage(string FilePath, int ChunkStart, float[] Vector, float VectorNorm);
 
     private sealed record Snapshot(string Model, IReadOnlyList<Passage> Passages);
 
@@ -174,12 +174,12 @@ public sealed class DocumentVectorIndex
         Dictionary<string, Match> best = new(StringComparer.Ordinal);
         foreach (Passage passage in passages)
         {
-            if (passage.Vector.Length != query.Length || passage.Norm == 0)
+            if (passage.Vector.Length != query.Length || passage.VectorNorm == 0)
             {
                 continue;
             }
 
-            double score = Dot(passage.Vector, query) / (passage.Norm * queryNorm);
+            double score = Dot(passage.Vector, query) / (passage.VectorNorm * queryNorm);
             if (!best.TryGetValue(passage.FilePath, out Match current) || score > current.Score)
             {
                 best[passage.FilePath] = new Match(passage.FilePath, passage.ChunkStart, score);
