@@ -270,7 +270,8 @@ public static partial class MimeParser
     private static byte[] QuotedWord(string text)
     {
         var bytes = new List<byte>(text.Length);
-        for (var i = 0; i < text.Length; i++)
+        var i = 0;
+        while (i < text.Length)
         {
             if (text[i] == '_')
             {
@@ -285,6 +286,7 @@ public static partial class MimeParser
             {
                 bytes.Add((byte)text[i]);
             }
+            i++;
         }
 
         return [.. bytes];

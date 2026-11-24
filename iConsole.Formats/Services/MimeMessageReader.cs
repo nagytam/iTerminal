@@ -123,7 +123,8 @@ public static class MimeMessageReader
     {
         text ??= string.Empty;
         List<byte> bytes = new(text.Length);
-        for (int i = 0; i < text.Length; i++)
+        int i = 0;
+        while (i < text.Length)
         {
             char c = text[i];
             if (c == '=' && i + 2 < text.Length && Uri.IsHexDigit(text[i + 1]) && Uri.IsHexDigit(text[i + 2]))
@@ -140,6 +141,7 @@ public static class MimeMessageReader
             {
                 bytes.Add((byte)c);
             }
+            i++;
         }
 
         return [.. bytes];

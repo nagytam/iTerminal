@@ -219,7 +219,8 @@ public static class AnsiText
     private static void Apply(string parameters, Style style)
     {
         int[] codes = parameters.Length == 0 ? [0] : [.. parameters.Split(';', ':').Select(p => int.TryParse(p, out int value) ? value : 0)];
-        for (int i = 0; i < codes.Length; i++)
+        int i = 0;
+        while (i < codes.Length)
         {
             int code = codes[i];
             switch (code)
@@ -268,6 +269,7 @@ public static class AnsiText
 
                     break;
             }
+            i++;
         }
     }
 

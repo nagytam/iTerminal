@@ -61,7 +61,8 @@ public static class ModelFileSummary
         var layers = new List<string>();
         var entities = new Dictionary<string, int>(StringComparer.Ordinal);
 
-        for (int i = 0; i < pairs.Count; i++)
+        int i = 0;
+        while (i < pairs.Count)
         {
             (int code, string value) = pairs[i];
             switch (code)
@@ -96,6 +97,7 @@ public static class ModelFileSummary
                     ExtentOf(extents, variable)[1] = ParseDouble(value);
                     break;
             }
+            i++;
         }
 
         if (version is null && entities.Count == 0 && layers.Count == 0)

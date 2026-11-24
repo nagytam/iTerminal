@@ -699,9 +699,11 @@ public class TetrisGame : GameBase
                 }
             }
 
-            for (int x = 0; x < Columns; x++)
+            int col = 0;
+            while (col < Columns)
             {
-                _board[0, x] = 0;
+                _board[0, col] = 0;
+                col++;
             }
 
             cleared++;

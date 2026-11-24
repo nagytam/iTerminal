@@ -286,7 +286,8 @@ public class FileDiffDialog : Dialog
 
         var lines = new List<string>();
         var start = 0;
-        for (var i = 0; i < text.Length; i++)
+        var i = 0;
+        while (i < text.Length)
         {
             if (text[i] == '\n' || text[i] == '\r')
             {
@@ -298,6 +299,7 @@ public class FileDiffDialog : Dialog
 
                 start = i + 1;
             }
+            i++;
         }
 
         if (start < text.Length)

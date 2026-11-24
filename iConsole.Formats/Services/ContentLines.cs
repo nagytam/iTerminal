@@ -118,7 +118,8 @@ internal static class ContentLines
         }
 
         StringBuilder builder = new(value.Length);
-        for (int i = 0; i < value.Length; i++)
+        int i = 0;
+        while (i < value.Length)
         {
             char c = value[i];
             if (c == '\\' && i + 1 < value.Length)
@@ -130,6 +131,7 @@ internal static class ContentLines
             {
                 builder.Append(c);
             }
+            i++;
         }
 
         return builder.ToString();
@@ -140,7 +142,8 @@ internal static class ContentLines
     {
         List<string> parts = [];
         StringBuilder current = new();
-        for (int i = 0; i < value.Length; i++)
+        int i = 0;
+        while (i < value.Length)
         {
             char c = value[i];
             if (c == '\\' && i + 1 < value.Length)
@@ -156,6 +159,7 @@ internal static class ContentLines
             {
                 current.Append(c);
             }
+            i++;
         }
 
         parts.Add(Unescape(current.ToString()));

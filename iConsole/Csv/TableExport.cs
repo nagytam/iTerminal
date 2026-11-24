@@ -137,7 +137,8 @@ public static class TableExport
     private static string JsonText(string value)
     {
         var text = new StringBuilder(value.Length);
-        for (int index = 0; index < value.Length; index++)
+        int index = 0;
+        while (index < value.Length)
         {
             char current = value[index];
             if (char.IsHighSurrogate(current) && index + 1 < value.Length && char.IsLowSurrogate(value[index + 1]))
@@ -152,6 +153,7 @@ public static class TableExport
             {
                 text.Append(current);
             }
+            index++;
         }
 
         return text.ToString();
@@ -165,7 +167,8 @@ public static class TableExport
     private static string XmlCharacters(string value)
     {
         var text = new StringBuilder(value.Length);
-        for (int index = 0; index < value.Length; index++)
+        int index = 0;
+        while (index < value.Length)
         {
             char current = value[index];
             if (char.IsHighSurrogate(current) && index + 1 < value.Length && char.IsLowSurrogate(value[index + 1]))
@@ -176,6 +179,7 @@ public static class TableExport
             {
                 text.Append(current);
             }
+            index++;
         }
 
         return text.ToString();

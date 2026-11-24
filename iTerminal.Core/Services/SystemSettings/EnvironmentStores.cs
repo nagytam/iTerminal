@@ -217,7 +217,8 @@ public sealed class EnvironmentFileStore(string path) : IEnvironmentVariableStor
         if (raw.Length >= 2 && raw[0] == '"' && raw[^1] == '"')
         {
             var builder = new StringBuilder();
-            for (var i = 1; i < raw.Length - 1; i++)
+            var i = 1;
+            while (i < raw.Length - 1)
             {
                 if (raw[i] == '\\' && i + 1 < raw.Length - 1)
                 {
@@ -225,6 +226,7 @@ public sealed class EnvironmentFileStore(string path) : IEnvironmentVariableStor
                 }
 
                 builder.Append(raw[i]);
+                i++;
             }
 
             return builder.ToString();
