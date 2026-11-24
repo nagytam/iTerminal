@@ -37,10 +37,12 @@ public sealed partial class DriveActionsService : IDriveActionsService
 
     // ---- eject ---------------------------------------------------------------------------------
 
-    public Task<DriveActionResult> EjectAsync(string root, CancellationToken cancellationToken = default) =>
-        OperatingSystem.IsWindows() ? EjectWindowsAsync(root, cancellationToken)
-        : OperatingSystem.IsLinux() ? EjectLinuxAsync(root, cancellationToken)
-        : Unsupported();
+    public Task<DriveActionResult> EjectAsync(string root, CancellationToken cancellationToken = default)
+    {
+        if (OperatingSystem.IsWindows()) return EjectWindowsAsync(root, cancellationToken);
+        if (OperatingSystem.IsLinux()) return EjectLinuxAsync(root, cancellationToken);
+        return Unsupported();
+    }
 
     private async Task<DriveActionResult> EjectWindowsAsync(string root, CancellationToken cancellationToken)
     {
@@ -186,16 +188,20 @@ public sealed partial class DriveActionsService : IDriveActionsService
 
     // ---- disk images ---------------------------------------------------------------------------
 
-    public Task<DriveActionResult> MountImageAsync(string imagePath, CancellationToken cancellationToken = default) =>
-        !IsImage(imagePath) ? Task.FromResult(Fail(UiText.Get("Drive.MountTypes", "Only .iso, .vhd and .vhdx files can be mounted.")))
-        : OperatingSystem.IsWindows() ? MountWindowsAsync(imagePath, cancellationToken)
-        : OperatingSystem.IsLinux() ? MountLinuxAsync(imagePath, cancellationToken)
-        : Unsupported();
+    public Task<DriveActionResult> MountImageAsync(string imagePath, CancellationToken cancellationToken = default)
+    {
+        if (!IsImage(imagePath)) return Task.FromResult(Fail(UiText.Get("Drive.MountTypes", "Only .iso, .vhd and .vhdx files can be mounted.")));
+        if (OperatingSystem.IsWindows()) return MountWindowsAsync(imagePath, cancellationToken);
+        if (OperatingSystem.IsLinux()) return MountLinuxAsync(imagePath, cancellationToken);
+        return Unsupported();
+    }
 
-    public Task<DriveActionResult> UnmountImageAsync(string imagePath, CancellationToken cancellationToken = default) =>
-        OperatingSystem.IsWindows() ? UnmountWindowsAsync(imagePath, cancellationToken)
-        : OperatingSystem.IsLinux() ? UnmountLinuxAsync(imagePath, cancellationToken)
-        : Unsupported();
+    public Task<DriveActionResult> UnmountImageAsync(string imagePath, CancellationToken cancellationToken = default)
+    {
+        if (OperatingSystem.IsWindows()) return UnmountWindowsAsync(imagePath, cancellationToken);
+        if (OperatingSystem.IsLinux()) return UnmountLinuxAsync(imagePath, cancellationToken);
+        return Unsupported();
+    }
 
     private async Task<DriveActionResult> MountWindowsAsync(string imagePath, CancellationToken cancellationToken)
     {
@@ -242,9 +248,9 @@ public sealed partial class DriveActionsService : IDriveActionsService
         }
 
         var mount = await _runner.RunAsync("udisksctl", ["mount", "-b", device], cancellationToken: cancellationToken);
-        return mount.Success
-            ? Ok(mount.StandardOutput.Trim().Length > 0 ? mount.StandardOutput.Trim() : $"{Path.GetFileName(imagePath)} is mounted.")
-            : Fail(Describe(mount, $"{Path.GetFileName(imagePath)} was attached as {device} but not mounted."));
+        var output = mount.StandardOutput.Trim();
+        if (!mount.Success) return Fail(Describe(mount, $"{Path.GetFileName(imagePath)} was attached as {device} but not mounted."));
+        return Ok(output.Length > 0 ? output : $"{Path.GetFileName(imagePath)} is mounted.");
     }
 
     private async Task<DriveActionResult> UnmountLinuxAsync(string imagePath, CancellationToken cancellationToken)

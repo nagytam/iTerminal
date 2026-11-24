@@ -198,6 +198,9 @@ public class PopupListView : Control
         _scroll = Math.Clamp(_scroll, 0, Math.Max(0, _items.Count - rows));
     }
 
-    private static string Fit(string text, int width) =>
-        width <= 0 ? string.Empty : text.Length > width ? text[..width] : text.PadRight(width);
+    private static string Fit(string text, int width)
+    {
+        if (width <= 0) return string.Empty;
+        return text.Length > width ? text[..width] : text.PadRight(width);
+    }
 }

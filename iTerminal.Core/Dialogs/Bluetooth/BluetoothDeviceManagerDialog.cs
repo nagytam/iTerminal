@@ -97,11 +97,9 @@ public class BluetoothDeviceManagerDialog : Dialog
     {
         ApplyPendingDevices();
         _status.Text = _statusText;
-        _table.EmptyText = !_loaded && _bluetooth.IsSupported
-            ? UiText.Get("Status.Bluetooth.Reading", "Reading the Bluetooth devices…")
-            : _bluetooth.CanChange
-                ? UiText.Get("Empty.BluetoothDevices", "No Bluetooth devices known. Press S to scan for nearby ones.")
-                : UiText.Get("Empty.BluetoothDevices.ReadOnly", "No paired Bluetooth devices found.");
+        if (!_loaded && _bluetooth.IsSupported) _table.EmptyText = UiText.Get("Status.Bluetooth.Reading", "Reading the Bluetooth devices…");
+        else if (_bluetooth.CanChange) _table.EmptyText = UiText.Get("Empty.BluetoothDevices", "No Bluetooth devices known. Press S to scan for nearby ones.");
+        else _table.EmptyText = UiText.Get("Empty.BluetoothDevices.ReadOnly", "No paired Bluetooth devices found.");
         base.OnIdle();
     }
 
@@ -169,11 +167,12 @@ public class BluetoothDeviceManagerDialog : Dialog
             StateText));
     }
 
-    private static string StateText(BluetoothDevice device) => device.IsConnected
-        ? UiText.Get("State.Bluetooth.Connected", "connected")
-        : device.IsPaired
-            ? UiText.Get("State.Bluetooth.Paired", "paired")
-            : UiText.Get("State.Bluetooth.Nearby", "nearby");
+    private static string StateText(BluetoothDevice device)
+    {
+        if (device.IsConnected) return UiText.Get("State.Bluetooth.Connected", "connected");
+        if (device.IsPaired) return UiText.Get("State.Bluetooth.Paired", "paired");
+        return UiText.Get("State.Bluetooth.Nearby", "nearby");
+    }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {

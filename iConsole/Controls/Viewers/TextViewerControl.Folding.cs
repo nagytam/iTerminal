@@ -355,14 +355,17 @@ public partial class TextViewerControl
     /// <summary>The gutter text of a screen row: fold marker, right-aligned number and a space; blank for a wrapped continuation row.</summary>
     internal string GutterText(TextRow row)
     {
-        int numberWidth = _showLineNumbers ? GutterWidth - (_enableFolding ? 1 : 0) - 1 : 0;
+        int numberWidth = 0;
+        if (_showLineNumbers) numberWidth = GutterWidth - (_enableFolding ? 1 : 0) - 1;
         string marker = string.Empty;
         string number = string.Empty;
         if (row.Start == 0)
         {
             if (_enableFolding)
             {
-                marker = IsFolded(row.Line) ? "▸" : CanFold(row.Line) ? "▾" : " ";
+                marker = " ";
+                if (IsFolded(row.Line)) marker = "▸";
+                else if (CanFold(row.Line)) marker = "▾";
             }
 
             if (_showLineNumbers)

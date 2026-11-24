@@ -84,7 +84,8 @@ public class StepIndicator : Control
         char[] cells = new char[WidthFor(count)];
         for (int i = 0; i < count; i++)
         {
-            cells[i * 2] = i < current ? '●' : i == current ? '◉' : '○';
+            if (i < current) cells[i * 2] = '●';
+            else cells[i * 2] = i == current ? '◉' : '○';
             if (i < count - 1)
             {
                 cells[i * 2 + 1] = '─';

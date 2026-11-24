@@ -279,7 +279,9 @@ public class TerminalPanel : Window
 
             var isError = text.StartsWith("ERR: ");
             var isCommand = text.StartsWith("> ");
-            var fg = isError ? Color.Red : isCommand ? Color.Cyan : Color.Gray;
+            var fg = Color.Gray;
+            if (isError) fg = Color.Red;
+            else if (isCommand) fg = Color.Cyan;
             var bg = Color.Black;
 
             var lineStr = new ConxelString(text, fg, bg);

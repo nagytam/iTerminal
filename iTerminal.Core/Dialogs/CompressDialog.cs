@@ -272,9 +272,9 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
     /// </summary>
     internal static string DefaultArchivePath(IReadOnlyList<Url> sources, Url? sourceFolder, Url? targetFolder, ArchiveFormat format)
     {
-        var baseName = sources.Count == 1
-            ? Path.GetFileNameWithoutExtension(FocusedEntry.NameOf(sources[0]))
-            : sourceFolder is not null ? FocusedEntry.NameOf(sourceFolder) : "archive";
+        string baseName;
+        if (sources.Count == 1) baseName = Path.GetFileNameWithoutExtension(FocusedEntry.NameOf(sources[0]));
+        else baseName = sourceFolder is not null ? FocusedEntry.NameOf(sourceFolder) : "archive";
         if (string.IsNullOrWhiteSpace(baseName) || baseName.EndsWith(':'))
         {
             baseName = "archive";
@@ -376,10 +376,10 @@ public class CompressDialog : FormDialog, ITransientOverlayHost
             .Select(f => _compressionService.WhyUnavailable(f))
             .FirstOrDefault(reason => reason is not null);
         // A replacing format says so whether or not an archive is there: a remote target is not looked at here.
-        var existing = !format.AddsToExisting
-            ? iConsole.Localization.UiText.Get("Compress.ReplacesExisting", "Replaces the existing archive.") + " "
-            : !ExistsLocally(ArchivePath) ? string.Empty
-            : iConsole.Localization.UiText.Get("Compress.AddsToExisting", "Adds to the existing archive.") + " ";
+        string existing;
+        if (!format.AddsToExisting) existing = iConsole.Localization.UiText.Get("Compress.ReplacesExisting", "Replaces the existing archive.") + " ";
+        else if (!ExistsLocally(ArchivePath)) existing = string.Empty;
+        else existing = iConsole.Localization.UiText.Get("Compress.AddsToExisting", "Adds to the existing archive.") + " ";
         _hintFull = existing
             + hint
             + (unavailable is null ? string.Empty : $" ({unavailable}.)");

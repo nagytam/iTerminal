@@ -145,7 +145,8 @@ public sealed class OfficeTextExtractor : IDocumentTextExtractor
             end--;
         }
 
-        return end == name.Length ? 0 : int.TryParse(name[end..], out int value) ? value : 0;
+        if (end == name.Length) return 0;
+        return int.TryParse(name[end..], out int value) ? value : 0;
     }
 
     /// <summary>

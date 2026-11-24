@@ -156,7 +156,9 @@ public class DiskUsageDialog : Dialog
         _chart.Items = items;
         _chart.IsVisible = items.Count > 0;
 
-        _badge.Text = _current.Inaccessible ? UiText.Get("DiskUsage.Partial", UiText.Get("DiskUsage.Partial", "PARTIAL")) : _sortByName ? UiText.Get("DiskUsage.ByName", UiText.Get("DiskUsage.ByName", "BY NAME")) : UiText.Get("DiskUsage.BySize", UiText.Get("DiskUsage.BySize", "BY SIZE"));
+        if (_current.Inaccessible) _badge.Text = UiText.Get("DiskUsage.Partial", UiText.Get("DiskUsage.Partial", "PARTIAL"));
+        else if (_sortByName) _badge.Text = UiText.Get("DiskUsage.ByName", UiText.Get("DiskUsage.ByName", "BY NAME"));
+        else _badge.Text = UiText.Get("DiskUsage.BySize", UiText.Get("DiskUsage.BySize", "BY SIZE"));
         _badge.Kind = _current.Inaccessible ? BadgeKind.Warning : BadgeKind.Info;
         PlaceChart();
         _badge.IsVisible = true;
@@ -287,9 +289,10 @@ public class DiskUsageDialog : Dialog
             var files = row.IsFolder ? $"{row.FileCount:N0}" : string.Empty;
             var text = $"{(i == _cursor ? "▶" : " ")} {name.Cut(nameWidth).ExpandRight(nameWidth)} "
                 + $"{Bar(row.Size, _current.Size, barWidth)} {row.Size.ToFileSize(),10} {Percent(row.Size, _current.Size)}" + (withFiles ? $" {files,10}" : string.Empty);
-            Color? color = i == _cursor
-                ? Color.Yellow
-                : row.IsFolder ? Color.Cyan : row.IsOther ? Color.Gray : null;
+            Color? color = null;
+            if (i == _cursor) color = Color.Yellow;
+            else if (row.IsFolder) color = Color.Cyan;
+            else if (row.IsOther) color = Color.Gray;
             lines.Add(new(text, color));
         }
 

@@ -257,17 +257,15 @@ public partial class Url
             {
                 // The storage's own root (mtp://<device>/<storage>/), or the device's list of storages.
                 var segments = Path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-                return segments.Length >= 2
-                    ? new Url(Data.Container.MTP + segments[0] + "/" + segments[1] + "/")
-                    : new Url(Data.Container.MTP + (segments.Length == 1 ? segments[0] + "/" : string.Empty));
+                var storageRoot = segments.Length == 1 ? segments[0] + "/" : string.Empty;
+                return segments.Length >= 2 ? new Url(Data.Container.MTP + segments[0] + "/" + segments[1] + "/") : new Url(Data.Container.MTP + storageRoot);
             }
             else if (ContainerType == ContainerType.Git)
             {
                 // The revision's tree root: git://<repository>/<revision>/.
                 var segments = Path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-                return segments.Length >= 2
-                    ? new Url(Data.Container.GIT + segments[0] + "/" + segments[1] + "/")
-                    : new Url(Data.Container.GIT + (segments.Length == 1 ? segments[0] + "/" : string.Empty));
+                var treeRoot = segments.Length == 1 ? segments[0] + "/" : string.Empty;
+                return segments.Length >= 2 ? new Url(Data.Container.GIT + segments[0] + "/" + segments[1] + "/") : new Url(Data.Container.GIT + treeRoot);
             }
             else if (ContainerType == ContainerType.FileSystem)
             {
@@ -629,11 +627,11 @@ public partial class Url
                 // s3://[accessKeyId@]bucket/key, onedrive://[account]/path and gdrive://[account]/path.
                 // The authority is the bucket or the account label (empty lists the buckets / uses the
                 // default account); the path is raw, as for WebDAV; no secret is ever part of a URL.
-                var (cloudScheme, cloudType) = _url.StartsWith(Data.Container.S3)
-                    ? (Data.Container.S3, ContainerType.S3)
-                    : _url.StartsWith(Data.Container.ONEDRIVE)
-                        ? (Data.Container.ONEDRIVE, ContainerType.OneDrive)
-                        : (Data.Container.GOOGLE_DRIVE, ContainerType.GoogleDrive);
+                string cloudScheme;
+                ContainerType cloudType;
+                if (_url.StartsWith(Data.Container.S3)) { cloudScheme = Data.Container.S3; cloudType = ContainerType.S3; }
+                else if (_url.StartsWith(Data.Container.ONEDRIVE)) { cloudScheme = Data.Container.ONEDRIVE; cloudType = ContainerType.OneDrive; }
+                else { cloudScheme = Data.Container.GOOGLE_DRIVE; cloudType = ContainerType.GoogleDrive; }
                 var cloudRest = _url[cloudScheme.Length..];
                 var cloudSlash = cloudRest.IndexOf('/');
                 var cloudAuthority = cloudSlash < 0 ? cloudRest : cloudRest[..cloudSlash];

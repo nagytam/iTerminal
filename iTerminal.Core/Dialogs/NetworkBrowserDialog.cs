@@ -417,13 +417,14 @@ public class NetworkBrowserDialog : SplitPaneDialog
             return;
         }
 
+        var sshMethod = string.IsNullOrEmpty(secret) ? SshAuthMethod.PrivateKey : SshAuthMethod.Password;
         var profile = new NetworkConnectionProfile
         {
             Protocol = isSmb ? NetworkProtocol.Smb : NetworkProtocol.Ssh,
             Host = row.Host,
             Username = username,
             ShareName = isSmb ? shareName : null,
-            SshAuthMethod = isSmb ? null : (string.IsNullOrEmpty(secret) ? SshAuthMethod.PrivateKey : SshAuthMethod.Password),
+            SshAuthMethod = isSmb ? null : sshMethod,
             PrivateKeyPath = null,
             HasSavedCredential = _saveConnectionCheckBox.IsChecked && !string.IsNullOrEmpty(secret),
         };

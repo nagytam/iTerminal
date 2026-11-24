@@ -65,7 +65,8 @@ public static class JsonTree
     /// </summary>
     public static string Label(string? key, JsonElement value)
     {
-        string prefix = key is null ? string.Empty : key.StartsWith('[') ? $"{key}: " : $"{Quote(key)}: ";
+        string prefix = string.Empty;
+        if (key is not null) prefix = key.StartsWith('[') ? $"{key}: " : $"{Quote(key)}: ";
         return prefix + value.ValueKind switch
         {
             JsonValueKind.Object => $"{{ {value.EnumerateObject().Count():N0} }}",

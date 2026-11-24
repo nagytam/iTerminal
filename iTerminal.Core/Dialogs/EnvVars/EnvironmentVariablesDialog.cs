@@ -184,9 +184,9 @@ public class EnvironmentVariablesDialog : Dialog
             }
 
             // A change's outcome (status, reload) must not be lost to a read landing right after it.
-            _parked = _parked is { Rows: null } older && outcome.Rows is not null
-                ? outcome with { Status = outcome.Status ?? older.Status, IsError = outcome.Status is null ? older.IsError : outcome.IsError, Reload = outcome.Reload || older.Reload }
-                : outcome;
+            if (_parked is { Rows: null } older && outcome.Rows is not null)
+                _parked = outcome with { Status = outcome.Status ?? older.Status, IsError = outcome.Status is null ? older.IsError : outcome.IsError, Reload = outcome.Reload || older.Reload };
+            else _parked = outcome;
         }
     }
 
@@ -621,9 +621,10 @@ public class EnvironmentVariablesDialog : Dialog
 
         // A name that is already there is not being changed, so only a new one is checked here (a process may
         // hold names the saved stores would refuse); the service still refuses a bad one in words.
-        var nameProblem = _editingName is not null ? null
-            : scope == EditScope.Session ? SessionEnvironment.ValidateName(name)
-            : SystemSettingsValidator.ValidateVariableName(name, windows);
+        string? nameProblem;
+        if (_editingName is not null) nameProblem = null;
+        else if (scope == EditScope.Session) nameProblem = SessionEnvironment.ValidateName(name);
+        else nameProblem = SystemSettingsValidator.ValidateVariableName(name, windows);
         var problem = nameProblem ?? SystemSettingsValidator.ValidateVariableValue(value, windows);
         if (problem is not null)
         {
@@ -784,8 +785,10 @@ public class EnvironmentVariablesDialog : Dialog
             x += label.Length + 1;
         }
 
-        var count = !_loaded ? UiText.Get("EnvVars.Reading", "reading…")
-            : _filter.Length > 0 ? $"{shown}/{_rows.Count}" : _rows.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        string count;
+        if (!_loaded) count = UiText.Get("EnvVars.Reading", "reading…");
+        else if (_filter.Length > 0) count = $"{shown}/{_rows.Count}";
+        else count = _rows.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
         if (iw - count.Length - 1 > x)
         {
             Put(buffer, iw - count.Length - 1, 0, count.Length, count, colorScheme.DisabledForeground, colorScheme.Background);
@@ -805,9 +808,10 @@ public class EnvironmentVariablesDialog : Dialog
     {
         if (visible.Count == 0)
         {
-            var empty = !_loaded ? UiText.Get("EnvVars.Reading", "reading…")
-                : _filter.Length > 0 ? string.Format(UiText.Get("EnvVars.NoMatch", "No variable matches \"{0}\"."), _filter)
-                : UiText.Get("EnvVars.Empty", "No variables here. Press N to add one.");
+            string empty;
+            if (!_loaded) empty = UiText.Get("EnvVars.Reading", "reading…");
+            else if (_filter.Length > 0) empty = string.Format(UiText.Get("EnvVars.NoMatch", "No variable matches \"{0}\"."), _filter);
+            else empty = UiText.Get("EnvVars.Empty", "No variables here. Press N to add one.");
             Put(buffer, 1, ListTop, iw - 2, empty, colorScheme.DisabledForeground, colorScheme.Background);
             return;
         }

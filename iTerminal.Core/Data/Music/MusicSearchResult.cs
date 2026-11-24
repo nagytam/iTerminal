@@ -32,9 +32,8 @@ public sealed record MusicSearchResult(
     public string DisplayName => Kind switch
     {
         MusicSearchResultKind.Artist => string.IsNullOrWhiteSpace(Artist) ? "Unknown artist" : Artist,
-        MusicSearchResultKind.Album => string.IsNullOrWhiteSpace(Artist)
-            ? (string.IsNullOrWhiteSpace(Album) ? "Unknown album" : Album)
-            : $"{Album} — {Artist}",
+        MusicSearchResultKind.Album when string.IsNullOrWhiteSpace(Artist) => string.IsNullOrWhiteSpace(Album) ? "Unknown album" : Album,
+        MusicSearchResultKind.Album => $"{Album} — {Artist}",
         _ => Track?.DisplayName ?? string.Empty,
     };
 

@@ -149,9 +149,8 @@ public sealed class FileSearchService(ILogger? logger = null) : IFileSearchServi
 
     internal static string Describe(FileSearchProgress progress)
     {
-        var found = progress.Hits == 0
-            ? "Nothing found"
-            : $"Found {progress.Hits:N0}{(progress.Hits >= FileSearch.MaxHits ? "+ (stopped at the limit)" : string.Empty)}";
+        var limitNote = progress.Hits >= FileSearch.MaxHits ? "+ (stopped at the limit)" : string.Empty;
+        var found = progress.Hits == 0 ? "Nothing found" : $"Found {progress.Hits:N0}{limitNote}";
         return $"{found} in {progress.FilesScanned:N0} file{(progress.FilesScanned == 1 ? string.Empty : "s")}, {progress.FoldersScanned:N0} folder{(progress.FoldersScanned == 1 ? string.Empty : "s")}.";
     }
 

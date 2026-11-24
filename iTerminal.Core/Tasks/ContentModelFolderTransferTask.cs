@@ -217,9 +217,9 @@ public abstract class ContentModelFolderTransferTask(
     private void UpdatePercentage(FolderDiscoveryTask discoveryTask, long processedFiles, long discoveredFiles)
     {
         var totalBytes = discoveryTask.TotalBytes;
-        var percentage = totalBytes > 0
-            ? 100L * Interlocked.Read(ref _bytesCopied) / totalBytes
-            : discoveredFiles > 0 ? 100L * processedFiles / discoveredFiles : 0;
+        long percentage;
+        if (totalBytes > 0) percentage = 100L * Interlocked.Read(ref _bytesCopied) / totalBytes;
+        else percentage = discoveredFiles > 0 ? 100L * processedFiles / discoveredFiles : 0;
         percentage = Math.Clamp(percentage, 0, 99);
         if (percentage > ProgressPercentage)
         {

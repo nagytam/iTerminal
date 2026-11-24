@@ -394,7 +394,9 @@ public class CalculatorEngine
             case "xor": return (long)a ^ (long)b;
             // A count outside 0..63 shifts everything out; the machine would take it modulo 64 (1 << 64 gave 1).
             case "shl": return b is < 0 or > 63 ? 0 : (long)a << (int)b;
-            case "shr": return b is < 0 or > 63 ? ((long)a < 0 ? -1 : 0) : (long)a >> (int)b;
+            case "shr":
+                if (b is < 0 or > 63) return (long)a < 0 ? -1L : 0L;
+                return (long)a >> (int)b;
             default: return b;
         }
     }

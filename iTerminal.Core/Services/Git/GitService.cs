@@ -345,9 +345,8 @@ public sealed class GitService : IGitService
         try
         {
             var result = await RunAsync(repositoryRoot, cancellationToken, args);
-            return result.Success
-                ? GitResult.Ok(result.StandardOutput)
-                : GitResult.Fail(string.IsNullOrWhiteSpace(result.StandardError) ? result.StandardOutput : result.StandardError);
+            if (result.Success) return GitResult.Ok(result.StandardOutput);
+            return GitResult.Fail(string.IsNullOrWhiteSpace(result.StandardError) ? result.StandardOutput : result.StandardError);
         }
         finally
         {

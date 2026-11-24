@@ -125,9 +125,9 @@ public sealed class GitDriveService(IExternalProcessRunner processRunner, ISetti
                     continue;
                 }
 
-                var kind = fields[0].StartsWith("refs/tags/", StringComparison.Ordinal) ? "Tag"
-                    : fields[0].StartsWith("refs/remotes/", StringComparison.Ordinal) ? "Remote"
-                    : "Branch";
+                var kind = "Branch";
+                if (fields[0].StartsWith("refs/tags/", StringComparison.Ordinal)) kind = "Tag";
+                else if (fields[0].StartsWith("refs/remotes/", StringComparison.Ordinal)) kind = "Remote";
                 entries.Add(new VirtualDriveEntry(GitDriveUrl.Build(repositoryRoot, fields[1]), fields[1], kind, FromUnix(fields[2]))
                 {
                     Detail = $"{kind}: {fields[3]}",

@@ -138,7 +138,7 @@ public static class ChartAxis
         double raw = (max - min) / intervals;
         double magnitude = Math.Pow(10, Math.Floor(Math.Log10(raw)));
         double residual = raw / magnitude;
-        double step = (residual <= 1 ? 1 : residual <= 2 ? 2 : residual <= 5 ? 5 : 10) * magnitude;
+        double step = (residual switch { <= 1 => 1, <= 2 => 2, <= 5 => 5, _ => 10 }) * magnitude;
         double niceMin = Math.Floor(min / step + 1e-9) * step;
         double niceMax = Math.Ceiling(max / step - 1e-9) * step;
         return (niceMin, niceMax, step);

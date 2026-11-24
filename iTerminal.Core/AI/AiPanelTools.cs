@@ -140,7 +140,7 @@ public partial class AiPanelTools(
         return true;
     }
 
-    private static string PanelLabel(IContentModel model) => model.Name == Content.Left ? "left" : model.Name == Content.Right ? "right" : model.Name;
+    private static string PanelLabel(IContentModel model) => model.Name switch { Content.Left => "left", Content.Right => "right", _ => model.Name };
 
     #endregion
 
@@ -499,7 +499,7 @@ public partial class AiPanelTools(
         }
 
         return marks.SetMark(entry, marked)
-            ? $"{(marked ? "Marked" : "Unmarked")} {entry.DisplayName?.Trim()}. {marks.MarkedCount} marked in total."
+            ? $"{(marked switch { true => "Marked", _ => "Unmarked" })} {entry.DisplayName?.Trim()}. {marks.MarkedCount} marked in total."
             : $"{entry.DisplayName?.Trim()} was left as it was.";
     }
 

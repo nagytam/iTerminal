@@ -253,7 +253,9 @@ public class RiskGame : GameBase
             {
                 int index = Index(column, row);
                 bool source = index == _selected;
-                Color background = source ? Color.Yellow : _owner[index] == 0 ? Color.Blue : Color.Red;
+                Color background = Color.Red;
+                if (source) background = Color.Yellow;
+                else if (_owner[index] == 0) background = Color.Blue;
                 Color foreground = source ? Color.Black : Color.White;
                 string text = _armies[index].ToString().PadLeft(3) + "    ";
                 cells.Add(new GameCell(text, foreground, background, index == _cursor));

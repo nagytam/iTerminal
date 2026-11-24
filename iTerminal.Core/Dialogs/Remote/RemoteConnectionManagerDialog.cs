@@ -359,9 +359,9 @@ public class RemoteConnectionManagerDialog : Dialog
         _folder.IsEnabled = fileDrive;
 
         var onlyFileDrives = iConsole.Localization.UiText.Get("Remote.OnlyFileDrives", "only for FTP and WebDAV");
-        _password.Placeholder = !fileDrive ? onlyFileDrives
-            : _editing?.HasSavedCredential == true ? iConsole.Localization.UiText.Get("Remote.PasswordSaved", "(saved - type to replace)")
-            : iConsole.Localization.UiText.Get("Remote.PasswordNone", "(none: anonymous or asks nothing)");
+        if (!fileDrive) _password.Placeholder = onlyFileDrives;
+        else if (_editing?.HasSavedCredential == true) _password.Placeholder = iConsole.Localization.UiText.Get("Remote.PasswordSaved", "(saved - type to replace)");
+        else _password.Placeholder = iConsole.Localization.UiText.Get("Remote.PasswordNone", "(none: anonymous or asks nothing)");
         _folder.Placeholder = fileDrive ? string.Empty : onlyFileDrives;
         _port.Placeholder = string.Format(iConsole.Localization.UiText.Get("Remote.DefaultPort", "(default {0})"), DefaultPortFor());
         StateHasChanged();
@@ -800,12 +800,13 @@ public class RemoteConnectionManagerDialog : Dialog
         _ => "PS",
     };
 
-    private static string DescribeCommand(RemoteConnection connection) =>
-        connection.IsFileDrive
-            ? string.Format(UiText.Get("Remote.Opens", "opens {0}"), connection.DriveUrl) + (connection.HasSavedCredential ? "  " + UiText.Get("Remote.PasswordSaved", "(password saved)") : string.Empty)
-            : RemoteShellLaunch.TryCreate(connection, out var launch, out var error) && launch is not null
-                ? Path.GetFileNameWithoutExtension(launch.FileName) + " " + string.Join(' ', launch.Arguments.Select(a => a.Contains(' ') ? $"\"{a}\"" : a))
-                : error ?? string.Empty;
+    private static string DescribeCommand(RemoteConnection connection)
+    {
+        if (connection.IsFileDrive)
+            return string.Format(UiText.Get("Remote.Opens", "opens {0}"), connection.DriveUrl) + (connection.HasSavedCredential ? "  " + UiText.Get("Remote.PasswordSaved", "(password saved)") : string.Empty);
+        if (!RemoteShellLaunch.TryCreate(connection, out var launch, out var error) || launch is null) return error ?? string.Empty;
+        return Path.GetFileNameWithoutExtension(launch.FileName) + " " + string.Join(' ', launch.Arguments.Select(a => a.Contains(' ') ? $"\"{a}\"" : a));
+    }
 
     private void DrawForm(IBuffer buffer, int iw, ColorScheme colorScheme)
     {

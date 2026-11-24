@@ -71,7 +71,7 @@ public sealed class GridArrayView
     public static GridArrayView Open(IGridArraySource source)
     {
         int rank = source.Shape.Count;
-        int rowAxis = rank == 0 ? -1 : rank == 1 ? 0 : rank - 2;
+        int rowAxis = rank switch { 0 => -1, 1 => 0, _ => rank - 2 };
         int columnAxis = rank >= 2 ? rank - 1 : -1;
         return new GridArrayView(source, new long[rank], rowAxis, columnAxis);
     }
@@ -148,7 +148,10 @@ public sealed class GridArrayView
         IReadOnlyList<string> fields = _source.Fields;
         bool byField = ColumnAxis < 0 && fields.Count > 0;
         long rowsAvailable = RowAxis >= 0 ? Shape[RowAxis] : 1;
-        long columnsAvailable = ColumnAxis >= 0 ? Shape[ColumnAxis] : byField ? fields.Count : 1;
+        long columnsAvailable;
+        if (ColumnAxis >= 0) columnsAvailable = Shape[ColumnAxis];
+        else if (byField) columnsAvailable = fields.Count;
+        else columnsAvailable = 1;
         if (rowsAvailable == 0 || columnsAvailable == 0)
         {
             // Nothing to read, but the columns are still named: a file with headers and no rows keeps its headers.
@@ -166,7 +169,9 @@ public sealed class GridArrayView
         for (int axis = 0; axis < Rank; axis++)
         {
             start[axis] = axis == RowAxis || axis == ColumnAxis ? 0 : _index[axis];
-            count[axis] = axis == RowAxis ? rows : axis == ColumnAxis ? columns : 1;
+            if (axis == RowAxis) count[axis] = rows;
+            else if (axis == ColumnAxis) count[axis] = columns;
+            else count[axis] = 1;
         }
 
         IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, count, cancellationToken);
@@ -290,10 +295,20 @@ public sealed class GridArrayView
     private async Task<GridQueryResult> QueryRowsAsync(string text, long chunkCells, int maxMatches, CancellationToken cancellationToken)
     {
         IReadOnlyList<string> fields = _source.Fields;
-        int width = Rank == 1 ? (fields.Count > 0 ? fields.Count : 1) : (int)Shape[1];
-        IReadOnlyList<string> headers = Rank == 1
-            ? (fields.Count > 0 ? fields : ["value"])
-            : (_source.ColumnNames.Count == width ? _source.ColumnNames : [.. Enumerable.Range(0, width).Select(column => column.ToString(System.Globalization.CultureInfo.InvariantCulture))]);
+        int width = Rank == 1 ? Math.Max(1, fields.Count) : (int)Shape[1];
+        IReadOnlyList<string> headers;
+        if (Rank == 1)
+        {
+            headers = fields.Count > 0 ? fields : ["value"];
+        }
+        else if (_source.ColumnNames.Count == width)
+        {
+            headers = _source.ColumnNames;
+        }
+        else
+        {
+            headers = [.. Enumerable.Range(0, width).Select(column => column.ToString(System.Globalization.CultureInfo.InvariantCulture))];
+        }
         GridQueryPlan plan = GridQuery.Parse(text, headers);
         GridQueryPlan filter = new(plan.From, null, plan.Where, null, false, null);
         var matched = new List<string[]>();

@@ -302,7 +302,7 @@ public sealed class PowerShellRuntimeDependency : IRuntimeDependency
     }
 
     private static string PlatformName() =>
-        $"{(OperatingSystem.IsWindows() ? "Windows" : OperatingSystem.IsMacOS() ? "macOS" : "Linux")} {RuntimeInformation.ProcessArchitecture}";
+        $"{(OperatingSystem.IsWindows(), OperatingSystem.IsMacOS()) switch { (true, _) => "Windows", (_, true) => "macOS", _ => "Linux" }} {RuntimeInformation.ProcessArchitecture}";
 
     /// <summary>The usual folders a system PowerShell 7 is installed in, per platform.</summary>
     internal static IEnumerable<string> DefaultSystemDirectories()

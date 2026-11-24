@@ -535,16 +535,16 @@ public partial class TextViewerControl : Control
         }
         else
         {
-            newRow = row < 0 ? cursorRow - 1
-                : row >= viewHeight ? cursorRow + 1
-                : ScrollableModel.ScrollPosition.Y + row;
+            if (row < 0) newRow = cursorRow - 1;
+            else if (row >= viewHeight) newRow = cursorRow + 1;
+            else newRow = ScrollableModel.ScrollPosition.Y + row;
         }
 
         newRow = Math.Clamp(newRow, 0, TextModel.Lines.Count - 1);
-        var newColumn = column < 0 ? cursorColumn - 1
-            : column >= viewWidth ? cursorColumn + 1
-            : RowMode ? rowStart + Math.Max(0, column - GutterWidth)
-            : ScrollableModel.ScrollPosition.X + column;
+        var newColumn = ScrollableModel.ScrollPosition.X + column;
+        if (RowMode) newColumn = rowStart + Math.Max(0, column - GutterWidth);
+        if (column < 0) newColumn = cursorColumn - 1;
+        else if (column >= viewWidth) newColumn = cursorColumn + 1;
         newColumn = Math.Clamp(newColumn, 0, TextModel.Lines[(int)newRow].Length);
 
         ScrollableModel.CursorPosition.Y = newRow;

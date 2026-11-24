@@ -128,9 +128,8 @@ public partial class AiPanelTools
         entry = null!;
         localPath = string.Empty;
         IEntry? found = string.IsNullOrWhiteSpace(name) ? model.GetFocusedEntry() : FindEntry(model, name, out error);
-        error = found is null
-            ? (string.IsNullOrWhiteSpace(name) ? "Nothing is under the cursor." : $"Error: no entry named '{name}' is listed.")
-            : string.Empty;
+        if (found is not null) error = string.Empty;
+        else error = string.IsNullOrWhiteSpace(name) ? "Nothing is under the cursor." : $"Error: no entry named '{name}' is listed.";
         if (found is null)
         {
             return false;

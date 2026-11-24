@@ -210,9 +210,8 @@ public class TreeView : Control
     /// </summary>
     public static string FormatRow(IHierarchicalItemModel item, int depth)
     {
-        var glyph = item.Children.Any()
-            ? (item.IsOpened ? ExpandedGlyph : CollapsedGlyph)
-            : " ";
+        var glyph = " ";
+        if (item.Children.Any()) glyph = item.IsOpened ? ExpandedGlyph : CollapsedGlyph;
         return new string(' ', Math.Max(0, depth) * IndentWidth) + glyph + " " + item.Name;
     }
 
@@ -325,9 +324,10 @@ public class TreeView : Control
 
         var rows = GetVisibleRows();
         var current = rows.FindIndex(row => row.Item.IsFocused);
-        var target = step == int.MinValue ? 0
-            : step == int.MaxValue ? rows.Count - 1
-            : Math.Clamp((current < 0 ? 0 : current) + step.Value, 0, rows.Count - 1);
+        int target;
+        if (step == int.MinValue) target = 0;
+        else if (step == int.MaxValue) target = rows.Count - 1;
+        else target = Math.Clamp(Math.Max(0, current) + step.Value, 0, rows.Count - 1);
         if (target != current)
         {
             if (current >= 0)

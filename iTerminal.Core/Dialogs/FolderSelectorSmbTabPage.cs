@@ -237,11 +237,10 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     private void RefreshSignedIn()
     {
         var host = SelectedEntry?.Host ?? _hostFilter;
-        var text = host is null
-            ? string.Empty
-            : LoginsFor(host) is { Count: > 0 } logins
-                ? string.Format(UiText.Get("FolderSelector.Smb.SignedIn", "Logged in to {0} as {1}."), host, UsersOf(logins))
-                : string.Format(UiText.Get("FolderSelector.Smb.Anonymous", "Browsing {0} anonymously. L logs in."), host);
+        string text;
+        if (host is null) text = string.Empty;
+        else if (LoginsFor(host) is { Count: > 0 } logins) text = string.Format(UiText.Get("FolderSelector.Smb.SignedIn", "Logged in to {0} as {1}."), host, UsersOf(logins));
+        else text = string.Format(UiText.Get("FolderSelector.Smb.Anonymous", "Browsing {0} anonymously. L logs in."), host);
         if (host is not null && SmbVersionOf(host) is > 0 and var version)
         {
             text += "  " + string.Format(UiText.Get("FolderSelector.Smb.Version", "SMB {0} in use."), version);
@@ -779,11 +778,10 @@ internal static class SmbBrowserRows
             var thisMachine = NetworkDiscoveryService.IsLocalAddress(host.IPAddress)
                 ? ", " + UiText.Get("FolderSelector.Smb.ThisMachine", "this machine")
                 : string.Empty;
-            var label = saved
-                ? $"{address} (SMB{thisMachine}, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")"
-                : login is not null
-                    ? $"{address} (SMB{thisMachine}, {LoggedIn(login.Username)})"
-                    : $"{address} (SMB{thisMachine})";
+            string label;
+            if (saved) label = $"{address} (SMB{thisMachine}, " + UiText.Get("FolderSelector.Smb.Saved", "saved") + ")";
+            else if (login is not null) label = $"{address} (SMB{thisMachine}, {LoggedIn(login.Username)})";
+            else label = $"{address} (SMB{thisMachine})";
             rows.Add(new(address, null, null, label));
         }
 

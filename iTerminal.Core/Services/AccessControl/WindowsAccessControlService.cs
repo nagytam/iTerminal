@@ -168,16 +168,16 @@ public sealed class WindowsAccessControlService : IAccessControlService
         var objects = (rule.InheritanceFlags & InheritanceFlags.ObjectInherit) != 0;
         if (rule.PropagationFlags.HasFlag(PropagationFlags.InheritOnly))
         {
-            return container && objects ? "subfolders, files"
-                : container ? "subfolders"
-                : objects ? "files"
-                : null;
+            if (container && objects) return "subfolders, files";
+            if (container) return "subfolders";
+            if (objects) return "files";
+            return null;
         }
 
-        return container && objects ? "folder, subfolders, files"
-            : container ? "folder, subfolders"
-            : objects ? "folder, files"
-            : "folder only";
+        if (container && objects) return "folder, subfolders, files";
+        if (container) return "folder, subfolders";
+        if (objects) return "folder, files";
+        return "folder only";
     }
 
     private static NTAccount Resolve(string name)

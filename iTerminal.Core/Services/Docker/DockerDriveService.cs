@@ -70,8 +70,9 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
             }
 
             var state = fields[1].ToLowerInvariant();
+            var createdText = fields[4].Length >= 19 ? fields[4][..19] : fields[4];
             DateTime? created = DateTime.TryParseExact(
-                fields[4].Length >= 19 ? fields[4][..19] : fields[4],
+                createdText,
                 "yyyy-MM-dd HH:mm:ss",
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.AssumeLocal,

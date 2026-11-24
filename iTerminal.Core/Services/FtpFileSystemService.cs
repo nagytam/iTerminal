@@ -214,9 +214,10 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
                 || (item.Type == FtpObjectType.Link && item.LinkObject?.Type == FtpObjectType.Directory);
             var childUrl = new Url(folderUrl + item.Name + (isFolder ? "/" : string.Empty), item.Name);
             var modified = item.Modified == DateTime.MinValue ? DateTime.MinValue : item.Modified;
+            var sizeText = item.Size < 0 ? string.Empty : item.Size.ToFileSize();
             rows.Add(new FileSystemEntry(childUrl)
             {
-                FileSize = isFolder ? Url.Folder : (item.Size < 0 ? string.Empty : item.Size.ToFileSize()),
+                FileSize = isFolder ? Url.Folder : sizeText,
                 Date = modified == DateTime.MinValue ? string.Empty : modified.ToString("yyyy-MM-dd"),
                 Time = modified == DateTime.MinValue ? string.Empty : modified.ToString("HH:mm"),
             });

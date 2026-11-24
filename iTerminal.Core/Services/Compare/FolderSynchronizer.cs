@@ -34,10 +34,10 @@ public sealed record SyncAction(SyncActionKind Kind, DiffItem Item)
     public bool CopiesToRight => Kind == SyncActionKind.CopyToRight;
 
     /// <summary>The URL read from, for a copy.</summary>
-    public Url? Source => Kind == SyncActionKind.CopyToRight ? Item.Left : Kind == SyncActionKind.CopyToLeft ? Item.Right : null;
+    public Url? Source => Kind switch { SyncActionKind.CopyToRight => Item.Left, SyncActionKind.CopyToLeft => Item.Right, _ => null };
 
     /// <summary>The URL removed, for a delete.</summary>
-    public Url? Victim => Kind == SyncActionKind.DeleteLeft ? Item.Left : Kind == SyncActionKind.DeleteRight ? Item.Right : null;
+    public Url? Victim => Kind switch { SyncActionKind.DeleteLeft => Item.Left, SyncActionKind.DeleteRight => Item.Right, _ => null };
 
     public long? SourceSize => Kind == SyncActionKind.CopyToRight ? Item.LeftSize : Item.RightSize;
 

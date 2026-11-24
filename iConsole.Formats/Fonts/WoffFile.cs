@@ -22,10 +22,12 @@ public static class WoffFile
         bytes.Length >= 4 && BinaryPrimitives.ReadUInt32BigEndian(bytes) == Signature;
 
     /// <summary>The bytes unchanged when they are not a WOFF file of either version, otherwise the sfnt font they wrap.</summary>
-    public static byte[] Unwrap(byte[] bytes) =>
-        IsWoff(bytes) ? ToSfnt(bytes)
-        : Woff2File.IsWoff2(bytes) ? Woff2File.ToSfnt(bytes)
-        : bytes;
+    public static byte[] Unwrap(byte[] bytes)
+    {
+        if (IsWoff(bytes)) return ToSfnt(bytes);
+        if (Woff2File.IsWoff2(bytes)) return Woff2File.ToSfnt(bytes);
+        return bytes;
+    }
 
     /// <summary>The sfnt font inside a WOFF file. Throws <see cref="FormatException"/> when the file is damaged.</summary>
     public static byte[] ToSfnt(byte[] bytes)

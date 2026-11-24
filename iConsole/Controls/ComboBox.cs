@@ -67,7 +67,7 @@ public class ComboBox<T> : Control, IReadOnly
         _items.AddRange(items);
         _selectedIndex = _items.Count == 0
             ? -1
-            : Math.Clamp(_selectedIndex < 0 ? 0 : _selectedIndex, 0, _items.Count - 1);
+            : Math.Clamp(Math.Max(0, _selectedIndex), 0, _items.Count - 1);
         StateHasChanged();
     }
 
@@ -278,9 +278,9 @@ public class ComboBox<T> : Control, IReadOnly
         line.Append(Fit(selectedText, innerWidth), wellForeground, wellBackground);
         line.Append(Border.End, wellForeground, wellBackground);
 
-        var glyphForeground = IsReadOnly
-            ? colorScheme.DisabledForeground
-            : IsFocused ? colorScheme.SelectedFocusedForeground : foreground;
+        var glyphForeground = foreground;
+        if (IsReadOnly) glyphForeground = colorScheme.DisabledForeground;
+        else if (IsFocused) glyphForeground = colorScheme.SelectedFocusedForeground;
         line.Append(DropDownGlyph, glyphForeground, background);
 
         if (line.Count < width)

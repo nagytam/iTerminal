@@ -758,7 +758,9 @@ public class MenuItem : PopUpWindow
                         );
                 }
                 // A "▲" / "▼" in the right border says the list goes on beyond the screen.
-                var rightEdge = y == 1 && hiddenAbove ? "▲" : y == ViewSize.Height - 2 && hiddenBelow ? "▼" : Border.Vertical;
+                var rightEdge = Border.Vertical;
+                if (y == 1 && hiddenAbove) rightEdge = "▲";
+                else if (y == ViewSize.Height - 2 && hiddenBelow) rightEdge = "▼";
                 s = new ConxelString(rightEdge, colorScheme.Foreground, colorScheme.Background);
                 buffer.Write(ZOrder,
                     new Position(AbsolutePosition.X + ViewSize.Width - 1, y + AbsolutePosition.Y), 

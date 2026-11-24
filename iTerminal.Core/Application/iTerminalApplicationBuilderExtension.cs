@@ -510,12 +510,11 @@ public static class iTerminalApplicationBuilderExtension
         // The system clipboard, for Ctrl+C/X/V on files; the in-process one answers where it cannot be reached.
         services.AddSingleton<iTerminal.Core.Services.Clipboard.IFileClipboardService>(provider =>
         {
-            iTerminal.Core.Services.Clipboard.IFileClipboardService system = OperatingSystem.IsWindows()
-                ? new iTerminal.Core.Services.Clipboard.WindowsFileClipboardService()
-                : OperatingSystem.IsLinux()
-                    ? new iTerminal.Core.Services.Clipboard.LinuxFileClipboardService(
-                        provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())
-                    : new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService();
+            iTerminal.Core.Services.Clipboard.IFileClipboardService system;
+            if (OperatingSystem.IsWindows()) system = new iTerminal.Core.Services.Clipboard.WindowsFileClipboardService();
+            else if (OperatingSystem.IsLinux()) system = new iTerminal.Core.Services.Clipboard.LinuxFileClipboardService(
+                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>());
+            else system = new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService();
             return new iTerminal.Core.Services.Clipboard.FallbackFileClipboardService(
                 system, new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService());
         });

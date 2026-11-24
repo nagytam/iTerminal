@@ -35,7 +35,7 @@ public static class QrTextRenderer
             {
                 bool top = Dark(x, y);
                 bool bottom = y + 1 < total && Dark(x, y + 1);
-                line.Append(top ? (bottom ? '█' : '▀') : (bottom ? '▄' : ' '));
+                line.Append((top, bottom) switch { (true, true) => '█', (true, false) => '▀', (false, true) => '▄', _ => ' ' });
             }
 
             lines.Add(line.ToString());

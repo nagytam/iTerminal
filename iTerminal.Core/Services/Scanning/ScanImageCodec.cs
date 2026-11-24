@@ -39,14 +39,11 @@ public static class ScanImageCodec
         }
 
         // With a 40-byte header the bit masks follow it; larger headers carry them inside.
-        int masks = headerSize == InfoHeaderSize && compression == BiBitfields ? 12
-            : headerSize == InfoHeaderSize && compression == BiAlphaBitfields ? 16
-            : 0;
+        int masks = (headerSize == InfoHeaderSize, compression) switch { (true, BiBitfields) => 12, (true, BiAlphaBitfields) => 16, _ => 0 };
 
         // A palette is present for 8 bits and fewer (always), and beyond that only when it is named.
-        long paletteEntries = bitCount <= 8
-            ? (colorsUsed != 0 ? colorsUsed : 1u << bitCount)
-            : colorsUsed;
+        long paletteEntries = colorsUsed;
+        if (bitCount <= 8) paletteEntries = colorsUsed != 0 ? colorsUsed : 1u << bitCount;
         long paletteBytes = paletteEntries * 4;
 
         long pixelOffset = FileHeaderSize + headerSize + masks + paletteBytes;

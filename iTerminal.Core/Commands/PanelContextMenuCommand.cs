@@ -25,9 +25,14 @@ public class PanelContextMenuCommand(IContentModelService contentModelService, C
     // Key ctor is (consoleKey, shift, alt, control). Only the panel's own instance listens to the key.
     public override Key? Key { get; init; } = browser is null ? null : new Key(ConsoleKey.Applications, false, false, false);
 
-    private IContentModel? TargetModel => browser is not null
-        ? ReferenceEquals(contentModelService.GetFocusedModel(), browser.ContentModel) ? browser.ContentModel : null
-        : contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel();
+    private IContentModel? TargetModel
+    {
+        get
+        {
+            if (browser is null) return contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel();
+            return ReferenceEquals(contentModelService.GetFocusedModel(), browser.ContentModel) ? browser.ContentModel : null;
+        }
+    }
 
     private ContentBrowser? TargetBrowser => browser
         ?? contentModelService.ContentBrowsers.OfType<ContentBrowser>().FirstOrDefault(b => ReferenceEquals(b.ContentModel, TargetModel));

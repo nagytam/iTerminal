@@ -291,7 +291,9 @@ public class HexViewer : Control
             for (int i = 0; i < count; i++)
             {
                 int byteOffset = offset + i;
-                span[p++] = byteOffset < data.Length ? (data[byteOffset] is >= 32 and < 127 ? (char)data[byteOffset] : '.') : ' ';
+                char glyph = ' ';
+                if (byteOffset < data.Length) glyph = data[byteOffset] is >= 32 and < 127 ? (char)data[byteOffset] : '.';
+                span[p++] = glyph;
             }
             span[p++] = '|';
             span[p..].Fill(' ');

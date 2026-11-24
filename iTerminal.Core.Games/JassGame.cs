@@ -203,9 +203,22 @@ public class JassGame : GameBase
         }
     }
 
-    private int WinningTeam => _scores[0] >= TargetScore && _scores[1] >= TargetScore
-        ? _scores[0] >= _scores[1] ? 0 : 1
-        : _scores[0] >= TargetScore ? 0 : 1;
+    private int WinningTeam
+    {
+        get
+        {
+            if (_scores[0] >= TargetScore && _scores[1] >= TargetScore) return _scores[0] >= _scores[1] ? 0 : 1;
+            return _scores[0] >= TargetScore ? 0 : 1;
+        }
+    }
+
+    private string RevealOrStatusText()
+    {
+        if (NeedsReveal) return string.Format(GameText.Get("Games.Jass.PassToReveal", "Pass device to Player {0}; press Enter to reveal."), _currentPlayer + 1);
+        if (_handComplete) return string.Empty;
+        if (IsComputerTurn) return string.Format(GameText.Get("Games.Jass.ComputerPlays", "Player {0} is the computer and is playing; your hand waits."), _currentPlayer + 1);
+        return string.Format(GameText.Get("Games.Jass.PlayerHand", "Player {0}'s hand (press 1–9 to play a card):"), ShownSeat + 1);
+    }
 
     internal IReadOnlyList<JassCard>[] Hands => _hands;
     internal IReadOnlyList<JassPlay> Trick => _trick;
@@ -516,7 +529,9 @@ public class JassGame : GameBase
 
     internal static int TrickStrength(JassCard card, JassSuit lead, JassSuit trump)
     {
-        int suitStrength = card.Suit == trump ? 2 : card.Suit == lead ? 1 : 0;
+        int suitStrength = 0;
+        if (card.Suit == trump) suitStrength = 2;
+        else if (card.Suit == lead) suitStrength = 1;
         int rankStrength = card.Suit == trump ? TrumpStrength(card.Rank) : NormalStrength(card.Rank);
         return suitStrength * 100 + rankStrength;
     }
@@ -667,13 +682,7 @@ public class JassGame : GameBase
                     SuitName(_trump.Value),
                     _tricksPlayed,
                     _trickPoints))],
-            [new GameCell(NeedsReveal
-                ? string.Format(GameText.Get("Games.Jass.PassToReveal", "Pass device to Player {0}; press Enter to reveal."), _currentPlayer + 1)
-                : _handComplete
-                    ? string.Empty
-                : IsComputerTurn
-                    ? string.Format(GameText.Get("Games.Jass.ComputerPlays", "Player {0} is the computer and is playing; your hand waits."), _currentPlayer + 1)
-                    : string.Format(GameText.Get("Games.Jass.PlayerHand", "Player {0}'s hand (press 1–9 to play a card):"), ShownSeat + 1))],
+            [new GameCell(RevealOrStatusText())],
         ];
 
         if (NeedsReveal)

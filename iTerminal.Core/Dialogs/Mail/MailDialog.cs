@@ -1132,9 +1132,10 @@ public class MailDialog : Dialog
             var focused = i == _setupCursor;
             var y = i - first;
             Put(buffer, 1, y, 22, field.Label, focused ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
-            var value = field.IsToggle ? (field.On ? iConsole.Localization.UiText.Get("Mail.ToggleOn", "[x] yes") : iConsole.Localization.UiText.Get("Mail.ToggleOff", "[ ] no"))
-                : field.IsSecret ? new string('*', field.Text.Length)
-                : field.Text;
+            string value;
+            if (field.IsToggle) value = field.On ? iConsole.Localization.UiText.Get("Mail.ToggleOn", "[x] yes") : iConsole.Localization.UiText.Get("Mail.ToggleOff", "[ ] no");
+            else if (field.IsSecret) value = new string('*', field.Text.Length);
+            else value = field.Text;
             Put(buffer, 23, y, iw - 24, value + (focused && !field.IsToggle ? "_" : string.Empty), colorScheme.Foreground,
                 focused ? colorScheme.SelectedBackground : colorScheme.Background);
         }
@@ -1180,7 +1181,8 @@ public class MailDialog : Dialog
         lock (_sync)
         {
             var field = _setup.First(f => f.Label == label);
-            return field.IsToggle ? (field.On ? "yes" : "no") : field.Text;
+            if (field.IsToggle) return field.On ? "yes" : "no";
+            return field.Text;
         }
     }
 

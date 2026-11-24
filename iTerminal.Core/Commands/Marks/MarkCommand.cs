@@ -21,9 +21,9 @@ public abstract class MarkCommand(IContentModelService contentModelService, ICon
     {
         get
         {
-            var model = ownModel is null
-                ? contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel()
-                : ReferenceEquals(contentModelService.GetFocusedModel(), ownModel) ? ownModel : null;
+            IContentModel? model;
+            if (ownModel is null) model = contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel();
+            else model = ReferenceEquals(contentModelService.GetFocusedModel(), ownModel) ? ownModel : null;
             return model is IMarkableContentModel { CanMark: true } ? model : null;
         }
     }

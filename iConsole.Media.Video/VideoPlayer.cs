@@ -269,7 +269,8 @@ public sealed class VideoPlayer : IDisposable
         // A little short of the end, so a seek there still has a frame to show.
         var duration = Duration;
         var last = duration - TimeSpan.FromSeconds(1.0 / _frameRate * 2);
-        return duration > TimeSpan.Zero && target > last ? (last > TimeSpan.Zero ? last : TimeSpan.Zero) : target;
+        if (duration > TimeSpan.Zero && target > last) return last > TimeSpan.Zero ? last : TimeSpan.Zero;
+        return target;
     }
 
     private void StartClockLocked()

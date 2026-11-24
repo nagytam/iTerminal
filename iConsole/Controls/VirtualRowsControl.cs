@@ -252,9 +252,9 @@ public abstract class VirtualRowsControl<T> : Control
                 {
                     text = RowText(item, index);
                     // A disabled list greys its rows, the cursor row included, like every other disabled control.
-                    VisualState state = !IsEnabled ? VisualState.Disabled
-                        : isCursor ? (IsFocused ? VisualState.Focused : VisualState.Selected)
-                        : VisualState.Normal;
+                    VisualState state = VisualState.Normal;
+                    if (!IsEnabled) state = VisualState.Disabled;
+                    else if (isCursor) state = IsFocused ? VisualState.Focused : VisualState.Selected;
                     GetColor(colorScheme, state, out foreground, out background);
                 }
                 else

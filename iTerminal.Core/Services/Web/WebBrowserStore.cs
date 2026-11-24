@@ -133,7 +133,8 @@ public sealed class WebBrowserStore(ISettingsService settingsService)
     private static string Clean(string title, string fallback)
     {
         var text = title.Replace('\r', ' ').Replace('\n', ' ').Trim();
-        return text.Length == 0 ? fallback : text.Length > 200 ? text[..200] : text;
+        if (text.Length == 0) return fallback;
+        return text.Length > 200 ? text[..200] : text;
     }
 
     private List<WebBookmark> Bookmarked() => _bookmarks ??= Load(BookmarksKey);

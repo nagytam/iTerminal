@@ -43,8 +43,11 @@ public class Gauge(IThemeService themeService) : Control(themeService)
     public double CriticalThreshold { get; set; } = 0.9;
 
     /// <summary>Colour for <paramref name="ratio"/>: green, yellow or red.</summary>
-    public static Color SeverityColor(double ratio, double warning = 0.75, double critical = 0.9) =>
-        ratio >= critical ? Color.Red : ratio >= warning ? Color.Yellow : Color.Green;
+    public static Color SeverityColor(double ratio, double warning = 0.75, double critical = 0.9)
+    {
+        if (ratio >= critical) return Color.Red;
+        return ratio >= warning ? Color.Yellow : Color.Green;
+    }
 
     /// <summary>Bar of <paramref name="width"/> cells (1/8-cell resolution), padded with the light shade.</summary>
     public static string BuildBar(double ratio, int width) =>

@@ -83,9 +83,11 @@ public class Chips : Control, IReadOnly
         return true;
     }
 
-    private string Label(int index) => index < _items.Count
-        ? (IsReadOnly ? $"[{_items[index]}]" : $"[{_items[index]} ×]")
-        : "[+]";
+    private string Label(int index)
+    {
+        if (index >= _items.Count) return "[+]";
+        return IsReadOnly ? $"[{_items[index]}]" : $"[{_items[index]} ×]";
+    }
 
     private int ChipCount => IsReadOnly ? _items.Count : _items.Count + 1;
 
@@ -248,9 +250,10 @@ public class Chips : Control, IReadOnly
 
             string label = Label(index);
             bool active = index == _active && IsFocused;
-            Color foreground = !IsEnabled ? colorScheme.DisabledForeground
-                : active ? colorScheme.SelectedFocusedForeground
-                : index == _items.Count ? colorScheme.DisabledForeground : colorScheme.Foreground;
+            Color foreground = colorScheme.Foreground;
+            if (!IsEnabled) foreground = colorScheme.DisabledForeground;
+            else if (active) foreground = colorScheme.SelectedFocusedForeground;
+            else if (index == _items.Count) foreground = colorScheme.DisabledForeground;
             Color background = active ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
             line.Append(label, foreground, background);
             column = start + label.Length;

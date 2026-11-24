@@ -141,7 +141,8 @@ internal static class GoRules
                 }
             }
 
-            byte regionOwner = touchesBlack == touchesWhite ? Empty : touchesBlack ? Black : White;
+            byte regionOwner = Empty;
+            if (touchesBlack != touchesWhite) regionOwner = touchesBlack ? Black : White;
             foreach (int point in region)
             {
                 owner[point] = regionOwner;
@@ -470,7 +471,9 @@ public class GoGame : GameBase
                     bool dead = _dead[index] && IsOver;
                     // Black stones are filled and white ones hollow, so the sides differ without colour as well.
                     Color color = stone == GoRules.Black ? Color.Black : Color.White;
-                    string glyph = dead ? "x" : stone == GoRules.Black ? "●" : "○";
+            string glyph = "○";
+            if (dead) glyph = "x";
+            else if (stone == GoRules.Black) glyph = "●";
                     cell = new GameCell(glyph + tail, dead ? Color.Red : color, index == _lastMove ? Color.DarkRed : wood);
                 }
                 else if (IsOver && territory[index] != GoRules.Empty)

@@ -186,9 +186,8 @@ public class Splitter : Control
     /// <summary>A double arrow across the divider, and nothing special elsewhere.</summary>
     public override PointerShape PointerShapeAt(Position position)
     {
-        return IsOnDivider(position)
-            ? (IsSideBySide ? PointerShape.ResizeHorizontal : PointerShape.ResizeVertical)
-            : PointerShape.Default;
+        if (!IsOnDivider(position)) return PointerShape.Default;
+        return IsSideBySide ? PointerShape.ResizeHorizontal : PointerShape.ResizeVertical;
     }
 
     private bool IsOnDivider(Position position)

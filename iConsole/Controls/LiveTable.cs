@@ -252,7 +252,8 @@ public class LiveTable : Control
             return x.CompareTo(y);
         }
 
-        return numberA != numberB ? (numberA ? -1 : 1) : string.Compare(a, b, StringComparison.CurrentCultureIgnoreCase);
+        if (numberA != numberB) return numberA ? -1 : 1;
+        return string.Compare(a, b, StringComparison.CurrentCultureIgnoreCase);
     }
 
     private int Body => Math.Max(1, (int)ViewSize.Height - 1);
@@ -439,7 +440,9 @@ public class LiveTable : Control
         for (int i = 0; i < columns.Count; i++)
         {
             string text = Fit(cells[i], widths[i], columns[i].Alignment);
-            Color? foreground = header ? scheme.SelectedForeground : colors is not null && colors.TryGetValue(i, out Color tint) ? tint : null;
+            Color? foreground = null;
+            if (header) foreground = scheme.SelectedForeground;
+            else if (colors is not null && colors.TryGetValue(i, out Color tint)) foreground = tint;
             Color? background = header ? scheme.SelectedBackground : null;
             if (!header && changedAt is not null && changedAt[i] != long.MinValue
                 && _flashDuration > TimeSpan.Zero && now - changedAt[i] < _flashDuration.TotalMilliseconds)

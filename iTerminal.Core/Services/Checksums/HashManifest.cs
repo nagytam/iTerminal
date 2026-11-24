@@ -31,9 +31,14 @@ public sealed record ManifestItem(string Path, ManifestStatus Status, string? De
 /// <summary>How far a create or a verify has got. Percent is by bytes when the drive reported sizes, by files otherwise.</summary>
 public sealed record ManifestProgress(int FilesDone, int FilesTotal, long BytesDone, long BytesTotal)
 {
-    public int Percent => BytesTotal > 0
-        ? (int)Math.Min(100, BytesDone * 100 / BytesTotal)
-        : FilesTotal > 0 ? Math.Min(100, FilesDone * 100 / FilesTotal) : 0;
+    public int Percent
+    {
+        get
+        {
+            if (BytesTotal > 0) return (int)Math.Min(100, BytesDone * 100 / BytesTotal);
+            return FilesTotal > 0 ? Math.Min(100, FilesDone * 100 / FilesTotal) : 0;
+        }
+    }
 }
 
 /// <summary>A file the manifest covers: where it is, and its path relative to the manifest's folder ('/'-separated).</summary>

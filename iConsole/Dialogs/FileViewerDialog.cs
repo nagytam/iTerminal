@@ -509,7 +509,9 @@ public class FileViewerDialog : Dialog
             await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
         }
 
-        _textViewerControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
+        string? syntaxPath = Url?.FullUrl;
+        if (Url is not null && Url.Path.Length > 0) syntaxPath = Url.Path;
+        _textViewerControl.Syntax = SyntaxHighlighter.ForFile(syntaxPath);
         StartDisassembly(fileSystem);
         StartPdfSignatures(fileSystem);
     }

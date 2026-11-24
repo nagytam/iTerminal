@@ -296,10 +296,10 @@ public class SnakeGame : GameBase
         if (crashed || rivalCrashed)
         {
             _state = SnakeState.Over;
-            _outcome = !rivalPlays ? SnakeOutcome.Crashed
-                : crashed && rivalCrashed ? SnakeOutcome.Draw
-                : crashed ? SnakeOutcome.Lost
-                : SnakeOutcome.Won;
+            if (!rivalPlays) _outcome = SnakeOutcome.Crashed;
+            else if (crashed && rivalCrashed) _outcome = SnakeOutcome.Draw;
+            else if (crashed) _outcome = SnakeOutcome.Lost;
+            else _outcome = SnakeOutcome.Won;
             return;
         }
 

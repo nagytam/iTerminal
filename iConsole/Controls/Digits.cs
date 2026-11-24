@@ -162,7 +162,7 @@ public class Digits : Control
                             char current = rows[row][column];
                             bool hasTop = top || current is '▀' or '█';
                             bool hasBottom = !top || current is '▄' or '█';
-                            rows[row][column] = hasTop && hasBottom ? '█' : hasTop ? '▀' : '▄';
+                            rows[row][column] = (hasTop, hasBottom) switch { (true, true) => '█', (true, false) => '▀', _ => '▄' };
                         }
                     }
                 }

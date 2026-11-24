@@ -297,7 +297,7 @@ public class PerformanceBenchmarkDialog : Dialog
 
     private static string ScoreText(double? score) => score is { } value ? value.ToString("N0") : "-";
 
-    private static string FormatValue(double value) => value >= 100 ? value.ToString("N0") : value >= 10 ? value.ToString("N1") : value.ToString("N2");
+    private static string FormatValue(double value) => value switch { >= 100 => value.ToString("N0"), >= 10 => value.ToString("N1"), _ => value.ToString("N2") };
 
     public override void Draw(IBuffer buffer)
     {

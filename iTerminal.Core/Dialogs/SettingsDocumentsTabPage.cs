@@ -110,11 +110,9 @@ public class SettingsDocumentsTabPage : TabPage
     {
         string effective = DocumentLibraryService.ResolveDocumentsFolder(_settingsService);
 
-        _hintLabel.Text = string.IsNullOrWhiteSpace(_documentsFolderTextBox.Text)
-            ? string.Format(iConsole.Localization.UiText.Get("SettingsPage.DocumentsDefault", "Empty uses the default folder: {0}"), effective)
-            : Directory.Exists(effective)
-                ? iConsole.Localization.UiText.Get("SettingsPage.FolderFound", "Folder found — it is indexed in the background.")
-                : iConsole.Localization.UiText.Get("SettingsPage.FolderMissing", "Folder does not exist yet.");
+        if (string.IsNullOrWhiteSpace(_documentsFolderTextBox.Text)) _hintLabel.Text = string.Format(iConsole.Localization.UiText.Get("SettingsPage.DocumentsDefault", "Empty uses the default folder: {0}"), effective);
+        else if (Directory.Exists(effective)) _hintLabel.Text = iConsole.Localization.UiText.Get("SettingsPage.FolderFound", "Folder found — it is indexed in the background.");
+        else _hintLabel.Text = iConsole.Localization.UiText.Get("SettingsPage.FolderMissing", "Folder does not exist yet.");
 
         _ocrHintLabel.Text = _ocrCheckBox.IsChecked
             ? iConsole.Localization.UiText.Get("SettingsPage.Ocr", "Needs Tesseract on PATH. Applies to images indexed from now on.")

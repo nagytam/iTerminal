@@ -283,8 +283,10 @@ public sealed class OAuthTokenProvider : ICloudTokenProvider
         var root = document.RootElement;
         var deviceCode = deviceCodeElement.GetString()!;
         var userCode = root.GetProperty("user_code").GetString()!;
-        var address = (root.TryGetProperty("verification_uri", out var uri) ? uri.GetString()
-            : root.TryGetProperty("verification_url", out var url) ? url.GetString() : null) ?? "the provider's device login page";
+        string? verification = null;
+        if (root.TryGetProperty("verification_uri", out var uri)) verification = uri.GetString();
+        else if (root.TryGetProperty("verification_url", out var url)) verification = url.GetString();
+        var address = verification ?? "the provider's device login page";
         var interval = root.TryGetProperty("interval", out var intervalElement) && intervalElement.TryGetInt32(out var i) ? i : 5;
         var lifetime = root.TryGetProperty("expires_in", out var expiresElement) && expiresElement.TryGetInt32(out var e) ? e : 900;
 

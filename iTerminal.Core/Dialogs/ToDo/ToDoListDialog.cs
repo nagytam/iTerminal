@@ -74,7 +74,8 @@ public class ToDoListDialog : Dialog
             RowForeground = task =>
             {
                 var colors = ThemeService.CurrentColorScheme;
-                return task.IsComplete ? colors.DisabledForeground : IsOverdue(task) ? colors.Error : null;
+                if (task.IsComplete) return colors.DisabledForeground;
+                return IsOverdue(task) ? colors.Error : null;
             },
         };
         ConfigureColumns();
@@ -473,9 +474,11 @@ public class ToDoListDialog : Dialog
     }
 
     /// <summary>When the task's reminder is, as the list shows it: the time alone when it is today, else the date and time.</summary>
-    private string ReminderText(ToDoTask task) => task.RemindAt is not { } at ? string.Empty
-        : DateOnly.FromDateTime(at) == _today ? at.ToString("HH:mm", CultureInfo.InvariantCulture)
-        : at.ToString("MM-dd HH:mm", CultureInfo.InvariantCulture);
+    private string ReminderText(ToDoTask task)
+    {
+        if (task.RemindAt is not { } at) return string.Empty;
+        return DateOnly.FromDateTime(at) == _today ? at.ToString("HH:mm", CultureInfo.InvariantCulture) : at.ToString("MM-dd HH:mm", CultureInfo.InvariantCulture);
+    }
 
     private void AskToDelete()
     {
@@ -507,9 +510,9 @@ public class ToDoListDialog : Dialog
             if (_editing is { } original)
             {
                 // Done stays done. The line can only say "!" (high): without it a high task becomes normal, and a low one stays low.
-                var priority = task.Priority == ToDoPriority.High ? ToDoPriority.High
-                    : original.Priority == ToDoPriority.High ? ToDoPriority.Normal
-                    : original.Priority;
+                var priority = original.Priority;
+                if (task.Priority == ToDoPriority.High) priority = ToDoPriority.High;
+                else if (original.Priority == ToDoPriority.High) priority = ToDoPriority.Normal;
                 _store.Update(task with { IsComplete = original.IsComplete, Priority = priority });
                 _editing = null;
             }

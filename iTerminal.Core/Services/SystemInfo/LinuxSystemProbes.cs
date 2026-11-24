@@ -38,9 +38,10 @@ public sealed class LinuxSystemProbes : SystemProbesBase
             string device = Path.Combine(card, "device");
             string? ueventText = TryRead(Path.Combine(device, "uevent"));
             var pci = ueventText is null ? null : SystemInfoParsers.ParsePciId(ueventText);
-            string name = pci is { } ids && pciIds is not null
-                ? SystemInfoParsers.ParsePciName(pciIds, ids.Vendor, ids.Device) ?? $"{ids.Vendor}:{ids.Device}"
-                : pci is { } raw ? $"{raw.Vendor}:{raw.Device}" : Path.GetFileName(card);
+            string name;
+            if (pci is { } ids && pciIds is not null) name = SystemInfoParsers.ParsePciName(pciIds, ids.Vendor, ids.Device) ?? $"{ids.Vendor}:{ids.Device}";
+            else if (pci is { } raw) name = $"{raw.Vendor}:{raw.Device}";
+            else name = Path.GetFileName(card);
 
             string? driver = Directory.Exists(device) && new DirectoryInfo(Path.Combine(device, "driver")).LinkTarget is { } link
                 ? Path.GetFileName(link)

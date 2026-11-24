@@ -392,7 +392,8 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
         int winner = state.Winner();
         if (winner >= 0)
         {
-            return winner == 2 ? 0 : winner == state.Turn ? Win - ply : -(Win - ply);
+            if (winner == 2) return 0;
+            return winner == state.Turn ? Win - ply : -(Win - ply);
         }
 
         if (remaining <= 0)

@@ -53,9 +53,12 @@ public static class XmlXPathQuery
                 return new XmlXPathOutcome(results, total, null);
             }
 
-            string text = value is double number
-                ? number.ToString(CultureInfo.InvariantCulture)
-                : value is bool flag ? (flag ? "true" : "false") : value.ToString() ?? string.Empty;
+            string text = value switch
+            {
+                double number => number.ToString(CultureInfo.InvariantCulture),
+                bool flag => flag ? "true" : "false",
+                _ => value.ToString() ?? string.Empty,
+            };
             return new XmlXPathOutcome([new XmlXPathResult(null, string.Empty, text)], 1, null);
         }
         catch (XPathException exception)

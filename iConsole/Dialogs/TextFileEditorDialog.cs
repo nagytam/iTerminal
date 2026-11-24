@@ -428,7 +428,9 @@ public class TextFileEditorDialog : Dialog
 
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, TextEditorControl.TextModel);
         _seenStamp = StampOf(Url);
-        TextEditorControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
+        string? syntaxPath = Url?.FullUrl;
+        if (Url is not null && Url.Path.Length > 0) syntaxPath = Url.Path;
+        TextEditorControl.Syntax = SyntaxHighlighter.ForFile(syntaxPath);
         await RestoreBackupAsync();
 
         await base.OnInitializeAsync();
@@ -551,10 +553,10 @@ public class TextFileEditorDialog : Dialog
         bool hasByteOrderMark = preamble.Length > 0 && bytes.AsSpan().StartsWith(preamble);
         string text = encoding.GetString(bytes, hasByteOrderMark ? preamble.Length : 0, bytes.Length - (hasByteOrderMark ? preamble.Length : 0));
 
-        lineEnding = text.Contains("\r\n") ? "\r\n"
-            : text.Contains('\n') ? "\n"
-            : text.Contains('\r') ? "\r"
-            : defaultLineEnding;
+        if (text.Contains("\r\n")) lineEnding = "\r\n";
+        else if (text.Contains('\n')) lineEnding = "\n";
+        else if (text.Contains('\r')) lineEnding = "\r";
+        else lineEnding = defaultLineEnding;
         lines = text.ReplaceLineEndings("\n").Split('\n');
 
         byte[] body = encoding.GetBytes(string.Join(lineEnding, lines));

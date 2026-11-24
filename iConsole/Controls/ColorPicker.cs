@@ -194,9 +194,8 @@ public class ColorPicker : Control, IReadOnly
                     : Color.Black;
                 // A read-only palette shows no cursor: it would point at a swatch the keys cannot move.
                 bool atCursor = index == _cursor && IsFocused && !IsReadOnly;
-                string cell = atCursor
-                    ? "[" + (swatch == _selected ? "✓" : " ") + "]"
-                    : " " + (swatch == _selected ? "✓" : " ") + " ";
+                string mark = swatch == _selected ? "✓" : " ";
+                string cell = atCursor ? "[" + mark + "]" : " " + mark + " ";
                 line.Append(cell, ink, swatch);
             }
 

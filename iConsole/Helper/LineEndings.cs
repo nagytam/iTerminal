@@ -53,13 +53,14 @@ public static class LineEndings
 
         // A tie between two kinds goes to the system's, when it is one of them.
         string system = Environment.NewLine;
-        int systemCount = system == "\r\n" ? crlf : system == "\n" ? lf : cr;
+        int systemCount = system switch { "\r\n" => crlf, "\n" => lf, _ => cr };
         if (systemCount == most)
         {
             return system;
         }
 
-        return crlf == most ? "\r\n" : lf == most ? "\n" : "\r";
+        if (crlf == most) return "\r\n";
+        return lf == most ? "\n" : "\r";
     }
 
     /// <summary>Splits on any of the three breaks, so a file with mixed endings still comes apart into its lines.</summary>

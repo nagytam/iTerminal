@@ -10,10 +10,12 @@ public sealed class PictureVideoDecoderFactory(FfmpegVideoDecoderFactory ffmpeg)
 {
     public bool IsAvailable => true;
 
-    public IVideoDecoder Create(string path) =>
-        SvgVideoDecoder.IsSvgFile(path) ? new SvgVideoDecoder(path)
-        : IconVideoDecoder.IsIconFile(path) ? new IconVideoDecoder(path)
-        : PsdVideoDecoder.IsPsdFile(path) ? new PsdVideoDecoder(path)
-        : RawPreviewVideoDecoder.IsRawFile(path) ? new RawPreviewVideoDecoder(path)
-        : ffmpeg.Create(path);
+    public IVideoDecoder Create(string path)
+    {
+        if (SvgVideoDecoder.IsSvgFile(path)) return new SvgVideoDecoder(path);
+        if (IconVideoDecoder.IsIconFile(path)) return new IconVideoDecoder(path);
+        if (PsdVideoDecoder.IsPsdFile(path)) return new PsdVideoDecoder(path);
+        if (RawPreviewVideoDecoder.IsRawFile(path)) return new RawPreviewVideoDecoder(path);
+        return ffmpeg.Create(path);
+    }
 }

@@ -330,9 +330,10 @@ internal sealed record GitInstallPlan(
                 return new GitInstallPlan(display, tool, arguments, environment, false);
             }
 
+            string[] noninteractiveEnv = nonInteractive ? new[] { "env", "DEBIAN_FRONTEND=noninteractive" } : [];
             return findOnPath("sudo") is null
                 ? new GitInstallPlan(display, tool, arguments, environment, false)
-                : new GitInstallPlan(display, "sudo", ["-n", .. (nonInteractive ? new[] { "env", "DEBIAN_FRONTEND=noninteractive" } : []), tool, .. arguments], null, true, $"sudo {tool} {string.Join(' ', arguments)}");
+                : new GitInstallPlan(display, "sudo", ["-n", .. noninteractiveEnv, tool, .. arguments], null, true, $"sudo {tool} {string.Join(' ', arguments)}");
         }
 
         return null;

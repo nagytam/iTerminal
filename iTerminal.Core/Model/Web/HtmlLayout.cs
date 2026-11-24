@@ -953,7 +953,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
                 {
                     spans.AddRange(lines[y].Spans);
                     length = lines[y].Length;
-                    anchors = lines[y].Anchors is { } a ? anchors is null ? a : [.. anchors, .. a] : anchors;
+                    if (lines[y].Anchors is { } a) anchors = anchors is null ? a : [.. anchors, .. a];
                 }
 
                 if (b < blocks.Count - 1)

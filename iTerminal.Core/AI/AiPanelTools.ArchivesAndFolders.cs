@@ -125,11 +125,10 @@ public partial class AiPanelTools
 
         // A format that replaces its target says so: the existing archive is overwritten, not added to.
         bool replaces = archiveExists && !chosen.AddsToExisting;
-        string operation = replaces
-            ? $"replacing existing archive {archiveUrl.FullUrl} with {sources.Count} item(s)"
-            : archiveExists
-                ? $"adding {sources.Count} item(s) to existing archive {archiveUrl.FullUrl}"
-                : $"creating archive {archiveUrl.FullUrl} from {sources.Count} item(s)";
+        string operation;
+        if (replaces) operation = $"replacing existing archive {archiveUrl.FullUrl} with {sources.Count} item(s)";
+        else if (archiveExists) operation = $"adding {sources.Count} item(s) to existing archive {archiveUrl.FullUrl}";
+        else operation = $"creating archive {archiveUrl.FullUrl} from {sources.Count} item(s)";
         List<string> actions = sources.Select(sourceUrl => replaces
             ? $"Replace {archiveUrl.FullUrl} with {sourceUrl.FullUrl}"
             : $"Add {sourceUrl.FullUrl} to {archiveUrl.FullUrl}").ToList();

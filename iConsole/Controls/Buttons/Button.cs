@@ -172,9 +172,10 @@ public class Button : Control
             backgroundColor = Brighten(backgroundColor);
         }
         var inner = Math.Max(0, (int)ViewSize.Width - 2);
-        var title = inner == 0
-            ? string.Empty
-            : EllipsisWhenClipped && inner > 1 && Title.Length > inner ? (Title[..(inner - 1)] + "…").Expand(inner) : Title.Cut(inner).Expand(inner);
+        string title;
+        if (inner == 0) title = string.Empty;
+        else if (EllipsisWhenClipped && inner > 1 && Title.Length > inner) title = (Title[..(inner - 1)] + "…").Expand(inner);
+        else title = Title.Cut(inner).Expand(inner);
         var titleLine = new ConxelString(Border.Start + title + Border.End, foregroundColor, backgroundColor);
         titleLine.HighlightHotKey(HotConsoleKey, HotKeyChar, hotKeyColor, backgroundColor);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, titleLine);

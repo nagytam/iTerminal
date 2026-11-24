@@ -420,9 +420,7 @@ public static class ManagedArchiveWriter
         }
 
         using var file = new FileStream(archivePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using Stream decompressed = format == ArchiveFormat.TarGz ? new GZipInputStream(file) { IsStreamOwner = false }
-            : format == ArchiveFormat.TarBz2 ? new BZip2InputStream(file) { IsStreamOwner = false }
-            : new NonClosingStream(file);
+        using Stream decompressed = OpenDecompressor(format, file);
         using var tar = new TarInputStream(decompressed, Encoding.UTF8) { IsStreamOwner = false };
         while (tar.GetNextEntry() is { } entry)
         {
@@ -492,5 +490,12 @@ public static class ManagedArchiveWriter
 
         private void Report(long currentBytes) =>
             progress?.Report(new ArchiveProgress(_finishedBytes + currentBytes, _total, _done, _count, _current));
+    }
+
+    private static Stream OpenDecompressor(ArchiveFormat format, FileStream file)
+    {
+        if (format == ArchiveFormat.TarGz) return new GZipInputStream(file) { IsStreamOwner = false };
+        if (format == ArchiveFormat.TarBz2) return new BZip2InputStream(file) { IsStreamOwner = false };
+        return new NonClosingStream(file);
     }
 }

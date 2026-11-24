@@ -507,9 +507,11 @@ public abstract class GamesDialog : SplitPaneDialog
             return;
         }
 
-        string mode = game.ModeLabel ?? (!game.OffersComputerOpponent
-            ? UiText.Get("Games.OnePlayer", "one player")
-            : game.VsComputer ? UiText.Get("Games.Mode.VsComputer", "against the computer") : UiText.Get("Games.Mode.TwoPlayers", "two players"));
+        string modeText;
+        if (!game.OffersComputerOpponent) modeText = UiText.Get("Games.OnePlayer", "one player");
+        else if (game.VsComputer) modeText = UiText.Get("Games.Mode.VsComputer", "against the computer");
+        else modeText = UiText.Get("Games.Mode.TwoPlayers", "two players");
+        string mode = game.ModeLabel ?? modeText;
         DrawSectionHeader(buffer, x0, iy, width, $"{game.Name} — {mode}", true, colorScheme);
 
         // Without room for the game list, a line says which game this is out of how many, so the others are not hidden.
@@ -521,9 +523,9 @@ public abstract class GamesDialog : SplitPaneDialog
         }
 
         int statusTop = line;
-        string status = _confirmingNewGame
-            ? UiText.Get("Games.ConfirmNew", "A game is on. Start a new one and lose this one? (y/n)")
-            : game.Status + (_thinking ? " " + UiText.Get("Games.Thinking", "The computer is thinking…") : string.Empty);
+        string status;
+        if (_confirmingNewGame) status = UiText.Get("Games.ConfirmNew", "A game is on. Start a new one and lose this one? (y/n)");
+        else status = game.Status + (_thinking ? " " + UiText.Get("Games.Thinking", "The computer is thinking…") : string.Empty);
         Color statusColor = _confirmingNewGame || game.IsOver ? Color.Yellow : Color.Cyan;
         List<string> statusLines = [.. Wrap(status, width - 1)];
         if (statusLines.Count > MaxStatusRows)

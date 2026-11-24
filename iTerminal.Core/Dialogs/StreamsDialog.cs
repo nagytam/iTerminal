@@ -672,9 +672,9 @@ public class StreamsDialog : Dialog
                 header += "  " + string.Format(UiText.Get("Streams.Truncated", "first {0} of {1}"), Compact(_content.Bytes.Length), Compact(_content.TotalSize));
             }
 
-            lines = _content.Bytes.Length == 0
-                ? [UiText.Get("Streams.Empty", "(empty)")]
-                : hex ? HexLines(_content.Bytes, rows) : TextLines(_content.Bytes.AsSpan(0, Math.Min(_content.Bytes.Length, rows * iw * 4)).ToArray(), rows); // Only what can be seen is decoded.
+            if (_content.Bytes.Length == 0) lines = [UiText.Get("Streams.Empty", "(empty)")];
+            else if (hex) lines = HexLines(_content.Bytes, rows);
+            else lines = TextLines(_content.Bytes.AsSpan(0, Math.Min(_content.Bytes.Length, rows * iw * 4)).ToArray(), rows); // Only what can be seen is decoded.
         }
 
         Put(buffer, 1, top - 1, iw - 2, header, colors.DisabledForeground, colors.Background);

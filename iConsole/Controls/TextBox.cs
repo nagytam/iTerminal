@@ -668,9 +668,9 @@ public partial class TextBox : Control, IReadOnly
             long dragColumn = mouseEvent.Position.X - AbsolutePosition.X - WellTextOffset;
             var well = ScrollableModel.ViewSize.Width;
             long cursor = ScrollableModel.CursorPosition.X;
-            long moved = dragColumn < 0 ? cursor - 1
-                : dragColumn >= well ? cursor + 1
-                : dragColumn + ScrollableModel.ScrollPosition.X;
+            long moved = dragColumn + ScrollableModel.ScrollPosition.X;
+            if (dragColumn < 0) moved = cursor - 1;
+            else if (dragColumn >= well) moved = cursor + 1;
             ScrollableModel.CursorPosition.X = Math.Clamp(moved, 0, TextLength);
             UpdateSelectionModel();
             KeepCursorVisible();
@@ -768,9 +768,8 @@ public partial class TextBox : Control, IReadOnly
         var text = CreateLabel(colorScheme, foregroundColor, backgroundColor);
 
         foregroundColor = Color.Green;
-        backgroundColor = (IsReadOnly)
-            ? Color.DarkYellow
-            : (IsValid) ? Color.Yellow : colorScheme.Error;
+        if (IsReadOnly) backgroundColor = Color.DarkYellow;
+        else backgroundColor = IsValid ? Color.Yellow : colorScheme.Error;
         if (!IsEnabled)
         {
             // The well is greyed with the label: a disabled box used to look as editable as an enabled one.

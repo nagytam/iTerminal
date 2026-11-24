@@ -33,21 +33,20 @@ public class RuntimeDependencyStepPage(
         }
 
         ColorScheme scheme = ThemeService.CurrentColorScheme;
-        string note = status.Problem is not null
-            ? $"{Alert.GlyphFor(BadgeKind.Error)} {status.Problem}"
-            : status.Note is { Length: > 0 } ? $"{Alert.GlyphFor(BadgeKind.Info)} {status.Note}" : string.Empty;
+        string note = string.Empty;
+        if (status.Problem is not null) note = $"{Alert.GlyphFor(BadgeKind.Error)} {status.Problem}";
+        else if (status.Note is { Length: > 0 }) note = $"{Alert.GlyphFor(BadgeKind.Info)} {status.Note}";
         Color noteColor = status.Problem is not null ? Color.DarkRed : scheme.DisabledForeground;
         bool needsWork = status.State != RuntimeDependencyState.Installed;
         bool skippedForGood = needsWork && service.IsPermanentlySkipped(id);
-        string tick = !needsWork
-            ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.NothingToDo", "✓ Nothing to do here.")
-            : isTicked(id)
-                ? skippedForGood
-                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.InstallWhileSkipped", "[x] Install this one   (P: skip it for good)")
-                    : iConsole.Localization.UiText.Get("RuntimeDependency.Tick.Install", "[x] Install this one   (Space: leave it out)")
-                : skippedForGood
-                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.SkippedForGood", "[ ] Skipped for good   (P: offer it again)")
-                    : iConsole.Localization.UiText.Get("RuntimeDependency.Tick.LeftOut", "[ ] Left out   (Space: install it)");
+        string tick;
+        if (!needsWork) tick = iConsole.Localization.UiText.Get("RuntimeDependency.Tick.NothingToDo", "✓ Nothing to do here.");
+        else if (isTicked(id)) tick = skippedForGood
+            ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.InstallWhileSkipped", "[x] Install this one   (P: skip it for good)")
+            : iConsole.Localization.UiText.Get("RuntimeDependency.Tick.Install", "[x] Install this one   (Space: leave it out)");
+        else tick = skippedForGood
+            ? iConsole.Localization.UiText.Get("RuntimeDependency.Tick.SkippedForGood", "[ ] Skipped for good   (P: offer it again)")
+            : iConsole.Localization.UiText.Get("RuntimeDependency.Tick.LeftOut", "[ ] Left out   (Space: install it)");
         Color tickColor = !needsWork || isTicked(id) ? Color.DarkGreen : scheme.DisabledForeground;
         WriteRow(buffer, 0, $"{status.Name} - {status.Purpose}", scheme.Foreground, width, scheme);
         WriteRow(buffer, 1, StateText(status), needsWork ? Color.DarkYellow : Color.DarkGreen, width, scheme);
@@ -103,11 +102,7 @@ public class RuntimeDependencyOverviewPage(
         List<(string Text, Color Color)> rows =
         [
             (iConsole.Localization.UiText.Get("RuntimeDependency.Intro", "Components iTerminal downloads instead of shipping."), scheme.Foreground),
-            (statuses.Count == 0
-                ? iConsole.Localization.UiText.Get("RuntimeDependency.NothingToSetUp", "There is nothing to set up.")
-                : needWork == 0
-                    ? iConsole.Localization.UiText.Get("RuntimeDependency.AllUpToDate", "All components are installed and up to date.")
-                    : string.Format(iConsole.Localization.UiText.Get("RuntimeDependency.NeedWork", "{0} of {1} need to be installed or updated."), needWork, statuses.Count), scheme.DisabledForeground),
+            (SetupSummary(statuses.Count, needWork), scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
             (iConsole.Localization.UiText.Get("RuntimeDependency.EnterCloses", "Enter closes this."), scheme.DisabledForeground),
         ];
@@ -121,6 +116,13 @@ public class RuntimeDependencyOverviewPage(
                 new Size(width, 1),
                 new ConxelString((text.Length > width ? text.Cut(width) : text).ExpandRight(width), color, scheme.Background));
         }
+    }
+
+    private static string SetupSummary(int count, int needWork)
+    {
+        if (count == 0) return iConsole.Localization.UiText.Get("RuntimeDependency.NothingToSetUp", "There is nothing to set up.");
+        if (needWork == 0) return iConsole.Localization.UiText.Get("RuntimeDependency.AllUpToDate", "All components are installed and up to date.");
+        return string.Format(iConsole.Localization.UiText.Get("RuntimeDependency.NeedWork", "{0} of {1} need to be installed or updated."), needWork, count);
     }
 }
 

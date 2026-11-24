@@ -258,9 +258,9 @@ public static class FolderComparer
         }
 
         var difference = leftTime - rightTime;
-        return difference > tolerance ? DiffKind.LeftNewer
-            : difference < -tolerance ? DiffKind.RightNewer
-            : null;
+        if (difference > tolerance) return DiffKind.LeftNewer;
+        if (difference < -tolerance) return DiffKind.RightNewer;
+        return null;
     }
 
     private static DateTime Truncate(DateTime time) => new(time.Year, time.Month, time.Day, time.Hour, time.Minute, 0, time.Kind);

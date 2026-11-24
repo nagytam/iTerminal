@@ -474,7 +474,8 @@ public class VideoFileViewerDialog : Dialog
             return _isOpening ? "Opening…" : string.Empty;
         }
 
-        return !string.IsNullOrEmpty(player.Error) ? player.Error : player.Frame is null ? "Decoding…" : string.Empty;
+        if (!string.IsNullOrEmpty(player.Error)) return player.Error;
+        return player.Frame is null ? "Decoding…" : string.Empty;
     }
 
     /// <summary>Converts a frame once, not on every repaint: the dialog repaints more often than frames arrive.</summary>

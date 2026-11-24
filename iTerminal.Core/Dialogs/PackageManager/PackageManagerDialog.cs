@@ -441,8 +441,8 @@ public class PackageManagerDialog : SplitPaneDialog
 
             _busy = false;
             var cancelled = cts.IsCancellationRequested;
-            _status = cancelled ? "Cancelled." : exitCode == 0 ? "Done." : $"Failed (exit {exitCode}).";
-            _statusSeverity = cancelled ? StatusSeverity.Info : exitCode == 0 ? StatusSeverity.Success : StatusSeverity.Error;
+            _status = cancelled ? "Cancelled." : exitCode switch { 0 => "Done.", _ => $"Failed (exit {exitCode})." };
+            _statusSeverity = cancelled ? StatusSeverity.Info : exitCode switch { 0 => StatusSeverity.Success, _ => StatusSeverity.Error };
             StateHasChanged();
 
             if (!cancelled && exitCode == 0)
@@ -770,7 +770,7 @@ public class PackageManagerDialog : SplitPaneDialog
             return;
         }
 
-        var activity = _busy ? "  (working…)" : _loading ? "  (loading…)" : string.Empty;
+        var activity = (_busy, _loading) switch { (true, _) => "  (working…)", (false, true) => "  (loading…)", _ => string.Empty };
         WriteLine(buffer, x, y, w, $"{_packageManagerService.DisplayName}{activity}", Color.Cyan, colorScheme.Background);
     }
 

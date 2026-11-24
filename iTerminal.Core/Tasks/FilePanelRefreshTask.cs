@@ -208,7 +208,7 @@ ON CONFLICT(Path) DO UPDATE SET
 
         PhaseDurations = phases;
 
-        var finishedCount = entries is not null ? entries.Count : (_contentModel is not null ? _contentModel.Entries.Count : 0);
+        var finishedCount = entries?.Count ?? _contentModel?.Entries.Count ?? 0;
         _logger.Information(nameof(FilePanelRefreshTask) + $" {Url.FullUrl} with {finishedCount} entries finished");
     }
 

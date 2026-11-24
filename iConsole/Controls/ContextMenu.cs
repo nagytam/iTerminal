@@ -330,7 +330,7 @@ public class ContextMenu : Popup
 
     private static string FormatRow(ContextMenuItem item, int checkWidth, int titleWidth, int rightWidth, int inner)
     {
-        string check = checkWidth == 0 ? string.Empty : item.IsChecked == true ? "✓ " : "  ";
+        string check = checkWidth == 0 ? string.Empty : item.IsChecked switch { true => "✓ ", _ => "  " };
         string row = " " + check + item.Text.PadRight(titleWidth);
         string right = item.HasSubmenu ? "▶" : item.Shortcut;
         if (right.Length > 0)

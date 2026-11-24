@@ -255,7 +255,8 @@ public class Slider : Control, IReadOnly
         char[] track = new char[trackWidth];
         for (int i = 0; i < trackWidth; i++)
         {
-            track[i] = i < thumb ? '━' : i == thumb ? '●' : '─';
+            if (i < thumb) track[i] = '━';
+            else track[i] = i == thumb ? '●' : '─';
         }
 
         string line = new string(track);

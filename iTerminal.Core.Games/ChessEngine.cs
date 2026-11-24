@@ -387,7 +387,8 @@ internal static class ChessRules
             captured = -piece;
         }
 
-        board[move.To] = move.Promotion != 0 ? (sbyte)((white ? 1 : -1) * move.Promotion) : (sbyte)piece;
+        int promotionSign = white ? 1 : -1;
+        board[move.To] = move.Promotion != 0 ? (sbyte)(promotionSign * move.Promotion) : (sbyte)piece;
 
         if (type == Piece.King && Math.Abs((move.To & 7) - (move.From & 7)) == 2)
         {

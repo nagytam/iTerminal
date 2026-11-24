@@ -290,9 +290,9 @@ public class DiskManagerDialog : Dialog
         }
 
         lines.Add(new InfoLines.Line(string.Empty));
-        lines.Add(_status.Length > 0
-            ? new InfoLines.Line(_status, _statusIsError ? Color.Red : Color.Green)
-            : new InfoLines.Line(_isBusy ? "Working..." : string.Empty));
+        var statusColor = _statusIsError ? Color.Red : Color.Green;
+        var busyText = _isBusy ? "Working..." : string.Empty;
+        lines.Add(_status.Length > 0 ? new InfoLines.Line(_status, statusColor) : new InfoLines.Line(busyText));
         return lines;
     }
 

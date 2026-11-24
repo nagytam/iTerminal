@@ -668,20 +668,23 @@ public class GitClientDialog : SplitPaneDialog
                 return [];
             }
 
-            return branch.IsRemote
-                ?
+            if (branch.IsRemote)
+            {
+                return
                 [
                     string.Format(UiText.Get("Git.Detail.RemoteBranch", "remote branch {0}"), branch.Name),
                     string.Empty,
                     UiText.Get("Git.Detail.RemoteKeys", "Space/Enter creates a local branch tracking it."),
-                ]
-                :
-                [
-                    string.Format(UiText.Get("Git.Detail.Branch", "branch {0}"), branch.Name) + (branch.IsCurrent ? "  " + UiText.Get("Git.Detail.Current", "(current)") : string.Empty),
-                    branch.Upstream is null ? UiText.Get("Git.Detail.NoUpstream", "upstream: (none)") : string.Format(UiText.Get("Git.Detail.Upstream", "upstream: {0}"), branch.Upstream),
-                    string.Empty,
-                    UiText.Get("Git.Detail.BranchKeys", "Space/Enter checkout   m merge   D delete   n new"),
                 ];
+            }
+
+            return
+            [
+                string.Format(UiText.Get("Git.Detail.Branch", "branch {0}"), branch.Name) + (branch.IsCurrent ? "  " + UiText.Get("Git.Detail.Current", "(current)") : string.Empty),
+                branch.Upstream is null ? UiText.Get("Git.Detail.NoUpstream", "upstream: (none)") : string.Format(UiText.Get("Git.Detail.Upstream", "upstream: {0}"), branch.Upstream),
+                string.Empty,
+                UiText.Get("Git.Detail.BranchKeys", "Space/Enter checkout   m merge   D delete   n new"),
+            ];
         }
 
         var head = CursorItem(_commitsListBox);

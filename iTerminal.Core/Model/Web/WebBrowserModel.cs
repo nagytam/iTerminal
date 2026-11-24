@@ -75,7 +75,8 @@ internal sealed class WebTab
                 }
 
                 var entry = Current;
-                return entry is null ? "New tab" : entry.Title.Length > 0 ? entry.Title : entry.Url;
+                if (entry is null) return "New tab";
+                return entry.Title.Length > 0 ? entry.Title : entry.Url;
             }
         }
     }

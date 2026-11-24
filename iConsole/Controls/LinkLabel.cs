@@ -114,7 +114,9 @@ public class LinkLabel : Control
             return;
         }
 
-        Color foreground = !IsEnabled ? colorScheme.DisabledForeground : IsFocused ? colorScheme.SelectedFocusedForeground : Color.Cyan;
+        Color foreground = Color.Cyan;
+        if (!IsEnabled) foreground = colorScheme.DisabledForeground;
+        else if (IsFocused) foreground = colorScheme.SelectedFocusedForeground;
         Color background = IsFocused && IsEnabled ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
         // The focused link is underlined as well as recoloured, so the focus shows even where the colours do not stand out.
         ConxelString line = new(_text, foreground, background, isUnderline: IsFocused && IsEnabled);

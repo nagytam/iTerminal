@@ -159,10 +159,10 @@ public static class CommandCatalog
             return 4;
         }
 
-        return e.Title.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) || e.Name.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) ? 0
-            : words.All(w => InTitle(e, w)) ? 1
-            : words.All(w => InTitle(e, w) || Contains(e.Key, w)) ? 2
-            : 3;
+        if (e.Title.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) || e.Name.StartsWith(phrase, StringComparison.OrdinalIgnoreCase)) return 0;
+        if (words.All(w => InTitle(e, w))) return 1;
+        if (words.All(w => InTitle(e, w) || Contains(e.Key, w))) return 2;
+        return 3;
     }
 
     private static int FuzzyScore(string letters, string title) =>

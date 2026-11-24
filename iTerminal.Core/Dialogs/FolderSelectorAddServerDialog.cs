@@ -237,7 +237,8 @@ public class FolderSelectorAddServerDialog : FormDialog
 
         Added = connection;
         _connections.MarkConnected(connection.Id);
-        var url = ftp ? connection.DriveUrl : Container.SSH + (connection.Username.Length > 0 ? connection.Username + "@" : string.Empty) + connection.Host + ":/";
+        var userPart = connection.Username.Length > 0 ? connection.Username + "@" : string.Empty;
+        var url = ftp ? connection.DriveUrl : Container.SSH + userPart + connection.Host + ":/";
         if (OpenInPanelAsync is { } open)
         {
             await open(url);

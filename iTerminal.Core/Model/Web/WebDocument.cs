@@ -53,7 +53,8 @@ internal sealed class WebField
     /// <summary>What the form sends for this field, or null when it sends nothing.</summary>
     public string? SubmittedValue => Kind switch
     {
-        WebFieldKind.Checkbox or WebFieldKind.Radio => Checked ? (Value.Length == 0 ? "on" : Value) : null,
+        WebFieldKind.Checkbox or WebFieldKind.Radio when !Checked => null,
+        WebFieldKind.Checkbox or WebFieldKind.Radio => Value.Length == 0 ? "on" : Value,
         WebFieldKind.Select => Options.Count == 0 ? null : Options[Math.Clamp(SelectedIndex, 0, Options.Count - 1)].Value,
         WebFieldKind.Submit or WebFieldKind.Reset or WebFieldKind.Button or WebFieldKind.File => null,
         _ => Value,

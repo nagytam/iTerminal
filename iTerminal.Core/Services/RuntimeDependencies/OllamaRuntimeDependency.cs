@@ -498,7 +498,7 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
     }
 
     private static string PlatformName() =>
-        $"{(OperatingSystem.IsWindows() ? "Windows" : OperatingSystem.IsMacOS() ? "macOS" : "Linux")} {RuntimeInformation.ProcessArchitecture}";
+        $"{(OperatingSystem.IsWindows(), OperatingSystem.IsMacOS()) switch { (true, _) => "Windows", (_, true) => "macOS", _ => "Linux" }} {RuntimeInformation.ProcessArchitecture}";
 
     private bool IsVersionDirectory(string directory) =>
         Version.TryParse(Path.GetFileName(directory), out Version? version) && IsCompatible(version);

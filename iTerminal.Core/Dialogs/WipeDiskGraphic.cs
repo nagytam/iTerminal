@@ -36,7 +36,9 @@ public static class WipeDiskGraphic
         var headGlyph = Head[(tick / HeadMilliseconds) % Head.Length];
         for (var cell = 0; cell < cells; cell++)
         {
-            bar.Append(cell < filled ? Overwritten : cell == filled ? headGlyph : Untouched);
+            if (cell < filled) bar.Append(Overwritten);
+            else if (cell == filled) bar.Append(headGlyph);
+            else bar.Append(Untouched);
         }
 
         var spinner = full ? "✓" : Spin[(tick / SpinMilliseconds) % Spin.Length];

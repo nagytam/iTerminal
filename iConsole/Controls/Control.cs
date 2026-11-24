@@ -760,9 +760,10 @@ public class Control : INotifyPropertyChanged, IControl
 
         var current = GetFocusedControl();
         var index = current is null ? -1 : stops.IndexOf(current);
-        var next = index < 0
-            ? (direction > 0 ? stops[0] : stops[^1])
-            : stops[(index + direction + stops.Count) % stops.Count];
+        int nextIndex;
+        if (index >= 0) nextIndex = (index + direction + stops.Count) % stops.Count;
+        else nextIndex = direction > 0 ? 0 : stops.Count - 1;
+        var next = stops[nextIndex];
         if (ReferenceEquals(next, current))
         {
             return;

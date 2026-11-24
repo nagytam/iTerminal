@@ -356,24 +356,32 @@ public class RuntimeDependencyDialog : Dialog
     /// <summary>Whether Enter on the wizard's current step would install rather than move on.</summary>
     private bool IsOnLastStep => _wizard is { CurrentStep: { } step } wizard && wizard.Steps.Count > 0 && ReferenceEquals(step, wizard.Steps[^1]);
 
-    internal string Hint => _service.IsBusy
-        ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Installing", "Installing... Esc:hide this (it keeps going)")
-        : IsWizardActive
-            ? IsOnLastStep
-                ? HasWork && TickedIds().Count > 0
-                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallWithTick", "Enter:install  Backspace:back  Space:tick  P:skip for good  S:skip version")
-                    : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallOnly", "Enter:close  Backspace:back  Esc:close")
-                : HasWork
-                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextWithTick", "Enter:next  Backspace:back  Space:tick  P:skip for good  S:skip version")
-                    : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextOnly", "Enter:next  Backspace:back  Esc:close")
-            : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Close", "Enter or Esc:close");
+    internal string Hint
+    {
+        get
+        {
+            if (_service.IsBusy) return iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Installing", "Installing... Esc:hide this (it keeps going)");
+            if (!IsWizardActive) return iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Close", "Enter or Esc:close");
 
-    private static (string Glyph, Color Color) StateMarker(RuntimeDependencyStatus status, ColorScheme scheme) =>
-        status.Problem is not null
-            ? (Alert.GlyphFor(BadgeKind.Error).ToString(), Color.DarkRed)
-            : status.State == RuntimeDependencyState.Installed
-                ? ("✓", Color.DarkGreen)
-                : ("●", Color.DarkYellow);
+            if (IsOnLastStep)
+            {
+                return HasWork && TickedIds().Count > 0
+                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallWithTick", "Enter:install  Backspace:back  Space:tick  P:skip for good  S:skip version")
+                    : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallOnly", "Enter:close  Backspace:back  Esc:close");
+            }
+
+            return HasWork
+                ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextWithTick", "Enter:next  Backspace:back  Space:tick  P:skip for good  S:skip version")
+                : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextOnly", "Enter:next  Backspace:back  Esc:close");
+        }
+    }
+
+    private static (string Glyph, Color Color) StateMarker(RuntimeDependencyStatus status, ColorScheme scheme)
+    {
+        if (status.Problem is not null) return (Alert.GlyphFor(BadgeKind.Error).ToString(), Color.DarkRed);
+        if (status.State == RuntimeDependencyState.Installed) return ("✓", Color.DarkGreen);
+        return ("●", Color.DarkYellow);
+    }
 
     public override void OnIdle()
     {

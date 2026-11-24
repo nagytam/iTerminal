@@ -922,7 +922,8 @@ public class WebBrowserDialog : Dialog
 
             // A new search starts on the line at the top of the screen; "next" and "previous" start beside it.
             var count = page.Lines.Count;
-            var start = entry.Scroll + (inclusive ? 0 : forward ? 1 : -1);
+            var direction = forward ? 1 : -1;
+            var start = entry.Scroll + (inclusive ? 0 : direction);
             for (var i = 0; i < count; i++)
             {
                 var line = ((forward ? start + i : start - i) % count + count) % count;
@@ -1254,7 +1255,8 @@ public class WebBrowserDialog : Dialog
         }
 
         var background = editing ? Color.White : scheme.ButtonBackground;
-        var foreground = editing ? Color.Black : tab.Url.Length == 0 ? scheme.DisabledForeground : scheme.Foreground;
+        var foreground = editing ? Color.Black : scheme.Foreground;
+        if (!editing && tab.Url.Length == 0) foreground = scheme.DisabledForeground;
         cells.Append("[", scheme.Foreground, scheme.Background);
         cells.Append(text.PadRight(inner), foreground, background);
         cells.Append("]", scheme.Foreground, scheme.Background);
@@ -1275,7 +1277,14 @@ public class WebBrowserDialog : Dialog
             document = entry?.Document;
             scroll = entry?.Scroll ?? 0;
             focusedIndex = entry?.FocusedItem ?? -1;
-            notice = tab.IsLoading && entry is null ? string.Format(UiText.Get("Web.Loading", "Loading {0}…"), tab.LoadingUrl) : entry is null ? UiText.Get("Web.EnterAddress", "Press Ctrl+L to enter an address, or F1 for help.") : UiText.Get("Web.Layout", "Laying out the page…");
+            if (tab.IsLoading && entry is null)
+            {
+                notice = string.Format(UiText.Get("Web.Loading", "Loading {0}…"), tab.LoadingUrl);
+            }
+            else
+            {
+                notice = entry is null ? UiText.Get("Web.EnterAddress", "Press Ctrl+L to enter an address, or F1 for help.") : UiText.Get("Web.Layout", "Laying out the page…");
+            }
         }
 
         WebItem? focus = page is not null && focusedIndex >= 0 && focusedIndex < page.Items.Count ? page.Items[focusedIndex] : null;
@@ -1354,8 +1363,10 @@ public class WebBrowserDialog : Dialog
                 var field = document.Fields[span.Field];
                 var editing = _mode == Mode.Field && ReferenceEquals(_editing, field);
                 text = field.Render(span.Text.Length, editing);
-                foreground = editing ? Color.Black : field.IsButton ? Color.White : scheme.Foreground;
-                background = editing ? Color.White : field.IsButton ? Color.DarkBlue : scheme.ButtonBackground;
+                foreground = editing ? Color.Black : scheme.Foreground;
+                if (field.IsButton && !editing) foreground = Color.White;
+                background = editing ? Color.White : scheme.ButtonBackground;
+                if (field.IsButton && !editing) background = Color.DarkBlue;
                 if (field.Disabled)
                 {
                     foreground = scheme.DisabledForeground;
@@ -1461,7 +1472,8 @@ public class WebBrowserDialog : Dialog
             }
             else
             {
-                text = row == 0 && _list.Count == 0 ? (_mode == Mode.Bookmarks ? " No bookmarks yet. Press Ctrl+D on a page to add one." : " Nothing visited yet.") : string.Empty;
+                text = string.Empty;
+                if (row == 0 && _list.Count == 0) text = _mode == Mode.Bookmarks ? " No bookmarks yet. Press Ctrl+D on a page to add one." : " Nothing visited yet.";
                 foreground = scheme.DisabledForeground;
                 background = scheme.Background;
             }
@@ -1539,7 +1551,10 @@ public class WebBrowserDialog : Dialog
                     color = scheme.DisabledForeground;
                 }
 
-                var right = total == 0 ? string.Empty : total <= ViewHeight ? " All " : $" {Math.Min(100, (scroll + ViewHeight) * 100 / total)}% ";
+                string right;
+                if (total == 0) right = string.Empty;
+                else if (total <= ViewHeight) right = " All ";
+                else right = $" {Math.Min(100, (scroll + ViewHeight) * 100 / total)}% ";
                 left = Shorten(left, Math.Max(1, width - right.Length)).PadRight(Math.Max(0, width - right.Length)) + right;
                 break;
         }
@@ -1588,7 +1603,8 @@ public class WebBrowserDialog : Dialog
             return string.Empty;
         }
 
-        return text.Length <= max ? text : max <= 1 ? text[..max] : text[..(max - 1)] + "…";
+        if (text.Length <= max) return text;
+        return max <= 1 ? text[..max] : text[..(max - 1)] + "…";
     }
 
     #endregion

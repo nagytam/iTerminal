@@ -236,7 +236,7 @@ public sealed class Hdf5FileReader : IHdfFileReader
         bool compoundColumns = rank == 1 && dataset.Type.Class == H5DataTypeClass.Compound;
         string[] fields = compoundColumns ? [.. dataset.Type.Compound.Members.Select(member => member.Name)] : [];
         long rowsAvailable = rank == 1 ? dimensions[0] : dimensions[rank - 2];
-        long columnsAvailable = rank == 1 ? (compoundColumns ? fields.Length : 1) : dimensions[rank - 1];
+        long columnsAvailable = (rank == 1, compoundColumns) switch { (true, true) => fields.Length, (true, false) => 1, _ => dimensions[rank - 1] };
         int columns = (int)Math.Min(columnsAvailable, Math.Max(1, maxColumns));
         int rows = (int)Math.Min(rowsAvailable, Math.Min(Math.Max(1, maxRows), Math.Max(1, maxCells / columns)));
 

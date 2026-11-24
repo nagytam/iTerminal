@@ -311,9 +311,8 @@ public class Tab(IThemeService themeService) : Control(themeService)
             tabPage.GetColor(out var foregroundColor, out var backgroundColor);
             var tabName = new ConxelString();
             // A name wider than the whole strip is cut with an ellipsis rather than pushed off it.
-            var name = tabPage.Name.Length + 4 > available
-                ? (available > 5 ? tabPage.Name.Cut(available - 5) + "…" : string.Empty)
-                : tabPage.Name;
+            var name = tabPage.Name;
+            if (tabPage.Name.Length + 4 > available) name = available > 5 ? tabPage.Name.Cut(available - 5) + "…" : string.Empty;
             if (i != FocusedTabPage && i > firstVisible && i - 1 != FocusedTabPage)
             {
                 // The tab before this one already drew the divider between them; drawing another

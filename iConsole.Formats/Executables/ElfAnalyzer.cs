@@ -96,9 +96,10 @@ internal static class ElfAnalyzer
             _ => ExecutableKind.Other,
         };
 
+        bool? pieState = pie ? true : type switch { 2 => false, _ => null };
         List<ExecutableFlag> flags =
         [
-            new("PIE", pie ? true : type == 2 ? false : null),
+            new("PIE", pieState),
             new("NX (non-executable stack)", hasProgramHeaders ? stack is not null && (stack.Flags & 1) == 0 : null),
             new("RELRO", hasProgramHeaders ? relro : null),
             new("Full RELRO (BIND_NOW)", hasProgramHeaders ? relro && bindNow : null),

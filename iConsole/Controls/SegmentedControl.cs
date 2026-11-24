@@ -208,8 +208,12 @@ public class SegmentedControl : Control, IReadOnly
             Color background;
             if (i == _selectedIndex)
             {
-                foreground = disabled ? colorScheme.DisabledSelectedForeground : IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
-                background = disabled ? colorScheme.DisabledBackground : IsFocused ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;
+                foreground = colorScheme.SelectedForeground;
+                if (disabled) foreground = colorScheme.DisabledSelectedForeground;
+                else if (IsFocused) foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.SelectedBackground;
+                if (disabled) background = colorScheme.DisabledBackground;
+                else if (IsFocused) background = colorScheme.SelectedFocusedBackground;
             }
             else
             {

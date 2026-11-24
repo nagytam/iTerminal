@@ -346,6 +346,10 @@ public sealed class SystemSampler : ISystemSampler
         PruneUnits(_networks, _networkNameList, StringComparer.Ordinal);
         Prune(_previousNetwork, _networkNameList, StringComparer.Ordinal);
 
+        Probed<double> gpuValue;
+        if (gpuLoad.Result.State == ProbeState.Ok && gpuLoad.Result.Value is { } gpuPercent) gpuValue = Probed<double>.Ok(gpuPercent);
+        else if (gpuLoad.Result.State == ProbeState.Ok) gpuValue = Probed<double>.NotReported;
+        else gpuValue = Retag<double?, double>(gpuLoad.Result.State);
         return new SystemSnapshot(
             operatingSystem,
             architecture,
@@ -360,9 +364,7 @@ public sealed class SystemSampler : ISystemSampler
             total,
             available,
             gpus,
-            gpuLoad.Result.State == ProbeState.Ok && gpuLoad.Result.Value is { } gpuPercent
-                ? Probed<double>.Ok(gpuPercent)
-                : gpuLoad.Result.State == ProbeState.Ok ? Probed<double>.NotReported : Retag<double?, double>(gpuLoad.Result.State),
+            gpuValue,
             driveNamesResult,
             driveTasks.Select(item => new NamedProbe<DriveReading>(item.name, item.Item2.Result)).ToList(),
             interfaces.Result,
@@ -469,10 +471,11 @@ public sealed class SystemSampler : ISystemSampler
             : Probed<double>.Measuring;
     }
 
-    private static Probed<BatteryReading> BatteryValue(Probed<BatteryReading?> read) =>
-        read.State == ProbeState.Ok && read.Value is { } battery
-            ? Probed<BatteryReading>.Ok(battery)
-            : read.State == ProbeState.Ok ? Probed<BatteryReading>.NotReported : Retag<BatteryReading?, BatteryReading>(read.State);
+    private static Probed<BatteryReading> BatteryValue(Probed<BatteryReading?> read)
+    {
+        if (read.State == ProbeState.Ok && read.Value is { } battery) return Probed<BatteryReading>.Ok(battery);
+        return read.State == ProbeState.Ok ? Probed<BatteryReading>.NotReported : Retag<BatteryReading?, BatteryReading>(read.State);
+    }
 
     private Probed<DiskRate> DiskValue(string name, Probed<Timed<DiskCounters>> read)
     {

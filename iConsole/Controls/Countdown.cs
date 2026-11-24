@@ -57,9 +57,9 @@ public class Countdown : Control
     public void Start(TimeSpan duration)
     {
         DateTime now = _dateTimeProviderService.Now;
-        Target = duration >= DateTime.MaxValue - now ? DateTime.MaxValue
-            : duration <= DateTime.MinValue - now ? DateTime.MinValue
-            : now + duration;
+        if (duration >= DateTime.MaxValue - now) Target = DateTime.MaxValue;
+        else if (duration <= DateTime.MinValue - now) Target = DateTime.MinValue;
+        else Target = now + duration;
     }
 
     public void Stop() => Target = null;
@@ -124,10 +124,10 @@ public class Countdown : Control
         // The time is what the control is for, so the label gives way to it: it is cut to the cells left over.
         int labelRoom = Math.Max(0, width - text.Length - 1);
         string prefix = Label.Length == 0 || labelRoom == 0 ? string.Empty : Label.Cut(labelRoom) + " ";
-        Color foreground = _target is null || !IsEnabled ? colorScheme.DisabledForeground
-            : IsFinished ? Color.Red
-            : Remaining < TimeSpan.FromSeconds(10) ? Color.Yellow
-            : colorScheme.Foreground;
+        Color foreground = colorScheme.Foreground;
+        if (_target is null || !IsEnabled) foreground = colorScheme.DisabledForeground;
+        else if (IsFinished) foreground = Color.Red;
+        else if (Remaining < TimeSpan.FromSeconds(10)) foreground = Color.Yellow;
         ConxelString line = new(prefix, colorScheme.Foreground, colorScheme.Background);
         line.Append(text, foreground, colorScheme.Background);
         line.Expand(width, colorScheme.Foreground, colorScheme.Background);

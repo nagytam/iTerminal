@@ -267,9 +267,8 @@ public class Table<T> : Control
             var row = snapshot[rowIndex];
             var text = BuildRow(Columns.Select(c => c.ValueSelector(row)));
 
-            var visualState = rowIndex == CursorRow
-                ? (IsFocused ? VisualState.Focused : VisualState.Selected)
-                : VisualState.Normal;
+            var visualState = VisualState.Normal;
+            if (rowIndex == CursorRow) visualState = IsFocused ? VisualState.Focused : VisualState.Selected;
             GetColor(colorScheme, visualState, out var fg, out var bg);
             if (visualState == VisualState.Normal && RowForeground?.Invoke(row) is { } rowColor)
             {

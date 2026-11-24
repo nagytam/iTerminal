@@ -126,9 +126,9 @@ public class VirtualMachineManagerDialog : Dialog
             RequestListing();
         }
 
-        _listBox.EmptyText = _listError.Length > 0
-            ? " " + _listError
-            : _loaded ? UiText.Get("VirtualMachineManager.None", " No virtual machines found.") : ReadingText;
+        if (_listError.Length > 0) _listBox.EmptyText = " " + _listError;
+        else if (_loaded) _listBox.EmptyText = UiText.Get("VirtualMachineManager.None", " No virtual machines found.");
+        else _listBox.EmptyText = ReadingText;
         UpdateDetails();
         base.OnIdle();
     }

@@ -710,7 +710,10 @@ public class TorrentManagerDialog : Dialog
             return;
         }
 
-        string clipped = text.Length > width ? (width > 1 ? text[..(width - 1)] + "…" : text[..width]) : text.PadRight(width);
+        string clipped;
+        if (text.Length <= width) clipped = text.PadRight(width);
+        else if (width > 1) clipped = text[..(width - 1)] + "…";
+        else clipped = text[..width];
         buffer.Write(
             ZOrder,
             new Position(AbsolutePosition.X + 1 + x, AbsolutePosition.Y + 1 + y),

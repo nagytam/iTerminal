@@ -73,18 +73,21 @@ public static class TaskNotificationHelper
             .ToList();
         var heading = lines.Count > 0 ? lines[0] : task.Name;
         var endsWithOutcome = lines.Count > 1 && IsOutcome(lines[^1]);
-        var details = endsWithOutcome ? lines[1..^1] : lines.Count > 1 ? lines[1..] : [];
-        var detail = !string.IsNullOrWhiteSpace(task.Subject) ? task.Subject
-            : details.Count > 0 ? string.Join(" ", details)
-            : null;
+        List<string> details;
+        if (endsWithOutcome) details = lines[1..^1];
+        else if (lines.Count > 1) details = lines[1..];
+        else details = [];
+        string? detail = null;
+        if (!string.IsNullOrWhiteSpace(task.Subject)) detail = task.Subject;
+        else if (details.Count > 0) detail = string.Join(" ", details);
 
         if (task.Error is not null)
         {
             // "Compress failed: <the message>" — the message is the Error, shown once, underneath.
             var failedAt = heading.IndexOf(" failed:", StringComparison.OrdinalIgnoreCase);
-            var title = failedAt > 0 ? heading[..(failedAt + " failed".Length)]
-                : endsWithOutcome ? $"{heading} failed"
-                : heading;
+            var title = heading;
+            if (failedAt > 0) title = heading[..(failedAt + " failed".Length)];
+            else if (endsWithOutcome) title = $"{heading} failed";
             return (title, task.Error, NotificationSeverity.Error);
         }
 

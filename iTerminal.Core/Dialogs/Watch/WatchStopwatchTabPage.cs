@@ -61,9 +61,9 @@ public sealed class WatchStopwatchTabPage(WatchStopwatch stopwatch, IDateTimePro
         int height = (int)ViewSize.Height;
         var (foreground, background) = RowColours(highlighted: false);
 
-        string status = stopwatch.IsRunning
-            ? UiText.Get("Watch.StateRunning", "Running")
-            : elapsed > TimeSpan.Zero ? UiText.Get("Watch.StateStopped", "Stopped") : UiText.Get("Watch.StateReady", "Ready");
+        string status = UiText.Get("Watch.StateReady", "Ready");
+        if (stopwatch.IsRunning) status = UiText.Get("Watch.StateRunning", "Running");
+        else if (elapsed > TimeSpan.Zero) status = UiText.Get("Watch.StateStopped", "Stopped");
         for (int row = 0; row < height; row++)
         {
             WriteRow(buffer, row, string.Empty, foreground, background);

@@ -362,9 +362,9 @@ public class FindFilesDialog : SplitPaneDialog
         var hits = _searchService.Hits;
         _resultItems.ReplaceAll([.. hits]);
         _resultListBox.UpdateModel();
-        _resultListBox.EmptyText = _searchService.IsRunning ? " Searching…"
-            : _searchService.Query is null ? UiText.Get("Empty.FindFiles", " Type a name pattern and press Enter.")
-            : " Nothing found.";
+        if (_searchService.IsRunning) _resultListBox.EmptyText = " Searching…";
+        else if (_searchService.Query is null) _resultListBox.EmptyText = UiText.Get("Empty.FindFiles", " Type a name pattern and press Enter.");
+        else _resultListBox.EmptyText = " Nothing found.";
 
         // Hits only ever arrive at the end, so the row the user is on stays where it is.
         var max = Math.Max(0, hits.Count - 1);

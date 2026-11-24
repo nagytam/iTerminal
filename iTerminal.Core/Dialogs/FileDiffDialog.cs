@@ -517,7 +517,8 @@ public class FileDiffDialog : Dialog
         Write(1, (int)ViewSize.Height - 2, " " + _status + position + options, inner, _statusIsError ? colorScheme.Error : foreground);
 
         // F4 only means something where there are lines to go back to.
-        var toggle = _leftLines is null ? string.Empty : _hexMode ? "  F4:text" : "  F4:hex";
+        var toggle = string.Empty;
+        if (_leftLines is not null) toggle = _hexMode ? "  F4:text" : "  F4:hex";
         var hints = _hexMode
             ? $" N/P:next/prev difference{toggle}  ↑↓ PgUp PgDn wheel  Esc:close ".FitHints(Math.Max(0, width - 4))
             : $" N/P:next/prev difference  W:whitespace  C:case{toggle}  ↑↓ PgUp PgDn wheel ←→:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));

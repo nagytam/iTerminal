@@ -182,7 +182,9 @@ public class ElapsedClock : Control
         int labelRoom = Math.Max(0, width - text.Length - 1);
         string prefix = Label.Length == 0 || labelRoom == 0 ? string.Empty : Label.Cut(labelRoom) + " ";
         ConxelString line = new(prefix, colorScheme.Foreground, colorScheme.Background);
-        Color foreground = !IsEnabled ? colorScheme.DisabledForeground : IsRunning ? Color.Green : colorScheme.Foreground;
+        Color foreground = colorScheme.Foreground;
+        if (!IsEnabled) foreground = colorScheme.DisabledForeground;
+        else if (IsRunning) foreground = Color.Green;
         line.Append(text, IsFocused && IsEnabled ? colorScheme.SelectedFocusedForeground : foreground, colorScheme.Background);
         line.Expand(width, colorScheme.Foreground, colorScheme.Background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);

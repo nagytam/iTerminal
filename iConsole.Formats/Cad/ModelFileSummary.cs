@@ -376,8 +376,12 @@ public static class ModelFileSummary
 
     #endregion
 
-    private static string ListSuffix(IReadOnlyList<string> names) =>
-        names.Count == 0 ? string.Empty : $" ({string.Join(", ", names.Take(20))}{(names.Count > 20 ? ", …" : string.Empty)})";
+    private static string ListSuffix(IReadOnlyList<string> names)
+    {
+        if (names.Count == 0) return string.Empty;
+        var more = names.Count > 20 ? ", …" : string.Empty;
+        return $" ({string.Join(", ", names.Take(20))}{more})";
+    }
 
     private static double ParseDouble(string text) =>
         double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double value) ? value : 0;

@@ -95,10 +95,14 @@ public class Content : Window, IContent
     }
 
     /// <summary>What fills the bottom of the screen now; a workspace saves it and puts it back.</summary>
-    public iTerminal.Core.Model.Workspaces.WorkspaceBar CurrentBar =>
-        _showTerminalPanel ? iTerminal.Core.Model.Workspaces.WorkspaceBar.FullTerminal
-        : _bottomBarMode == BottomBarMode.Terminal ? iTerminal.Core.Model.Workspaces.WorkspaceBar.Terminal
-        : iTerminal.Core.Model.Workspaces.WorkspaceBar.Ai;
+    public iTerminal.Core.Model.Workspaces.WorkspaceBar CurrentBar
+    {
+        get
+        {
+            if (_showTerminalPanel) return iTerminal.Core.Model.Workspaces.WorkspaceBar.FullTerminal;
+            return _bottomBarMode == BottomBarMode.Terminal ? iTerminal.Core.Model.Workspaces.WorkspaceBar.Terminal : iTerminal.Core.Model.Workspaces.WorkspaceBar.Ai;
+        }
+    }
 
     public void ToggleTerminalPanel()
     {

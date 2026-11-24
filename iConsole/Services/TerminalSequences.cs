@@ -56,7 +56,9 @@ public static class TerminalSequences
             case TerminalNotificationStyle.Bell:
                 return Bell;
             case TerminalNotificationStyle.Osc9:
-                string text = cleanBody.Length == 0 ? cleanTitle : cleanTitle.Length == 0 ? cleanBody : cleanTitle + ": " + cleanBody;
+                string text = cleanTitle + ": " + cleanBody;
+                if (cleanBody.Length == 0) text = cleanTitle;
+                else if (cleanTitle.Length == 0) text = cleanBody;
                 return "\u001b]9;" + text + "\u0007";
             case TerminalNotificationStyle.Osc777:
                 return "\u001b]777;notify;" + cleanTitle + ";" + cleanBody + "\u0007";

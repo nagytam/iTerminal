@@ -324,7 +324,7 @@ public class ExecutableAnalysisDialog : Dialog
         Section(UiText.Get("Exe.Sec.Hardening", "Hardening"));
         foreach (ExecutableFlag flag in report.Hardening)
         {
-            Add(flag.Name, flag.Enabled is { } enabled ? (enabled ? yes : no) : unknown);
+            Add(flag.Name, flag.Enabled switch { true => yes, false => no, null => unknown });
         }
 
         Section(UiText.Get("Exe.Sec.Imports", "Imports"));
@@ -352,7 +352,8 @@ public class ExecutableAnalysisDialog : Dialog
         Section(UiText.Get("Exe.Sec.Sections", "Sections (size in file, entropy, access)"));
         foreach (ExecutableSection section in report.Sections)
         {
-            string entropy = section.Entropy is { } e ? e.ToString("0.00", CultureInfo.InvariantCulture) + (section.Sampled ? "*" : string.Empty) : "-";
+            string sampledMark = section.Sampled ? "*" : string.Empty;
+            string entropy = section.Entropy is { } e ? e.ToString("0.00", CultureInfo.InvariantCulture) + sampledMark : "-";
             string access = (section.Executable ? "x" : "-") + (section.Writable ? "w" : "-");
             Add(section.Name, string.Format(CultureInfo.CurrentCulture, "{0:N0} B  {1}  {2}", section.FileSize, entropy, access));
         }

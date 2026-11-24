@@ -312,7 +312,9 @@ public class NumericUpDown : Control, IReadOnly
 
         // Input well — shares TextBox's editable-field colours so inputs look consistent.
         var wellForeground = IsEnabled ? Color.Green : colorScheme.DisabledForeground;
-        var wellBackground = !IsEnabled ? colorScheme.DisabledBackground : IsReadOnly ? Color.DarkYellow : Color.Yellow;
+        var wellBackground = colorScheme.Background;
+        if (!IsEnabled) wellBackground = colorScheme.DisabledBackground;
+        else wellBackground = IsReadOnly ? Color.DarkYellow : Color.Yellow;
 
         var width = Math.Max(_minimum.ToString().Length, _maximum.ToString().Length);
         // A remembered "-" on a zero shows as "-0", so the sign of the number typed next is not a surprise.
@@ -323,9 +325,9 @@ public class NumericUpDown : Control, IReadOnly
         line.Append(valueText, wellForeground, wellBackground);
         line.Append(Border.End, wellForeground, wellBackground);
 
-        var arrowForeground = IsReadOnly
-            ? colorScheme.DisabledForeground
-            : IsFocused ? colorScheme.SelectedFocusedForeground : foreground;
+        var arrowForeground = foreground;
+        if (IsReadOnly) arrowForeground = colorScheme.DisabledForeground;
+        else if (IsFocused) arrowForeground = colorScheme.SelectedFocusedForeground;
         _upArrowOffset = line.Count;
         line.Append(Border.ArrowUp, arrowForeground, background);
         _downArrowOffset = line.Count;

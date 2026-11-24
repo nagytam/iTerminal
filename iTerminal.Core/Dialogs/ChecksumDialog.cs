@@ -342,11 +342,9 @@ public class ChecksumDialog : Dialog
         if (Written is { } written)
         {
             lines.Add(default);
-            lines.Add(result is null
-                ? new(Row("Written", $"{written.Source}: checking…"))
-                : string.Equals(result.Hashes[written.Algorithm], written.Hash, StringComparison.OrdinalIgnoreCase)
-                    ? new(Row("Written", $"✓ matches {written.Source}"), Color.Green)
-                    : new(Row("Written", $"✗ does NOT match {written.Source}"), colorScheme.Error));
+            if (result is null) lines.Add(new(Row("Written", $"{written.Source}: checking…")));
+            else if (string.Equals(result.Hashes[written.Algorithm], written.Hash, StringComparison.OrdinalIgnoreCase)) lines.Add(new(Row("Written", $"✓ matches {written.Source}"), Color.Green));
+            else lines.Add(new(Row("Written", $"✗ does NOT match {written.Source}"), colorScheme.Error));
         }
 
         AddSignatureLines(lines, result, valueWidth, colorScheme);

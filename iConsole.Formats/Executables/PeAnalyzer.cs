@@ -87,7 +87,7 @@ internal static class PeAnalyzer
 
         ExecutableKind kind = headers.IsDll
             ? ExecutableKind.SharedLibrary
-            : pe.Subsystem == Subsystem.Native ? ExecutableKind.Driver : ExecutableKind.Executable;
+            : pe.Subsystem switch { Subsystem.Native => ExecutableKind.Driver, _ => ExecutableKind.Executable };
 
         return new ExecutableReport
         {

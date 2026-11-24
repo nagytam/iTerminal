@@ -31,8 +31,10 @@ public sealed record CertificateInfo(
     bool SelfIssued)
 {
     /// <summary>Where the certificate stands at <paramref name="now"/>.</summary>
-    public CertificateValidity ValidityAt(DateTimeOffset now) =>
-        now < NotBefore ? CertificateValidity.NotYetValid
-        : now > NotAfter ? CertificateValidity.Expired
-        : CertificateValidity.Valid;
+    public CertificateValidity ValidityAt(DateTimeOffset now)
+    {
+        if (now < NotBefore) return CertificateValidity.NotYetValid;
+        if (now > NotAfter) return CertificateValidity.Expired;
+        return CertificateValidity.Valid;
+    }
 }

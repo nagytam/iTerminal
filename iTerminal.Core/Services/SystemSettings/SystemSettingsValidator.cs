@@ -62,12 +62,12 @@ public static partial class SystemSettingsValidator
             : null;
     }
 
-    public static string? ValidateDescription(string? description) =>
-        description is not null && description.Any(char.IsControl)
-            ? UiText.Get("SysVal.DescLine", "The description must be a single line.")
-            : description is { Length: > 256 }
-                ? UiText.Get("SysVal.DescLong", "The description can be at most 256 characters.")
-                : null;
+    public static string? ValidateDescription(string? description)
+    {
+        if (description is not null && description.Any(char.IsControl)) return UiText.Get("SysVal.DescLine", "The description must be a single line.");
+        if (description is { Length: > 256 }) return UiText.Get("SysVal.DescLong", "The description can be at most 256 characters.");
+        return null;
+    }
 
     /// <summary>
     /// A variable name. Windows takes nearly any text without <c>=</c>; the files Linux reads at login
