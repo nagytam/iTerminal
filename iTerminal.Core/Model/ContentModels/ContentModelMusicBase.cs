@@ -140,10 +140,10 @@ public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentMod
         SetUrl(new Url(string.IsNullOrWhiteSpace(stored) ? UrlScheme : stored));
     }
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
-        _settingsService.Set(Name, url);
-        _folderHistoryService?.Add(url);
+        _settingsService.Set(Name, path);
+        _folderHistoryService?.Add(path);
         StatusMessage = string.Empty;
 
         // Going somewhere ends the search that led there — the same thing a file panel does. On
@@ -152,7 +152,7 @@ public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentMod
         Filter = null;
 
         Entries.Clear();
-        Url = url;
+        Url = path;
         ResetNavigation();
         Refresh();
     }

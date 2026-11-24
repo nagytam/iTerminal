@@ -334,7 +334,7 @@ public abstract class GamesDialog : SplitPaneDialog
             }
 
             Land(new Outcome(generation, move));
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Drops the search in flight and any move it parked.</summary>

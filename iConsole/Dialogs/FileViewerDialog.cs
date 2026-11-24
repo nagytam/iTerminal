@@ -120,7 +120,7 @@ public class FileViewerDialog : Dialog
         _lastFollowTick = now;
         var from = _followBytes;
         var encoding = _textViewerControl.TextModel.Encoding;
-        PendingFollow = Task.Run(() => ReadAppended(path, from, encoding)).ContinueWith(task =>
+        PendingFollow = Task.Run(() => ReadAppended(path, from, encoding), CancellationToken.None).ContinueWith(task =>
         {
             // Observing the exception keeps a failed read from being left unobserved; the next check tries again.
             if (task.IsCompletedSuccessfully)
@@ -474,7 +474,7 @@ public class FileViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(FileViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

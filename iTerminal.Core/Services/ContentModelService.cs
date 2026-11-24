@@ -338,7 +338,7 @@ public class ContentModelService(
         ContentBrowsers.Add(contentBrowser);
     }
 
-    public async Task SetUrlAsync(Url url)
+    public async Task SetUrlAsync(Url selectedDrivePath)
     {
         var contentModel = GetLastContentModel();
         if (contentModel is not null)
@@ -348,10 +348,10 @@ public class ContentModelService(
             {
                 CursorPositions[contentModel.Url.FullUrl] = contentModel.CursorPosition.Y;
             }
-            if (url.ContainerType != left!.ContainerType)
+            if (selectedDrivePath.ContainerType != left.ContainerType)
             {
-                ContentModelAsyncDrive.RememberReturnUrl(settingsService, contentModel.Name, contentModel.Url, url);
-                contentModel = AddContentModel(contentModel.Name, url);
+                ContentModelAsyncDrive.RememberReturnUrl(settingsService, contentModel.Name, contentModel.Url, selectedDrivePath);
+                contentModel = AddContentModel(contentModel.Name, selectedDrivePath);
                 if (contentModel is not null)
                 {
                     await contentModel.ContentBrowser.ChangeModelAsync(contentModel.Name);
@@ -360,13 +360,13 @@ public class ContentModelService(
             }
             else
             {
-                contentModel?.SetUrl(url);
+                contentModel?.SetUrl(selectedDrivePath);
                 ReturnToRememberedRow(contentModel, left);
             }
         }
     }
 
-    public async Task SetUrlAsync(string name, Url url)
+    public async Task SetUrlAsync(string name, Url selectedDrivePath)
     {
         var contentModel = GetModel(name);
         if (contentModel is not null)
@@ -376,10 +376,10 @@ public class ContentModelService(
             {
                 CursorPositions[contentModel.Url.FullUrl] = contentModel.CursorPosition.Y;
             }
-            if (url.ContainerType != left!.ContainerType)
+            if (selectedDrivePath.ContainerType != left.ContainerType)
             {
-                ContentModelAsyncDrive.RememberReturnUrl(settingsService, name, contentModel.Url, url);
-                contentModel = AddContentModel(name, url);
+                ContentModelAsyncDrive.RememberReturnUrl(settingsService, name, contentModel.Url, selectedDrivePath);
+                contentModel = AddContentModel(name, selectedDrivePath);
                 if (contentModel is not null)
                 {
                     await contentModel.ContentBrowser.ChangeModelAsync(name);
@@ -388,7 +388,7 @@ public class ContentModelService(
             }
             else
             {
-                contentModel?.SetUrl(url);
+                contentModel?.SetUrl(selectedDrivePath);
                 ReturnToRememberedRow(contentModel, left);
             }
         }

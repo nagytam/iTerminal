@@ -8,7 +8,7 @@ public class TreeScrollDownCommand(IHierarchicalItemModel root) : Command
     public override Key? Key { get; init; } = 
         new Key(ConsoleKey.DownArrow, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var focusedItem = root.GetFocusedItem();
         if (focusedItem != null)

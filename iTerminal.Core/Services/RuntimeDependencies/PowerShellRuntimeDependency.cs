@@ -36,7 +36,7 @@ public sealed class PowerShellRuntimeDependency : IRuntimeDependency
     private readonly IReadOnlyList<string> _systemDirectories;
     private readonly Func<string, TimeSpan, Task<string?>> _readVersion;
     private readonly bool _isWindows;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private (string Path, DateTime Stamp, string? Version)? _cached;
 
     public PowerShellRuntimeDependency(string rootDirectory)

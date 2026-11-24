@@ -22,7 +22,7 @@ public class DeleteCharacterCommand(ITextModel textModel, IScrollableModel scrol
         return base.CanExecute();
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var lines = textModel.Lines;
         if (lines.Count == 0)

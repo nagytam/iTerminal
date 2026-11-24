@@ -146,7 +146,7 @@ public class CsvViewerDialog : Dialog
         int generation = ++_documentGeneration;
         _pendingDocumentGeneration = generation;
         char? delimiter = DelimiterFor(Url);
-        CsvDocument document = await Task.Run(() => _csvDocumentParser.Parse(text, delimiter));
+        CsvDocument document = await Task.Run(() => _csvDocumentParser.Parse(text, delimiter), CancellationToken.None);
         if (generation != _documentGeneration)
         {
             // An F8 came in while the file parsed; its re-read lands the document.
@@ -216,7 +216,7 @@ public class CsvViewerDialog : Dialog
         _query = null;
         int generation = ++_documentGeneration;
         _pendingDocumentGeneration = generation;
-        _switch = Task.Run(() => _csvDocumentParser.Parse(encoding.GetString(bytes, bomLength, bytes.Length - bomLength), delimiter));
+        _switch = Task.Run(() => _csvDocumentParser.Parse(encoding.GetString(bytes, bomLength, bytes.Length - bomLength), delimiter), CancellationToken.None);
         Title = TitleText();
         StateHasChanged();
     }
@@ -535,7 +535,7 @@ public class CsvViewerDialog : Dialog
 
         IEnumerable<TableExportChoice> choices = Enum.GetValues<TableExportFormat>().Select(format => new TableExportChoice(format));
         TableExportChoice? chosen = await _promptService.SelectAsync(
-            new SelectionPrompt<TableExportChoice>(UiText.Get("Csv.Export.Format", "Export as"), choices) { Label = choice => choice.Format.ToString() });
+            new SelectionPrompt<TableExportChoice>(UiText.Get("Csv.Export.Format", "Export as"), choices) { Label = choice => choice.Format.ToString() }, CancellationToken.None);
         if (chosen is null)
         {
             _statusLabel.Text = UiText.Get("Csv.Export.Cancelled", "Nothing was written");
@@ -546,7 +546,7 @@ public class CsvViewerDialog : Dialog
         TableExportFormat format = chosen.Format;
         string defaultName = Path.GetFileNameWithoutExtension(Url.Name) + "-export" + TableExport.Extension(format);
         string? answer = await _promptService.AskAsync(
-            new TextPrompt<string>(UiText.Get("Csv.Export.Ask", "Save the rows as")) { DefaultValue = defaultName }.Validate(ValidFileName));
+            new TextPrompt<string>(UiText.Get("Csv.Export.Ask", "Save the rows as")) { DefaultValue = defaultName }.Validate(ValidFileName), CancellationToken.None);
         if (answer is null)
         {
             _statusLabel.Text = UiText.Get("Csv.Export.Cancelled", "Nothing was written");
@@ -567,7 +567,7 @@ public class CsvViewerDialog : Dialog
         if (fileSystem.ExistsFile(target))
         {
             bool? overwrite = await _promptService.ConfirmAsync(
-                new ConfirmationPrompt(string.Format(UiText.Get("Csv.Export.Overwrite", "{0} already exists. Overwrite it?"), name)));
+                new ConfirmationPrompt(string.Format(UiText.Get("Csv.Export.Overwrite", "{0} already exists. Overwrite it?"), name)), CancellationToken.None);
             if (overwrite != true)
             {
                 _statusLabel.Text = UiText.Get("Csv.Export.Cancelled", "Nothing was written");
@@ -582,7 +582,7 @@ public class CsvViewerDialog : Dialog
             : _grid.Rows;
         try
         {
-            string text = await Task.Run(() => TableExport.Build(format, headers, rows));
+            string text = await Task.Run(() => TableExport.Build(format, headers, rows), CancellationToken.None);
             byte[] bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
             await fileSystem.WriteFileAsync(target, new MemoryStream(bytes));
             string status = string.Format(UiText.Get("Csv.Export.Done", "Exported {0:N0} row(s) to {1}"), rows.Count, name);
@@ -611,7 +611,7 @@ public class CsvViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(CsvViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

@@ -292,7 +292,7 @@ public sealed class OAuthTokenProvider : ICloudTokenProvider
         _pending[account] = new Pending(message);
         _notifications?.Notify(string.Format(UiText.Get("OAuth.SignIn", "Sign in to {0}"), _config.Name), string.Format(UiText.Get("OAuth.SignInDetail", "Open {0} and enter {1}"), address, userCode), iConsole.Services.NotificationSeverity.Info, Timeout.InfiniteTimeSpan);
 
-        _ = Task.Run(() => PollAsync(account, deviceCode, TimeSpan.FromSeconds(Math.Max(1, interval)), TimeSpan.FromSeconds(lifetime)));
+        _ = Task.Run(() => PollAsync(account, deviceCode, TimeSpan.FromSeconds(Math.Max(1, interval)), TimeSpan.FromSeconds(lifetime)), cancellationToken);
         return new CloudSignInRequiredException(message);
     }
 

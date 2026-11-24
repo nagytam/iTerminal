@@ -530,7 +530,7 @@ public class AccessControlDialog : Dialog
     private static bool IsSpace(KeyEvent keyEvent) => keyEvent.ConsoleKey == ConsoleKey.Spacebar || keyEvent.KeyChar == ' ';
 
     /// <summary>Typing, Backspace, Ctrl+U, Ctrl+W and a paste, for the text field under the cursor.</summary>
-    private string EditText(string text, KeyEvent keyEvent)
+    private static string EditText(string text, KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
         {

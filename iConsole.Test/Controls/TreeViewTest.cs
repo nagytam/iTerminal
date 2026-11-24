@@ -266,7 +266,7 @@ public class TreeViewTest
         child1.Children.Add(new HierarchicalItemModel(child1, "Grandchild1")); // Add children so toggle works
 
         var treeView = new TreeView(root, _mockThemeService.Object);
-        treeView.ToggleItem(child1);
+        TreeView.ToggleItem(child1);
 
         Assert.IsTrue(child1.IsOpened);
     }
@@ -281,7 +281,7 @@ public class TreeViewTest
         child1.Children.Add(new HierarchicalItemModel(child1, "Grandchild1")); // Add children so toggle works
 
         var treeView = new TreeView(root, _mockThemeService.Object);
-        treeView.ToggleItem(child1);
+        TreeView.ToggleItem(child1);
 
         Assert.IsFalse(child1.IsOpened);
     }
@@ -294,7 +294,7 @@ public class TreeViewTest
         var child1 = new HierarchicalItemModel(root, "Child1"); // No children
 
         var treeView = new TreeView(root, _mockThemeService.Object);
-        treeView.ToggleItem(child1);
+        TreeView.ToggleItem(child1);
 
         Assert.IsFalse(child1.IsOpened);
     }
@@ -336,10 +336,10 @@ public class TreeViewTest
 
         var treeView = new TreeView(root, _mockThemeService.Object);
 
-        Assert.AreEqual(0, treeView.GetItemDepth(root));
-        Assert.AreEqual(1, treeView.GetItemDepth(child1));
-        Assert.AreEqual(2, treeView.GetItemDepth(grandchild1));
-        Assert.AreEqual(3, treeView.GetItemDepth(greatgrandchild1));
+        Assert.AreEqual(0, TreeView.GetItemDepth(root));
+        Assert.AreEqual(1, TreeView.GetItemDepth(child1));
+        Assert.AreEqual(2, TreeView.GetItemDepth(grandchild1));
+        Assert.AreEqual(3, TreeView.GetItemDepth(greatgrandchild1));
     }
 
     [Timeout(60_000)]
@@ -495,7 +495,7 @@ public class TreeViewTest
         var root = new HierarchicalItemModel(null, "Root");
         var treeView = new TreeView(root, _mockThemeService.Object);
 
-        Assert.AreEqual(0, treeView.GetItemDepth(root));
+        Assert.AreEqual(0, TreeView.GetItemDepth(root));
     }
 
     [Timeout(60_000)]

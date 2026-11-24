@@ -132,7 +132,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
         return lines;
     }
 
-    private bool IsHidden(HtmlNode node) =>
+    private static bool IsHidden(HtmlNode node) =>
         Hidden.Contains(node.Tag)
         || node.HasAttr("hidden")
         || (node.Attr("style") is { Length: > 0 } css && HiddenStyleRegex().IsMatch(css));
@@ -210,7 +210,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
                 return;
             }
 
-            if (owner.IsHidden(node))
+            if (HtmlLayout.IsHidden(node))
             {
                 return;
             }
@@ -456,7 +456,7 @@ internal sealed partial class HtmlLayout(WebDocument document)
             {
                 if (child.Tag == "li")
                 {
-                    if (owner.IsHidden(child))
+                    if (HtmlLayout.IsHidden(child))
                     {
                         continue;
                     }

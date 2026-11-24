@@ -140,6 +140,6 @@ public class SettingsMusicTabPage : TabPage
         _volumeLabel.Position = new Position(0, 5);
         _volumeLabel.ViewSize = new Size(Math.Min(ViewSize.Width, 7), 1);
         _volumeSlider.Position = new Position(8, 5);
-        _volumeSlider.ViewSize = new Size(Math.Max(1, Math.Min(40, (long)ViewSize.Width - 8)), 1);
+        _volumeSlider.ViewSize = new Size(Math.Max(1, Math.Min(40, ViewSize.Width - 8)), 1);
     }
 }

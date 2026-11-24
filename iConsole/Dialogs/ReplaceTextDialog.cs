@@ -155,7 +155,7 @@ public class ReplaceTextDialog : Dialog
 
         public override Key? Key { get; init; } = all ? null : new Key(ConsoleKey.Enter, false, false, false);
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             dialog.Replace(all);
             return Task.CompletedTask;

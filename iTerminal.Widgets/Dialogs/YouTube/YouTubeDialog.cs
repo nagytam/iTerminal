@@ -226,7 +226,7 @@ public class YouTubeDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, OutcomeKind.Message, Text: exception.Message, IsError: true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Enter on a result, or F3: asks for the stream of the video under the cursor, then plays it in the viewer.</summary>
@@ -255,7 +255,7 @@ public class YouTubeDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, OutcomeKind.Message, Text: exception.Message, IsError: true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F2: the video's page in the system's browser.</summary>
@@ -271,11 +271,11 @@ public class YouTubeDialog : SplitPaneDialog
         string url = video.PageUrl;
         RequestTask = Task.Run(async () =>
         {
-            LaunchOutcome outcome = await _launcher.OpenUrlAsync(url);
+            LaunchOutcome outcome = await _launcher.OpenUrlAsync(url, CancellationToken.None);
             Land(new Outcome(generation, OutcomeKind.Message,
                 Text: outcome.Started ? string.Format(UiText.Get("YouTube.Opened", "Opened {0} in the browser."), url) : outcome.Failure ?? UiText.Get("YouTube.OpenFailed", "The browser could not be started."),
                 IsError: !outcome.Started));
-        });
+        }, CancellationToken.None);
     }
 
     private int BeginRequest(string status)

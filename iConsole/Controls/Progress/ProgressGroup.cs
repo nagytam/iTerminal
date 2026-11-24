@@ -381,7 +381,7 @@ public class ProgressGroup : Control
     private sealed record RowView(
         string Description, ProgressState State, bool Indeterminate, double Fraction, double Speed, TimeSpan Elapsed, TimeSpan? Remaining, bool IsOverall);
 
-    private RowView ViewOf(ProgressTask task)
+    private static RowView ViewOf(ProgressTask task)
     {
         string text = task.Description;
         if (task.Message.Length > 0)

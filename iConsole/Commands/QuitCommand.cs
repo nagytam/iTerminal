@@ -51,7 +51,7 @@ public class QuitCommand : Command
             : active.IsIdentical(keyEvent);
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var screen = (Control?.GetRootControl() as Screen);
         var desktop = screen?.Desktop;

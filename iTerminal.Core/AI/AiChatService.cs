@@ -229,7 +229,7 @@ public class AiChatService : IAiChatService
         return escapeStart == text.Length - 1 || IncompleteAnsiEscapeRegex.IsMatch(text[escapeStart..]);
     }
 
-    private List<ChatMessage> BuildMessages(List<AiChatMessage> history)
+    private static List<ChatMessage> BuildMessages(List<AiChatMessage> history)
     {
         var messages = new List<ChatMessage>
         {

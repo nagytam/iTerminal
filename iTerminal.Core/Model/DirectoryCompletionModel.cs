@@ -52,14 +52,14 @@ public sealed class DirectoryCompletionModel : IBlockingCompletionModel
     private readonly Func<long> _clock;
     private readonly TimeSpan _listTimeout;
 
-    private readonly object _cacheGate = new();
+    private readonly Lock _cacheGate = new();
     private string? _cachedPath;
     private IReadOnlyList<DirectoryChild> _cached = [];
     private long _cachedAt;
     private Task<IReadOnlyList<DirectoryChild>>? _inflight;
     private string? _inflightPath;
 
-    private readonly object _publishGate = new();
+    private readonly Lock _publishGate = new();
     private long _sequence;
     private long _published;
 

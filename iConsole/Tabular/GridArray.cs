@@ -219,7 +219,7 @@ public sealed class GridArrayView
     }
 
     /// <summary>The axis clause of a query (<c>AT</c>, <c>ROWS</c>, <c>COLUMNS</c>), or null when it has none or does not parse.</summary>
-    public GridAxisClause? AxisClauseOf(string text) => GridQuery.AxisClauseOf(text);
+    public static GridAxisClause? AxisClauseOf(string text) => GridQuery.AxisClauseOf(text);
 
     /// <summary>
     /// Runs a query over a window of the array: the rows and columns are the axes the clause names (or the array's own), each fixed axis
@@ -253,7 +253,7 @@ public sealed class GridArrayView
         }
 
         GridTable table = await window.MaterializeAsync(int.MaxValue, int.MaxValue, (int)Math.Min(int.MaxValue, DefaultChunkCells), cancellationToken, withRowNumbers: false);
-        GridQueryResult shaped = GridQuery.Execute(table.Headers, table.Rows, GridQuery.Parse(text, table.Headers));
+        GridQueryResult shaped = GridQuery.Execute(table.Headers, table.Rows, GridQuery.Parse(text, table.Headers), cancellationToken);
         return shaped with { Truncated = table.RowsTruncated || table.ColumnsTruncated };
     }
 
@@ -329,7 +329,7 @@ public sealed class GridArrayView
                 }
             }
 
-            foreach (string[] line in GridQuery.Execute(headers, lines, filter).Rows)
+            foreach (string[] line in GridQuery.Execute(headers, lines, filter, cancellationToken).Rows)
             {
                 if (matched.Count >= maxMatches)
                 {
@@ -341,7 +341,7 @@ public sealed class GridArrayView
             }
         }
 
-        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit));
+        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit), cancellationToken);
         return shaped with { Matched = matched.Count, Truncated = truncated };
     }
 
@@ -387,7 +387,7 @@ public sealed class GridArrayView
             }
 
             IReadOnlyList<string> cells = await _source.ReadBlockAsync(start, count, cancellationToken);
-            foreach (string[] row in GridQuery.Execute(headers, LongRows(start, count, cells), filter).Rows)
+            foreach (string[] row in GridQuery.Execute(headers, LongRows(start, count, cells), filter, cancellationToken).Rows)
             {
                 if (matched.Count >= maxMatches)
                 {
@@ -401,7 +401,7 @@ public sealed class GridArrayView
             more = Advance(index, split);
         }
 
-        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit));
+        GridQueryResult shaped = GridQuery.Execute(headers, matched, new GridQueryPlan(null, plan.Columns, null, plan.OrderBy, plan.Descending, plan.Limit), cancellationToken);
         return shaped with { Matched = matched.Count, Truncated = truncated };
     }
 

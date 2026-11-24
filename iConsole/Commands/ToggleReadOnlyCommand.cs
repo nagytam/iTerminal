@@ -37,7 +37,7 @@ public class ToggleReadOnlyCommand : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F6, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         if (_readOnly is not null)
         {

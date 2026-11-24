@@ -79,7 +79,7 @@ public class WebBrowserModelTest
 
     private static async Task LayoutAsync(WebBrowserModel model, WebTab tab, int width = 60)
     {
-        model.EnsureLayout(tab, width);
+        WebBrowserModel.EnsureLayout(tab, width);
         await tab.LayoutTask;
     }
 
@@ -202,7 +202,7 @@ public class WebBrowserModelTest
         await model.NavigateAsync(tab, "https://a.test/search");
         await LayoutAsync(model, tab);
         var document = tab.Current!.Document!;
-        model.SetValue(tab, document.Fields[0], "two words & more");
+        WebBrowserModel.SetValue(tab, document.Fields[0], "two words & more");
 
         await model.SubmitAsync(tab, document.Fields[2]);
 
@@ -221,8 +221,8 @@ public class WebBrowserModelTest
         var tab = model.Active;
         await model.NavigateAsync(tab, "https://a.test/login");
         var fields = tab.Current!.Document!.Fields;
-        model.SetValue(tab, fields[0], "ada");
-        model.SetValue(tab, fields[1], "s3cret");
+        WebBrowserModel.SetValue(tab, fields[0], "ada");
+        WebBrowserModel.SetValue(tab, fields[1], "s3cret");
 
         await model.SubmitAsync(tab, fields[2]);
 
@@ -244,7 +244,7 @@ public class WebBrowserModelTest
         await model.NavigateAsync(tab, "https://a.test/");
         var fields = tab.Current!.Document!.Fields;
 
-        model.Toggle(tab, fields[1]);
+        WebBrowserModel.Toggle(tab, fields[1]);
 
         Assert.IsFalse(fields[0].Checked);
         Assert.IsTrue(fields[1].Checked);
@@ -298,7 +298,7 @@ public class WebBrowserModelTest
 
         _ = model.NavigateAsync(tab, "https://a.test/slow");
         Assert.IsTrue(tab.IsLoading);
-        model.Stop(tab);
+        WebBrowserModel.Stop(tab);
         fetcher.Gate.SetResult();
         await tab.LoadTask;
 

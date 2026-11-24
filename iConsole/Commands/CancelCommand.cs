@@ -7,7 +7,7 @@ public class CancelCommand(CancellationTokenSource cancellationTokenSource) : Co
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Escape, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         cancellationTokenSource.Cancel();
         Control?.Parent?.Close();

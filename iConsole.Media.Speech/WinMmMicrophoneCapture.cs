@@ -19,7 +19,7 @@ internal sealed class WinMmMicrophoneCapture : IMicrophoneCapture
     private const int WhdrPrepared = 0x00000002;
 
     private readonly PcmBuffer _buffer = new();
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private IntPtr _handle;
     private IntPtr[] _headers = [];
     private IntPtr[] _data = [];

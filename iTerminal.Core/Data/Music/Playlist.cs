@@ -10,7 +10,7 @@ namespace iTerminal.Core.Data.Music;
 /// </summary>
 public sealed class Playlist
 {
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
     private readonly List<MusicTrack> _tracks = [];
     private readonly List<int> _playOrder = [];
     private readonly Random _random = new();

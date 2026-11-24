@@ -411,8 +411,8 @@ public class LogView : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        long x = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-        long y = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        long x = mouseEvent.Position.X - AbsolutePosition.X;
+        long y = mouseEvent.Position.Y - AbsolutePosition.Y;
         if (mouseEvent.WheelDelta != 0 && IsEnabled && x >= 0 && x < ViewSize.Width && y >= 0 && y < ViewSize.Height)
         {
             ScrollBy(mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);

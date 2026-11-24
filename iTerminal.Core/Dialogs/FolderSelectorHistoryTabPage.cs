@@ -88,7 +88,7 @@ public class FolderSelectorHistoryTabPage : FolderSelectorTabPage
         base.OnInitializeLayout();
     }
 
-    private IEnumerable<string> FilterAndSortItems(IEnumerable<string> items, CancellationToken cancellationToken)
+    private static IEnumerable<string> FilterAndSortItems(IEnumerable<string> items, CancellationToken cancellationToken)
     {
         return items;
     }

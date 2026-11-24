@@ -47,7 +47,7 @@ public class StatusBar : Control
 
     protected void StackFitting(IReadOnlyList<Control> inOrder, IReadOnlyList<Control> byPriority)
     {
-        var room = (long)ViewSize.Width;
+        var room = ViewSize.Width;
         var shown = new HashSet<Control>();
         foreach (var item in byPriority)
         {

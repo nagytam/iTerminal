@@ -7,7 +7,7 @@ namespace iTerminal.Core.Services.Clipboard;
 /// </summary>
 public sealed class InProcessFileClipboardService : IFileClipboardService
 {
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private FileClipboardContent? _content;
 
     public Task SetFilesAsync(IReadOnlyList<string> paths, bool isCut, CancellationToken cancellationToken = default)

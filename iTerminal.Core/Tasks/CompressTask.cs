@@ -173,7 +173,7 @@ public sealed class CompressTask(
             return;
         }
 
-        var size = isLocal && File.Exists(localPath) ? new FileInfo(localPath!).Length : url.Length;
+        var size = isLocal && File.Exists(localPath) ? new FileInfo(localPath).Length : url.Length;
         items.Add(new ArchiveItem(
             entryName,
             false,

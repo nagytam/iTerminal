@@ -124,14 +124,14 @@ public class ContentModelFileSystem(
         return new Url(Directory.GetCurrentDirectory());
     }
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
-        if (!fileSystemService.ExistsFolder(url))
+        if (!fileSystemService.ExistsFolder(path))
         {
-            url = NearestExistingFolder(url);
+            path = NearestExistingFolder(path);
         }
-        _settingsService.Set(Name, url.FullUrl);
-        _folderHistoryService.Add(url);
+        _settingsService.Set(Name, path.FullUrl);
+        _folderHistoryService.Add(path);
         // Cancel any in-flight prefetch scheduling for the previous folder before
         // the task sweep below, so stale tasks cannot be added afterwards.
         var oldPrefetchCts = Interlocked.Exchange(ref _prefetchScheduleCts, new CancellationTokenSource());
@@ -143,22 +143,22 @@ public class ContentModelFileSystem(
         }
         Entries.Clear();
         Filter = null;
-        Url = url;
+        Url = path;
         ResetNavigation();
-        if (url.Path != Path.GetPathRoot(url.Path))
+        if (path.Path != Path.GetPathRoot(path.Path))
         {
-            Entries.Add(new FileSystemEntry("..", url.ParentPath));
+            Entries.Add(new FileSystemEntry("..", path.ParentPath));
         }
 
         #region
 
         if (FolderWatcher is not null)
         {
-            FolderWatcher.Path = url.Path;
+            FolderWatcher.Path = path.Path;
         }
         else
         {
-            FolderWatcher = new FileSystemWatcher(url.Path)
+            FolderWatcher = new FileSystemWatcher(path.Path)
             {
                 NotifyFilter = NotifyFilters.Attributes
                                | NotifyFilters.CreationTime
@@ -240,7 +240,7 @@ public class ContentModelFileSystem(
             // SchedulePrefetch starts, the token is already cancelled and it returns immediately.
             var prefetchUrl = Url;
             var prefetchToken = _prefetchScheduleCts?.Token ?? CancellationToken.None;
-            Task.Run(() => SchedulePrefetch(prefetchUrl, prefetchToken));
+            Task.Run(() => SchedulePrefetch(prefetchUrl, prefetchToken), CancellationToken.None);
         }
         else
         {
@@ -398,7 +398,7 @@ public class ContentModelFileSystem(
 
                 cancellationTokenSource.Dispose();
             }
-        });
+        }, CancellationToken.None);
     }
 
     public override void Delete(Url url, bool recursive, bool moveToRecycleBin)

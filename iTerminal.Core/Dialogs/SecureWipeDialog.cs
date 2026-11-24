@@ -176,7 +176,7 @@ public class SecureWipeDialog : Dialog
         }
 
         Interlocked.Exchange(ref _totalWrite, total);
-    });
+    }, CancellationToken.None);
 
     /// <summary>The second Enter: starts the wipe.</summary>
     public void Confirm()
@@ -214,7 +214,7 @@ public class SecureWipeDialog : Dialog
             Phase = WipePhase.Finished;
             RefreshPanels();
             Announce(result);
-        });
+        }, CancellationToken.None);
         UpdateLines();
     }
 
@@ -291,7 +291,7 @@ public class SecureWipeDialog : Dialog
     /// Serializes <see cref="UpdateLines"/>: it runs on the key thread and on the idle thread. Without it the idle thread could build the
     /// armed lines, lose to a key that withdrew the arming, and then store its stale lines over the new ones for good.
     /// </summary>
-    private readonly object _linesLock = new();
+    private readonly Lock _linesLock = new();
 
     private void UpdateLines()
     {

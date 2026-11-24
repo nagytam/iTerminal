@@ -27,7 +27,7 @@ public class SelectTreeFolderCommand(IContentModelService contentModelService, F
         return canExecute;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var folderSelectorFolderTreeTabPage = Control?.Parent as FolderSelectorFolderTreeTabPage;
         if (folderSelectorFolderTreeTabPage is not null)

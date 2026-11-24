@@ -320,7 +320,7 @@ public class TranslatorDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, Say("Translator.Failed", "Translation failed: {0}", exception.Message), true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F7: finds the language of the text — offline when that is sure, otherwise by asking the engine.</summary>
@@ -354,7 +354,7 @@ public class TranslatorDialog : SplitPaneDialog
             {
                 Land(new Outcome(generation, Say("Translator.DetectFailed", "Detection failed: {0}", exception.Message), true));
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F6: swaps the languages and makes the translation the new text, so a translation can be checked by translating it back.</summary>

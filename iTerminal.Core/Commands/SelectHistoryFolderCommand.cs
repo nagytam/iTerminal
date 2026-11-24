@@ -21,7 +21,7 @@ public class SelectHistoryFolderCommand(
         return base.CanExecute() && GetFocusedFolder() is not null;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var focusedItem = GetFocusedFolder();
         if (focusedItem is null)

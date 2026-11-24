@@ -387,7 +387,7 @@ public class ScannerDialog : Dialog
                 }
 
                 AcceptResult(generation, result);
-            });
+            }, CancellationToken.None);
         }
     }
 
@@ -482,7 +482,7 @@ public class ScannerDialog : Dialog
                     SetStatus(string.Format(UiText.Get("Scan.SavingPage", "Saving page {0} of {1}…"), i + 1, pages.Count), false);
                 }
 
-                SaveResult saved = await service.SaveAsync(pages[i], Path.Combine(folder, FileName(target, i, pages.Count, extension)), format);
+                SaveResult saved = await service.SaveAsync(pages[i], Path.Combine(folder, FileName(target, i, pages.Count, extension)), format, CancellationToken.None);
                 if (!saved.Success)
                 {
                     failure = saved.Message;
@@ -509,7 +509,7 @@ public class ScannerDialog : Dialog
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>

@@ -11,7 +11,7 @@ namespace iTerminal.Core.Application;
 /// </summary>
 public sealed class DatabaseLocation(string databasePath, StartupWarningService warnings) : IDisposable
 {
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private SqliteConnection? _keepAlive;
     private string? _connectionString;
 

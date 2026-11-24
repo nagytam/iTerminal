@@ -189,8 +189,8 @@ public class ListBox<T> : Control
     {
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);
 
-        var relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-        var relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        var relativeX = mouseEvent.Position.X - AbsolutePosition.X;
+        var relativeY = mouseEvent.Position.Y - AbsolutePosition.Y;
         var isInside = relativeX >= 0 && relativeX < ViewSize.Width
             && relativeY >= 0 && relativeY < ViewSize.Height;
         if (!isInside || Count == 0)
@@ -332,17 +332,17 @@ public class ListBox<T> : Control
         }
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Focused:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.SelectedFocusedBackground;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.SelectedFocusedBackground;
                 break;
             case VisualState.Selected:
                 // The cursor row adopts the theme's focused-selection highlight only while the
@@ -350,22 +350,22 @@ public class ListBox<T> : Control
                 // several share a dialog. An unfocused list keeps the quieter selection colors.
                 if (IsFocused)
                 {
-                    foregroundColor = colorScheme.SelectedFocusedForeground;
-                    backgroundColor = colorScheme.SelectedFocusedBackground;
+                    foreground = colorScheme.SelectedFocusedForeground;
+                    background = colorScheme.SelectedFocusedBackground;
                 }
                 else
                 {
-                    foregroundColor = colorScheme.SelectedForeground;
-                    backgroundColor = colorScheme.SelectedBackground;
+                    foreground = colorScheme.SelectedForeground;
+                    background = colorScheme.SelectedBackground;
                 }
                 break;
             case VisualState.SelectedDisabled:
-                foregroundColor = colorScheme.DisabledSelectedForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledSelectedForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

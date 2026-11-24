@@ -24,7 +24,7 @@ public class CreateFileCommand(
         return base.CanExecute();
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (Control?.Parent is CreateFileDialog createFileDialog)
         {

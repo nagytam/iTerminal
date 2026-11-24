@@ -438,7 +438,7 @@ public partial class Url
                             var entryName = innerPath.TrimStart('/');
                             if (string.IsNullOrEmpty(entryName))
                             {
-                                var archiveFileInfo = GetFileInfoCached(_containerFilePath!);
+                                var archiveFileInfo = GetFileInfoCached(_containerFilePath);
                                 _name = archiveFileInfo.Name;
                                 _extension = (archiveFileInfo.Extension.Length > 1) ? archiveFileInfo.Extension[1..] : string.Empty;
                             }
@@ -452,7 +452,7 @@ public partial class Url
 
                         _path = fullPath;
                         _fullName = innerPath;
-                        _directoryName = innerPath.Split(DirectorySeparatorSlashChar).Last();
+                        _directoryName = innerPath.Split(DirectorySeparatorSlashChar)[^1];
                         _displayName = _name;
                         PathType = innerPath.EndsWith('/') ? PathType.Folder : PathType.File;
                         ContainerType = ContainerType.SshFileSystemArchive;
@@ -466,7 +466,7 @@ public partial class Url
                         _displayName = fullPath.Replace("/", string.Empty);
                         // The entry's own name, as on every other remote drive: a copy or a rename
                         // that reads it would otherwise land on the folder itself.
-                        _name = fullPath.TrimEnd('/').Split('/').Last();
+                        _name = fullPath.TrimEnd('/').Split('/')[^1];
                         PathType = (_url.EndsWith('/')) ? PathType.Folder : PathType.File;
                         var sshDot = _name.LastIndexOf('.');
                         _extension = PathType == PathType.File && sshDot > 0 && sshDot < _name.Length - 1 ? _name[(sshDot + 1)..] : string.Empty;
@@ -525,7 +525,7 @@ public partial class Url
                         var entryName = innerPath.TrimStart('/');
                         if (string.IsNullOrEmpty(entryName))
                         {
-                            var archiveFileInfo = GetFileInfoCached(_containerFilePath!);
+                            var archiveFileInfo = GetFileInfoCached(_containerFilePath);
                             _name = archiveFileInfo.Name;
                             _extension = (archiveFileInfo.Extension.Length > 1) ? archiveFileInfo.Extension[1..] : string.Empty;
                         }
@@ -539,7 +539,7 @@ public partial class Url
 
                     _path = ftpPath;
                     _fullName = innerPath;
-                    _directoryName = innerPath.Split(DirectorySeparatorSlashChar).Last();
+                    _directoryName = innerPath.Split(DirectorySeparatorSlashChar)[^1];
                     _displayName = _name;
                     PathType = innerPath.EndsWith('/') ? PathType.Folder : PathType.File;
                     ContainerType = ContainerType.FtpFileSystemArchive;
@@ -550,7 +550,7 @@ public partial class Url
                     _path = ftpPath;
                     _fullName = ftpPath;
                     _directoryName = ftpPath;
-                    _displayName = ftpPath.TrimEnd('/').Split('/').Last();
+                    _displayName = ftpPath.TrimEnd('/').Split('/')[^1];
                     _name = _displayName;
                     PathType = ftpPath.EndsWith('/') ? PathType.Folder : PathType.File;
                     // As on SMB: a file on an FTP server needs its extension for the viewer and the preview.
@@ -586,7 +586,7 @@ public partial class Url
                 _path = smbPath;
                 _fullName = smbPath;
                 _directoryName = smbPath;
-                _displayName = smbPath.TrimEnd('/').Split('/').Last();
+                _displayName = smbPath.TrimEnd('/').Split('/')[^1];
                 _name = _displayName;
                 PathType = smbPath.EndsWith('/') ? PathType.Folder : PathType.File;
                 // Without this a file on a share has no extension, so the viewer, the preview and the file
@@ -613,7 +613,7 @@ public partial class Url
                 _path = davPath;
                 _fullName = davPath;
                 _directoryName = davPath;
-                _displayName = davPath.TrimEnd('/').Split('/').Last();
+                _displayName = davPath.TrimEnd('/').Split('/')[^1];
                 _name = _displayName;
                 PathType = davPath.EndsWith('/') ? PathType.Folder : PathType.File;
                 var davDot = _name.LastIndexOf('.');
@@ -644,7 +644,7 @@ public partial class Url
                 _path = cloudPath;
                 _fullName = cloudPath;
                 _directoryName = cloudPath;
-                _displayName = cloudPath.TrimEnd('/').Split('/').Last();
+                _displayName = cloudPath.TrimEnd('/').Split('/')[^1];
                 _name = _displayName;
                 PathType = cloudPath.EndsWith('/') ? PathType.Folder : PathType.File;
                 var cloudDot = _name.LastIndexOf('.');
@@ -673,7 +673,7 @@ public partial class Url
                 _username = string.Empty;
                 _fullName = _path;
                 _directoryName = _path;
-                _displayName = _path.TrimEnd('/').Split('/').Last();
+                _displayName = _path.TrimEnd('/').Split('/')[^1];
                 _name = _displayName;
                 PathType = _path.EndsWith('/') ? PathType.Folder : PathType.File;
                 ContainerType = ContainerType.IPhoneFileSystem;
@@ -688,7 +688,7 @@ public partial class Url
                 _name = fileInfo.Name;
                 _extension = (fileInfo.Extension.Length > 1) ? fileInfo.Extension[1..] : string.Empty;
                 _fullName = fileInfo.FullName;
-                _directoryName = _fullName.Split(DirectorySeparatorChar).Last();
+                _directoryName = _fullName.Split(DirectorySeparatorChar)[^1];
                 _container = null;
                 ContainerType = ContainerType.FileSystem;
                 _container = Data.Container.FILE;
@@ -737,7 +737,7 @@ public partial class Url
                     if (string.IsNullOrEmpty(entryName))
                     {
                         // Root of archive — use archive file name
-                        var archiveFileInfo = GetFileInfoCached(_containerFilePath!);
+                        var archiveFileInfo = GetFileInfoCached(_containerFilePath);
                         _name = archiveFileInfo.Name;
                         _extension = (archiveFileInfo.Extension.Length > 1) ? archiveFileInfo.Extension[1..] : string.Empty;
                     }
@@ -753,7 +753,7 @@ public partial class Url
                 }
 
                 _fullName = innerPath;
-                _directoryName = _fullName.Split(DirectorySeparatorSlashChar).Last();
+                _directoryName = _fullName.Split(DirectorySeparatorSlashChar)[^1];
                 ContainerType = GetArchiveContainerType(_containerFilePath);
                 _container = GetArchiveContainerString(_containerFilePath);
                 _directorySeparatorChar = DirectorySeparatorSlashChar;
@@ -777,7 +777,7 @@ public partial class Url
             _urlScheme    = Data.Container.FILE;
             _path         = path;
             _fullName     = info.FullName;
-            _directoryName= info.FullName.Split(System.IO.Path.DirectorySeparatorChar).Last();
+            _directoryName= info.FullName.Split(System.IO.Path.DirectorySeparatorChar)[^1];
             _name         = info.Name;
             _extension    = (info.Extension.Length > 1) ? info.Extension[1..] : string.Empty;
             _displayName  = info.Name;

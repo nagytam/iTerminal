@@ -25,7 +25,7 @@ public class FileInformationRefreshTask
     private DateTime _lastModelProgressUpdate = DateTime.MinValue;
     private static readonly TimeSpan ModelProgressUpdateInterval = TimeSpan.FromMilliseconds(500);
     private readonly uint _reportBatchSize;
-    private readonly object _countLock = new();
+    private readonly Lock _countLock = new();
     private bool _countFinished;
 
     public FileInformationRefreshTask(

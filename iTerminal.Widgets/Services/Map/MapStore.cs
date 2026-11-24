@@ -21,7 +21,7 @@ public sealed class MapStore(ISettingsService settingsService)
     public static readonly MapPlace Home = new("Budapest", 47.4979, 19.0402);
     public const int HomeZoom = 12;
 
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private List<MapPlace>? _places;
 
     /// <summary>The tile address template; <c>{z}</c>, <c>{x}</c> and <c>{y}</c> stand for the tile.</summary>

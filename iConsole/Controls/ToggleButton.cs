@@ -109,31 +109,31 @@ public class ToggleButton : Control, IReadOnly
     }
 
     public override void GetColor(ColorScheme colorScheme, VisualState visualState,
-        out Color foregroundColor, out Color backgroundColor)
+        out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Focused:
                 // Focus changes the text colour only; the background still says ON or OFF, so the
                 // state stays readable on the one control the user is looking at.
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = IsOn ? colorScheme.SelectedBackground : colorScheme.ButtonBackground;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = IsOn ? colorScheme.SelectedBackground : colorScheme.ButtonBackground;
                 break;
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledButtonBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledButtonBackground;
                 break;
             default:
                 // Use selection colours when ON to make the active state visually distinct.
                 if (IsOn)
                 {
-                    foregroundColor = colorScheme.SelectedForeground;
-                    backgroundColor = colorScheme.SelectedBackground;
+                    foreground = colorScheme.SelectedForeground;
+                    background = colorScheme.SelectedBackground;
                 }
                 else
                 {
-                    foregroundColor = colorScheme.Foreground;
-                    backgroundColor = colorScheme.ButtonBackground;
+                    foreground = colorScheme.Foreground;
+                    background = colorScheme.ButtonBackground;
                 }
                 break;
         }

@@ -16,7 +16,7 @@ namespace iTerminal.Core.Services.Music;
 public sealed class AudioDeviceService : IAudioDeviceService
 {
     private readonly IReadOnlyList<IAudioOutputBackend> _backends;
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
 
     private IAudioOutputBackend? _activeBackend;
     private IReadOnlyList<AudioDevice> _devices = [];

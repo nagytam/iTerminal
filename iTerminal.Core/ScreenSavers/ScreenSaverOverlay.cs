@@ -139,8 +139,8 @@ public class ScreenSaverOverlay : Control
         IsVisible = true;
         StateHasChanged();
 
-        var token = _animation!.Token;
-        Task.Run(() => AnimateAsync(token));
+        var token = _animation.Token;
+        Task.Run(() => AnimateAsync(token), CancellationToken.None);
     }
 
     private void Stop()

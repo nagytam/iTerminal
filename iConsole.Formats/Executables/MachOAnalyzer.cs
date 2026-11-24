@@ -16,7 +16,6 @@ internal static class MachOAnalyzer
     private const int MaxSymbols = 1_000_000;
     private const int MaxExportNames = 25;
     private const int MaxLibraries = 128;
-    private const int MaxStringTable = 4 * 1024 * 1024;
     private const int MaxSlices = 30;
 
     public static ExecutableReport Analyze(BoundedFileReader file, CancellationToken cancellationToken)

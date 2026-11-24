@@ -97,20 +97,20 @@ public class Buffer : IBuffer
         return false;
     }
 
-    public void Resize(Size size)
+    public void Resize(Size newSize)
     {
-        Size = size;
+        Size = newSize;
         foreach (var layer in Layers.AsSnapshot())
         {
-            layer.Resize(size);
+            layer.Resize(newSize);
         }
-        MergedLayer.Resize(size);
+        MergedLayer.Resize(newSize);
         if (Cursor?.CursorPosition != null)
         {
-            Cursor.Size = size;
+            Cursor.Size = newSize;
             // Clamp cursor inside the buffer bounds.
-            Cursor.CursorPosition.X = Math.Min(Cursor.CursorPosition.X, Math.Max(0, size.Width - 1));
-            Cursor.CursorPosition.Y = Math.Min(Cursor.CursorPosition.Y, Math.Max(0, size.Height - 1));
+            Cursor.CursorPosition.X = Math.Min(Cursor.CursorPosition.X, Math.Max(0, newSize.Width - 1));
+            Cursor.CursorPosition.Y = Math.Min(Cursor.CursorPosition.Y, Math.Max(0, newSize.Height - 1));
         }
     }
 

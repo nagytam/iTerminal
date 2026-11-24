@@ -22,7 +22,7 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
 
     private readonly string _path;
     private readonly bool _isStream;
-    private readonly object _processLock = new();
+    private readonly Lock _processLock = new();
 
     private Process? _process;
     private Stream? _output;

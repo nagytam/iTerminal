@@ -29,7 +29,7 @@ public interface IFileLabelService
 public sealed class FileLabelService(IDbContextFactory<iTerminalDbContext> dbContextFactory) : IFileLabelService
 {
     private readonly ConcurrentDictionary<string, FileLabel> _labels = new(StringComparer.Ordinal);
-    private readonly object _loadLock = new();
+    private readonly Lock _loadLock = new();
     private Task? _loading;
 
     public FileLabel Get(string path)

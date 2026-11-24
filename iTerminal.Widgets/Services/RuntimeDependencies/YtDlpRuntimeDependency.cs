@@ -36,7 +36,7 @@ public sealed class YtDlpRuntimeDependency : IRuntimeDependency
     private readonly bool _isWindows;
     private readonly bool _isMac;
     private readonly bool _isPrivileged;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private (string Path, DateTime Stamp, string? Version)? _cached;
 
     public YtDlpRuntimeDependency()

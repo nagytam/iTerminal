@@ -394,8 +394,8 @@ public class FilePicker : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        long x = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-        long y = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        long x = mouseEvent.Position.X - AbsolutePosition.X;
+        long y = mouseEvent.Position.Y - AbsolutePosition.Y;
         if (x < 0 || x >= ViewSize.Width || y < 0 || y >= ViewSize.Height || !IsEnabled)
         {
             return isHandled;

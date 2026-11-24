@@ -132,7 +132,7 @@ internal sealed class MorrisState
         QuietMoves = QuietMoves,
     };
 
-    public byte Color(int side) => (byte)(side + 1);
+    public static byte Color(int side) => (byte)(side + 1);
 
     public int OnBoard(int side)
     {
@@ -199,7 +199,7 @@ internal sealed class MorrisState
     {
         List<MorrisMove> moves = [];
         int side = state.Turn;
-        byte color = state.Color(side);
+        byte color = MorrisState.Color(side);
         if (state.Placing(side))
         {
             for (int to = 0; to < 24; to++)
@@ -245,7 +245,7 @@ internal sealed class MorrisState
 
     private static void AddWithRemovals(MorrisState state, List<MorrisMove> moves, int from, int to)
     {
-        byte color = state.Color(state.Turn);
+        byte color = MorrisState.Color(state.Turn);
         if (!MorrisBoard.FormsMill(state.Board, from, to, color))
         {
             moves.Add(new MorrisMove(from, to, -1));
@@ -437,7 +437,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
 
     private static int Mobility(MorrisState state, int side)
     {
-        byte color = state.Color(side);
+        byte color = MorrisState.Color(side);
         int room = 0;
         for (int point = 0; point < 24; point++)
         {
@@ -461,7 +461,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
     /// <summary>Mills with two of a side's men and the third point empty.</summary>
     private static int PotentialMills(MorrisState state, int side)
     {
-        byte color = state.Color(side);
+        byte color = MorrisState.Color(side);
         int count = 0;
         foreach (int[] mill in MorrisBoard.Mills)
         {
@@ -658,7 +658,7 @@ public class NineMensMorrisGame : GameBase
         {
             _selected = -1;
         }
-        else if (_state.Board[_cursor] == _state.Color(side))
+        else if (_state.Board[_cursor] == MorrisState.Color(side))
         {
             _selected = _cursor;
             if (!MorrisState.Moves(_state).Any(m => m.From == _cursor))
@@ -852,7 +852,7 @@ public class NineMensMorrisGame : GameBase
             board[_movedFrom] = 0;
         }
 
-        board[_placed] = _state.Color(_state.Turn);
+        board[_placed] = MorrisState.Color(_state.Turn);
         return board;
     }
 

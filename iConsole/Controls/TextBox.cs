@@ -665,12 +665,12 @@ public partial class TextBox : Control, IReadOnly
         // it moves a step with each movement, scrolling the value, so a long value can be selected beyond what shows.
         if (mouseEvent.IsDrag && _dragSelecting && IsEnabled)
         {
-            long dragColumn = (long)mouseEvent.Position.X - (long)AbsolutePosition.X - WellTextOffset;
+            long dragColumn = mouseEvent.Position.X - AbsolutePosition.X - WellTextOffset;
             var well = ScrollableModel.ViewSize.Width;
             long cursor = ScrollableModel.CursorPosition.X;
             long moved = dragColumn < 0 ? cursor - 1
                 : dragColumn >= well ? cursor + 1
-                : dragColumn + (long)ScrollableModel.ScrollPosition.X;
+                : dragColumn + ScrollableModel.ScrollPosition.X;
             ScrollableModel.CursorPosition.X = Math.Clamp(moved, 0, TextLength);
             UpdateSelectionModel();
             KeepCursorVisible();
@@ -695,8 +695,8 @@ public partial class TextBox : Control, IReadOnly
         }
 
         ClearSelection();
-        long column = (long)mouseEvent.Position.X - (long)AbsolutePosition.X - WellTextOffset;
-        long target = Math.Clamp(column + (long)ScrollableModel.ScrollPosition.X, 0, TextLength);
+        long column = mouseEvent.Position.X - AbsolutePosition.X - WellTextOffset;
+        long target = Math.Clamp(column + ScrollableModel.ScrollPosition.X, 0, TextLength);
         ScrollableModel.CursorPosition.X = target;
         _selectionAnchor = target;
         _dragSelecting = true;
@@ -838,7 +838,7 @@ public partial class TextBox : Control, IReadOnly
         return completion[typed.Length..];
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         if (IsReadOnly)
         {
@@ -849,20 +849,20 @@ public partial class TextBox : Control, IReadOnly
             case VisualState.Normal:
             default:
                 {
-                    foregroundColor = colorScheme.Foreground;
-                    backgroundColor = colorScheme.Background;
+                    foreground = colorScheme.Foreground;
+                    background = colorScheme.Background;
                     break;
                 }
             case VisualState.Disabled:
                 {
-                    foregroundColor = colorScheme.DisabledForeground;
-                    backgroundColor = colorScheme.DisabledBackground;
+                    foreground = colorScheme.DisabledForeground;
+                    background = colorScheme.DisabledBackground;
                     break;
                 }
             case VisualState.Focused:
                 {
-                    foregroundColor = colorScheme.SelectedFocusedForeground;
-                    backgroundColor = colorScheme.Background;
+                    foreground = colorScheme.SelectedFocusedForeground;
+                    background = colorScheme.Background;
                     break;
                 }
         }

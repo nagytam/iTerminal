@@ -262,7 +262,7 @@ public class WebBrowserDialog : Dialog
                 // Esc stops a load that replaces a page; with nothing on screen yet there is nothing to keep, so it closes.
                 if (tab.IsLoading && tab.Current is not null)
                 {
-                    _model.Stop(tab);
+                    WebBrowserModel.Stop(tab);
                 }
                 else if (_findQuery.Length > 0)
                 {
@@ -282,7 +282,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace when !key.Shift && !key.Control && !key.Alt:
                 if (!_model.GoBack(tab))
                 {
-                    _model.Say(tab, UiText.Get("Web.NoEarlier", "There is no earlier page."));
+                    WebBrowserModel.Say(tab, UiText.Get("Web.NoEarlier", "There is no earlier page."));
                 }
 
                 return true;
@@ -290,7 +290,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace when key.Shift:
                 if (!_model.GoForward(tab))
                 {
-                    _model.Say(tab, UiText.Get("Web.NoLater", "There is no later page."));
+                    WebBrowserModel.Say(tab, UiText.Get("Web.NoLater", "There is no later page."));
                 }
 
                 return true;
@@ -346,7 +346,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Tab when !key.Alt:
                 if (!tab.MoveFocus(!key.Shift, ViewHeight))
                 {
-                    _model.Say(tab, UiText.Get("Web.NoLinks", "There are no links on this page."));
+                    WebBrowserModel.Say(tab, UiText.Get("Web.NoLinks", "There are no links on this page."));
                 }
 
                 return true;
@@ -367,7 +367,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.LeftArrow or ConsoleKey.RightArrow when !key.Control && !key.Alt:
                 if (FocusedField() is { Kind: WebFieldKind.Select } select)
                 {
-                    _model.CycleOption(tab, select, key.ConsoleKey == ConsoleKey.RightArrow ? 1 : -1);
+                    WebBrowserModel.CycleOption(tab, select, key.ConsoleKey == ConsoleKey.RightArrow ? 1 : -1);
                     return true;
                 }
 
@@ -578,14 +578,14 @@ public class WebBrowserDialog : Dialog
 
         if (PasteHelper.IsDeleteWordKey(key))
         {
-            _model.SetValue(tab, field, PasteHelper.DeleteLastWord(field.Value));
+            WebBrowserModel.SetValue(tab, field, PasteHelper.DeleteLastWord(field.Value));
             return true;
         }
 
         if (PasteHelper.IsPasteKey(key))
         {
             PasteHelper.Paste(
-                text => _model.SetValue(tab, field, field.Value + (field.Kind == WebFieldKind.TextArea ? text.Replace("\r\n", "\n").Replace('\r', '\n') : PasteHelper.SingleLine(text))),
+                text => WebBrowserModel.SetValue(tab, field, field.Value + (field.Kind == WebFieldKind.TextArea ? text.Replace("\r\n", "\n").Replace('\r', '\n') : PasteHelper.SingleLine(text))),
                 StateHasChanged);
             return true;
         }
@@ -604,7 +604,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Enter:
                 if (field.Kind == WebFieldKind.TextArea)
                 {
-                    _model.SetValue(tab, field, field.Value + "\n");
+                    WebBrowserModel.SetValue(tab, field, field.Value + "\n");
                     return true;
                 }
 
@@ -615,18 +615,18 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace:
                 if (field.Value.Length > 0)
                 {
-                    _model.SetValue(tab, field, field.Value[..^1]);
+                    WebBrowserModel.SetValue(tab, field, field.Value[..^1]);
                 }
 
                 return true;
             case ConsoleKey.U when key.Control:
-                _model.SetValue(tab, field, string.Empty);
+                WebBrowserModel.SetValue(tab, field, string.Empty);
                 return true;
         }
 
         if (ConsoleKeyHelper.IsTypingKey(key))
         {
-            _model.SetValue(tab, field, field.Value + key.KeyChar);
+            WebBrowserModel.SetValue(tab, field, field.Value + key.KeyChar);
             return true;
         }
 
@@ -753,11 +753,11 @@ public class WebBrowserDialog : Dialog
         var url = tab.Url;
         if (url.Length == 0 || url.StartsWith("about:", StringComparison.OrdinalIgnoreCase))
         {
-            _model.Say(tab, UiText.Get("Web.NoBookmark", "This page cannot be bookmarked."));
+            WebBrowserModel.Say(tab, UiText.Get("Web.NoBookmark", "This page cannot be bookmarked."));
             return;
         }
 
-        _model.Say(tab, _model.Store.ToggleBookmark(url, tab.Title) ? UiText.Get("Web.Bookmarked", "Bookmarked.") : UiText.Get("Web.BookmarkRemoved", "Bookmark removed."));
+        WebBrowserModel.Say(tab, _model.Store.ToggleBookmark(url, tab.Title) ? UiText.Get("Web.Bookmarked", "Bookmarked.") : UiText.Get("Web.BookmarkRemoved", "Bookmark removed."));
     }
 
     private void ToggleSource()
@@ -780,11 +780,11 @@ public class WebBrowserDialog : Dialog
         var tab = _model.Active;
         try
         {
-            _model.Say(tab, string.Format(UiText.Get("Web.SavedTo", "Saved to {0}"), _model.Save(tab)));
+            WebBrowserModel.Say(tab, string.Format(UiText.Get("Web.SavedTo", "Saved to {0}"), _model.Save(tab)));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
-            _model.Say(tab, string.Format(UiText.Get("Web.SaveFailed", "Could not save: {0}"), exception.Message));
+            WebBrowserModel.Say(tab, string.Format(UiText.Get("Web.SaveFailed", "Could not save: {0}"), exception.Message));
         }
     }
 
@@ -845,7 +845,7 @@ public class WebBrowserDialog : Dialog
     private WebField? FocusedField()
     {
         var tab = _model.Active;
-        return tab.FocusedWebItem is { IsField: true } item ? _model.FieldOf(tab, item) : null;
+        return tab.FocusedWebItem is { IsField: true } item ? WebBrowserModel.FieldOf(tab, item) : null;
     }
 
     /// <summary>Enter on the focused item. With nothing focused the first link or control on screen is taken, as Tab would.</summary>
@@ -859,7 +859,7 @@ public class WebBrowserDialog : Dialog
 
         if (item.IsField)
         {
-            if (_model.FieldOf(tab, item) is { } field)
+            if (WebBrowserModel.FieldOf(tab, item) is { } field)
             {
                 ActivateField(field);
             }
@@ -885,22 +885,22 @@ public class WebBrowserDialog : Dialog
                 _mode = Mode.Field;
                 break;
             case WebFieldKind.Checkbox or WebFieldKind.Radio:
-                _model.Toggle(tab, field);
+                WebBrowserModel.Toggle(tab, field);
                 break;
             case WebFieldKind.Select:
-                _model.CycleOption(tab, field, 1);
+                WebBrowserModel.CycleOption(tab, field, 1);
                 break;
             case WebFieldKind.Submit:
                 _ = _model.SubmitAsync(tab, field);
                 break;
             case WebFieldKind.Reset:
-                _model.ResetForm(tab, field);
+                WebBrowserModel.ResetForm(tab, field);
                 break;
             case WebFieldKind.Button:
-                _model.Say(tab, UiText.Get("Web.NeedsScript", "This button needs JavaScript, which the Web Browser does not run."));
+                WebBrowserModel.Say(tab, UiText.Get("Web.NeedsScript", "This button needs JavaScript, which the Web Browser does not run."));
                 break;
             case WebFieldKind.File:
-                _model.Say(tab, UiText.Get("Web.NoUpload", "Uploading files is not supported."));
+                WebBrowserModel.Say(tab, UiText.Get("Web.NoUpload", "Uploading files is not supported."));
                 break;
         }
     }
@@ -1000,7 +1000,7 @@ public class WebBrowserDialog : Dialog
             {
                 if (tab.IsLoading)
                 {
-                    _model.Stop(tab);
+                    WebBrowserModel.Stop(tab);
                 }
                 else
                 {
@@ -1113,7 +1113,7 @@ public class WebBrowserDialog : Dialog
             _mode = Mode.Browse;
             if (item.IsField)
             {
-                if (_model.FieldOf(tab, item) is { } field)
+                if (WebBrowserModel.FieldOf(tab, item) is { } field)
                 {
                     ActivateField(field);
                 }
@@ -1173,7 +1173,7 @@ public class WebBrowserDialog : Dialog
                 DrawHelp(buffer, scheme, _screenX, _screenY + 2, width, _contentHeight);
                 break;
             default:
-                _model.EnsureLayout(tab, _contentWidth);
+                WebBrowserModel.EnsureLayout(tab, _contentWidth);
                 DrawPage(buffer, scheme, tab, _screenX, _screenY + 2, width, _contentHeight);
                 break;
         }

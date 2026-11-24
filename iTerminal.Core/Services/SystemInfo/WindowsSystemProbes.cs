@@ -168,7 +168,7 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
         }
     }
 
-    private readonly object _diskNameLock = new();
+    private readonly Lock _diskNameLock = new();
     private IReadOnlyList<string>? _diskNames;
     private int _diskNameReads;
     private const int DiskScanEvery = 30;

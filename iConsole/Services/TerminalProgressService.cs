@@ -19,7 +19,7 @@ public sealed class TerminalProgressService : ITerminalProgressService, IConsole
     private readonly Func<TextWriter> _output;
     private readonly ConsoleOwnership? _ownership;
     private readonly bool _enabled;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private (TerminalProgressState State, long Percentage)? _requested;
 
     /// <param name="output">Where the sequences are written. Defaults to standard output, which is the terminal.</param>

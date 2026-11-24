@@ -20,7 +20,7 @@ public class ReplaceTextDialogCommand(
 
     public override bool CanExecute() => !editor.IsReadOnly;
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var dialog = new ReplaceTextDialog(editor, beepService, dateTimeProviderService, themeService);
         if (Control is not null)

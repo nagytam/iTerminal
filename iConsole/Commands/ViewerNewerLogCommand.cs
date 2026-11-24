@@ -13,7 +13,7 @@ public class ViewerNewerLogCommand(FileViewerDialog viewer) : Command
 
     public override bool CanExecute() => viewer.NewerLog is not null;
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (viewer.NewerLog is { } url)
         {

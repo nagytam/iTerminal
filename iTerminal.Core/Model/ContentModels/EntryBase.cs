@@ -166,7 +166,7 @@ public abstract record EntryBase : IEntry
         return color;
     }
 
-    public Color GetBackgroundColor(ColorScheme colorScheme, bool cursor, VisualState visualState)
+    public static Color GetBackgroundColor(ColorScheme colorScheme, bool cursor, VisualState visualState)
     {
         var color = colorScheme.Background;
         if (cursor)

@@ -25,7 +25,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
     private readonly IAudioDeviceService _deviceService;
     private readonly Serilog.ILogger? _logger;
 
-    private readonly object _requestLock = new();
+    private readonly Lock _requestLock = new();
     private readonly AutoResetEvent _wakeUp = new(false);
 
     private Thread? _pumpThread;

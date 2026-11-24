@@ -32,7 +32,7 @@ public class ExecuteCommand(
         return base.CanExecute() && ProgramFile.IsRunnable(FileAssociationRunner.LocalFilePath(entry.Url));
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         // A command already running (typed, or another program) owns the command line and the session: this one waits.
         if (terminalModel.IsRunning || terminalModel.ShellSessions is { IsBusy: true })

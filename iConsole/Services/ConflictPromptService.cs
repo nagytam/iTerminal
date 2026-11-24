@@ -18,7 +18,7 @@ public class ConflictPromptService(IServiceProvider serviceProvider, IThemeServi
         {
             var desktop = serviceProvider.GetRequiredService<IDesktop>();
             var dialog = new ConflictPromptDialog(title, message, themeService);
-            var root = desktop.Screens.First();
+            var root = desktop.Screens[0];
             await root.ShowDialogAsync(dialog);
             try
             {

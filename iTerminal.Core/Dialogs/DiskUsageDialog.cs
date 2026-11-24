@@ -384,11 +384,11 @@ public class DiskUsageDialog : Dialog
             }
 
             if (mouseEvent.LeftClicked
-                && (long)mouseEvent.Position.X >= (long)_lines.AbsolutePosition.X
-                && (long)mouseEvent.Position.X < (long)_lines.AbsolutePosition.X + _lines.ViewSize.Width)
+                && mouseEvent.Position.X >= _lines.AbsolutePosition.X
+                && mouseEvent.Position.X < _lines.AbsolutePosition.X + _lines.ViewSize.Width)
             {
                 // Three lines of heading (the folder, its totals, a blank) come before the first row.
-                var row = (int)((long)mouseEvent.Position.Y - (long)_lines.AbsolutePosition.Y) - 3;
+                var row = (int)(mouseEvent.Position.Y - _lines.AbsolutePosition.Y) - 3;
                 var index = _top + row;
                 if (row >= 0 && row < VisibleRows && index < Rows().Count)
                 {

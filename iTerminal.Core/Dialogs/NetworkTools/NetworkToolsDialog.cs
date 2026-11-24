@@ -245,7 +245,7 @@ public class NetworkToolsDialog : Dialog
             }
 
             _finishedStatus = outcome;
-        });
+        }, CancellationToken.None);
     }
 
     private void CancelRun()

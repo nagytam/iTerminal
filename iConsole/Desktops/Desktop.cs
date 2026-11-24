@@ -70,7 +70,7 @@ public class Desktop : IHostedService, IDesktop
     {
         Diagnostics.StartupTrace.Mark("desktop-start");
         _timerResolution = new TimerResolution(1);
-        _runTask = Task.Run(RunAsync);
+        _runTask = Task.Run(RunAsync, cancellationToken);
         return Task.CompletedTask;
     }
 
@@ -268,7 +268,7 @@ public class Desktop : IHostedService, IDesktop
 
     private void OnWindowSizeChanged(object? sender, Size e)
     {
-        Screens.First().OnWindowSizeChanged(sender, e);
+        Screens[0].OnWindowSizeChanged(sender, e);
         RenderInitialState();
     }
 

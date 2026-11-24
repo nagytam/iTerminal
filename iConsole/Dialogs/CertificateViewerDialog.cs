@@ -306,7 +306,7 @@ public class CertificateViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(CertificateViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

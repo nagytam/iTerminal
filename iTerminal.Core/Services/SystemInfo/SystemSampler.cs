@@ -160,7 +160,7 @@ public sealed class SystemSampler : ISystemSampler
             {
                 _loopCancellation = new CancellationTokenSource();
                 CancellationToken token = _loopCancellation.Token;
-                _ = Task.Run(() => RunLoopAsync(token));
+                _ = Task.Run(() => RunLoopAsync(token), CancellationToken.None);
             }
         }
 
@@ -469,7 +469,7 @@ public sealed class SystemSampler : ISystemSampler
             : Probed<double>.Measuring;
     }
 
-    private Probed<BatteryReading> BatteryValue(Probed<BatteryReading?> read) =>
+    private static Probed<BatteryReading> BatteryValue(Probed<BatteryReading?> read) =>
         read.State == ProbeState.Ok && read.Value is { } battery
             ? Probed<BatteryReading>.Ok(battery)
             : read.State == ProbeState.Ok ? Probed<BatteryReading>.NotReported : Retag<BatteryReading?, BatteryReading>(read.State);

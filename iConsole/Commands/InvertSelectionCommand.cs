@@ -8,7 +8,7 @@ public class InvertSelectionCommand<T>(IScrollableModel scrollableModel, IListBo
     public override Key? Key { get; init; } = 
         new Key(ConsoleKey.Insert, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var cursorPositionY = (int)scrollableModel.CursorPosition.Y;
         var listBoxItems = listBoxModel.ListItems.ToList();

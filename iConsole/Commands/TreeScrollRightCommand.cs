@@ -8,7 +8,7 @@ public class TreeScrollRightCommand(IHierarchicalItemModel root) : Command
     public override Key? Key { get; init; } = 
         new Key(ConsoleKey.RightArrow, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         var focusedItem = root.GetFocusedItem();
         if (focusedItem != null && focusedItem.Children.Any())
@@ -20,7 +20,7 @@ public class TreeScrollRightCommand(IHierarchicalItemModel root) : Command
                 return Task.CompletedTask;
             }
 
-            var nextItem = focusedItem.Children.AsSnapshot().First();
+            var nextItem = focusedItem.Children.AsSnapshot()[0];
             if (nextItem is not null)
             {
                 focusedItem.IsFocused = false;

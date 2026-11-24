@@ -35,7 +35,7 @@ public class FileDisguiseCheckerTest
             string path = Path.Combine(folder, "report.pdf");
             await File.WriteAllBytesAsync(path, [0x4D, 0x5A, 0x90, 0x00, 0x03]);
 
-            FileKind kind = await new FileDisguiseChecker().DetectAsync(path);
+            FileKind kind = await FileDisguiseChecker.DetectAsync(path);
 
             Assert.AreEqual(FileKind.Executable, kind);
             Assert.IsTrue(FileDisguiseCache.TryGet(path, out FileKind cached));
@@ -52,7 +52,7 @@ public class FileDisguiseCheckerTest
     public async Task DetectAsync_AnUnreadableFileIsUnknownAndNotCached()
     {
         string path = Path.Combine(NewFolder(), "missing.pdf");
-        Assert.AreEqual(FileKind.Unknown, await new FileDisguiseChecker().DetectAsync(path));
+        Assert.AreEqual(FileKind.Unknown, await FileDisguiseChecker.DetectAsync(path));
         Assert.IsFalse(FileDisguiseCache.TryGet(path, out _));
     }
 

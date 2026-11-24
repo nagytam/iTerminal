@@ -260,7 +260,7 @@ public class CompareFoldersDialog : Dialog
                 _progress = string.Empty;
                 StateHasChanged();
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>

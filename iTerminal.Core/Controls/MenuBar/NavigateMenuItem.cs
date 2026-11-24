@@ -55,8 +55,8 @@ public class NavigateMenuItem : MenuItem
         AddMenuItem(new MenuItem("Go To Folder\tCtrl+F1",  folderSelectorCommand, [], themeService));
         AddMenuItem(new MenuItem("Switch Panels\tCtrl+U",  new SwitchPanelsCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Zoom Panel\tCtrl+Shift+Z", new iTerminal.Core.Commands.TogglePanelZoomCommand(content), [], themeService));
-        AddMenuItem(new MenuItem("Same Folder in Other Panel	Ctrl+Shift+D", new iTerminal.Core.Commands.SameFolderInOtherPanelCommand(contentModelService), [], themeService));
-        AddMenuItem(new MenuItem("Show Hidden Files	Ctrl+Shift+S", new iTerminal.Core.Commands.ToggleHiddenFilesCommand(contentModelService, settingsService), [], themeService));
+        AddMenuItem(new MenuItem("Same Folder in Other Panel\tCtrl+Shift+D", new iTerminal.Core.Commands.SameFolderInOtherPanelCommand(contentModelService), [], themeService));
+        AddMenuItem(new MenuItem("Show Hidden Files\tCtrl+Shift+S", new iTerminal.Core.Commands.ToggleHiddenFilesCommand(contentModelService, settingsService), [], themeService));
         if (sortDialog is not null)
         {
             AddMenuItem(new MenuItem("Sort By…\tShift+F11", new SortDialogCommand(sortDialog, contentModelService), [], themeService));

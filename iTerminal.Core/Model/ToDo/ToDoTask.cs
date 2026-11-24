@@ -159,7 +159,7 @@ public sealed class ToDoStore(ISettingsService settingsService)
 
     private static readonly JsonSerializerOptions Json = new();
 
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private readonly List<ToDoTask> _tasks = [];
     private bool _loaded;
 

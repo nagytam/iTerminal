@@ -172,7 +172,7 @@ public class ToolsMenuItem : MenuItem
             {
                 string label = string.IsNullOrEmpty(command.KeyDisplayText)
                     ? command.Title
-                    : $"{command.Title}	{command.KeyDisplayText}";
+                    : $"{command.Title}\t{command.KeyDisplayText}";
                 entries.Add(new MenuItem(label, command, [], themeService));
             }
             submenus.Add(new MenuItem(groupTitles[key], null, entries, themeService));

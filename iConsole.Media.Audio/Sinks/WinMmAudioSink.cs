@@ -24,7 +24,7 @@ public sealed class WinMmAudioSink : IAudioSink
     private const int WhdrDone = 0x00000001;
     private const int WhdrPrepared = 0x00000002;
 
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
 
     private IntPtr _handle;
     private IntPtr[] _headerPointers = [];

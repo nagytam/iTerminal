@@ -176,7 +176,7 @@ public partial class SshFileSystemService : ISshFileSystemService
             try
             {
                 using SshCommand cmd = _client.RunCommand("df -h");
-                var diskSpace = cmd.Result.Split("\n").First(l => l.EndsWith("/"));
+                var diskSpace = cmd.Result.Split("\n").First(l => l.EndsWith('/'));
                 var regex = RegexDf();
                 var match = regex.Match(diskSpace);
                 if (match.Success)
@@ -215,7 +215,7 @@ public partial class SshFileSystemService : ISshFileSystemService
                         }
                         if (name != ".")
                         {
-                            var folderPostFix = listEntry.StartsWith("d") ? "/" : string.Empty;
+                            var folderPostFix = listEntry.StartsWith('d') ? "/" : string.Empty;
                             var size = match.Groups[1].Value.ToFileSize(); ;
                             var date = match.Groups[2].Value.Replace("  ", " ");
                             var time = match.Groups[3].Value;

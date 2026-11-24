@@ -132,7 +132,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     {
         public override string Title => "Log out of an SMB host";
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is FolderSelectorSmbTabPage page)
             {
@@ -146,7 +146,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
     {
         public override string Title => "Log in to an SMB host";
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is FolderSelectorSmbTabPage page)
             {
@@ -161,7 +161,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         public override Key? Key { get; init; } = new Key(ConsoleKey.Enter, false, false, false);
         public override string Title => "Select SMB host or share";
 
-        public override async Task ExecuteAsync(object? arg)
+        public override async Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is not FolderSelectorSmbTabPage page)
             {
@@ -567,13 +567,13 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         }
 
         // The prompts are answered on the UI thread; nothing below touches the control tree after an await.
-        var username = await _promptService.AskAsync(UsernamePrompt(host));
+        var username = await _promptService.AskAsync(UsernamePrompt(host), CancellationToken.None);
         if (string.IsNullOrWhiteSpace(username))
         {
             Interlocked.Exchange(ref _loginBusy, 0);
             return;
         }
-        var password = await _promptService.AskAsync(PasswordPrompt(username, host));
+        var password = await _promptService.AskAsync(PasswordPrompt(username, host), CancellationToken.None);
         if (password is null)
         {
             Interlocked.Exchange(ref _loginBusy, 0);
@@ -588,7 +588,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
         SmbListing? listing = null;
         try
         {
-            listing = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password);
+            listing = await _networkDiscoveryService.ListSharesWithLoginAsync(host, username, password, CancellationToken.None);
         }
         catch (Exception)
         {

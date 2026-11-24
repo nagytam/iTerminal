@@ -212,7 +212,7 @@ public class MenuItem : PopUpWindow
             }
             column += menuItem.Text.Length + 1;
         }
-        var screenWidth = (long)ViewSize.Width;
+        var screenWidth = ViewSize.Width;
         if (screenWidth > 0 && column + dropDownWidth > screenWidth)
         {
             column = Math.Max(0, screenWidth - dropDownWidth);

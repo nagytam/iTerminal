@@ -32,7 +32,7 @@ public sealed class VideoPlayer : IDisposable
     private static readonly TimeSpan MaxWait = TimeSpan.FromMilliseconds(50);
 
     private readonly IVideoDecoder _decoder;
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private readonly AutoResetEvent _wake = new(false);
     private readonly Thread _thread;
     private readonly double _frameRate;

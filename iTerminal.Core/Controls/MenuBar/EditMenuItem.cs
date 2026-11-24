@@ -36,14 +36,14 @@ public class EditMenuItem : MenuItem
         {
             // The system clipboard: what another program (Explorer, a mail client, an upload dialog)
             // can paste, and what it copied can be pasted here.
-            AddMenuItem(new MenuItem("Copy to Clipboard	Ctrl+C",    new Commands.Clipboard.ClipboardCopyCommand(clipboardOperations, contentModelService), [], themeService));
-            AddMenuItem(new MenuItem("Cut to Clipboard	Ctrl+X",     new Commands.Clipboard.ClipboardCutCommand(clipboardOperations, contentModelService), [], themeService));
-            AddMenuItem(new MenuItem("Paste from Clipboard	Ctrl+V", new Commands.Clipboard.ClipboardPasteCommand(clipboardOperations, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Copy to Clipboard\tCtrl+C",    new Commands.Clipboard.ClipboardCopyCommand(clipboardOperations, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Cut to Clipboard\tCtrl+X",     new Commands.Clipboard.ClipboardCutCommand(clipboardOperations, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Paste from Clipboard\tCtrl+V", new Commands.Clipboard.ClipboardPasteCommand(clipboardOperations, contentModelService), [], themeService));
             AddMenuItem(new MenuItem("-", null, [], themeService));
         }
 
-        AddMenuItem(new MenuItem("Copy Path	Ctrl+Shift+Insert", new iTerminal.Core.Commands.CopyPathCommand(contentModelService), [], themeService));
-        AddMenuItem(new MenuItem("Copy Name	Ctrl+Shift+N", new iTerminal.Core.Commands.CopyNameCommand(contentModelService), [], themeService));
+        AddMenuItem(new MenuItem("Copy Path\tCtrl+Shift+Insert", new iTerminal.Core.Commands.CopyPathCommand(contentModelService), [], themeService));
+        AddMenuItem(new MenuItem("Copy Name\tCtrl+Shift+N", new iTerminal.Core.Commands.CopyNameCommand(contentModelService), [], themeService));
         // The panel has its own copy bound to the Menu key; this one is how to find it, and how to reach the menu on a
         // terminal that never sends that key. It acts on the focused panel, or the last one.
         AddMenuItem(new MenuItem("Context Menu\tMenu", new PanelContextMenuCommand(contentModelService), [], themeService));
@@ -102,7 +102,7 @@ public class EditMenuItem : MenuItem
         }
         if (fileDiffDialog is not null)
         {
-            AddMenuItem(new MenuItem("Compare Files	Ctrl+F10", new DiffFilesDialogCommand(fileDiffDialog, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Compare Files\tCtrl+F10", new DiffFilesDialogCommand(fileDiffDialog, contentModelService), [], themeService));
         }
     }
 }

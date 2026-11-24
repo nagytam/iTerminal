@@ -86,7 +86,7 @@ public class PackageManagerDialog : SplitPaneDialog
 
     private readonly ConcurrentObservableCollection<PackageInfo> _packageItems = new();
     private readonly ConcurrentObservableCollection<string> _outputItems = new();
-    private readonly object _outputLock = new();
+    private readonly Lock _outputLock = new();
     private readonly List<string> _output = [];
 
     private readonly PackageListBox _packageListBox;
@@ -239,7 +239,7 @@ public class PackageManagerDialog : SplitPaneDialog
     private void StartRefreshInstalled() =>
         StartQuery(
             string.Format(UiText.Get("Packages.LoadingInstalled", "Loading installed packages from {0}…"), _packageManagerService.DisplayName),
-            ct => _packageManagerService.GetInstalledPackagesAsync(),
+            ct => _packageManagerService.GetInstalledPackagesAsync(CancellationToken.None),
             packages =>
             {
                 _installed = packages;
@@ -257,7 +257,7 @@ public class PackageManagerDialog : SplitPaneDialog
         _searchQuery = query;
         StartQuery(
             $"Searching for \"{query}\"…",
-            ct => _packageManagerService.SearchPackagesAsync(query),
+            ct => _packageManagerService.SearchPackagesAsync(query, CancellationToken.None),
             packages =>
             {
                 _searchResults = packages;
@@ -318,7 +318,7 @@ public class PackageManagerDialog : SplitPaneDialog
             // showing is a moment in which Enter acts on a row that is about to be replaced.
             _loading = false;
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private void SyncPackageList()
@@ -449,7 +449,7 @@ public class PackageManagerDialog : SplitPaneDialog
             {
                 StartRefreshInstalled();
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void Cancel()

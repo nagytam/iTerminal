@@ -85,7 +85,7 @@ public class FileMenuItem : MenuItem
         }
         if (editLinkDialog is not null)
         {
-            AddMenuItem(new MenuItem("Edit Link	Ctrl+Shift+L", new EditLinkDialogCommand(editLinkDialog, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Edit Link\tCtrl+Shift+L", new EditLinkDialogCommand(editLinkDialog, contentModelService), [], themeService));
         }
         if (compressDialog is not null)
         {
@@ -101,23 +101,23 @@ public class FileMenuItem : MenuItem
         }
         if (hashManifestDialog is not null)
         {
-            AddMenuItem(new MenuItem(UiText.Get("Menu.HashManifestItem", "Hash Manifest…") + "	Shift+Alt+F3", new HashManifestDialogCommand(hashManifestDialog, contentModelService, fileSystemResolver), [], themeService));
+            AddMenuItem(new MenuItem(UiText.Get("Menu.HashManifestItem", "Hash Manifest…") + "\tShift+Alt+F3", new HashManifestDialogCommand(hashManifestDialog, contentModelService, fileSystemResolver), [], themeService));
         }
         if (signatureDialog is not null)
         {
-            AddMenuItem(new MenuItem("Signatures	Ctrl+Shift+F7", new SignatureDialogCommand(signatureDialog, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Signatures\tCtrl+Shift+F7", new SignatureDialogCommand(signatureDialog, contentModelService), [], themeService));
         }
         if (printDialog is not null)
         {
-            AddMenuItem(new MenuItem(UiText.Get("Menu.PrintItem", "Print…") + "	Ctrl+P", new PrintDialogCommand(printDialog, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem(UiText.Get("Menu.PrintItem", "Print…") + "\tCtrl+P", new PrintDialogCommand(printDialog, contentModelService), [], themeService));
         }
         if (secureWipeDialog is not null)
         {
-            AddMenuItem(new MenuItem("Secure Wipe	Ctrl+Shift+F8", new SecureWipeDialogCommand(secureWipeDialog, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Secure Wipe\tCtrl+Shift+F8", new SecureWipeDialogCommand(secureWipeDialog, contentModelService), [], themeService));
         }
         if (fileEncryptionDialog is not null)
         {
-            AddMenuItem(new MenuItem(UiText.Get("Menu.EncryptFiles", "Encrypt / Decrypt…") + "	Ctrl+Shift+E", new FileEncryptionDialogCommand(fileEncryptionDialog, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem(UiText.Get("Menu.EncryptFiles", "Encrypt / Decrypt…") + "\tCtrl+Shift+E", new FileEncryptionDialogCommand(fileEncryptionDialog, contentModelService), [], themeService));
         }
         if (malwareScanService is { IsAvailable: true })
         {

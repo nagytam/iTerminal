@@ -19,7 +19,7 @@ public sealed class UserGroupManagerDialog : Dialog
 
     private const int DialogWidth = 78;
     private const int DialogHeight = 24;
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
     private IReadOnlyList<LocalUser> _users = [];
     private IReadOnlyList<LocalGroup> _groups = [];
     private Listing _listing;

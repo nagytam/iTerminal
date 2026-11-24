@@ -43,7 +43,7 @@ public sealed class MapTileService : IMapTileService, IDisposable
     private readonly ConcurrentDictionary<MapTileKey, MapTile> _memory = new();
     private readonly ConcurrentDictionary<MapTileKey, DateTime> _failed = new();
     private readonly SemaphoreSlim _network = new(2);
-    private readonly object _packLock = new();
+    private readonly Lock _packLock = new();
     private List<string>? _packs;
 
     public MapTileService(IWebFetcher fetcher, MapStore store, string directory)

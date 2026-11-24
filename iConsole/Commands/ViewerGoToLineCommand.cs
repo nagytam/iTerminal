@@ -18,7 +18,7 @@ public class ViewerGoToLineCommand(
     /// <summary>Only in the text view: a hex dump has lines of bytes, not lines of text.</summary>
     public override bool CanExecute() => base.CanExecute() && viewer.IsVisible;
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var dialog = new GoToLineDialog(viewer, beepService, dateTimeProviderService, themeService);
         if (Control is not null)

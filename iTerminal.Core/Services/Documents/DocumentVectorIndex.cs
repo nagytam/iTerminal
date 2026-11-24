@@ -48,7 +48,7 @@ public sealed class DocumentVectorIndex
     private Snapshot? _snapshot;
 
     /// <summary>Documents embedded with <paramref name="model"/>.</summary>
-    public int Count(iTerminalDbContext context, string model)
+    public static int Count(iTerminalDbContext context, string model)
     {
         EnsureCreated(context);
         using SqliteCommand command = CreateCommand(context, $"SELECT COUNT(*) FROM {StateTable} WHERE Model = $model;");
@@ -61,7 +61,7 @@ public sealed class DocumentVectorIndex
     /// The documents whose text is in <c>DocumentContents</c> but whose vectors are missing or were made by another
     /// model. Sorted, so a run is repeatable.
     /// </summary>
-    public List<string> Pending(iTerminalDbContext context, string model)
+    public static List<string> Pending(iTerminalDbContext context, string model)
     {
         EnsureCreated(context);
         using SqliteCommand command = CreateCommand(
@@ -141,7 +141,7 @@ public sealed class DocumentVectorIndex
     /// The text of one stored passage, or empty when there is none. The passage is stored as it was embedded, so a results
     /// row needs no offset into the document's text (SQL substring counts characters, not the UTF-16 units the offsets use).
     /// </summary>
-    public string ReadPassage(iTerminalDbContext context, string path, int chunkStart)
+    public static string ReadPassage(iTerminalDbContext context, string path, int chunkStart)
     {
         // The tables are made by the Search that produced these offsets; not repeated per row, which would be 50 DDL statements per query.
         using SqliteCommand command = CreateCommand(

@@ -122,16 +122,16 @@ public abstract class ContentModelAsyncDrive : ContentModelBase, IFileSystemProv
         SetUrl(new Url(string.IsNullOrWhiteSpace(stored) || !stored.StartsWith(Scheme, StringComparison.Ordinal) ? Scheme : stored));
     }
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
-        _settingsService.Set(Name, url);
-        _folderHistoryService?.Add(url);
+        _settingsService.Set(Name, path);
+        _folderHistoryService?.Add(path);
         StatusMessage = string.Empty;
         Filter = null;
 
-        Url = url;
+        Url = path;
         ResetNavigation();
-        Entries.ReplaceAll([ParentEntry(url)]);
+        Entries.ReplaceAll([ParentEntry(path)]);
         Refresh();
     }
 
@@ -201,7 +201,7 @@ public abstract class ContentModelAsyncDrive : ContentModelBase, IFileSystemProv
                     Update();
                 }
             }
-        });
+        }, CancellationToken.None);
     }
 
     private bool IsCurrent(int generation, Url url) =>

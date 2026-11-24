@@ -112,7 +112,7 @@ public sealed class FileSearchService(ILogger? logger = null) : IFileSearchServi
                 logger?.Warning(exception, "File search failed");
                 Finish(generation, $"Search failed: {exception.Message}", null);
             }
-        });
+        }, CancellationToken.None);
 
         return SearchTask;
     }

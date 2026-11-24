@@ -73,8 +73,8 @@ public class RuntimeDependencyDialog : Dialog
     {
         if (Parent is not null)
         {
-            int width = (int)Math.Max(20, Math.Min(PreferredWidth, (long)Parent.ViewSize.Width));
-            int height = (int)Math.Max(FixedRows, Math.Min(FixedRows + RowsPerDependency * Actionable().Count, (long)Parent.ViewSize.Height));
+            int width = (int)Math.Max(20, Math.Min(PreferredWidth, Parent.ViewSize.Width));
+            int height = (int)Math.Max(FixedRows, Math.Min(FixedRows + RowsPerDependency * Actionable().Count, Parent.ViewSize.Height));
             CenterInParent(new Size(width, height));
         }
 

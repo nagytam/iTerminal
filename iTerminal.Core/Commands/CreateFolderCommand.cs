@@ -23,7 +23,7 @@ public class CreateFolderCommand(
         return base.CanExecute();
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         if (Control?.Parent is CreateFolderDialog createFolderDialog)
         {

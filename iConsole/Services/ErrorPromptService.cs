@@ -26,7 +26,7 @@ public class ErrorPromptService(IServiceProvider serviceProvider, IThemeService 
         {
             var desktop = serviceProvider.GetRequiredService<IDesktop>();
             var dialog = new ErrorPromptDialog(title, message, themeService, acceptLabel, declineLabel);
-            var root = desktop.Screens.First();
+            var root = desktop.Screens[0];
             await root.ShowDialogAsync(dialog);
             try
             {

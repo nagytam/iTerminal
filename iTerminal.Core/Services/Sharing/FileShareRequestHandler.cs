@@ -91,14 +91,14 @@ internal sealed class FileShareRequestHandler
     }
 
     /// <summary>Writes a status-only error response (400 or 413) for a head that could not be read.</summary>
-    public Task WriteErrorAsync(Stream output, int status, CancellationToken cancellationToken) => status switch
+    public static Task WriteErrorAsync(Stream output, int status, CancellationToken cancellationToken) => status switch
     {
         413 => WriteStatusAsync(output, 413, "Content Too Large", null, cancellationToken),
         _ => WriteStatusAsync(output, 400, "Bad Request", null, cancellationToken),
     };
 
     /// <summary>The path to <paramref name="relative"/> under <paramref name="root"/>, or null when a segment is refused.</summary>
-    private string? Resolve(string root, string[] relative)
+    private static string? Resolve(string root, string[] relative)
     {
         string candidate = root;
         foreach (string segment in relative)

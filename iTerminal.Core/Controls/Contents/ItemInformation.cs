@@ -229,7 +229,7 @@ public class ItemInformation : iConsole.Controls.Control
         {
             try
             {
-                await _disguiseChecker.DetectAsync(path, source.Token);
+                await FileDisguiseChecker.DetectAsync(path, source.Token);
                 // Stale-result guard: the cursor must still be on the file that was read.
                 if (!source.IsCancellationRequested
                     && ReferenceEquals(ContentModel, expectedModel)
@@ -247,7 +247,7 @@ public class ItemInformation : iConsole.Controls.Control
             {
                 _logger?.Warning(ex, "File type check failed for {Url}", expectedUrl);
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void CancelPendingFolderInformationRefresh()
@@ -348,7 +348,7 @@ public class ItemInformation : iConsole.Controls.Control
 
                 cancellationTokenSource.Dispose();
             }
-        });
+        }, CancellationToken.None);
     }
 
     public override void OnInitializeCommands()

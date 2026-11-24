@@ -111,7 +111,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransient
         {
             return;
         }
-        var favourite = _favourites.AsSnapshot().ElementAt(index);
+        var favourite = _favourites.AsSnapshot()[index];
         _pendingDeleteIndex = index;
         _pendingDeleteUrl = favourite;
         // The question has to fit the status line whole, so the name gives up the room the rest of the question needs.
@@ -146,7 +146,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransient
         // The delete acts on the cursor, so it runs only if the cursor still rests on the favourite the question named.
         if (yes && pending is int index && pendingUrl is not null
             && (int)_listBox.ScrollableModel.CursorPosition.Y == index
-            && index < _favourites.Count && _favourites.AsSnapshot().ElementAt(index).FullUrl == pendingUrl.FullUrl)
+            && index < _favourites.Count && _favourites.AsSnapshot()[index].FullUrl == pendingUrl.FullUrl)
         {
             await _deleteFavouriteCommand.RunAsync(null);
         }
@@ -176,7 +176,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransient
 
         public override bool CanExecute() => Control?.Parent is FolderSelectorFavouritesTabPage page && page._favourites.Any();
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is FolderSelectorFavouritesTabPage page)
             {
@@ -256,7 +256,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransient
         yield return ("Ctrl+D", iConsole.Localization.UiText.Get("FolderSelector.Hint.RemoveFavourite", "Remove the favourite under the cursor."));
     }
 
-    private IEnumerable<Url> FilterAndSortItems(IEnumerable<Url> items, CancellationToken cancellationToken)
+    private static IEnumerable<Url> FilterAndSortItems(IEnumerable<Url> items, CancellationToken cancellationToken)
     {
         return items;
     }

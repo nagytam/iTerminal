@@ -46,7 +46,7 @@ public class ClipboardCopyCommand(
 
     public override Key? Key { get; init; } = key ?? new Key(ConsoleKey.C, false, false, true);
 
-    public override bool CanExecute() => Operations.LocalPathsOf(TargetModel).Count > 0;
+    public override bool CanExecute() => FileClipboardOperations.LocalPathsOf(TargetModel).Count > 0;
 
     public override Task ExecuteAsync(object? args) => Operations.CopyAsync(TargetModel, cut: false);
 }
@@ -64,7 +64,7 @@ public class ClipboardCutCommand(
 
     public override Key? Key { get; init; } = key ?? new Key(ConsoleKey.X, false, false, true);
 
-    public override bool CanExecute() => Operations.LocalPathsOf(TargetModel).Count > 0;
+    public override bool CanExecute() => FileClipboardOperations.LocalPathsOf(TargetModel).Count > 0;
 
     public override Task ExecuteAsync(object? args) => Operations.CopyAsync(TargetModel, cut: true);
 }
@@ -82,7 +82,7 @@ public class ClipboardPasteCommand(
 
     public override Key? Key { get; init; } = key ?? new Key(ConsoleKey.V, false, false, true);
 
-    public override bool CanExecute() => Operations.CanPasteInto(TargetModel);
+    public override bool CanExecute() => FileClipboardOperations.CanPasteInto(TargetModel);
 
     public override Task ExecuteAsync(object? args) =>
         Control is iConsole.Controls.Control host ? Operations.PasteAsync(TargetModel, host) : Task.CompletedTask;

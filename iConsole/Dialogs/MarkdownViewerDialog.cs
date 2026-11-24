@@ -175,7 +175,7 @@ public class MarkdownViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(MarkdownViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

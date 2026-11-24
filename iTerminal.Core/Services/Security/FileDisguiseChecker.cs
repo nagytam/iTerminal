@@ -8,7 +8,7 @@ namespace iTerminal.Core.Services.Security;
 /// </summary>
 public class FileDisguiseChecker
 {
-    public async Task<FileKind> DetectAsync(string path, CancellationToken cancellationToken = default)
+    public static async Task<FileKind> DetectAsync(string path, CancellationToken cancellationToken = default)
     {
         FileKind kind = FileKind.Unknown;
         try

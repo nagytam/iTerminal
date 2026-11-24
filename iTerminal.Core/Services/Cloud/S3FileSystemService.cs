@@ -270,7 +270,7 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
 
     // --- listing ------------------------------------------------------------------------------
 
-    private string BucketRoot(Url url, string bucket)
+    private static string BucketRoot(Url url, string bucket)
     {
         var user = string.IsNullOrEmpty(url.Username) ? string.Empty : url.Username + "@";
         return Container.S3 + user + bucket + "/";

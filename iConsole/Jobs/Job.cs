@@ -13,12 +13,12 @@ public abstract class Job : IJob
         Desktop = desktop;
     }
 
-    public async Task ExecuteAsync(CancellationToken cancellationToken)
+    public async Task ExecuteAsync(CancellationToken token)
     {
         OnStart();
         try
         {
-            await RunAsync(cancellationToken);
+            await RunAsync(token);
         }
         catch 
         {

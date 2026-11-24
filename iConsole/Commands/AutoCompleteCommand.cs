@@ -37,7 +37,7 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
     /// <summary>The same wait for an <see cref="IBlockingCompletionModel"/>, whose update lists a folder (bounded at 750 ms by the model).</summary>
     internal static readonly TimeSpan BlockingUpdateWait = TimeSpan.FromMilliseconds(1000);
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         // Matches are computed on a background task per keystroke. A Tab pressed straight after
         // typing used to read the matches of the keystroke *before* — completing to nothing, or to a
@@ -57,11 +57,11 @@ public class AutoCompleteCommand(ITextModel textModel, ICompletionModel completi
                 autoCompletion.SuppressNextVisibilityUpdate();
                 // Use the highlighted item in the list when available.
                 var selectedValue = autoCompletion.GetSelectedValue();
-                textModel.Lines[0] = selectedValue ?? completionModel.MatchingValues.First();
+                textModel.Lines[0] = selectedValue ?? completionModel.MatchingValues[0];
             }
             else
             {
-                textModel.Lines[0] = completionModel.MatchingValues.First();
+                textModel.Lines[0] = completionModel.MatchingValues[0];
             }
             textModel.TriggerPropertyChanged();
             Control?.Hide();

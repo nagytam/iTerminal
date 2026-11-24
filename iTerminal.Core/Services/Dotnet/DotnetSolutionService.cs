@@ -137,7 +137,7 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
 
     private static bool IsProjectPath(string? value) =>
         !string.IsNullOrWhiteSpace(value)
-        && ProjectExtensions.Any(extension => value!.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
+        && ProjectExtensions.Any(extension => value.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
 
     public SbomResult GenerateSbom(SolutionInfo solution, SbomFormat format)
     {
@@ -355,7 +355,7 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
 
             // The process has exited, but a child it left running (MSBuild keeps a build node alive) can hold the
             // output open. Wait for the last lines a short while, not for the child to finish.
-            await Task.WhenAny(Task.Run(() => process.WaitForExit()), Task.Delay(OutputGracePeriod));
+            await Task.WhenAny(Task.Run(() => process.WaitForExit(), cancellationToken), Task.Delay(OutputGracePeriod, cancellationToken));
             return exitCode;
         }
         catch (OperationCanceledException)

@@ -161,8 +161,8 @@ public class HexViewer : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-        long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        long relativeX = mouseEvent.Position.X - AbsolutePosition.X;
+        long relativeY = mouseEvent.Position.Y - AbsolutePosition.Y;
         if (!IsEnabled || RowCount == 0 || relativeX < 0 || relativeX >= ViewSize.Width || relativeY < 0 || relativeY >= ViewSize.Height)
         {
             return isHandled;
@@ -179,7 +179,7 @@ public class HexViewer : Control
 
         if (mouseEvent.LeftClicked)
         {
-            long row = (long)ScrollableModel.ScrollPosition.Y + relativeY;
+            long row = ScrollableModel.ScrollPosition.Y + relativeY;
             if (row < RowCount)
             {
                 if (!IsFocused)

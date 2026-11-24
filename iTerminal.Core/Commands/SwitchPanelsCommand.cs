@@ -17,7 +17,7 @@ public class SwitchPanelsCommand(
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.U, false, false, true);
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var left = Content.Left;
         var right = Content.Right;

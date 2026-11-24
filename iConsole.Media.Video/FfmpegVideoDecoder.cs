@@ -44,7 +44,7 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
     public static void ResetProbeAvailability() => _isProbeAvailable = null;
 
     private readonly string _path;
-    private readonly object _processLock = new();
+    private readonly Lock _processLock = new();
 
     private Process? _process;
     private Stream? _output;

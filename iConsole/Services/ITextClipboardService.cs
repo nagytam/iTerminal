@@ -19,7 +19,7 @@ public interface ITextClipboardService
 /// <summary>A clipboard that lives in this process only: the default, and what tests use.</summary>
 public sealed class InProcessTextClipboardService : ITextClipboardService
 {
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private string? _text;
 
     public Task SetTextAsync(string text, CancellationToken cancellationToken = default)

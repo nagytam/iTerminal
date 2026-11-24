@@ -123,7 +123,7 @@ public partial class AiPanelTools
     #region Reading metadata
 
     /// <summary>The entry named <paramref name="name"/>, else the one under the cursor, as a local path.</summary>
-    private bool TryLocalEntry(IContentModel model, string? name, out IEntry entry, out string localPath, out string error)
+    private static bool TryLocalEntry(IContentModel model, string? name, out IEntry entry, out string localPath, out string error)
     {
         entry = null!;
         localPath = string.Empty;

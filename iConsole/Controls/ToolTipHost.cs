@@ -125,7 +125,7 @@ public class ToolTipHost : Control
         var text = " " + target.ToolTipText + " ";
         var root = GetRootControl();
         // One line of text inside a border; wider than the screen, it is cut at the edge rather than wrapped.
-        var width = (long)Math.Min(text.Length + 2, Math.Max(3, root.ViewSize.Width));
+        var width = Math.Min(text.Length + 2, Math.Max(3, root.ViewSize.Width));
         const long height = 3;
         var tip = new Popup(ThemeService)
         {

@@ -246,7 +246,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             {
                 _isBusy = false;
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F5: refreshes the monitor and the security on screen.</summary>
@@ -286,7 +286,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             {
                 _isBusy = false;
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Only the newest lookup may park its result: an older one that lands late is dropped.</summary>
@@ -401,7 +401,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             }
 
             ParkHistory(generation, bars);
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Applies a parked history on the UI thread.</summary>
@@ -521,7 +521,7 @@ public class MarketTerminalDialog : SplitPaneDialog
             {
                 _isBusy = false;
             }
-        });
+        }, CancellationToken.None);
     }
 
     #endregion

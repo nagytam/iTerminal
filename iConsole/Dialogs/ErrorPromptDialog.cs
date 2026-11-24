@@ -22,7 +22,7 @@ public class ErrorPromptDialog : Dialog
 
     private sealed class ChoiceCommand(TaskCompletionSource<bool> choice, bool result) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             choice.TrySetResult(result);
             Control?.Parent?.Close();

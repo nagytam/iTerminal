@@ -49,7 +49,7 @@ public sealed class PromptService(
         try
         {
             var desktop = serviceProvider.GetRequiredService<IDesktop>();
-            var root = desktop.Screens.First();
+            var root = desktop.Screens[0];
             await root.ShowDialogAsync(dialog);
             try
             {

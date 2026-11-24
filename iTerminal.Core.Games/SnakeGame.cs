@@ -332,7 +332,7 @@ public class SnakeGame : GameBase
     /// Whether a snake whose head moves to <paramref name="head"/> runs into a wall, its own body (the tail moves away unless it
     /// bites) or the other snake's body (the other tail moves away unless the other snake bites), or into the other head.
     /// </summary>
-    private bool Crashes((int X, int Y) head, bool eats, List<(int X, int Y)> own, List<(int X, int Y)> other, bool headOnHead, int otherBlockingCount)
+    private static bool Crashes((int X, int Y) head, bool eats, List<(int X, int Y)> own, List<(int X, int Y)> other, bool headOnHead, int otherBlockingCount)
     {
         if (OutOfBounds(head) || headOnHead)
         {

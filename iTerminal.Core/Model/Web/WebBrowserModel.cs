@@ -268,7 +268,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
 
     private readonly List<WebTab> _tabs = [new WebTab()];
     private int _active;
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
 
     public WebBrowserStore Store => store;
     public string DownloadDirectory => downloadDirectory;
@@ -470,7 +470,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
         return true;
     }
 
-    public void Stop(WebTab tab)
+    public static void Stop(WebTab tab)
     {
         lock (tab.Sync)
         {
@@ -743,7 +743,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
         return LoadAsync(tab, request, replace: false);
     }
 
-    public void ResetForm(WebTab tab, WebField field)
+    public static void ResetForm(WebTab tab, WebField field)
     {
         lock (tab.Sync)
         {
@@ -760,7 +760,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
     }
 
     /// <summary>Checks a radio button (and unchecks the others of its group) or flips a checkbox.</summary>
-    public void Toggle(WebTab tab, WebField field)
+    public static void Toggle(WebTab tab, WebField field)
     {
         lock (tab.Sync)
         {
@@ -786,7 +786,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
         }
     }
 
-    public void CycleOption(WebTab tab, WebField field, int step)
+    public static void CycleOption(WebTab tab, WebField field, int step)
     {
         lock (tab.Sync)
         {
@@ -798,7 +798,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
         }
     }
 
-    public void SetValue(WebTab tab, WebField field, string value)
+    public static void SetValue(WebTab tab, WebField field, string value)
     {
         lock (tab.Sync)
         {
@@ -807,7 +807,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
         }
     }
 
-    public WebField? FieldOf(WebTab tab, WebItem item)
+    public static WebField? FieldOf(WebTab tab, WebItem item)
     {
         lock (tab.Sync)
         {
@@ -815,7 +815,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
         }
     }
 
-    public void Say(WebTab tab, string message)
+    public static void Say(WebTab tab, string message)
     {
         lock (tab.Sync)
         {
@@ -832,7 +832,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
     /// Makes sure the page is laid out for <paramref name="width"/>: starts a background layout when it is
     /// not, and keeps showing the old one meanwhile. Called from <c>Draw</c>, so it only starts a task.
     /// </summary>
-    public void EnsureLayout(WebTab tab, int width)
+    public static void EnsureLayout(WebTab tab, int width)
     {
         WebHistoryEntry entry;
         bool source;

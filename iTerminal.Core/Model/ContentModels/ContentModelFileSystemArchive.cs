@@ -43,12 +43,12 @@ public class ContentModelFileSystemArchive(
     private FolderHistoryService _folderHistoryService { get; set; } = folderHistoryService;
     private ISettingsService _settingsService { get; set; } = settingsService;
 
-    public override void SetUrl(Url url)
+    public override void SetUrl(Url path)
     {
-        _settingsService.Set(Name, url.FullUrl);
-        _folderHistoryService.Add(url);
+        _settingsService.Set(Name, path.FullUrl);
+        _folderHistoryService.Add(path);
         Entries.Clear();
-        ArchivePath = url.Path;
+        ArchivePath = path.Path;
         ResetNavigation();
 
         Refresh();
@@ -89,7 +89,7 @@ public class ContentModelFileSystemArchive(
             }
 
             ReplaceEntriesAndRestoreFocus(entries, isComplete: true);
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Splits the panel's location into the archive's file and the folder inside it ("" at the top, "sub/" below).</summary>

@@ -208,7 +208,7 @@ public class TerminalModel(
     internal bool TryChangeDirectory()
     {
         var text = (Command.Command ?? string.Empty).Trim();
-        if (!(text == "cd" || text.StartsWith("cd ", StringComparison.Ordinal) || text.StartsWith("cd	", StringComparison.Ordinal))
+        if (!(text == "cd" || text.StartsWith("cd ", StringComparison.Ordinal) || text.StartsWith("cd\t", StringComparison.Ordinal))
             || text.IndexOfAny(ShellOperators) >= 0)
         {
             return false;

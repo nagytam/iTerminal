@@ -158,7 +158,7 @@ public class TreeView : Control
     /// Toggles the expanded/collapsed state of a specific item.
     /// </summary>
     /// <param name="item">The item to toggle.</param>
-    public void ToggleItem(IHierarchicalItemModel item)
+    public static void ToggleItem(IHierarchicalItemModel item)
     {
         if (item.Children.Any())
         {
@@ -180,7 +180,7 @@ public class TreeView : Control
     /// </summary>
     /// <param name="item">The item to get the depth for.</param>
     /// <returns>The depth of the item, starting from 0 for the root.</returns>
-    public int GetItemDepth(IHierarchicalItemModel item)
+    public static int GetItemDepth(IHierarchicalItemModel item)
     {
         int depth = 0;
         var current = item.Parent;
@@ -376,8 +376,8 @@ public class TreeView : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-        long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        long relativeX = mouseEvent.Position.X - AbsolutePosition.X;
+        long relativeY = mouseEvent.Position.Y - AbsolutePosition.Y;
         if (relativeX < 0 || relativeX >= ViewSize.Width || relativeY < 0 || relativeY >= ViewSize.Height)
         {
             return isHandled;

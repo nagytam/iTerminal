@@ -370,7 +370,7 @@ public partial class AiPanelTools(
 
         int last = Math.Max(0, model.FilteredEntries.Count - 1);
         long current = model.CursorPosition.Y;
-        long target = where!.Trim().ToLowerInvariant() switch
+        long target = where.Trim().ToLowerInvariant() switch
         {
             "first" or "top" or "home" => 0,
             "last" or "bottom" or "end" => last,
@@ -853,7 +853,7 @@ public partial class AiPanelTools(
     }
 
     /// <summary>The explicitly named entries, else the marked ones, else the one under the cursor.</summary>
-    private IReadOnlyList<Url> ResolveTargets(IContentModel model, string? names, out string problem)
+    private static IReadOnlyList<Url> ResolveTargets(IContentModel model, string? names, out string problem)
     {
         problem = string.Empty;
         if (!string.IsNullOrWhiteSpace(names))

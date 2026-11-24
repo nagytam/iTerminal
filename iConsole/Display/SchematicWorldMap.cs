@@ -55,7 +55,7 @@ public static class SchematicWorldMap
         [(172, -35), (178, -38), (174, -41), (167, -46), (170, -44)],
     ];
 
-    private static readonly object CacheLock = new();
+    private static readonly Lock CacheLock = new();
     private static readonly Dictionary<(int Width, int Height), bool[,]> LandCache = [];
 
     /// <summary>Whether the point at <paramref name="longitude"/>, <paramref name="latitude"/> (degrees) is inside one of the outlines.</summary>

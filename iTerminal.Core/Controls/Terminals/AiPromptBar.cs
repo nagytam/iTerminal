@@ -210,7 +210,7 @@ public class AiPromptBar : Window, IBottomBar
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
-        _ = Task.Run(async () => await _chatService.CheckAvailabilityAsync(_model));
+        _ = Task.Run(async () => await _chatService.CheckAvailabilityAsync(_model), CancellationToken.None);
     }
 
     /// <summary>The text the availability check starts with, before it has an answer.</summary>

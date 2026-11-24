@@ -252,13 +252,13 @@ public class PopUpWindow : Window
         }
 
         var buttons = Controls.AsSnapshot().OfType<ActionButton>().ToList();
-        var start = (long)AbsolutePosition.X + (long)ViewSize.Width - 1 - buttons.Sum(b => b.ActionView.Length);
+        var start = AbsolutePosition.X + ViewSize.Width - 1 - buttons.Sum(b => b.ActionView.Length);
         foreach (var button in buttons)
         {
             var length = button.ActionView.Length;
             if (mouseEvent.Position.X >= start && mouseEvent.Position.X < start + length)
             {
-                button.Position = new Position(start - (long)AbsolutePosition.X, 0);
+                button.Position = new Position(start - AbsolutePosition.X, 0);
                 button.ViewSize = new Size(length, 1);
                 return await button.HandleMouseEventAsync(mouseEvent);
             }

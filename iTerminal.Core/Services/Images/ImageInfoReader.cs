@@ -43,7 +43,6 @@ public static class ImageInfoReader
     private const ushort TagGpsLatitude = 0x0002;
     private const ushort TagGpsLongitudeRef = 0x0003;
     private const ushort TagGpsLongitude = 0x0004;
-    private const ushort TagGpsAltitudeRef = 0x0005;
     private const ushort TagGpsAltitude = 0x0006;
 
     /// <summary>The metadata of an image file on disk. An unreadable file gives one field saying so.</summary>

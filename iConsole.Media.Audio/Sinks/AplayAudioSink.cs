@@ -17,7 +17,7 @@ public sealed class AplayAudioSink : IAudioSink
 {
     private const string Executable = "aplay";
 
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
 
     private Process? _process;
     private Stream? _input;

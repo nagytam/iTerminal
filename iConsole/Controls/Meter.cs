@@ -72,22 +72,22 @@ public class Meter(IThemeService themeService) : Control(themeService)
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(line, fg, bg));
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Focused:
             case VisualState.Selected:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.SelectedFocusedBackground;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.SelectedFocusedBackground;
                 break;
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

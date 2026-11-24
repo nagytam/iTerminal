@@ -304,7 +304,7 @@ public class FileEncryptionDialog : FormDialog
                 _refreshPending = true;
                 _phase = result.Succeeded > 0 && !result.Cancelled ? EncryptionPhase.AskDelete : EncryptionPhase.Finished;
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>The answer to "delete the originals?": yes starts the delete, no keeps them.</summary>
@@ -365,7 +365,7 @@ public class FileEncryptionDialog : FormDialog
                 : string.Format(UiText.Get("Encryption.DeleteFailed", "{0} original(s) deleted; {1} failed: {2}"), deleted, failures.Count, failures[0]);
             _refreshPending = true;
             _phase = EncryptionPhase.Finished;
-        });
+        }, CancellationToken.None);
     }
 
     private void Announce(EncryptionResult result)

@@ -107,7 +107,7 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
         public override string Title => "New server";
         public override string Description => "Add an FTP or SFTP server and open it.";
 
-        public override async Task ExecuteAsync(object? arg)
+        public override async Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is FolderSelectorRemoteFilesTabPage page)
             {
@@ -150,7 +150,7 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
     {
         public override string Title => "Open FTP or SFTP connection";
 
-        public override async Task ExecuteAsync(object? arg)
+        public override async Task ExecuteAsync(object? args)
         {
             if (Control?.Parent is not FolderSelectorRemoteFilesTabPage page)
             {

@@ -203,7 +203,7 @@ public class ChecksumDialog : Dialog
                     Error = exception.Message;
                 }
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>The tools run beside the read, on this background task; a failure here never hides the checksums.</summary>
@@ -509,7 +509,7 @@ public class ChecksumDialog : Dialog
                 {
                     _reputation = answer;
                 }
-            });
+            }, CancellationToken.None);
         }
 
         UpdateLines();
@@ -527,12 +527,12 @@ public class ChecksumDialog : Dialog
         var generation = Volatile.Read(ref _lookupGeneration);
         _ = Task.Run(async () =>
         {
-            var outcome = await _launcher.OpenUrlAsync(link);
+            var outcome = await _launcher.OpenUrlAsync(link, CancellationToken.None);
             if (!outcome.Started && generation == Volatile.Read(ref _lookupGeneration))
             {
                 SetReputationNote(outcome.Failure ?? UiText.Get("Reputation.OpenFailed", "The browser could not be started."), true);
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>
@@ -720,7 +720,7 @@ public class ChecksumDialog : Dialog
         }
 
         string name = ChecksumService.DisplayName(algorithm);
-        Task copy = TextClipboard.Current.SetTextAsync(result.Hashes[algorithm]);
+        Task copy = TextClipboard.Current.SetTextAsync(result.Hashes[algorithm], CancellationToken.None);
         _saveStatus = string.Format(iConsole.Localization.UiText.Get("Checksum.Copied", "Copied the {0} to the clipboard."), name);
         _saveFailed = false;
         _ = copy.ContinueWith(task =>

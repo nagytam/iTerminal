@@ -80,8 +80,8 @@ public partial class UpdateDialog : FormDialog
     {
         if (Parent is not null)
         {
-            int width = (int)Math.Max(20, Math.Min(PreferredWidth, (long)Parent.ViewSize.Width));
-            int height = (int)Math.Max(5, Math.Min(Rows, (long)Parent.ViewSize.Height));
+            int width = (int)Math.Max(20, Math.Min(PreferredWidth, Parent.ViewSize.Width));
+            int height = (int)Math.Max(5, Math.Min(Rows, Parent.ViewSize.Height));
             CenterInParent(new Size(width, height));
         }
 

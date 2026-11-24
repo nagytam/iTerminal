@@ -33,7 +33,7 @@ public class ProgressWindow : PopUpWindow
 
         public override Key? Key { get; init; } = new Key(ConsoleKey.Escape, false, false, false);
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             if (task.Status == iConsole.Data.TaskStatus.Started)
             {

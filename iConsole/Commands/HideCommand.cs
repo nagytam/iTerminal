@@ -7,7 +7,7 @@ public class HideCommand : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Escape, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         Control?.Parent?.Hide();
         return Task.CompletedTask;

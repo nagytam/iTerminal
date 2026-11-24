@@ -290,7 +290,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
 
     // ---- PEM (in-process) ----
 
-    private async Task<SignatureVerdict> VerifyPemAsync(string filePath, string signaturePath, string? publicKeyPath, CancellationToken cancellationToken)
+    private static async Task<SignatureVerdict> VerifyPemAsync(string filePath, string signaturePath, string? publicKeyPath, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(publicKeyPath))
         {
@@ -340,7 +340,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         return (ecdsa.VerifyHash(hash, signature), Fingerprint(ecdsa.ExportSubjectPublicKeyInfo()));
     }
 
-    private async Task<SignResult> SignPemAsync(string filePath, string? keyPath, CancellationToken cancellationToken)
+    private static async Task<SignResult> SignPemAsync(string filePath, string? keyPath, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(keyPath) || !File.Exists(keyPath))
         {

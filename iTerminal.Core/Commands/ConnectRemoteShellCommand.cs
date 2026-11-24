@@ -25,13 +25,13 @@ public class ConnectRemoteShellCommand(
         return canExecute;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var sshTabPage = Control?.Parent as FolderSelectorRemoteShellTabPage;
         if (sshTabPage is not null)
         {
             var host = sshTabPage.Host;
-            if (!host.Contains(":/") && !host.EndsWith("/"))
+            if (!host.Contains(":/") && !host.EndsWith('/'))
             {
                 host += ":/";
             }

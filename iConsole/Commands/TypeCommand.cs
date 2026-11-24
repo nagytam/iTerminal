@@ -65,7 +65,7 @@ public class TypeCommand : Command
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         //var model = Model as IContentModel;
         //model?.Refresh();

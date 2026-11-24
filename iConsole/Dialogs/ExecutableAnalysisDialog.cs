@@ -477,7 +477,7 @@ public class ExecutableAnalysisDialog : Dialog
 
     private sealed class CloseSelfCommand(ExecutableAnalysisDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;
@@ -488,7 +488,7 @@ public class ExecutableAnalysisDialog : Dialog
     {
         public override string Title => "Disassemble";
 
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.ToggleListing();
             return Task.CompletedTask;

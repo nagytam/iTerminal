@@ -98,7 +98,7 @@ public class ScrollBar(IThemeService themeService)
         }
 
         bool vertical = ScrollBarOrientation == Orientation.Vertical;
-        long total = (long)(vertical ? ScrollableModel.ScrollableSize.Height : ScrollableModel.ScrollableSize.Width);
+        long total = (vertical ? ScrollableModel.ScrollableSize.Height : ScrollableModel.ScrollableSize.Width);
         long current = vertical ? ScrollableModel.CursorPosition.Y : ScrollableModel.CursorPosition.X;
         long target;
         if (mouseEvent.WheelDelta != 0)
@@ -108,9 +108,9 @@ public class ScrollBar(IThemeService themeService)
         else if (mouseEvent.LeftClicked)
         {
             long offset = vertical
-                ? (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y
-                : (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-            long length = vertical ? (long)ViewSize.Height : (long)ViewSize.Width;
+                ? mouseEvent.Position.Y - AbsolutePosition.Y
+                : mouseEvent.Position.X - AbsolutePosition.X;
+            long length = vertical ? ViewSize.Height : ViewSize.Width;
             target = CursorForClick(offset, length, total, current);
             // A press on the track (not an arrow) starts a drag, so the thumb follows the pointer while the button is held.
             _dragging = !mouseEvent.IsRelease && offset > 0 && offset < length - 1;
@@ -127,12 +127,12 @@ public class ScrollBar(IThemeService themeService)
     private long CursorForDragAt(MouseEvent mouseEvent)
     {
         bool vertical = ScrollBarOrientation == Orientation.Vertical;
-        long total = (long)(vertical ? ScrollableModel!.ScrollableSize.Height : ScrollableModel!.ScrollableSize.Width);
+        long total = (vertical ? ScrollableModel!.ScrollableSize.Height : ScrollableModel!.ScrollableSize.Width);
         long current = vertical ? ScrollableModel.CursorPosition.Y : ScrollableModel.CursorPosition.X;
         long offset = vertical
-            ? (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y
-            : (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
-        long length = vertical ? (long)ViewSize.Height : (long)ViewSize.Width;
+            ? mouseEvent.Position.Y - AbsolutePosition.Y
+            : mouseEvent.Position.X - AbsolutePosition.X;
+        long length = vertical ? ViewSize.Height : ViewSize.Width;
         return CursorForDrag(offset, length, total, current);
     }
 

@@ -41,7 +41,7 @@ public class FileClipboardOperations(
     ILogger logger)
 {
     /// <summary>The local paths of what a copy or cut in <paramref name="model"/> would take; empty when there are none.</summary>
-    public IReadOnlyList<string> LocalPathsOf(IContentModel? model)
+    public static IReadOnlyList<string> LocalPathsOf(IContentModel? model)
     {
         var paths = new List<string>();
         foreach (var url in FocusedEntry.ActionableUrls(model))
@@ -56,7 +56,7 @@ public class FileClipboardOperations(
     }
 
     /// <summary>Whether <paramref name="model"/> is a folder a paste may write into.</summary>
-    public bool CanPasteInto(IContentModel? model) =>
+    public static bool CanPasteInto(IContentModel? model) =>
         model is not null
         && model is not IMusicContentModel
         && !model.IsReadOnly

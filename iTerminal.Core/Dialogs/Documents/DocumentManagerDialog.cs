@@ -275,7 +275,7 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             try
             {
-                await Task.Delay(SearchDebounce);
+                await Task.Delay(SearchDebounce, CancellationToken.None);
                 if (generation != Volatile.Read(ref _searchGeneration))
                 {
                     // Superseded while waiting: the newer keystroke's task will do the work, and
@@ -296,7 +296,7 @@ public class DocumentManagerDialog : SplitPaneDialog
                 }
                 else
                 {
-                    hits = await _documentLibraryService.SearchAsync(query, MaxResults);
+                    hits = await _documentLibraryService.SearchAsync(query, MaxResults, CancellationToken.None);
                 }
 
                 if (generation != Volatile.Read(ref _searchGeneration))
@@ -322,7 +322,7 @@ public class DocumentManagerDialog : SplitPaneDialog
             {
                 StateHasChanged();
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>
@@ -500,7 +500,7 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             try
             {
-                string text = await _documentLibraryService.GetTextAsync(path);
+                string text = await _documentLibraryService.GetTextAsync(path, CancellationToken.None);
                 if (generation != Volatile.Read(ref _previewGeneration))
                 {
                     return;
@@ -523,7 +523,7 @@ public class DocumentManagerDialog : SplitPaneDialog
             {
                 StateHasChanged();
             }
-        });
+        }, CancellationToken.None);
     }
 
     private static string DescribeMissingText(DocumentEntry entry)
@@ -628,7 +628,7 @@ public class DocumentManagerDialog : SplitPaneDialog
             {
                 StartSearch(_query, preserveSelection: true);
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void CancelRescan()

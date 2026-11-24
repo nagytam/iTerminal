@@ -340,7 +340,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         return LinuxStdin.TcSetAttr(LinuxStdin.StdinFd, LinuxStdin.TcsaNow, ref _original) == 0;
     }
 
-    private bool TrySetNonBlockingStdin(bool enable)
+    private static bool TrySetNonBlockingStdin(bool enable)
     {
         var flags = LinuxStdin.fcntl(LinuxStdin.StdinFd, LinuxStdin.FGetFl, 0);
         if (flags < 0)

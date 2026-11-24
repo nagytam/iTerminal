@@ -197,7 +197,7 @@ public class JassGame : GameBase
             return string.Format(
                 GameText.Get("Games.Jass.ToPlay", "Player {0} to play. Trump: {1}. Partnership: {2} – {3}."),
                 _currentPlayer + 1,
-                SuitName(_trump!.Value),
+                SuitName(_trump.Value),
                 _scores[0],
                 _scores[1]);
         }

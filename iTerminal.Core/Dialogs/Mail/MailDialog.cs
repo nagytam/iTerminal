@@ -944,7 +944,7 @@ public class MailDialog : Dialog
                     _busy = false;
                 }
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>A text in the chosen language, with its arguments filled in.</summary>

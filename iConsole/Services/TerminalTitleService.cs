@@ -10,7 +10,7 @@ public sealed class TerminalTitleService : ITerminalTitleService
     private readonly Func<TextWriter> _output;
     private readonly ConsoleOwnership? _ownership;
     private readonly bool _enabled;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private string _title = string.Empty;
     private bool _pushed;
 

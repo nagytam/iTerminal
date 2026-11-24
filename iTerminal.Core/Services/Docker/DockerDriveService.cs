@@ -238,7 +238,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
                 await pipe.Writer.CompleteAsync(exception);
                 throw;
             }
-        });
+        }, cancellationToken);
 
         var found = false;
         Exception? readerFailure = null;

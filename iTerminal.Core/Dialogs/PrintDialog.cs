@@ -205,7 +205,7 @@ public class PrintDialog : Dialog
 
             StartRefresh(force: true);
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Reads the queue of the chosen printer. A round that is not forced is skipped while a call is still out.</summary>
@@ -264,7 +264,7 @@ public class PrintDialog : Dialog
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     #endregion
@@ -515,7 +515,7 @@ public class PrintDialog : Dialog
 
             StartRefresh(force: true);
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);

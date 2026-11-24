@@ -196,7 +196,7 @@ public class SignatureDialog : Dialog
                     _busy = string.Empty;
                 }
             }
-        });
+        }, CancellationToken.None);
     }
 
     private void RefreshPanels()

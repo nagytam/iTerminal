@@ -301,7 +301,7 @@ public class ComboBox<T> : Control, IReadOnly
         return text.Length > width ? text[..width] : text.PadRight(width);
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         if (IsReadOnly)
         {
@@ -311,17 +311,17 @@ public class ComboBox<T> : Control, IReadOnly
         switch (visualState)
         {
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Focused:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.Background;
                 break;
             case VisualState.Normal:
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

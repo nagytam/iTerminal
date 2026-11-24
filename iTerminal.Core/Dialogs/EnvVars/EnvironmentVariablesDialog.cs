@@ -692,7 +692,7 @@ public class EnvironmentVariablesDialog : Dialog
         return true;
     }
 
-    private string ScopeName(EditScope scope) => scope switch
+    private static string ScopeName(EditScope scope) => scope switch
     {
         EditScope.Session => UiText.Get("EnvVars.Session", "Session"),
         EditScope.User => UiText.Get("EnvVars.User", "User"),

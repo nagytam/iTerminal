@@ -12,7 +12,7 @@ public class TerminalExecuteCommand(TerminalModel terminalModel) : Command
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Enter, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         if (terminalModel is not null 
             && ContentModelService is not null)

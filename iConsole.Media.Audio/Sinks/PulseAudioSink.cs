@@ -20,7 +20,7 @@ public sealed class PulseAudioSink : IAudioSink
     private const int SampleFormatS16Le = 3;
     private const int StreamPlayback = 1;
 
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
 
     private IntPtr _handle;
     private PcmFormat _format;

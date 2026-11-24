@@ -24,7 +24,7 @@ public class ConflictPromptDialog : Dialog
 
     private sealed class ChoiceCommand(ConflictPromptDialog dialog, FileConflictChoice choice) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             dialog.Answer(choice);
             Control?.Parent?.Close();

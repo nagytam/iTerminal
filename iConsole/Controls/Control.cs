@@ -57,7 +57,7 @@ public class Control : INotifyPropertyChanged, IControl
         {
             if (_isVisible != value)
             {
-                Task.Run(() => OnIsVisibleChanged());
+                Task.Run(() => OnIsVisibleChanged(), CancellationToken.None);
                 _isVisible = value;
                 InvalidateTree();
                 OnPropertyChanged(nameof(IsVisible));
@@ -656,23 +656,23 @@ public class Control : INotifyPropertyChanged, IControl
         return focusedControl;
     }
 
-    public IControl? GetNextFocusableControl(IControl focusedControl)
+    public IControl? GetNextFocusableControl(IControl control)
     {
-        var nextControl = focusedControl;
+        var nextControl = control;
         var controlList = Controls.AsSnapshot();
-        var index = controlList.IndexOf(focusedControl);
+        var index = controlList.IndexOf(control);
         var orderedList = controlList.Skip(index + 1).ToList();
         orderedList.AddRange(controlList.Take(index));
-        foreach (var control in orderedList)
+        foreach (var candidate in orderedList)
         {
             // A disabled control takes no keys, so Tab passes over it rather than stopping on it.
-            if (control.CanFocus && control.IsEnabled)
+            if (candidate.CanFocus && candidate.IsEnabled)
             {
-                nextControl = control;
+                nextControl = candidate;
                 break;
             }
         }
-        if (nextControl == focusedControl)
+        if (nextControl == control)
         {
             nextControl = Parent?.GetNextFocusableControl(this) ?? this;
         }
@@ -697,22 +697,22 @@ public class Control : INotifyPropertyChanged, IControl
         return false;
     }
 
-    public IControl? GetPreviousFocusableControl(IControl focusedControl)
+    public IControl? GetPreviousFocusableControl(IControl control)
     {
-        var previousControl = focusedControl;
+        var previousControl = control;
         var controlList = Controls.AsSnapshot().Reverse().ToList();
-        var index = controlList.IndexOf(focusedControl);
+        var index = controlList.IndexOf(control);
         var orderedList = controlList.Skip(index + 1).ToList();
         orderedList.AddRange(controlList.Take(index));
-        foreach (var control in orderedList)
+        foreach (var candidate in orderedList)
         {
-            if (control.CanFocus && control.IsEnabled)
+            if (candidate.CanFocus && candidate.IsEnabled)
             {
-                previousControl = control;
+                previousControl = candidate;
                 break;
             }
         }
-        if (previousControl == focusedControl)
+        if (previousControl == control)
         {
             previousControl = Parent?.GetPreviousFocusableControl(this) ?? this;
         }
@@ -823,7 +823,7 @@ public class Control : INotifyPropertyChanged, IControl
             {
                 // Stopped: nothing more to repaint.
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Ends the repaint started by <see cref="StartAutoRefresh"/>. Safe to call when none is running.</summary>

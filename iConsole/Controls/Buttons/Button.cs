@@ -206,27 +206,27 @@ public class Button : Control
         _ => color,
     };
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Normal:
             default:
                 {
-                    foregroundColor = colorScheme.Foreground;
-                    backgroundColor = colorScheme.ButtonBackground;
+                    foreground = colorScheme.Foreground;
+                    background = colorScheme.ButtonBackground;
                     break;
                 }
             case VisualState.Disabled:
                 {
-                    foregroundColor = colorScheme.DisabledForeground;
-                    backgroundColor = colorScheme.DisabledButtonBackground;
+                    foreground = colorScheme.DisabledForeground;
+                    background = colorScheme.DisabledButtonBackground;
                     break;
                 }
             case VisualState.Focused:
                 {
-                    foregroundColor = colorScheme.SelectedFocusedForeground;
-                    backgroundColor = colorScheme.ButtonBackground;
+                    foreground = colorScheme.SelectedFocusedForeground;
+                    background = colorScheme.ButtonBackground;
                     break;
                 }
         }

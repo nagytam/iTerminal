@@ -496,7 +496,7 @@ public sealed class MapModel : IDisposable
             {
                 // The map was closed.
             }
-        });
+        }, CancellationToken.None);
         return true;
     }
 

@@ -88,9 +88,9 @@ public class StartupWarningDialog : Dialog
         {
             // Clamped to the screen so a narrow terminal gets a narrower dialog rather than a
             // negative position, which is what the old hand-rolled centring produced.
-            int width = (int)Math.Max(20, Math.Min(PreferredWidth, (long)Parent.ViewSize.Width));
+            int width = (int)Math.Max(20, Math.Min(PreferredWidth, Parent.ViewSize.Width));
             int lineCount = WrapWarnings(width - 2).Count;
-            int height = (int)Math.Max(ChromeRows + 1, Math.Min(lineCount + ChromeRows, (long)Parent.ViewSize.Height));
+            int height = (int)Math.Max(ChromeRows + 1, Math.Min(lineCount + ChromeRows, Parent.ViewSize.Height));
             CenterInParent(new Size(width, height));
         }
     }

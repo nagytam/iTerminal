@@ -128,30 +128,30 @@ public class RadioButton : Control, IReadOnly
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, lineString);
     }
 
-    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
+    public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foreground, out Color background)
     {
         switch (visualState)
         {
             case VisualState.Focused:
-                foregroundColor = colorScheme.SelectedFocusedForeground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.SelectedFocusedForeground;
+                background = colorScheme.Background;
                 break;
             case VisualState.Disabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Selected:
-                foregroundColor = colorScheme.SelectedForeground;
-                backgroundColor = colorScheme.SelectedBackground;
+                foreground = colorScheme.SelectedForeground;
+                background = colorScheme.SelectedBackground;
                 break;
             case VisualState.SelectedDisabled:
-                foregroundColor = colorScheme.DisabledForeground;
-                backgroundColor = colorScheme.DisabledBackground;
+                foreground = colorScheme.DisabledForeground;
+                background = colorScheme.DisabledBackground;
                 break;
             case VisualState.Normal:
             default:
-                foregroundColor = colorScheme.Foreground;
-                backgroundColor = colorScheme.Background;
+                foreground = colorScheme.Foreground;
+                background = colorScheme.Background;
                 break;
         }
     }

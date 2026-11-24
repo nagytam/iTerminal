@@ -529,7 +529,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         conxel.HasUnderlineColor != lastConxel.HasUnderlineColor ||
         conxel.LinkId           != lastConxel.LinkId;
 
-    private int RenderByCharacters(
+    private static int RenderByCharacters(
         int y,
         int minX,
         int maxX,

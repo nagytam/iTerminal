@@ -20,7 +20,7 @@ public sealed class WebBrowserStore(ISettingsService settingsService)
 
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = false };
 
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private List<WebBookmark>? _bookmarks;
     private List<WebBookmark>? _history;
 

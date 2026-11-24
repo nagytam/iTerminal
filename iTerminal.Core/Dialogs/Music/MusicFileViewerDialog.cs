@@ -122,7 +122,7 @@ public class MusicFileViewerDialog : Dialog
             return;
         }
 
-        MusicTagSet current = await Task.Run(() => MusicTagReader.ReadAll(path));
+        MusicTagSet current = await Task.Run(() => MusicTagReader.ReadAll(path), CancellationToken.None);
         var editor = new MusicTagEditorDialog(path, current, _beepService, _dateTimeProviderService, ThemeService, saved: () =>
         {
             if (FilePath == path)

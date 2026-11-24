@@ -21,7 +21,7 @@ public class SelectDriveCommand(
         return base.CanExecute() && selectedDrive is not null && selectedDrive.IsEnabled;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var selectedDrive = (Control?.Parent as FolderSelectorDrivesTabPage)?.SelectedDrive;
         if (selectedDrive is null)

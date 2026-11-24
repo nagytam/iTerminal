@@ -357,7 +357,7 @@ public sealed class NetworkToolService : INetworkToolService
     /// </summary>
     private async Task<string?> LookupNameAsync(IPAddress address, CancellationToken cancellationToken)
     {
-        if (!_lookupGate.Wait(0))
+        if (!_lookupGate.Wait(0, cancellationToken))
         {
             return null;
         }
@@ -412,7 +412,7 @@ public sealed class NetworkToolService : INetworkToolService
     /// <summary>Writes lines to the output until the scan has returned; after <see cref="Close"/> a late line is dropped.</summary>
     private sealed class ScanOutput(Action<string> writeLine)
     {
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
         private bool _closed;
 
         public void Write(string line)

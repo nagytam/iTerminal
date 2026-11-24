@@ -176,7 +176,7 @@ public class HdfViewerDialog : Dialog
         CancellationToken token = _listCancellation.Token;
         string path = Url.Path;
         // The reader opens the file, so the whole call runs on a worker thread.
-        _list = Task.Run(async () => await _reader.ListDatasetsAsync(path, MaxDatasets, token));
+        _list = Task.Run(async () => await _reader.ListDatasetsAsync(path, MaxDatasets, token), CancellationToken.None);
     }
 
     /// <summary>Puts a finished listing or slice on screen. A stale or cancelled one is dropped without a word; a failed one keeps the grid.</summary>
@@ -311,7 +311,7 @@ public class HdfViewerDialog : Dialog
             return;
         }
 
-        if (_view is not null && _view.AxisClauseOf(text) is not null)
+        if (_view is not null && GridArrayView.AxisClauseOf(text) is not null)
         {
             // AT, ROWS or COLUMNS: the query names the window of the array it reads, which may differ from the slice on screen.
             _queryRun.StartWindow(_view, text, MaxMatches);
@@ -483,7 +483,7 @@ public class HdfViewerDialog : Dialog
         _pendingGeneration = ++_generation;
         // The view is immutable, so the read keeps the axes it was started with even if a key moves them meanwhile.
         GridArrayView view = _view!;
-        _slice = Task.Run(async () => await view.MaterializeAsync(MaxRows, MaxColumns, MaxCells, token));
+        _slice = Task.Run(async () => await view.MaterializeAsync(MaxRows, MaxColumns, MaxCells, token), CancellationToken.None);
     }
 
     /// <summary>Moves the active leading dimension's index by <paramref name="delta"/>, clamped to the dimension, and reads the new slice.</summary>
@@ -732,7 +732,7 @@ public class HdfViewerDialog : Dialog
 
     private sealed class CloseSelfCommand(HdfViewerDialog owner) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             owner.Close();
             return Task.CompletedTask;

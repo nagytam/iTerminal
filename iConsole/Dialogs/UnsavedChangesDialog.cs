@@ -36,7 +36,7 @@ public class UnsavedChangesDialog : Dialog
 
     private sealed class ChoiceCommand(TaskCompletionSource<UnsavedChoice> choice, UnsavedChoice result) : Command
     {
-        public override Task ExecuteAsync(object? arg)
+        public override Task ExecuteAsync(object? args)
         {
             choice.TrySetResult(result);
             Control?.Parent?.Close();

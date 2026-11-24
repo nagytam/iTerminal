@@ -818,7 +818,7 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
                     continue;
                 }
 
-                string passage = _vectorIndex.ReadPassage(context, match.Path, match.ChunkStart);
+                string passage = DocumentVectorIndex.ReadPassage(context, match.Path, match.ChunkStart);
 
                 // Rank is lower-first, so the best score gets the lowest rank.
                 hits.Add(new DocumentSearchHit(entry, DocumentSearchMatch.Semantic, Excerpt(passage), -match.Score));
@@ -876,10 +876,10 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
             using (iTerminalDbContext context = _dbContextFactory.CreateDbContext())
             {
                 context.Database.EnsureCreated();
-                pending = _vectorIndex.Pending(context, model);
+                pending = DocumentVectorIndex.Pending(context, model);
 
                 // Read now, not at the end of the run, so a library that is already embedded reads as built right after a restart.
-                _semanticIndexed = _vectorIndex.Count(context, model);
+                _semanticIndexed = DocumentVectorIndex.Count(context, model);
             }
 
             hadWork = pending.Count > 0;
@@ -919,7 +919,7 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
 
             using iTerminalDbContext counted = _dbContextFactory.CreateDbContext();
             counted.Database.EnsureCreated();
-            _semanticIndexed = _vectorIndex.Count(counted, model);
+            _semanticIndexed = DocumentVectorIndex.Count(counted, model);
         }
         catch (OperationCanceledException)
         {

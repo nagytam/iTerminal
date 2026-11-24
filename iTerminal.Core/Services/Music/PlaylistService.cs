@@ -169,7 +169,7 @@ public sealed class PlaylistService : IPlaylistService
     /// </summary>
     public IReadOnlyList<MusicTrack> LoadLast() => Load(LastPlaylistPath);
 
-    private IReadOnlyList<MusicTrack> ScanFolder(string folder, bool recursive)
+    private static IReadOnlyList<MusicTrack> ScanFolder(string folder, bool recursive)
     {
         var files = new List<string>();
         CollectAudioFiles(folder, recursive, MaxFolderScanDepth, files);

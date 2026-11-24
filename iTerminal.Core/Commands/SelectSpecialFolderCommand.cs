@@ -21,7 +21,7 @@ public class SelectSpecialFolderCommand(IContentModelService contentModelService
         return base.CanExecute() && GetFocusedPlace() is not null;
     }
 
-    public override async Task ExecuteAsync(object? arg)
+    public override async Task ExecuteAsync(object? args)
     {
         var focusedItem = GetFocusedPlace();
         if (focusedItem is null)

@@ -160,7 +160,7 @@ public class FileDiffDialog : Dialog
             {
                 SetStatus(Say("FileDiff.Status.CouldNotRead", "Could not read the files: {0}", exception.Message), isError: true);
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>F4: switches between a text file's lines and its bytes. A binary file has no lines, so it stays in hex.</summary>
@@ -441,7 +441,7 @@ public class FileDiffDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
-    private void RecomputeInBackground() => LoadTask = Task.Run(Recompute);
+    private void RecomputeInBackground() => LoadTask = Task.Run(Recompute, CancellationToken.None);
 
     private void Scroll(int rows)
     {
@@ -488,7 +488,7 @@ public class FileDiffDialog : Dialog
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
         var inner = Math.Max(0, width - 2);
-        var column = _view.ColumnWidth(inner);
+        var column = FileDiffDialog.DiffView.ColumnWidth(inner);
 
         void Write(int x, int row, string text, int length, Color color) =>
             buffer.Write(ZOrder, new Position(AbsolutePosition.X + x, AbsolutePosition.Y + row), new Size(length, 1),
@@ -547,7 +547,7 @@ public class FileDiffDialog : Dialog
             }
         }
 
-        public int ColumnWidth(int totalWidth) => Math.Max(1, (totalWidth - 1) / 2);
+        public static int ColumnWidth(int totalWidth) => Math.Max(1, (totalWidth - 1) / 2);
 
         public void SetResult(TextDiffResult? result)
         {

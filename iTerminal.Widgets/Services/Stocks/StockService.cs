@@ -342,7 +342,7 @@ public sealed class StockService : IStockService, IDisposable
             {
                 var cancellation = new CancellationTokenSource();
                 _loopCancellation = cancellation;
-                _loop = Task.Run(() => RunLoopAsync(cancellation.Token));
+                _loop = Task.Run(() => RunLoopAsync(cancellation.Token), CancellationToken.None);
             }
         }
 

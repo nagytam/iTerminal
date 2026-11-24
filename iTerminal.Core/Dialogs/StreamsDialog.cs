@@ -187,7 +187,7 @@ public class StreamsDialog : Dialog
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private void StartPreview()
@@ -219,7 +219,7 @@ public class StreamsDialog : Dialog
             }
 
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private async Task ReadPreviewAsync(string path, string name, int generation, CancellationToken token)
@@ -492,7 +492,7 @@ public class StreamsDialog : Dialog
 
             StartList();
             StateHasChanged();
-        });
+        }, CancellationToken.None);
     }
 
     private void SetStatus(string text, bool isError)

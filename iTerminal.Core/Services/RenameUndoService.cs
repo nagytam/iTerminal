@@ -11,7 +11,7 @@ public sealed class RenameUndoService
 {
     public sealed record Rename(IContentModel Model, Url Source, Url Target);
 
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private IReadOnlyList<Rename> _last = [];
 
     public void Remember(IContentModel model, Url source, Url target)

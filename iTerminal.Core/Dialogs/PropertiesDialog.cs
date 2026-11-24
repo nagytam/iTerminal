@@ -199,7 +199,7 @@ public class PropertiesDialog : FormDialog
             {
                 // A file whose mark cannot be read shows none.
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary>Ctrl+F, or the button: asks whether to remove the mark. Nothing is asked of a file that has none.</summary>
@@ -245,7 +245,7 @@ public class PropertiesDialog : FormDialog
                 {
                     _removeError = string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message);
                 }
-            });
+            }, CancellationToken.None);
         }
 
         UpdateLines();
@@ -410,7 +410,7 @@ public class PropertiesDialog : FormDialog
             {
                 _measureComplete = true;
             }
-        });
+        }, CancellationToken.None);
     }
 
     /// <summary><see cref="Progress{T}"/> posts to a synchronization context; this reports where it is called.</summary>

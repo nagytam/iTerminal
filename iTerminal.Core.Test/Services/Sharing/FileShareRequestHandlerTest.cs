@@ -219,7 +219,7 @@ public class FileShareRequestHandlerTest
         FileShareRequestHandler handler = new([_shared], Token);
         using MemoryStream output = new();
 
-        await handler.WriteErrorAsync(output, 413, CancellationToken.None);
+        await FileShareRequestHandler.WriteErrorAsync(output, 413, CancellationToken.None);
 
         Assert.IsTrue(Encoding.ASCII.GetString(output.ToArray()).StartsWith("HTTP/1.1 413 ", StringComparison.Ordinal));
     }

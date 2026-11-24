@@ -27,7 +27,6 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class SynchronizeFoldersDialog : Dialog
 {
-    private const string CloseActionView = " [X]";
 
     private readonly IContentModelService _contentModelService;
     private readonly FileSystemResolver _resolver;

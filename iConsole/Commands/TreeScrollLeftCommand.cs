@@ -8,7 +8,7 @@ public class TreeScrollLeftCommand(IHierarchicalItemModel root) : Command
     public override Key? Key { get; init; } = 
         new Key(ConsoleKey.LeftArrow, false, false, false);
 
-    public override Task ExecuteAsync(object? arg)
+    public override Task ExecuteAsync(object? args)
     {
         // An open node closes where it is; a closed one or a leaf steps up to its parent, which stays open.
         var focusedItem = root.GetFocusedItem();
