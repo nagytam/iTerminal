@@ -464,13 +464,9 @@ public class ContentModelFileSystem(
 
         Process process = new();
         process.StartInfo.WorkingDirectory = terminalModel.Command.WorkingDirectoryUrl.Path;
-        if (OperatingSystem.IsWindows()
-            && terminalModel.Command.Command.EndsWith(".ps1", StringComparison.CurrentCultureIgnoreCase))
-        {
-            process.StartInfo.FileName = "powershell.exe";
-            process.StartInfo.Arguments = "-f " + terminalModel.Command.Command;
-        }
-        else if (OperatingSystem.IsWindows())
+        // ProgramFile.CommandFor already writes the whole command line, interpreter included (for a .ps1,
+        // "powershell … -File name.ps1"), so cmd runs it as typed; wrapping it again broke the script.
+        if (OperatingSystem.IsWindows())
         {
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.Arguments = "/C " + terminalModel.Command.Command;
