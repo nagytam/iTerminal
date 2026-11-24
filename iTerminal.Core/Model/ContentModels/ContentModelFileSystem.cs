@@ -124,14 +124,14 @@ public class ContentModelFileSystem(
         return new Url(Directory.GetCurrentDirectory());
     }
 
-    public override void SetUrl(Url path)
+    public override void SetUrl(Url url)
     {
-        if (!fileSystemService.ExistsFolder(path))
+        if (!fileSystemService.ExistsFolder(url))
         {
-            path = NearestExistingFolder(path);
+            url = NearestExistingFolder(url);
         }
-        _settingsService.Set(Name, path.FullUrl);
-        _folderHistoryService.Add(path);
+        _settingsService.Set(Name, url.FullUrl);
+        _folderHistoryService.Add(url);
         // Cancel any in-flight prefetch scheduling for the previous folder before
         // the task sweep below, so stale tasks cannot be added afterwards.
         var oldPrefetchCts = Interlocked.Exchange(ref _prefetchScheduleCts, new CancellationTokenSource());
@@ -143,22 +143,22 @@ public class ContentModelFileSystem(
         }
         Entries.Clear();
         Filter = null;
-        Url = path;
+        Url = url;
         ResetNavigation();
-        if (path.Path != Path.GetPathRoot(path.Path))
+        if (url.Path != Path.GetPathRoot(url.Path))
         {
-            Entries.Add(new FileSystemEntry("..", path.ParentPath));
+            Entries.Add(new FileSystemEntry("..", url.ParentPath));
         }
 
         #region
 
         if (FolderWatcher is not null)
         {
-            FolderWatcher.Path = path.Path;
+            FolderWatcher.Path = url.Path;
         }
         else
         {
-            FolderWatcher = new FileSystemWatcher(path.Path)
+            FolderWatcher = new FileSystemWatcher(url.Path)
             {
                 NotifyFilter = NotifyFilters.Attributes
                                | NotifyFilters.CreationTime

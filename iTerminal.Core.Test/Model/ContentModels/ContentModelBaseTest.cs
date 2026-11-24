@@ -53,7 +53,7 @@ public class ContentModelBaseTest
         public override string GetHeader(int width) => new string('H', width);
         public override void ReadUrl() { }
         public override void Refresh(bool forceRefresh = false) { }
-        public override void SetUrl(Url path) => Url = path;
+        public override void SetUrl(Url url) => Url = url;
         public string EntryCountFooterForTest() => EntryCountFooter();
     }
 

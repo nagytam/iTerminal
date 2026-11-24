@@ -57,7 +57,7 @@ public class MultiRenameCommandTest
         public override string GetHeader(int width) => string.Empty;
         public override void ReadUrl() { }
         public override void Refresh(bool forceRefresh = false) { }
-        public override void SetUrl(Url path) => Url = path;
+        public override void SetUrl(Url url) => Url = url;
     }
 
     private static Mock<IFrequentExecutionGuardService> Guard()

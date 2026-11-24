@@ -390,7 +390,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     public abstract string GetHeader(int width);
     public abstract void ReadUrl();
     public abstract void Refresh(bool forceRefresh = false);
-    public abstract void SetUrl(Url path);
+    public abstract void SetUrl(Url url);
 
     public virtual IEntry? GetFocusedEntry()
     {

@@ -81,10 +81,10 @@ public sealed class ContentModelPreview : ContentModelBase, IDisposable
 
     public override void ReadUrl() => SetUrl(new Url(Container.PREVIEW));
 
-    public override void SetUrl(Url path)
+    public override void SetUrl(Url url)
     {
-        _settingsService.Set(Name, path);
-        Url = path;
+        _settingsService.Set(Name, url);
+        Url = url;
         ResetNavigation();
         Entries.ReplaceAll([]);
         Schedule(force: true);

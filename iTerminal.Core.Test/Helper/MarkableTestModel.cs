@@ -86,10 +86,10 @@ internal sealed class MarkableTestModel : ContentModelBase
     public override string GetHeader(int width) => string.Empty;
     public override void ReadUrl() { }
     public override void Refresh(bool forceRefresh = false) { }
-    public override void SetUrl(Url path)
+    public override void SetUrl(Url url)
     {
         // As every drive does.
-        Url = path;
+        Url = url;
         ResetNavigation();
     }
     public override bool ExistsFile(Url url) => File.Exists(url.FullName);

@@ -21,7 +21,7 @@ public class ContentModelMusicBaseTest
         public override string GetHeader(int width) => string.Empty;
         public override void ReadUrl() { }
         public override void Refresh(bool forceRefresh = false) { }
-        public override void SetUrl(Url path) { }
+        public override void SetUrl(Url url) { }
     }
 
     private static (TestMusicModel Model, Mock<IMusicPlayerService> Player) Model(RepeatMode repeat = RepeatMode.Off, bool shuffled = false, int volume = 50)

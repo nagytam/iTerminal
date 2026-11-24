@@ -44,12 +44,12 @@ public class ContentModelFileSystemArchive(
     private FolderHistoryService _folderHistoryService { get; set; } = folderHistoryService;
     private ISettingsService _settingsService { get; set; } = settingsService;
 
-    public override void SetUrl(Url path)
+    public override void SetUrl(Url url)
     {
-        _settingsService.Set(Name, path.FullUrl);
-        _folderHistoryService.Add(path);
+        _settingsService.Set(Name, url.FullUrl);
+        _folderHistoryService.Add(url);
         Entries.Clear();
-        ArchivePath = path.Path;
+        ArchivePath = url.Path;
         ResetNavigation();
 
         Refresh();
