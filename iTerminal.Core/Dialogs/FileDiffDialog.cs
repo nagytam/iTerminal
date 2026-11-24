@@ -38,8 +38,6 @@ public class FileDiffDialog : Dialog
 
     private readonly DiffView _view;
     private readonly BinaryDiffView _hexView;
-    private byte[]? _leftBytes;
-    private byte[]? _rightBytes;
     private volatile BinaryDiffResult? _binary;
     private volatile bool _hexMode;
     private CancellationTokenSource? _cancellation;

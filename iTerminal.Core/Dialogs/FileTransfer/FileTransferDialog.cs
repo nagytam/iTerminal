@@ -30,7 +30,6 @@ public class FileTransferDialog : Dialog
 
     private FileShareState? _shown;
     private string? _failureKey;
-    private int _selectionCount;
 
     public FileTransferDialog(IFileShareService service, IThemeService themeService)
         : base(nameof(FileTransferDialog), themeService)

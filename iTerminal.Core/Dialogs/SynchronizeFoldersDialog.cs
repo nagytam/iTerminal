@@ -270,7 +270,6 @@ public class SynchronizeFoldersDialog : Dialog
         StateHasChanged();
     }
 
-    private bool _statusIsError;
 
     /// <summary>
     /// Shows the finished preview, or the failure, on the thread that owns the controls. The list is filled before the

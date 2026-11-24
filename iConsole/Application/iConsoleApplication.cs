@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace iConsole.Application;
 
+#pragma warning disable S101 // Brand name: the lowercase 'i' prefix is the product's naming, used across every project.
 public class iConsoleApplication(IHost host) : IAsyncDisposable
 {
     private readonly IHost _host = host;
@@ -59,3 +60,4 @@ public class iConsoleApplication(IHost host) : IAsyncDisposable
         }
     }
 }
+#pragma warning restore S101

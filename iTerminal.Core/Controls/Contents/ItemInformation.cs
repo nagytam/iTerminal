@@ -26,7 +26,7 @@ public class ItemInformation : iConsole.Controls.Control
     private string? _pendingFolderInformationRefreshUrl;
     private IContentModel? _pendingFolderInformationRefreshModel;
     private string? _lastFocusedInformationUrl;
-    private IMemoryCacheService _memoryCacheService;
+    private readonly IMemoryCacheService _memoryCacheService;
     private readonly FileDisguiseChecker? _disguiseChecker;
     private CancellationTokenSource? _disguiseCancellation;
     private string? _lastDisguiseUrl;
@@ -358,11 +358,6 @@ public class ItemInformation : iConsole.Controls.Control
         // -= first: this can run again, and a second subscription would refresh the line twice.
         ContentModel.PropertyChanged -= OnContentModelPropertyChanged;
         ContentModel.PropertyChanged += OnContentModelPropertyChanged;
-    }
-
-    public override void OnInitializeLayout()
-    {
-        base.OnInitializeLayout();
     }
 
     public override void Draw(IBuffer buffer)

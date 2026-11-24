@@ -20,9 +20,8 @@ public class TreeView : Control
     /// Gets or sets the root node of the tree.
     /// </summary>
     public IHierarchicalItemModel Root { get; set; }
-        = new HierarchicalItemModel(null, string.Empty);
 
-    private bool _isInitializing;
+    private readonly bool _isInitializing;
 
     /// <summary>
     /// Initializes a new instance of the TreeView class.

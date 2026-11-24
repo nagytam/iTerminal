@@ -23,7 +23,6 @@ public sealed class PulseAudioSink : IAudioSink
     private readonly Lock _syncLock = new();
 
     private IntPtr _handle;
-    private PcmFormat _format;
     private byte[] _writeScratch = [];
     private volatile bool _stopped;
 

@@ -19,7 +19,7 @@ public interface IConsoleDriver : Services.IConsoleHandoverParticipant
         get => CursorShape.Default;
         set
         {
-            // Intentionally empty: there is nothing to do for this case.
+            _ = value; // Intentionally ignored: this accessor has no state to change.
         }
     }
 

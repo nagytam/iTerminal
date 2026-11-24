@@ -24,11 +24,6 @@ public class Dialog : PopUpWindow
         await base.OnInitializeAsync();
     }
 
-    public override void OnInitializeZOrder()
-    {
-        base.OnInitializeZOrder();
-    }
-
     public override void OnInitializeActionButtons()
     {
     }

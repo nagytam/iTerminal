@@ -7,7 +7,7 @@ namespace iConsole.Drivers;
 
 public class SystemConsoleDriver : IConsoleDriver
 {
-    private Position _windowPosition = new(0, 0);
+    private Position _windowPosition;
 
     private string _title = string.Empty;
     public string Title

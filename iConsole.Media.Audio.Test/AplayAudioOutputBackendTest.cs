@@ -83,7 +83,7 @@ public class AplayAudioOutputBackendTest
     {
         var path = Path.Combine(_binDirectory, "aplay");
         File.WriteAllText(path, "#!/bin/sh\n" + body);
-        File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
     }
 
     private void UsePath() =>

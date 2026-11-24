@@ -11,7 +11,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
     private const int STD_OUTPUT_HANDLE = -11;
     private const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
     private readonly bool _supportsVirtualTerminalProcessing;
-    private Position _windowPosition = new(0, 0);
+    private Position _windowPosition;
 
     private string _title = string.Empty;
     public string Title

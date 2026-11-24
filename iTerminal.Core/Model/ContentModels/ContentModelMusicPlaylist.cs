@@ -7,6 +7,7 @@ using iConsole.Services;
 using iTerminal.Core.Data.Music;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Music;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Model.ContentModels;
 

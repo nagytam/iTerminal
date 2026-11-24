@@ -15,7 +15,7 @@ namespace iConsole.Controls;
 [DebuggerDisplay("{Text}")]
 public class MenuItem : PopUpWindow
 {
-    public string Text { get; set; } = string.Empty;
+    public string Text { get; set; }
     protected ConcurrentList<MenuItem> MenuItems { get; private set; }
 
     public bool IsOpened { get; private set; } = false;

@@ -22,11 +22,6 @@ public class MenuBar : MenuItem
         ZOrder = 0;
     }
 
-    public override void Draw(IBuffer buffer)
-    {
-        base.Draw(buffer);
-    }
-
     /// <summary>
     /// Keeps <see cref="Control.IsModal"/> in sync with whether any top-level menu is
     /// currently open. While modal, <c>Desktop.GetModalChildControl()</c> routes every key

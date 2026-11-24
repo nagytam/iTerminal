@@ -15,7 +15,6 @@ namespace iTerminal.Core.Controls.Terminals;
 
 public class TerminalWindow : Window
 {
-    private IContentModelService _contentModelService;
     private TerminalModel _terminalModel { get; set; }
 
     //public override bool IsEnabled 

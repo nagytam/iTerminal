@@ -67,7 +67,7 @@ public sealed class ForecastService : IForecastService
     private readonly Dictionary<string, Forecast> _forecasts;
     private readonly Dictionary<string, DateTimeOffset> _lastAttempts = [];
     private readonly Dictionary<string, long> _requestSequence = [];
-    private List<SavedPlace> _places;
+    private readonly List<SavedPlace> _places;
     private string? _homeKey;
 
     public ForecastService(ISettingsService settings, IForecastProvider provider, TimeProvider? time = null, ILogger? logger = null)

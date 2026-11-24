@@ -35,8 +35,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     /// <summary>Completes once the first frame has reached the terminal. The desktop starts its background jobs after it.</summary>
     public Task FirstFrameRendered => _firstFrameRendered.Task;
 
-    private Color ConsoleForegroundColor;
-    private Color ConsoleBackgroundColor;
     private readonly Lock _dumpLock = new();
     private int _dumpFrameIndex;
     private long _renderIterations;
@@ -73,8 +71,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         _watchDog = watchDog;
         _sixelOverlay = sixelOverlay;
         _consoleDriver = consoleDriver ?? Services.NullConsoleDriver.Instance;
-        ConsoleForegroundColor = _consoleDriver.ForegroundColor;
-        ConsoleBackgroundColor = _consoleDriver.BackgroundColor;
         Buffer = buffer ?? new Buffers.Buffer(Services.NullConsoleDriver.Instance);
         LastBuffer = new BufferLayer(0, Buffer.Size, Color.White, Color.Black);
         LastBufferCursor = new Cursor(Buffer.Size);

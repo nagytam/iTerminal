@@ -319,7 +319,7 @@ public sealed partial class SevenZipArchiveWriter(IExternalProcessRunner runner,
         public override bool CanWrite => true;
         public override long Length => 0;
         public override long Position { get => 0; set {
-            // Intentionally empty: there is nothing to do for this case.
+            _ = value; // Intentionally ignored: this accessor has no state to change.
         } }
         public override void Flush() { }
         public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();

@@ -1,5 +1,4 @@
 using iTerminal.Core.Services;
-﻿using iTerminal.Core.Services;
 using Serilog;
 using Serilog.Events;
 
@@ -7,7 +6,7 @@ namespace iTerminal.Core.Logger;
 
 public class Logger : ILogger
 {
-    private string _logFileName;
+    private readonly string _logFileName;
     private ILogger _logger { get; set; }
 
     public Logger(ISettingsService settingsService)

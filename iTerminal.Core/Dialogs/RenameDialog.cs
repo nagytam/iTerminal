@@ -13,7 +13,6 @@ namespace iTerminal.Core.Dialogs;
 
 public class RenameDialog : FormDialog
 {
-    private readonly IContentModelService _contentModelService;
     public Url SourceUrl { get; set; } = null!;
     public Url TargetUrl
     {

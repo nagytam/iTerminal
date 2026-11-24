@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iConsole.Data;
 

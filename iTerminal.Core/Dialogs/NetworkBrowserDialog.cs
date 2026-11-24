@@ -50,8 +50,6 @@ public class NetworkBrowserDialog : SplitPaneDialog
     private readonly INetworkProfileService _networkProfileService;
     private readonly IPasswordManager _passwordManager;
     private readonly IContentModelService _contentModelService;
-    private readonly IBeepService _beepService;
-    private readonly IDateTimeProviderService _dateTimeProviderService;
 
     private readonly ConcurrentObservableCollection<HostRow> _hostItems = new();
     private readonly HostListBox _hostListBox;

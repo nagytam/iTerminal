@@ -10,7 +10,7 @@ namespace iConsole.Dialogs;
 public class SearchTextDialog : Dialog
 {
     private ISearchModel _searchModel { get; set; }
-    private TextBox _textBoxSearch;
+    private readonly TextBox _textBoxSearch;
     private Button _searchTextButton { get; set; }
     private Button _cancelButton { get; set; }
     private readonly CheckBox _regexBox;

@@ -16,7 +16,7 @@ namespace iTerminal.Core.Dialogs;
 
 public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage, ITransientOverlayHost
 {
-    private string _key = "Favourites";
+    private readonly string _key = "Favourites";
     private ISettingsService _settingsService { get; set; }
     private ConcurrentObservableCollection<Url> _favourites { get; set; }
     private ListBox<Url> _listBox { get; set; }

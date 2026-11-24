@@ -1,4 +1,5 @@
 using iConsole.Data;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Services.Archives;
 

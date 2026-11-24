@@ -75,7 +75,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private UserMenuDialog? _userMenuDialog { get; set; }
     private FileDiffDialog? _fileDiffDialog { get; set; }
     private iTerminal.Core.Services.Clipboard.FileClipboardOperations? _clipboard { get; set; }
-    private iTerminal.Core.Services.RenameUndoService? _renameUndo;
+    private readonly iTerminal.Core.Services.RenameUndoService? _renameUndo;
     private DiskImageDialog? _diskImageDialog { get; set; }
     private SecureWipeDialog? _secureWipeDialog { get; set; }
     private FileEncryptionDialog? _fileEncryptionDialog { get; set; }

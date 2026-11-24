@@ -15,7 +15,7 @@ public interface ISearchModel : INotifyPropertyChanged
 
     /// <summary>Whether upper and lower case must match.</summary>
     bool MatchCase { get => true; set {
-        // Intentionally empty: there is nothing to do for this case.
+        _ = value; // Intentionally ignored: this accessor has no state to change.
     } }
 
     /// <summary>How many characters the hit at <paramref name="hit"/> covers: for plain text the length of <see cref="Search"/>, for a regular expression what it matched.</summary>

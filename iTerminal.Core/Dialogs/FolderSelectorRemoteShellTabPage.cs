@@ -85,11 +85,6 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         base.OnInitializeLayout();
     }
 
-    public override void Draw(IBuffer buffer)
-    {
-        base.Draw(buffer);
-    }
-
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         foreach (var hint in base.GetKeyHints())

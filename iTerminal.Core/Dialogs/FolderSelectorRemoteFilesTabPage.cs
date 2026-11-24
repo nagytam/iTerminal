@@ -13,6 +13,7 @@ using iTerminal.Core.Model.Network;
 using iTerminal.Core.Model.Remote;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Remote;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iTerminal.Core.Dialogs;
 

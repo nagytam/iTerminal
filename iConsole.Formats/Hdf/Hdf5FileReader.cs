@@ -4,6 +4,7 @@ using iConsole.Hdf;
 using iConsole.Formats.Hdf;
 using PureHDF;
 using PureHDF.Selections;
+#pragma warning disable S1075 // iTerminal's own URLs (not file-system paths) use '/' on every platform.
 
 namespace iConsole.Formats.Hdf;
 

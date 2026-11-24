@@ -200,7 +200,7 @@ public class PowerShellRuntimeDependencyTest
 
         string program = Path.Combine(destination, "pwsh");
         Assert.AreEqual("program", File.ReadAllText(program));
-        Assert.IsTrue(File.GetUnixFileMode(program).HasFlag(UnixFileMode.UserExecute), "Without the execute bit the program cannot be started.");
+        if (!OperatingSystem.IsWindows()) Assert.IsTrue(File.GetUnixFileMode(program).HasFlag(UnixFileMode.UserExecute), "Without the execute bit the program cannot be started.");
         Assert.IsFalse(File.Exists(Path.Combine(root, "escaped.txt")));
     }
 

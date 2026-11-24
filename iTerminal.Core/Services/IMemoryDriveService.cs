@@ -22,10 +22,10 @@ public interface IMemoryDriveService : IFileSystem
     event EventHandler? MirrorLoaded
     {
         add {
-            // Intentionally empty: there is nothing to do for this case.
+            _ = value; // Intentionally ignored: this accessor has no state to change.
         }
         remove {
-            // Intentionally empty: there is nothing to do for this case.
+            _ = value; // Intentionally ignored: this accessor has no state to change.
         }
     }
 

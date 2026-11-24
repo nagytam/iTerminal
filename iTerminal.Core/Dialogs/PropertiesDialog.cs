@@ -325,7 +325,6 @@ public class PropertiesDialog : FormDialog
 
     public string AccessedText { get => _textBoxAccessed.Text ?? string.Empty; set => _textBoxAccessed.Text = value ?? string.Empty; }
 
-    private string _path = string.Empty;
 
     /// <summary>Sets the local file or folder; call before showing the dialog.</summary>
     public void Load(string path)

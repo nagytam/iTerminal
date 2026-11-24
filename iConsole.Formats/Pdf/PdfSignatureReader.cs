@@ -104,7 +104,7 @@ internal static partial class PdfSignatureReader
 
             int keyStart = searchFrom + at;
             searchFrom = keyStart + ByteRangeKey.Length;
-            if (!TryParseRange(pdf, searchFrom, out long[]? range))
+            if (!TryParseRange(pdf, searchFrom, out long[]? range) || range is null)
             {
                 continue;
             }

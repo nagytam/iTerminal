@@ -26,7 +26,6 @@ public class NetworkManagerDialog : Dialog
     private const int MinimumNameWidth = 8;
     private const int MinimumDescriptionWidth = 4;
 
-    private readonly TaskManager _taskManager;
     private readonly NetworkInfoModel _networkInfoModel;
     private readonly Table<NetworkInfo> _table;
     private readonly ScrollBar _scrollBar;

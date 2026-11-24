@@ -22,7 +22,7 @@ internal sealed class WebField
 {
     public WebFieldKind Kind { get; init; }
     public string Name { get; init; } = string.Empty;
-    public string Value { get; set; } = string.Empty;
+    public string Value { get; set; }
     public string Placeholder { get; init; } = string.Empty;
     public string Label { get; init; } = string.Empty;
     public bool Checked { get; set; }

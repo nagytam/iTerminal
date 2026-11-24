@@ -8,7 +8,6 @@ using iTerminal.Core.Services;
 using iTerminal.Core.Services.RuntimeDependencies;
 using iTerminal.Widgets.Jobs;
 using iTerminal.Widgets.Services.RuntimeDependencies;
-using iTerminal.Widgets.Services;
 using iTerminal.Widgets.Commands;
 using iTerminal.Widgets.Controls.MenuBar;
 using iTerminal.Widgets.Dialogs.Stocks;
