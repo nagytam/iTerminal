@@ -18,7 +18,7 @@ public static class MultiRenamePattern
     /// <summary>The pattern a new dialog starts with: it renames nothing.</summary>
     public const string DefaultPattern = "[C]";
 
-    private static readonly Regex TokenPattern = new(@"\[(N(?::(\d{1,3}))?|C|E)\]", RegexOptions.CultureInvariant);
+    private static readonly Regex TokenPattern = new(@"\[(N(?::(\d{1,3}))?|C|E)\]", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
     /// <summary>
     /// Splits <paramref name="name"/> into the part <c>[C]</c> names and the extension <c>[E]</c> names.

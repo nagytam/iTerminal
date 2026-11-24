@@ -26,13 +26,11 @@ public class Dialog : PopUpWindow
 
     public override void OnInitializeZOrder()
     {
-        var zOrder = (Parent?.ZOrder + 1) ?? 1;
         base.OnInitializeZOrder();
     }
 
     public override void OnInitializeActionButtons()
     {
-        // AddActionButton(new ActionButton("Close", "[X]", new CloseCommand(), ThemeService));
     }
 
     public override void OnInitializeLayout()

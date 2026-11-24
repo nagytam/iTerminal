@@ -580,7 +580,6 @@ public class MenuItem : PopUpWindow
 
     public override Task TriggerHotKeyAsync()
     {
-        // base.TriggerHotKey();
 
         if (!IsOpened)
         {
@@ -710,7 +709,6 @@ public class MenuItem : PopUpWindow
         else
         {
             var colorScheme = ThemeService.CurrentColorScheme;
-            var visualState = GetVisualState();
             var headerLine = " " + Title + " ";
 
             var actionButtons = GetActionButtons();

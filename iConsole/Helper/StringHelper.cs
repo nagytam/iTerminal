@@ -100,7 +100,7 @@ public static class StringHelper
             return hints;
         }
         var leading = hints.Length - hints.TrimStart(' ').Length;
-        var items = System.Text.RegularExpressions.Regex.Split(hints.Trim(), @"\s{2,}").ToList();
+        var items = System.Text.RegularExpressions.Regex.Split(hints.Trim(), @"\s{2,}", System.Text.RegularExpressions.RegexOptions.None, TimeSpan.FromSeconds(1)).ToList();
         var prefix = new string(' ', Math.Min(leading, 1));
         string Join() => prefix + string.Join("  ", items);
         while (items.Count > 1 && Join().Length > width)

@@ -19,7 +19,7 @@ public static class JsonTree
     /// <summary>Deepest nesting read; a document nested deeper is reported as not valid JSON.</summary>
     public const int MaxDepth = 256;
 
-    private static readonly Regex Whitespace = new(@"\s+", RegexOptions.Compiled);
+    private static readonly Regex Whitespace = new(@"\s+", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     /// <summary>The root row of the document, with its children.</summary>
     public static JsonNodeItem Build(JsonDocument document)

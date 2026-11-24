@@ -27,7 +27,7 @@ public class WatchAlarmTest
         Assert.AreEqual(string.Empty, label);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("")]
     [DataRow("25:00")]
     [DataRow("noon")]

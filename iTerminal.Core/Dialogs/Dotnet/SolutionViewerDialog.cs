@@ -75,7 +75,7 @@ public class SolutionViewerDialog : SplitPaneDialog
     // VSTest console summary line, e.g. "Passed!  - Failed: 0, Passed: 42, Skipped: 0, Total: 42, Duration: 1 s - Foo.dll"
     private static readonly Regex TestSummaryLineRegex = new(
         @"^(?:Passed|Failed)!\s*-\s*Failed:\s*(\d+),\s*Passed:\s*(\d+),\s*Skipped:\s*(\d+),\s*Total:\s*(\d+)",
-        RegexOptions.Compiled);
+        RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     private readonly IDotnetSolutionService _dotnetSolutionService;
     private IReadOnlyList<DotnetSdk> _sdks = [];

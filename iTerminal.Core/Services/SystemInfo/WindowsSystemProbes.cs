@@ -59,7 +59,7 @@ internal sealed class WindowsSystemProbes : SystemProbesBase
             return result;
         }
 
-        foreach (string subKey in cls.GetSubKeyNames().Where(name => Regex.IsMatch(name, "^[0-9]{4}$")).OrderBy(name => name, StringComparer.Ordinal))
+        foreach (string subKey in cls.GetSubKeyNames().Where(name => Regex.IsMatch(name, "^[0-9]{4}$", RegexOptions.None, TimeSpan.FromSeconds(1))).OrderBy(name => name, StringComparer.Ordinal))
         {
             using RegistryKey? card = cls.OpenSubKey(subKey);
             if (card?.GetValue("DriverDesc") is not string name)

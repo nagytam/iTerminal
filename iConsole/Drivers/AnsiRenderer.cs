@@ -18,7 +18,6 @@ public static class AnsiRenderer
     private const char   UNDERLINE = '4';
     private const char   BLINK = '5';
     private const char   STRIKE_THROUGH = '9';
-    private const string DOUBLE_UNDERLINE = "21";
     private const char   H = 'H';
     private const string RESET = "[0m";
     private const string OSC = "\x1B]";
@@ -63,26 +62,9 @@ public static class AnsiRenderer
         15, // White
     ];
 
-    private const string FOREGROUND_BLACK = "30";
-    private const string FOREGROUND_RED = "31";
-    private const string FOREGROUND_YELLOW = "33";
-    private const string FOREGROUND_MAGENTA = "35";
-    private const string FOREGROUND_WHITE = "37";
 
-    private const string BACKGROUND_RED = "41";
-    private const string BACKGROUND_YELLOW = "43";
-    private const string BACKGROUND_MAGENTA = "45";
-    private const string BACKGROUND_WHITE = "47";
 
-    private const string FOREGROUND_RED_BRIGHT = "91";
-    private const string FOREGROUND_YELLOW_BRIGHT = "93";
-    private const string FOREGROUND_MAGENTA_BRIGHT = "95";
-    private const string FOREGROUND_WHITE_BRIGHT = "97";
 
-    private const string BACKGROUND_RED_BRIGHT = "101";
-    private const string BACKGROUND_YELLOW_BRIGHT = "103";
-    private const string BACKGROUND_MAGENTA_BRIGHT = "105";
-    private const string BACKGROUND_CYAN_BRIGHT = "106";
 
     // O(1) lookup tables indexed by Color enum ordinal (mirrors ConsoleColor 0-15).
     // Avoids the large switch chains that the JIT cannot easily optimise into a jump table.

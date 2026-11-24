@@ -464,26 +464,6 @@ public sealed class GridArrayView
     public IReadOnlyList<string> LongFormHeaders =>
         [.. Enumerable.Range(0, Rank).Select(axis => "axis" + axis.ToString(System.Globalization.CultureInfo.InvariantCulture)), "value"];
 
-    /// <summary>The largest rectangle, cut from the first axis inward, of at most <paramref name="budget"/> cells: a prefix of the array in row-major order.</summary>
-    private static long[] Rectangle(IReadOnlyList<long> shape, long budget)
-    {
-        var count = new long[shape.Count];
-        long remaining = budget;
-        for (int axis = 0; axis < shape.Count; axis++)
-        {
-            long inner = 1;
-            for (int rest = axis + 1; rest < shape.Count; rest++)
-            {
-                inner *= shape[rest];
-            }
-
-            count[axis] = Math.Max(1, Math.Min(shape[axis], remaining / inner));
-            remaining = Math.Max(1, remaining / Math.Max(1, count[axis]));
-        }
-
-        return count;
-    }
-
     /// <summary>The headers of a window of <paramref name="columns"/> columns: the names the source gives, or the numbers, field names or <c>value</c>.</summary>
     private IReadOnlyList<string> Headers(int columns, bool byField, IReadOnlyList<string> fields, bool withRowNumbers)
     {

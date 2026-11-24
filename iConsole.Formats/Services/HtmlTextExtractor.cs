@@ -12,7 +12,7 @@ namespace iConsole.Formats.Services;
 /// </summary>
 public static class HtmlTextExtractor
 {
-    private static readonly Regex WhitespaceRun = new(@"\s+", RegexOptions.Compiled);
+    private static readonly Regex WhitespaceRun = new(@"\s+", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     /// <summary>Stands for a space inside a preformatted block until the line is tidied: a private-use character, not whitespace.</summary>
     private const char PreservedSpace = '\uE020';

@@ -225,7 +225,6 @@ public partial class SshFileSystemService : ISshFileSystemService
                                 CultureInfo.InvariantCulture,
                                 DateTimeStyles.None);
                             var displayName = name;
-                            // name = (name == "..") ? string.Empty : name;
                             var fullUrl = url.FullUrl;
                             Url childUrl;
                             if (displayName == ".." && _url.Path == "/")

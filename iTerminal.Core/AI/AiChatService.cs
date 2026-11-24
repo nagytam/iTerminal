@@ -171,9 +171,9 @@ public class AiChatService : IAiChatService
     }
 
     // Strips <think>...</think> blocks and ANSI escape sequences from model output.
-    private static readonly Regex ThinkTagRegex = new(@"<think>.*?</think>", RegexOptions.Singleline | RegexOptions.Compiled);
-    private static readonly Regex AnsiEscapeRegex = new(@"\x1b(?:\[[0-?]*[ -/]*[@-~]|[^[])", RegexOptions.Compiled);
-    private static readonly Regex IncompleteAnsiEscapeRegex = new(@"\x1b\[[0-?]*[ -/]*$", RegexOptions.Compiled);
+    private static readonly Regex ThinkTagRegex = new(@"<think>.*?</think>", RegexOptions.Singleline | RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+    private static readonly Regex AnsiEscapeRegex = new(@"\x1b(?:\[[0-?]*[ -/]*[@-~]|[^[])", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+    private static readonly Regex IncompleteAnsiEscapeRegex = new(@"\x1b\[[0-?]*[ -/]*$", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     internal static string Sanitize(string text)
     {

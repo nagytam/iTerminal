@@ -139,7 +139,6 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
             }
         }
 
-        // AnsiRenderer.Test();
     }
 
     public void RefreshWindowSize()
@@ -298,7 +297,6 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
 
     public void SetCursorPosition(int x, int y)
     {
-        //Debug.Assert(x >= 0 && x < WindowSize.Width);
         //Debug.Assert(y >= 0 && y < WindowSize.Height);
         x = x.Range(0, Math.Max(0, (int)WindowSize.Width - 1));
         y = y.Range(0, Math.Max(0, (int)WindowSize.Height - 1));

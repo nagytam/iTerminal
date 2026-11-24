@@ -169,7 +169,6 @@ public class BufferLayer
                     }
                     else
                     {
-                        // Debugger.Break();
                     }
                 }
             }

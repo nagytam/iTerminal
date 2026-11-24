@@ -88,7 +88,7 @@ public class MusicTagEditorDialog : Dialog
             return UiText.Get("MusicTag.Year", "The year is four digits, or blank.");
         }
 
-        if (edit.Track.Length > 0 && !System.Text.RegularExpressions.Regex.IsMatch(edit.Track, @"^\d+(/\d+)?$"))
+        if (edit.Track.Length > 0 && !System.Text.RegularExpressions.Regex.IsMatch(edit.Track, @"^\d+(/\d+)?$", RegexOptions.None, TimeSpan.FromSeconds(1)))
         {
             return UiText.Get("MusicTag.Track", "The track is a number, or number/total, or blank.");
         }

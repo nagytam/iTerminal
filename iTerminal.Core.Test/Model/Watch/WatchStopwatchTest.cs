@@ -46,7 +46,7 @@ public class WatchStopwatchTest
         Assert.AreEqual(0, watch.Laps.Count);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, "00:00.00")]
     [DataRow(1234, "00:01.23")]
     [DataRow(3723456, "1:02:03.45")]

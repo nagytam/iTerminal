@@ -164,7 +164,7 @@ public static partial class MimeParser
 
     internal static string? Parameter(string contentType, string name)
     {
-        var match = Regex.Match(contentType, $@"{name}\s*=\s*(?:""([^""]*)""|([^;\s]+))", RegexOptions.IgnoreCase);
+        var match = Regex.Match(contentType, $@"{name}\s*=\s*(?:""([^""]*)""|([^;\s]+))", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
         if (!match.Success) return null;
         return match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Value;
     }

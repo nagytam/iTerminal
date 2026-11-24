@@ -712,7 +712,6 @@ public partial class TextEditorControl
         }
 
         var lines = TextModel.Lines;
-        var comparison = ComparisonFor(matchCase);
         var startRow = (int)Math.Clamp(ScrollableModel.CursorPosition.Y, 0, lines.Count - 1);
         var startColumn = (int)Math.Min(ScrollableModel.CursorPosition.X, lines[startRow].Length);
         for (var step = 0; step <= lines.Count; step++)

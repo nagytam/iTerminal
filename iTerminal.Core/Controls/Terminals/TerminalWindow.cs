@@ -19,7 +19,6 @@ public class TerminalWindow : Window
     private TerminalModel _terminalModel { get; set; }
 
     //public override bool IsEnabled 
-    //{ 
     //    get  
     //    {
     //        try

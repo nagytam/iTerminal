@@ -16,7 +16,6 @@ public class FrequentExecutionGuardService(IDateTimeProviderService dateTimeProv
         var now = _dateTimeProviderService.Now;
         if (LastExecution.Add(FilterOffset).CompareTo(now) <= 0)
         {
-            //Trace.TraceInformation("Guard: execute");
             LastExecution = now;
             action();
             return;
@@ -56,7 +55,6 @@ public class FrequentExecutionGuardService(IDateTimeProviderService dateTimeProv
             }
 
             LastExecution = _dateTimeProviderService.Now;
-            // Trace.TraceInformation("Guard: execution after delay");
             try
             {
                 action();

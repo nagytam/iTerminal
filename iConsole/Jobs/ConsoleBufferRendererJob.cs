@@ -282,7 +282,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             }
             lock (Buffer.SyncLock)
             {
-                // Debug.Assert(!Buffer.IsLocked);
                 if (LastBuffer.Size != Buffer.Size)
                 {
                     shouldClearConsole = true;
@@ -296,10 +295,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                     _shownPicture = null;
                 }
 
-                //if (Buffer.IsDirty)
-                //{
-                //    Buffer.IsDirty = false;
-                //}
                 var layer = Buffer.MergedLayer;
                 layerToDump = layer;
                 pictureToDraw = PreparePicture(layer);
@@ -382,10 +377,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             }
         }
 
-        //if (Buffer.IsDirty)
-        //{
-        //    isIdle = false;
-        //}
 
         return isIdle;
     }
@@ -495,7 +486,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         ICollection<ConsoleDisplayWrite>? displayWrites,
         bool captureTrace)
     {
-        DebugConsoleOutput(y, source, last);
         var changedCharacters = RenderByCharacters(y, minX, maxX, source, last, pendingWrites, displayWrites);
         return captureTrace
             ? $"line={y};mode=chars;changed={changedCharacters};text=|{GetLineText(source)}|"
@@ -777,16 +767,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     private static int CountVisibleCharacters(BufferLayer layer)
         => RenderingDumpHelper.CountVisibleCharacters(layer);
 
-    private static string GetLineText(IReadOnlyList<Conxel> line)
-        => RenderingDumpHelper.GetLineText(line);
-
     private static string GetLineText(Span<Conxel> line)
         => RenderingDumpHelper.GetLineText(line.ToArray());
-
-    private static void DebugConsoleOutput(int y, Span<Conxel> source, Span<Conxel> last)
-    {
-        //var sourceString = new ConxelString(source);
-        //var lastString = new ConxelString(last);
-        // Debug.WriteLine($"Update line {y}:{Environment.NewLine}<<<{lastString.Text}>>>{Environment.NewLine}<<<{sourceString.Text}>>>");
-    }
 }

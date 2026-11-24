@@ -292,7 +292,7 @@ internal sealed class RarRuntimeDependency : SystemToolRuntimeDependency
     }
 
     /// <summary>The banner <c>rar</c> prints with no arguments: "RAR 7.23   Copyright (c) 1993-2026 Alexander Roshal".</summary>
-    private static readonly Regex VersionPattern = new(@"^\s*RAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant);
+    private static readonly Regex VersionPattern = new(@"^\s*RAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 }
 
 /// <summary>RARLAB's <c>unrar</c>: reads RAR archives on a machine without 7-Zip. Its Windows program is <c>UnRAR.exe</c>.</summary>
@@ -337,5 +337,5 @@ internal sealed class UnrarRuntimeDependency : SystemToolRuntimeDependency
     }
 
     /// <summary>The banner <c>unrar</c> prints with no arguments: "UNRAR 7.23 freeware      Copyright (c) 1993-2026 Alexander Roshal".</summary>
-    private static readonly Regex VersionPattern = new(@"^\s*UNRAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant);
+    private static readonly Regex VersionPattern = new(@"^\s*UNRAR (\d+(?:\.\d+)+)", RegexOptions.Multiline | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 }

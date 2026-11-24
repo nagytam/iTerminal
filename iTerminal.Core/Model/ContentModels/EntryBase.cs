@@ -13,7 +13,7 @@ namespace iTerminal.Core.Model.ContentModels;
 public abstract record EntryBase : IEntry
 {
     protected string fileSize = string.Empty;
-    public virtual string FileSize //=> Url.FileSize;
+    public virtual string FileSize
     {
         // The folder marker is stored as the constant everything compares against and shown in the chosen language; the
         // abbreviations fit the size column, which is six cells wide.

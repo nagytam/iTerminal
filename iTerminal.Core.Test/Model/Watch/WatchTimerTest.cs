@@ -7,7 +7,7 @@ public class WatchTimerTest
 {
     private static readonly DateTime Start = new(2026, 10, 14, 10, 0, 0);
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("5 Tea", 5, "Tea")]
     [DataRow("5", 5, "")]
     [DataRow("05:00 Eggs", 5, "Eggs")]
@@ -21,7 +21,7 @@ public class WatchTimerTest
         Assert.AreEqual(label, parsedLabel);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("")]
     [DataRow("0")]
     [DataRow("00:00")]

@@ -105,7 +105,6 @@ public class Control : INotifyPropertyChanged, IControl
             if (_hasStateChanged != value)
             {
                 // TODO
-                //Task.Run(() => OnHasStateChangedChanged());
                 OnHasStateChangedChange(value);
                 _hasStateChanged = value;
             }
@@ -441,7 +440,6 @@ public class Control : INotifyPropertyChanged, IControl
     {
         if (IsVisible)
         {
-            // Debug.WriteLine($"{Name} StateHasChanged");
             HasStateChanged = true;
         }
         GetRootControl().Refresh(ZOrder + 1);
@@ -893,7 +891,6 @@ public class Control : INotifyPropertyChanged, IControl
         dialog.Parent = parent;
         dialog.ZOrder = ZOrder + 1;
         await dialog.ShowAsync();
-        //await dialog.OnInitializeAsync();
         parent.AddControl(dialog);
     }
 

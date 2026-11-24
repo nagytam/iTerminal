@@ -29,7 +29,7 @@ public sealed class YtDlpYouTubeService : IYouTubeService
 
     private static readonly TimeSpan SearchTimeout = TimeSpan.FromSeconds(60);
     private static readonly TimeSpan ResolveTimeout = TimeSpan.FromSeconds(60);
-    private static readonly Regex VideoIdPattern = new("^[A-Za-z0-9_-]{11}$", RegexOptions.CultureInvariant);
+    private static readonly Regex VideoIdPattern = new("^[A-Za-z0-9_-]{11}$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
     /// <summary>Runs yt-dlp with the given arguments. Replaced by a fake in the tests.</summary>
     internal delegate Task<YtDlpResult> YtDlpRunner(IReadOnlyList<string> arguments, TimeSpan timeout, CancellationToken cancellationToken);

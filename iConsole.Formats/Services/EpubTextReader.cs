@@ -11,7 +11,6 @@ namespace iConsole.Formats.Services;
 /// </summary>
 public static class EpubTextReader
 {
-//p|//div|//section|//article|//blockquote|//pre|//tr|//li|//dt|//dd|//figcaption|//table|//ul|//ol|//dl";
 
     public static IReadOnlyList<string> Read(byte[] content)
     {

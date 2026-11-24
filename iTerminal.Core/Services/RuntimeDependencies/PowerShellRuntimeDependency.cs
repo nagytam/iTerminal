@@ -366,7 +366,7 @@ public sealed class PowerShellRuntimeDependency : IRuntimeDependency
                 return null;
             }
 
-            Match match = Regex.Match(await output + " " + await errors, @"\d+\.\d+\.\d+");
+            Match match = Regex.Match(await output + " " + await errors, @"\d+\.\d+\.\d+", RegexOptions.None, TimeSpan.FromSeconds(1));
             return match.Success ? match.Value : null;
         }
         catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception or IOException)

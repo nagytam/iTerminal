@@ -64,7 +64,7 @@ public class NetworkManagerDialogTest
 
     /// <summary>The name and the description share the width that is left, so the columns always fit the dialog.</summary>
     [Timeout(60_000)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(60)]
     [DataRow(120)]
     public async Task TheColumnsFitTheDialogWidth(int width)
