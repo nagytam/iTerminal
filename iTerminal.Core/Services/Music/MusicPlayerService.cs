@@ -541,12 +541,9 @@ public sealed class MusicPlayerService : IMusicPlayerService
                 }
             }
 
-            if (_requestedPause)
+            if (_requestedPause && !WaitWhilePaused(sink))
             {
-                if (!WaitWhilePaused(sink))
-                {
-                    return false;
-                }
+                return false;
             }
 
             TimeSpan? seek;

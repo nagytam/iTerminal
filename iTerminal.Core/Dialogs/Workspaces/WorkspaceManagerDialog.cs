@@ -163,12 +163,9 @@ public class WorkspaceManagerDialog : Dialog
 
             if (!(keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift))
             {
-                if (HandleListKey(keyEvent, out toRestore))
+                if (HandleListKey(keyEvent, out toRestore) && toRestore is null)
                 {
-                    if (toRestore is null)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             else if (_pending != Pending.None)

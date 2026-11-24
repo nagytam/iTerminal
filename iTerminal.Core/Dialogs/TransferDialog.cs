@@ -43,12 +43,9 @@ public abstract class TransferDialog : FormDialog
         get
         {
             var targetName = TextBoxTarget?.Text ?? string.Empty;
-            if (Path.GetFileName(targetName) == targetName)
+            if (Path.GetFileName(targetName) == targetName && BaseUrl is not null)
             {
-                if (BaseUrl is not null)
-                {
-                    targetName = BaseUrl.Combine(targetName);
-                }
+                targetName = BaseUrl.Combine(targetName);
             }
             return targetName;
         }

@@ -89,22 +89,19 @@ public class FolderIndexJob : Job
         {
             try
             {
-                if (_queue.TryDequeue(out IHierarchicalItemModel? folder) && folder is Folder currentFolder && currentFolder.Url is Url url)
+                if ((_queue.TryDequeue(out IHierarchicalItemModel? folder) && folder is Folder currentFolder && currentFolder.Url is Url url) && url.UrlScheme == Container.FILE)
                 {
-                    if (url.UrlScheme == Container.FILE)
+                    if (TryGetFolderMetadata(url.Path, out long size, out DateTimeOffset modifiedUtc))
                     {
-                        if (TryGetFolderMetadata(url.Path, out long size, out DateTimeOffset modifiedUtc))
-                        {
-                            UpdateCacheIfChanged(url.Path, size, modifiedUtc);
-                        }
+                        UpdateCacheIfChanged(url.Path, size, modifiedUtc);
+                    }
 
-                        string[] subFolderNames = Directory.GetDirectories(url.Path);
-                        foreach (string subFolderName in subFolderNames)
-                        {
-                            Folder subFolder = new(currentFolder, subFolderName);
-                            folder.Children.Add(subFolder);
-                            _queue.Enqueue(subFolder);
-                        }
+                    string[] subFolderNames = Directory.GetDirectories(url.Path);
+                    foreach (string subFolderName in subFolderNames)
+                    {
+                        Folder subFolder = new(currentFolder, subFolderName);
+                        folder.Children.Add(subFolder);
+                        _queue.Enqueue(subFolder);
                     }
                 }
             }
