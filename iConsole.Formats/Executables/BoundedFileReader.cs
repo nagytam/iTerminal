@@ -147,13 +147,10 @@ internal sealed class BoundedFileReader : IDisposable
         }
 
         double entropy = 0;
-        foreach (long count in counts)
+        foreach (long count in counts.Where(count => count > 0))
         {
-            if (count > 0)
-            {
-                double p = (double)count / done;
-                entropy -= p * Math.Log2(p);
-            }
+            double p = (double)count / done;
+            entropy -= p * Math.Log2(p);
         }
 
         // Sampled when the section is bigger than what went in, or was cut short only by the file's own end (not a sample).

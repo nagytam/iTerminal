@@ -977,13 +977,10 @@ internal sealed partial class HtmlLayout(WebDocument document)
             {
                 case "tr":
                     List<Cell> cells = [];
-                    foreach (var cell in child.Children)
+                    foreach (var cell in child.Children.Where(cell => cell.Tag is "td" or "th"))
                     {
-                        if (cell.Tag is "td" or "th")
-                        {
-                            var span = int.TryParse(cell.Attr("colspan"), out var parsed) ? Math.Clamp(parsed, 1, 40) : 1;
-                            cells.Add(new Cell(cell, span, cell.Tag == "th"));
-                        }
+                        var span = int.TryParse(cell.Attr("colspan"), out var parsed) ? Math.Clamp(parsed, 1, 40) : 1;
+                        cells.Add(new Cell(cell, span, cell.Tag == "th"));
                     }
 
                     rows.Add(cells);

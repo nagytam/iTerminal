@@ -137,12 +137,9 @@ internal sealed class MorrisState
     public int OnBoard(int side)
     {
         int count = 0;
-        foreach (byte point in Board)
+        foreach (byte point in Board.Where(point => point == side + 1))
         {
-            if (point == side + 1)
-            {
-                count++;
-            }
+            count++;
         }
 
         return count;

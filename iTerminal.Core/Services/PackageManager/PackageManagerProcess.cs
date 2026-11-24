@@ -52,7 +52,9 @@ internal static class PackageManagerProcess
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return new ProcessResult(false, string.Empty, $"{fileName} command timed out");
             }
 
@@ -126,7 +128,9 @@ internal static class PackageManagerProcess
         }
         catch (OperationCanceledException)
         {
-            try { process.Kill(entireProcessTree: true); } catch { }
+            try { process.Kill(entireProcessTree: true); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
             onOutputLine("(cancelled)");
             return -1;
         }

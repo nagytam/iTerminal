@@ -487,7 +487,9 @@ public sealed class GitService : IGitService
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return new ProcessResult(false, string.Empty, "git command timed out");
             }
 

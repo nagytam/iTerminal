@@ -100,6 +100,7 @@ public class Desktop : IHostedService, IDesktop
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         foreach (var job in Jobs)
@@ -363,6 +364,7 @@ public class Desktop : IHostedService, IDesktop
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
     }

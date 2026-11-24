@@ -979,18 +979,15 @@ public static class SyntaxHighlighter
 
     private static bool StartsLineComment(SyntaxLanguage language, string line, int index)
     {
-        foreach (string marker in language.LineComments)
+        foreach (string marker in language.LineComments.Where(marker => string.Compare(line, index, marker, 0, marker.Length, StringComparison.OrdinalIgnoreCase) == 0))
         {
-            if (string.Compare(line, index, marker, 0, marker.Length, StringComparison.OrdinalIgnoreCase) == 0)
+            // "rem" must start the line's first word; the symbol markers may sit anywhere.
+            if (char.IsLetter(marker[0]))
             {
-                // "rem" must start the line's first word; the symbol markers may sit anywhere.
-                if (char.IsLetter(marker[0]))
-                {
-                    return line.AsSpan(0, index).Trim().IsEmpty;
-                }
-
-                return true;
+                return line.AsSpan(0, index).Trim().IsEmpty;
             }
+
+            return true;
         }
 
         return false;

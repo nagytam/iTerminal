@@ -184,12 +184,9 @@ public sealed class GridQueryDrafter(IGridQueryAssistant assistant)
         }
 
         string line = text.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim() ?? string.Empty;
-        foreach (string label in new[] { "Query:", "SQL:" })
+        foreach (string label in new[] { "Query:", "SQL:" }.Where(label => line.StartsWith(label, StringComparison.OrdinalIgnoreCase)))
         {
-            if (line.StartsWith(label, StringComparison.OrdinalIgnoreCase))
-            {
-                line = line[label.Length..].Trim();
-            }
+            line = line[label.Length..].Trim();
         }
 
         return line.TrimEnd(';').Trim().Trim('`').Trim();

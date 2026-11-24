@@ -47,7 +47,9 @@ public class DatePopUpWindow : PopUpWindow
     public override string Title
     {
         get => UiText.Get(TitleKey, TitleFallback);
-        set { }
+        set {
+            // Intentionally empty: there is nothing to do for this case.
+        }
     }
 
     public override void OnInitializeLayout()

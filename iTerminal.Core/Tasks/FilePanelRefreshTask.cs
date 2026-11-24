@@ -123,12 +123,14 @@ public class FilePanelRefreshTask : BackgroundTask
                     }
                     catch
                     {
+                        // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                     }
                 }
             }
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
         finally
         {
@@ -188,11 +190,13 @@ ON CONFLICT(Path) DO UPDATE SET
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
             }
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         if (!CancellationToken.IsCancellationRequested && _contentModel is not null && IsCurrentUrl())
@@ -203,6 +207,7 @@ ON CONFLICT(Path) DO UPDATE SET
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
 

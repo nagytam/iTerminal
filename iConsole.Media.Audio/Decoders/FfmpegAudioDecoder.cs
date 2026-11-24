@@ -230,6 +230,7 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         try
@@ -238,6 +239,7 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
     }
 
@@ -290,6 +292,7 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
                 return false;
             }

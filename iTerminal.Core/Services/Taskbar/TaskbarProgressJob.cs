@@ -47,6 +47,7 @@ public sealed class TaskbarProgressJob(TaskManager taskManager, ITaskbarProgress
         }
         catch (OperationCanceledException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         finally
         {

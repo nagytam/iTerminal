@@ -37,6 +37,7 @@ public sealed class ListDataSource<T> : IVirtualDataSource<T>
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         item = default;

@@ -111,6 +111,7 @@ public sealed class AplayAudioSink : IAudioSink
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
     }
 
@@ -164,6 +165,7 @@ public sealed class AplayAudioSink : IAudioSink
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
 
             if (process is null)
@@ -180,6 +182,7 @@ public sealed class AplayAudioSink : IAudioSink
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
 
             try
@@ -188,6 +191,7 @@ public sealed class AplayAudioSink : IAudioSink
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
         }
     }
@@ -291,6 +295,7 @@ public sealed class AplayAudioSink : IAudioSink
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
                 return [];
             }

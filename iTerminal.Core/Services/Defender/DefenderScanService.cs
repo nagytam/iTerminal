@@ -145,9 +145,11 @@ public sealed partial class DefenderScanService(Func<string?>? locate = null) : 
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (UnauthorizedAccessException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         var shipped = Path.Combine(

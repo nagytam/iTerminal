@@ -311,6 +311,7 @@ public class HashManifestDialog : Dialog
                 }
                 catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or NotSupportedException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }

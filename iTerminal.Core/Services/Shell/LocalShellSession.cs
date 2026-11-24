@@ -177,6 +177,7 @@ public sealed class LocalShellSession : IDisposable
         }
         catch (InvalidOperationException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         _process.Dispose();

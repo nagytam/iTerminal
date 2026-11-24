@@ -194,6 +194,7 @@ public class PropertiesDialog : FormDialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
@@ -240,6 +241,7 @@ public class PropertiesDialog : FormDialog
                 }
                 catch (OperationCanceledException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
                 catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
                 {
@@ -405,6 +407,7 @@ public class PropertiesDialog : FormDialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {

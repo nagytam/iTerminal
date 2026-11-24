@@ -447,12 +447,9 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
     {
         var tokens = FilterTokens();
         var matches = 0;
-        foreach (var track in Player.Playlist.Tracks)
+        foreach (var track in Player.Playlist.Tracks.Where(track => Matches(track, tokens)))
         {
-            if (Matches(track, tokens))
-            {
-                matches++;
-            }
+            matches++;
         }
 
         return matches;

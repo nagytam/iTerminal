@@ -58,12 +58,9 @@ public sealed class MusicPlaylistStore : IMusicPlaylistStore
         {
             List<MusicPlaylistEntry> rows = [];
             int position = 0;
-            foreach (MusicTrack track in tracks ?? [])
+            foreach (MusicTrack track in (tracks ?? []).Where(track => track is not null))
             {
-                if (track is not null)
-                {
-                    rows.Add(MusicPlaylistEntry.FromTrack(track, position++));
-                }
+                rows.Add(MusicPlaylistEntry.FromTrack(track, position++));
             }
 
             using iTerminalDbContext context = _dbContextFactory.CreateDbContext();

@@ -21,8 +21,12 @@ public interface IMemoryDriveService : IFileSystem
     /// </summary>
     event EventHandler? MirrorLoaded
     {
-        add { }
-        remove { }
+        add {
+            // Intentionally empty: there is nothing to do for this case.
+        }
+        remove {
+            // Intentionally empty: there is nothing to do for this case.
+        }
     }
 
     /// <summary>Raises <see cref="MirrorLoaded"/>.</summary>

@@ -189,12 +189,9 @@ public class Tab(IThemeService themeService) : Control(themeService)
     public override void Close()
     {
         base.Close();
-        foreach (var tabPage in TabPages.AsSnapshot())
+        foreach (var tabPage in TabPages.AsSnapshot().Where(tabPage => tabPage != FocusedPage))
         {
-            if (tabPage != FocusedPage)
-            {
-                tabPage.Close();
-            }
+            tabPage.Close();
         }
     }
 

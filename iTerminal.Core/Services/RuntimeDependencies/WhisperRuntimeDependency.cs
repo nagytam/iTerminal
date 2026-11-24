@@ -112,6 +112,7 @@ public sealed class WhisperRuntimeDependency : IRuntimeDependency, IWhisperModel
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 

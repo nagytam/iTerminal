@@ -91,6 +91,7 @@ public static class KeyTraceHelper
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
     }
 

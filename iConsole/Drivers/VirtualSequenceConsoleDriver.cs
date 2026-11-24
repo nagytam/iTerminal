@@ -195,6 +195,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
             }
             catch (IOException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
     }
@@ -218,6 +219,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
             }
             catch (IOException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
 
@@ -307,6 +309,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
 
         }
     }

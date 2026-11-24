@@ -125,12 +125,9 @@ public sealed class LinuxSystemProbes : SystemProbesBase
 
     private static string? ReadFirstExisting(params string[] paths)
     {
-        foreach (string path in paths)
+        foreach (string path in paths.Where(path => File.Exists(path)))
         {
-            if (File.Exists(path))
-            {
-                return TryRead(path);
-            }
+            return TryRead(path);
         }
 
         return null;

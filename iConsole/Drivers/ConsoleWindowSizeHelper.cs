@@ -75,6 +75,7 @@ public static class ConsoleWindowSizeHelper
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         return size;

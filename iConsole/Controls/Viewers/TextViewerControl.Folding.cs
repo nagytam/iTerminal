@@ -309,6 +309,7 @@ public partial class TextViewerControl
     {
         while (IsHidden(line) && Unfold(line))
         {
+            // Reading to the end is the whole job; there is nothing to do per item.
         }
     }
 

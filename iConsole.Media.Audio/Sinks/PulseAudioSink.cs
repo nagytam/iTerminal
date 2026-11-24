@@ -156,6 +156,7 @@ public sealed class PulseAudioSink : IAudioSink
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
             }
         }
@@ -173,6 +174,7 @@ public sealed class PulseAudioSink : IAudioSink
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
             }
         }
@@ -209,6 +211,7 @@ public sealed class PulseAudioSink : IAudioSink
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
                 _handle = IntPtr.Zero;
             }
@@ -279,12 +282,9 @@ public sealed class PulseAudioSink : IAudioSink
 
     private static string? GetDefaultSinkName()
     {
-        foreach (var line in RunLines("pactl", ["info"]))
+        foreach (var line in RunLines("pactl", ["info"]).Where(line => line.StartsWith("Default Sink:", StringComparison.OrdinalIgnoreCase)))
         {
-            if (line.StartsWith("Default Sink:", StringComparison.OrdinalIgnoreCase))
-            {
-                return line["Default Sink:".Length..].Trim();
-            }
+            return line["Default Sink:".Length..].Trim();
         }
 
         return null;
@@ -338,6 +338,7 @@ public sealed class PulseAudioSink : IAudioSink
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
                 return [];
             }

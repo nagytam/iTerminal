@@ -89,6 +89,7 @@ public sealed class XmlValidator : IXmlValidator
             using XmlReader reader = XmlReader.Create(new MemoryStream(content), settings, baseUri);
             while (reader.Read())
             {
+                // Reading to the end is the whole job; there is nothing to do per item.
             }
         }
         catch (XmlException exception)

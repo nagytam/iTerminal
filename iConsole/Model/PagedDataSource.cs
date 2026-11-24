@@ -268,6 +268,7 @@ public sealed class PagedDataSource<T> : IVirtualDataSource<T>, IDisposable
         }
         catch (OperationCanceledException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (Exception exception)
         {

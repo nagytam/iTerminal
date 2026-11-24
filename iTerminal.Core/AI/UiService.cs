@@ -68,12 +68,9 @@ public class UiService : IUiService
     private Dialog? ResolveContributedDialog(string name)
     {
         string key = name.ToLowerInvariant();
-        foreach (IOpenableDialogContribution contribution in _serviceProvider.GetServices<IOpenableDialogContribution>())
+        foreach (IOpenableDialogContribution contribution in _serviceProvider.GetServices<IOpenableDialogContribution>().Where(contribution => contribution.Names.Contains(key)))
         {
-            if (contribution.Names.Contains(key))
-            {
-                return contribution.Resolve(_serviceProvider);
-            }
+            return contribution.Resolve(_serviceProvider);
         }
 
         return null;

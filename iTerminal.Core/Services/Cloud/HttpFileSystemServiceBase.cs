@@ -230,6 +230,7 @@ public abstract class HttpFileSystemServiceBase(HttpMessageHandler? handler, ILo
             }
             catch (IOException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
     }

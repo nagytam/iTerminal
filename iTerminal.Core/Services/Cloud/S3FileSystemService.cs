@@ -197,12 +197,9 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
             ["host"] = info.Host,
             ["x-amz-date"] = now.ToString("yyyyMMdd'T'HHmmss'Z'", CultureInfo.InvariantCulture),
         };
-        foreach (var header in request.Headers)
+        foreach (var header in request.Headers.Where(header => header.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase)))
         {
-            if (header.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-            {
-                headers[header.Key] = string.Join(',', header.Value);
-            }
+            headers[header.Key] = string.Join(',', header.Value);
         }
 
         var payloadHash = headers.GetValueOrDefault("x-amz-content-sha256") ?? AwsSignatureV4.EmptyPayloadHash;

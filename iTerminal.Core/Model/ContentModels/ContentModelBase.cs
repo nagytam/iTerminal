@@ -407,6 +407,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
         return focusedEntry;
     }

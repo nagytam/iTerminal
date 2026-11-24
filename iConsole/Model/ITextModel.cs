@@ -16,7 +16,9 @@ public interface ITextModel : INotifyPropertyChanged
     string LineEnding
     {
         get => Environment.NewLine;
-        set { }
+        set {
+            // Intentionally empty: there is nothing to do for this case.
+        }
     }
 
     void TriggerPropertyChanged();

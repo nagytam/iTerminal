@@ -175,6 +175,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             }
             catch (Exception exception) when (exception is IOException or ObjectDisposedException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             finally
             {
@@ -769,6 +770,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
     }
 

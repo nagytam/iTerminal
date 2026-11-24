@@ -626,12 +626,9 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        foreach (string file in Enumerate(() => Directory.EnumerateFiles(folder, "*", DiscoveryOptions)))
+        foreach (string file in (Enumerate(() => Directory.EnumerateFiles(folder, "*", DiscoveryOptions))).Where(file => !IsHidden(file)))
         {
-            if (!IsHidden(file))
-            {
-                files.Add(file);
-            }
+            files.Add(file);
         }
 
         onFolderScanned?.Invoke();

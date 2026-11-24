@@ -19,6 +19,7 @@ public interface IConsoleDriver : Services.IConsoleHandoverParticipant
         get => CursorShape.Default;
         set
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 

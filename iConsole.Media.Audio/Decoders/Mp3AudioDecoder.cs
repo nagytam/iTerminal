@@ -120,6 +120,7 @@ public sealed class Mp3AudioDecoder : IAudioDecoder
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         _stream.Dispose();

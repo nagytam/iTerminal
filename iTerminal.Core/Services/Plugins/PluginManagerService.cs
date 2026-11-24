@@ -211,23 +211,17 @@ public sealed class PluginManagerService : IPluginManagerService
         lock (_gate)
         {
             bool changed = false;
-            foreach (string name in files)
+            foreach (string name in files.Where(name => !_entries.ContainsKey(name)))
             {
-                if (!_entries.ContainsKey(name))
-                {
-                    _entries[name] = new Entry(name);
-                    changed = true;
-                }
+                _entries[name] = new Entry(name);
+                changed = true;
             }
 
             // A file that has gone is forgotten, unless the plug-in is loaded or on its way; a loaded one keeps its entry until it is unloaded.
-            foreach (Entry entry in _entries.Values.ToList())
+            foreach (Entry entry in _entries.Values.ToList().Where(entry => !files.Contains(entry.FileName) && entry.State is PluginState.Unloaded or PluginState.Failed))
             {
-                if (!files.Contains(entry.FileName) && entry.State is PluginState.Unloaded or PluginState.Failed)
-                {
-                    _entries.Remove(entry.FileName);
-                    changed = true;
-                }
+                _entries.Remove(entry.FileName);
+                changed = true;
             }
 
             if (changed)

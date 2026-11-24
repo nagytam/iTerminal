@@ -27,9 +27,11 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
                 catch (ArgumentOutOfRangeException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }
@@ -73,9 +75,11 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
                 catch (ArgumentOutOfRangeException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }  
@@ -99,6 +103,7 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (System.IO.IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }
@@ -122,6 +127,7 @@ public class SystemConsoleDriver : IConsoleDriver
                 }
                 catch (System.IO.IOException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }
@@ -165,6 +171,7 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -184,9 +191,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         RefreshWindowSize();
@@ -224,9 +233,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -258,9 +269,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -298,6 +311,7 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -318,9 +332,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -371,9 +387,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 
@@ -404,9 +422,11 @@ public class SystemConsoleDriver : IConsoleDriver
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         catch (ArgumentOutOfRangeException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 

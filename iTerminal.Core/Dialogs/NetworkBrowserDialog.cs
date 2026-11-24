@@ -224,6 +224,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {

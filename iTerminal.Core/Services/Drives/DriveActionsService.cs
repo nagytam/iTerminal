@@ -360,6 +360,7 @@ public sealed partial class DriveActionsService : IDriveActionsService
                 }
                 catch (ArgumentException)
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
             }
         }

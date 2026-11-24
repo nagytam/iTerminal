@@ -507,6 +507,7 @@ public sealed class UpdateService : IUpdateService
                 string probe = Path.Combine(target, $".write-test-{Guid.NewGuid():N}");
                 using (File.Create(probe))
                 {
+                    // Intentionally empty: there is nothing to do for this case.
                 }
 
                 File.Delete(probe);

@@ -442,12 +442,9 @@ public class CalculatorEngine
     private static int DigitCount(string text)
     {
         var count = 0;
-        foreach (var c in text)
+        foreach (var c in text.Where(c => char.IsLetterOrDigit(c)))
         {
-            if (char.IsLetterOrDigit(c))
-            {
-                count++;
-            }
+            count++;
         }
         return count;
     }

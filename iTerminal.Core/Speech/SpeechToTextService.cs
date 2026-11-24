@@ -154,6 +154,7 @@ public sealed class SpeechToTextService : ISpeechToTextService
         }
         catch (AggregateException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 

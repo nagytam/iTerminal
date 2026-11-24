@@ -92,6 +92,7 @@ public sealed class SpellChecker : ISpellChecker
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
 
@@ -180,12 +181,9 @@ public sealed class SpellChecker : ISpellChecker
 
         string normal = Normalize(word.Replace('’', '\''));
         var found = new List<string>();
-        foreach (string candidate in Edits(normal))
+        foreach (string candidate in Edits(normal).Where(candidate => Known(candidate) && !found.Contains(candidate)))
         {
-            if (Known(candidate) && !found.Contains(candidate))
-            {
-                found.Add(candidate);
-            }
+            found.Add(candidate);
         }
 
         if (found.Count < max && normal.Length <= 12)
@@ -193,12 +191,9 @@ public sealed class SpellChecker : ISpellChecker
             // Two edits away, only from the first-edit strings, and only as many as are still needed.
             foreach (string once in Edits(normal).Take(3000))
             {
-                foreach (string candidate in Edits(once))
+                foreach (string candidate in Edits(once).Where(candidate => Known(candidate) && !found.Contains(candidate)))
                 {
-                    if (Known(candidate) && !found.Contains(candidate))
-                    {
-                        found.Add(candidate);
-                    }
+                    found.Add(candidate);
                 }
 
                 if (found.Count >= max * 4)

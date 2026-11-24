@@ -302,12 +302,9 @@ public class ScrollView : Control
             c.HasStateChanged = false;
         }
 
-        foreach (IControl child in control.Controls.AsSnapshot())
+        foreach (IControl child in control.Controls.AsSnapshot().Where(child => child is not null))
         {
-            if (child is not null)
-            {
-                ClearChanged(child);
-            }
+            ClearChanged(child);
         }
     }
 

@@ -385,6 +385,7 @@ public class ContentModelFileSystem(
             }
             catch (TaskCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             finally
             {

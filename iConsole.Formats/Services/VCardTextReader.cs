@@ -141,12 +141,9 @@ public static class VCardTextReader
 
     private static string? Field(List<ContentLine> card, string name)
     {
-        foreach (ContentLine property in card)
+        foreach (ContentLine property in card.Where(property => property.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
         {
-            if (property.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-            {
-                return ContentLines.Unescape(property.Value);
-            }
+            return ContentLines.Unescape(property.Value);
         }
 
         return null;

@@ -512,12 +512,9 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
             return;
         }
 
-        foreach (string directory in Directory.EnumerateDirectories(_root).Where(IsVersionDirectory))
+        foreach (string directory in Directory.EnumerateDirectories(_root).Where(IsVersionDirectory).Where(directory => Version.Parse(Path.GetFileName(directory)) < current))
         {
-            if (Version.Parse(Path.GetFileName(directory)) < current)
-            {
-                DeleteDirectory(directory);
-            }
+            DeleteDirectory(directory);
         }
     }
 
@@ -556,6 +553,7 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 }

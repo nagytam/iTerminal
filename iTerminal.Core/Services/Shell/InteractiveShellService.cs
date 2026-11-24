@@ -92,6 +92,7 @@ public sealed class InteractiveShellService(ConsoleOwnership consoleOwnership) :
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 }

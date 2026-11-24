@@ -705,6 +705,7 @@ public partial class TextEditorControl
             }
             catch (System.Text.RegularExpressions.RegexMatchTimeoutException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
 
             return (-1, 0, replacement);

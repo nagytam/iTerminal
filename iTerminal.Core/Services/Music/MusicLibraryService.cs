@@ -593,12 +593,9 @@ public sealed class MusicLibraryService : IMusicLibraryService
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        foreach (string file in Enumerate(() => Directory.EnumerateFiles(folder, "*", DiscoveryOptions)))
+        foreach (string file in (Enumerate(() => Directory.EnumerateFiles(folder, "*", DiscoveryOptions))).Where(file => AudioDecoderFactory.IsAudioFile(file)))
         {
-            if (AudioDecoderFactory.IsAudioFile(file))
-            {
-                files.Add(file);
-            }
+            files.Add(file);
         }
 
         onFolderScanned?.Invoke();

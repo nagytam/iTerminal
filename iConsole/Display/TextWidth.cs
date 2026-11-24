@@ -194,12 +194,9 @@ public static class TextWidth
     public static string FromCells(IEnumerable<char> cells)
     {
         var builder = new StringBuilder();
-        foreach (var cell in cells)
+        foreach (var cell in cells.Where(cell => cell != Continuation))
         {
-            if (cell != Continuation)
-            {
-                builder.Append(cell);
-            }
+            builder.Append(cell);
         }
         return builder.ToString();
     }

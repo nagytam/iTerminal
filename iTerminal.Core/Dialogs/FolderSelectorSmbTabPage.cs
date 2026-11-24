@@ -330,6 +330,7 @@ public class FolderSelectorSmbTabPage : FolderSelectorTabPage
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {
@@ -785,12 +786,9 @@ internal static class SmbBrowserRows
             rows.Add(new(address, null, null, label));
         }
 
-        foreach (var login in loginList)
+        foreach (var login in loginList.Where(login => listed.Add(login.Host)))
         {
-            if (listed.Add(login.Host))
-            {
-                rows.Add(new(login.Host, null, null, $"{login.Host} (SMB, {LoggedIn(login.Username)})"));
-            }
+            rows.Add(new(login.Host, null, null, $"{login.Host} (SMB, {LoggedIn(login.Username)})"));
         }
 
         foreach (var profile in savedProfiles)

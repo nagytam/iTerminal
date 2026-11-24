@@ -105,6 +105,7 @@ public sealed class CompressTask(
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
             }
         }
@@ -194,6 +195,7 @@ public sealed class CompressTask(
         }
         catch
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
 
         return DateTime.TryParse($"{url.Date} {url.Time}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsed)

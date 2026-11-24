@@ -184,6 +184,7 @@ public class SignatureDialog : Dialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {

@@ -35,19 +35,13 @@ public class FolderPathCompletionModel : ICompletionModel
         get
         {
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var typedPath in _typedPaths.Completions)
+            foreach (var typedPath in _typedPaths.Completions.Where(typedPath => !string.IsNullOrWhiteSpace(typedPath) && seen.Add(typedPath)))
             {
-                if (!string.IsNullOrWhiteSpace(typedPath) && seen.Add(typedPath))
-                {
-                    yield return typedPath;
-                }
+                yield return typedPath;
             }
-            foreach (var visitedFolder in _folderHistoryService?.History.AsSnapshot() ?? [])
+            foreach (var visitedFolder in (_folderHistoryService?.History.AsSnapshot() ?? []).Where(visitedFolder => !string.IsNullOrWhiteSpace(visitedFolder) && seen.Add(visitedFolder)))
             {
-                if (!string.IsNullOrWhiteSpace(visitedFolder) && seen.Add(visitedFolder))
-                {
-                    yield return visitedFolder;
-                }
+                yield return visitedFolder;
             }
         }
     }

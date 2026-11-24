@@ -286,6 +286,7 @@ public class UserMenuService(string filePath, IInteractiveShellService shellServ
             }
             catch (IOException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
     }

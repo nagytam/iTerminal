@@ -125,7 +125,9 @@ public sealed class StartupWarningService : IDisposable
         _lockStream = null;
         if (_pidPath is not null)
         {
-            try { File.Delete(_pidPath); } catch { }
+            try { File.Delete(_pidPath); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
             _pidPath = null;
         }
     }

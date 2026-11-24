@@ -22,6 +22,7 @@ public abstract class Job : IJob
         }
         catch 
         {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
         }
         OnStop();
     }

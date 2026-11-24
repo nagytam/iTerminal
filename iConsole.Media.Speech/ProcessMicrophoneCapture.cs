@@ -119,6 +119,7 @@ internal sealed class ProcessMicrophoneCapture(IReadOnlyList<RecorderCommand> ca
             }
             catch (AggregateException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
 
             process.Dispose();

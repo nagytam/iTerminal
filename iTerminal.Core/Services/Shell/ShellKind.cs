@@ -28,13 +28,10 @@ public static class ShellKinds
 
     public static bool TryParse(string? text, out ShellKind kind)
     {
-        foreach (var candidate in All)
+        foreach (var candidate in All.Where(candidate => string.Equals(Name(candidate), text?.Trim(), StringComparison.OrdinalIgnoreCase)))
         {
-            if (string.Equals(Name(candidate), text?.Trim(), StringComparison.OrdinalIgnoreCase))
-            {
-                kind = candidate;
-                return true;
-            }
+            kind = candidate;
+            return true;
         }
 
         kind = ShellKind.Sh;

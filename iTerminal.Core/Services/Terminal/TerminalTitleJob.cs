@@ -49,6 +49,7 @@ public sealed class TerminalTitleJob(IContentModelService contentModelService, I
         }
         catch (OperationCanceledException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
         finally
         {

@@ -798,7 +798,9 @@ public class FileToTextConverterService : IFileToTextConverterService
         }
         finally
         {
-            try { bitmap.Dispose(); } catch { }
+            try { bitmap.Dispose(); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
         }
     }
 

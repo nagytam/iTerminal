@@ -330,6 +330,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
 
             // A wrong ZipCrypto password is only noticed once the data fails its check, and one in 256 wrong passwords

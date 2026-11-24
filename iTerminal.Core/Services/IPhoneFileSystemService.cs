@@ -369,15 +369,21 @@ public sealed class IPhoneFileSystemService : IIPhoneFileSystemService, IDisposa
         {
             if (_afcClient is not null)
             {
-                try { afc.afc_file_close(_afcClient, handle); } catch { }
+                try { afc.afc_file_close(_afcClient, handle); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
             }
         }
     }
 
     private void DisposeSession()
     {
-        try { _afcClient?.Dispose(); } catch { }
-        try { _deviceHandle?.Dispose(); } catch { }
+        try { _afcClient?.Dispose(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
+        try { _deviceHandle?.Dispose(); } catch {
+            // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+        }
         _afcClient = null;
         _deviceHandle = null;
         _connectedUdid = null;

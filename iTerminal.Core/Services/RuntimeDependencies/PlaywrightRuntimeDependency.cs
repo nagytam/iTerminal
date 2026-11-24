@@ -370,6 +370,7 @@ public sealed class PlaywrightRuntimeDependency : IRuntimeDependency
         }
         catch (IOException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
     }
 }

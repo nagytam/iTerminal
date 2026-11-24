@@ -110,6 +110,7 @@ public class FolderIndexJob : Job
             }
             catch
             {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
             }
 
             // The walker is the only writer after start, so the flag cannot race the drive handler. It is set here, before
@@ -148,6 +149,7 @@ public class FolderIndexJob : Job
                 }
                 catch
                 {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
                 }
             }
 

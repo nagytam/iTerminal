@@ -22,8 +22,12 @@ public sealed class NullContentModelService : IContentModelService
 
     public event EventHandler? ModelChanged
     {
-        add { }
-        remove { }
+        add {
+            // Intentionally empty: there is nothing to do for this case.
+        }
+        remove {
+            // Intentionally empty: there is nothing to do for this case.
+        }
     }
 
     public void AddContentBrowser(string name, IContentBrowser contentBrowser)

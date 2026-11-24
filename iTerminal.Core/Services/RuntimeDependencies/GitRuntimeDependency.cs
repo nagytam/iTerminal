@@ -251,7 +251,9 @@ public sealed partial class GitRuntimeDependency : IRuntimeDependency
             }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch { }
+                try { process.Kill(entireProcessTree: true); } catch {
+                    // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+                }
                 return null;
             }
 

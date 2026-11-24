@@ -176,6 +176,7 @@ public class StreamsDialog : Dialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
             catch (Exception exception)
             {
@@ -216,6 +217,7 @@ public class StreamsDialog : Dialog
             }
             catch (OperationCanceledException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
 
             StateHasChanged();
@@ -547,6 +549,7 @@ public class StreamsDialog : Dialog
             }
             catch (ArgumentException)
             {
+                // Intentionally empty: there is nothing to do for this case.
             }
         }
 

@@ -367,12 +367,9 @@ public class CompareFoldersDialog : Dialog
 
         marks.ClearMarks();
         var count = 0;
-        foreach (var entry in model.FilteredEntries)
+        foreach (var entry in model.FilteredEntries.Where(entry => !FocusedEntry.IsParentEntry(entry) && wanted.Contains(FocusedEntry.NameOf(entry.Url)) && marks.SetMark(entry, true)))
         {
-            if (!FocusedEntry.IsParentEntry(entry) && wanted.Contains(FocusedEntry.NameOf(entry.Url)) && marks.SetMark(entry, true))
-            {
-                count++;
-            }
+            count++;
         }
 
         model.Update();

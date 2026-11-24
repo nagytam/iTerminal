@@ -242,12 +242,9 @@ public sealed class Playlist
         lock (_syncLock)
         {
             _tracks.Clear();
-            foreach (var track in tracks ?? [])
+            foreach (var track in (tracks ?? []).Where(track => track is not null && !_tracks.Contains(track)))
             {
-                if (track is not null && !_tracks.Contains(track))
-                {
-                    _tracks.Add(track);
-                }
+                _tracks.Add(track);
             }
 
             _currentIndex = -1;

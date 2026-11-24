@@ -213,12 +213,9 @@ public static class ModelFileSummary
                     break;
                 case "mtllib":
                     recognised++;
-                    foreach (string name in rest.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string name in rest.Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(name => !libraries.Contains(name)))
                     {
-                        if (!libraries.Contains(name))
-                        {
-                            libraries.Add(name);
-                        }
+                        libraries.Add(name);
                     }
                     break;
             }

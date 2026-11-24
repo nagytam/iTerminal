@@ -47,6 +47,7 @@ public class GitDriveCommand(IContentModelService contentModelService) : OpenDri
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
+            // Intentionally empty: there is nothing to do for this case.
         }
 
         return null;

@@ -346,7 +346,9 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
         {
             // Cancel before killing: killing raises the exit event at once, and that would finish the run as an exit code.
             exited.TrySetCanceled(cancellationToken);
-            try { process.Kill(entireProcessTree: true); } catch { }
+            try { process.Kill(entireProcessTree: true); } catch {
+                // Deliberately ignored: the failure leaves nothing to undo, so the operation is best effort.
+            }
         });
 
         try
