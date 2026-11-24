@@ -17,7 +17,7 @@ public class CreateFileCommand(
 
     public override bool CanExecute()
     {
-        if (Control?.Parent is CreateFileDialog createFileDialog)
+        if (Control?.Parent is CreateFileDialog)
         {
             return newFileValidator.EnsureCurrent();
         }

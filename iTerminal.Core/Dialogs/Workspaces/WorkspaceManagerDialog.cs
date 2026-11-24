@@ -467,7 +467,7 @@ public class WorkspaceManagerDialog : Dialog
 
     private void AskUpdate()
     {
-        if (Selected is not { } selected)
+        if (Selected is null)
         {
             SetStatus(Say("Workspaces.Status.NothingToUpdate", "Nothing to update yet. S saves the screen as a new workspace."), true);
             return;

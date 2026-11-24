@@ -225,7 +225,7 @@ public partial class SshFileSystemService : ISshFileSystemService
                                 CultureInfo.InvariantCulture,
                                 DateTimeStyles.None);
                             var displayName = name;
-                            var fullUrl = url.FullUrl;
+
                             Url childUrl;
                             if (displayName == ".." && _url.Path == "/")
                             {
@@ -310,7 +310,7 @@ public partial class SshFileSystemService : ISshFileSystemService
 
     public async Task CreateFolderAsync(Url url)
     {
-        var folderName = url.Directory;
+
         using SshCommand command = _client!.CreateCommand(SshCommands.MakeFolder(url.Path));
         await command.ExecuteAsync(CancellationToken.None);
     }

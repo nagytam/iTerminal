@@ -476,8 +476,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         foreach (var page in pdf.GetPages())
         {
             var text = ContentOrderTextExtractor.GetText(page);
-            var otherText = string.Join(" ", page.GetWords());
-            var rawText = page.Text;
+
 
             var lines = text.Split(Environment.NewLine);
             foreach (var line in lines)

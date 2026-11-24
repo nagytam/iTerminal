@@ -16,7 +16,7 @@ public class CreateFolderCommand(
 
     public override bool CanExecute()
     {
-        if (Control?.Parent is CreateFolderDialog createFolderDialog)
+        if (Control?.Parent is CreateFolderDialog)
         {
             return folderValidator.EnsureCurrent();
         }

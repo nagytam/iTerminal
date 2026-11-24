@@ -424,7 +424,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
 
     public bool ExistsFolder(Url url)
     {
-        var (container, path) = Split(url);
+        var (container, _) = Split(url);
         return container.Length == 0 || Test(url, "-d");
     }
 

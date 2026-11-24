@@ -18,7 +18,7 @@ public class ConnectRemoteShellCommand(
     public override bool CanExecute()
     {
         var canExecute = base.CanExecute();
-        if (Control?.Parent is FolderSelectorRemoteShellTabPage tabPage)
+        if (Control?.Parent is FolderSelectorRemoteShellTabPage)
         {
             canExecute = canExecute && hostValidator.EnsureCurrent();
         }
