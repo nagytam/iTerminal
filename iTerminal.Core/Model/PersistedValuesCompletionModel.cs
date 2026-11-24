@@ -20,13 +20,10 @@ public class PersistedValuesCompletionModel : ICompletionModel
         var values = _settingsService.Get(_key);
         if (!string.IsNullOrEmpty(values))
         {
-            foreach (var value in values.Split(';'))
+            // A blank entry (a trailing ';', or one saved before blanks were refused) is not a completion.
+            foreach (var value in values.Split(';').Where(value => !string.IsNullOrWhiteSpace(value) && !_completions.Contains(value)))
             {
-                // A blank entry (a trailing ';', or one saved before blanks were refused) is not a completion.
-                if (!string.IsNullOrWhiteSpace(value) && !_completions.Contains(value))
-                {
-                    _completions.Add(value);
-                }
+                _completions.Add(value);
             }
         }
     }
