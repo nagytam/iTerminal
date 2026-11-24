@@ -210,20 +210,6 @@ public sealed class WaveAudioDecoder : IAudioDecoder
     private static void WriteSample(Span<byte> destination, int index, short value) =>
         BinaryPrimitives.WriteInt16LittleEndian(destination[(index * 2)..], value);
 
-    private static int ReadExactly(Stream stream, byte[] buffer, int count)
-    {
-        var total = 0;
-        while (total < count)
-        {
-            var read = stream.Read(buffer, total, count - total);
-            if (read <= 0)
-            {
-                break;
-            }
-            total += read;
-        }
-        return total;
-    }
 
     private static WaveHeader ReadHeader(Stream stream)
     {
@@ -349,6 +335,21 @@ public sealed class WaveAudioDecoder : IAudioDecoder
         while (total < buffer.Length)
         {
             var read = stream.Read(buffer[total..]);
+            if (read <= 0)
+            {
+                break;
+            }
+            total += read;
+        }
+        return total;
+    }
+
+    private static int ReadExactly(Stream stream, byte[] buffer, int count)
+    {
+        var total = 0;
+        while (total < count)
+        {
+            var read = stream.Read(buffer, total, count - total);
             if (read <= 0)
             {
                 break;

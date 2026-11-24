@@ -445,18 +445,6 @@ public class Control : INotifyPropertyChanged, IControl
         GetRootControl().Refresh(ZOrder + 1);
     }
 
-    public void Refresh(int zOrder)
-    {
-        if (ZOrder >= zOrder && IsVisible)
-        {
-            HasStateChanged = true;
-        }
-        foreach (var control in Controls.AsArray())
-        {
-            if (control is null) continue;
-            control.Refresh(zOrder);
-        }
-    }
     #endregion
 
     public void OnWindowResize(Size size)
@@ -844,6 +832,19 @@ public class Control : INotifyPropertyChanged, IControl
         {
             if (control is null) continue;
             control.Refresh();
+        }
+    }
+
+    public void Refresh(int zOrder)
+    {
+        if (ZOrder >= zOrder && IsVisible)
+        {
+            HasStateChanged = true;
+        }
+        foreach (var control in Controls.AsArray())
+        {
+            if (control is null) continue;
+            control.Refresh(zOrder);
         }
     }
     #endregion

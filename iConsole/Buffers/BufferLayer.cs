@@ -96,16 +96,6 @@ public class BufferLayer
         }
     }
 
-    public void Clear()
-    {
-        var defaultChar = new Conxel(' ', DefaultForegroundColor, DefaultBackgroundColor);
-        for (int y = 0; y < Size.Height; y++)
-        {
-            Content[y].Span.Fill(defaultChar);
-        }
-        BoundRect = null;
-        ResetRowExtents();
-    }
 
     /// <summary>Forgets what was written since the last clear without touching the cells, for a layer about to be overwritten whole.</summary>
     public void ResetBounds()
@@ -119,6 +109,17 @@ public class BufferLayer
         for (int y = 0; y < Size.Height; y++)
         {
             Content[y].Span.Fill(fill);
+        }
+        BoundRect = null;
+        ResetRowExtents();
+    }
+
+    public void Clear()
+    {
+        var defaultChar = new Conxel(' ', DefaultForegroundColor, DefaultBackgroundColor);
+        for (int y = 0; y < Size.Height; y++)
+        {
+            Content[y].Span.Fill(defaultChar);
         }
         BoundRect = null;
         ResetRowExtents();

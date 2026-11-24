@@ -111,11 +111,6 @@ public static class StringHelper
         return fitted.Length <= width ? fitted : fitted.Cut(width);
     }
 
-    public static string Expand(this string value, int left, int right)
-    {
-        var paddedString = " ".Repeat(Math.Min(left, MaxPadding)) + value + " ".Repeat(Math.Min(right, MaxPadding));
-        return paddedString;
-    }
 
     public static string Expand(this string value, int width)
     {
@@ -151,6 +146,12 @@ public static class StringHelper
             });
         }
         return c.Repeat(left) + value + c.Repeat(right);
+    }
+
+    public static string Expand(this string value, int left, int right)
+    {
+        var paddedString = " ".Repeat(Math.Min(left, MaxPadding)) + value + " ".Repeat(Math.Min(right, MaxPadding));
+        return paddedString;
     }
 
     public static string ExpandRight(this string? value, int width)

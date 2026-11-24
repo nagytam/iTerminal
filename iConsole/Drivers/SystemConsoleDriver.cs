@@ -315,30 +315,6 @@ public class SystemConsoleDriver : IConsoleDriver
         }
     }
 
-    public void Write(int x, int y, Conxel conxel)
-    {
-        // The second column of a wide character: the wide character before it already covered it.
-        if (conxel.Char == TextWidth.Continuation)
-        {
-            return;
-        }
-
-        try
-        {
-            SetCursorPosition(x, y);
-            ForegroundColor = conxel.ForegroundColor;
-            BackgroundColor = conxel.BackgroundColor;
-            Console.Write(conxel.Char);
-        }
-        catch (IOException)
-        {
-            // Intentionally empty: there is nothing to do for this case.
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            // Intentionally empty: there is nothing to do for this case.
-        }
-    }
 
     // Reused across frames to avoid per-write allocations. Write is only ever called from the
     // single console-renderer thread, so a shared, non-synchronized builder is safe here.
@@ -384,6 +360,31 @@ public class SystemConsoleDriver : IConsoleDriver
                 _writeBuilder.Append(c.Char);
             }
             FlushRun(runFg, runBg);
+        }
+        catch (IOException)
+        {
+            // Intentionally empty: there is nothing to do for this case.
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            // Intentionally empty: there is nothing to do for this case.
+        }
+    }
+
+    public void Write(int x, int y, Conxel conxel)
+    {
+        // The second column of a wide character: the wide character before it already covered it.
+        if (conxel.Char == TextWidth.Continuation)
+        {
+            return;
+        }
+
+        try
+        {
+            SetCursorPosition(x, y);
+            ForegroundColor = conxel.ForegroundColor;
+            BackgroundColor = conxel.BackgroundColor;
+            Console.Write(conxel.Char);
         }
         catch (IOException)
         {
