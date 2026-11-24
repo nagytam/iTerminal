@@ -18,6 +18,7 @@ verification status, is in [promotion-overview.md](../research/promotion-overvie
 - [scoop-and-chocolatey.md](scoop-and-chocolatey.md): the Scoop `extras` request issue (rules verified), a note on Chocolatey (rules unverified, not drafted), and a pointer to the winget procedure in [../Distributions/winget.md](../Distributions/winget.md), which is already under way.
 - [old-computer-club-facebook.md](old-computer-club-facebook.md): short post (English and Hungarian), fact check and screenshot list for the Facebook group "Old Computer Club"; group rules unverified, screenshots rendered into `screenshots/` (see the content file for caveats).
 - [lemmy-news-forms-and-awesome-dotnet-issue.md](lemmy-news-forms-and-awesome-dotnet-issue.md): a post for Lemmy `commandline@lemmy.ml`, the Linux Today form entries, the corrected It's FOSS News route, and an issue for the aloneguid awesome-dotnet list (rules unverified).
+- [reddit-rule-changes-and-star-gated-lists.md](reddit-rule-changes-and-star-gated-lists.md): the r/opensource AI and age rules (do not post there), an r/csharp side-projects comment draft, and the awesome-shell 50-star gate (blocked).
 
 ## Before anything is sent
 

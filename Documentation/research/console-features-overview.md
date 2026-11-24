@@ -609,3 +609,84 @@ Rows outside this document, in the comparison table of `Documentation/architectu
 - **Focus-in and focus-out reporting (`?1004h`)**: built. `TerminalFocusReporting` (`iConsole/Inputs/TerminalFocusReporting.cs`) and `TerminalFocusService`; the Posix input job switches it on and off (`iConsole.Inputs.Posix/Jobs/PosixTerminalInputPublisherJob.cs`). The table says "Not found".
 - **Window title (OSC 0/2) and title stack**: built. `TerminalSequences.SetTitle` (OSC 2), `PushTitle` and `PopTitle` (`CSI 22;2t` and `CSI 23;2t`), used by `TerminalTitleService`. The table says "Not found".
 - **Cursor shape (DECSCUSR) and pointer shape (OSC 22)**: built (`iConsole/Display/CursorShape.cs`, `PointerShapeService`). Neither is in the table.
+
+#### Survey 7: Harbour-CUI and HBTui (Harbour)
+
+Survey 7, dated 2026-11-24: Harbour-CUI (omm, a fork of digikv/Harbour-CUI) and HBTui (tfonrouge), both written in Harbour, the Clipper dialect. No earlier survey covers Harbour. The brief asked for six to ten libraries from uncovered languages, but eighteen language or dialect names were searched (Harbour, Squirrel, newLISP, Nelua, Pico Lisp, Oz and Mozart, GNU Smalltalk, Hack, BQN, Shen, Unicon, AngelScript, Gosu, Fennel, Jakt, Inko, Boo and Xojo), and Harbour was the only one with a readable widget list, so this survey is short. The basis is the README of each library, fetched on 2026-11-24 through a page summary (the wording was not checked line by line against the file), plus the GitHub repository record for licence, archive flag and last push. It is not run-time behaviour. "Not found" means a grep of `iConsole/` and `iTerminal.Core/` (`--include=*.cs`) on branch `fix/build-warnings-3` at commit `c5c693b3`.
+
+| Library | Language | Licence | Date checked | Release (as found) | Survey | Links |
+| --- | --- | --- | --- | --- | --- | --- |
+| Harbour-CUI (omm fork of digikv/Harbour-CUI) | Harbour | MIT | 2026-11-24 | No release or tag shown; last push 19 November 2026 (GitHub record) | 7 | [GitHub](https://github.com/omm/Harbour-CUI) |
+| HBTui | Harbour | No licence file (the README says so) | 2026-11-24 | No release; last push 2 April 2026; not archived (GitHub record) | 7 | [GitHub](https://github.com/tfonrouge/HBTui) |
+
+Features of Harbour-CUI, from its README: about thirty widgets (a table of 33 names; the text says 30) for windows, inputs, buttons, lists, menus, layouts, charts and toasts; text fields that enforce a picture and validation rules; overlapping windows with title-bar move, resize, maximise, minimise and close, click-to-raise and Ctrl+F6 cycling; seven built-in themes with 55 colour categories; wide characters that take two cells; buffered repaints; and headless tests. Features of HBTui, from its README: the same widget names, each widget painting in its own viewport, a singleton event loop with three priorities, four built-in themes, and a note that no licence file is included.
+
+**Input**
+
+158. **Overwrite mode in a text field.** *Missing.* A text field inserts at the cursor only. The Insert key does not switch to overwrite, and the file panel binds Insert to invert selection (`iConsole/Commands/InvertSelectionCommand.cs`), so a switch would have to apply only while a text field has focus. Search terms that found nothing in `iConsole/` and `iTerminal.Core/`: `OverwriteMode`, `InsertMode`, `OverType`, and `ConsoleKey.Insert` in the text controls (`iConsole/Controls/TextBox*.cs`). The only inserting path found is `TypeCommand` (`iConsole/Commands/TypeCommand.cs:35`). **Seen in:** Harbour-CUI (HTLineEdit, where Ins toggles insert mode, from its README). Fits: `TextBox`, `TypeCommand`, `TextEditorControl`. Priority: low.
+
+159. **Mouse capture for a drag.** *Partly.* `Control.HandleMouseEventAsync` offers an event to each child in turn until one takes it, so a control with its own drag state (`Splitter` and `Slider`, which keep a `_dragging` flag) still gets the moves after the pointer leaves it. No capture exists, though: a pressed control does not own the pointer until release, and a sibling that takes the event first wins. Search terms that found nothing in `iConsole/` and `iTerminal.Core/`: `MouseCapture`, `CapturedControl`, `DragCapture`, `PointerCapture`, `BeginDrag`. **Seen in:** Harbour-CUI (its mouse section says widgets opt in to moves and the release while a button is held, even outside their bounds, from its README). Fits: `Control.HandleMouseEventAsync` and `TerminalInputConsumerJob`. Priority: low, because the splitter, the slider and window drag already work.
+
+**Framework**
+
+160. **One action in a menu, a toolbar and a context menu.** *Partly.* A menu entry takes an `ICommand` (`MenuItem`), and `ContextMenuItem` runs an `Execute` delegate. `ToolbarItem` carries only a caption, a key hint and an enabled flag, and `Toolbar` reports the chosen index through `ItemInvoked`, so a toolbar cannot share a command with a menu without extra wiring. Search terms that found nothing in `iConsole/` and `iTerminal.Core/`: `IAction`, `ActionItem`, `ToolbarItem.Command`, and any class ending in `Action` (none in `iConsole/`; `ActionButton` is a button, not an action). **Seen in:** Harbour-CUI (HTAction, one action object used by the menu bar, toolbar and context menu, from its README). Fits: `Toolbar`, `ToolbarItem`, `ContextMenuItem`. Priority: low.
+
+#### Suggested order for Survey 7
+
+1. Item 158 (overwrite mode): small and visible in the editor and the command line; it must leave Insert alone in the file panels.
+2. Item 160 (one action in several places): removes separate wiring where a dialog toolbar repeats a menu command.
+3. Item 159 (mouse capture): only when a new drag control needs a pointer that leaves its bounds.
+
+#### Already covered (Survey 7 candidates)
+
+- Windows and the desktop (HTMainWindow, HTDesktop): built (`Window`, `Desktop`).
+- Dialogs and message boxes (HTDialog, HTMessageBox): built (`Dialog`; the message box is `ErrorPromptDialog`, and the prompt kinds are item 94).
+- Line edit and get fields (HTLineEdit, HTGet): built (`TextBox`). The picture rule is `InputMask` (`iConsole/Model/InputMask.cs`, `TextBox.Masking.cs`) and the validation rule is `IInputValidator` (`iConsole/Model/Validations/InputValidators.cs`). A rule that enables a field from another field's value is not a separate type.
+- Multi-line text edit (HTTextEdit): built (`TextEditorControl`).
+- Spin box (HTSpinner): built (`NumericUpDown`).
+- Check list, list box and combo box (HTCheckList, HTListBox, HTComboBox): built (`CheckList`, `ListBox<T>`, `ComboBox<T>`).
+- Browse grid (HTBrowse): built as `Table<T>` and `VirtualTable<T>`. Its inline cell editing is not built (no `CellEditor`, `EditCell` or `BeginEdit` found), and that is item 104.
+- Push button, check box and radio button: built (`Button`, `CheckBox`, `RadioGroup`).
+- Menu bar, menus and context menu (HTMenuBar, HTMenu, HTContextMenu): built (`MenuBar`, `ContextMenu`, with submenus).
+- Box, stack and grid layouts (HTVBoxLayout, HTHBoxLayout, HTGridLayout): built (`StackPanel`, `GridPanel`, `SizeRule`).
+- Label, frame, separator and scroll bar (HTLabel, HTFrame, HTSeparator, HTScrollBar): built (`Label`, `BoxPanel`, `Separator`, `ScrollBar`).
+- Progress bar, status bar and tab widget (HTProgressBar, HTStatusBar, HTTabWidget): built (`ProgressBar`, `StatusBar`, `Tab`).
+- Sparkline and bar chart (HTSparkline, HTBarChart): built (`Sparkline`, `BarChart`).
+- Toast (HTToast): built (`Toast`, `ToastHost`; see "Notifications and toasts" in `ui-framework.md`).
+- Tool bar (HTToolBar): built as `Toolbar`; its items are not commands, which is item 160.
+- Drop shadows: built (`Shadow`).
+- Overlapping windows with title-bar move and resize: partly, under item 43. Click-to-raise was not checked. Maximise and minimise, Ctrl+F6 cycling and a window list: item 68, still missing (no `ConsoleKey.F6` binding in `Desktop`, and no tile, cascade or window list was found).
+- Clipboard keys and Shift+arrow selection in a text field: built (`ClipboardKeys`, `TextBox.SelectionTextModel`).
+- Seven or four built-in themes and colour categories (Harbour-CUI, HBTui): built as `ColorScheme` and `ThemeService`. Saving a custom theme to a file is item 10 (styling by rules) and item 98 (theme design tokens).
+- Custom pixel fonts (Harbour-CUI, 8 by 8 glyphs): the font part is item 38 (big text), still missing. Sprites are not added, because no iTerminal feature asks for them.
+- Held-key detection (Harbour-CUI): partly. `WindowsPhysicalKeyboard` polls the modifier keys with `GetAsyncKeyState` (`iConsole/Interop/WindowsPhysicalKeyboard.cs`), and key release on a terminal is item 6 (not built).
+- Wide characters that take two cells (Harbour-CUI): item 1, partly built (see the status block below).
+- Priority event loop (HBTui `HTEventLoop`): built as `TaskManager` priorities (`Rendering > Input > Background`) and `Desktop` jobs.
+- Headless test driver (`gtnul`): built (`VirtualSequenceConsoleDriver`, `AppHarness`, `iConsole.Test`).
+- Viewport per widget, with (0,0) at its top left (HBTui): built, since every control has positions relative to its parent.
+
+#### Considered and skipped (Survey 7)
+
+- libtui (e-Lama, the README names it libgui; Harbour): GPL-3.0; last push 9 October 2020, so abandoned; its page lists no widgets. Skipped because the two libraries above are the readable Harbour options. Source: [repository](https://github.com/e-Lama/libtui).
+- harbr (dev-town, "Harbour TUI"): an application for Git projects and terminal sessions, not a library; its repository has no release, and its language is not stated on the page. Not read further. Source: [repository](https://github.com/dev-town/harbr).
+- Harbour's terminal drivers (gtcrs, gtsln, gtwvt, gtxwc, gttrm, gtnul): the platform layer under a widget set, not widgets. Codepage translation and the X11 pixel-font build do not apply to iConsole.
+- GTWVG and GTWVW (Windows-only): found in a forum thread from 2016; not read.
+- The 2016 Harbour community TUI project (Diego Pego): found in a forum post only, with no current status; not read.
+- Clipper ACHOICE and GET commands: the native commands of the language, not a library.
+- Hack: facebook/hh-clilib (argument parsing and TTY detection, marked abandoned on Packagist) and kilahm/hack-clio (prompts and output with ANSI codes; last release v1.1.0 from 2014). Neither is a widget library. Source: [hh-clilib](https://github.com/hhvm/hh-clilib).
+- newLISP, Squirrel, Nelua, Pico Lisp, Oz and Mozart, Shen, Unicon, Fennel, Jakt, Inko and Boo: searched once each, no terminal widget library found.
+- GNU Smalltalk: its GUI library, BLOX, is graphical; no terminal library found.
+- BQN: bqed is an editor application and the other hits are graphical or other languages.
+- AngelScript and Gosu: no console widget library found (Gosu's add-ons are graphical).
+- Xojo: no text user interface library found; XUI is a desktop UI kit and OptionParser handles arguments only.
+
+#### Status after the pull of 2026-11-24
+
+Items 1, 2, 6, 34, 36, 58, 146 and 157 were searched again, and the Harbour items were checked against items 6, 10, 38, 43, 68, 94, 98 and 104. Two items changed:
+
+- **Item 1 (wide-character and grapheme width): now partly.** `TextWidth` (`iConsole/Display/TextWidth.cs`) gives the columns of a character from the East Asian Wide ranges and the common emoji ranges, stores a wide character with a continuation cell, and drops zero-width marks. `ConxelString`, `AnsiRenderer` and `SystemConsoleDriver` call it. Grapheme clusters (joined emoji) are not handled, and no per-control clipping in `Table`, `ListBox` or `TextBox` was found. Earlier status: missing.
+- **Item 36 (braille and block-character canvas): now partly.** `SchematicWorldMap.RenderBraille` (`iConsole/Display/SchematicWorldMap.cs:142`) draws a map in 2 by 4 Braille dots per cell. It is one control's renderer, not a reusable canvas, so the item stays open. Earlier status: missing.
+
+Unchanged: item 2 (no `2004h` or `BracketedPaste`), item 6 (`KittyKeyboardProtocol.cs` pushes flag 1 only, so key release is not reported), item 34 (no `38;5` or `38;2`), item 146 (no `1049`), item 157 (`CursorShape.cs` has only DECSCUSR) and item 58 (the repeat count is built).
+
+Outside this document, the following text is now out of date and was not edited (it is read-only or belongs to another file): the item 1 entry of `Documentation/architecture/ui-framework/tui-library-comparison.md` (read-only) and the "Suggested improvements" item 1 in `Documentation/architecture/ui-framework.md` ("No width handling was found"), and the comparison table row for wide characters in `ui-framework.md`. The header line of this document still gives 156 as the highest item; the highest item is now 160.

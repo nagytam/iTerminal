@@ -258,3 +258,23 @@ given below).
 - Post as yourself and stay in the thread.
 
 **Considered and skipped:** none besides the unreadable rules.
+
+## Survey 6: 2026-11-24 (Reddit rule change, star-gated lists, stale press calls)
+
+**Basis.** Twelve web searches and nine page fetches on 2026-11-24. Latest release is v0.0.0.788 (published 2026-11-24). Nothing was sent, posted, submitted or signed up for. Branch: `fix/build-warnings-3`; nothing committed.
+
+| # | Venue | Type | How to submit | Rule status | Content file | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 43 | r/opensource | Reddit | Post under the sidebar rules | Reported by Linux Magazine (<https://www.linux-magazine.com/Online/News/r-opensource-Bans-AI-Assisted-and-AI-Related-Projects?category=13443>): since 2026-10-24 projects must be a year old, with about three contributors, and not obviously AI-built. Moderator post itself unread; **unverified** at source | [reddit-rule-changes-and-star-gated-lists.md](../Promotion/reddit-rule-changes-and-star-gated-lists.md) | skipped (iTerminal fails the stated rules); changes venue 9 |
+| 44 | r/csharp | Reddit | Monthly side-projects thread, if it still exists | Unverified (only a 2016 rules post found) | reddit-rule-changes-and-star-gated-lists.md | prepared; user to read rules first |
+| 45 | alebcay/awesome-shell | Awesome-list | Pull request | Verified (<https://raw.githubusercontent.com/alebcay/awesome-shell/master/CONTRIBUTING.md>): 50 stars minimum, own projects allowed | reddit-rule-changes-and-star-gated-lists.md | blocked (1 star) |
+| 46 | Terminal Trove weekly newsletter | Newsletter | Same submit form as venue 5 | Unverified (page 403; search summary) | directories-and-newsletters.md | covered by venue 5 |
+
+**Considered and skipped:** ComputerWoche "Tools fuer Profis" (call dated 2007, <https://www.computerwoche.de/article/2660653/die-computerwoche-honoriert-ihre-erfahrungen-2.html>); Fastlancer (paid listing, freelancer audience, <https://www.fastlancer.org/tool-vorschlagen/>); LWN (only a 2005 guide); LibHunt, SourceForge, Softpedia, MajorGeeks (no rules found); Linuxiac, 9to5Linux, Linux Uprising, FOSS Post (no tip route found); hup.hu (rules page 404); Fosstodon/Mastodon (no rules found, user's own account decision). LinuxLinks contact page read again: <https://www.linuxlinks.com/submit-news/> confirms the suggestion form and a page on AI-heavy projects, unchanged from venue 18.
+
+**Activity log, 2026-11-24.** Read CLAUDE.md, README, the overview and the index; verified the release (v0.0.0.788), MIT license, six `Strings*.resx` files in `iConsole/Localization/Resources` and the AI statement in `CONTRIBUTING.md`. Searched and fetched the venues above. Wrote `Documentation/Promotion/reddit-rule-changes-and-star-gated-lists.md` and indexed it. Most channels were already covered by Surveys 1-5, so this run found few new venues.
+
+**Waiting for the user (Survey 6)**
+- Do not post to r/opensource. Read each other subreddit's sidebar for AI rules before posting (venue 9 and 44).
+- Read r/csharp's rules and pinned threads in a browser before using the draft.
+- Awesome-shell, awesome-tuis and awesome-cli-apps all gate on stars or age; revisit after 2027-04-15 and when stars grow, without asking others for stars.
