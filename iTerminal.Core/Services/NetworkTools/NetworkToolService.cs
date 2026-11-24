@@ -357,7 +357,7 @@ public sealed class NetworkToolService : INetworkToolService
     /// </summary>
     private async Task<string?> LookupNameAsync(IPAddress address, CancellationToken cancellationToken)
     {
-        if (!_lookupGate.Wait(0, cancellationToken))
+        if (!await _lookupGate.WaitAsync(0, cancellationToken))
         {
             return null;
         }

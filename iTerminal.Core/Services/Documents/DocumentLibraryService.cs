@@ -872,7 +872,7 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
             List<string> pending;
             using (iTerminalDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 pending = DocumentVectorIndex.Pending(context, model);
 
                 // Read now, not at the end of the run, so a library that is already embedded reads as built right after a restart.
@@ -915,7 +915,7 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
             }
 
             using iTerminalDbContext counted = _dbContextFactory.CreateDbContext();
-            counted.Database.EnsureCreated();
+            await counted.Database.EnsureCreatedAsync();
             _semanticIndexed = DocumentVectorIndex.Count(counted, model);
         }
         catch (OperationCanceledException)

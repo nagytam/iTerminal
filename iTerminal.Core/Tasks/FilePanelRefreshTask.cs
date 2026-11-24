@@ -105,7 +105,7 @@ public class FilePanelRefreshTask : BackgroundTask
                     try
                     {
                         using var ctx = _dbContextFactory.CreateDbContext();
-                        var entity = ctx.FolderContentsCacheEntries.Find(Url.Path);
+                        var entity = await ctx.FolderContentsCacheEntries.FindAsync(Url.Path);
                         if (entity is not null)
                         {
                             var age = DateTimeOffset.UtcNow - entity.SavedAtUtc;
@@ -176,7 +176,7 @@ public class FilePanelRefreshTask : BackgroundTask
                 try
                 {
                     using var ctx = _dbContextFactory.CreateDbContext();
-                    ctx.Database.EnsureCreated();
+                    await ctx.Database.EnsureCreatedAsync();
                     var dtos = entries.Select(e => new CachedEntryDto(e is FileSystemEntry f ? f.Url.DisplayName : e.Url.DisplayName, e.Url.FullUrl)).ToList();
                     var json = JsonSerializer.Serialize(dtos);
                     var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

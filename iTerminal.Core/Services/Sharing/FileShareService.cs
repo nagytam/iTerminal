@@ -183,7 +183,7 @@ public sealed class FileShareService(IFileShareAddressSource addressSource) : IF
                 break;
             }
 
-            if (!connections.Wait(0, cancellationToken))
+            if (!await connections.WaitAsync(0, cancellationToken))
             {
                 client.Dispose();
                 continue;
