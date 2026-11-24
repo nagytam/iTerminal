@@ -330,7 +330,7 @@ public class EncyclopediaDialog : SplitPaneDialog
             return;
         }
 
-        bool full = toggle ? !_articleIsFull || _articleTitle != hit.Title : true;
+        bool full = !toggle || !_articleIsFull || _articleTitle != hit.Title;
         _requestedIndex = SelectedIndex();
         StartArticle(hit, full);
     }

@@ -1,6 +1,6 @@
 ﻿namespace iConsole.Model;
 
-public interface IListItem<T>
+public interface IListItem<out T>
 {
     public T Item { get; }
     public bool IsEnabled { get; }

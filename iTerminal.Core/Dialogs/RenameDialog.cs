@@ -113,7 +113,6 @@ public class RenameDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        //var url = _contentModelService.FocusedFileUrl;
         //var targetFolder = _contentModelService.NonFocusedFolderUrl;
         //ArgumentNullException.ThrowIfNull(url);
         //SourceUrl = url;

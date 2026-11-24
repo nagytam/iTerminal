@@ -64,7 +64,7 @@ internal static class PeAnalyzer
             new("DEP/NX", (dll & DllCharNxCompat) != 0),
             new("CFG", (dll & DllCharGuardCf) != 0),
             new("SafeSEH", SafeSeh(machine, is64, dll, loadConfig)),
-            new("Stack cookie (/GS)", loadConfig.Present ? loadConfig.SecurityCookie != 0 : false),
+            new("Stack cookie (/GS)", loadConfig.Present && loadConfig.SecurityCookie != 0),
         ];
 
         if (!managed && imports.Count > 0 && importedSymbols is >= 0 and < 5 && !headers.IsDll)

@@ -277,7 +277,7 @@ public class ContextMenu : Popup
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         int inner = (int)ContentSize.Width;
-        (int checkWidth, int titleWidth, int rightWidth) = Measure();
+        (int checkWidth, int titleWidth, _) = Measure();
         for (int i = 0; i < _items.Count && i < ContentSize.Height; i++)
         {
             ContextMenuItem item = _items[i];

@@ -184,7 +184,6 @@ public class Buffer : IBuffer
             var layer = snapshot[z];
             if (layer is not null && layer.BoundRect is not null)
             {
-                //Debug.Assert(layer.BoundRect.Bottom <= baseLayer.Size.Height);
                 MergedLayer.Merge(layer, layer.BoundRect);
             }
             else

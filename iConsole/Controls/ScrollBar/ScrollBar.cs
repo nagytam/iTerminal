@@ -207,7 +207,7 @@ public class ScrollBar(IThemeService themeService)
 
     private void DrawVerticalScrollBar(IBuffer buffer)
     {
-        ArgumentNullException.ThrowIfNull(ScrollableModel, nameof(ScrollableModel));
+        ArgumentNullException.ThrowIfNull(ScrollableModel);
 
         if (ViewSize.Width < 1 || ViewSize.Height < 1)
         {
@@ -256,7 +256,7 @@ public class ScrollBar(IThemeService themeService)
     }
     private void DrawHorizontalScrollBar(IBuffer buffer)
     {
-        ArgumentNullException.ThrowIfNull(ScrollableModel, nameof(ScrollableModel));
+        ArgumentNullException.ThrowIfNull(ScrollableModel);
 
         if (ViewSize.Width < 1 || ViewSize.Height < 1)
         {

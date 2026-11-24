@@ -176,7 +176,7 @@ public abstract class VirtualRowsControl<T> : Control
 
         if (relativeY < HeaderRows)
         {
-            return mouseEvent.LeftClicked && OnHeaderClick((int)relativeX) ? true : isHandled;
+            return (mouseEvent.LeftClicked && OnHeaderClick((int)relativeX)) || isHandled;
         }
 
         if (Source.Count == 0)

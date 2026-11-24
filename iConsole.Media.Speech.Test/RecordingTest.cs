@@ -58,8 +58,8 @@ public class RecordingTest
     [TestMethod]
     public void TheRecorderCommandLines_AskForRawSixteenKilohertzMono()
     {
-        StringAssert.Contains(ProcessMicrophoneCapture.ParecordArguments(), "--raw --format=s16le --rate=16000 --channels=1");
-        StringAssert.Contains(ProcessMicrophoneCapture.ArecordArguments(), "-t raw -f S16_LE -r 16000 -c 1");
+        StringAssert.Contains(ProcessMicrophoneCapture.ParecordArguments, "--raw --format=s16le --rate=16000 --channels=1");
+        StringAssert.Contains(ProcessMicrophoneCapture.ArecordArguments, "-t raw -f S16_LE -r 16000 -c 1");
         string ffmpeg = ProcessMicrophoneCapture.FfmpegArguments(":default");
         StringAssert.Contains(ffmpeg, "-f avfoundation -i \":default\"");
         StringAssert.Contains(ffmpeg, "-ar 16000 -ac 1 -f s16le -");

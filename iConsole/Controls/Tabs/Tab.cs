@@ -105,7 +105,6 @@ public class Tab(IThemeService themeService) : Control(themeService)
 
         if (TabPages.Count > 0)
         {
-            FocusedTabPage = FocusedTabPage;
             for (var i = 0; i < TabPages.Count; i++)
             {
                 if (i == FocusedTabPage)

@@ -67,7 +67,6 @@ public class TypeCommand : Command
 
     public override Task ExecuteAsync(object? args)
     {
-        //model?.Refresh();
         return Task.CompletedTask;
     }
 }

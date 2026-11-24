@@ -1042,7 +1042,6 @@ public partial class TextViewerControl : Control
                 line = line[positionX..]
                     .PadRight(Math.Max(0, (int)ViewSize.Width - 2));
                 var conxelLine = new ConxelString(line, foregroundColor, backgroundColor);
-                var highlightPositionX = (int)(positionX - ScrollableModel.ScrollPosition.X);
                 bool isCursorLine = ScrollableModel.CursorPosition.Y == indexY;
                 // The cursor's row keeps the cursor colours; the others are coloured by what the text is.
                 ColorizeSyntax(conxelLine, TextModel.Lines[(int)indexY], inComment, positionX, out inComment, isCursorLine);

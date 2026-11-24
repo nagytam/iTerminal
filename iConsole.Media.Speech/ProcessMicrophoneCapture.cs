@@ -30,9 +30,9 @@ internal sealed class ProcessMicrophoneCapture(IReadOnlyList<RecorderCommand> ca
     /// <summary>The id of the recorder while it runs; tests check that it is gone after <see cref="Stop"/>.</summary>
     internal int? ProcessId => _process?.Id;
 
-    internal static string ParecordArguments() => "--raw --format=s16le --rate=16000 --channels=1 --latency-msec=100";
+    internal const string ParecordArguments = "--raw --format=s16le --rate=16000 --channels=1 --latency-msec=100";
 
-    internal static string ArecordArguments() => "-q -t raw -f S16_LE -r 16000 -c 1";
+    internal const string ArecordArguments = "-q -t raw -f S16_LE -r 16000 -c 1";
 
     internal static string FfmpegArguments(string device) =>
         $"-hide_banner -loglevel error -nostdin -f avfoundation -i \"{device}\" -ar 16000 -ac 1 -f s16le -";

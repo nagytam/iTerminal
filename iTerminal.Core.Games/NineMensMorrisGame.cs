@@ -320,7 +320,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
 {
     private const int Win = 100_000;
 
-    public sealed class TimeUp : Exception;
+    public sealed class TimeUpException : Exception;
 
     private readonly System.Diagnostics.Stopwatch _clock = System.Diagnostics.Stopwatch.StartNew();
     private bool _mayAbort;
@@ -366,7 +366,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
                     break;
                 }
             }
-            catch (TimeUp)
+            catch (TimeUpException)
             {
                 break;
             }
@@ -382,7 +382,7 @@ internal sealed class MorrisSearch(Random random, CancellationToken token, int m
             token.ThrowIfCancellationRequested();
             if (_mayAbort && _clock.ElapsedMilliseconds > budgetMilliseconds)
             {
-                throw new TimeUp();
+                throw new TimeUpException();
             }
         }
 

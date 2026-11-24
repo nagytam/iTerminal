@@ -309,7 +309,6 @@ public class RiskGame : GameBase
         int[] owner = (int[])_owner.Clone();
         int[] armies = (int[])_armies.Clone();
         RiskPhase phase = _phase;
-        int reinforcements = _reinforcements;
         int version = Version;
         Random random = new(Random.Next());
 
