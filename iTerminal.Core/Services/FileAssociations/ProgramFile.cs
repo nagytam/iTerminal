@@ -26,6 +26,11 @@ public static class ProgramFile
                 return false;
             }
 
+            if (InterpreterFor(path) is not null)
+            {
+                return true;
+            }
+
             if (OperatingSystem.IsWindows())
             {
                 return WindowsProgramExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
@@ -47,11 +52,32 @@ public static class ProgramFile
     /// </summary>
     public static string CommandFor(string fileName)
     {
+        string interpreter = InterpreterFor(fileName) is { } found ? found + " " : string.Empty;
         if (OperatingSystem.IsWindows())
         {
-            return fileName.Contains(' ') ? $"\"{fileName}\"" : fileName;
+            if (interpreter.Length > 0)
+            {
+                return interpreter + (fileName.Contains(' ') ? $"\"{fileName}\"" : fileName);
+            }
+
+            // The command log runs in a PowerShell session, which never runs a bare name from the
+            // current folder and ignores a quoted name; ".\name" works in PowerShell and in cmd, and
+            // cmd /c takes a quoted name with spaces in both.
+            return fileName.Contains(' ') ? $"cmd /c \".\\{fileName}\"" : ".\\" + fileName;
         }
 
-        return "./'" + fileName.Replace("'", "'\\''") + "'";
+        return interpreter + "./'" + fileName.Replace("'", "'\\''") + "'";
     }
+
+    /// <summary>
+    /// The command that runs a script, whether or not it has an execute bit: PowerShell scripts
+    /// (.ps1) and shell scripts (.sh) are started by their interpreter. Null for any other file.
+    /// </summary>
+    private static string? InterpreterFor(string path) =>
+        Path.GetExtension(path).ToLowerInvariant() switch
+        {
+            ".ps1" => OperatingSystem.IsWindows() ? "powershell -NoProfile -ExecutionPolicy Bypass -File" : "pwsh -File",
+            ".sh" => "bash",
+            _ => null,
+        };
 }

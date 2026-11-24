@@ -33,11 +33,32 @@ public class ProgramFileTest
             Assert.Inconclusive("The execute bit is a Unix notion; the Windows rule is the extension.");
         }
 
-        var script = Path.Combine(_folder, "run.sh");
+        var script = Path.Combine(_folder, "run.txt");
         File.WriteAllText(script, "echo hi\n");
         File.SetUnixFileMode(script, UnixFileMode.UserRead | UnixFileMode.UserWrite);
 
-        Assert.IsFalse(ProgramFile.IsRunnable(script), "a script without its execute bit goes to the system default");
+        Assert.IsFalse(ProgramFile.IsRunnable(script), "a file without its execute bit goes to the system default");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("run.sh")]
+    [DataRow("run.ps1")]
+    [DataRow("RUN.PS1")]
+    public void IsRunnable_AShellOrPowerShellScript_IsAProgramWithoutAnExecuteBit(string name)
+    {
+        var script = Path.Combine(_folder, name);
+        File.WriteAllText(script, "echo hi\n");
+
+        Assert.IsTrue(ProgramFile.IsRunnable(script));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void CommandFor_AScript_StartsItWithItsInterpreter()
+    {
+        Assert.StartsWith("bash ", ProgramFile.CommandFor("run.sh"));
+        Assert.Contains("-File", ProgramFile.CommandFor("run.ps1"));
     }
 
     [Timeout(60_000)]
@@ -77,7 +98,7 @@ public class ProgramFileTest
         }
 
         Assert.AreEqual("./'tool'", ProgramFile.CommandFor("tool"));
-        Assert.AreEqual("./'my tool.sh'", ProgramFile.CommandFor("my tool.sh"));
+        Assert.AreEqual("bash ./'my tool.sh'", ProgramFile.CommandFor("my tool.sh"));
         Assert.AreEqual("./'it'\\''s'", ProgramFile.CommandFor("it's"), "a single quote is closed, escaped and reopened");
     }
 
@@ -90,7 +111,8 @@ public class ProgramFileTest
             Assert.Inconclusive("The Windows command form does not apply on Unix.");
         }
 
-        Assert.AreEqual("tool.exe", ProgramFile.CommandFor("tool.exe"));
-        Assert.AreEqual("\"my tool.exe\"", ProgramFile.CommandFor("my tool.exe"));
+        Assert.AreEqual(".\\tool.exe", ProgramFile.CommandFor("tool.exe"));
+        Assert.AreEqual(".\\run.bat", ProgramFile.CommandFor("run.bat"));
+        Assert.AreEqual("cmd /c \".\\my tool.bat\"", ProgramFile.CommandFor("my tool.bat"));
     }
 }
