@@ -57,7 +57,7 @@ how the existing VirusTotal lookup already works (see `Documentation/architectur
 | **Have** Anti-malware scan | Microsoft Defender custom scan of a file or folder (Windows) | Scan with Defender command | `Services/Defender/DefenderScanService.cs`, behind `IMalwareScanService` |
 | **Have** Secure wipe | Overwrite then delete marked files and folders | Ctrl+Shift+F8 | `Services/Wipe/SecureWipeService.cs` |
 | **Have** File encryption | AES-256-GCM with PBKDF2 keys, `.enc` files | Ctrl+Shift+E | `Services/Encryption/FileEncryptionService.cs` |
-| **Have** Password manager | Encrypted vault for credentials, used by the remote drives and the cloud drives | Ctrl+X | `Services/PasswordManager.cs`, `Services/PasswordCrypto.cs`, `Data/VaultEntry.cs` |
+| **Have** Password manager | Encrypted vault for credentials, used by the remote drives and the cloud drives | Ctrl+Shift+X | `Services/PasswordManager.cs`, `Services/PasswordCrypto.cs`, `Data/VaultEntry.cs` |
 | **Have** Host identity | SSH host keys (SHA-256) and FTPS certificates are trusted on first use and refused when they change | `known_hosts.json` in the data folder | `Services/TrustedHostStore.cs` |
 | **Have** Network tools | Ping, traceroute, DNS and reverse DNS, whois, TCP port check, HTTP headers, subnet scan | Network tools dialog | `Services/NetworkTools/` |
 | **Have** Executable analysis | PE, ELF and Mach-O headers, section entropy and packer hints, Authenticode certificates | Viewer on a binary (F3) | `iConsole.Formats/Executables/` |
