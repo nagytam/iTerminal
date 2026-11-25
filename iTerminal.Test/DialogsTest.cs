@@ -51,7 +51,7 @@ public class DialogsTest
     [DataRow("Ctrl+Y", "ToDoListDialog")]
     [DataRow("Ctrl+W", "MailDialog")]
     [DataRow("Ctrl+S", "WebBrowserDialog")]
-    [DataRow("Ctrl+X", "PasswordManagerDialog")]
+    [DataRow("Ctrl+Shift+X", "PasswordManagerDialog")]
     [DataRow("Ctrl+G", "GitClientDialog")]
     [DataRow("F2", "TerminalDialog")]
     [DataRow("Alt+F11", "IPhoneBrowserDialog")]
