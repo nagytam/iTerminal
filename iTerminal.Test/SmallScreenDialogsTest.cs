@@ -538,7 +538,7 @@ public class SmallScreenDialogsTest
     [DataRow("Alt+F2", "Remote connections", "WebDAV connection.")]
     [DataRow("Ctrl+Shift+F1", "BitTorrent", "or its URL.")]
     [DataRow("Ctrl+Shift+F2", "Workspaces", "Enter brings one")]
-    [DataRow("Ctrl+X", "Passwords", "they are saved.")]
+    [DataRow("Ctrl+Shift+X", "Passwords", "they are saved.")]
     public async Task AnEmptyListDialogOn45Columns_WrapsItsHintInsteadOfCuttingIt(string chord, string title, string lastWords)
     {
         // The hint is the only guidance on an empty list; on a narrow terminal it used to end in an ellipsis after a few words.
@@ -848,7 +848,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 40, height: 15);
 
-        await narrow.PressAsync("Ctrl+X");
+        await narrow.PressAsync("Ctrl+Shift+X");
 
         await narrow.WaitForTextAsync("Passwords");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Enter edit")), "the footer");
@@ -895,7 +895,7 @@ public class SmallScreenDialogsTest
     [DataRow("Alt+F3", "Esc:schließen")]
     [DataRow("Ctrl+D", "Esc schließen")]
     [DataRow("Ctrl+W", "Esc zurück")]
-    [DataRow("Ctrl+X", "Esc schließen")]
+    [DataRow("Ctrl+Shift+X", "Esc schließen")]
     [DataRow("Alt+F2", "Esc schließen")]
     [DataRow("Ctrl+Shift+F2", "Esc schließen")]
     public async Task TheFootersOfContactsFindAndDocumentsInGerman_AreGerman(string chord, string expected)

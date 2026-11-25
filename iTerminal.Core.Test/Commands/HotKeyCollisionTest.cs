@@ -34,7 +34,7 @@ public class HotKeyCollisionTest
         var passwords = new PasswordManagerDialogCommand(null!);
 
         Assert.IsNull(recorder.Key);
-        Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), passwords.AlternateKey);
+        Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), passwords.Key);
     }
 
     [Timeout(60_000)]
@@ -79,7 +79,7 @@ public class HotKeyCollisionTest
     }
 
     /// <summary>
-    /// Ctrl+Shift+X is the password manager's chord that always reaches it (Ctrl+X cuts in a file panel), so Add evidence,
+    /// Ctrl+Shift+X is the password manager's chord (Ctrl+X is Cut in the file clipboard), so Add evidence,
     /// which a focused file panel runs before the menu bar's commands, must not take it.
     /// </summary>
     [Timeout(60_000)]
@@ -96,9 +96,8 @@ public class HotKeyCollisionTest
             Mock.Of<iConsole.Media.Speech.IMicrophoneCaptureFactory>(),
             null!);
 
-        Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), passwords.AlternateKey);
+        Assert.AreEqual(new Key(ConsoleKey.X, true, false, true), passwords.Key);
         Assert.AreEqual(new Key(ConsoleKey.Delete, true, false, true), addEvidence.Key);
-        Assert.AreNotEqual(passwords.AlternateKey, addEvidence.Key);
         Assert.AreNotEqual(passwords.Key, addEvidence.Key);
     }
 

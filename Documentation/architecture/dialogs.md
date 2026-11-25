@@ -168,7 +168,7 @@ A full-screen `SplitPaneDialog` (like the Git client) showing a live watchlist: 
 - **The watchlist and the search hits are `Table<T>`s** (`Table<StockRow>`, `Table<StockSearchHit>`). `WatchlistColumns(width)` and `HitColumns(width)` set the columns for the line width; the company name takes what the other columns leave, and on a narrow line the exchange, then the change in percent, then the change go first. A rise is green and a fall red through `RowForeground`, on rows not under the cursor. The tables redraw on `CollectionChanged`; the stock dialog's own heading is the table's header row.
 - **The end-to-end suite replaces the provider** (`SandboxServices.StockQuotes`): no run reaches the network.
 
-### Password manager (`PasswordManagerDialog`, Ctrl+X)
+### Password manager (`PasswordManagerDialog`, Ctrl+Shift+X)
 The saved passwords, listed by category, title and username; the password is hidden in the detail line until V shows it.
 
 - **The list is a `Table<PasswordEntry>`, and its cursor is the only cursor.** The dialog's keys (Up/Down, Page, Home, End, Enter, N, D, V, Esc) move the table's cursor through `MoveCursor`; a click or the wheel moves it through the table itself, and the dialog reads `CursorRow` back. The table is hidden outside list mode (`SetMode` and `SyncListVisibility`), and it is not focused, so the dialog's key handling sees every key first.
