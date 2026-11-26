@@ -2419,6 +2419,12 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Surveiller le mot sous le curseur (dans la vue de débogage, le retirer)</value>
   </data>
+  <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
+    <value>No se encontró csharp-ls. Instálelo con dotnet tool install -g csharp-ls.</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerStarting" xml:space="preserve">
+    <value>Iniciando el servidor de lenguaje de C#...</value>
+  </data>
   <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
     <value>El panel central solo puede intercambiar su sitio con otro panel: mueva al centro el panel que quiera allí.</value>
   </data>

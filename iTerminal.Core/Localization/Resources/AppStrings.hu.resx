@@ -2419,6 +2419,12 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Osserva la parola sotto il cursore (nella vista debug, rimuovila)</value>
   </data>
+  <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
+    <value>A csharp-ls nem található. Telepítse a dotnet tool install -g csharp-ls paranccsal.</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerStarting" xml:space="preserve">
+    <value>A C# nyelvi kiszolgáló indítása...</value>
+  </data>
   <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
     <value>A középső panel csak másik panellel cserélhet helyet: a kívánt panelt vidd a középre.</value>
   </data>

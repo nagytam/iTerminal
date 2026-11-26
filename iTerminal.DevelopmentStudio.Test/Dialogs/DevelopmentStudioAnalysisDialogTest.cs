@@ -3,6 +3,8 @@ using iTerminal.Core.Services.Dotnet;
 using iTerminal.DevelopmentStudio.Dialogs;
 using iTerminal.DevelopmentStudio.Model;
 using iTerminal.DevelopmentStudio.Services;
+using iTerminal.DevelopmentStudio.Services.Lsp;
+using iTerminal.DevelopmentStudio.Test.Services.Lsp;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.DevelopmentStudio.Test.Dialogs;
@@ -14,7 +16,7 @@ public class DevelopmentStudioAnalysisDialogTest
     private static async Task<DevelopmentStudioDialog> OpenAsync(string folder, IReadOnlyList<DevelopmentProject> items, FakeProcessRunner runner)
     {
         var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), new BreakpointStore(),
-            new MainProgramStore(), new FakeDotnetSolutionService { Sdks = [] }, TestTheme())
+            new MainProgramStore(), new FakeDotnetSolutionService { Sdks = [] }, TestTheme(), new CSharpLanguageServer(new FakeLanguageServer()))
         {
             Folder = folder,
         };

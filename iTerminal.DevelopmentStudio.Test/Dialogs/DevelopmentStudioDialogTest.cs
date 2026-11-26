@@ -5,6 +5,8 @@ using iTerminal.Core.Services.Dotnet;
 using iTerminal.DevelopmentStudio.Dialogs;
 using iTerminal.DevelopmentStudio.Model;
 using iTerminal.DevelopmentStudio.Services;
+using iTerminal.DevelopmentStudio.Services.Lsp;
+using iTerminal.DevelopmentStudio.Test.Services.Lsp;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.DevelopmentStudio.Test.Dialogs;
@@ -27,12 +29,12 @@ public class DevelopmentStudioDialogTest
 
     private sealed record Harness(DevelopmentStudioDialog Dialog, FakeProcessRunner Runner, FakeDotnetSolutionService Dotnet, BreakpointStore Breakpoints);
 
-    private static async Task<Harness> OpenAsync(IReadOnlyList<DevelopmentProject> items, FakeDotnetSolutionService? dotnet = null, string? solutionPath = null, FakeProcessRunner? runner = null, MainProgramStore? mainProgram = null)
+    private static async Task<Harness> OpenAsync(IReadOnlyList<DevelopmentProject> items, FakeDotnetSolutionService? dotnet = null, string? solutionPath = null, FakeProcessRunner? runner = null, MainProgramStore? mainProgram = null, CSharpLanguageServer? server = null)
     {
         dotnet ??= new FakeDotnetSolutionService { Solution = TwoProjects, Sdks = [new DotnetSdk("9.0.100", "/sdk/9")] };
         runner ??= new FakeProcessRunner();
         var breakpoints = new BreakpointStore();
-        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme())
+        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()))
         {
             Folder = "/src",
         };
@@ -312,6 +314,79 @@ public class DevelopmentStudioDialogTest
         var command = runner.Commands.Single();
         Assert.AreEqual("mvn", command.FileName);
         CollectionAssert.AreEqual(new[] { "-B", "-q", "compile" }, command.Arguments.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ALiveErrorShowsInTheErrorListAndAsAGutterMarkOnItsLine()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "Program.cs");
+        File.WriteAllText(path, "class P\n{\n    int x = \"ERROR\";\n}\n");
+        try
+        {
+            var fake = new FakeLanguageServer
+            {
+                Diagnostics = (uri, text) => text.Contains("ERROR", StringComparison.Ordinal)
+                    ? [FakeLanguageServer.Diagnostic(2, 12, 1, "CS0029", "Cannot implicitly convert")]
+                    : [],
+            };
+            await using var server = new CSharpLanguageServer(fake);
+            var script = new DevelopmentProject("Program.cs", DevelopmentLanguage.DotNet, DevelopmentProjectKind.Script, path);
+            var harness = await OpenAsync([script], server: server);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+            // The dialog reads the server on its idle pass, as it does in the application.
+            await WaitUntilAsync(() =>
+            {
+                harness.Dialog.OnIdle();
+                return harness.Dialog.ErrorLines.Any(line => line.Contains("error CS0029", StringComparison.Ordinal));
+            }, "the live error to reach the Error List");
+
+            StringAssert.StartsWith(harness.Dialog.EditorLines[2], "!", "the line with the error has the error mark");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ABreakpointShowsBeforeALiveErrorOnTheSameLine()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "Program.cs");
+        File.WriteAllText(path, "class P\n{\n    int x = \"ERROR\";\n}\n");
+        try
+        {
+            var fake = new FakeLanguageServer
+            {
+                Diagnostics = (uri, text) => text.Contains("ERROR", StringComparison.Ordinal)
+                    ? [FakeLanguageServer.Diagnostic(2, 12, 1, "CS0029", "Cannot implicitly convert")]
+                    : [],
+            };
+            await using var server = new CSharpLanguageServer(fake);
+            var script = new DevelopmentProject("Program.cs", DevelopmentLanguage.DotNet, DevelopmentProjectKind.Script, path);
+            var harness = await OpenAsync([script], server: server);
+            harness.Breakpoints.Toggle(path, 3);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+            await WaitUntilAsync(() =>
+            {
+                harness.Dialog.OnIdle();
+                return harness.Dialog.ErrorLines.Any(line => line.Contains("error CS0029", StringComparison.Ordinal));
+            }, "the live error to reach the Error List");
+
+            StringAssert.StartsWith(harness.Dialog.EditorLines[2], "●", "the breakpoint wins over the error mark on its line");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
     }
 
     [Timeout(60_000)]

@@ -2419,6 +2419,12 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Das Wort unter dem Cursor beobachten (in der Debug-Ansicht entfernen)</value>
   </data>
+  <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
+    <value>csharp-ls est introuvable. Installez-le avec dotnet tool install -g csharp-ls.</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerStarting" xml:space="preserve">
+    <value>Démarrage du serveur de langage C#...</value>
+  </data>
   <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
     <value>Le panneau central ne peut qu'échanger sa place avec un autre : déplacez au centre le panneau souhaité.</value>
   </data>

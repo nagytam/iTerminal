@@ -204,6 +204,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddiTerminal(configuration);
                 services.AddWidgets(configuration);
                 services.AddDevelopmentStudio();
+                services.AddSingleton<iTerminal.DevelopmentStudio.Services.Lsp.ILanguageServerLauncher, SandboxServices.LanguageServers>();
 
                 foreach (var descriptor in services
                     .Where(d => d.ServiceType == typeof(IJob) && OmittedJobs.Contains(d.ImplementationType))
