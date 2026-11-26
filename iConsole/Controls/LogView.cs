@@ -27,7 +27,8 @@ public sealed record LogEntry(string Text, LogEntryLevel Level, IReadOnlyList<Lo
 /// that arrived meanwhile is <see cref="UnreadCount"/>, shown at the bottom right), and End or scrolling to the bottom
 /// turns it on again. At most <see cref="MaxLines"/> lines are kept, the oldest are dropped first, and a view that is
 /// not following does not move when they go. <see cref="MinimumLevel"/> and <see cref="FilterText"/> hide lines without
-/// deleting them. Lines are cut at the right edge; Left and Right scroll sideways.
+/// deleting them. Lines are cut at the right edge; Left and Right scroll sideways. <see cref="Find"/> searches the lines
+/// shown for a text, highlights its matches and scrolls to them; F3 and Shift+F3 step to the next and previous match.
 /// </summary>
 public class LogView : Control
 {
@@ -49,6 +50,8 @@ public class LogView : Control
     private int _unread;
     private int _version;
     private int _drawnVersion = -1;
+    private string _searchText = string.Empty;
+    private int _matchIndex = -1;
 
     public LogView(IThemeService themeService) : base(themeService)
     {
@@ -130,6 +133,45 @@ public class LogView : Control
                     RebuildVisible();
                 }
             }
+        }
+    }
+
+    /// <summary>The text the view is searching for (ignoring case); empty when there is no search. Its matches are highlighted.</summary>
+    public string SearchText
+    {
+        get { lock (_gate) { return _searchText; } }
+    }
+
+    /// <summary>
+    /// Sets the text to find and moves to its first match from the top of the view. Only the lines shown (after the level and
+    /// line filters) are searched. Returns false when nothing matches; the text is kept either way, so the highlights stay.
+    /// </summary>
+    public bool Find(string text)
+    {
+        lock (_gate)
+        {
+            _searchText = text ?? string.Empty;
+            _matchIndex = -1;
+            _version++;
+            return Seek(EffectiveTop(), 1);
+        }
+    }
+
+    /// <summary>Moves to the next match after the current one, wrapping from the last line to the first. False when nothing matches.</summary>
+    public bool FindNext()
+    {
+        lock (_gate)
+        {
+            return Seek(_matchIndex < 0 ? EffectiveTop() : _matchIndex + 1, 1);
+        }
+    }
+
+    /// <summary>Moves to the match before the current one, wrapping from the first line to the last. False when nothing matches.</summary>
+    public bool FindPrevious()
+    {
+        lock (_gate)
+        {
+            return Seek(_matchIndex < 0 ? EffectiveTop() - 1 : _matchIndex - 1, -1);
         }
     }
 
@@ -279,6 +321,39 @@ public class LogView : Control
         }
     }
 
+    /// <summary>
+    /// Looks for the search text among the visible lines, starting at <paramref name="start"/> and moving by <paramref name="step"/>
+    /// and wrapping around once. On a match the view scrolls so that line is at the top. Called with the lock held.
+    /// </summary>
+    private bool Seek(int start, int step)
+    {
+        int count = _visible.Count;
+        if (_searchText.Length == 0 || count == 0)
+        {
+            return false;
+        }
+
+        for (int n = 0; n < count; n++)
+        {
+            int index = (((start + (n * step)) % count) + count) % count;
+            if (_visible[index].Text.Contains(_searchText, StringComparison.CurrentCultureIgnoreCase))
+            {
+                _matchIndex = index;
+                _top = Math.Clamp(index, 0, MaxTop);
+                _follow = _top >= MaxTop;
+                if (_follow)
+                {
+                    _unread = 0;
+                }
+
+                _version++;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private bool Passes(LogEntry entry)
     {
         return entry.Level >= _minimumLevel
@@ -377,6 +452,11 @@ public class LogView : Control
         yield return ("Home", UiText.Get("Hint.OldestLine", "Oldest line"));
         yield return ("End", UiText.Get("Hint.NewestLineFollow", "Newest line, and follow new lines"));
         yield return ("Left/Right", UiText.Get("Hint.ScrollSideways", "Scroll sideways"));
+        if (SearchText.Length > 0)
+        {
+            yield return ("F3", UiText.Get("Hint.FindNext", "Find the next match"));
+            yield return ("Shift+F3", UiText.Get("Hint.FindPrevious", "Find the previous match"));
+        }
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -412,6 +492,17 @@ public class LogView : Control
                 return true;
             case ConsoleKey.RightArrow:
                 ScrollSideways(ColumnStep);
+                return true;
+            case ConsoleKey.F3 when SearchText.Length > 0:
+                if (keyEvent.Shift)
+                {
+                    FindPrevious();
+                }
+                else
+                {
+                    FindNext();
+                }
+
                 return true;
         }
 
@@ -458,6 +549,7 @@ public class LogView : Control
         int unread;
         int left;
         bool following;
+        string search;
         lock (_gate)
         {
             int top = EffectiveTop();
@@ -465,6 +557,7 @@ public class LogView : Control
             unread = _unread;
             left = _left;
             following = _follow;
+            search = _searchText;
             _drawnVersion = _version;
         }
 
@@ -487,9 +580,18 @@ public class LogView : Control
             string badge = line == height - 1 && !following && unread > 0 ? $" ▼ {unread} new " : string.Empty;
             int textWidth = Math.Max(0, width - badge.Length);
             var conxelString = new ConxelString(text.Cut(textWidth).PadRight(textWidth), foreground, colorScheme.Background);
-            if (line < rows.Length && rows[line].Spans is { } entrySpans)
+            if (line < rows.Length)
             {
-                ApplySpans(conxelString, entrySpans, left, Math.Min(text.Length, textWidth));
+                IReadOnlyList<LogSpan> lineSpans = rows[line].Spans ?? [];
+                if (search.Length > 0)
+                {
+                    lineSpans = [.. lineSpans, .. MatchSpans(rows[line].Text, search, colorScheme)];
+                }
+
+                if (lineSpans.Count > 0)
+                {
+                    ApplySpans(conxelString, lineSpans, left, Math.Min(text.Length, textWidth));
+                }
             }
 
             if (badge.Length > 0)
@@ -499,6 +601,17 @@ public class LogView : Control
 
             conxelString.Expand(width, foreground, colorScheme.Background);
             buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + line), new Size(width, 1), conxelString);
+        }
+    }
+
+    /// <summary>One span in the selection colours for every occurrence of <paramref name="search"/> (ignoring case) in <paramref name="text"/>.</summary>
+    private static IEnumerable<LogSpan> MatchSpans(string text, string search, ColorScheme colorScheme)
+    {
+        int at = text.IndexOf(search, StringComparison.CurrentCultureIgnoreCase);
+        while (at >= 0)
+        {
+            yield return new LogSpan(at, search.Length, colorScheme.SelectedForeground, colorScheme.SelectedBackground);
+            at = text.IndexOf(search, at + search.Length, StringComparison.CurrentCultureIgnoreCase);
         }
     }
 

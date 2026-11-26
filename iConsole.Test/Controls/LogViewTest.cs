@@ -281,6 +281,96 @@ public class LogViewTest
         Assert.IsTrue(view.HasStateChanged);
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Find_MovesToTheFirstMatchFromTheTop_AndWrapsAround()
+    {
+        LogView view = Create();
+        AppendNumbered(view, 10);
+
+        // Following the end of the log, the search starts there and wraps to the first match above it.
+        Assert.IsTrue(view.Find("line 02"));
+
+        Assert.AreEqual(2, view.TopIndex);
+        Assert.IsFalse(view.Follow);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FindNextAndPrevious_StepThroughTheMatchesAndWrap()
+    {
+        LogView view = Create(2);
+        string[] lines = ["error a", "ok", "error b", "ok", "ok", "ok", "error c", "ok", "ok", "ok"];
+        foreach (string line in lines)
+        {
+            view.Append(line);
+        }
+
+        view.Follow = false;
+        Assert.IsTrue(view.Find("ERROR"));
+        Assert.AreEqual(0, view.TopIndex);
+
+        Assert.IsTrue(view.FindNext());
+        Assert.AreEqual(2, view.TopIndex);
+        Assert.IsTrue(view.FindNext());
+        Assert.AreEqual(6, view.TopIndex);
+        Assert.IsTrue(view.FindNext());
+        Assert.AreEqual(0, view.TopIndex);
+
+        Assert.IsTrue(view.FindPrevious());
+        Assert.AreEqual(6, view.TopIndex);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Find_ReturnsFalseWhenNothingMatches_AndSearchesOnlyTheLinesShown()
+    {
+        LogView view = Create();
+        view.Append("keep this");
+        view.Append("drop that");
+        view.FilterText = "keep";
+
+        Assert.IsFalse(view.Find("drop"));
+        Assert.IsFalse(view.FindNext());
+        Assert.AreEqual("drop", view.SearchText);
+        Assert.IsTrue(view.Find("KEEP"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F3_StepsToTheNextMatch_OnlyWhileASearchIsSet()
+    {
+        LogView view = Create(1);
+        view.Append("hit");
+        view.Append("miss");
+        view.Append("hit");
+        view.Follow = false;
+
+        Assert.IsFalse(await view.HandleKeyEventAsync(Key(ConsoleKey.F3)));
+
+        view.Find("hit");
+        Assert.IsTrue(await view.HandleKeyEventAsync(Key(ConsoleKey.F3)));
+        Assert.AreEqual(2, view.TopIndex);
+        Assert.IsTrue(await view.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.F3, true, false, false)));
+        Assert.AreEqual(0, view.TopIndex);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Draw_HighlightsEveryMatchInTheSelectionColours()
+    {
+        LogView view = Create();
+        view.Append("hello world");
+        view.Find("world");
+        ColorScheme scheme = new();
+        var screen = new ScreenBuffer(20, 4);
+
+        view.Draw(screen);
+
+        Assert.AreEqual(scheme.Foreground, screen.ForegroundAt(0, 0));
+        Assert.AreEqual(scheme.SelectedForeground, screen.ForegroundAt(6, 0));
+    }
+
     private static void StringAssert_Contains(string value, string expected)
     {
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(value, expected);
