@@ -14,10 +14,17 @@ public sealed class FakeProcessRunner : IDevelopmentProcessRunner
 
     public int ExitCode { get; set; }
 
+    /// <summary>Runs for each command before its output is replayed (a test writes the files a real tool would).</summary>
+    public Action<ProcessCommand>? OnRun { get; set; }
+
+    /// <summary>The output of one command, when set; otherwise <see cref="Output"/>.</summary>
+    public Func<ProcessCommand, IReadOnlyList<string>>? OutputFor { get; set; }
+
     public Task<int> RunAsync(ProcessCommand command, Action<string> onOutputLine, CancellationToken cancellationToken = default)
     {
         lock (Commands) Commands.Add(command);
-        foreach (string line in Output) onOutputLine(line);
+        OnRun?.Invoke(command);
+        foreach (string line in OutputFor?.Invoke(command) ?? Output) onOutputLine(line);
         return Task.FromResult(ExitCode);
     }
 }

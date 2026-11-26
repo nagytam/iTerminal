@@ -2302,8 +2302,14 @@
   <data name="DevelopmentStudio.Busy" xml:space="preserve">
     <value>Un comando è ancora in esecuzione; X lo annulla ({0} non è stato avviato).</value>
   </data>
+  <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
+    <value>Egy parancs még fut; a mérés előtt az X megszakítja.</value>
+  </data>
   <data name="DevelopmentStudio.BusyDebug" xml:space="preserve">
     <value>Un comando è ancora in esecuzione; X lo annulla prima del debug.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyProfile" xml:space="preserve">
+    <value>Egy parancs még fut; a profilozás előtt az X megszakítja.</value>
   </data>
   <data name="DevelopmentStudio.CallStack" xml:space="preserve">
     <value>Stack di chiamate</value>
@@ -2314,6 +2320,18 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Rimosse {0} cartelle di cache di {1}.</value>
   </data>
+  <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
+    <value>Lefedettség-mérés megszakítva.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageHeading" xml:space="preserve">
+    <value>Lefedettség</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageSummary" xml:space="preserve">
+    <value>Lefedettség {0:0.0}%: {1} / {2} sor {3} fájlban.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageTotal" xml:space="preserve">
+    <value>Lefedettség {0:0.0}%: {1} / {2} sor {3} fájlban.</value>
+  </data>
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Debug</value>
   </data>
@@ -2322,6 +2340,12 @@
   </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} non riuscito (uscita {1}).</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorer" xml:space="preserve">
+    <value>Fájlböngésző: az Enter kibontja a mappát vagy megnyitja a fájlt.</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorerHeading" xml:space="preserve">
+    <value>Fájlböngésző</value>
   </data>
   <data name="DevelopmentStudio.Found" xml:space="preserve">
     <value>Trovati {0} elementi. Invio apre un file; F5 avvia il debug.</value>
@@ -2340,6 +2364,12 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Compila, pulisci, testa o esegui l'elemento selezionato</value>
+  </data>
+  <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
+    <value>A kijelölt elem lefedettségének mérése / a kijelölt Python-szkript profilozása</value>
+  </data>
+  <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
+    <value>A lefedettségi nézetben a kurzor alatti fájl megnyitása</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Apri il file (o esegui il test)</value>
@@ -2380,8 +2410,26 @@
   <data name="DevelopmentStudio.NoCommand" xml:space="preserve">
     <value>{0} non può {1} {2}.</value>
   </data>
+  <data name="DevelopmentStudio.NoCoverage" xml:space="preserve">
+    <value>Még nincs lefedettség. Az O a kijelölt elem lefedettségét méri.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageFor" xml:space="preserve">
+    <value>A(z) {0} itt nem mér lefedettséget.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageReport" xml:space="preserve">
+    <value>A futás nem hagyott lefedettségi jelentést. Ellenőrizze a kimenetet.</value>
+  </data>
   <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
     <value>Il debug di {0} non è disponibile qui per {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
+    <value>Még nincs profil. A P a kijelölt Python-szkriptet profilozza.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfileWritten" xml:space="preserve">
+    <value>A profilozó nem írt profilt. Ellenőrizze a kimenetet.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfilerFor" xml:space="preserve">
+    <value>A(z) {0} itt nem profilozható.</value>
   </data>
   <data name="DevelopmentStudio.NoProjectsToCheck" xml:space="preserve">
     <value>Nessun progetto .NET da selezionare.</value>
@@ -2416,14 +2464,35 @@
   <data name="DevelopmentStudio.Paused" xml:space="preserve">
     <value>Fermo a {0}:{1}</value>
   </data>
+  <data name="DevelopmentStudio.ProfileEmpty" xml:space="preserve">
+    <value>A profilban nincs függvény.</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeader" xml:space="preserve">
+    <value>     hívások   összes s   halmozott s  függvény</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeading" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileSummary" xml:space="preserve">
+    <value>{0} profilozva: {1} függvény. A legtöbb idő: {2}.</value>
+  </data>
   <data name="DevelopmentStudio.ProjectCount" xml:space="preserve">
     <value>{0} progetti</value>
+  </data>
+  <data name="DevelopmentStudio.ReadingFolder" xml:space="preserve">
+    <value>(mappa olvasása...)</value>
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>Trovati {0} elementi.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Esecuzione di {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
+    <value>{0} lefedettségének mérése...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
+    <value>{0} profilozása...</value>
   </data>
   <data name="DevelopmentStudio.RunningState" xml:space="preserve">
     <value>In esecuzione.</value>

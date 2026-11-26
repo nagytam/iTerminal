@@ -2302,8 +2302,14 @@
   <data name="DevelopmentStudio.Busy" xml:space="preserve">
     <value>Un comando sigue en ejecución; X lo cancela ({0} no se inició).</value>
   </data>
+  <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla prima della misura.</value>
+  </data>
   <data name="DevelopmentStudio.BusyDebug" xml:space="preserve">
     <value>Un comando sigue en ejecución; X lo cancela antes de depurar.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyProfile" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla prima del profilo.</value>
   </data>
   <data name="DevelopmentStudio.CallStack" xml:space="preserve">
     <value>Pila de llamadas</value>
@@ -2314,6 +2320,18 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Se quitaron {0} carpetas de caché de {1}.</value>
   </data>
+  <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
+    <value>Misura della copertura annullata.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageHeading" xml:space="preserve">
+    <value>Copertura</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageSummary" xml:space="preserve">
+    <value>Copertura {0:0.0}%: {1} di {2} righe in {3} file.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageTotal" xml:space="preserve">
+    <value>Copertura {0:0.0}%: {1} di {2} righe in {3} file.</value>
+  </data>
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Depuración</value>
   </data>
@@ -2322,6 +2340,12 @@
   </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} falló (código de salida {1}).</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorer" xml:space="preserve">
+    <value>Esplora file: Invio espande una cartella o apre un file.</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorerHeading" xml:space="preserve">
+    <value>Esplora file</value>
   </data>
   <data name="DevelopmentStudio.Found" xml:space="preserve">
     <value>{0} elementos encontrados. Intro abre un archivo; F5 inicia la depuración.</value>
@@ -2340,6 +2364,12 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Compilar, limpiar, probar o ejecutar el elemento seleccionado</value>
+  </data>
+  <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
+    <value>Misura la copertura dell'elemento selezionato / profila lo script Python selezionato</value>
+  </data>
+  <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
+    <value>Nella vista copertura, apri il file sotto il cursore</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Abrir el archivo (o ejecutar la prueba)</value>
@@ -2380,8 +2410,26 @@
   <data name="DevelopmentStudio.NoCommand" xml:space="preserve">
     <value>{0} no puede {1} {2}.</value>
   </data>
+  <data name="DevelopmentStudio.NoCoverage" xml:space="preserve">
+    <value>Nessuna copertura ancora. O misura la copertura dell'elemento selezionato.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageFor" xml:space="preserve">
+    <value>{0} non ha una misura della copertura qui.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageReport" xml:space="preserve">
+    <value>L'esecuzione non ha lasciato un report di copertura. Controlla l'output.</value>
+  </data>
   <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
     <value>La depuración de {0} no está disponible aquí para {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
+    <value>Nessun profilo ancora. P profila lo script Python selezionato.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfileWritten" xml:space="preserve">
+    <value>Il profiler non ha scritto alcun profilo. Controlla l'output.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfilerFor" xml:space="preserve">
+    <value>{0} non ha un profiler qui.</value>
   </data>
   <data name="DevelopmentStudio.NoProjectsToCheck" xml:space="preserve">
     <value>No hay proyectos .NET que marcar.</value>
@@ -2416,14 +2464,35 @@
   <data name="DevelopmentStudio.Paused" xml:space="preserve">
     <value>Detenido en {0}:{1}</value>
   </data>
+  <data name="DevelopmentStudio.ProfileEmpty" xml:space="preserve">
+    <value>Il profilo non ha funzioni.</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeader" xml:space="preserve">
+    <value>     chiamate   totale s   cumul. s  funzione</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeading" xml:space="preserve">
+    <value>Profilo</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileSummary" xml:space="preserve">
+    <value>{0} profilato: {1} funzioni. Più tempo: {2}.</value>
+  </data>
   <data name="DevelopmentStudio.ProjectCount" xml:space="preserve">
     <value>{0} proyectos</value>
+  </data>
+  <data name="DevelopmentStudio.ReadingFolder" xml:space="preserve">
+    <value>(lettura della cartella...)</value>
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>{0} elementos encontrados.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Ejecutando {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
+    <value>Misura della copertura di {0}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
+    <value>Profilo di {0}...</value>
   </data>
   <data name="DevelopmentStudio.RunningState" xml:space="preserve">
     <value>En ejecución.</value>

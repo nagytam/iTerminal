@@ -2444,8 +2444,14 @@
   <data name="DevelopmentStudio.Busy" xml:space="preserve">
     <value>A command is still running; X cancels it ({0} was not started).</value>
   </data>
+  <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
+    <value>A command is still running; X cancels it before measuring coverage.</value>
+  </data>
   <data name="DevelopmentStudio.BusyDebug" xml:space="preserve">
     <value>A command is still running; X cancels it before debugging.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyProfile" xml:space="preserve">
+    <value>A command is still running; X cancels it before profiling.</value>
   </data>
   <data name="DevelopmentStudio.CallStack" xml:space="preserve">
     <value>Call stack</value>
@@ -2456,6 +2462,18 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Removed {0} cache folders of {1}.</value>
   </data>
+  <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
+    <value>Coverage measurement cancelled.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageHeading" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageSummary" xml:space="preserve">
+    <value>Coverage {0:0.0}%: {1} of {2} lines in {3} files.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageTotal" xml:space="preserve">
+    <value>Coverage {0:0.0}%: {1} of {2} lines in {3} files.</value>
+  </data>
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Debug</value>
   </data>
@@ -2464,6 +2482,12 @@
   </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} failed (exit {1}).</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorer" xml:space="preserve">
+    <value>File Explorer: Enter expands a folder or opens a file.</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorerHeading" xml:space="preserve">
+    <value>File Explorer</value>
   </data>
   <data name="DevelopmentStudio.Found" xml:space="preserve">
     <value>Found {0} items. Enter opens a file; F5 starts debugging.</value>
@@ -2482,6 +2506,12 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Build, clean, test, run the selected item</value>
+  </data>
+  <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
+    <value>Measure the coverage of the selected item / profile the selected Python script</value>
+  </data>
+  <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
+    <value>In the coverage view, open the file under the cursor</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Open the file (or run the test)</value>
@@ -2522,8 +2552,26 @@
   <data name="DevelopmentStudio.NoCommand" xml:space="preserve">
     <value>{0} cannot {1} {2}.</value>
   </data>
+  <data name="DevelopmentStudio.NoCoverage" xml:space="preserve">
+    <value>No coverage yet. O measures the coverage of the selected item.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageFor" xml:space="preserve">
+    <value>{0} has no coverage measurement here.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageReport" xml:space="preserve">
+    <value>The run left no coverage report. Check the output.</value>
+  </data>
   <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
     <value>Debugging {0} is not available for {1} here.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
+    <value>No profile yet. P profiles the selected Python script.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfileWritten" xml:space="preserve">
+    <value>The profiler wrote no profile. Check the output.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfilerFor" xml:space="preserve">
+    <value>{0} has no profiler here.</value>
   </data>
   <data name="DevelopmentStudio.NoProjectsToCheck" xml:space="preserve">
     <value>No .NET projects to check.</value>
@@ -2558,14 +2606,35 @@
   <data name="DevelopmentStudio.Paused" xml:space="preserve">
     <value>Stopped at {0}:{1}</value>
   </data>
+  <data name="DevelopmentStudio.ProfileEmpty" xml:space="preserve">
+    <value>The profile has no functions.</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeader" xml:space="preserve">
+    <value>     calls   total s   cumul. s  function</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeading" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileSummary" xml:space="preserve">
+    <value>Profiled {0}: {1} functions. Most time: {2}.</value>
+  </data>
   <data name="DevelopmentStudio.ProjectCount" xml:space="preserve">
     <value>{0} projects</value>
+  </data>
+  <data name="DevelopmentStudio.ReadingFolder" xml:space="preserve">
+    <value>(reading the folder...)</value>
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>Found {0} items.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Running {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
+    <value>Measuring the coverage of {0}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
+    <value>Profiling {0}...</value>
   </data>
   <data name="DevelopmentStudio.RunningState" xml:space="preserve">
     <value>Running.</value>

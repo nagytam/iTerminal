@@ -45,6 +45,10 @@ public sealed class DotNetToolchain : IDevelopmentToolchain
 
     public IReadOnlyList<string> CacheFolders(DevelopmentProject project) => [];
 
+    /// <summary>The tests under coverlet's collector (<c>XPlat Code Coverage</c>), which writes a Cobertura report under the results folder.</summary>
+    public IReadOnlyList<ProcessCommand> Coverage(DevelopmentProject project, string resultsFolder) =>
+        [Dotnet(project, "test", project.Path, "--collect:XPlat Code Coverage", "--results-directory", resultsFolder)];
+
     public DebugPlan? PlanDebug(DevelopmentProject project, string? builtAssembly, bool debugTests)
     {
         if (project.Kind != DevelopmentProjectKind.DotNetProject || builtAssembly is null || debugTests) return null;
@@ -114,6 +118,26 @@ public sealed class PythonToolchain : IDevelopmentToolchain
 
         return folders;
     }
+
+    /// <summary>coverage.py runs the test file (or the script) and <c>coverage xml</c> writes the Cobertura report.</summary>
+    public IReadOnlyList<ProcessCommand> Coverage(DevelopmentProject project, string resultsFolder)
+    {
+        string data = Path.Combine(resultsFolder, ".coverage");
+        string report = Path.Combine(resultsFolder, "coverage.xml");
+        string[] target = project.IsTest ? ["-m", "pytest", "-q", project.Path] : [project.Path];
+        return
+        [
+            Python(project, ["-m", "coverage", "run", "--data-file=" + data, .. target]),
+            Python(project, ["-m", "coverage", "xml", "--data-file=" + data, "-o", report]),
+        ];
+    }
+
+    /// <summary>cProfile writes the stats of the script to <paramref name="profilePath"/>.</summary>
+    public ProcessCommand Profile(DevelopmentProject project, string profilePath) =>
+        Python(project, ["-m", "cProfile", "-o", profilePath, project.Path]);
+
+    public ProcessCommand ProfileSummary(DevelopmentProject project, string profilePath) =>
+        Python(project, ["-c", iTerminal.DevelopmentStudio.Services.Analysis.PythonProfileParser.SummaryScript, profilePath]);
 
     public DebugPlan? PlanDebug(DevelopmentProject project, string? builtAssembly, bool debugTests)
     {

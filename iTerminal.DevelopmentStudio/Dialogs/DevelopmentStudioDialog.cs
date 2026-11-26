@@ -10,6 +10,7 @@ using iTerminal.Core.Dialogs;
 using iTerminal.DevelopmentStudio.Model;
 using iTerminal.DevelopmentStudio.Services;
 using iTerminal.Core.Model.Dotnet;
+using iTerminal.DevelopmentStudio.Services.Analysis;
 using iTerminal.DevelopmentStudio.Services.Dap;
 using iTerminal.Core.Services.Dotnet;
 
@@ -25,15 +26,19 @@ namespace iTerminal.DevelopmentStudio.Dialogs;
 public class DevelopmentStudioDialog : SplitPaneDialog
 {
     /// <summary>What the left pane lists: the Solution Explorer, or the Test Explorer.</summary>
-    private enum ExplorerMode { Solution, Tests }
+    private enum ExplorerMode { Solution, Tests, Files }
 
     /// <summary>What the right pane shows: the source of the open file, the output log, or the debug view.</summary>
-    private enum ViewMode { Source, Output, Debug }
+    private enum ViewMode { Source, Output, Debug, Coverage, Profile }
 
     private enum StatusSeverity { Info, Success, Error }
 
     /// <summary>One row of the explorer. <see cref="Item"/> is null for a heading row.</summary>
-    private sealed record ExplorerRow(string DisplayName, DevelopmentProject? Item, Color? Tint);
+    /// <summary>One row of the explorer. A File Explorer row carries <see cref="FilePath"/> instead of a project.</summary>
+    private sealed record ExplorerRow(string DisplayName, DevelopmentProject? Item, Color? Tint, string? FilePath = null, bool IsDirectory = false);
+
+    /// <summary>A file or folder of the File Explorer tree. <see cref="Children"/> is empty for a file.</summary>
+    private sealed record FileNode(string Path, bool IsDirectory, List<FileNode> Children);
 
     /// <summary>The result of the last test run of one test item.</summary>
     private sealed record TestOutcome(bool Passed, TestTotals Totals);
@@ -116,6 +121,27 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private ViewMode _viewMode = ViewMode.Source;
 
     private DebugSession? _session;
+
+    /// <summary>Coverage of the last coverage run, and the file each Coverage row names (row 1 is the first file).</summary>
+    private CoverageReport? _coverage;
+    private readonly List<CoverageFile> _coverageFiles = [];
+
+    /// <summary>The functions of the last profile, by cumulative time.</summary>
+    private IReadOnlyList<ProfileEntry> _profile = [];
+
+    /// <summary>The File Explorer tree of the folder, built once on first use (and again after a refresh).</summary>
+    private IReadOnlyList<FileNode> _fileRoots = [];
+    private bool _fileTreeBuilt;
+    private readonly HashSet<string> _expandedFolders = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>The folders the File Explorer does not list, and the tree's size and depth limits.</summary>
+    private static readonly HashSet<string> SkippedFileFolders = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".git", ".vs", ".vscode", ".idea", "bin", "obj", "node_modules", ".venv", "venv", "__pycache__", ".pytest_cache", "TestResults", "packages",
+    };
+
+    public const int MaxFileNodes = 3000;
+    public const int MaxFileDepth = 4;
     private volatile bool _paused;
     private volatile bool _busy;
     private CancellationTokenSource? _runCts;
@@ -284,6 +310,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
         yield return ("V", UiText.Get("DevelopmentStudio.HintSdk", "Switch to the next .NET SDK"));
         yield return ("S / F", UiText.Get("DevelopmentStudio.HintSbom", "Write a CycloneDX SBOM of the solution / switch it between XML and JSON"));
+        yield return ("O / P", UiText.Get("DevelopmentStudio.HintCoverage", "Measure the coverage of the selected item / profile the selected Python script"));
+        yield return ("G", UiText.Get("DevelopmentStudio.HintGoToFile", "In the coverage view, open the file under the cursor"));
         yield return ("X", UiText.Get("DevelopmentStudio.HintCancel", "Cancel the running command"));
     }
 
@@ -367,6 +395,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             case ConsoleKey.F when plain:
                 ToggleSbomFormat();
                 return true;
+            case ConsoleKey.O when plain:
+                RunCoverage();
+                return true;
+            case ConsoleKey.P when plain:
+                RunProfile();
+                return true;
+            case ConsoleKey.G when plain:
+                OpenCoverageFileAtCursor();
+                return true;
             case ConsoleKey.X when plain:
                 if (_runCts is not null) await _runCts.CancelAsync();
                 return true;
@@ -378,6 +415,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private void EnterPressed()
     {
+        if (_explorerMode == ExplorerMode.Files)
+        {
+            EnterFileRow();
+            return;
+        }
+
         var item = SelectedItem;
         if (_explorerMode == ExplorerMode.Tests)
         {
@@ -394,25 +437,137 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         OpenSource(item.Path);
     }
 
+    /// <summary>Enter on a File Explorer row: a folder expands or collapses, a file opens in the source view.</summary>
+    private void EnterFileRow()
+    {
+        var row = SelectedRow;
+        if (row?.FilePath is null) return;
+        if (row.IsDirectory)
+        {
+            if (!_expandedFolders.Remove(row.FilePath)) _expandedFolders.Add(row.FilePath);
+            RebuildExplorer();
+            StateHasChanged();
+            return;
+        }
+
+        OpenSource(row.FilePath);
+    }
+
+    /// <summary>F6 cycles the left pane: Solution Explorer, Test Explorer, File Explorer.</summary>
     private void ToggleExplorerMode()
     {
-        _explorerMode = _explorerMode == ExplorerMode.Solution ? ExplorerMode.Tests : ExplorerMode.Solution;
+        _explorerMode = _explorerMode switch
+        {
+            ExplorerMode.Solution => ExplorerMode.Tests,
+            ExplorerMode.Tests => ExplorerMode.Files,
+            _ => ExplorerMode.Solution,
+        };
         RebuildExplorer();
+        if (_explorerMode == ExplorerMode.Files)
+        {
+            _ = LoadFileTreeAsync();
+            SetStatus(UiText.Get("DevelopmentStudio.FileExplorer", "File Explorer: Enter expands a folder or opens a file."), StatusSeverity.Info);
+            return;
+        }
+
         SetStatus(_explorerMode == ExplorerMode.Tests
             ? UiText.Get("DevelopmentStudio.TestExplorer", "Test Explorer: Enter or T runs the test item under the cursor.")
             : UiText.Get("DevelopmentStudio.SolutionExplorer", "Solution Explorer."), StatusSeverity.Info);
     }
 
+    /// <summary>Reads the folder's tree (bounded in count and depth) off the UI thread, then lists it.</summary>
+    private async Task LoadFileTreeAsync()
+    {
+        string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
+        var roots = await Task.Run(() =>
+        {
+            int budget = MaxFileNodes;
+            return ReadFileFolder(folder, 0, ref budget);
+        }, CancellationToken.None);
+        _fileRoots = roots;
+        _fileTreeBuilt = true;
+        RebuildExplorer();
+        StateHasChanged();
+    }
+
+    /// <summary>Folders first, then files, each by name; folders named in <see cref="SkippedFileFolders"/> are left out.</summary>
+    private static List<FileNode> ReadFileFolder(string folder, int depth, ref int budget)
+    {
+        var nodes = new List<FileNode>();
+        List<string> dirs;
+        List<string> files;
+        try
+        {
+            dirs = Directory.EnumerateDirectories(folder)
+                .Where(dir => !SkippedFileFolders.Contains(Path.GetFileName(dir)))
+                .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase).ToList();
+            files = Directory.EnumerateFiles(folder)
+                .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase).ToList();
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return nodes;
+        }
+
+        foreach (string dir in dirs)
+        {
+            if (budget <= 0) return nodes;
+            budget--;
+            var node = new FileNode(dir, true, []);
+            if (depth < MaxFileDepth) node.Children.AddRange(ReadFileFolder(dir, depth + 1, ref budget));
+            nodes.Add(node);
+        }
+
+        foreach (string file in files)
+        {
+            if (budget <= 0) return nodes;
+            budget--;
+            nodes.Add(new FileNode(file, false, []));
+        }
+
+        return nodes;
+    }
+
+    /// <summary>The File Explorer row under the cursor (null in the other panes or on the heading).</summary>
+    private ExplorerRow? SelectedRow
+    {
+        get
+        {
+            var rows = _explorerListBox.ListModel.ListItems;
+            var index = (int)_explorerListBox.ScrollableModel.CursorPosition.Y;
+            return index >= 0 && index < rows.Count ? rows[index].Item : null;
+        }
+    }
+
+    /// <summary>F7 cycles the right pane: Source, Output, Debug, Coverage, Profile.</summary>
     private void CycleViewMode()
     {
         _viewMode = _viewMode switch
         {
             ViewMode.Source => ViewMode.Output,
             ViewMode.Output => ViewMode.Debug,
+            ViewMode.Debug => ViewMode.Coverage,
+            ViewMode.Coverage => ViewMode.Profile,
             _ => ViewMode.Source,
         };
         RebuildView();
         StateHasChanged();
+    }
+
+    /// <summary>G in the coverage view: opens the file the cursor is on.</summary>
+    private void OpenCoverageFileAtCursor()
+    {
+        if (_viewMode != ViewMode.Coverage) return;
+        int row = (int)_viewListBox.ScrollableModel.CursorPosition.Y;
+        CoverageFile? file;
+        lock (_stateLock)
+        {
+            // Row 0 is the total; the files follow in order.
+            file = row >= 1 && row - 1 < _coverageFiles.Count ? _coverageFiles[row - 1] : null;
+        }
+
+        if (file is null) return;
+        OpenSource(file.Path);
     }
 
     #endregion
@@ -430,10 +585,33 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     }
 
     /// <summary>Rebuilds the explorer rows from the scan and, in the Test Explorer, the test results.</summary>
+    /// <summary>Rebuilds the explorer rows: the Solution Explorer, the Test Explorer, or the File Explorer tree.</summary>
     private void RebuildExplorer()
     {
         var rows = new List<ExplorerRow>();
-        if (_explorerMode == ExplorerMode.Solution)
+        if (_explorerMode == ExplorerMode.Files)
+        {
+            if (!_fileTreeBuilt)
+            {
+                rows.Add(new ExplorerRow(UiText.Get("DevelopmentStudio.ReadingFolder", "(reading the folder...)"), null, null));
+            }
+
+            void AddNodes(IEnumerable<FileNode> nodes, int depth)
+            {
+                foreach (var node in nodes)
+                {
+                    bool expanded = node.IsDirectory && _expandedFolders.Contains(node.Path);
+                    string name = Path.GetFileName(node.Path);
+                    string marker = node.IsDirectory ? (expanded ? "▾ " : "▸ ") : "  ";
+                    rows.Add(new ExplorerRow(new string(' ', depth * 2) + marker + name, null,
+                        node.IsDirectory ? Color.Cyan : null, node.Path, node.IsDirectory));
+                    if (expanded) AddNodes(node.Children, depth + 1);
+                }
+            }
+
+            AddNodes(_fileRoots, 0);
+        }
+        else if (_explorerMode == ExplorerMode.Solution)
         {
             foreach (var item in _items)
             {
@@ -501,18 +679,27 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                         lines.Add(UiText.Get("DevelopmentStudio.NoSource", "Select a file in the explorer and press Enter to open it here."));
                     }
 
+                    CoverageFile? covered = _coverage?.Files.FirstOrDefault(file => file.Path.Equals(_sourcePath, StringComparison.OrdinalIgnoreCase));
                     for (int i = 0; i < _sourceLines.Count; i++)
                     {
                         int number = i + 1;
-                        string gutter = number == _stopLine && _sourcePath.Equals(_stopPath, StringComparison.OrdinalIgnoreCase)
-                            ? "→"
-                            : _breakpoints.Contains(_sourcePath, number) ? "●" : " ";
+                        bool isStop = number == _stopLine && _sourcePath.Equals(_stopPath, StringComparison.OrdinalIgnoreCase);
+                        string gutter = isStop ? "→"
+                            : _breakpoints.Contains(_sourcePath, number) ? "●"
+                            : covered is not null && covered.Hits.TryGetValue(number, out int hits) ? (hits > 0 ? "+" : "-")
+                            : " ";
                         lines.Add($"{gutter}{number,5}  {_sourceLines[i]}");
                     }
 
                     break;
                 case ViewMode.Output:
                     lines.AddRange(_output);
+                    break;
+                case ViewMode.Coverage:
+                    lines.AddRange(CoverageLines());
+                    break;
+                case ViewMode.Profile:
+                    lines.AddRange(ProfileLines());
                     break;
                 default:
                     lines.AddRange(DebugLines());
@@ -527,6 +714,49 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         _viewItems.ReplaceAll(lines);
         _viewListBox.UpdateModel();
+    }
+
+    /// <summary>The coverage view: the total, then one row per file (the rows <see cref="OpenCoverageFileAtCursor"/> reads). Caller holds the lock.</summary>
+    private List<string> CoverageLines()
+    {
+        var lines = new List<string>();
+        _coverageFiles.Clear();
+        if (_coverage is null)
+        {
+            lines.Add(UiText.Get("DevelopmentStudio.NoCoverage", "No coverage yet. O measures the coverage of the selected item."));
+            return lines;
+        }
+
+        lines.Add(string.Format(UiText.Get("DevelopmentStudio.CoverageTotal", "Coverage {0:0.0}%: {1} of {2} lines in {3} files."),
+            _coverage.Percent, _coverage.CoveredLines, _coverage.ValidLines, _coverage.Files.Count));
+        string root = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
+        foreach (var file in _coverage.Files)
+        {
+            _coverageFiles.Add(file);
+            string shown = Path.GetRelativePath(root, file.Path);
+            lines.Add($"{file.Percent,6:0.0}%  {file.CoveredLines,5}/{file.ValidLines,-5}  {shown}");
+        }
+
+        return lines;
+    }
+
+    /// <summary>The profile view: the functions by cumulative time. Caller holds the lock.</summary>
+    private List<string> ProfileLines()
+    {
+        var lines = new List<string>();
+        if (_profile.Count == 0)
+        {
+            lines.Add(UiText.Get("DevelopmentStudio.NoProfile", "No profile yet. P profiles the selected Python script."));
+            return lines;
+        }
+
+        lines.Add(UiText.Get("DevelopmentStudio.ProfileHeader", "     calls   total s   cumul. s  function"));
+        foreach (var entry in _profile)
+        {
+            lines.Add($"{entry.Calls,10}  {entry.TotalSeconds,8:0.000}  {entry.CumulativeSeconds,8:0.000}  {entry.Function}");
+        }
+
+        return lines;
     }
 
     /// <summary>The debug view's lines; <see cref="_watchRows"/> maps the watch rows to their watch so Delete can remove one. Caller holds the lock.</summary>
@@ -760,6 +990,187 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     #region Commands (build, clean, test, run)
 
+    /// <summary>
+    /// O: measures the coverage of the cursor item. The toolchain's commands run in order, each writing into a temporary
+    /// results folder; the Cobertura report they leave is read into the coverage view and the source gutter.
+    /// </summary>
+    private void RunCoverage()
+    {
+        var item = SelectedItem;
+        if (item is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.SelectItem", "Select an item first."), StatusSeverity.Info);
+            return;
+        }
+
+        if (_busy)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.BusyCoverage", "A command is still running; X cancels it before measuring coverage."), StatusSeverity.Info);
+            return;
+        }
+
+        var toolchain = ToolchainFor(item);
+        string resultsFolder = Path.Combine(Path.GetTempPath(), "DevelopmentStudio-coverage-" + Guid.NewGuid().ToString("N"));
+        var commands = toolchain.Coverage(item, resultsFolder);
+        if (commands.Count == 0)
+        {
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.NoCoverageFor", "{0} has no coverage measurement here."), LanguageLabel(item.Language)), StatusSeverity.Info);
+            return;
+        }
+
+        Directory.CreateDirectory(resultsFolder);
+        var cts = new CancellationTokenSource();
+        _runCts = cts;
+        _busy = true;
+        lock (_stateLock) _output.Clear();
+        SetStatus(string.Format(UiText.Get("DevelopmentStudio.RunningCoverage", "Measuring the coverage of {0}..."), item.Name), StatusSeverity.Info);
+        _viewMode = ViewMode.Output;
+        RebuildView();
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                foreach (var command in commands)
+                {
+                    if (cts.IsCancellationRequested) break;
+                    AppendOutput($"$ {command.Display}");
+                    // A failing test run still leaves a report for what did run, so the commands go on regardless.
+                    await _runner.RunAsync(command, AppendOutput, cts.Token);
+                }
+
+                string? report = toolchain.FindCoverageReport(resultsFolder);
+                if (cts.IsCancellationRequested)
+                {
+                    SetStatus(UiText.Get("DevelopmentStudio.CoverageCancelled", "Coverage measurement cancelled."), StatusSeverity.Info);
+                }
+                else if (report is null)
+                {
+                    SetStatus(UiText.Get("DevelopmentStudio.NoCoverageReport", "The run left no coverage report. Check the output."), StatusSeverity.Error);
+                }
+                else
+                {
+                    var coverage = CoberturaParser.Parse(await File.ReadAllTextAsync(report, cts.Token));
+                    lock (_stateLock)
+                    {
+                        _coverage = coverage;
+                        _viewMode = ViewMode.Coverage;
+                    }
+
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.CoverageSummary", "Coverage {0:0.0}%: {1} of {2} lines in {3} files."),
+                        coverage.Percent, coverage.CoveredLines, coverage.ValidLines, coverage.Files.Count), StatusSeverity.Success);
+                }
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Xml.XmlException or OperationCanceledException or InvalidOperationException)
+            {
+                SetStatus(exception.Message, StatusSeverity.Error);
+            }
+            finally
+            {
+                // The view is rebuilt before the run is marked finished, so anyone who waits for it sees the result.
+                DeleteTemporaryFolder(resultsFolder);
+                RebuildView();
+                _busy = false;
+                _runCts = null;
+                StateHasChanged();
+            }
+        }, CancellationToken.None);
+    }
+
+    /// <summary>
+    /// P: profiles the cursor item with the toolchain's profiler (cProfile for Python), then reads the stats back as the
+    /// profile view's rows of functions by cumulative time.
+    /// </summary>
+    private void RunProfile()
+    {
+        var item = SelectedItem;
+        if (item is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.SelectItem", "Select an item first."), StatusSeverity.Info);
+            return;
+        }
+
+        if (_busy)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.BusyProfile", "A command is still running; X cancels it before profiling."), StatusSeverity.Info);
+            return;
+        }
+
+        var toolchain = ToolchainFor(item);
+        string folder = Path.Combine(Path.GetTempPath(), "DevelopmentStudio-profile-" + Guid.NewGuid().ToString("N"));
+        string profilePath = Path.Combine(folder, "profile.prof");
+        var command = toolchain.Profile(item, profilePath);
+        var summary = toolchain.ProfileSummary(item, profilePath);
+        if (command is null || summary is null)
+        {
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.NoProfilerFor", "{0} has no profiler here."), LanguageLabel(item.Language)), StatusSeverity.Info);
+            return;
+        }
+
+        Directory.CreateDirectory(folder);
+        var cts = new CancellationTokenSource();
+        _runCts = cts;
+        _busy = true;
+        lock (_stateLock) _output.Clear();
+        SetStatus(string.Format(UiText.Get("DevelopmentStudio.RunningProfile", "Profiling {0}..."), item.Name), StatusSeverity.Info);
+        _viewMode = ViewMode.Output;
+        RebuildView();
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                AppendOutput($"$ {command.Display}");
+                await _runner.RunAsync(command, AppendOutput, cts.Token);
+                if (!File.Exists(profilePath))
+                {
+                    SetStatus(UiText.Get("DevelopmentStudio.NoProfileWritten", "The profiler wrote no profile. Check the output."), StatusSeverity.Error);
+                    return;
+                }
+
+                var lines = new List<string>();
+                await _runner.RunAsync(summary, line => { lock (lines) lines.Add(line); }, cts.Token);
+                var entries = PythonProfileParser.Parse(lines);
+                lock (_stateLock)
+                {
+                    _profile = entries;
+                    _viewMode = ViewMode.Profile;
+                }
+
+                var hottest = entries.OrderByDescending(entry => entry.CumulativeSeconds).FirstOrDefault();
+                SetStatus(hottest is null
+                    ? UiText.Get("DevelopmentStudio.ProfileEmpty", "The profile has no functions.")
+                    : string.Format(UiText.Get("DevelopmentStudio.ProfileSummary", "Profiled {0}: {1} functions. Most time: {2}."), item.Name, entries.Count, hottest.Function),
+                    StatusSeverity.Success);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or OperationCanceledException or InvalidOperationException)
+            {
+                SetStatus(exception.Message, StatusSeverity.Error);
+            }
+            finally
+            {
+                DeleteTemporaryFolder(folder);
+                RebuildView();
+                _busy = false;
+                _runCts = null;
+                StateHasChanged();
+            }
+        }, CancellationToken.None);
+    }
+
+    /// <summary>Deletes a temporary results folder; a folder that cannot be deleted is left for the system's temp cleanup.</summary>
+    private static void DeleteTemporaryFolder(string folder)
+    {
+        try
+        {
+            if (Directory.Exists(folder)) Directory.Delete(folder, recursive: true);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            // Left for the system's temp cleanup; the result has already been read.
+        }
+    }
+
     /// <summary>Runs one command on the checked projects, or on the cursor item when nothing is checked.</summary>
     private void RunSelected(string verb)
     {
@@ -923,6 +1334,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>Re-scans the folder. The Test Explorer keeps the results of the items still there.</summary>
     private async Task RefreshAsync()
     {
+        _fileTreeBuilt = false;
         _items = await ScanAsync();
         RebuildExplorer();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Refreshed", "Found {0} items."), _items.Count), StatusSeverity.Info);
@@ -1441,17 +1853,21 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         var rightX = ix + leftW + 1;
         var rightW = iw - leftW - 1;
 
-        DrawSectionHeader(buffer, ix, midY, leftW,
-            _explorerMode == ExplorerMode.Solution
-                ? UiText.Get("DevelopmentStudio.SolutionExplorerHeading", "Solution Explorer")
-                : UiText.Get("DevelopmentStudio.TestExplorerHeading", "Test Explorer"),
-            true, colorScheme);
+        string explorerHeading = _explorerMode switch
+        {
+            ExplorerMode.Solution => UiText.Get("DevelopmentStudio.SolutionExplorerHeading", "Solution Explorer"),
+            ExplorerMode.Tests => UiText.Get("DevelopmentStudio.TestExplorerHeading", "Test Explorer"),
+            _ => UiText.Get("DevelopmentStudio.FileExplorerHeading", "File Explorer"),
+        };
+        DrawSectionHeader(buffer, ix, midY, leftW, explorerHeading, true, colorScheme);
         if (rightW > 0)
         {
             string heading = _viewMode switch
             {
                 ViewMode.Source => UiText.Get("DevelopmentStudio.SourceHeading", "Source"),
                 ViewMode.Output => UiText.Get("DevelopmentStudio.OutputHeading", "Output"),
+                ViewMode.Coverage => UiText.Get("DevelopmentStudio.CoverageHeading", "Coverage"),
+                ViewMode.Profile => UiText.Get("DevelopmentStudio.ProfileHeading", "Profile"),
                 _ => UiText.Get("DevelopmentStudio.DebugHeading", "Debug"),
             };
             DrawSectionHeader(buffer, rightX, midY, rightW, heading, false, colorScheme);

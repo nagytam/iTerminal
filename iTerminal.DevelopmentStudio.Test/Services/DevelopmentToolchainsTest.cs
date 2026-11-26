@@ -66,6 +66,43 @@ public class DevelopmentToolchainsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void DotnetCoverageRunsTheTestsUnderCoverletIntoTheResultsFolder()
+    {
+        var project = new DevelopmentProject("App.Test", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App.Test/App.Test.csproj", IsTest: true);
+
+        var command = Toolchains.For(project).Coverage(project, "/tmp/results").Single();
+
+        CollectionAssert.AreEqual(new[] { "test", "/src/App.Test/App.Test.csproj", "--collect:XPlat Code Coverage", "--results-directory", "/tmp/results" }, command.Arguments.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void PythonCoverageRunsThenWritesACoberturaReport()
+    {
+        var script = new DevelopmentProject("tool.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, "/src/tool.py");
+
+        var commands = Toolchains.For(script).Coverage(script, "/tmp/results");
+
+        CollectionAssert.Contains(commands[0].Arguments.ToList(), "run");
+        CollectionAssert.AreEqual(new[] { "-m", "coverage", "xml", "--data-file=/tmp/results/.coverage", "-o", "/tmp/results/coverage.xml" }, commands[1].Arguments.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void OnlyDotnetAndPythonMeasureCoverageAndOnlyPythonProfiles()
+    {
+        var powershell = new DevelopmentProject("tool.ps1", DevelopmentLanguage.PowerShell, DevelopmentProjectKind.Script, "/src/tool.ps1");
+        var java = new DevelopmentProject("Main.java", DevelopmentLanguage.Java, DevelopmentProjectKind.Script, "/src/Main.java");
+        var python = new DevelopmentProject("tool.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, "/src/tool.py");
+
+        Assert.AreEqual(0, Toolchains.For(powershell).Coverage(powershell, "/tmp/r").Count);
+        Assert.AreEqual(0, Toolchains.For(java).Coverage(java, "/tmp/r").Count);
+        Assert.IsNull(Toolchains.For(powershell).Profile(powershell, "/tmp/p.prof"));
+        Assert.AreEqual("-m", Toolchains.For(python).Profile(python, "/tmp/p.prof").Arguments[0]);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void PowerShellRunsAndTestsButOffersNoDebugger()
     {
         var script = new DevelopmentProject("tool.ps1", DevelopmentLanguage.PowerShell, DevelopmentProjectKind.Script, "/src/tool.ps1");

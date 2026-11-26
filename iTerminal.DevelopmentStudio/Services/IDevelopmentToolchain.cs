@@ -37,4 +37,25 @@ public interface IDevelopmentToolchain
 
     /// <summary>The DLL a build of a .NET project leaves in <c>bin/Debug</c>, the newest one; null when there is none.</summary>
     string? FindBuiltAssembly(DevelopmentProject project) => null;
+
+    /// <summary>
+    /// The commands that measure the coverage of the item, in order. Each writes into <paramref name="resultsFolder"/>, and
+    /// the last one leaves a Cobertura report there (see <see cref="FindCoverageReport"/>). Empty when the language has none here.
+    /// </summary>
+    IReadOnlyList<ProcessCommand> Coverage(DevelopmentProject project, string resultsFolder) => [];
+
+    /// <summary>The Cobertura report a coverage run left under <paramref name="resultsFolder"/>, or null when there is none.</summary>
+    string? FindCoverageReport(string resultsFolder)
+    {
+        if (!Directory.Exists(resultsFolder)) return null;
+        return Directory.EnumerateFiles(resultsFolder, "*.xml", SearchOption.AllDirectories)
+            .FirstOrDefault(file => Path.GetFileName(file).Equals("coverage.cobertura.xml", StringComparison.OrdinalIgnoreCase)
+                || Path.GetFileName(file).Equals("coverage.xml", StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>The command that profiles the item into <paramref name="profilePath"/>. Null when the language offers no profiler here.</summary>
+    ProcessCommand? Profile(DevelopmentProject project, string profilePath) => null;
+
+    /// <summary>The command that prints the profile at <paramref name="profilePath"/> as tab-separated lines (see <c>PythonProfileParser</c>).</summary>
+    ProcessCommand? ProfileSummary(DevelopmentProject project, string profilePath) => null;
 }
