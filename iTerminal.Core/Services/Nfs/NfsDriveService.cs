@@ -26,7 +26,7 @@ public sealed record NfsExportEntry : VirtualDriveEntry, IDriveObjectEntry
 /// They are reached only from batch tasks and background work, never from a key handler. The panel's own F3, F5 and F8
 /// gates answer from the listing (<see cref="ContentModelAsyncDrive"/>) and never call this service.</para>
 /// </summary>
-public sealed class NfsDriveService(INfsMountFactory mountFactory) : INfsDriveService, IAsyncDisposable
+public sealed class NfsDriveService(INfsMountFactory mountFactory) : INfsDriveService, IDisposable, IAsyncDisposable
 {
     private readonly NfsMountCache _mounts = new(mountFactory);
 
@@ -239,6 +239,9 @@ public sealed class NfsDriveService(INfsMountFactory mountFactory) : INfsDriveSe
 
         return location;
     }
+
+    /// <summary>The synchronous path the container takes at shutdown; it waits for the mounts to close, which is quick once the server is gone.</summary>
+    public void Dispose() => _mounts.DisposeAsync().AsTask().GetAwaiter().GetResult();
 
     public async ValueTask DisposeAsync() => await _mounts.DisposeAsync();
 }
