@@ -922,6 +922,9 @@
   <data name="CmdDesc.59bf9cc1" xml:space="preserve">
     <value>Ouvrir le fichier sélectionné dans la visionneuse.</value>
   </data>
+  <data name="CmdDesc.5b1ccbaa" xml:space="preserve">
+    <value>Exécute la commande saisie sur la ligne de commande, dans le dossier de ce panneau, et affiche sa sortie dans la boîte de dialogue du terminal.</value>
+  </data>
   <data name="CmdDesc.5efc92aa" xml:space="preserve">
     <value>Affiche la météo des lieux enregistrés : maintenant, les 24 prochaines heures et les 7 prochains jours.</value>
   </data>
@@ -1009,9 +1012,6 @@
   <data name="CmdDesc.85281618" xml:space="preserve">
     <value>Chiffrer les fichiers marqués (ou celui sous le curseur) avec une phrase secrète dans des fichiers .enc séparés, ou déchiffrer des fichiers .enc.</value>
   </data>
-  <data name="CmdDesc.86cc06e0" xml:space="preserve">
-    <value>Exécuter le programme sélectionné dans le journal des commandes.</value>
-  </data>
   <data name="CmdDesc.86d5c50c" xml:space="preserve">
     <value>Ouvrir le fichier texte sélectionné dans l’éditeur.</value>
   </data>
@@ -1033,6 +1033,9 @@
   </data>
   <data name="CmdDesc.8f7a1d59" xml:space="preserve">
     <value>Écraser puis supprimer les fichiers et dossiers marqués (ou celui sous le curseur) pour qu’ils ne puissent pas être récupérés.</value>
+  </data>
+  <data name="CmdDesc.8fd2e348" xml:space="preserve">
+    <value>Exécute le programme sélectionné dans le journal des commandes et affiche sa sortie dans la boîte de dialogue du terminal.</value>
   </data>
   <data name="CmdDesc.919dae4f" xml:space="preserve">
     <value>Diminuer le volume de lecture de 5 %.</value>
@@ -1102,9 +1105,6 @@
   </data>
   <data name="CmdDesc.adc840e9" xml:space="preserve">
     <value>Parcourir les hôtes SSH/SMB du réseau local et s’y connecter.</value>
-  </data>
-  <data name="CmdDesc.aec2e334" xml:space="preserve">
-    <value>Exécuter la commande saisie sur la ligne de commande, dans le dossier de ce panneau.</value>
   </data>
   <data name="CmdDesc.b2cf0726" xml:space="preserve">
     <value>Retirer le titre sélectionné de la file de lecture. Le fichier n’est pas touché.</value>
@@ -10030,6 +10030,9 @@
   </data>
   <data name="Terminal.NoCommand" xml:space="preserve">
     <value>Aucune commande de terminal n'a encore été exécutée.</value>
+  </data>
+  <data name="Terminal.Running" xml:space="preserve">
+    <value>La commande est en cours d'exécution. Sa sortie apparaîtra ici à la fin.</value>
   </data>
   <data name="Terminal.SandboxBusy" xml:space="preserve">
     <value>Une commande est en cours : le bac à sable ne peut être changé qu'à la fin.</value>

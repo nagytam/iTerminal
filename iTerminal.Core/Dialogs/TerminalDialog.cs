@@ -46,15 +46,26 @@ public class TerminalDialog : Dialog
         await base.OnInitializeAsync();
 
         _terminalCommand = _terminalModel.History.LastOrDefault();
-        if (_terminalCommand is not null)
-        {
-            Title = string.Format(UiText.Get("Dialog.TerminalCommandTitle", "Terminal - {0}"), _terminalCommand?.Command);
-        }
-        else
-        {
-            Title = UiText.Get("Dialog.TerminalTitle", "Terminal");
-        }
+        ApplyTitle();
+    }
 
+    /// <summary>The title names the command shown, and changes with it when a panel's command starts or finishes while the dialog is open.</summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        ApplyTitle();
+    }
+
+    private void ApplyTitle()
+    {
+        var command = TerminalTextTabPage.ShownCommand(_terminalModel);
+        var title = command is not null
+            ? string.Format(UiText.Get("Dialog.TerminalCommandTitle", "Terminal - {0}"), command.Command)
+            : UiText.Get("Dialog.TerminalTitle", "Terminal");
+        if (title != Title)
+        {
+            Title = title;
+        }
     }
     public override void OnInitializeLayout()
     {
