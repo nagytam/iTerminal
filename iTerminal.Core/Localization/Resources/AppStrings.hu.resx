@@ -2449,6 +2449,9 @@
   <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
     <value>Nincs főprogram: az F5 a kurzor alatti elemet indítja.</value>
   </data>
+  <data name="DevelopmentStudio.MainNotStartable" xml:space="preserve">
+    <value>{0} nincs indítható programja. Főprogram csak konzol- vagy webprojekt, illetve szkript lehet.</value>
+  </data>
   <data name="DevelopmentStudio.MainSet" xml:space="preserve">
     <value>A(z) {0} a főprogram. Az F5 és a Ctrl+F5 ezt indítja.</value>
   </data>

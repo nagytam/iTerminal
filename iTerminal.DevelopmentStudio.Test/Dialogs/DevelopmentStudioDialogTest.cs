@@ -162,6 +162,25 @@ public class DevelopmentStudioDialogTest
         Assert.AreEqual("  ▸ [ ] C#  App", reopened.Dialog.ExplorerRows[1]);
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MRefusesALibraryButAcceptsAConsoleAndAWebProject()
+    {
+        var library = new DevelopmentProject("Lib", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/Lib/Lib.csproj", SolutionPath: "/src/App.slnx", Output: DotNetOutputKind.Library);
+        var web = new DevelopmentProject("Site", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/Site/Site.csproj", SolutionPath: "/src/App.slnx", Output: DotNetOutputKind.Web);
+        var mainProgram = new MainProgramStore();
+        var harness = await OpenAsync([Solution, library, web, App], mainProgram: mainProgram);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.M, 'm'));
+        Assert.AreEqual(string.Empty, mainProgram.Path, "a library has no program to start");
+        Assert.IsTrue(harness.Dialog.Status.Contains("no program to start", StringComparison.Ordinal));
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.M, 'm'));
+        Assert.AreEqual("/src/Site/Site.csproj", mainProgram.Path, "a web project can be the Main program");
+    }
+
     /// <summary>A folder with <c>App/App.csproj</c>, a <c>Program.cs</c>, a <c>Properties</c> folder and a nested <c>Lib</c> project.</summary>
     private static string NewProjectFolder()
     {

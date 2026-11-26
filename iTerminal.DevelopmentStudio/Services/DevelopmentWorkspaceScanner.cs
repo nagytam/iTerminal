@@ -22,6 +22,15 @@ public sealed partial class DevelopmentWorkspaceScanner(IDotnetSolutionService d
     [GeneratedRegex(@"<IsTestProject>\s*true\s*</IsTestProject>", RegexOptions.IgnoreCase)]
     private static partial Regex IsTestProjectRegex();
 
+    [GeneratedRegex(@"<OutputType>\s*(Exe|WinExe)\s*</OutputType>", RegexOptions.IgnoreCase)]
+    private static partial Regex ExecutableOutputRegex();
+
+    [GeneratedRegex(@"<OutputType>\s*Library\s*</OutputType>", RegexOptions.IgnoreCase)]
+    private static partial Regex LibraryOutputRegex();
+
+    [GeneratedRegex(@"<Project\s[^>]*Sdk\s*=\s*""([^""]+)""", RegexOptions.IgnoreCase)]
+    private static partial Regex ProjectSdkRegex();
+
     /// <inheritdoc />
     public IReadOnlyList<DevelopmentProject> Scan(string folder)
     {
@@ -66,8 +75,9 @@ public sealed partial class DevelopmentWorkspaceScanner(IDotnetSolutionService d
             if (IsDotNetProjectFile(extension))
             {
                 if (claimedProjects.Contains(file)) continue;
-                bool isTest = IsTestProjectRegex().IsMatch(SafeRead(file));
-                items.Add(new DevelopmentProject(Path.GetFileNameWithoutExtension(file), DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, file, isTest));
+                string text = SafeRead(file);
+                bool isTest = IsTestProjectRegex().IsMatch(text);
+                items.Add(new DevelopmentProject(Path.GetFileNameWithoutExtension(file), DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, file, isTest, null, OutputOf(text)));
             }
             else if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase))
             {
@@ -104,7 +114,7 @@ public sealed partial class DevelopmentWorkspaceScanner(IDotnetSolutionService d
 
         return solution.Projects
             .Where(project => File.Exists(project.AbsolutePath))
-            .Select(project => new DevelopmentProject(project.Name, DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, project.AbsolutePath, project.IsTestProject, solutionPath))
+            .Select(project => new DevelopmentProject(project.Name, DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, project.AbsolutePath, project.IsTestProject, solutionPath, OutputOf(SafeRead(project.AbsolutePath))))
             .ToList();
     }
 
@@ -151,6 +161,23 @@ public sealed partial class DevelopmentWorkspaceScanner(IDotnetSolutionService d
         || extension.Equals(".fsproj", StringComparison.OrdinalIgnoreCase)
         || extension.Equals(".vbproj", StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// What a project builds to, from the text of its project file: the web SDK is a web project, an <c>Exe</c> output or the
+    /// worker SDK is a console project, a <c>Library</c> output or the plain SDK without an output type is a library.
+    /// </summary>
+    public static DotNetOutputKind OutputOf(string projectFileText)
+    {
+        if (string.IsNullOrWhiteSpace(projectFileText)) return DotNetOutputKind.Unknown;
+        string sdk = ProjectSdkRegex().Match(projectFileText) is { Success: true } match ? match.Groups[1].Value : string.Empty;
+        if (sdk.Contains("Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase)) return DotNetOutputKind.Web;
+        if (ExecutableOutputRegex().IsMatch(projectFileText) || sdk.Contains("Microsoft.NET.Sdk.Worker", StringComparison.OrdinalIgnoreCase)) return DotNetOutputKind.Console;
+        if (LibraryOutputRegex().IsMatch(projectFileText)) return DotNetOutputKind.Library;
+        // A file that holds a project element with no output type is a library under the plain SDK; anything else is left unknown.
+        return sdk.Equals("Microsoft.NET.Sdk", StringComparison.OrdinalIgnoreCase) && projectFileText.Contains("</Project>", StringComparison.OrdinalIgnoreCase)
+            ? DotNetOutputKind.Library
+            : DotNetOutputKind.Unknown;
+    }
+
     /// <summary>A Python test file by the usual names (<c>test_*.py</c>, <c>*_test.py</c>) or a file under a <c>tests</c> folder.</summary>
     public static bool IsPythonTest(string file)
     {
@@ -164,12 +191,8 @@ public sealed partial class DevelopmentWorkspaceScanner(IDotnetSolutionService d
     {
         try
         {
-            // Only the head of a project file is read; IsTestProject sits near the top.
-            using var stream = File.OpenRead(file);
-            var buffer = new char[16 * 1024];
-            using var reader = new StreamReader(stream);
-            int count = reader.Read(buffer, 0, buffer.Length);
-            return new string(buffer, 0, count);
+            // A project file is small. It is read whole, so OutputType is found wherever the file puts it.
+            return File.ReadAllText(file);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {

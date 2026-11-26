@@ -2591,6 +2591,9 @@
   <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
     <value>No Main program: F5 starts the item under the cursor.</value>
   </data>
+  <data name="DevelopmentStudio.MainNotStartable" xml:space="preserve">
+    <value>{0} has no program to start. Only a console or web project, or a script, can be the Main program.</value>
+  </data>
   <data name="DevelopmentStudio.MainSet" xml:space="preserve">
     <value>{0} is the Main program. F5 and Ctrl+F5 start it.</value>
   </data>
