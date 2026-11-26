@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Text.Json.Nodes;
 using iTerminal.DevelopmentStudio.Model;
 
@@ -220,9 +221,12 @@ public sealed class PowerShellToolchain : IDevelopmentToolchain
 }
 
 /// <summary>
-/// Java: Maven or Gradle for project folders (<c>pom.xml</c>, <c>build.gradle</c>), <c>javac</c> and the source launcher
-/// (<c>java File.java</c>) for single files. No debugger is offered: the Eclipse java-debug adapter needs a jar the
-/// Development Studio does not ship, so debugging Java says so rather than failing silently.
+/// Java: Maven or Gradle for project folders (<c>pom.xml</c>, <c>build.gradle</c>). A single file is compiled with
+/// <c>javac</c> and the source root of its package on the source path, so a file that uses its package's other classes
+/// compiles; the classes go to <see cref="JavaSourceLayout.ClassesFolderName"/> under that root. A run starts the compiled
+/// class when there is one, and otherwise hands a single-file program to the source launcher (<c>java File.java</c>). No
+/// debugger is offered: the Eclipse java-debug adapter needs a jar the Development Studio does not ship, so debugging Java
+/// says so rather than failing silently.
 /// </summary>
 public sealed class JavaToolchain : IDevelopmentToolchain
 {
@@ -236,39 +240,65 @@ public sealed class JavaToolchain : IDevelopmentToolchain
 
     public string JavaRuntime { get; init; } = "java";
 
+    /// <summary>
+    /// The JDK the commands run with: its <c>bin</c> holds <c>javac</c>, <c>java</c>, and it becomes <c>JAVA_HOME</c> for Maven and
+    /// Gradle. Null runs the tools on the PATH.
+    /// </summary>
+    public string? JavaHome { get; init; }
+
     public ProcessCommand Build(DevelopmentProject project)
     {
-        if (project.Kind == DevelopmentProjectKind.Script) return new ProcessCommand(Javac, [project.Path], project.Directory);
+        if (project.Kind == DevelopmentProjectKind.Script)
+        {
+            string root = JavaSourceLayout.RootOf(project.Path);
+            return Command(ToolPath(Javac), ["-d", JavaSourceLayout.ClassesFolder(root), "-sourcepath", root, project.Path], project.Directory);
+        }
+
         return project.Path.EndsWith("pom.xml", StringComparison.OrdinalIgnoreCase)
-            ? new ProcessCommand(Maven, ["-B", "-q", "compile"], project.Directory)
-            : new ProcessCommand(GradleHost(project), ["build", "-x", "test"], project.Directory);
+            ? Command(Maven, ["-B", "-q", "compile"], project.Directory)
+            : Command(GradleHost(project), ["build", "-x", "test"], project.Directory);
     }
 
     public ProcessCommand? Run(DevelopmentProject project)
     {
-        if (project.Kind == DevelopmentProjectKind.Script) return new ProcessCommand(JavaRuntime, [project.Path], project.Directory);
+        if (project.Kind == DevelopmentProjectKind.Script)
+        {
+            string root = JavaSourceLayout.RootOf(project.Path);
+            string classes = JavaSourceLayout.ClassesFolder(root);
+            string name = JavaSourceLayout.QualifiedName(project.Path);
+            return File.Exists(Path.Combine(classes, name.Replace('.', Path.DirectorySeparatorChar) + ".class"))
+                ? Command(ToolPath(JavaRuntime), ["-cp", classes, name], project.Directory)
+                : Command(ToolPath(JavaRuntime), [project.Path], project.Directory);
+        }
+
         return project.Path.EndsWith("pom.xml", StringComparison.OrdinalIgnoreCase)
-            ? new ProcessCommand(Maven, ["-B", "-q", "exec:java"], project.Directory)
-            : new ProcessCommand(GradleHost(project), ["run"], project.Directory);
+            ? Command(Maven, ["-B", "-q", "exec:java"], project.Directory)
+            : Command(GradleHost(project), ["run"], project.Directory);
     }
 
     public ProcessCommand? Test(DevelopmentProject project)
     {
         if (project.Kind == DevelopmentProjectKind.Script) return null;
         return project.Path.EndsWith("pom.xml", StringComparison.OrdinalIgnoreCase)
-            ? new ProcessCommand(Maven, ["-B", "test"], project.Directory)
-            : new ProcessCommand(GradleHost(project), ["test"], project.Directory);
+            ? Command(Maven, ["-B", "test"], project.Directory)
+            : Command(GradleHost(project), ["test"], project.Directory);
     }
 
+    /// <summary>A project is cleaned by its build tool; a single file's classes are removed as its cache folder.</summary>
     public ProcessCommand? Clean(DevelopmentProject project)
     {
         if (project.Kind == DevelopmentProjectKind.Script) return null;
         return project.Path.EndsWith("pom.xml", StringComparison.OrdinalIgnoreCase)
-            ? new ProcessCommand(Maven, ["-B", "clean"], project.Directory)
-            : new ProcessCommand(GradleHost(project), ["clean"], project.Directory);
+            ? Command(Maven, ["-B", "clean"], project.Directory)
+            : Command(GradleHost(project), ["clean"], project.Directory);
     }
 
-    public IReadOnlyList<string> CacheFolders(DevelopmentProject project) => [];
+    public IReadOnlyList<string> CacheFolders(DevelopmentProject project)
+    {
+        if (project.Kind != DevelopmentProjectKind.Script) return [];
+        string classes = JavaSourceLayout.ClassesFolder(JavaSourceLayout.RootOf(project.Path));
+        return Directory.Exists(classes) ? [classes] : [];
+    }
 
     public DebugPlan? PlanDebug(DevelopmentProject project, string? builtAssembly, bool debugTests) => null;
 
@@ -277,5 +307,78 @@ public sealed class JavaToolchain : IDevelopmentToolchain
     {
         string wrapper = Path.Combine(project.Directory, OperatingSystem.IsWindows() ? "gradlew.bat" : "gradlew");
         return File.Exists(wrapper) ? wrapper : Gradle;
+    }
+
+    /// <summary>A tool of the chosen JDK (<c>bin/javac</c>), or the tool name itself on the PATH.</summary>
+    private string ToolPath(string tool)
+    {
+        if (JavaHome is null) return tool;
+        string executable = OperatingSystem.IsWindows() && !tool.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? tool + ".exe" : tool;
+        return Path.Combine(JavaHome, "bin", executable);
+    }
+
+    private ProcessCommand Command(string fileName, IReadOnlyList<string> arguments, string workingDirectory) =>
+        new(fileName, arguments, workingDirectory, JavaHome is null ? null : new Dictionary<string, string> { ["JAVA_HOME"] = JavaHome });
+}
+
+/// <summary>
+/// Where a Java file's source tree starts and where its compiled classes go. The tree's root is the folder above the file's
+/// package folders (a file in <c>src/app/util</c> declaring <c>package app.util;</c> has <c>src</c> as its root), or the
+/// file's own folder for the default package or when the file is not in the folders its package names.
+/// </summary>
+public static partial class JavaSourceLayout
+{
+    /// <summary>The folder under the source root that holds the compiled classes of the single-file builds.</summary>
+    public const string ClassesFolderName = ".iterminal-classes";
+
+    [GeneratedRegex(@"^\s*package\s+([A-Za-z_][\w.]*)\s*;", RegexOptions.Multiline)]
+    private static partial Regex PackageRegex();
+
+    /// <summary>The package the file declares, read from the start of the file (empty for the default package).</summary>
+    public static string PackageOf(string sourcePath)
+    {
+        try
+        {
+            using var reader = new StreamReader(sourcePath);
+            char[] head = new char[16384];
+            int read = reader.ReadBlock(head, 0, head.Length);
+            return PackageRegex().Match(new string(head, 0, read)) is { Success: true } match ? match.Groups[1].Value : string.Empty;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return string.Empty;
+        }
+    }
+
+    /// <summary>The source root of the file (see the class summary).</summary>
+    public static string RootOf(string sourcePath)
+    {
+        string folder = Path.GetDirectoryName(sourcePath) ?? string.Empty;
+        string package = PackageOf(sourcePath);
+        if (package.Length == 0) return folder;
+
+        string[] segments = package.Split('.');
+        StringComparison comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        string full = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar);
+        if (!full.EndsWith(Path.DirectorySeparatorChar + string.Join(Path.DirectorySeparatorChar, segments), comparison)) return folder;
+
+        string root = full;
+        foreach (string _ in segments)
+        {
+            root = Path.GetDirectoryName(root) ?? root;
+        }
+
+        return root;
+    }
+
+    /// <summary>The folder the compiled classes of a source root go to.</summary>
+    public static string ClassesFolder(string root) => Path.Combine(root, ClassesFolderName);
+
+    /// <summary>The class name the file declares: its package and its file name (<c>app.util.Util</c>), or the file name alone.</summary>
+    public static string QualifiedName(string sourcePath)
+    {
+        string simple = Path.GetFileNameWithoutExtension(sourcePath);
+        string package = PackageOf(sourcePath);
+        return package.Length == 0 ? simple : package + "." + simple;
     }
 }

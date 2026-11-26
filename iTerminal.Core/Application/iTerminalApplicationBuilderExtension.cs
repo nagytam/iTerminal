@@ -20,6 +20,7 @@ using iTerminal.Core.Services;
 using iTerminal.Core.Services.Documents;
 using iTerminal.Core.Services.Labels;
 using iTerminal.Core.Services.RuntimeDependencies;
+using iTerminal.Core.Services.Sdk;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -668,6 +669,13 @@ public static class iTerminalApplicationBuilderExtension
         // PowerShell 7 for remote PowerShell sessions and Ctrl+O on Windows, downloaded from its GitHub release. A
         // PowerShell that is installed already is used as it is.
         services.AddSingleton<IRuntimeDependency>(_ => new PowerShellRuntimeDependency(Path.Combine(runtimesDirectory, "powershell")));
+
+        // The .NET SDKs and JDKs the Development studio's SDK manager downloads (dotnet/ and jdk/ under the runtimes folder).
+        // Each archive is checked against the digest its publisher lists. The download can be long, so the client has no timeout.
+        services.AddSingleton<ISdkManager>(provider => new SdkManager(
+            new HttpClient { Timeout = Timeout.InfiniteTimeSpan },
+            runtimesDirectory,
+            provider.GetRequiredService<ISettingsService>()));
 
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.

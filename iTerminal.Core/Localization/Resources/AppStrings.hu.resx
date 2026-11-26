@@ -2413,6 +2413,9 @@
   <data name="DevelopmentStudio.HintSdk" xml:space="preserve">
     <value>Passa al prossimo SDK .NET</value>
   </data>
+  <data name="DevelopmentStudio.HintSdkManager" xml:space="preserve">
+    <value>.NET SDK-k és JDK-k telepítése, és a Java fordításokhoz és futtatásokhoz használt JDK kiválasztása</value>
+  </data>
   <data name="DevelopmentStudio.HintStart" xml:space="preserve">
     <value>Avvia il debug o continua</value>
   </data>
@@ -6457,7 +6460,7 @@
     <value>Tab:következő mező  Fel/Le:választás  F5:árfolyamok frissítése  F6:csere  Esc:bezár</value>
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
-    <value>F5:debug F9:punto di interruzione F10/F11:passo Spazio:seleziona B/C/T/R:compila/pulisci/testa/esegui V:SDK S/F:SBOM F6/F7:pannelli Invio:apri Esc:chiudi</value>
+    <value>F5:debug F9:punto di interruzione F10/F11:passo Spazio:seleziona B/C/T/R:compila/pulisci/testa/esegui V:SDK K:SDKs S/F:SBOM F6/F7:pannelli Invio:apri Esc:chiudi</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:keresés/olvasás  Tab:mező  F3:teljes  F2:böngésző  Esc:bezár</value>
@@ -9307,6 +9310,96 @@
   <data name="ScreenSaver.Wake" xml:space="preserve">
     <value>Képernyő felébresztése</value>
     </data>
+  <data name="SdkManager.ActiveJava" xml:space="preserve">
+    <value>Telepítve, Javához használva</value>
+  </data>
+  <data name="SdkManager.AlreadyActive" xml:space="preserve">
+    <value>A(z) {0} már a használt Java.</value>
+  </data>
+  <data name="SdkManager.Available" xml:space="preserve">
+    <value>Elérhető</value>
+  </data>
+  <data name="SdkManager.Busy" xml:space="preserve">
+    <value>Az utolsó kérés még fut.</value>
+  </data>
+  <data name="SdkManager.Cancelled" xml:space="preserve">
+    <value>Megszakítva.</value>
+  </data>
+  <data name="SdkManager.ConfirmRemove" xml:space="preserve">
+    <value>Eltávolítja a(z) {0} {1} verziót az iTerminalból? (i/n)</value>
+  </data>
+  <data name="SdkManager.Details" xml:space="preserve">
+    <value>A telepített SDK-k és JDK-k az iTerminal adatmappájában vannak. Telepített JDK-n az Enter teszi azt a Java-verzióvá, amellyel a fordítás és a futtatás történik.</value>
+  </data>
+  <data name="SdkManager.Done" xml:space="preserve">
+    <value>A(z) {0} telepítve.</value>
+  </data>
+  <data name="SdkManager.DotNetUsed" xml:space="preserve">
+    <value>Az itt telepített .NET SDK-k bekerülnek a stúdió V-ciklusába.</value>
+  </data>
+  <data name="SdkManager.Downloading" xml:space="preserve">
+    <value>{0} letöltése…</value>
+  </data>
+  <data name="SdkManager.Failed" xml:space="preserve">
+    <value>A(z) {0} nem telepíthető: {1}</value>
+  </data>
+  <data name="SdkManager.HintClose" xml:space="preserve">
+    <value>Bezárás</value>
+  </data>
+  <data name="SdkManager.HintInstall" xml:space="preserve">
+    <value>SDK telepítése, vagy a telepített JDK használata Javához</value>
+  </data>
+  <data name="SdkManager.HintRefresh" xml:space="preserve">
+    <value>Listák újraolvasása</value>
+  </data>
+  <data name="SdkManager.HintRemove" xml:space="preserve">
+    <value>Telepített SDK vagy JDK eltávolítása</value>
+  </data>
+  <data name="SdkManager.Installed" xml:space="preserve">
+    <value>Telepítve</value>
+  </data>
+  <data name="SdkManager.JavaChosen" xml:space="preserve">
+    <value>A Java fordítások és futtatások a(z) {0} verziót használják.</value>
+  </data>
+  <data name="SdkManager.KindDotNet" xml:space="preserve">
+    <value>.NET SDK</value>
+  </data>
+  <data name="SdkManager.KindJdk" xml:space="preserve">
+    <value>Java JDK</value>
+  </data>
+  <data name="SdkManager.Latest" xml:space="preserve">
+    <value>Elérhető, a legújabb</value>
+  </data>
+  <data name="SdkManager.ListFailed" xml:space="preserve">
+    <value>Nem érhető el a kiadó: {0}</value>
+  </data>
+  <data name="SdkManager.None" xml:space="preserve">
+    <value> Nem található SDK.</value>
+  </data>
+  <data name="SdkManager.NotAnInstall" xml:space="preserve">
+    <value>A(z) {0} nem tartalmaz {1} telepítést.</value>
+  </data>
+  <data name="SdkManager.NotInstalled" xml:space="preserve">
+    <value>Ez nincs telepítve, nincs mit eltávolítani.</value>
+  </data>
+  <data name="SdkManager.Preview" xml:space="preserve">
+    <value>Elérhető, előzetes verzió</value>
+  </data>
+  <data name="SdkManager.Reading" xml:space="preserve">
+    <value> SDK-k beolvasása…</value>
+  </data>
+  <data name="SdkManager.Refreshing" xml:space="preserve">
+    <value>Frissítés…</value>
+  </data>
+  <data name="SdkManager.Removed" xml:space="preserve">
+    <value>A(z) {0} eltávolítva.</value>
+  </data>
+  <data name="SdkManager.Title" xml:space="preserve">
+    <value>SDK-kezelő</value>
+  </data>
+  <data name="SdkManager.Unpacking" xml:space="preserve">
+    <value>{0} kicsomagolása…</value>
+  </data>
   <data name="Search.Line" xml:space="preserve">
     <value>{0}. sor: {1}</value>
   </data>

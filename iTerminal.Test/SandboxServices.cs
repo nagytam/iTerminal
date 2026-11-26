@@ -29,6 +29,30 @@ public static class SandboxServices
         public iTerminal.DevelopmentStudio.Services.Lsp.ILanguageServerProcess? Launch(string fileName, string workingDirectory) => null;
     }
 
+    /// <summary>Installs nothing and lists nothing: the Development studio's SDK manager never reaches the publishers or the runtimes folder from a test.</summary>
+    public sealed class Sdks : iTerminal.Core.Services.Sdk.ISdkManager
+    {
+        public IReadOnlyList<iTerminal.Core.Model.Dotnet.DotnetSdk> InstalledDotNetSdks() => [];
+
+        public IReadOnlyList<iTerminal.Core.Services.Sdk.InstalledJdk> InstalledJdks() => [];
+
+        public string? ActiveJavaHome => null;
+
+        public void UseJavaHome(string? home)
+        {
+        }
+
+        public Task<IReadOnlyList<iTerminal.Core.Services.Sdk.AvailableSdk>> ListAvailableAsync(iTerminal.Core.Services.Sdk.SdkKind kind, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<iTerminal.Core.Services.Sdk.AvailableSdk>>([]);
+
+        public Task<string> InstallAsync(iTerminal.Core.Services.Sdk.AvailableSdk sdk, IProgress<string>? progress, CancellationToken cancellationToken) =>
+            throw new InvalidOperationException("The end-to-end suite installs no SDK.");
+
+        public void Uninstall(string versionFolder)
+        {
+        }
+    }
+
     public sealed class DirectoryLister(string root) : IDirectoryLister
     {
         private readonly Core.Services.DirectoryLister _real = new();

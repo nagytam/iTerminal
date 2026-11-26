@@ -2413,6 +2413,9 @@
   <data name="DevelopmentStudio.HintSdk" xml:space="preserve">
     <value>Zum nächsten .NET-SDK wechseln</value>
   </data>
+  <data name="DevelopmentStudio.HintSdkManager" xml:space="preserve">
+    <value>Installer des SDK .NET et des JDK, et choisir le JDK des compilations et exécutions Java</value>
+  </data>
   <data name="DevelopmentStudio.HintStart" xml:space="preserve">
     <value>Debuggen starten oder fortsetzen</value>
   </data>
@@ -6457,7 +6460,7 @@
     <value>Tab:champ suivant  Haut/Bas:choisir  F5:actualiser les taux  F6:inverser  Esc:fermer</value>
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
-    <value>F5:Debuggen F9:Haltepunkt F10/F11:Schritt Space:markieren B/C/T/R:bauen/säubern/testen/ausführen V:SDK S/F:SBOM F6/F7:Bereiche F8:Disposition Enter:öffnen Esc:schließen</value>
+    <value>F5:Debuggen F9:Haltepunkt F10/F11:Schritt Space:markieren B/C/T/R:bauen/säubern/testen/ausführen V:SDK K:SDKs S/F:SBOM F6/F7:Bereiche F8:Disposition Enter:öffnen Esc:schließen</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:chercher/lire  Tab:champ  F3:entier  F2:navigateur  Esc:fermer</value>
@@ -9307,6 +9310,96 @@
   <data name="ScreenSaver.Wake" xml:space="preserve">
     <value>Réveiller l'écran</value>
     </data>
+  <data name="SdkManager.ActiveJava" xml:space="preserve">
+    <value>Installé, utilisé pour Java</value>
+  </data>
+  <data name="SdkManager.AlreadyActive" xml:space="preserve">
+    <value>{0} est déjà le Java utilisé.</value>
+  </data>
+  <data name="SdkManager.Available" xml:space="preserve">
+    <value>Disponible</value>
+  </data>
+  <data name="SdkManager.Busy" xml:space="preserve">
+    <value>La dernière demande est encore en cours.</value>
+  </data>
+  <data name="SdkManager.Cancelled" xml:space="preserve">
+    <value>Annulé.</value>
+  </data>
+  <data name="SdkManager.ConfirmRemove" xml:space="preserve">
+    <value>Supprimer {0} {1} d'iTerminal ? (o/n)</value>
+  </data>
+  <data name="SdkManager.Details" xml:space="preserve">
+    <value>Les SDK et JDK installés sont conservés dans le dossier de données d'iTerminal. Entrée sur un JDK installé en fait le Java qui compile et exécute.</value>
+  </data>
+  <data name="SdkManager.Done" xml:space="preserve">
+    <value>{0} est installé.</value>
+  </data>
+  <data name="SdkManager.DotNetUsed" xml:space="preserve">
+    <value>Les SDK .NET installés ici rejoignent le cycle de V du studio.</value>
+  </data>
+  <data name="SdkManager.Downloading" xml:space="preserve">
+    <value>Téléchargement de {0}…</value>
+  </data>
+  <data name="SdkManager.Failed" xml:space="preserve">
+    <value>Impossible d'installer {0} : {1}</value>
+  </data>
+  <data name="SdkManager.HintClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="SdkManager.HintInstall" xml:space="preserve">
+    <value>Installer le SDK, ou utiliser le JDK installé pour Java</value>
+  </data>
+  <data name="SdkManager.HintRefresh" xml:space="preserve">
+    <value>Relire les listes</value>
+  </data>
+  <data name="SdkManager.HintRemove" xml:space="preserve">
+    <value>Supprimer un SDK ou JDK installé</value>
+  </data>
+  <data name="SdkManager.Installed" xml:space="preserve">
+    <value>Installé</value>
+  </data>
+  <data name="SdkManager.JavaChosen" xml:space="preserve">
+    <value>Les compilations et exécutions Java utilisent {0}.</value>
+  </data>
+  <data name="SdkManager.KindDotNet" xml:space="preserve">
+    <value>SDK .NET</value>
+  </data>
+  <data name="SdkManager.KindJdk" xml:space="preserve">
+    <value>JDK Java</value>
+  </data>
+  <data name="SdkManager.Latest" xml:space="preserve">
+    <value>Disponible, la plus récente</value>
+  </data>
+  <data name="SdkManager.ListFailed" xml:space="preserve">
+    <value>Impossible de joindre l'éditeur : {0}</value>
+  </data>
+  <data name="SdkManager.None" xml:space="preserve">
+    <value> Aucun SDK trouvé.</value>
+  </data>
+  <data name="SdkManager.NotAnInstall" xml:space="preserve">
+    <value>{0} ne contient pas d'installation de {1}.</value>
+  </data>
+  <data name="SdkManager.NotInstalled" xml:space="preserve">
+    <value>Celui-ci n'est pas installé, il n'y a rien à supprimer.</value>
+  </data>
+  <data name="SdkManager.Preview" xml:space="preserve">
+    <value>Disponible, une préversion</value>
+  </data>
+  <data name="SdkManager.Reading" xml:space="preserve">
+    <value> Lecture des SDK…</value>
+  </data>
+  <data name="SdkManager.Refreshing" xml:space="preserve">
+    <value>Actualisation…</value>
+  </data>
+  <data name="SdkManager.Removed" xml:space="preserve">
+    <value>{0} a été supprimé.</value>
+  </data>
+  <data name="SdkManager.Title" xml:space="preserve">
+    <value>Gestionnaire de SDK</value>
+  </data>
+  <data name="SdkManager.Unpacking" xml:space="preserve">
+    <value>Décompression de {0}…</value>
+  </data>
   <data name="Search.Line" xml:space="preserve">
     <value>Ligne {0} : {1}</value>
   </data>

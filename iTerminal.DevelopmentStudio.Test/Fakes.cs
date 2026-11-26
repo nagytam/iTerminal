@@ -1,5 +1,6 @@
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
+using iTerminal.Core.Services.Sdk;
 using iTerminal.DevelopmentStudio.Model;
 using iTerminal.DevelopmentStudio.Services;
 
@@ -58,4 +59,40 @@ public sealed class FakeDotnetSolutionService : IDotnetSolutionService
 
     public Task<int> RunAsync(string workingDirectory, string dotnetPath, IReadOnlyList<string> arguments, Action<string> onOutputLine, CancellationToken cancellationToken = default) =>
         Task.FromResult(0);
+}
+
+/// <summary>An SDK manager with nothing to download and no install: the lists and the JDK choice are what a test sets.</summary>
+public sealed class FakeSdkManager : ISdkManager
+{
+    public IReadOnlyList<DotnetSdk> DotNet { get; set; } = [];
+
+    public IReadOnlyList<InstalledJdk> Jdks { get; set; } = [];
+
+    public IReadOnlyList<AvailableSdk> Available { get; set; } = [];
+
+    public string? ActiveJavaHome { get; private set; }
+
+    public List<AvailableSdk> Installs { get; } = [];
+
+    public IReadOnlyList<DotnetSdk> InstalledDotNetSdks() => DotNet;
+
+    public IReadOnlyList<InstalledJdk> InstalledJdks() => Jdks;
+
+    public void UseJavaHome(string? home) => ActiveJavaHome = home;
+
+    public Task<IReadOnlyList<AvailableSdk>> ListAvailableAsync(SdkKind kind, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<AvailableSdk>>(Available.Where(sdk => sdk.Kind == kind).ToList());
+
+    public Task<string> InstallAsync(AvailableSdk sdk, IProgress<string>? progress, CancellationToken cancellationToken)
+    {
+        lock (Installs) Installs.Add(sdk);
+        return Task.FromResult(sdk.Version);
+    }
+
+    public List<string> Removed { get; } = [];
+
+    public void Uninstall(string versionFolder)
+    {
+        lock (Removed) Removed.Add(versionFolder);
+    }
 }

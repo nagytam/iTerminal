@@ -27,6 +27,10 @@ public sealed record DotnetSdk(string Version, string Root)
             ?? all.OrderByDescending(sdk => sdk.BaseVersion).ThenByDescending(sdk => sdk.Version, StringComparer.Ordinal).FirstOrDefault();
     }
 
+    /// <summary>The SDKs ordered newest first, as <see cref="ParseListing"/> orders them (used to merge two lists).</summary>
+    public static IReadOnlyList<DotnetSdk> Newest(IEnumerable<DotnetSdk> sdks) =>
+        [.. sdks.OrderByDescending(sdk => sdk.BaseVersion).ThenByDescending(sdk => sdk.Version, StringComparer.Ordinal)];
+
     /// <summary>
     /// Reads the output of <c>dotnet --list-sdks</c>, one <c>10.0.113 [/usr/lib/dotnet/sdk]</c> line per SDK, newest first.
     /// Lines that do not match are skipped.
