@@ -18,7 +18,7 @@ using iConsole.Xps;
 using iConsole.Interfaces;
 using iConsole.Viewers;
 using iConsole.Media.Audio;
-using iTerminal.Core.Dialogs.Dotnet;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Dialogs.Music;
 using iTerminal.Core.Dialogs.Video;
 using iTerminal.Core.Dialogs.Web;
@@ -31,7 +31,7 @@ namespace iTerminal.Core.Commands;
 public class ViewFileDialogCommand(
     FileViewerDialog fileViewerDialog,
     IContentModelService contentModelService,
-    SolutionViewerDialog? solutionViewerDialog = null,
+    ISolutionDialogFactory? solutionDialogFactory = null,
     MusicFileViewerDialog? musicFileViewerDialog = null,
     VideoFileViewerDialog? videoFileViewerDialog = null,
     ImageFileViewerDialog? imageFileViewerDialog = null,
@@ -63,7 +63,7 @@ public class ViewFileDialogCommand(
     private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
     private readonly FileViewerDialog _fileViewerDialog = fileViewerDialog;
     private readonly IContentModelService _contentModelService = contentModelService;
-    private readonly SolutionViewerDialog? _solutionViewerDialog = solutionViewerDialog;
+    private readonly ISolutionDialogFactory? _solutionDialogFactory = solutionDialogFactory;
     private readonly MusicFileViewerDialog? _musicFileViewerDialog = musicFileViewerDialog;
     private readonly XmlViewerDialog? _xmlViewerDialog = xmlViewerDialog;
     private readonly JsonViewerDialog? _jsonViewerDialog = jsonViewerDialog;
@@ -116,7 +116,7 @@ public class ViewFileDialogCommand(
     /// <summary>
     /// Audio files open in the music viewer, but only when they resolve to a real local file: the
     /// player decodes from a path, so a track on an SSH or SMB drive has nothing for it to open —
-    /// the same restriction the solution viewer has.
+    /// the same restriction the Development studio has.
     /// </summary>
     private bool IsMusicFile(Url url) =>
         _musicFileViewerDialog is not null
@@ -152,15 +152,15 @@ public class ViewFileDialogCommand(
             return;
         }
 
-        // Solution files open in the solution viewer (project list + dotnet build/test/run),
+        // Solution files open in the Development studio (project list + dotnet build/test/run),
         // but only when they resolve to a real local file — dotnet can't act on a remote path.
-        if (_solutionViewerDialog is not null
+        if (_solutionDialogFactory is not null
             && focusedFileUrl is not null
             && IsSolutionFile(focusedFileUrl.Extension)
             && File.Exists(focusedFileUrl.Path))
         {
-            _solutionViewerDialog.SolutionPath = focusedFileUrl.Path;
-            await (Control?.ShowDialogAsync(_solutionViewerDialog) ?? Task.CompletedTask);
+            var solutionDialog = _solutionDialogFactory.Create(focusedFileUrl.Path);
+            await (Control?.ShowDialogAsync(solutionDialog) ?? Task.CompletedTask);
             return;
         }
 

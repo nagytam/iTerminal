@@ -1,6 +1,7 @@
 ﻿using iConsole.Interfaces;
 using iConsole.Jobs;
 using iTerminal.Widgets.Application;
+using iTerminal.DevelopmentStudio.Application;
 using iTerminal.Widgets.Jobs;
 using iConsole.Test.Core.Automation;
 using iTerminal.Core.Application;
@@ -202,6 +203,7 @@ public sealed class TerminalApp : IAsyncDisposable
             {
                 services.AddiTerminal(configuration);
                 services.AddWidgets(configuration);
+                services.AddDevelopmentStudio();
 
                 foreach (var descriptor in services
                     .Where(d => d.ServiceType == typeof(IJob) && OmittedJobs.Contains(d.ImplementationType))
@@ -298,6 +300,10 @@ public sealed class TerminalApp : IAsyncDisposable
                     new Core.Services.Cloud.AzureBlobFileSystemService(
                         account => new Core.Services.Cloud.AzureBlobCredentials(account, null, null),
                         new SandboxServices.RefusedNetwork()));
+
+                // No test reaches an NFS server: nfs:// is there, and every mount is refused.
+                services.AddSingleton<Core.Services.Nfs.INfsMountFactory>(
+                    new Core.Services.Nfs.UnavailableNfsMountFactory("No NFS servers in the test sandbox."));
 
                 // The clipboard stays in the process — a run must neither overwrite what the person
                 // running it had copied nor paste what they had — and no test ejects, formats or

@@ -29,5 +29,6 @@ public enum ContainerType
     EvidenceNotebook,
     Obex,
     Dropbox,
-    AzureBlob
+    AzureBlob,
+    Nfs
 }

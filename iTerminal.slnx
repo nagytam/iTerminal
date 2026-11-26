@@ -27,6 +27,10 @@
   <Project Path="iTerminal.Widgets.Test\iTerminal.Widgets.Test.csproj">
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />
   </Project>
+  <Project Path="iTerminal.DevelopmentStudio\iTerminal.DevelopmentStudio.csproj" />
+  <Project Path="iTerminal.DevelopmentStudio.Test\iTerminal.DevelopmentStudio.Test.csproj">
+    <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />
+  </Project>
   <Project Path="iTerminal.Core.Test\iTerminal.Core.Test.csproj">
     <BuildDependency Project="iConsole\iConsole.csproj" />
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />

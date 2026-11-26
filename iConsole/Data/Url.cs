@@ -256,6 +256,17 @@ public partial class Url
                 // The archive's own top level, not the (empty) drive root: archive://<archive>/.
                 return new Url(Data.Container.ARCHIVE + Host + "/");
             }
+            else if (ContainerType == ContainerType.Nfs)
+            {
+                // The export's own root (nfs://<host>/<export>/), the host's list of exports (nfs://<host>/), or the bare scheme.
+                var segments = Path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                if (segments.Length >= 2)
+                {
+                    return new Url(Data.Container.NFS + segments[0] + "/" + segments[1] + "/");
+                }
+
+                return segments.Length == 1 ? new Url(Data.Container.NFS + segments[0] + "/") : new Url(Data.Container.NFS);
+            }
             else if (ContainerType == ContainerType.Mtp)
             {
                 // The storage's own root (mtp://<device>/<storage>/), or the device's list of storages.
@@ -908,6 +919,7 @@ public partial class Url
             (Data.Container.EVIDENCE, ContainerType.EvidenceNotebook),
             (Data.Container.MTP, ContainerType.Mtp),
             (Data.Container.OBEX, ContainerType.Obex),
+            (Data.Container.NFS, ContainerType.Nfs),
         ];
         foreach (var (candidate, type) in drives)
         {
@@ -937,7 +949,7 @@ public partial class Url
             or ContainerType.Recycle
             or ContainerType.EvidenceNotebook
             or ContainerType.Mtp
-            or ContainerType.Obex;
+            or ContainerType.Obex or ContainerType.Nfs;
 
     /// <summary>The HTTP-backed drives whose URL is <c>scheme://[user@]authority/raw/path</c>.</summary>
     private bool IsHttpPathDrive =>

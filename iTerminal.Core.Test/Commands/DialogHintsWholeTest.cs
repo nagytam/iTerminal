@@ -393,7 +393,8 @@ public class DialogHintsWholeTest
             }
         }
 
-        Assert.IsTrue(footers >= 8, $"only {footers} footers were found");
+        // Core's dialogs with a footer constant. The Development studio is in its own assembly and its footer is checked there.
+        Assert.IsTrue(footers >= 7, $"only {footers} footers were found");
         Assert.AreEqual(0, silent.Count, "These footers do not say how to leave: " + string.Join(", ", silent));
     }
 }

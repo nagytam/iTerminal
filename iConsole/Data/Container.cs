@@ -63,6 +63,12 @@ public static class Container
     /// </summary>
     public const string MTP = "mtp://";
 
+    /// <summary>
+    /// An NFS export, browsed as a drive: <c>nfs://&lt;host&gt;/&lt;escaped export&gt;/&lt;path&gt;</c>. The export is the
+    /// server path percent-escaped as one segment (<c>%2Fsrv%2Fdata</c>); the host level lists the server’s exports.
+    /// </summary>
+    public const string NFS = "nfs://";
+
     /// <summary>An S3 bucket (or any S3-compatible store): <c>s3://[accessKeyId@]bucket/key</c>; an empty bucket lists them.</summary>
     public const string S3 = "s3://";
 

@@ -234,7 +234,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Plugins.IPluginManagerService, iTerminal.Core.Services.Plugins.PluginManagerService>();
         services.AddTransient<iTerminal.Core.Dialogs.Plugins.PluginManagerDialog>();
         services.AddSingleton<iTerminal.Core.Services.Dotnet.IDotnetSolutionService, iTerminal.Core.Services.Dotnet.DotnetSolutionService>();
-        services.AddTransient<iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog>();
         services.AddSingleton<iTerminal.Core.Services.PackageManager.IPackageManagerService>(_ =>
             OperatingSystem.IsWindows()
                 ? new iTerminal.Core.Services.PackageManager.WinGetPackageManagerService()
@@ -583,6 +582,10 @@ public static class iTerminalApplicationBuilderExtension
                 : new iTerminal.Core.Services.Mtp.UnavailableMtpBackend("MTP devices cannot be browsed on this system.");
         });
         services.AddSingleton<iTerminal.Core.Services.Mtp.IMtpDriveService, iTerminal.Core.Services.Mtp.MtpDriveService>();
+        // nfs://: NFSv3 exports through NfsSharp.Client (managed, so every platform). One mount per export for the run,
+        // shared by both panels; the factory is the only thing that names the library, and a test replaces it.
+        services.AddSingleton<iTerminal.Core.Services.Nfs.INfsMountFactory, iTerminal.Core.Services.Nfs.NfsV3MountFactory>();
+        services.AddSingleton<iTerminal.Core.Services.Nfs.INfsDriveService, iTerminal.Core.Services.Nfs.NfsDriveService>();
         // The cloud drives: s3://, onedrive:// and gdrive://. One client for the run each; the OAuth
         // ones sign in through the device flow and keep their refresh token in the password manager.
         services.AddSingleton<iTerminal.Core.Services.Cloud.IS3FileSystemService>(provider =>

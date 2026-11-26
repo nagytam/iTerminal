@@ -61,7 +61,7 @@ public class FileClipboardOperations(
         && model is not IMusicContentModel
         && !model.IsReadOnly
         && model.Url is { } url
-        && url.ContainerType is not (ContainerType.Docker or ContainerType.Git);
+        && url.ContainerType is not (ContainerType.Docker or ContainerType.Git or ContainerType.Nfs);
 
     /// <summary>Puts the entries of <paramref name="model"/> on the system clipboard; true when something was put there.</summary>
     public async Task<bool> CopyAsync(IContentModel? model, bool cut)

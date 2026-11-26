@@ -118,7 +118,7 @@ public class FolderUrlValidationModelTest
             Container.SSH, Container.FTP, Container.SMB, Container.IPHONE, Container.MEMORY_DRIVE,
             Container.MUSIC_CATALOG, Container.MUSIC_PLAYLIST, Container.DOCKER, Container.GIT,
             Container.SEARCH_RESULTS, Container.PREVIEW, Container.ARCHIVE, Container.RECYCLE, Container.EVIDENCE,
-            Container.WEBDAV, Container.WEBDAV_SECURE, Container.MTP,
+            Container.WEBDAV, Container.WEBDAV_SECURE, Container.MTP, Container.NFS,
             Container.S3, Container.ONEDRIVE, Container.GOOGLE_DRIVE, Container.DROPBOX, Container.AZURE_BLOB,
             Container.OBEX,
         ];

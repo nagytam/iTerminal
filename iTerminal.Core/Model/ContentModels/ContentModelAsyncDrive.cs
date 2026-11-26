@@ -80,7 +80,7 @@ public abstract class ContentModelAsyncDrive : ContentModelBase, IFileSystemProv
     public static bool IsAsyncDrive(ContainerType containerType) =>
         containerType is ContainerType.Docker or ContainerType.Git
             or ContainerType.SearchResults or ContainerType.Preview or ContainerType.Archive
-            or ContainerType.Recycle or ContainerType.Mtp
+            or ContainerType.Recycle or ContainerType.Mtp or ContainerType.Nfs
             or ContainerType.S3 or ContainerType.OneDrive or ContainerType.GoogleDrive
             or ContainerType.Dropbox or ContainerType.AzureBlob or ContainerType.Obex;
 

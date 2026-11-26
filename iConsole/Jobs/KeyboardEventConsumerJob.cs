@@ -73,7 +73,7 @@ public class KeyboardEventConsumerJob(
     }
 
     // Guarantees F1 opens context-sensitive help from anywhere, even inside dialogs that don't
-    // carry their own HelpDialogCommand (e.g. GitClientDialog, SolutionViewerDialog).
+    // carry their own HelpDialogCommand (e.g. GitClientDialog, DevelopmentStudioDialog).
     private static bool IsUnmodifiedHelpKey(KeyEvent keyEvent) =>
         keyEvent.ConsoleKey == ConsoleKey.F1 && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt;
 }
