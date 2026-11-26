@@ -1,6 +1,6 @@
 # Console and terminal UI features: survey overview
 
-This document records console and terminal UI libraries from languages the older comparison does not cover, checked against iConsole, and the features they have that iConsole lacks. The older comparison in `Documentation/architecture/ui-framework/tui-library-comparison.md` is a read-only record of earlier surveys. Its highest item is 131, so the items here start at 132. The highest item in this document is 156 (Survey 5).
+This document records console and terminal UI libraries from languages the older comparison does not cover, checked against iConsole, and the features they have that iConsole lacks. The older comparison in `Documentation/architecture/ui-framework/tui-library-comparison.md` is a read-only record of earlier surveys. Its highest item is 131, so the items here start at 132. The highest item in this document is 161 (Survey 8).
 
 ## Overview
 
@@ -21,13 +21,13 @@ This document records console and terminal UI libraries from languages the older
 | Reusable diff view (item 133) | SageTUI | Partly: the diff code is in `iTerminal.Core`, none in `iConsole` | `TextViewerControl`, `Table<T>` |
 | Node-and-link diagram (item 134) | ConsoleMonster | Missing | `LineCanvas`, `BorderedGrid` |
 | Grouped table rows (item 135) | ConsoleMonster | Missing | `Table<T>`, `VirtualTable<T>` |
-| Find in a log view (item 136) | ConsoleMonster | Partly: the line filter exists, a find does not | `LogView`, `SearchEngine` |
+| Find in a log view (item 136) | ConsoleMonster | Built: F7 opens the inline find line in `LogView`; F3 and Shift+F3 step through matches | `LogView`, `SearchEngine` |
 | Export of table or list data (item 137) | ConsoleMonster, termr | Partly: screen export only (`ScreenRecorder`) | `Table<T>`, `ScreenRecorder` |
 | Chart zoom, pan and crosshair (item 138) | ConsoleMonster | Missing | `ScatterChart`, `ChartCanvas` |
 | Metric tile (item 139) | termr | Missing | `BoxPanel`, `Digits` |
 | Data profile of a table (item 140) | termr | Missing | `Table<T>`, the CSV viewer |
 | Undo and redo in a single-line field (item 141) | SageTUI | Partly: the editor has undo, `TextBox` does not | `TextBox` |
-| Crash banner and restore after an unhandled exception (item 142) | SageTUI | Missing as a banner; the normal exit path was not read | `Desktop`, `ConsoleOwnership` |
+| Crash banner and restore after an unhandled exception (item 142) | SageTUI | Missing as a banner; the exit path is now read (status of 2026-11-26) | `Desktop`, `ConsoleOwnership` |
 | Indent and dedent helpers (item 143) | mist | Partly: wrap, cut and expand exist | `StringHelper` |
 | Editable list (item 144) | Emacs Widget Library | Missing | `ListBox<T>` with `TextBox` rows, or `FormPanel` |
 | Row identity in the virtual controls (item 145) | vui.el | Partly: `ListBox<T>` keeps the selection on the item; the virtual controls keep the cursor as a row number | `VirtualRowsControl<T>`, `IVirtualDataSource<T>` |
@@ -42,6 +42,7 @@ This document records console and terminal UI libraries from languages the older
 | Named areas in the grid layout (item 154) | tui.mbt | Missing | `GridPanel`, `BorderedGrid` |
 | Reusable location list, quickfix style (item 155) | vim-quickui | Partly: the search drive and its status bar only | `VirtualListBox<T>`, `VirtualTable<T>`, `TextViewerControl.ShowLine` |
 | User object on each control (item 156) | Gambas gb.term.form | Missing | `Control` |
+| Console code page setting (item 161) | LibCon (AutoHotkey) | Missing; the app sets no console code page | `SystemConsoleDriver`, the Windows input project |
 
 ### Suggested order
 
@@ -49,7 +50,7 @@ Ranked for iTerminal, for items 132 to 143 (Survey 1).
 
 1. Item 142 (crash banner and restore): a terminal left broken by a crash is the most visible failure. Read the existing restore path before work starts.
 2. Item 132 (reorderable list): the playing queue has no move command (`MoveUp`, `MoveDown` and `Reorder` find nothing in `iTerminal.Core`).
-3. Item 136 (find in a log view): git, docker and transfer output is shown in `LogView`.
+3. Item 136 (find in a log view): git, docker and transfer output is shown in `LogView`. Built on 2026-11-26 as the control's API; the key or dialog that calls it is still to do (see the status block of 2026-11-26).
 4. Item 137 (export of table data): search results and comparisons could be saved as CSV or Markdown.
 5. Item 133 (diff view in `iConsole`): moves the diff drawing out of `iTerminal.Core` and removes a second copy later.
 6. Item 141 (undo in `TextBox`): rename and filter fields.
@@ -123,7 +124,7 @@ Items 144 to 153 were ranked inside their own surveys, so the blocks below are n
 
 #### 136. Find in a log view
 
-- Status: Partly. `LogView.FilterText` and `MinimumLevel` hide lines, but nothing moves to a match.
+- Status: Built (2026-11-26 change). `LogView` has `Find`, `FindNext` and `FindPrevious`; F7 opens an inline find line on the bottom row, Enter runs the search, Esc closes the line and keeps the search, and F3 and Shift+F3 step through the matches. `LogView.FilterText` and `MinimumLevel` still hide lines.
 - What it is: next and previous match in `LogView`, separate from the line filter.
 - Sources: [ConsoleMonster](https://github.com/EvotecIT/ConsoleMonster) (log viewports with find).
 - Search terms in `LogView.cs`: `Find`, `FindNext`, `SearchText`, `FindText` (only `LogHighlighters.Find`).
@@ -690,3 +691,67 @@ Items 1, 2, 6, 34, 36, 58, 146 and 157 were searched again, and the Harbour item
 Unchanged: item 2 (no `2004h` or `BracketedPaste`), item 6 (`KittyKeyboardProtocol.cs` pushes flag 1 only, so key release is not reported), item 34 (no `38;5` or `38;2`), item 146 (no `1049`), item 157 (`CursorShape.cs` has only DECSCUSR) and item 58 (the repeat count is built).
 
 Outside this document, the following text is now out of date and was not edited (it is read-only or belongs to another file): the item 1 entry of `Documentation/architecture/ui-framework/tui-library-comparison.md` (read-only) and the "Suggested improvements" item 1 in `Documentation/architecture/ui-framework.md` ("No width handling was found"), and the comparison table row for wide characters in `ui-framework.md`. The header line of this document still gives 156 as the highest item; the highest item is now 160.
+
+#### Status after the pull of 2026-11-26
+
+Checked on branch `docs/compare-console-refresh-2026-11-26` at commit `54128d5f` (the commit of `main`, HEAD on 2026-11-26), by a grep of `iConsole/` and `iTerminal.Core/` (`--include=*.cs`) and by reading the named lines. Items 1, 2, 3, 6, 34, 36, 94, 130, 138, 146, 147, 149, 150, 156, 157, 158, 159 and 160 were searched again. The highest item is now 161.
+
+One item changed status:
+
+- **Item 136 (find in a log view): now built as the control's API, not yet wired.** `LogView.Find` (`iConsole/Controls/LogView.cs:149`), `FindNext` (line 161) and `FindPrevious` (line 170) were added by commit `54128d5f` (#846). They search the lines the level and line filters leave showing, ignore case, and wrap at either end. Nothing in `iConsole/` or `iTerminal.Core/` calls them yet, so no key or dialog reaches the find. Earlier status: partly (line filter only).
+
+Status text that changed without a status change:
+
+- **Item 142 (crash banner and restore): still missing as a banner; the exit path is now read.** `iConsoleApplication.RunAsync` (`iConsole/Application/iConsoleApplication.cs:30-58`) stops the host in a `finally` when the run did not reach the orderly stop. `Desktop.StopAsync` (`iConsole/Desktops/Desktop.cs:77`) runs each job's `OnAfterStop`. The Posix input job turns focus reporting and mouse reporting off in `RunAsync` (`iConsole.Inputs.Posix/Jobs/PosixTerminalInputPublisherJob.cs:178, 183`), and again on hand-back in `OnConsoleReleased` (lines 268 and 271). The Kitty keyboard pop is in `PopKittyKeyboard` (line 106), whose caller was not traced. The cursor and colour reset is in `SystemConsoleDriver.OnConsoleReleased` (`iConsole/Drivers/SystemConsoleDriver.cs:166-170`). No crash log or banner was found (`UnhandledException`, `CrashRecovery`, `crash`, `RestoreTerminal`). A restore after a real crash was not run, so it is not confirmed.
+- **Item 146 (alternate screen): still missing.** The console calls have moved: `OnConsoleReleased` is at `SystemConsoleDriver.cs:161`, `OnConsoleReacquired` at line 182 and `Clear()` at line 228. No `1049`, `?47h` or `?1047` was found.
+- **Item 137 (export of table data): still partly.** `TableExportFormat` has three values, Csv, Json and Xml (`iConsole/Csv/TableExport.cs:9-14`). No Markdown format was added.
+- **Item 158 (overwrite mode): still missing.** Shift+Insert is paste in the text fields (`iConsole/Helper/ClipboardKeys.cs:51`), so a plain Insert toggle would not clash with it. A text field still has no insert or overwrite state.
+- **Item 147 (caption hot keys): still partly.** The `&` marker is parsed only in `ContextMenuItem` (`iConsole/Controls/ContextMenuItem.cs:69-91`). `Control.HotKeyChar` is at `iConsole/Controls/Control.cs:945`; the Survey 1 note gives line 909.
+- **Item 149 (colour picker): still partly.** `ColorPicker` is still the sixteen-swatch grid (`iConsole/Controls/ColorPicker.cs:10`).
+- **Item 138 (chart zoom and crosshair): still missing.** No zoom, pan or crosshair term in `iConsole/Controls/Charts/`.
+- **Item 94 (message and wait dialogs): still missing.** No `MessageBox`, `ShowMessageAsync` or `WaitDialog`.
+- **Item 2 (bracketed paste), item 3 and 34 (colour depth): still missing.** No `2004h`, `BracketedPaste`, `NO_COLOR`, `COLORTERM`, `38;5` or `38;2` in `iConsole/`, `iConsole.Inputs.Posix`, `iConsole.Inputs.Windows` or `iTerminal.Core/`. Item 6 is unchanged: `KittyKeyboardProtocol.DisambiguateEscapeCodes` is 1 (`iConsole/Inputs/KittyKeyboardProtocol.cs:12`).
+
+#### Survey 8: Beef, Rebol, Cobra, AssemblyScript, Pyret and AutoHotkey
+
+Survey 8, dated 2026-11-26: LibCon (AutoHotkey) is the only library read. The brief named no libraries, so the scope was languages no survey covers. Six names were searched once each: Beef, Rebol, Cobra, AssemblyScript, Pyret and AutoHotkey. Five of the six give nothing new: Cobra resolves to the Go CLI framework and Rebol's text backend to Red (both covered), and Beef, AssemblyScript and Pyret have no terminal widget library in the results. The pool of uncovered languages with a terminal widget library is nearly used up, so this survey is short, as Surveys 6 and 7 are. The basis is the docs of LibCon, read through a page summary (the wording was not checked line by line), and not run-time behaviour. "Not found" means a grep of `iConsole/` and `iTerminal.Core/` (`--include=*.cs`) on branch `docs/compare-console-refresh-2026-11-26` at commit `54128d5f`.
+
+| Library | Language | Licence | Date checked | Release (as found) | Survey | Links |
+| --- | --- | --- | --- | --- | --- | --- |
+| LibCon | AutoHotkey | Not checked | 2026-11-26 | No release or date on the docs page; the only version string, 1.0.6.1, is given as an example | 8 | [GitHub](https://github.com/joedf/LibCon.ahk), [docs](https://github.com/joedf/LibCon.ahk/blob/4d582be23abe4e11298e5035ee0ff603553a35a1/LibCon_docs.md) |
+
+**Terminal protocol**
+
+161. **Console code page setting.** *Missing.* The app sets no code page on the console, and no getter or setter of one was found. The search found no `SetConsoleOutputCP`, `SetConsoleCP`, `GetConsoleOutputCP`, `GetConsoleCP`, `OutputEncoding`, `InputEncoding` or console-level `CodePage` in `iConsole/`, `iConsole.Inputs.Posix`, `iConsole.Inputs.Windows` or `iTerminal/`. The only `OutputEncoding` lines in `iTerminal.Core/` are inside PowerShell scripts run in a child process (`iTerminal.Core/Services/UsersAndGroups/WindowsUserGroupService.cs:165`). The `CodePage` hits are file readers (`TextEncodings.ForCodePage`), not the console. **Seen in:** LibCon (input and output code pages, read and set, per its docs). Fits: `SystemConsoleDriver` and the Windows input project. Whether the Windows output is wrong without it was not run, so it is **unverified**. Priority: low.
+
+#### Suggested order for Survey 8
+
+1. Item 161 (console code page): low; check the Windows output on a real console before any work, because the Posix input job is a separate path.
+
+#### Already covered (Survey 8 candidates)
+
+- Console input and output, and reading and filling screen cells (LibCon): built (`Buffer` and `IBuffer` in `iConsole/Buffers/`, and `ConxelString`).
+- Foreground and background colour for each cell (LibCon): built (`Conxel`).
+- Cursor position and appearance (LibCon): built (`Cursor.IsCursorVisible`; `CursorShape` for DECSCUSR in `iConsole/Display/CursorShape.cs`).
+- Window title (LibCon): built (`TerminalTitleService`, OSC 2).
+- Attach to and detach from the console (LibCon): built as `ConsoleOwnership` (Ctrl+O lends the terminal).
+- Progress bar in text (LibCon `sProgressBar`): built (`ProgressBar` in `iConsole/Controls/Progress/ProgressBar.cs`).
+- Clear the screen (LibCon): built (see Survey 6).
+- Pause prompt and debug message box (LibCon `Pause` and `LibConError`): item 94, still missing.
+- Working directory, number-base conversion and the colour table printout (LibCon): not applicable to a console UI library.
+
+#### Considered and skipped (Survey 8)
+
+- LibCon (AutoHotkey): read. Console input, output, buffer, colour and cursor functions only; no widgets. Its docs page shows no release date. Item 161 comes from it.
+- AHKonsole (AutoHotkey, by G33kdude): a class for console support with buffers for double buffering, known from a search snippet only and **unverified**. It is a console I/O helper, not a widget set, so it is not listed.
+- CGUI and the AutoHotkey GUI control pages (`GuiControls`, `Gui`): windowed controls (text, edit, button, list view), not console.
+- Beef: the search found no terminal library; the one "Beef" hit is a GUI library for Odin, and Odin is covered.
+- AssemblyScript: no terminal widget library; the hits are Rust, Go, JavaScript and Dart libraries, all covered.
+- Pyret: the official site says Pyret runs from the command line; no terminal user interface library was found.
+- Cobra: the search returned the Go command-line framework and reeflective/console, a Go library built on Cobra. Go is covered, and no language called Cobra with a TUI library was found.
+- Rebol: no terminal widget library; the hits are Red's text backend (covered in Survey 4) and Rebol's VID, which is graphical.
+
+#### Status after the find-line change (2026-11-26)
+
+- **Item 136 (find in a log view): built.** `LogView` takes F7 to open an inline find line on its bottom row. Typed characters build the query, Backspace edits it, Enter runs `Find` (an empty query clears the search), and Esc closes the line and keeps the search. The line is an `ITransientOverlayHost`, so Esc in a dialog closes the line first. The two strings are `LogView.FindPrompt` and `Hint.FindStart` in the six resource files. Tests: `iConsole.Test/Controls/LogViewTest.cs`.
+- No other item in this document changed status.
