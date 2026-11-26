@@ -610,6 +610,35 @@ public static class iTerminalApplicationBuilderExtension
                 provider.GetService<Serilog.ILogger>());
             return new iTerminal.Core.Services.Cloud.GoogleDriveFileSystemService(tokens, provider.GetService<Serilog.ILogger>());
         });
+        // Dropbox and Azure Blob Storage: dropbox:// and azblob://. Each request names its account, so one client serves them all.
+        services.AddSingleton<iTerminal.Core.Services.Cloud.IDropboxFileSystemService>(provider =>
+        {
+            var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>>().Value;
+            var tokens = new iTerminal.Core.Services.Cloud.DropboxTokenProvider(
+                options.Dropbox,
+                provider.GetService<IPasswordManager>(),
+                provider.GetService<Serilog.ILogger>());
+            return new iTerminal.Core.Services.Cloud.DropboxFileSystemService(tokens, provider.GetService<Serilog.ILogger>());
+        });
+        services.AddSingleton<iTerminal.Core.Services.Cloud.IAzureBlobFileSystemService>(provider =>
+        {
+            var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>>().Value;
+            var passwords = provider.GetService<IPasswordManager>();
+            return new iTerminal.Core.Services.Cloud.AzureBlobFileSystemService(
+                account => iTerminal.Core.Services.Cloud.AzureBlobCredentialResolver.Resolve(account, passwords, options.AzureBlob),
+                provider.GetService<Serilog.ILogger>());
+        });
+        // Bluetooth file transfer (obex://): BlueZ's obexd on Linux. Windows and macOS say so in the drive's footer.
+        services.AddSingleton<iTerminal.Core.Services.Obex.IObexBackend>(provider =>
+        {
+            if (OperatingSystem.IsLinux())
+            {
+                return new iTerminal.Core.Services.Obex.BlueZObexBackend(provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>());
+            }
+
+            return new iTerminal.Core.Services.Obex.UnavailableObexBackend("Bluetooth file transfer can only be browsed on Linux (BlueZ).");
+        });
+        services.AddSingleton<iTerminal.Core.Services.Obex.IObexDriveService, iTerminal.Core.Services.Obex.ObexDriveService>();
         services.AddSingleton<IIPhoneFileSystemService, IPhoneFileSystemService>();
         services.AddSingleton<IIPhoneDeviceService, IPhoneDeviceService>();
         services.AddTransient<IArchiveFileSystemService, ArchiveFileSystemService>();

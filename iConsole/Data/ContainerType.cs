@@ -27,5 +27,8 @@ public enum ContainerType
     OneDrive,
     GoogleDrive,
     EvidenceNotebook,
+    Obex,
+    Dropbox,
+    AzureBlob,
     Nfs
 }

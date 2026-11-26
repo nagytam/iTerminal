@@ -967,6 +967,20 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// The network of the machine a run is on is never reached: every request an HTTP-backed drive makes is
+    /// answered with a refusal, so a drive that was reached by mistake fails in its footer and does nothing else.
+    /// </summary>
+    public sealed class RefusedNetwork : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(HttpStatusCode.Forbidden)
+            {
+                ReasonPhrase = "No network in the test sandbox",
+                RequestMessage = request,
+            });
+    }
+
+    /// <summary>
     /// The Bluetooth stack of the machine a run is on is never asked: no test scans, pairs, connects or forgets a
     /// device of the person's own. Two made-up devices are listed, so the dialog has rows to act on.
     /// </summary>

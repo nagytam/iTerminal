@@ -285,6 +285,22 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.Mtp.IMtpBackend>(
                     new Core.Services.Mtp.UnavailableMtpBackend("No MTP devices in the test sandbox."));
 
+                // No test browses a phone or a headset over Bluetooth: obex:// is there, and empty-handed.
+                services.AddSingleton<Core.Services.Obex.IObexBackend>(
+                    new Core.Services.Obex.UnavailableObexBackend("No Bluetooth file transfer in the test sandbox."));
+
+                // No test reaches Dropbox or Azure: their clients are there, and every request they make is refused.
+                services.AddSingleton<Core.Services.Cloud.IDropboxFileSystemService>(
+                    new Core.Services.Cloud.DropboxFileSystemService(
+                        new Core.Services.Cloud.DropboxTokenProvider(new Core.Services.Cloud.OAuthClientOptions()),
+                        new SandboxServices.RefusedNetwork(),
+                        "https://api.dropboxapi.com",
+                        "https://content.dropboxapi.com"));
+                services.AddSingleton<Core.Services.Cloud.IAzureBlobFileSystemService>(
+                    new Core.Services.Cloud.AzureBlobFileSystemService(
+                        account => new Core.Services.Cloud.AzureBlobCredentials(account, null, null),
+                        new SandboxServices.RefusedNetwork()));
+
                 // No test reaches an NFS server: nfs:// is there, and every mount is refused.
                 services.AddSingleton<Core.Services.Nfs.INfsMountFactory>(
                     new Core.Services.Nfs.UnavailableNfsMountFactory("No NFS servers in the test sandbox."));
