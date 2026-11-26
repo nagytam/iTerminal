@@ -22,6 +22,7 @@ using iTerminal.Core.Model;
 using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using System.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace iTerminal.Core.Controls.Contents;
 
@@ -64,6 +65,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private CompressDialog? _compressDialog { get; set; }
     private ExtractDialog? _extractDialog { get; set; }
     private Services.FileAssociations.FileAssociationRunner? _fileAssociations { get; set; }
+    private TerminalDialog? _terminalDialog { get; set; }
     private OpenWithDialog? _openWithDialog { get; set; }
     private OpenWithDialog? _editWithDialog { get; set; }
     private CreateLinkDialog? _createLinkDialog { get; set; }
@@ -123,6 +125,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         Services.FileAssociations.FileAssociationRunner? fileAssociations = null,
         OpenWithDialog? openWithDialog = null,
         OpenWithDialog? editWithDialog = null,
+        TerminalDialog? terminalDialog = null,
         CreateLinkDialog? createLinkDialog = null,
         PropertiesDialog? propertiesDialog = null,
         ChecksumDialog? checksumDialog = null,
@@ -213,6 +216,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _fileAssociations = fileAssociations;
         _openWithDialog = openWithDialog;
         _editWithDialog = editWithDialog;
+        _terminalDialog = terminalDialog;
         ContentModelService = contentModelService ?? NullContentModelService.Instance;
         ContentModelService.ModelChanged += OnContentModelServiceModelChanged;
         _terminalModel = terminalModel ?? new TerminalModel(new iConsole.Tasks.TaskManager(), NullContentModelService.Instance);
@@ -280,7 +284,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         // Enter runs what is on the command line before it opens anything; Alt+Enter, Ctrl+Enter,
         // Shift+Enter and Ctrl+Shift+Enter copy names to it. Ctrl+X T/P of mc is not available:
         // the password manager has Ctrl+X.
-        AddCommand(new iTerminal.Core.Commands.CommandLine.RunCommandLineCommand(ContentModel, ContentModelService, _terminalModel, IsCommandLineVisible));
+        AddCommand(new iTerminal.Core.Commands.CommandLine.RunCommandLineCommand(ContentModel, ContentModelService, _terminalModel, IsCommandLineVisible, ShowTerminalDialogAsync));
         void Reveal() => FindContent()?.RevealCommandLine();
         AddCommand(new iTerminal.Core.Commands.CommandLine.InsertIntoCommandLineCommand(
             iTerminal.Core.Commands.CommandLine.CommandLineInsert.FileName, new Key(ConsoleKey.Enter, false, true, false),
@@ -369,7 +373,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         AddCommand(new NavigateToArchiveCommand(ContentModelService));
         AddCommand(new TabForwardCommand());
         AddCommand(new TabBackwardCommand());
-        AddCommand(new ExecuteCommand(ContentModel, _terminalModel, _taskManager));
+        AddCommand(new ExecuteCommand(ContentModel, _terminalModel, ShowTerminalDialogAsync));
         // Any other file, with no program chosen: the system's default program, outside the application.
         if (_fileAssociations is not null)
         {
@@ -1294,6 +1298,16 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     }
 
     private bool IsCommandLineVisible() => FindContent()?.IsCommandLineVisible ?? false;
+
+    /// <summary>
+    /// Opens the terminal dialog on the command a panel has just started. A fresh dialog each time, as the other
+    /// dialog commands get one: the instance this panel was built with would keep the language it had at start-up.
+    /// </summary>
+    private Task ShowTerminalDialogAsync()
+    {
+        var dialog = DialogRefresh.Services?.GetService<TerminalDialog>() ?? _terminalDialog;
+        return dialog is null ? Task.CompletedTask : ShowDialogAsync(dialog);
+    }
 
     /// <summary>The keys that still work while Info is on: navigation without modifiers, Tab, F1, F10, Ctrl+T and Ctrl+F.</summary>
     private static bool IsInfoPassThroughKey(KeyEvent keyEvent)

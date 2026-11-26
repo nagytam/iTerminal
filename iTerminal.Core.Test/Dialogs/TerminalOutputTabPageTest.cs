@@ -75,6 +75,41 @@ public class TerminalOutputTabPageTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task WhileACommandRuns_ThePageSaysSo_AndShowsTheOutputWhenItFinishes()
+    {
+        // A panel's command is shown from the start, not after it lands in the history, so the dialog opened on it is not empty.
+        var model = ModelWith();
+        var command = model.Command;
+        command.CommandTask = new TaskCompletionSource().Task;
+        var page = new TerminalOutputTabPage(model, TestTheme());
+        await page.OnInitializeAsync();
+        CollectionAssert.AreEqual(new[] { TerminalTextTabPage.RunningText }, page.LinesForTest.ToArray());
+
+        command.Output = "one\ntwo";
+        command.CommandTask = null;
+        model.AddCommandHistory(command);
+        page.OnIdle();
+
+        CollectionAssert.AreEqual(new[] { "one", "two" }, page.LinesForTest.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnIdlePassWithNoChange_DoesNotReloadThePage()
+    {
+        var model = ModelWith(new TerminalCommand { Output = "kept" });
+        var page = new TerminalOutputTabPage(model, TestTheme());
+        await page.OnInitializeAsync();
+
+        // Same command, same state: the text is left alone, so the viewer keeps its place between idle passes.
+        model.History.Last().Output = "changed in place";
+        page.OnIdle();
+
+        CollectionAssert.AreEqual(new[] { "kept" }, page.LinesForTest.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void NameAndHotKey()
     {
         var page = new TerminalOutputTabPage(ModelWith(), TestTheme());

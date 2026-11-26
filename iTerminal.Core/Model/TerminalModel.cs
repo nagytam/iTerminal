@@ -58,19 +58,20 @@ public class TerminalModel(
     /// Enter started it again. <see cref="ITerminalCommand.CommandTask"/> is now the command's own
     /// completion, cleared when it has actually finished.</para>
     /// </summary>
-    public void StartCommand()
+    /// <returns>True when a command was started; false for a command already running and a plain <c>cd</c>.</returns>
+    public bool StartCommand()
     {
         var command = Command;
         if (command.CommandTask is not null)
         {
-            return;
+            return false;
         }
 
         // A plain "cd" moves the panel: the shell it would run in is gone when the command ends, so
         // run as a command it changed nothing the user could see.
         if (TryChangeDirectory())
         {
-            return;
+            return false;
         }
 
         command.Output = null;
@@ -90,13 +91,22 @@ public class TerminalModel(
         }
 
         var contentModel = contentModelService.GetLastContentModel();
-        var executeCommandTask = new ExecuteCommandTask()
+        Queue(new ExecuteCommandTask()
         {
             ContentModel = builtin is null ? contentModel : null,
             TerminalModel = this,
             Builtin = builtin,
-        };
+        });
+        return true;
+    }
 
+    /// <summary>
+    /// Queues <paramref name="executeCommandTask"/> on the task manager and marks the current command as running until
+    /// the task completes, so the command line shows it and nothing else starts. Returns at once.
+    /// </summary>
+    internal void Queue(ExecuteCommandTask executeCommandTask)
+    {
+        var command = Command;
         command.CommandTask = executeCommandTask.Completion;
         OnPropertyChanged(nameof(Command));
 

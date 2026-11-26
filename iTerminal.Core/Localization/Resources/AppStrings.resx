@@ -974,6 +974,10 @@
     <value>Open the selected file in the viewer.</value>
     <comment>Open the selected file in the viewer.</comment>
   </data>
+  <data name="CmdDesc.5b1ccbaa" xml:space="preserve">
+    <value>Run the command typed on the command line, in this panel's folder, and show its output in the terminal dialog.</value>
+    <comment>Run the command typed on the command line, in this panel's folder, and show its output in the terminal dialog.</comment>
+  </data>
   <data name="CmdDesc.5efc92aa" xml:space="preserve">
     <value>Show the weather for the saved places: now, the next 24 hours and the next 7 days.</value>
   </data>
@@ -1086,10 +1090,6 @@
     <value>Encrypt the marked files (or the one under the cursor) with a passphrase into separate .enc files, or decrypt .enc files.</value>
     <comment>Encrypt the marked files (or the one under the cursor) with a passphrase into separate .enc files, or decrypt .enc files.</comment>
   </data>
-  <data name="CmdDesc.86cc06e0" xml:space="preserve">
-    <value>Run the selected program in the command log.</value>
-    <comment>Run the selected program in the command log.</comment>
-  </data>
   <data name="CmdDesc.86d5c50c" xml:space="preserve">
     <value>Open the selected text file in the editor.</value>
     <comment>Open the selected text file in the editor.</comment>
@@ -1116,6 +1116,10 @@
   <data name="CmdDesc.8f7a1d59" xml:space="preserve">
     <value>Overwrite the marked files and folders (or the one under the cursor) and delete them so they cannot be recovered.</value>
     <comment>Overwrite the marked files and folders (or the one under the cursor) and delete them so they cannot be recovered.</comment>
+  </data>
+  <data name="CmdDesc.8fd2e348" xml:space="preserve">
+    <value>Run the selected program in the command log and show its output in the terminal dialog.</value>
+    <comment>Run the selected program in the command log and show its output in the terminal dialog.</comment>
   </data>
   <data name="CmdDesc.919dae4f" xml:space="preserve">
     <value>Lower the playback volume by 5%.</value>
@@ -1204,10 +1208,6 @@
   <data name="CmdDesc.adc840e9" xml:space="preserve">
     <value>Browse and connect to SSH/SMB hosts on the local network.</value>
     <comment>Browse and connect to SSH/SMB hosts on the local network.</comment>
-  </data>
-  <data name="CmdDesc.aec2e334" xml:space="preserve">
-    <value>Run the command typed on the command line, in this panel's folder.</value>
-    <comment>Run the command typed on the command line, in this panel's folder.</comment>
   </data>
   <data name="CmdDesc.b2cf0726" xml:space="preserve">
     <value>Take the selected track out of the playing queue. The file is left alone.</value>
@@ -10236,6 +10236,9 @@
   </data>
   <data name="Terminal.NoCommand" xml:space="preserve">
     <value>No terminal command has been run yet.</value>
+  </data>
+  <data name="Terminal.Running" xml:space="preserve">
+    <value>The command is running. Its output appears here when it finishes.</value>
   </data>
   <data name="Terminal.SandboxBusy" xml:space="preserve">
     <value>A command is running: the sandbox can be changed when it finishes.</value>
