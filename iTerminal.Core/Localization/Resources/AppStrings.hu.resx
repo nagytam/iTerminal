@@ -2335,6 +2335,9 @@
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Debug</value>
   </data>
+  <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
+    <value>{0}. sor, {1}. oszlop</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(niente qui)</value>
   </data>
@@ -2375,7 +2378,7 @@
     <value>Apri il file (o esegui il test)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Esplora o test / sorgente, output o vista debug</value>
+    <value>Böngésző-fül (Megoldás, Tesztek, Fájlok) / kimeneti panel fül (Kimenet, Hibakeresés, Lefedettség, Profil)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Esegui senza debug</value>

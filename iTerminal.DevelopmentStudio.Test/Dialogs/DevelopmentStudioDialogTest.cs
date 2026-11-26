@@ -1,3 +1,4 @@
+using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
 using iTerminal.DevelopmentStudio.Dialogs;
@@ -84,7 +85,7 @@ public class DevelopmentStudioDialogTest
         var command = runner.Commands.Single();
         Assert.AreEqual(new DotnetSdk("9.0.100", "/sdk/9").HostPath, command.FileName);
         CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx" }, command.Arguments.ToArray());
-        CollectionAssert.Contains(harness.Dialog.ViewLines.ToList(), "Build succeeded.");
+        CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), "Build succeeded.");
         await WaitForStatusAsync(harness.Dialog, "build succeeded");
     }
 
@@ -226,11 +227,11 @@ public class DevelopmentStudioDialogTest
             var harness = await OpenAsync([script]);
 
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
-            await WaitUntilAsync(() => harness.Dialog.ViewLines.Any(line => line.Contains("print('hi')", StringComparison.Ordinal)), "the file to open");
+            await WaitUntilAsync(() => harness.Dialog.EditorLines.Any(line => line.Contains("print('hi')", StringComparison.Ordinal)), "the file to open");
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F9));
 
             Assert.IsTrue(harness.Breakpoints.Contains(path, 1));
-            StringAssert.StartsWith(harness.Dialog.ViewLines[0], "●");
+            StringAssert.StartsWith(harness.Dialog.EditorLines[0], "●");
         }
         finally
         {
@@ -260,5 +261,54 @@ public class DevelopmentStudioDialogTest
         var keys = harness.Dialog.GetKeyHints().Select(hint => hint.Key).ToList();
 
         CollectionAssert.IsSubsetOf(new[] { "F5", "Ctrl+F5", "Shift+F5", "F9", "F10 / F11", "Shift+F11", "Space", "A / Shift+T", "V", "S / F" }, keys);
+    }
+
+    /// <summary>The row and column of the first screen line that holds <paramref name="text"/>.</summary>
+    private static (int Row, int Column) Locate(ScreenBuffer screen, string text)
+    {
+        for (int row = 0; row < iTerminal.Core.Test.Helper.UiTestHelper.ScreenSize.Height; row++)
+        {
+            int column = screen.Line(row).IndexOf(text, StringComparison.Ordinal);
+            if (column >= 0) return (row, column);
+        }
+
+        Assert.Fail($"'{text}' is not on the screen");
+        return (-1, -1);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheEditorIsOnTheLeftTheSolutionExplorerOnTheRightAndTheOutputPanelAtTheBottom()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        var screen = Render(harness.Dialog);
+
+        var editor = Locate(screen, " Source");
+        var explorer = Locate(screen, " Solution Explorer");
+        var output = Locate(screen, " Output ");
+        Assert.AreEqual(editor.Row, explorer.Row, "the editor and the explorer share the top band");
+        Assert.IsTrue(editor.Column < iTerminal.Core.Test.Helper.UiTestHelper.ScreenSize.Width / 2, "the editor is the left column");
+        Assert.IsTrue(explorer.Column > iTerminal.Core.Test.Helper.UiTestHelper.ScreenSize.Width / 2, "the Solution Explorer is the right column");
+        Assert.IsTrue(output.Row > explorer.Row + 5, "the output panel sits below the panes");
+        Assert.AreEqual(1, output.Column, "the output tabs start at the left edge of the dialog, inside the frame");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F7CyclesTheOutputPanelTabsAndLeavesTheEditorOnTheSource()
+    {
+        var harness = await OpenAsync([Solution]);
+        var editorBefore = harness.Dialog.EditorLines.ToList();
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+
+        CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), "Watch", "F7 moves the output panel to the debug tab");
+        CollectionAssert.AreEqual(editorBefore, harness.Dialog.EditorLines.ToList(), "the editor keeps the source");
+
+        for (int i = 0; i < 3; i++) await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+
+        CollectionAssert.AreEqual(editorBefore, harness.Dialog.EditorLines.ToList(), "the editor keeps the source through the whole cycle");
+        CollectionAssert.DoesNotContain(harness.Dialog.OutputLines.ToList(), "Watch", "four presses come back to the output log");
     }
 }

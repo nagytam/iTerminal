@@ -28,8 +28,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>What the left pane lists: the Solution Explorer, or the Test Explorer.</summary>
     private enum ExplorerMode { Solution, Tests, Files }
 
-    /// <summary>What the right pane shows: the source of the open file, the output log, or the debug view.</summary>
-    private enum ViewMode { Source, Output, Debug, Coverage, Profile }
+    /// <summary>The tabs of the bottom output panel: the output log, the debug view, the coverage and the profile.</summary>
+    private enum OutputTab { Output, Debug, Coverage, Profile }
 
     private enum StatusSeverity { Info, Success, Error }
 
@@ -97,9 +97,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private string _solutionPath = string.Empty;
 
     private readonly ConcurrentObservableCollection<ExplorerRow> _explorerItems = new();
-    private readonly ConcurrentObservableCollection<string> _viewItems = new();
+    private readonly ConcurrentObservableCollection<string> _editorItems = new();
+    private readonly ConcurrentObservableCollection<string> _outputItems = new();
     private readonly ExplorerListBox _explorerListBox;
-    private readonly ViewListBox _viewListBox;
+    private readonly ViewListBox _editorListBox;
+    private readonly ViewListBox _outputListBox;
 
     /// <summary>Guards everything the background tasks write: output, the debug state and the source.</summary>
     private readonly Lock _stateLock = new();
@@ -118,7 +120,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private IReadOnlyList<DevelopmentProject> _items = [];
     private readonly Dictionary<string, TestOutcome> _testOutcomes = new(StringComparer.OrdinalIgnoreCase);
     private ExplorerMode _explorerMode = ExplorerMode.Solution;
-    private ViewMode _viewMode = ViewMode.Source;
+    /// <summary>The tab the bottom output panel shows (F7 cycles it). The editor always shows the source.</summary>
+    private OutputTab _outputTab = OutputTab.Output;
 
     private DebugSession? _session;
 
@@ -187,12 +190,17 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _explorerListBox = new ExplorerListBox(
             new ListBoxModel<ExplorerRow>(_explorerItems) { TransformItem = (row, _) => new ListItem<ExplorerRow>(row) { Value = row.DisplayName, IsEnabled = true } },
             themeService);
-        _viewListBox = new ViewListBox(
-            new ListBoxModel<string>(_viewItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
+        _editorListBox = new ViewListBox(
+            new ListBoxModel<string>(_editorItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
+            themeService);
+        _outputListBox = new ViewListBox(
+            new ListBoxModel<string>(_outputItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
             themeService);
 
+        // Tab order: the Solution Explorer, the editor, then the output panel.
         AddControl(_explorerListBox);
-        AddControl(_viewListBox);
+        AddControl(_editorListBox);
+        AddControl(_outputListBox);
     }
 
     /// <summary>The status line text (the last command's outcome, or the reason a key did nothing).</summary>
@@ -207,8 +215,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The explorer rows as they are drawn, in order.</summary>
     public IReadOnlyList<string> ExplorerRows => _explorerItems.Select(row => row.DisplayName).ToList();
 
-    /// <summary>The lines of the right pane as they are drawn, in order.</summary>
-    public IReadOnlyList<string> ViewLines => [.. _viewItems];
+    /// <summary>The lines of the editor as they are drawn, in order (the gutter included).</summary>
+    public IReadOnlyList<string> EditorLines => [.. _editorItems];
+
+    /// <summary>The lines of the bottom output panel as they are drawn, in order.</summary>
+    public IReadOnlyList<string> OutputLines => [.. _outputItems];
 
     /// <summary>Whether a debugging session is running (started, not yet ended).</summary>
     public bool IsDebugging => _session is not null;
@@ -233,7 +244,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _sdkIndex = defaultSdk is null ? -1 : _sdks.ToList().IndexOf(defaultSdk);
         _explorerMode = ExplorerMode.Solution;
         SelectSolutionRow();
-        _viewMode = ViewMode.Source;
+        _outputTab = OutputTab.Output;
         _status = _items.Count == 0
             ? UiText.Get("DevelopmentStudio.NothingFound", "No solutions, projects or scripts were found in this folder.")
             : string.Format(UiText.Get("DevelopmentStudio.Found", "Found {0} items. Enter opens a file; F5 starts debugging."), _items.Count);
@@ -251,24 +262,56 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             Position = new Position(0, 0);
         }
 
-        var iw = (int)ViewSize.Width - 2;
-        var ih = (int)ViewSize.Height - 2;
-        if (iw > 0 && ih > 0)
+        var layout = Arrange(ViewSize);
+        if (layout is null)
         {
-            var midH = ih - 2;
-            if (midH > 0)
-            {
-                var leftW = Math.Max(26, iw * 34 / 100);
-                var rightX = 1 + leftW + 1;
-                var rightW = iw - leftW - 1;
-                _explorerListBox.Position = new Position(1, 3 + 1);
-                _explorerListBox.ViewSize = new Size(leftW, Math.Max(0, midH - 1));
-                _viewListBox.Position = new Position(rightX, 3 + 1);
-                _viewListBox.ViewSize = rightW > 0 ? new Size(rightW, Math.Max(0, midH - 1)) : new Size(0, 0);
-            }
+            // Too small for the three panes: the lists stay out of the way until the dialog is resized.
+            _editorListBox.ViewSize = new Size(0, 0);
+            _explorerListBox.ViewSize = new Size(0, 0);
+            _outputListBox.ViewSize = new Size(0, 0);
+        }
+        else
+        {
+            int topListHeight = layout.OutputBandY - TopListRow;
+            _editorListBox.Position = new Position(1, TopListRow);
+            _editorListBox.ViewSize = new Size(layout.EditorWidth, topListHeight);
+            _explorerListBox.Position = new Position(layout.ExplorerX, TopListRow);
+            _explorerListBox.ViewSize = new Size(layout.ExplorerWidth, topListHeight);
+            _outputListBox.Position = new Position(1, layout.OutputBandY + 1);
+            _outputListBox.ViewSize = new Size(layout.InnerWidth, layout.OutputListHeight);
         }
 
         base.OnInitializeLayout();
+    }
+
+    /// <summary>The row of the first list row under the pane bands (the frame is row 0, the header row 1, the bands row 2).</summary>
+    private const int TopListRow = 3;
+
+    /// <summary>
+    /// Where the three panes sit, in the dialog's own coordinates: row 0 and the last row are the frame, row 1 is the header,
+    /// and the editor (left) and the Solution Explorer (right) share the rows above the output panel (bottom).
+    /// </summary>
+    /// <param name="EditorWidth">The editor's columns, from column 1.</param>
+    /// <param name="ExplorerX">The first column of the Solution Explorer; the column before it is the divider.</param>
+    /// <param name="ExplorerWidth">The Solution Explorer's columns.</param>
+    /// <param name="OutputBandY">The row of the output panel's tab band; the editor and explorer lists end the row before.</param>
+    /// <param name="OutputListHeight">The output panel's list rows, under its band.</param>
+    /// <param name="InnerWidth">The columns inside the frame.</param>
+    private sealed record StudioLayout(int EditorWidth, int ExplorerX, int ExplorerWidth, int OutputBandY, int OutputListHeight, int InnerWidth);
+
+    /// <summary>The pane rectangles for a dialog of <paramref name="size"/>, or null when it is too small to show all three.</summary>
+    private static StudioLayout? Arrange(Size size)
+    {
+        int innerWidth = (int)size.Width - 2;
+        int innerHeight = (int)size.Height - 2;
+        int explorerWidth = Math.Max(26, innerWidth * 34 / 100);
+        int editorWidth = innerWidth - explorerWidth - 1;
+        // The panes above the output panel take two thirds of the rows under the header: a band and their list rows.
+        int topRows = Math.Max(3, (innerHeight - 2) * 2 / 3);
+        int outputBandY = 2 + topRows;
+        int outputListHeight = innerHeight - 3 - topRows;
+        if (editorWidth < 10 || outputListHeight < 1) return null;
+        return new StudioLayout(editorWidth, editorWidth + 2, explorerWidth, outputBandY, outputListHeight, innerWidth);
     }
 
     /// <summary>Esc: stops a running command and the debugged program, then closes.</summary>
@@ -304,7 +347,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("Shift+F11", UiText.Get("DevelopmentStudio.HintStepOut", "Step out"));
         yield return ("B / C / T / R", UiText.Get("DevelopmentStudio.HintCommands", "Build, clean, test, run the selected item"));
         yield return ("W", UiText.Get("DevelopmentStudio.HintWatch", "Watch the word under the cursor (in the debug view, remove it)"));
-        yield return ("F6 / F7", UiText.Get("DevelopmentStudio.HintPanes", "Explorer or Tests / source, output or debug view"));
+        yield return ("F6 / F7", UiText.Get("DevelopmentStudio.HintPanes", "Explorer tab (Solution, Tests, Files) / output panel tab (Output, Debug, Coverage, Profile)"));
         yield return ("Enter", UiText.Get("DevelopmentStudio.HintOpen", "Open the file (or run the test)"));
         yield return ("Space", UiText.Get("DevelopmentStudio.HintCheck", "Check or uncheck the .NET project; B, C, T and R then run on the checked ones"));
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
@@ -339,7 +382,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 ToggleExplorerMode();
                 return true;
             case ConsoleKey.F7 when plain:
-                CycleViewMode();
+                CycleOutputTab();
                 return true;
             case ConsoleKey.F9 when plain:
                 ToggleBreakpointAtCursor();
@@ -539,26 +582,25 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
     }
 
-    /// <summary>F7 cycles the right pane: Source, Output, Debug, Coverage, Profile.</summary>
-    private void CycleViewMode()
+    /// <summary>F7 cycles the output panel's tabs: Output, Debug, Coverage, Profile. The editor is not affected.</summary>
+    private void CycleOutputTab()
     {
-        _viewMode = _viewMode switch
+        _outputTab = _outputTab switch
         {
-            ViewMode.Source => ViewMode.Output,
-            ViewMode.Output => ViewMode.Debug,
-            ViewMode.Debug => ViewMode.Coverage,
-            ViewMode.Coverage => ViewMode.Profile,
-            _ => ViewMode.Source,
+            OutputTab.Output => OutputTab.Debug,
+            OutputTab.Debug => OutputTab.Coverage,
+            OutputTab.Coverage => OutputTab.Profile,
+            _ => OutputTab.Output,
         };
-        RebuildView();
+        RebuildOutputPanel();
         StateHasChanged();
     }
 
-    /// <summary>G in the coverage view: opens the file the cursor is on.</summary>
+    /// <summary>G in the coverage tab: opens the file the cursor is on.</summary>
     private void OpenCoverageFileAtCursor()
     {
-        if (_viewMode != ViewMode.Coverage) return;
-        int row = (int)_viewListBox.ScrollableModel.CursorPosition.Y;
+        if (_outputTab != OutputTab.Coverage) return;
+        int row = (int)_outputListBox.ScrollableModel.CursorPosition.Y;
         CoverageFile? file;
         lock (_stateLock)
         {
@@ -665,40 +707,61 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _ => "PowerShell",
     };
 
-    /// <summary>Rebuilds the right pane for its mode: the source with its gutter, the output log, or the debug view.</summary>
+    /// <summary>Rebuilds both the editor and the output panel.</summary>
     private void RebuildView()
+    {
+        RebuildEditor();
+        RebuildOutputPanel();
+    }
+
+    /// <summary>Rebuilds the editor: the open file with its gutter (breakpoint, stop line, coverage), or the hint when none is open.</summary>
+    private void RebuildEditor()
     {
         var lines = new List<string>();
         lock (_stateLock)
         {
-            switch (_viewMode)
+            if (_sourcePath.Length == 0)
             {
-                case ViewMode.Source:
-                    if (_sourcePath.Length == 0)
-                    {
-                        lines.Add(UiText.Get("DevelopmentStudio.NoSource", "Select a file in the explorer and press Enter to open it here."));
-                    }
+                lines.Add(UiText.Get("DevelopmentStudio.NoSource", "Select a file in the explorer and press Enter to open it here."));
+            }
 
-                    CoverageFile? covered = _coverage?.Files.FirstOrDefault(file => file.Path.Equals(_sourcePath, StringComparison.OrdinalIgnoreCase));
-                    for (int i = 0; i < _sourceLines.Count; i++)
-                    {
-                        int number = i + 1;
-                        bool isStop = number == _stopLine && _sourcePath.Equals(_stopPath, StringComparison.OrdinalIgnoreCase);
-                        string gutter = isStop ? "→"
-                            : _breakpoints.Contains(_sourcePath, number) ? "●"
-                            : covered is not null && covered.Hits.TryGetValue(number, out int hits) ? (hits > 0 ? "+" : "-")
-                            : " ";
-                        lines.Add($"{gutter}{number,5}  {_sourceLines[i]}");
-                    }
+            CoverageFile? covered = _coverage?.Files.FirstOrDefault(file => file.Path.Equals(_sourcePath, StringComparison.OrdinalIgnoreCase));
+            for (int i = 0; i < _sourceLines.Count; i++)
+            {
+                int number = i + 1;
+                bool isStop = number == _stopLine && _sourcePath.Equals(_stopPath, StringComparison.OrdinalIgnoreCase);
+                string gutter = isStop ? "→"
+                    : _breakpoints.Contains(_sourcePath, number) ? "●"
+                    : covered is not null && covered.Hits.TryGetValue(number, out int hits) ? (hits > 0 ? "+" : "-")
+                    : " ";
+                lines.Add($"{gutter}{number,5}  {_sourceLines[i]}");
+            }
+        }
 
-                    break;
-                case ViewMode.Output:
+        if (lines.Count == 0)
+        {
+            lines.Add(string.Empty);
+        }
+
+        _editorItems.ReplaceAll(lines);
+        _editorListBox.UpdateModel();
+    }
+
+    /// <summary>Rebuilds the output panel for its tab: the output log, the debug view, the coverage or the profile.</summary>
+    private void RebuildOutputPanel()
+    {
+        var lines = new List<string>();
+        lock (_stateLock)
+        {
+            switch (_outputTab)
+            {
+                case OutputTab.Output:
                     lines.AddRange(_output);
                     break;
-                case ViewMode.Coverage:
+                case OutputTab.Coverage:
                     lines.AddRange(CoverageLines());
                     break;
-                case ViewMode.Profile:
+                case OutputTab.Profile:
                     lines.AddRange(ProfileLines());
                     break;
                 default:
@@ -712,8 +775,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             lines.Add(string.Empty);
         }
 
-        _viewItems.ReplaceAll(lines);
-        _viewListBox.UpdateModel();
+        _outputItems.ReplaceAll(lines);
+        _outputListBox.UpdateModel();
     }
 
     /// <summary>The coverage view: the total, then one row per file (the rows <see cref="OpenCoverageFileAtCursor"/> reads). Caller holds the lock.</summary>
@@ -817,7 +880,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         }
 
-        if (_viewMode == ViewMode.Output) RebuildView();
+        if (_outputTab == OutputTab.Output) RebuildOutputPanel();
     }
 
     private void SetStatus(string text, StatusSeverity severity)
@@ -827,11 +890,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         StateHasChanged();
     }
 
-    /// <summary>Opens a source file in the source view. The read runs on a background task; the newest request wins.</summary>
+    /// <summary>Opens a source file in the editor. The read runs on a background task; the newest request wins.</summary>
     private void OpenSource(string path)
     {
         _sourceRequest = path;
-        _viewMode = ViewMode.Source;
         _ = Task.Run(() =>
         {
             string[] lines;
@@ -863,7 +925,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             }
 
             RebuildView();
-            _viewListBox.ScrollableModel.CursorPosition.Y = 0;
+            _editorListBox.ScrollableModel.CursorPosition.Y = 0;
             SetStatus(error ?? Path.GetFileName(path), error is null ? StatusSeverity.Info : StatusSeverity.Error);
         }, CancellationToken.None);
     }
@@ -876,9 +938,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     {
         get
         {
-            if (_viewMode != ViewMode.Source) return 0;
-            var rows = _viewListBox.ListModel.ListItems;
-            var index = (int)_viewListBox.ScrollableModel.CursorPosition.Y;
+            var rows = _editorListBox.ListModel.ListItems;
+            var index = (int)_editorListBox.ScrollableModel.CursorPosition.Y;
             return index >= 0 && index < rows.Count && rows.Count > 0 ? index + 1 : 0;
         }
     }
@@ -932,7 +993,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>W in the source view: adds the word under the cursor to the watch list.</summary>
     private void ToggleWatchAtCursor()
     {
-        if (_viewMode == ViewMode.Debug)
+        // W on the debug tab, with the output panel focused, removes the watch on its row; from the editor it adds one.
+        if (_outputTab == OutputTab.Debug && _outputListBox.IsFocused)
         {
             RemoveWatchAtCursor();
             return;
@@ -955,13 +1017,13 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         RebuildView();
     }
 
-    /// <summary>Delete in the debug view: removes the watch on the cursor row.</summary>
+    /// <summary>Delete in the debug tab, with the output panel focused: removes the watch on the cursor row.</summary>
     private void RemoveWatchAtCursor()
     {
-        if (_viewMode != ViewMode.Debug) return;
+        if (_outputTab != OutputTab.Debug || !_outputListBox.IsFocused) return;
         lock (_stateLock)
         {
-            int row = (int)_viewListBox.ScrollableModel.CursorPosition.Y;
+            int row = (int)_outputListBox.ScrollableModel.CursorPosition.Y;
             if (!_watchRows.TryGetValue(row, out int watch)) return;
             _watchExpressions.RemoveAt(watch);
             if (watch < _watchValues.Count) _watchValues.RemoveAt(watch);
@@ -978,7 +1040,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             if (line < 1 || line > _sourceLines.Count) return null;
             string text = _sourceLines[line - 1];
             // The rows are "<gutter><line number,5>  <text>": eight columns before the text, so the cursor's column is shifted back by them.
-            int column = Math.Clamp((int)_viewListBox.ScrollableModel.CursorPosition.X - GutterWidth, 0, text.Length);
+            int column = Math.Clamp((int)_editorListBox.ScrollableModel.CursorPosition.X - GutterWidth, 0, text.Length);
             int start = column, end = column;
             while (start > 0 && (char.IsLetterOrDigit(text[start - 1]) || text[start - 1] == '_')) start--;
             while (end < text.Length && (char.IsLetterOrDigit(text[end]) || text[end] == '_')) end++;
@@ -1024,7 +1086,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _busy = true;
         lock (_stateLock) _output.Clear();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.RunningCoverage", "Measuring the coverage of {0}..."), item.Name), StatusSeverity.Info);
-        _viewMode = ViewMode.Output;
+        _outputTab = OutputTab.Output;
         RebuildView();
 
         _ = Task.Run(async () =>
@@ -1054,7 +1116,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                     lock (_stateLock)
                     {
                         _coverage = coverage;
-                        _viewMode = ViewMode.Coverage;
+                        _outputTab = OutputTab.Coverage;
                     }
 
                     SetStatus(string.Format(UiText.Get("DevelopmentStudio.CoverageSummary", "Coverage {0:0.0}%: {1} of {2} lines in {3} files."),
@@ -1113,7 +1175,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _busy = true;
         lock (_stateLock) _output.Clear();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.RunningProfile", "Profiling {0}..."), item.Name), StatusSeverity.Info);
-        _viewMode = ViewMode.Output;
+        _outputTab = OutputTab.Output;
         RebuildView();
 
         _ = Task.Run(async () =>
@@ -1134,7 +1196,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 lock (_stateLock)
                 {
                     _profile = entries;
-                    _viewMode = ViewMode.Profile;
+                    _outputTab = OutputTab.Profile;
                 }
 
                 var hottest = entries.OrderByDescending(entry => entry.CumulativeSeconds).FirstOrDefault();
@@ -1263,7 +1325,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
 
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, targetLabel), StatusSeverity.Info);
-        _viewMode = ViewMode.Output;
+        _outputTab = OutputTab.Output;
         RebuildView();
 
         _ = Task.Run(async () =>
@@ -1567,7 +1629,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 if (buildExit != 0)
                 {
                     SetStatus(string.Format(UiText.Get("DevelopmentStudio.BuildFailedNoDebug", "The build failed, so {0} was not started."), item.Name), StatusSeverity.Error);
-                    _viewMode = ViewMode.Output;
+                    _outputTab = OutputTab.Output;
                     return;
                 }
 
@@ -1594,7 +1656,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             AppendOutput($"Debugging {item.Name} with {plan.FileName}");
             await session.LaunchAsync(plan.Launch, breakpoints, cts.Token);
             SetStatus(string.Format(UiText.Get("DevelopmentStudio.Started", "Debugging {0}. F5 continues, F10 steps over."), item.Name), StatusSeverity.Success);
-            _viewMode = ViewMode.Debug;
+            _outputTab = OutputTab.Debug;
         }
         catch (Exception exception) when (exception is InvalidOperationException or DapException or OperationCanceledException or IOException)
         {
@@ -1793,13 +1855,13 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 _watchValues.AddRange(watchValues);
                 _stopPath = top?.Path ?? string.Empty;
                 _stopLine = top?.Line ?? 0;
-                _viewMode = ViewMode.Source;
+                _outputTab = OutputTab.Debug;
             }
 
             if (openFile) OpenSourceAndWait(top!.Path);
             RebuildView();
             SetStatus(string.Format(UiText.Get("DevelopmentStudio.StoppedAt", "Stopped ({0}) at {1}:{2}."), stop.Reason, top is null ? "?" : Path.GetFileName(top.Path), top?.Line ?? 0), StatusSeverity.Info);
-            if (_stopLine > 0) _viewListBox.ScrollableModel.CursorPosition.Y = _stopLine - 1;
+            if (_stopLine > 0) _editorListBox.ScrollableModel.CursorPosition.Y = _stopLine - 1;
         }
         catch (Exception exception) when (exception is DapException or OperationCanceledException or InvalidOperationException or ObjectDisposedException)
         {
@@ -1837,42 +1899,83 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         if (ViewSize.IsEmpty) return;
 
+        var layout = Arrange(ViewSize);
+        if (layout is null) return;
+
+        // Rows and columns are the dialog's own (row 0 is the frame), so each one is the dialog's origin plus it.
         var colorScheme = ThemeService.CurrentColorScheme;
-        var ix = (int)AbsolutePosition.X + 1;
-        var iy = (int)AbsolutePosition.Y + 1;
-        var iw = (int)ViewSize.Width - 2;
-        var ih = (int)ViewSize.Height - 2;
-        if (iw <= 0 || ih <= 0) return;
+        int x0 = (int)AbsolutePosition.X;
+        int y0 = (int)AbsolutePosition.Y;
+        int footerRow = (int)ViewSize.Height - 2;
 
-        DrawHeader(buffer, ix, iy, iw, colorScheme);
-        DrawFooter(buffer, ix, iy + ih - 1, iw, colorScheme);
+        DrawHeader(buffer, x0 + 1, y0 + 1, layout.InnerWidth, colorScheme);
+        DrawFooter(buffer, x0 + 1, y0 + footerRow, layout.InnerWidth, colorScheme);
 
-        var midY = iy + 1;
-        if (ih - 2 <= 0) return;
-        var leftW = Math.Max(26, iw * 34 / 100);
-        var rightX = ix + leftW + 1;
-        var rightW = iw - leftW - 1;
-
-        string explorerHeading = _explorerMode switch
+        // The editor (left) and the Solution Explorer (right) each have a band; a divider line separates them down to the output panel.
+        int bandRow = y0 + 2;
+        DrawSectionHeader(buffer, x0 + 1, bandRow, layout.EditorWidth, EditorTitle(), _editorListBox.IsFocused, colorScheme);
+        DrawSectionHeader(buffer, x0 + layout.ExplorerX, bandRow, layout.ExplorerWidth, ExplorerHeading(), _explorerListBox.IsFocused, colorScheme);
+        int dividerX = x0 + layout.ExplorerX - 1;
+        for (int row = bandRow; row < y0 + layout.OutputBandY; row++)
         {
-            ExplorerMode.Solution => UiText.Get("DevelopmentStudio.SolutionExplorerHeading", "Solution Explorer"),
-            ExplorerMode.Tests => UiText.Get("DevelopmentStudio.TestExplorerHeading", "Test Explorer"),
-            _ => UiText.Get("DevelopmentStudio.FileExplorerHeading", "File Explorer"),
-        };
-        DrawSectionHeader(buffer, ix, midY, leftW, explorerHeading, true, colorScheme);
-        if (rightW > 0)
+            WriteLine(buffer, dividerX, row, 1, "│", colorScheme.Foreground, colorScheme.Background);
+        }
+
+        // The output panel spans the bottom: its band is the tab strip of Output, Debug, Coverage and Profile.
+        DrawOutputTabs(buffer, x0 + 1, y0 + layout.OutputBandY, layout.InnerWidth, colorScheme);
+    }
+
+    /// <summary>The editor's band: the open file's name and the cursor's line and column, or "Source" while no file is open.</summary>
+    private string EditorTitle()
+    {
+        string path;
+        lock (_stateLock) path = _sourcePath;
+        if (path.Length == 0) return UiText.Get("DevelopmentStudio.SourceHeading", "Source");
+
+        var cursor = _editorListBox.ScrollableModel.CursorPosition;
+        int column = Math.Max(1, (int)cursor.X - GutterWidth + 1);
+        string position = string.Format(UiText.Get("DevelopmentStudio.EditorPosition", "Ln {0}, Col {1}"), (int)cursor.Y + 1, column);
+        return $"{Path.GetFileName(path)}   {position}";
+    }
+
+    /// <summary>The Solution Explorer's band: the heading of the mode F6 has shown.</summary>
+    private string ExplorerHeading() => _explorerMode switch
+    {
+        ExplorerMode.Solution => UiText.Get("DevelopmentStudio.SolutionExplorerHeading", "Solution Explorer"),
+        ExplorerMode.Tests => UiText.Get("DevelopmentStudio.TestExplorerHeading", "Test Explorer"),
+        _ => UiText.Get("DevelopmentStudio.FileExplorerHeading", "File Explorer"),
+    };
+
+    /// <summary>The output panel's tab strip. The shown tab is drawn in reverse video, the others on the band.</summary>
+    private void DrawOutputTabs(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
+    {
+        bool focused = _outputListBox.IsFocused;
+        var band = focused ? colorScheme.SelectedFocusedBackground : colorScheme.ButtonBackground;
+        var bandText = focused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+        WriteLine(buffer, x, y, w, string.Empty, bandText, band);
+
+        int column = x;
+        foreach (OutputTab tab in Enum.GetValues<OutputTab>())
         {
-            string heading = _viewMode switch
-            {
-                ViewMode.Source => UiText.Get("DevelopmentStudio.SourceHeading", "Source"),
-                ViewMode.Output => UiText.Get("DevelopmentStudio.OutputHeading", "Output"),
-                ViewMode.Coverage => UiText.Get("DevelopmentStudio.CoverageHeading", "Coverage"),
-                ViewMode.Profile => UiText.Get("DevelopmentStudio.ProfileHeading", "Profile"),
-                _ => UiText.Get("DevelopmentStudio.DebugHeading", "Debug"),
-            };
-            DrawSectionHeader(buffer, rightX, midY, rightW, heading, false, colorScheme);
+            string label = " " + OutputTabHeading(tab) + " ";
+            int labelWidth = Math.Min(label.Length, x + w - column);
+            if (labelWidth <= 0) break;
+
+            bool shown = tab == _outputTab;
+            WriteLine(buffer, column, y, labelWidth, label,
+                shown ? colorScheme.Background : bandText,
+                shown ? colorScheme.Foreground : band);
+            column += label.Length + 1;
         }
     }
+
+    private static string OutputTabHeading(OutputTab tab) => tab switch
+    {
+        OutputTab.Output => UiText.Get("DevelopmentStudio.OutputHeading", "Output"),
+        OutputTab.Coverage => UiText.Get("DevelopmentStudio.CoverageHeading", "Coverage"),
+        OutputTab.Profile => UiText.Get("DevelopmentStudio.ProfileHeading", "Profile"),
+        _ => UiText.Get("DevelopmentStudio.DebugHeading", "Debug"),
+    };
 
     private void DrawHeader(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {

@@ -2335,6 +2335,9 @@
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Débogage</value>
   </data>
+  <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
+    <value>Lín. {0}, Col. {1}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(rien ici)</value>
   </data>
@@ -2375,7 +2378,7 @@
     <value>Ouvrir le fichier (ou lancer le test)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Explorateur ou tests / source, sortie ou vue de débogage</value>
+    <value>Pestaña del explorador (Solución, Pruebas, Archivos) / pestaña del panel de salida (Salida, Debug, Cobertura, Perfil)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Exécuter sans débogage</value>
