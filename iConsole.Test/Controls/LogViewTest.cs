@@ -371,6 +371,107 @@ public class LogViewTest
         Assert.AreEqual(scheme.SelectedForeground, screen.ForegroundAt(6, 0));
     }
 
+    private static KeyEvent Typed(char c) => new(c, ConsoleKey.NoName, false, false, false);
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task FindLine_F7OpensIt_TypedTextBuildsTheQuery_AndEnterRunsTheSearch()
+    {
+        var view = Create();
+        AppendNumbered(view, 10);
+
+        Assert.IsTrue(await view.HandleKeyEventAsync(Key(ConsoleKey.F7)));
+        Assert.IsTrue(view.IsOverlayOpen);
+        Assert.IsTrue(await view.HandleKeyEventAsync(Typed('0')));
+        Assert.IsTrue(await view.HandleKeyEventAsync(Typed('9')));
+        Assert.IsTrue(await view.HandleKeyEventAsync(Key(ConsoleKey.Enter)));
+
+        Assert.IsFalse(view.IsOverlayOpen);
+        Assert.AreEqual("09", view.SearchText);
+        var screen = new ScreenBuffer(20, 4);
+        view.Draw(screen);
+        Assert.IsTrue(screen.Contains("line 09"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task FindLine_PaintsThePromptOnTheBottomRow()
+    {
+        var view = Create();
+        AppendNumbered(view, 4);
+
+        await view.HandleKeyEventAsync(Key(ConsoleKey.F7));
+        await view.HandleKeyEventAsync(Typed('a'));
+        await view.HandleKeyEventAsync(Typed('b'));
+        var screen = new ScreenBuffer(20, 4);
+        view.Draw(screen);
+        view.Draw(screen);
+
+        StringAssert_Contains(screen.Line(3), "Find: ab_");
+        StringAssert_Contains(screen.Line(0), "line 00");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task FindLine_EscClosesItAndKeepsTheCurrentSearch()
+    {
+        var view = Create();
+        AppendNumbered(view, 10);
+        view.Find("line 01");
+
+        await view.HandleKeyEventAsync(Key(ConsoleKey.F7));
+        Assert.AreEqual("line 01", ReadFindQuery(view));
+        Assert.IsTrue(await view.HandleKeyEventAsync(Key(ConsoleKey.Escape)));
+
+        Assert.IsFalse(view.IsOverlayOpen);
+        Assert.AreEqual("line 01", view.SearchText);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task FindLine_BackspaceEditsTheQuery()
+    {
+        var view = Create();
+        AppendNumbered(view, 3);
+
+        await view.HandleKeyEventAsync(Key(ConsoleKey.F7));
+        await view.HandleKeyEventAsync(Typed('x'));
+        await view.HandleKeyEventAsync(Typed('y'));
+        await view.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        await view.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.AreEqual("x", view.SearchText);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task FindLine_EnterWithAnEmptyQueryClearsTheSearch()
+    {
+        var view = Create();
+        AppendNumbered(view, 3);
+        view.Find("line");
+
+        await view.HandleKeyEventAsync(Key(ConsoleKey.F7));
+        for (int i = 0; i < "line".Length; i++)
+        {
+            await view.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        }
+
+        await view.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        Assert.AreEqual(string.Empty, view.SearchText);
+        Assert.IsFalse(view.IsOverlayOpen);
+    }
+
+    /// <summary>Reads the query the find line shows, from what it draws, so the test does not reach into the control.</summary>
+    private static string ReadFindQuery(LogView view)
+    {
+        var screen = new ScreenBuffer(20, 4);
+        view.Draw(screen);
+        string row = screen.Line(3).TrimEnd();
+        int start = row.IndexOf("Find: ", StringComparison.Ordinal) + "Find: ".Length;
+        return row[start..^1];
+    }
+
     private static void StringAssert_Contains(string value, string expected)
     {
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(value, expected);

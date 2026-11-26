@@ -1067,6 +1067,9 @@
   <data name="Hint.FindPrevious" xml:space="preserve">
     <value>Find the previous match</value>
   </data>
+  <data name="Hint.FindStart" xml:space="preserve">
+    <value>Find text in the log</value>
+  </data>
   <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
     <value>First or last day of the month</value>
   </data>
@@ -1471,6 +1474,9 @@
   </data>
   <data name="Key.Writable" xml:space="preserve">
     <value>F6-Writable</value>
+  </data>
+  <data name="LogView.FindPrompt" xml:space="preserve">
+    <value>Find: </value>
   </data>
   <data name="Msg.EnterLineNumber" xml:space="preserve">
     <value>Enter a line number.</value>
