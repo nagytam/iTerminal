@@ -2341,6 +2341,12 @@
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(hier ist nichts)</value>
   </data>
+  <data name="DevelopmentStudio.ErrorCounts" xml:space="preserve">
+    <value>{0} erreurs, {1} avertissements</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
+    <value>Liste des erreurs</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} fehlgeschlagen (Exit {1}).</value>
   </data>
@@ -2374,6 +2380,9 @@
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>Dans la vue de couverture, ouvrir le fichier sous le curseur</value>
   </data>
+  <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
+    <value>Déplacer et redimensionner les panneaux : les flèches déplacent le panneau actif vers ce bord, Maj+flèches le redimensionnent</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Datei öffnen (oder Test ausführen)</value>
   </data>
@@ -2404,6 +2413,15 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Das Wort unter dem Cursor beobachten (in der Debug-Ansicht entfernen)</value>
   </data>
+  <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
+    <value>Le panneau central ne peut qu'échanger sa place avec un autre : déplacez au centre le panneau souhaité.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentreResize" xml:space="preserve">
+    <value>Le panneau central occupe le reste ; redimensionnez plutôt un panneau de bord.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutOn" xml:space="preserve">
+    <value>Disposition des panneaux : les flèches déplacent le panneau actif vers ce bord, Maj+flèches le redimensionnent, F8 ou Échap termine.</value>
+  </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Lokale Variablen</value>
   </data>
@@ -2424,6 +2442,9 @@
   </data>
   <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
     <value>Das Debuggen von {0} ist für {1} hier nicht verfügbar.</value>
+  </data>
+  <data name="DevelopmentStudio.NoErrors" xml:space="preserve">
+    <value>Aucune erreur ni avertissement. Le build, l'exécution et les tests les signalent ici.</value>
   </data>
   <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
     <value>Pas encore de profil. P profile le script Python sélectionné.</value>
@@ -6358,7 +6379,7 @@
     <value>Tab:champ suivant  Haut/Bas:choisir  F5:actualiser les taux  F6:inverser  Esc:fermer</value>
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
-    <value>F5:Debuggen F9:Haltepunkt F10/F11:Schritt Space:markieren B/C/T/R:bauen/säubern/testen/ausführen V:SDK S/F:SBOM F6/F7:Bereiche Enter:öffnen Esc:schließen</value>
+    <value>F5:Debuggen F9:Haltepunkt F10/F11:Schritt Space:markieren B/C/T/R:bauen/säubern/testen/ausführen V:SDK S/F:SBOM F6/F7:Bereiche F8:Disposition Enter:öffnen Esc:schließen</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:chercher/lire  Tab:champ  F3:entier  F2:navigateur  Esc:fermer</value>

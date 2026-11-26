@@ -2483,6 +2483,12 @@
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nothing here)</value>
   </data>
+  <data name="DevelopmentStudio.ErrorCounts" xml:space="preserve">
+    <value>{0} errors, {1} warnings</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
+    <value>Error List</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} failed (exit {1}).</value>
   </data>
@@ -2516,6 +2522,9 @@
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>In the coverage view, open the file under the cursor</value>
   </data>
+  <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
+    <value>Move and resize the panels: arrows move the focused one to that edge, Shift+arrows resize it</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Open the file (or run the test)</value>
   </data>
@@ -2546,6 +2555,15 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Watch the word under the cursor (in the debug view, remove it)</value>
   </data>
+  <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
+    <value>The centre panel can only swap places with a panel: move the panel you want there into the centre.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentreResize" xml:space="preserve">
+    <value>The centre panel fills what the edges leave; resize an edge panel instead.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutOn" xml:space="preserve">
+    <value>Panel layout: arrows move the focused panel to that edge, Shift+arrows resize it, F8 or Esc ends.</value>
+  </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Locals</value>
   </data>
@@ -2566,6 +2584,9 @@
   </data>
   <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
     <value>Debugging {0} is not available for {1} here.</value>
+  </data>
+  <data name="DevelopmentStudio.NoErrors" xml:space="preserve">
+    <value>No errors or warnings. Build, run and test report theirs here.</value>
   </data>
   <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
     <value>No profile yet. P profiles the selected Python script.</value>
@@ -6564,7 +6585,7 @@
     <value>Tab:next field  Up/Down:choose  F5:refresh rates  F6:swap  Esc:close</value>
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
-    <value>F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK S/F:SBOM F6/F7:panes Enter:open Esc:close</value>
+    <value>F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:search/read  Tab:field  F3:whole  F2:browser  Esc:close</value>

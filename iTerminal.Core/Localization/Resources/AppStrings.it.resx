@@ -2341,6 +2341,12 @@
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nada aquí)</value>
   </data>
+  <data name="DevelopmentStudio.ErrorCounts" xml:space="preserve">
+    <value>{0} errori, {1} avvisi</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
+    <value>Elenco errori</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} falló (código de salida {1}).</value>
   </data>
@@ -2374,6 +2380,9 @@
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>Nella vista copertura, apri il file sotto il cursore</value>
   </data>
+  <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
+    <value>Sposta e ridimensiona i pannelli: le frecce spostano il pannello attivo verso quel bordo, Maiusc+frecce ne cambiano le dimensioni</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Abrir el archivo (o ejecutar la prueba)</value>
   </data>
@@ -2404,6 +2413,15 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Vigilar la palabra bajo el cursor (en la vista de depuración, quitarla)</value>
   </data>
+  <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
+    <value>Il pannello centrale può solo scambiarsi di posto con un altro pannello: sposta al centro quello desiderato.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentreResize" xml:space="preserve">
+    <value>Il pannello centrale occupa lo spazio rimasto; ridimensiona invece un pannello di bordo.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutOn" xml:space="preserve">
+    <value>Disposizione dei pannelli: le frecce spostano il pannello attivo verso quel bordo, Maiusc+frecce ne cambiano le dimensioni, F8 o Esc termina.</value>
+  </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Variables locales</value>
   </data>
@@ -2424,6 +2442,9 @@
   </data>
   <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
     <value>La depuración de {0} no está disponible aquí para {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoErrors" xml:space="preserve">
+    <value>Nessun errore o avviso. Build, esecuzione e test li segnalano qui.</value>
   </data>
   <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
     <value>Nessun profilo ancora. P profila lo script Python selezionato.</value>

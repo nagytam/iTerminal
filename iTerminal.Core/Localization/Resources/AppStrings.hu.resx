@@ -2341,6 +2341,12 @@
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(niente qui)</value>
   </data>
+  <data name="DevelopmentStudio.ErrorCounts" xml:space="preserve">
+    <value>{0} hiba, {1} figyelmeztetés</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
+    <value>Hibalista</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} non riuscito (uscita {1}).</value>
   </data>
@@ -2374,6 +2380,9 @@
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>A lefedettségi nézetben a kurzor alatti fájl megnyitása</value>
   </data>
+  <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
+    <value>Panelek mozgatása és átméretezése: a nyilak a kijelölt panelt az adott szélre viszik, a Shift+nyilak átméretezik</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Apri il file (o esegui il test)</value>
   </data>
@@ -2404,6 +2413,15 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Osserva la parola sotto il cursore (nella vista debug, rimuovila)</value>
   </data>
+  <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
+    <value>A középső panel csak másik panellel cserélhet helyet: a kívánt panelt vidd a középre.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentreResize" xml:space="preserve">
+    <value>A középső panel kitölti a többi helyet; inkább egy szélső panel méretét változtasd.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutOn" xml:space="preserve">
+    <value>Panelelrendezés: a nyilak a kijelölt panelt az adott szélre viszik, a Shift+nyilak átméretezik, az F8 vagy az Esc befejezi.</value>
+  </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Variabili locali</value>
   </data>
@@ -2424,6 +2442,9 @@
   </data>
   <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
     <value>Il debug di {0} non è disponibile qui per {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoErrors" xml:space="preserve">
+    <value>Nincs hiba vagy figyelmeztetés. A build, a futtatás és a tesztek itt jelenítik meg őket.</value>
   </data>
   <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
     <value>Még nincs profil. A P a kijelölt Python-szkriptet profilozza.</value>

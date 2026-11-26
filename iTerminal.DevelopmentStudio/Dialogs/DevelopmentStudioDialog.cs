@@ -2,6 +2,7 @@ using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
+using iConsole.Layouts;
 using iConsole.Display;
 using iConsole.Localization;
 using iConsole.Model;
@@ -19,7 +20,9 @@ namespace iTerminal.DevelopmentStudio.Dialogs;
 /// <summary>
 /// The Development Studio (Tools &gt; Development studio): a Solution Explorer of the .NET solutions and projects, Python
 /// and PowerShell scripts under <see cref="Folder"/>, a Test Explorer of the test items with their results, a source view
-/// with breakpoints, the output of build, run, clean and test, and a debug view (call stack, locals, watch, breakpoints).
+/// with breakpoints, the output of build, run, clean and test, a debug view (call stack, locals, watch, breakpoints) and the
+/// Error List of the errors and warnings those commands printed. Each of these panels is its own component, docked to an
+/// edge or the centre: F8 moves a panel to another edge (swapping with the panel there) and resizes it with Shift+arrows.
 /// The keys follow Visual Studio and VS Code: F5 starts or continues, Shift+F5 stops, F9 toggles a breakpoint, F10 steps
 /// over, F11 steps into and Shift+F11 steps out. Commands run on background tasks; key handlers and drawing never wait for them.
 /// </summary>
@@ -102,10 +105,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly ExplorerListBox _explorerListBox;
     private readonly ViewListBox _editorListBox;
     private readonly ViewListBox _outputListBox;
+    private readonly ConcurrentObservableCollection<string> _errorItems = new();
+    private readonly ViewListBox _errorListBox;
 
     /// <summary>Guards everything the background tasks write: output, the debug state and the source.</summary>
     private readonly Lock _stateLock = new();
     private readonly List<string> _output = [];
+    /// <summary>The errors and warnings the commands printed, in order. A line the tools print twice (MSBuild's summary) is listed once.</summary>
+    private readonly List<BuildDiagnostic> _diagnostics = [];
+    private readonly HashSet<string> _diagnosticTexts = new(StringComparer.Ordinal);
     private readonly List<string> _sourceLines = [];
     private string _sourcePath = string.Empty;
     private string _sourceRequest = string.Empty;
@@ -120,6 +128,13 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private IReadOnlyList<DevelopmentProject> _items = [];
     private readonly Dictionary<string, TestOutcome> _testOutcomes = new(StringComparer.OrdinalIgnoreCase);
     private ExplorerMode _explorerMode = ExplorerMode.Solution;
+    /// <summary>The panels, docked by <see cref="_dock"/> in the arrangement <see cref="_layout"/> gives them. F8 changes the arrangement.</summary>
+    private readonly DockPanel _dock;
+    private readonly Dictionary<StudioPanelKind, StudioPanel> _panels = [];
+    private readonly StudioPanelLayout _layout = StudioPanelLayout.Default();
+    private bool _layoutMode;
+    private string _statusBeforeLayout = string.Empty;
+    private StatusSeverity _statusSeverityBeforeLayout = StatusSeverity.Info;
     /// <summary>The tab the bottom output panel shows (F7 cycles it). The editor always shows the source.</summary>
     private OutputTab _outputTab = OutputTab.Output;
 
@@ -197,10 +212,24 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             new ListBoxModel<string>(_outputItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
             themeService);
 
-        // Tab order: the Solution Explorer, the editor, then the output panel.
-        AddControl(_explorerListBox);
-        AddControl(_editorListBox);
-        AddControl(_outputListBox);
+        _errorListBox = new ViewListBox(
+            new ListBoxModel<string>(_errorItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
+            themeService)
+        {
+            EmptyText = UiText.Get("DevelopmentStudio.NoErrors", "No errors or warnings. Build, run and test report theirs here."),
+        };
+
+        // Each panel is a component of its own; the dock places them in the order _layout gives.
+        _dock = new DockPanel(themeService) { Gap = 1 };
+        _panels[StudioPanelKind.Editor] = new StudioPanel(StudioPanelKind.Editor, _editorListBox, EditorTitle, themeService);
+        _panels[StudioPanelKind.Explorer] = new StudioPanel(StudioPanelKind.Explorer, _explorerListBox, ExplorerHeading, themeService);
+        _panels[StudioPanelKind.Output] = new StudioPanel(StudioPanelKind.Output, _outputListBox, () => string.Empty, themeService)
+        {
+            BandPainter = (buffer, x, y, width, colorScheme, focused) => DrawOutputTabs(buffer, x, y, width, colorScheme, focused),
+        };
+        _panels[StudioPanelKind.Errors] = new StudioPanel(StudioPanelKind.Errors, _errorListBox, ErrorHeading, themeService);
+        AddControl(_dock);
+        RebuildDock();
     }
 
     /// <summary>The status line text (the last command's outcome, or the reason a key did nothing).</summary>
@@ -220,6 +249,21 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     /// <summary>The lines of the bottom output panel as they are drawn, in order.</summary>
     public IReadOnlyList<string> OutputLines => [.. _outputItems];
+
+    /// <summary>The Error List rows as they are drawn, in order.</summary>
+    public IReadOnlyList<string> ErrorLines => [.. _errorItems];
+
+    /// <summary>The panels in the order they are docked, each with its edge (or the centre) and its share of the space in percent.</summary>
+    public IReadOnlyList<(StudioPanelKind Kind, DockSide Side, int Percent)> Panels => _layout.Docked();
+
+    /// <summary>The panel whose list has the focus, or null when none has.</summary>
+    public StudioPanelKind? FocusedPanel => FocusedPanelKind();
+
+    /// <summary>Whether the panel layout mode (F8) is on.</summary>
+    public bool IsLayoutMode => _layoutMode;
+
+    /// <summary>The 1-based source line the editor's cursor is on, or 0 when no file is open.</summary>
+    public int CursorLineNumber => CursorLine;
 
     /// <summary>Whether a debugging session is running (started, not yet ended).</summary>
     public bool IsDebugging => _session is not null;
@@ -262,56 +306,26 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             Position = new Position(0, 0);
         }
 
-        var layout = Arrange(ViewSize);
-        if (layout is null)
-        {
-            // Too small for the three panes: the lists stay out of the way until the dialog is resized.
-            _editorListBox.ViewSize = new Size(0, 0);
-            _explorerListBox.ViewSize = new Size(0, 0);
-            _outputListBox.ViewSize = new Size(0, 0);
-        }
-        else
-        {
-            int topListHeight = layout.OutputBandY - TopListRow;
-            _editorListBox.Position = new Position(1, TopListRow);
-            _editorListBox.ViewSize = new Size(layout.EditorWidth, topListHeight);
-            _explorerListBox.Position = new Position(layout.ExplorerX, TopListRow);
-            _explorerListBox.ViewSize = new Size(layout.ExplorerWidth, topListHeight);
-            _outputListBox.Position = new Position(1, layout.OutputBandY + 1);
-            _outputListBox.ViewSize = new Size(layout.InnerWidth, layout.OutputListHeight);
-        }
-
+        // The panels fill the frame between the header row (row 1) and the footer row (the second to last).
+        _dock.Position = new Position(1, 2);
+        _dock.ViewSize = new Size(Math.Max(0, (int)ViewSize.Width - 2), Math.Max(0, (int)ViewSize.Height - 4));
         base.OnInitializeLayout();
+        LayoutPanelBodies();
     }
 
-    /// <summary>The row of the first list row under the pane bands (the frame is row 0, the header row 1, the bands row 2).</summary>
-    private const int TopListRow = 3;
-
     /// <summary>
-    /// Where the three panes sit, in the dialog's own coordinates: row 0 and the last row are the frame, row 1 is the header,
-    /// and the editor (left) and the Solution Explorer (right) share the rows above the output panel (bottom).
+    /// The studio opens on the Solution Explorer. The dialog's own focus goes to the first focusable control in the dock, which
+    /// is the Error List when it is docked to the top, so the Explorer takes the focus after it: a second focused list would
+    /// get the keys first.
     /// </summary>
-    /// <param name="EditorWidth">The editor's columns, from column 1.</param>
-    /// <param name="ExplorerX">The first column of the Solution Explorer; the column before it is the divider.</param>
-    /// <param name="ExplorerWidth">The Solution Explorer's columns.</param>
-    /// <param name="OutputBandY">The row of the output panel's tab band; the editor and explorer lists end the row before.</param>
-    /// <param name="OutputListHeight">The output panel's list rows, under its band.</param>
-    /// <param name="InnerWidth">The columns inside the frame.</param>
-    private sealed record StudioLayout(int EditorWidth, int ExplorerX, int ExplorerWidth, int OutputBandY, int OutputListHeight, int InnerWidth);
-
-    /// <summary>The pane rectangles for a dialog of <paramref name="size"/>, or null when it is too small to show all three.</summary>
-    private static StudioLayout? Arrange(Size size)
+    public override async Task ShowAsync()
     {
-        int innerWidth = (int)size.Width - 2;
-        int innerHeight = (int)size.Height - 2;
-        int explorerWidth = Math.Max(26, innerWidth * 34 / 100);
-        int editorWidth = innerWidth - explorerWidth - 1;
-        // The panes above the output panel take two thirds of the rows under the header: a band and their list rows.
-        int topRows = Math.Max(3, (innerHeight - 2) * 2 / 3);
-        int outputBandY = 2 + topRows;
-        int outputListHeight = innerHeight - 3 - topRows;
-        if (editorWidth < 10 || outputListHeight < 1) return null;
-        return new StudioLayout(editorWidth, editorWidth + 2, explorerWidth, outputBandY, outputListHeight, innerWidth);
+        await base.ShowAsync();
+
+        // The dialog is added to its parent only after this returns, so the root cannot clear the flags the first focus left behind:
+        // the dialog clears its own tree.
+        ResetFocus();
+        _explorerListBox.SetFocus();
     }
 
     /// <summary>Esc: stops a running command and the debugged program, then closes.</summary>
@@ -348,6 +362,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("B / C / T / R", UiText.Get("DevelopmentStudio.HintCommands", "Build, clean, test, run the selected item"));
         yield return ("W", UiText.Get("DevelopmentStudio.HintWatch", "Watch the word under the cursor (in the debug view, remove it)"));
         yield return ("F6 / F7", UiText.Get("DevelopmentStudio.HintPanes", "Explorer tab (Solution, Tests, Files) / output panel tab (Output, Debug, Coverage, Profile)"));
+        yield return ("F8", UiText.Get("DevelopmentStudio.HintLayout", "Move and resize the panels: arrows move the focused one to that edge, Shift+arrows resize it"));
         yield return ("Enter", UiText.Get("DevelopmentStudio.HintOpen", "Open the file (or run the test)"));
         yield return ("Space", UiText.Get("DevelopmentStudio.HintCheck", "Check or uncheck the .NET project; B, C, T and R then run on the checked ones"));
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
@@ -360,6 +375,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // In the layout mode Esc ends the mode rather than closing the dialog.
+        if (_layoutMode && HandleLayoutKey(keyEvent)) return true;
+
         bool plain = !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;
         bool shift = keyEvent.Shift && !keyEvent.Alt && !keyEvent.Control;
         bool ctrl = keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
@@ -383,6 +401,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.F7 when plain:
                 CycleOutputTab();
+                return true;
+            case ConsoleKey.F8 when plain:
+                ToggleLayoutMode();
                 return true;
             case ConsoleKey.F9 when plain:
                 ToggleBreakpointAtCursor();
@@ -458,6 +479,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private void EnterPressed()
     {
+        if (_errorListBox.IsFocused)
+        {
+            OpenDiagnosticAtCursor();
+            return;
+        }
+
         if (_explorerMode == ExplorerMode.Files)
         {
             EnterFileRow();
@@ -712,6 +739,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     {
         RebuildEditor();
         RebuildOutputPanel();
+        RebuildErrorPanel();
     }
 
     /// <summary>Rebuilds the editor: the open file with its gutter (breakpoint, stop line, coverage), or the hint when none is open.</summary>
@@ -870,6 +898,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private void AppendOutput(string line)
     {
+        bool diagnosed = false;
         lock (_stateLock)
         {
             _output.Add(line);
@@ -878,9 +907,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 _output.RemoveRange(0, _output.Count - MaxOutputLines);
             }
 
+            if (BuildDiagnosticParser.Parse(line) is { } diagnostic && _diagnosticTexts.Add(diagnostic.Text) && _diagnostics.Count < MaxOutputLines)
+            {
+                _diagnostics.Add(diagnostic);
+                diagnosed = true;
+            }
         }
 
         if (_outputTab == OutputTab.Output) RebuildOutputPanel();
+        if (diagnosed) RebuildErrorPanel();
     }
 
     private void SetStatus(string text, StatusSeverity severity)
@@ -891,7 +926,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     }
 
     /// <summary>Opens a source file in the editor. The read runs on a background task; the newest request wins.</summary>
-    private void OpenSource(string path)
+    private void OpenSource(string path, int line = 1)
     {
         _sourceRequest = path;
         _ = Task.Run(() =>
@@ -925,7 +960,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             }
 
             RebuildView();
-            _editorListBox.ScrollableModel.CursorPosition.Y = 0;
+            _editorListBox.ScrollableModel.CursorPosition.Y = Math.Clamp(line - 1, 0, Math.Max(0, lines.Length - 1));
             SetStatus(error ?? Path.GetFileName(path), error is null ? StatusSeverity.Info : StatusSeverity.Error);
         }, CancellationToken.None);
     }
@@ -1084,7 +1119,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         var cts = new CancellationTokenSource();
         _runCts = cts;
         _busy = true;
-        lock (_stateLock) _output.Clear();
+        lock (_stateLock) ClearOutputLocked();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.RunningCoverage", "Measuring the coverage of {0}..."), item.Name), StatusSeverity.Info);
         _outputTab = OutputTab.Output;
         RebuildView();
@@ -1173,7 +1208,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         var cts = new CancellationTokenSource();
         _runCts = cts;
         _busy = true;
-        lock (_stateLock) _output.Clear();
+        lock (_stateLock) ClearOutputLocked();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.RunningProfile", "Profiling {0}..."), item.Name), StatusSeverity.Info);
         _outputTab = OutputTab.Output;
         RebuildView();
@@ -1321,7 +1356,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _busy = true;
         lock (_stateLock)
         {
-            _output.Clear();
+            ClearOutputLocked();
         }
 
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, targetLabel), StatusSeverity.Info);
@@ -1623,7 +1658,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             {
                 // A .NET program is built first, so the debugger starts the DLL that matches the source.
                 var build = toolchain.Build(item)!;
-                lock (_stateLock) _output.Clear();
+                lock (_stateLock) ClearOutputLocked();
+                RebuildErrorPanel();
                 AppendOutput($"$ {build.Display}");
                 int buildExit = await _runner.RunAsync(build, AppendOutput, cts.Token);
                 if (buildExit != 0)
@@ -1899,31 +1935,226 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         if (ViewSize.IsEmpty) return;
 
-        var layout = Arrange(ViewSize);
-        if (layout is null) return;
-
         // Rows and columns are the dialog's own (row 0 is the frame), so each one is the dialog's origin plus it.
         var colorScheme = ThemeService.CurrentColorScheme;
         int x0 = (int)AbsolutePosition.X;
         int y0 = (int)AbsolutePosition.Y;
+        int innerWidth = (int)ViewSize.Width - 2;
         int footerRow = (int)ViewSize.Height - 2;
 
-        DrawHeader(buffer, x0 + 1, y0 + 1, layout.InnerWidth, colorScheme);
-        DrawFooter(buffer, x0 + 1, y0 + footerRow, layout.InnerWidth, colorScheme);
+        DrawHeader(buffer, x0 + 1, y0 + 1, innerWidth, colorScheme);
+        DrawFooter(buffer, x0 + 1, y0 + footerRow, innerWidth, colorScheme);
+    }
 
-        // The editor (left) and the Solution Explorer (right) each have a band; a divider line separates them down to the output panel.
-        int bandRow = y0 + 2;
-        DrawSectionHeader(buffer, x0 + 1, bandRow, layout.EditorWidth, EditorTitle(), _editorListBox.IsFocused, colorScheme);
-        DrawSectionHeader(buffer, x0 + layout.ExplorerX, bandRow, layout.ExplorerWidth, ExplorerHeading(), _explorerListBox.IsFocused, colorScheme);
-        int dividerX = x0 + layout.ExplorerX - 1;
-        for (int row = bandRow; row < y0 + layout.OutputBandY; row++)
+    #region Panels and layout
+
+    /// <summary>The Error List's band: its name and how many errors and warnings the commands printed.</summary>
+    private string ErrorHeading()
+    {
+        int errors;
+        int warnings;
+        lock (_stateLock)
         {
-            WriteLine(buffer, dividerX, row, 1, "│", colorScheme.Foreground, colorScheme.Background);
+            errors = _diagnostics.Count(diagnostic => diagnostic.IsError);
+            warnings = _diagnostics.Count - errors;
         }
 
-        // The output panel spans the bottom: its band is the tab strip of Output, Debug, Coverage and Profile.
-        DrawOutputTabs(buffer, x0 + 1, y0 + layout.OutputBandY, layout.InnerWidth, colorScheme);
+        return UiText.Get("DevelopmentStudio.ErrorListHeading", "Error List") + "   "
+            + string.Format(UiText.Get("DevelopmentStudio.ErrorCounts", "{0} errors, {1} warnings"), errors, warnings);
     }
+
+    /// <summary>Rebuilds the Error List from the diagnostics the output holds, in the order they were printed.</summary>
+    private void RebuildErrorPanel()
+    {
+        var lines = new List<string>();
+        lock (_stateLock) lines.AddRange(_diagnostics.Select(diagnostic => diagnostic.Text));
+        _errorItems.ReplaceAll(lines);
+        _errorListBox.UpdateModel();
+    }
+
+    /// <summary>Clears the output and the errors it held, for a new command. The caller holds <see cref="_stateLock"/>.</summary>
+    private void ClearOutputLocked()
+    {
+        _output.Clear();
+        _diagnostics.Clear();
+        _diagnosticTexts.Clear();
+    }
+
+    /// <summary>Enter on an Error List row: opens the file the diagnostic names, at the line it names.</summary>
+    private void OpenDiagnosticAtCursor()
+    {
+        int row = (int)_errorListBox.ScrollableModel.CursorPosition.Y;
+        BuildDiagnostic? diagnostic;
+        lock (_stateLock) diagnostic = row >= 0 && row < _diagnostics.Count ? _diagnostics[row] : null;
+        if (diagnostic is null) return;
+
+        string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
+        string path;
+        try
+        {
+            // The tools print paths relative to the folder they ran in, which is the studio's folder or the solution's.
+            path = Path.GetFullPath(diagnostic.File, folder);
+        }
+        catch (ArgumentException)
+        {
+            return;
+        }
+
+        OpenSource(path, diagnostic.Line);
+    }
+
+    /// <summary>The panel whose list has the focus, or null when none has.</summary>
+    private StudioPanelKind? FocusedPanelKind()
+    {
+        foreach (StudioPanel panel in _panels.Values)
+        {
+            if (panel.HasFocus) return panel.Kind;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Docks every panel again in the order <see cref="_layout"/> gives, then gives the focus back to the panel that had it.
+    /// The dock lays its children out in the order they were added, so a changed arrangement means a rebuilt dock.
+    /// </summary>
+    private void RebuildDock()
+    {
+        StudioPanelKind? focused = FocusedPanelKind();
+        foreach (StudioPanel panel in _panels.Values)
+        {
+            _dock.Remove(panel);
+        }
+
+        foreach ((StudioPanelKind kind, DockSide side, int percent) in _layout.Docked())
+        {
+            _dock.Add(_panels[kind], side, SizeRule.Percent(percent).WithMin(3));
+        }
+
+        LayoutPanelBodies();
+
+        // A removed and re-added list keeps its focus flag, which would make SetFocus a no-op: clear the flags first.
+        ResetFocus();
+        if (focused is { } focusedKind) _panels[focusedKind].Body.SetFocus();
+    }
+
+    /// <summary>The dock sizes the panels; each panel then sizes its list to the rows under its band.</summary>
+    private void LayoutPanelBodies()
+    {
+        foreach (StudioPanel panel in _panels.Values)
+        {
+            panel.LayoutBody();
+        }
+    }
+
+    /// <summary>F8 starts or ends the panel layout mode.</summary>
+    private void ToggleLayoutMode()
+    {
+        if (_layoutMode)
+        {
+            LeaveLayoutMode();
+            return;
+        }
+
+        _layoutMode = true;
+        _statusBeforeLayout = _status;
+        _statusSeverityBeforeLayout = _statusSeverity;
+        SetStatus(UiText.Get("DevelopmentStudio.LayoutOn", "Panel layout: arrows move the focused panel to that edge, Shift+arrows resize it, F8 or Esc ends."), StatusSeverity.Info);
+    }
+
+    private void LeaveLayoutMode()
+    {
+        _layoutMode = false;
+        SetStatus(_statusBeforeLayout, _statusSeverityBeforeLayout);
+    }
+
+    /// <summary>
+    /// The keys of the layout mode. Arrows move the focused panel to that edge; Shift and an arrow move its inner border.
+    /// Returns false for the keys that keep their meaning in the mode (the commands, Tab and the arrows of a list).
+    /// </summary>
+    private bool HandleLayoutKey(KeyEvent keyEvent)
+    {
+        bool plain = !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;
+        bool shift = keyEvent.Shift && !keyEvent.Alt && !keyEvent.Control;
+        switch (keyEvent.ConsoleKey)
+        {
+            case ConsoleKey.Escape:
+            case ConsoleKey.F8 when plain:
+            case ConsoleKey.Enter when plain:
+                LeaveLayoutMode();
+                return true;
+            case ConsoleKey.LeftArrow when plain:
+                MovePanel(DockSide.Left);
+                return true;
+            case ConsoleKey.RightArrow when plain:
+                MovePanel(DockSide.Right);
+                return true;
+            case ConsoleKey.UpArrow when plain:
+                MovePanel(DockSide.Top);
+                return true;
+            case ConsoleKey.DownArrow when plain:
+                MovePanel(DockSide.Bottom);
+                return true;
+            case ConsoleKey.LeftArrow when shift:
+                ResizePanel(DockSide.Left);
+                return true;
+            case ConsoleKey.RightArrow when shift:
+                ResizePanel(DockSide.Right);
+                return true;
+            case ConsoleKey.UpArrow when shift:
+                ResizePanel(DockSide.Top);
+                return true;
+            case ConsoleKey.DownArrow when shift:
+                ResizePanel(DockSide.Bottom);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /// <summary>Moves the focused panel to <paramref name="side"/>: onto an empty edge, or swapping with the panel there.</summary>
+    private void MovePanel(DockSide side)
+    {
+        if (FocusedPanelKind() is not { } kind) return;
+
+        switch (_layout.Move(kind, side))
+        {
+            case StudioPanelMove.Refused:
+                SetStatus(UiText.Get("DevelopmentStudio.LayoutCentre", "The centre panel can only swap places with a panel: move the panel you want there into the centre."), StatusSeverity.Info);
+                break;
+            case StudioPanelMove.Moved:
+            case StudioPanelMove.Swapped:
+                RebuildDock();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Shift and an arrow move the inner border of the focused panel: toward the panel's inside it grows the panel, away from it
+    /// it shrinks. The arrow along the panel's own edge does nothing, and the centre panel has no border to move.
+    /// </summary>
+    private void ResizePanel(DockSide direction)
+    {
+        if (FocusedPanelKind() is not { } kind) return;
+
+        DockSide side = _layout.SideOf(kind);
+        if (side == DockSide.Fill)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.LayoutCentreResize", "The centre panel fills what the edges leave; resize an edge panel instead."), StatusSeverity.Info);
+            return;
+        }
+
+        const int step = 5;
+        int delta = (side, direction) switch
+        {
+            (DockSide.Left, DockSide.Right) or (DockSide.Right, DockSide.Left) or (DockSide.Top, DockSide.Bottom) or (DockSide.Bottom, DockSide.Top) => step,
+            (DockSide.Left, DockSide.Left) or (DockSide.Right, DockSide.Right) or (DockSide.Top, DockSide.Top) or (DockSide.Bottom, DockSide.Bottom) => -step,
+            _ => 0,
+        };
+        if (delta != 0 && _layout.Resize(kind, delta)) RebuildDock();
+    }
+
+    #endregion
 
     /// <summary>The editor's band: the open file's name and the cursor's line and column, or "Source" while no file is open.</summary>
     private string EditorTitle()
@@ -1947,9 +2178,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     };
 
     /// <summary>The output panel's tab strip. The shown tab is drawn in reverse video, the others on the band.</summary>
-    private void DrawOutputTabs(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
+    private void DrawOutputTabs(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme, bool focused)
     {
-        bool focused = _outputListBox.IsFocused;
         var band = focused ? colorScheme.SelectedFocusedBackground : colorScheme.ButtonBackground;
         var bandText = focused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
         WriteLine(buffer, x, y, w, string.Empty, bandText, band);
@@ -1987,7 +2217,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private void DrawFooter(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
-        string hints = UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK S/F:SBOM F6/F7:panes Enter:open Esc:close");
+        string hints = UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close");
         DrawStatusAndHints(buffer, x, y, w, _status, _statusSeverity switch
         {
             StatusSeverity.Error => colorScheme.Error,
