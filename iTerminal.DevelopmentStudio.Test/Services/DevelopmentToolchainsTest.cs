@@ -19,7 +19,7 @@ public class DevelopmentToolchainsTest
         CollectionAssert.AreEqual(new[] { "test", "/src/App/App.csproj" }, toolchain.Test(project)!.Arguments.ToArray());
         CollectionAssert.AreEqual(new[] { "clean", "/src/App/App.csproj" }, toolchain.Clean(project)!.Arguments.ToArray());
         CollectionAssert.AreEqual(new[] { "run", "--project", "/src/App/App.csproj" }, toolchain.Run(project)!.Arguments.ToArray());
-        Assert.AreEqual("/src/App", toolchain.Build(project)!.WorkingDirectory);
+        Assert.AreEqual(Path.GetDirectoryName("/src/App/App.csproj"), toolchain.Build(project)!.WorkingDirectory);
     }
 
     [Timeout(60_000)]
@@ -84,7 +84,7 @@ public class DevelopmentToolchainsTest
         var commands = Toolchains.For(script).Coverage(script, "/tmp/results");
 
         CollectionAssert.Contains(commands[0].Arguments.ToList(), "run");
-        CollectionAssert.AreEqual(new[] { "-m", "coverage", "xml", "--data-file=/tmp/results/.coverage", "-o", "/tmp/results/coverage.xml" }, commands[1].Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "-m", "coverage", "xml", "--data-file=" + Path.Combine("/tmp/results", ".coverage"), "-o", Path.Combine("/tmp/results", "coverage.xml") }, commands[1].Arguments.ToArray());
     }
 
     [Timeout(60_000)]
