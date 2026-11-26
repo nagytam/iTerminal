@@ -148,6 +148,26 @@ public static class TextWidth
     }
 
     /// <summary>
+    /// True when the cell <paramref name="current"/>, which follows the cell <paramref name="previous"/> on the same
+    /// row, must be written at its own column instead of after the previous cell by the terminal's cursor advance.
+    /// The width the terminal draws a character with is not always the width <see cref="Width(int)"/> gives it (a
+    /// joined emoji sequence, a symbol with a variation selector, an ambiguous-width glyph), so a run that relies on the
+    /// advance can slide the rest of the row onto the wrong columns. Writing each such cell at its column confines a
+    /// mismatch to the cell it concerns. Plain printable ASCII keeps the run, and a surrogate pair is never split.
+    /// </summary>
+    public static bool NeedsAbsolutePosition(char previous, char current)
+    {
+        if (char.IsLowSurrogate(current) && char.IsHighSurrogate(previous))
+        {
+            return false;
+        }
+
+        return !IsPlainCell(previous) || !IsPlainCell(current);
+    }
+
+    private static bool IsPlainCell(char c) => c is >= ' ' and <= '~';
+
+    /// <summary>
     /// The text as the cells it occupies: wide BMP characters are followed by <see cref="Continuation"/>, wide
     /// characters outside the BMP are kept as surrogate pairs, zero-width characters are dropped and narrow
     /// characters outside the BMP become <see cref="Replacement"/>.
