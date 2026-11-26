@@ -2,6 +2,7 @@ using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
+using iConsole.Helper;
 using iConsole.Layouts;
 using iConsole.Display;
 using iConsole.Localization;
@@ -79,6 +80,29 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             if (line.Contains("succeeded", StringComparison.OrdinalIgnoreCase) || line.Contains("passed", StringComparison.OrdinalIgnoreCase)) return Color.Green;
             return null;
         }
+
+        /// <summary>The colours of the source rows, by the highlighter's palette. Null for the output and error lists.</summary>
+        public ISyntaxHighlightingService? Highlighting { get; set; }
+
+        /// <summary>The coloured stretches of each source row, in the row's own characters (the gutter already counted). Null for the other lists.</summary>
+        public IReadOnlyList<IReadOnlyList<SyntaxSpan>>? RowSpans { get; set; }
+
+        protected override void ColorizeItemText(ConxelString row, int index)
+        {
+            if (Highlighting is null || RowSpans is null || index < 0 || index >= RowSpans.Count) return;
+            foreach (SyntaxSpan span in RowSpans[index])
+            {
+                if (span.Kind == SyntaxKind.Plain) continue;
+                Color color = Highlighting.Palette.ColorOf(span.Kind, Color.White);
+                int end = Math.Min(row.Count, span.Start + span.Length);
+                for (int x = Math.Max(0, span.Start); x < end; x++)
+                {
+                    Conxel cell = row.String[x];
+                    cell.ForegroundColor = color;
+                    row.String[x] = cell;
+                }
+            }
+        }
     }
 
     private readonly IDevelopmentWorkspaceScanner _scanner;
@@ -87,6 +111,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly BreakpointStore _breakpoints;
     private readonly MainProgramStore _mainProgram;
     private readonly IDotnetSolutionService _dotnet;
+    private readonly ISyntaxHighlightingService _highlighting;
 
     /// <summary>The .NET SDKs installed, newest first, and the one new .NET commands use (-1 when none was found).</summary>
     private IReadOnlyList<DotnetSdk> _sdks = [];
@@ -215,11 +240,13 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         MainProgramStore mainProgram,
         IDotnetSolutionService dotnetSolutionService,
         IThemeService themeService,
-        CSharpLanguageServer languageServer)
+        CSharpLanguageServer languageServer,
+        ISyntaxHighlightingService highlighting)
         : base(nameof(DevelopmentStudioDialog), themeService)
     {
         _scanner = scanner;
         _languageServer = languageServer;
+        _highlighting = highlighting;
         _runner = runner;
         _toolchains = toolchains;
         _breakpoints = breakpoints;
@@ -232,7 +259,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             themeService);
         _editorListBox = new ViewListBox(
             new ListBoxModel<string>(_editorItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
-            themeService);
+            themeService)
+        {
+            Highlighting = highlighting,
+        };
         _outputListBox = new ViewListBox(
             new ListBoxModel<string>(_outputItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
             themeService);
@@ -957,13 +987,20 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private void RebuildEditor()
     {
         var lines = new List<string>();
+        var rowSpans = new List<IReadOnlyList<SyntaxSpan>>();
         lock (_stateLock)
         {
             if (_sourcePath.Length == 0)
             {
                 lines.Add(UiText.Get("DevelopmentStudio.NoSource", "Select a file in the explorer and press Enter to open it here."));
+                rowSpans.Add([]);
             }
 
+            // Java, C#, PowerShell, Python and the other languages the highlighter knows are coloured line by line; a block
+            // comment carries from one line to the next, so the lines are tokenized in order.
+            SyntaxLanguage? language = _highlighting.FindByFile(_sourcePath);
+            bool inComment = false;
+            var spans = new List<SyntaxSpan>();
             CoverageFile? covered = _coverage?.Files.FirstOrDefault(file => file.Path.Equals(_sourcePath, StringComparison.OrdinalIgnoreCase));
             Dictionary<int, string> liveMarks = LiveMarks(_sourcePath);
             for (int i = 0; i < _sourceLines.Count; i++)
@@ -976,15 +1013,27 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                     : covered is not null && covered.Hits.TryGetValue(number, out int hits) ? (hits > 0 ? "+" : "-")
                     : " ";
                 lines.Add($"{gutter}{number,5}  {_sourceLines[i]}");
+
+                if (language is null)
+                {
+                    rowSpans.Add([]);
+                    continue;
+                }
+
+                spans.Clear();
+                inComment = _highlighting.Tokenize(language, _sourceLines[i], inComment, spans);
+                rowSpans.Add([.. spans.Select(span => span with { Start = span.Start + GutterWidth })]);
             }
         }
 
         if (lines.Count == 0)
         {
             lines.Add(string.Empty);
+            rowSpans.Add([]);
         }
 
         _editorItems.ReplaceAll(lines);
+        _editorListBox.RowSpans = rowSpans;
         _editorListBox.UpdateModel();
     }
 

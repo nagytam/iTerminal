@@ -278,6 +278,10 @@ public class ListBox<T> : Control
             }
 
             _rowScratch.Reset(text, width, foregroundColor, backgroundColor);
+            if (index < filteredItems.Count && GetVisualState(index) is VisualState.Normal or VisualState.Disabled)
+            {
+                ColorizeItemText(_rowScratch, index);
+            }
             buffer.Write(ZOrder,
                 new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + y)), ViewSize,
                 _rowScratch);
@@ -311,6 +315,15 @@ public class ListBox<T> : Control
     /// the selection highlight always wins, matching how per-row coloring worked before this hook existed.
     /// </summary>
     protected virtual Color? GetItemForegroundOverride(int index) => null;
+
+    /// <summary>
+    /// Lets a subclass recolour the cells of a non-selected row's text part by what they are (a syntax highlighter's keywords
+    /// and strings), after <see cref="GetItemForegroundOverride"/> has set the row's colour. <paramref name="row"/> is the row
+    /// as it will be drawn; the selected row is never passed here, so the selection highlight stays whole.
+    /// </summary>
+    protected virtual void ColorizeItemText(ConxelString row, int index)
+    {
+    }
 
     public virtual VisualState GetVisualState(int index)
     {
