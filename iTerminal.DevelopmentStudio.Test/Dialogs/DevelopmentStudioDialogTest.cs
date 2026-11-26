@@ -278,7 +278,7 @@ public class DevelopmentStudioDialogTest
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
         await WaitIdleAsync(harness.Dialog);
 
-        Assert.AreEqual(Path.Combine("/sdk/8", OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet"), runner.Commands.Single().FileName);
+        Assert.AreEqual(new DotnetSdk("8.0.400", "/sdk/8").HostPath, runner.Commands.Single().FileName);
     }
 
     [Timeout(60_000)]
