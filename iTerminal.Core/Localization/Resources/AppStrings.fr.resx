@@ -2449,6 +2449,9 @@
   <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
     <value>Aucun programme principal : F5 lance l'élément sous le curseur.</value>
   </data>
+  <data name="DevelopmentStudio.MainNotStartable" xml:space="preserve">
+    <value>{0} n'a pas de programme à lancer. Seuls un projet console ou web, ou un script, peut être le programme principal.</value>
+  </data>
   <data name="DevelopmentStudio.MainSet" xml:space="preserve">
     <value>{0} est le programme principal. F5 et Ctrl+F5 le lancent.</value>
   </data>

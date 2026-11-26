@@ -897,7 +897,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The Main program, when one is set and the scan still lists it; otherwise null.</summary>
     private DevelopmentProject? MainItem => _items.FirstOrDefault(IsMain);
 
-    /// <summary>M: makes the item under the cursor the Main program, or clears it when it already is.</summary>
+    /// <summary>M: makes the item under the cursor the Main program (a console, web project or script), or clears it when it already is.</summary>
     private void ToggleMainProgramAtCursor()
     {
         var item = SelectedItem;
@@ -910,6 +910,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         if (item.Kind == DevelopmentProjectKind.Solution)
         {
             SetStatus(UiText.Get("DevelopmentStudio.MainSolution", "A solution cannot be the Main program. Select a project or a script."), StatusSeverity.Info);
+            return;
+        }
+
+        if (!IsMain(item) && !item.IsStartable)
+        {
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.MainNotStartable", "{0} has no program to start. Only a console or web project, or a script, can be the Main program."), item.Name), StatusSeverity.Info);
             return;
         }
 

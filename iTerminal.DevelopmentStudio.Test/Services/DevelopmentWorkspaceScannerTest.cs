@@ -72,6 +72,19 @@ public class DevelopmentWorkspaceScannerTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ReadsWhetherAProjectIsAConsoleWebOrLibraryProject()
+    {
+        Assert.AreEqual(DotNetOutputKind.Web, DevelopmentWorkspaceScanner.OutputOf("<Project Sdk=\"Microsoft.NET.Sdk.Web\"><PropertyGroup /></Project>"));
+        Assert.AreEqual(DotNetOutputKind.Console, DevelopmentWorkspaceScanner.OutputOf("<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType></PropertyGroup></Project>"));
+        Assert.AreEqual(DotNetOutputKind.Console, DevelopmentWorkspaceScanner.OutputOf("<Project Sdk=\"Microsoft.NET.Sdk.Worker\"></Project>"));
+        Assert.AreEqual(DotNetOutputKind.Library, DevelopmentWorkspaceScanner.OutputOf("<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><TargetFramework>net11.0</TargetFramework></PropertyGroup></Project>"));
+        Assert.AreEqual(DotNetOutputKind.Library, DevelopmentWorkspaceScanner.OutputOf("<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Library</OutputType></PropertyGroup></Project>"));
+        Assert.AreEqual(DotNetOutputKind.Unknown, DevelopmentWorkspaceScanner.OutputOf("<Project />"), "a file without an SDK is not judged");
+        Assert.AreEqual(DotNetOutputKind.Unknown, DevelopmentWorkspaceScanner.OutputOf(string.Empty));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void AFolderThatDoesNotExistHasNoItems()
     {
         var dotnet = new Mock<IDotnetSolutionService>();
