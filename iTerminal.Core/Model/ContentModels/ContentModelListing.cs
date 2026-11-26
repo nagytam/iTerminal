@@ -30,7 +30,7 @@ internal static class ContentModelListing
     /// other drive asks <see cref="IContentModel.ExistsFile"/> or <see cref="IContentModel.ExistsFolder"/>.
     /// </summary>
     public static bool IsShown(IContentModel model, Url url) =>
-        model is ContentModelRemoteDrive
+        AnswersFromListing(model)
             ? FindListed(model, url) is not null
             : model.ExistsFile(url) || model.ExistsFolder(url);
 
@@ -39,7 +39,14 @@ internal static class ContentModelListing
     /// from its listing; every other drive answers through <see cref="IContentModel.ExistsFile"/>, which is cheap there.
     /// </summary>
     public static bool FileIsShown(IContentModel model, Url url) =>
-        model is ContentModelRemoteDrive
+        AnswersFromListing(model)
             ? FindListed(model, url) is { PathType: PathType.File }
             : model.ExistsFile(url);
+
+    /// <summary>
+    /// The drives whose existence check is a network call or a process (SFTP-like remote drives, Dropbox, Azure Blob,
+    /// OBEX): the gate reads their listing instead, so the key handler never waits on the service.
+    /// </summary>
+    private static bool AnswersFromListing(IContentModel model) =>
+        model is ContentModelRemoteDrive or ContentModelDropboxDrive or ContentModelAzureBlobDrive or ContentModelObexDrive;
 }

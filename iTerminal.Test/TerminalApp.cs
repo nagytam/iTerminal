@@ -283,6 +283,22 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.Mtp.IMtpBackend>(
                     new Core.Services.Mtp.UnavailableMtpBackend("No MTP devices in the test sandbox."));
 
+                // No test browses a phone or a headset over Bluetooth: obex:// is there, and empty-handed.
+                services.AddSingleton<Core.Services.Obex.IObexBackend>(
+                    new Core.Services.Obex.UnavailableObexBackend("No Bluetooth file transfer in the test sandbox."));
+
+                // No test reaches Dropbox or Azure: their clients are there, and every request they make is refused.
+                services.AddSingleton<Core.Services.Cloud.IDropboxFileSystemService>(
+                    new Core.Services.Cloud.DropboxFileSystemService(
+                        new Core.Services.Cloud.DropboxTokenProvider(new Core.Services.Cloud.OAuthClientOptions()),
+                        new SandboxServices.RefusedNetwork(),
+                        "https://api.dropboxapi.com",
+                        "https://content.dropboxapi.com"));
+                services.AddSingleton<Core.Services.Cloud.IAzureBlobFileSystemService>(
+                    new Core.Services.Cloud.AzureBlobFileSystemService(
+                        account => new Core.Services.Cloud.AzureBlobCredentials(account, null, null),
+                        new SandboxServices.RefusedNetwork()));
+
                 // The clipboard stays in the process — a run must neither overwrite what the person
                 // running it had copied nor paste what they had — and no test ejects, formats or
                 // mounts anything of the machine it runs on.

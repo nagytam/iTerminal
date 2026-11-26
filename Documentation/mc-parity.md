@@ -16,7 +16,7 @@ review's mc gaps are all reconciled in "Closed since the first review".
 
 | Area | Detail |
 | --- | --- |
-| Drives | `ssh`, `smb`, `ftp`/FTPS, `dav`/`davs`, `mtp`, `s3`, `onedrive`, `gdrive`, `iphone`, `docker`, `git` (browse any revision), `archive` (zip/tar/7z/rar/iso/cab), `recycle`, `search`, `preview`, memory drive |
+| Drives | `ssh`, `smb`, `ftp`/FTPS, `dav`/`davs`, `mtp`, `obex` (Bluetooth file transfer, Linux), `s3`, `onedrive`, `gdrive`, `dropbox`, `azblob`, `iphone`, `docker`, `git` (browse any revision), `archive` (zip/tar/7z/rar/iso/cab), `recycle`, `search`, `preview`, memory drive |
 | Safety | Recycle-bin and freedesktop-Trash browsing with restore, secure wipe, free-space guard before a copy, no recursive delete through links, y/n on destructive actions, SSH/FTPS host pinning |
 | Integrity | Checksums (MD5/SHA-1/256/512) with automatic `.sha256` / `SHA256SUMS` verification, signing (gpg, Authenticode, key file), duplicate finder, disk usage |
 | Comparison | Folder compare ending in marks, two-way and one-way sync with plan-then-confirm, text and binary diff |
@@ -124,7 +124,7 @@ by power users; **P3** polish or niche.
 ### P3
 
 17. 3-way merge inside the file diff, and in the Git client (the docs list in-pane conflict
-    resolution as not built); more cloud providers (Dropbox, Box, B2, Azure Blob) on
+    resolution as not built); more cloud providers (Box, B2) on
     `HttpFileSystemServiceBase`; drag and drop; accessibility mode; a headless CLI
     (`iterminal sync|find|dedupe`) over the sync, compare and duplicate engines.
 18. Real-device verification of what is marked unrun in the architecture docs: MTP backends,

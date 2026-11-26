@@ -56,6 +56,9 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
         Container.S3,
         Container.ONEDRIVE,
         Container.GOOGLE_DRIVE,
+        Container.DROPBOX,
+        Container.AZURE_BLOB,
+        Container.OBEX,
     ];
 
     public FolderSelectorSpecialFoldersTabPage(

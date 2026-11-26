@@ -112,3 +112,97 @@ public class ContentModelGoogleDriveDrive(
 
     protected override string DescribeLocation() => $"gdrive: {(Url?.Path ?? "/")}";
 }
+
+/// <summary>A panel on Dropbox (<c>dropbox://[account]/path</c>), signed in with the app's refresh token from the password manager.</summary>
+public class ContentModelDropboxDrive(
+    string name,
+    ISettingsService? settingsService,
+    IDropboxFileSystemService dropboxFileSystemService,
+    FolderHistoryService? folderHistoryService,
+    IFrequentExecutionGuardService frequentExecutionGuardService,
+    ILogger? logger = null)
+    : ContentModelAsyncDrive(name, settingsService, folderHistoryService, frequentExecutionGuardService, logger)
+{
+    protected override string Scheme => Container.DROPBOX;
+
+    public override ContainerType ContainerType => ContainerType.Dropbox;
+
+    public override IFileSystem FileSystem => dropboxFileSystemService;
+
+    protected override Task<IReadOnlyList<IEntry>> ListAsync(Url url, CancellationToken cancellationToken) =>
+        dropboxFileSystemService.ListAsync(url, cancellationToken);
+
+    protected override string DescribeLocation() => $"dropbox: {(Url?.Path ?? "/")}";
+}
+
+/// <summary>
+/// A storage account, as a row of <c>azblob://</c>: Enter opens it, and it is not a file to copy or
+/// delete. The rows come from the password manager's entries, so the root works with no network.
+/// </summary>
+public sealed record AzureAccountEntry : VirtualDriveEntry, IDriveObjectEntry
+{
+    public AzureAccountEntry(Url url, string name)
+        : base(url, name, "Account")
+    {
+        Detail = "Account";
+    }
+}
+
+/// <summary>
+/// A panel on Azure Blob Storage (<c>azblob://account/container/path</c>). The root lists the storage
+/// accounts the password manager holds, an account lists its containers, and below a container the
+/// blobs are listed as folders and files. The credentials are looked up per request by the service, so
+/// the account in the URL is the one that signs it.
+/// </summary>
+public class ContentModelAzureBlobDrive(
+    string name,
+    ISettingsService? settingsService,
+    IAzureBlobFileSystemService azureBlobFileSystemService,
+    IPasswordManager? passwordManager,
+    FolderHistoryService? folderHistoryService,
+    IFrequentExecutionGuardService frequentExecutionGuardService,
+    ILogger? logger = null)
+    : ContentModelAsyncDrive(name, settingsService, folderHistoryService, frequentExecutionGuardService, logger)
+{
+    protected override string Scheme => Container.AZURE_BLOB;
+
+    public override ContainerType ContainerType => ContainerType.AzureBlob;
+
+    public override IFileSystem FileSystem => azureBlobFileSystemService;
+
+    /// <summary>The account list is the root; an account's own root leads back up to it, not out of the drive.</summary>
+    protected override bool IsDriveRoot(Url url) => url.Host.Length == 0;
+
+    /// <summary>The account list cannot be written to: an account is added in the password manager, not here.</summary>
+    public override bool IsReadOnly => Url is not null && Url.Host.Length == 0;
+
+    public override bool CanMark => Url is null || (Url.Host.Length != 0 && Url.Path.Trim('/').Length != 0);
+
+    protected override IEntry ParentEntry(Url url)
+    {
+        if (!IsDriveRoot(url) && url.Path.Trim('/').Length == 0)
+        {
+            return new VirtualDriveEntry(new Url(Container.AZURE_BLOB), "..", "Up");
+        }
+
+        return base.ParentEntry(url);
+    }
+
+    protected override Task<IReadOnlyList<IEntry>> ListAsync(Url url, CancellationToken cancellationToken)
+    {
+        if (url.Host.Length == 0)
+        {
+            IReadOnlyList<IEntry> accounts = [.. AzureBlobCredentialResolver.SavedAccounts(passwordManager)
+                .Select(account => (IEntry)new AzureAccountEntry(new Url(Container.AZURE_BLOB + account + "/"), account))];
+            return Task.FromResult(accounts);
+        }
+
+        return azureBlobFileSystemService.ListAsync(url, cancellationToken);
+    }
+
+    protected override string DescribeLocation()
+    {
+        var url = Url;
+        return url is null || url.Host.Length == 0 ? "azblob: accounts" : $"azblob://{url.Host}{url.Path}";
+    }
+}

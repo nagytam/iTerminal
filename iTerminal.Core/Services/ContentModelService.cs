@@ -41,6 +41,9 @@ public sealed class ContentModelService(
     iTerminal.Core.Services.Cloud.IS3FileSystemService? s3FileSystemService = null,
     iTerminal.Core.Services.Cloud.IOneDriveFileSystemService? oneDriveFileSystemService = null,
     iTerminal.Core.Services.Cloud.IGoogleDriveFileSystemService? googleDriveFileSystemService = null,
+    iTerminal.Core.Services.Cloud.IDropboxFileSystemService? dropboxFileSystemService = null,
+    iTerminal.Core.Services.Cloud.IAzureBlobFileSystemService? azureBlobFileSystemService = null,
+    iTerminal.Core.Services.Obex.IObexDriveService? obexDriveService = null,
     Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>? cloudOptions = null,
     iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null)
     : IContentModelService, IDisposable
@@ -198,6 +201,21 @@ public sealed class ContentModelService(
             case ContainerType.GoogleDrive when googleDriveFileSystemService is not null:
                 {
                     contentModel = new ContentModelGoogleDriveDrive(name, settingsService, googleDriveFileSystemService, folderHistoryService, frequentExecutionGuardService, logger);
+                    break;
+                }
+            case ContainerType.Dropbox when dropboxFileSystemService is not null:
+                {
+                    contentModel = new ContentModelDropboxDrive(name, settingsService, dropboxFileSystemService, folderHistoryService, frequentExecutionGuardService, logger);
+                    break;
+                }
+            case ContainerType.AzureBlob when azureBlobFileSystemService is not null:
+                {
+                    contentModel = new ContentModelAzureBlobDrive(name, settingsService, azureBlobFileSystemService, passwordManager, folderHistoryService, frequentExecutionGuardService, logger);
+                    break;
+                }
+            case ContainerType.Obex when obexDriveService is not null:
+                {
+                    contentModel = new ContentModelObexDrive(name, settingsService, obexDriveService, folderHistoryService, frequentExecutionGuardService, logger);
                     break;
                 }
             case ContainerType.IPhoneFileSystem:

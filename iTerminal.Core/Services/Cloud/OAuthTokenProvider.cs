@@ -20,6 +20,11 @@ public class CloudOptions
     public OAuthClientOptions GoogleDrive { get; set; } = new();
 
     public S3Options S3 { get; set; } = new();
+
+    /// <summary>Dropbox: only the app key (<see cref="OAuthClientOptions.ClientId"/>) is used; the refresh token is in the password manager.</summary>
+    public OAuthClientOptions Dropbox { get; set; } = new();
+
+    public AzureBlobOptions AzureBlob { get; set; } = new();
 }
 
 public class OAuthClientOptions
@@ -57,6 +62,9 @@ public interface ICloudTokenProvider
 
     /// <summary>Forgets the cached access token (the service answered 401), so the next call refreshes it.</summary>
     void Invalidate(string account);
+
+    /// <summary>Forgets every cached access token, for a service that does not say which account a refused request was for.</summary>
+    void InvalidateAll() { }
 }
 
 /// <summary>What one provider's OAuth device flow is made of.</summary>
