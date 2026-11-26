@@ -8038,6 +8038,24 @@
   <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
     <value>Pregunta al registro quién tiene un dominio o una dirección.</value>
   </data>
+  <data name="Nfs.ConnectionFailed" xml:space="preserve">
+    <value>Falló la conexión NFS con {0}: {1}</value>
+  </data>
+  <data name="Nfs.ExportIsNotFile" xml:space="preserve">
+    <value>Una exportación es un montaje, no un archivo: ábrala para trabajar con lo que contiene.</value>
+  </data>
+  <data name="Nfs.Header" xml:space="preserve">
+    <value>NFS: {0}</value>
+  </data>
+  <data name="Nfs.HostsNotListed" xml:space="preserve">
+    <value>NFS no tiene lista de servidores: escriba nfs://host/ para listar sus exportaciones.</value>
+  </data>
+  <data name="Nfs.MoveFolderUnsupported" xml:space="preserve">
+    <value>Una carpeta no se puede mover entre exportaciones; cópiela y luego bórrela.</value>
+  </data>
+  <data name="Nfs.ReadOnlyExport" xml:space="preserve">
+    <value>Los hosts y las exportaciones son de solo lectura aquí: crear, copiar, mover y borrar funcionan dentro de una exportación.</value>
+  </data>
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Coloque el cursor en un archivo o una carpeta, o marque algunos antes.</value>
   </data>

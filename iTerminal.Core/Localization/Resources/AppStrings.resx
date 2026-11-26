@@ -8244,6 +8244,24 @@
   <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
     <value>Ask the registry who holds a domain or an address.</value>
   </data>
+  <data name="Nfs.ConnectionFailed" xml:space="preserve">
+    <value>NFS connection to {0} failed: {1}</value>
+  </data>
+  <data name="Nfs.ExportIsNotFile" xml:space="preserve">
+    <value>An export is a mount, not a file: open it to work with what is inside.</value>
+  </data>
+  <data name="Nfs.Header" xml:space="preserve">
+    <value>NFS: {0}</value>
+  </data>
+  <data name="Nfs.HostsNotListed" xml:space="preserve">
+    <value>NFS has no list of servers: type nfs://host/ to list its exports.</value>
+  </data>
+  <data name="Nfs.MoveFolderUnsupported" xml:space="preserve">
+    <value>A folder cannot be moved between exports; copy it, then delete it.</value>
+  </data>
+  <data name="Nfs.ReadOnlyExport" xml:space="preserve">
+    <value>Hosts and exports are read-only here: create, copy, move and delete work inside an export.</value>
+  </data>
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Put the cursor on a file or folder, or mark some, first.</value>
   </data>

@@ -8102,6 +8102,24 @@
   <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
     <value>Fragt bei der Registrierungsstelle nach dem Inhaber einer Domain oder Adresse.</value>
   </data>
+  <data name="Nfs.ConnectionFailed" xml:space="preserve">
+    <value>NFS-Verbindung zu {0} fehlgeschlagen: {1}</value>
+  </data>
+  <data name="Nfs.ExportIsNotFile" xml:space="preserve">
+    <value>Ein Export ist eine Einbindung, keine Datei: öffnen, um mit dem Inhalt zu arbeiten.</value>
+  </data>
+  <data name="Nfs.Header" xml:space="preserve">
+    <value>NFS: {0}</value>
+  </data>
+  <data name="Nfs.HostsNotListed" xml:space="preserve">
+    <value>NFS hat keine Serverliste: nfs://host/ eingeben, um dessen Exporte aufzulisten.</value>
+  </data>
+  <data name="Nfs.MoveFolderUnsupported" xml:space="preserve">
+    <value>Ein Ordner kann nicht zwischen Exporten verschoben werden; kopieren, dann löschen.</value>
+  </data>
+  <data name="Nfs.ReadOnlyExport" xml:space="preserve">
+    <value>Hosts und Exporte sind hier schreibgeschützt: Erstellen, Kopieren, Verschieben und Löschen funktionieren innerhalb eines Exports.</value>
+  </data>
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Setzen Sie den Cursor auf eine Datei oder einen Ordner, oder markieren Sie vorher welche.</value>
   </data>

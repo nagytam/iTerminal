@@ -8038,6 +8038,24 @@
   <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
     <value>Lekérdezi, kihez tartozik egy domain vagy cím.</value>
   </data>
+  <data name="Nfs.ConnectionFailed" xml:space="preserve">
+    <value>Az NFS-kapcsolódás sikertelen: {0} ({1})</value>
+  </data>
+  <data name="Nfs.ExportIsNotFile" xml:space="preserve">
+    <value>Az export csatolás, nem fájl: nyissa meg a tartalmának eléréséhez.</value>
+  </data>
+  <data name="Nfs.Header" xml:space="preserve">
+    <value>NFS: {0}</value>
+  </data>
+  <data name="Nfs.HostsNotListed" xml:space="preserve">
+    <value>Az NFS-nek nincs kiszolgálólistája: írja be az nfs://gép/ címet az exportjai listázásához.</value>
+  </data>
+  <data name="Nfs.MoveFolderUnsupported" xml:space="preserve">
+    <value>Mappa nem helyezhető át exportok között; másolja, majd törölje.</value>
+  </data>
+  <data name="Nfs.ReadOnlyExport" xml:space="preserve">
+    <value>A gépek és az exportok itt csak olvashatók: létrehozás, másolás, áthelyezés és törlés az exporton belül működik.</value>
+  </data>
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Helyezze a kurzort egy fájlra vagy mappára, vagy előbb jelöljön ki néhányat.</value>
   </data>
