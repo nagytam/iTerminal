@@ -84,6 +84,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly IDevelopmentProcessRunner _runner;
     private readonly DevelopmentToolchains _toolchains;
     private readonly BreakpointStore _breakpoints;
+    private readonly MainProgramStore _mainProgram;
     private readonly IDotnetSolutionService _dotnet;
 
     /// <summary>The .NET SDKs installed, newest first, and the one new .NET commands use (-1 when none was found).</summary>
@@ -152,6 +153,16 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private bool _fileTreeBuilt;
     private readonly HashSet<string> _expandedFolders = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// The files and folders under each project of the Solution Explorer, by project path. They are read in the background the
+    /// first time a project is expanded; <see cref="_loadingProjects"/> holds the ones being read.
+    /// </summary>
+    private readonly Dictionary<string, IReadOnlyList<FileNode>> _projectFiles = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _loadingProjects = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Changed by every re-scan, so a project read that lands after it is dropped rather than shown stale.</summary>
+    private int _treeGeneration;
+
     /// <summary>The folders the File Explorer does not list, and the tree's size and depth limits.</summary>
     private static readonly HashSet<string> SkippedFileFolders = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -160,6 +171,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     public const int MaxFileNodes = 3000;
     public const int MaxFileDepth = 4;
+
+    /// <summary>The files and folders listed under one project of the Solution Explorer.</summary>
+    public const int MaxProjectNodes = 1000;
     private volatile bool _paused;
     private volatile bool _busy;
     private CancellationTokenSource? _runCts;
@@ -191,6 +205,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         IDevelopmentProcessRunner runner,
         DevelopmentToolchains toolchains,
         BreakpointStore breakpoints,
+        MainProgramStore mainProgram,
         IDotnetSolutionService dotnetSolutionService,
         IThemeService themeService)
         : base(nameof(DevelopmentStudioDialog), themeService)
@@ -199,6 +214,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _runner = runner;
         _toolchains = toolchains;
         _breakpoints = breakpoints;
+        _mainProgram = mainProgram;
         _dotnet = dotnetSolutionService;
         Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
 
@@ -282,20 +298,33 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         _checked.Clear();
         _testOutcomes.Clear();
+        _treeGeneration++;
+        _projectFiles.Clear();
+        _loadingProjects.Clear();
         _items = await ScanAsync();
         _sdks = await Task.Run(() => _dotnet.ListSdks().ToList(), CancellationToken.None);
         DotnetSdk? defaultSdk = DotnetSdk.Default(_sdks);
         _sdkIndex = defaultSdk is null ? -1 : _sdks.ToList().IndexOf(defaultSdk);
         _explorerMode = ExplorerMode.Solution;
-        SelectSolutionRow();
+        OpenSolutionsInTree();
         _outputTab = OutputTab.Output;
         _status = _items.Count == 0
             ? UiText.Get("DevelopmentStudio.NothingFound", "No solutions, projects or scripts were found in this folder.")
             : string.Format(UiText.Get("DevelopmentStudio.Found", "Found {0} items. Enter opens a file; F5 starts debugging."), _items.Count);
         _statusSeverity = StatusSeverity.Info;
         RebuildExplorer();
+        SelectSolutionRow();
         RebuildView();
         StateHasChanged();
+    }
+
+    /// <summary>The solutions start expanded, as they do in Visual Studio: their projects show at once. The projects start collapsed.</summary>
+    private void OpenSolutionsInTree()
+    {
+        foreach (var item in _items.Where(item => item.Kind == DevelopmentProjectKind.Solution))
+        {
+            _expandedFolders.Add(item.Path);
+        }
     }
 
     public override void OnInitializeLayout()
@@ -364,6 +393,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("F6 / F7", UiText.Get("DevelopmentStudio.HintPanes", "Explorer tab (Solution, Tests, Files) / output panel tab (Output, Debug, Coverage, Profile)"));
         yield return ("F8", UiText.Get("DevelopmentStudio.HintLayout", "Move and resize the panels: arrows move the focused one to that edge, Shift+arrows resize it"));
         yield return ("Enter", UiText.Get("DevelopmentStudio.HintOpen", "Open the file (or run the test)"));
+        yield return ("Left / Right", UiText.Get("DevelopmentStudio.HintExpand", "Collapse or expand the solution, project or folder under the cursor"));
+        yield return ("M", UiText.Get("DevelopmentStudio.HintMain", "Make the item under the cursor the Main program: F5 and Ctrl+F5 start it"));
         yield return ("Space", UiText.Get("DevelopmentStudio.HintCheck", "Check or uncheck the .NET project; B, C, T and R then run on the checked ones"));
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
         yield return ("V", UiText.Get("DevelopmentStudio.HintSdk", "Switch to the next .NET SDK"));
@@ -388,7 +419,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 await CloseAsync();
                 return true;
             case ConsoleKey.F5 when ctrl:
-                RunSelected("run");
+                RunMainOrSelected("run");
                 return true;
             case ConsoleKey.F5 when shift:
                 StopDebugging();
@@ -444,6 +475,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             case ConsoleKey.Spacebar when plain:
                 ToggleCheckAtCursor();
                 return true;
+            case ConsoleKey.RightArrow when plain && _explorerListBox.IsFocused:
+                ExpandOrCollapseAtCursor(expand: true);
+                return true;
+            case ConsoleKey.LeftArrow when plain && _explorerListBox.IsFocused:
+                ExpandOrCollapseAtCursor(expand: false);
+                return true;
+            case ConsoleKey.M when plain:
+                ToggleMainProgramAtCursor();
+                return true;
             case ConsoleKey.A when plain:
                 CheckAllProjects();
                 return true;
@@ -498,7 +538,20 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             return;
         }
 
-        if (item is null || item.Kind == DevelopmentProjectKind.Solution)
+        // In the Solution Explorer a file row opens, and a solution, project or folder row expands or collapses.
+        if (SelectedRow?.FilePath is not null)
+        {
+            EnterFileRow();
+            return;
+        }
+
+        if (item is not null && IsContainer(item))
+        {
+            ToggleExpandedAt(item.Path);
+            return;
+        }
+
+        if (item is null)
         {
             SetStatus(UiText.Get("DevelopmentStudio.SelectFile", "Select a project or a script to open."), StatusSeverity.Info);
             return;
@@ -507,20 +560,39 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         OpenSource(item.Path);
     }
 
-    /// <summary>Enter on a File Explorer row: a folder expands or collapses, a file opens in the source view.</summary>
+    /// <summary>Enter on a tree file row opens it in the source view; on a folder row it expands or collapses the folder.</summary>
     private void EnterFileRow()
     {
         var row = SelectedRow;
         if (row?.FilePath is null) return;
         if (row.IsDirectory)
         {
-            if (!_expandedFolders.Remove(row.FilePath)) _expandedFolders.Add(row.FilePath);
-            RebuildExplorer();
-            StateHasChanged();
+            ToggleExpandedAt(row.FilePath);
             return;
         }
 
         OpenSource(row.FilePath);
+    }
+
+    /// <summary>Expands or collapses a solution, project or folder row, and rebuilds the tree.</summary>
+    private void ToggleExpandedAt(string path)
+    {
+        if (!_expandedFolders.Remove(path)) _expandedFolders.Add(path);
+        RebuildExplorer();
+        StateHasChanged();
+    }
+
+    /// <summary>Left and Right: collapse or expand the container under the cursor. A file, or a row that is already so, does nothing.</summary>
+    private void ExpandOrCollapseAtCursor(bool expand)
+    {
+        if (_explorerMode == ExplorerMode.Tests) return;
+        var row = SelectedRow;
+        if (row is null) return;
+
+        string? path = row.Item?.Path ?? (row.IsDirectory ? row.FilePath : null);
+        bool container = row.Item is { } item ? IsContainer(item) : row.IsDirectory;
+        if (path is null || !container || _expandedFolders.Contains(path) == expand) return;
+        ToggleExpandedAt(path);
     }
 
     /// <summary>F6 cycles the left pane: Solution Explorer, Test Explorer, File Explorer.</summary>
@@ -560,8 +632,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         StateHasChanged();
     }
 
-    /// <summary>Folders first, then files, each by name; folders named in <see cref="SkippedFileFolders"/> are left out.</summary>
-    private static List<FileNode> ReadFileFolder(string folder, int depth, ref int budget)
+    /// <summary>
+    /// Folders first, then files, each by name; folders named in <see cref="SkippedFileFolders"/> are left out, and so are the
+    /// folders in <paramref name="excludedFolders"/> (the folders other projects own).
+    /// </summary>
+    private static List<FileNode> ReadFileFolder(string folder, int depth, ref int budget, IReadOnlySet<string>? excludedFolders = null)
     {
         var nodes = new List<FileNode>();
         List<string> dirs;
@@ -569,7 +644,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         try
         {
             dirs = Directory.EnumerateDirectories(folder)
-                .Where(dir => !SkippedFileFolders.Contains(Path.GetFileName(dir)))
+                .Where(dir => !SkippedFileFolders.Contains(Path.GetFileName(dir)) && excludedFolders?.Contains(dir) != true)
                 .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase).ToList();
             files = Directory.EnumerateFiles(folder)
                 .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase).ToList();
@@ -584,7 +659,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             if (budget <= 0) return nodes;
             budget--;
             var node = new FileNode(dir, true, []);
-            if (depth < MaxFileDepth) node.Children.AddRange(ReadFileFolder(dir, depth + 1, ref budget));
+            if (depth < MaxFileDepth) node.Children.AddRange(ReadFileFolder(dir, depth + 1, ref budget, excludedFolders));
             nodes.Add(node);
         }
 
@@ -665,27 +740,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 rows.Add(new ExplorerRow(UiText.Get("DevelopmentStudio.ReadingFolder", "(reading the folder...)"), null, null));
             }
 
-            void AddNodes(IEnumerable<FileNode> nodes, int depth)
-            {
-                foreach (var node in nodes)
-                {
-                    bool expanded = node.IsDirectory && _expandedFolders.Contains(node.Path);
-                    string name = Path.GetFileName(node.Path);
-                    string marker = node.IsDirectory ? (expanded ? "▾ " : "▸ ") : "  ";
-                    rows.Add(new ExplorerRow(new string(' ', depth * 2) + marker + name, null,
-                        node.IsDirectory ? Color.Cyan : null, node.Path, node.IsDirectory));
-                    if (expanded) AddNodes(node.Children, depth + 1);
-                }
-            }
-
-            AddNodes(_fileRoots, 0);
+            AddFileRows(rows, _fileRoots, 0);
         }
         else if (_explorerMode == ExplorerMode.Solution)
         {
-            foreach (var item in _items)
-            {
-                rows.Add(new ExplorerRow(SolutionRowName(item, _checked.Contains(item.Path)), item, TintFor(item)));
-            }
+            AddSolutionTree(rows);
         }
         else
         {
@@ -712,15 +771,152 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _explorerListBox.UpdateModel();
     }
 
-    private static string SolutionRowName(DevelopmentProject item, bool isChecked)
+    /// <summary>
+    /// The Solution Explorer tree, as Visual Studio draws it: a solution lists its projects, a project lists the files and folders
+    /// under it, and the items that belong to no solution follow at the top level in scan order.
+    /// </summary>
+    private void AddSolutionTree(List<ExplorerRow> rows)
+    {
+        var solutionPaths = _items
+            .Where(item => item.Kind == DevelopmentProjectKind.Solution)
+            .Select(item => item.Path)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var item in _items)
+        {
+            // A project that a listed solution holds is drawn under that solution, not again at the top level.
+            if (item.SolutionPath is { } owner && solutionPaths.Contains(owner)) continue;
+            AddItemRows(rows, item, 0);
+        }
+    }
+
+    /// <summary>One item of the tree and, when it is expanded, what it holds: its projects, or its files and folders.</summary>
+    private void AddItemRows(List<ExplorerRow> rows, DevelopmentProject item, int depth)
+    {
+        bool container = IsContainer(item);
+        bool expanded = container && _expandedFolders.Contains(item.Path);
+        string marker = container ? (expanded ? "▾ " : "▸ ") : "  ";
+        rows.Add(new ExplorerRow(new string(' ', depth * 2) + marker + ItemRowName(item), item, TintFor(item)));
+        if (!expanded) return;
+
+        if (item.Kind == DevelopmentProjectKind.Solution)
+        {
+            foreach (var project in _items.Where(child => child.Kind == DevelopmentProjectKind.DotNetProject
+                && child.SolutionPath is { } owner && owner.Equals(item.Path, StringComparison.OrdinalIgnoreCase)))
+            {
+                AddItemRows(rows, project, depth + 1);
+            }
+
+            return;
+        }
+
+        if (_projectFiles.TryGetValue(item.Path, out var nodes))
+        {
+            AddFileRows(rows, nodes, depth + 1);
+            return;
+        }
+
+        rows.Add(new ExplorerRow(new string(' ', (depth + 1) * 2) + UiText.Get("DevelopmentStudio.ReadingFolder", "(reading the folder...)"), null, null));
+        LoadProjectFiles(item);
+    }
+
+    /// <summary>Adds the files and folders of a tree level. An expanded folder lists its own children below it.</summary>
+    private void AddFileRows(List<ExplorerRow> rows, IEnumerable<FileNode> nodes, int depth)
+    {
+        foreach (var node in nodes)
+        {
+            bool expanded = node.IsDirectory && _expandedFolders.Contains(node.Path);
+            string name = Path.GetFileName(node.Path);
+            string marker = node.IsDirectory ? (expanded ? "▾ " : "▸ ") : "  ";
+            rows.Add(new ExplorerRow(new string(' ', depth * 2) + marker + name, null,
+                node.IsDirectory ? Color.Cyan : null, node.Path, node.IsDirectory));
+            if (expanded) AddFileRows(rows, node.Children, depth + 1);
+        }
+    }
+
+    /// <summary>A solution, a .NET project or a Java project: a row that expands to show what it holds. A script has none.</summary>
+    private static bool IsContainer(DevelopmentProject item) =>
+        item.Kind is DevelopmentProjectKind.Solution or DevelopmentProjectKind.DotNetProject or DevelopmentProjectKind.JavaProject;
+
+    /// <summary>
+    /// Reads the files and folders of a project's folder in the background, then rebuilds the tree. The folders that other
+    /// listed projects own are left out, since each of those is drawn under its own project.
+    /// </summary>
+    private void LoadProjectFiles(DevelopmentProject project)
+    {
+        if (_projectFiles.ContainsKey(project.Path) || !_loadingProjects.Add(project.Path)) return;
+
+        int generation = _treeGeneration;
+        var otherProjectFolders = _items
+            .Where(item => IsContainer(item) && item.Kind != DevelopmentProjectKind.Solution && item.Path != project.Path)
+            .Select(item => item.Directory)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        _ = LoadProjectFilesAsync(project, generation, otherProjectFolders);
+    }
+
+    private async Task LoadProjectFilesAsync(DevelopmentProject project, int generation, HashSet<string> otherProjectFolders)
+    {
+        var nodes = await Task.Run(() =>
+        {
+            int budget = MaxProjectNodes;
+            return ReadFileFolder(project.Directory, 0, ref budget, otherProjectFolders);
+        }, CancellationToken.None);
+
+        _loadingProjects.Remove(project.Path);
+        if (generation != _treeGeneration) return;
+        _projectFiles[project.Path] = nodes;
+        RebuildExplorer();
+        StateHasChanged();
+    }
+
+    /// <summary>The name of an item's row: its checkbox for a .NET project, and the tags for a test and for the Main program.</summary>
+    private string ItemRowName(DevelopmentProject item)
     {
         string test = item.IsTest ? "  [test]" : string.Empty;
+        string main = IsMain(item) ? $"  [{UiText.Get("DevelopmentStudio.MainTag", "main")}]" : string.Empty;
         return item.Kind switch
         {
             DevelopmentProjectKind.Solution => $"Solution  {item.Name}",
-            DevelopmentProjectKind.DotNetProject => $"   [{(isChecked ? 'x' : ' ')}] {LanguageLabel(item.Language)}  {item.Name}{test}",
-            _ => $"       {LanguageLabel(item.Language)}  {item.Name}{test}",
+            DevelopmentProjectKind.DotNetProject => $"[{(_checked.Contains(item.Path) ? 'x' : ' ')}] {LanguageLabel(item.Language)}  {item.Name}{test}{main}",
+            _ => $"{LanguageLabel(item.Language)}  {item.Name}{test}{main}",
         };
+    }
+
+    /// <summary>Whether the item is the Main program.</summary>
+    private bool IsMain(DevelopmentProject item) =>
+        item.Kind != DevelopmentProjectKind.Solution && _mainProgram.Path.Equals(item.Path, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>The Main program, when one is set and the scan still lists it; otherwise null.</summary>
+    private DevelopmentProject? MainItem => _items.FirstOrDefault(IsMain);
+
+    /// <summary>M: makes the item under the cursor the Main program, or clears it when it already is.</summary>
+    private void ToggleMainProgramAtCursor()
+    {
+        var item = SelectedItem;
+        if (item is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.SelectItem", "Select an item first."), StatusSeverity.Info);
+            return;
+        }
+
+        if (item.Kind == DevelopmentProjectKind.Solution)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.MainSolution", "A solution cannot be the Main program. Select a project or a script."), StatusSeverity.Info);
+            return;
+        }
+
+        if (IsMain(item))
+        {
+            _mainProgram.Clear();
+            SetStatus(UiText.Get("DevelopmentStudio.MainCleared", "No Main program: F5 starts the item under the cursor."), StatusSeverity.Info);
+        }
+        else
+        {
+            _mainProgram.Set(item.Path);
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.MainSet", "{0} is the Main program. F5 and Ctrl+F5 start it."), item.Name), StatusSeverity.Info);
+        }
+
+        RebuildExplorer();
+        StateHasChanged();
     }
 
     private static Color? TintFor(DevelopmentProject item) =>
@@ -1281,6 +1477,18 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         RunCommand(targets, verb);
     }
 
+    /// <summary>Ctrl+F5: runs the Main program when one is set, whatever is checked or under the cursor; otherwise the same as R.</summary>
+    private void RunMainOrSelected(string verb)
+    {
+        if (MainItem is not { } main)
+        {
+            RunSelected(verb);
+            return;
+        }
+
+        RunCommand([main], verb);
+    }
+
     /// <summary>The checked projects in explorer order, or the cursor item when none is checked (empty on a heading row).</summary>
     private IReadOnlyList<DevelopmentProject> ResolveTargets()
     {
@@ -1432,7 +1640,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private async Task RefreshAsync()
     {
         _fileTreeBuilt = false;
+        _treeGeneration++;
+        _projectFiles.Clear();
+        _loadingProjects.Clear();
         _items = await ScanAsync();
+        OpenSolutionsInTree();
         RebuildExplorer();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Refreshed", "Found {0} items."), _items.Count), StatusSeverity.Info);
     }
@@ -1459,11 +1671,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         return all.Where(item => item.Path.Equals(_solutionPath, StringComparison.OrdinalIgnoreCase) || projectPaths.Contains(item.Path)).ToList();
     }
 
-    /// <summary>Puts the explorer cursor on the solution the dialog was opened on.</summary>
+    /// <summary>Puts the explorer cursor on the row of the solution the dialog was opened on. Call it after the tree is built.</summary>
     private void SelectSolutionRow()
     {
         if (string.IsNullOrEmpty(_solutionPath)) return;
-        int index = _items.ToList().FindIndex(item => item.Path.Equals(_solutionPath, StringComparison.OrdinalIgnoreCase));
+        int index = _explorerItems.ToList().FindIndex(row => row.Item is { Kind: DevelopmentProjectKind.Solution } item
+            && item.Path.Equals(_solutionPath, StringComparison.OrdinalIgnoreCase));
         _explorerListBox.ScrollableModel.CursorPosition.Y = Math.Max(0, index);
     }
 
@@ -1619,7 +1832,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     #region Debugging
 
-    /// <summary>F5: starts debugging the selected item, or continues the program when it is stopped.</summary>
+    /// <summary>F5: starts debugging the Main program (or the selected item when none is set), or continues the program when it is stopped.</summary>
     private void StartOrContinueDebugging()
     {
         if (_session is not null)
@@ -1629,7 +1842,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             return;
         }
 
-        var item = SelectedItem;
+        var item = MainItem ?? SelectedItem;
         if (item is null || item.Kind == DevelopmentProjectKind.Solution)
         {
             SetStatus(UiText.Get("DevelopmentStudio.SelectToDebug", "Select a project or a script to debug. A solution cannot be debugged."), StatusSeverity.Info);

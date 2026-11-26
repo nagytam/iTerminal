@@ -24,12 +24,14 @@ public enum DevelopmentProjectKind
 /// <param name="Kind">What the item is.</param>
 /// <param name="Path">The absolute path of the project, solution or script file.</param>
 /// <param name="IsTest">Whether the item holds tests (a test project, or a test file).</param>
+/// <param name="SolutionPath">The solution that lists the project, when the scan found one. The explorer draws the project under it.</param>
 public sealed record DevelopmentProject(
     string Name,
     DevelopmentLanguage Language,
     DevelopmentProjectKind Kind,
     string Path,
-    bool IsTest = false)
+    bool IsTest = false,
+    string? SolutionPath = null)
 {
     /// <summary>The folder the item lives in. It is the working directory of every command run on the item.</summary>
     public string Directory => System.IO.Path.GetDirectoryName(Path) ?? string.Empty;

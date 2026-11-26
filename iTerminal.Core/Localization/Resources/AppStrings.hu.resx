@@ -2377,11 +2377,17 @@
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>A kijelölt elem lefedettségének mérése / a kijelölt Python-szkript profilozása</value>
   </data>
+  <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
+    <value>A kurzor alatti megoldás, projekt vagy mappa összecsukása vagy kibontása</value>
+  </data>
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>A lefedettségi nézetben a kurzor alatti fájl megnyitása</value>
   </data>
   <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
     <value>Panelek mozgatása és átméretezése: a nyilak a kijelölt panelt az adott szélre viszik, a Shift+nyilak átméretezik</value>
+  </data>
+  <data name="DevelopmentStudio.HintMain" xml:space="preserve">
+    <value>A kurzor alatti elem legyen a főprogram: az F5 és a Ctrl+F5 ezt indítja</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Apri il file (o esegui il test)</value>
@@ -2424,6 +2430,18 @@
   </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Variabili locali</value>
+  </data>
+  <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
+    <value>Nincs főprogram: az F5 a kurzor alatti elemet indítja.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSet" xml:space="preserve">
+    <value>A(z) {0} a főprogram. Az F5 és a Ctrl+F5 ezt indítja.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSolution" xml:space="preserve">
+    <value>A megoldás nem lehet a főprogram. Válasszon projektet vagy szkriptet.</value>
+  </data>
+  <data name="DevelopmentStudio.MainTag" xml:space="preserve">
+    <value>fő</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Apri un file (Invio) e posiziona il cursore su una riga per impostare un punto di interruzione.</value>

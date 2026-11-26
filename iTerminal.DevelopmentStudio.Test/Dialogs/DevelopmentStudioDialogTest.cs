@@ -13,8 +13,8 @@ namespace iTerminal.DevelopmentStudio.Test.Dialogs;
 public class DevelopmentStudioDialogTest
 {
     private static readonly DevelopmentProject Solution = new("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.Solution, "/src/App.slnx");
-    private static readonly DevelopmentProject App = new("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App/App.csproj");
-    private static readonly DevelopmentProject AppTest = new("App.Test", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App.Test/App.Test.csproj", IsTest: true);
+    private static readonly DevelopmentProject App = new("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App/App.csproj", SolutionPath: "/src/App.slnx");
+    private static readonly DevelopmentProject AppTest = new("App.Test", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App.Test/App.Test.csproj", IsTest: true, SolutionPath: "/src/App.slnx");
     private static readonly DevelopmentProject Script = new("tool.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, "/src/tool.py");
     private static readonly DevelopmentProject Java = new("svc", DevelopmentLanguage.Java, DevelopmentProjectKind.JavaProject, "/src/svc/pom.xml");
 
@@ -27,12 +27,12 @@ public class DevelopmentStudioDialogTest
 
     private sealed record Harness(DevelopmentStudioDialog Dialog, FakeProcessRunner Runner, FakeDotnetSolutionService Dotnet, BreakpointStore Breakpoints);
 
-    private static async Task<Harness> OpenAsync(IReadOnlyList<DevelopmentProject> items, FakeDotnetSolutionService? dotnet = null, string? solutionPath = null, FakeProcessRunner? runner = null)
+    private static async Task<Harness> OpenAsync(IReadOnlyList<DevelopmentProject> items, FakeDotnetSolutionService? dotnet = null, string? solutionPath = null, FakeProcessRunner? runner = null, MainProgramStore? mainProgram = null)
     {
         dotnet ??= new FakeDotnetSolutionService { Solution = TwoProjects, Sdks = [new DotnetSdk("9.0.100", "/sdk/9")] };
         runner ??= new FakeProcessRunner();
         var breakpoints = new BreakpointStore();
-        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, dotnet, TestTheme())
+        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme())
         {
             Folder = "/src",
         };
@@ -55,11 +55,11 @@ public class DevelopmentStudioDialogTest
 
         CollectionAssert.AreEqual(new[]
         {
-            "Solution  App",
-            "   [ ] C#  App",
-            "   [ ] C#  App.Test  [test]",
-            "       Python  tool.py",
-            "       Java  svc",
+            "▾ Solution  App",
+            "  ▸ [ ] C#  App",
+            "  ▸ [ ] C#  App.Test  [test]",
+            "  Python  tool.py",
+            "▸ Java  svc",
         }, harness.Dialog.ExplorerRows.ToArray());
     }
 
@@ -69,8 +69,108 @@ public class DevelopmentStudioDialogTest
     {
         var harness = await OpenAsync([Solution, App, AppTest, Script], solutionPath: "/src/App.slnx");
 
-        CollectionAssert.AreEqual(new[] { "Solution  App", "   [ ] C#  App", "   [ ] C#  App.Test  [test]" }, harness.Dialog.ExplorerRows.ToArray());
+        CollectionAssert.AreEqual(new[] { "▾ Solution  App", "  ▸ [ ] C#  App", "  ▸ [ ] C#  App.Test  [test]" }, harness.Dialog.ExplorerRows.ToArray());
         Assert.AreEqual("/src", harness.Dialog.Folder);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task LeftAndRightCollapseAndExpandTheSolutionAndItsProjects()
+    {
+        var harness = await OpenAsync([Solution, App, AppTest, Script]);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+        CollectionAssert.AreEqual(new[] { "▸ Solution  App", "  Python  tool.py" }, harness.Dialog.ExplorerRows.ToArray(), "Left collapses the solution under the cursor");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.RightArrow));
+        CollectionAssert.AreEqual(new[]
+        {
+            "▾ Solution  App",
+            "  ▸ [ ] C#  App",
+            "  ▸ [ ] C#  App.Test  [test]",
+            "  Python  tool.py",
+        }, harness.Dialog.ExplorerRows.ToArray(), "Right expands it again");
+
+        // A script has nothing to expand: Right leaves the list as it is.
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.RightArrow));
+        Assert.AreEqual(4, harness.Dialog.ExplorerRows.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EnterOnAProjectListsItsFilesAndFoldersAndLeavesOutAnotherProjectsFolder()
+    {
+        string folder = NewProjectFolder();
+        try
+        {
+            var project = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, Path.Combine(folder, "App.csproj"));
+            var nested = new DevelopmentProject("Lib", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, Path.Combine(folder, "Lib", "Lib.csproj"));
+            var harness = await OpenAsync([project, nested]);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+            await WaitUntilAsync(() => !harness.Dialog.ExplorerRows.Any(row => row.Contains("reading the folder", StringComparison.Ordinal)), "the project folder to be read");
+
+            CollectionAssert.AreEqual(new[]
+            {
+                "▾ [ ] C#  App",
+                "  ▸ Properties",
+                "    App.csproj",
+                "    Program.cs",
+                "▸ [ ] C#  Lib",
+            }, harness.Dialog.ExplorerRows.ToArray(), "the Lib folder is drawn under its own project, not under App");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MMakesTheMainProgramAndCtrlF5RunsItWhateverTheCursorIs()
+    {
+        var runner = new FakeProcessRunner();
+        var mainProgram = new MainProgramStore();
+        var harness = await OpenAsync([Solution, App, AppTest], runner: runner, mainProgram: mainProgram);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.M, 'm'));
+        Assert.IsTrue(harness.Dialog.Status.Contains("cannot be the Main program", StringComparison.Ordinal), "a solution is not a Main program");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.M, 'm'));
+        Assert.AreEqual("/src/App/App.csproj", mainProgram.Path);
+        Assert.AreEqual("  ▸ [ ] C#  App  [main]", harness.Dialog.ExplorerRows[1]);
+
+        // Ctrl+F5 runs the Main program, not the project under the cursor.
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F5, control: true));
+        await WaitIdleAsync(harness.Dialog);
+        Assert.IsTrue(runner.Commands.Single().Arguments.Contains("/src/App/App.csproj"));
+
+        // The choice survives closing the studio: a new dialog on the same store shows it.
+        var reopened = await OpenAsync([Solution, App, AppTest], mainProgram: mainProgram);
+        Assert.AreEqual("  ▸ [ ] C#  App  [main]", reopened.Dialog.ExplorerRows[1]);
+
+        await reopened.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await reopened.Dialog.HandleKeyEventAsync(Key(ConsoleKey.M, 'm'));
+        Assert.AreEqual(string.Empty, mainProgram.Path, "a second M on the Main program clears it");
+        Assert.AreEqual("  ▸ [ ] C#  App", reopened.Dialog.ExplorerRows[1]);
+    }
+
+    /// <summary>A folder with <c>App/App.csproj</c>, a <c>Program.cs</c>, a <c>Properties</c> folder and a nested <c>Lib</c> project.</summary>
+    private static string NewProjectFolder()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudioTree_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(Path.Combine(folder, "Properties"));
+        Directory.CreateDirectory(Path.Combine(folder, "Lib"));
+        File.WriteAllText(Path.Combine(folder, "App.csproj"), "<Project />");
+        File.WriteAllText(Path.Combine(folder, "Program.cs"), "class Program {}");
+        File.WriteAllText(Path.Combine(folder, "Properties", "launchSettings.json"), "{}");
+        File.WriteAllText(Path.Combine(folder, "Lib", "Lib.csproj"), "<Project />");
+        return folder;
     }
 
     [Timeout(60_000)]
@@ -99,7 +199,7 @@ public class DevelopmentStudioDialogTest
 
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
-        Assert.AreEqual("   [x] C#  App", harness.Dialog.ExplorerRows[1]);
+        Assert.AreEqual("  ▸ [x] C#  App", harness.Dialog.ExplorerRows[1]);
 
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
         await WaitIdleAsync(harness.Dialog);
@@ -116,12 +216,12 @@ public class DevelopmentStudioDialogTest
 
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.T, 'T', shift: true));
 
-        Assert.AreEqual("   [x] C#  App.Test  [test]", harness.Dialog.ExplorerRows[2]);
-        Assert.AreEqual("   [ ] C#  App", harness.Dialog.ExplorerRows[1], "Shift+T checks only the test projects");
+        Assert.AreEqual("  ▸ [x] C#  App.Test  [test]", harness.Dialog.ExplorerRows[2]);
+        Assert.AreEqual("  ▸ [ ] C#  App", harness.Dialog.ExplorerRows[1], "Shift+T checks only the test projects");
 
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.T, 'T', shift: true));
 
-        Assert.AreEqual("   [ ] C#  App.Test  [test]", harness.Dialog.ExplorerRows[2]);
+        Assert.AreEqual("  ▸ [ ] C#  App.Test  [test]", harness.Dialog.ExplorerRows[2]);
     }
 
     [Timeout(60_000)]

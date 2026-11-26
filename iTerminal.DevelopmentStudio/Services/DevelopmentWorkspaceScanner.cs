@@ -104,7 +104,7 @@ public sealed partial class DevelopmentWorkspaceScanner(IDotnetSolutionService d
 
         return solution.Projects
             .Where(project => File.Exists(project.AbsolutePath))
-            .Select(project => new DevelopmentProject(project.Name, DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, project.AbsolutePath, project.IsTestProject))
+            .Select(project => new DevelopmentProject(project.Name, DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, project.AbsolutePath, project.IsTestProject, solutionPath))
             .ToList();
     }
 
