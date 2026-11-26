@@ -2570,6 +2570,12 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Watch the word under the cursor (in the debug view, remove it)</value>
   </data>
+  <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
+    <value>csharp-ls was not found. Install it with dotnet tool install -g csharp-ls.</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerStarting" xml:space="preserve">
+    <value>Starting the C# language server...</value>
+  </data>
   <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
     <value>The centre panel can only swap places with a panel: move the panel you want there into the centre.</value>
   </data>

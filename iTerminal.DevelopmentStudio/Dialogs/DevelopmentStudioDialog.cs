@@ -13,6 +13,7 @@ using iTerminal.DevelopmentStudio.Services;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.DevelopmentStudio.Services.Analysis;
 using iTerminal.DevelopmentStudio.Services.Dap;
+using iTerminal.DevelopmentStudio.Services.Lsp;
 using iTerminal.Core.Services.Dotnet;
 
 namespace iTerminal.DevelopmentStudio.Dialogs;
@@ -115,6 +116,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The errors and warnings the commands printed, in order. A line the tools print twice (MSBuild's summary) is listed once.</summary>
     private readonly List<BuildDiagnostic> _diagnostics = [];
     private readonly HashSet<string> _diagnosticTexts = new(StringComparer.Ordinal);
+    /// <summary>The C# language server, shared by every dialog. The dialog reads it on its idle pass, never from its tasks.</summary>
+    private readonly CSharpLanguageServer _languageServer;
+    /// <summary>The server version the Error List and the gutter were last built from.</summary>
+    private long _seenServerVersion = -1;
+    private bool _startingShown;
+    private bool _missingAnnounced;
     private readonly List<string> _sourceLines = [];
     private string _sourcePath = string.Empty;
     private string _sourceRequest = string.Empty;
@@ -207,10 +214,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         BreakpointStore breakpoints,
         MainProgramStore mainProgram,
         IDotnetSolutionService dotnetSolutionService,
-        IThemeService themeService)
+        IThemeService themeService,
+        CSharpLanguageServer languageServer)
         : base(nameof(DevelopmentStudioDialog), themeService)
     {
         _scanner = scanner;
+        _languageServer = languageServer;
         _runner = runner;
         _toolchains = toolchains;
         _breakpoints = breakpoints;
@@ -950,12 +959,14 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             }
 
             CoverageFile? covered = _coverage?.Files.FirstOrDefault(file => file.Path.Equals(_sourcePath, StringComparison.OrdinalIgnoreCase));
+            Dictionary<int, string> liveMarks = LiveMarks(_sourcePath);
             for (int i = 0; i < _sourceLines.Count; i++)
             {
                 int number = i + 1;
                 bool isStop = number == _stopLine && _sourcePath.Equals(_stopPath, StringComparison.OrdinalIgnoreCase);
                 string gutter = isStop ? "→"
                     : _breakpoints.Contains(_sourcePath, number) ? "●"
+                    : liveMarks.TryGetValue(number, out string? liveMark) ? liveMark
                     : covered is not null && covered.Hits.TryGetValue(number, out int hits) ? (hits > 0 ? "+" : "-")
                     : " ";
                 lines.Add($"{gutter}{number,5}  {_sourceLines[i]}");
@@ -1121,6 +1132,102 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         StateHasChanged();
     }
 
+    /// <summary>The folder the language server works in: the studio's folder, or the current one when there is none.</summary>
+    private string ServerFolder => string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
+
+    /// <summary>
+    /// Redraws the Error List and the gutter when the language server changed. The server is read here, on the UI thread, so
+    /// its tasks never touch the controls.
+    /// </summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        long version = _languageServer.Version;
+        if (version == _seenServerVersion) return;
+        _seenServerVersion = version;
+        RebuildEditor();
+        RebuildErrorPanel();
+        ShowServerStatus();
+    }
+
+    /// <summary>The status line while a C# file is open: starting, then back to the file name, or not installed (once per dialog).</summary>
+    private void ShowServerStatus()
+    {
+        if (!_sourcePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)) return;
+        switch (_languageServer.State)
+        {
+            case LanguageServerState.Starting:
+                _startingShown = true;
+                SetStatus(UiText.Get("DevelopmentStudio.LanguageServerStarting", "Starting the C# language server..."), StatusSeverity.Info);
+                break;
+            case LanguageServerState.Ready when _startingShown:
+                _startingShown = false;
+                SetStatus(Path.GetFileName(_sourcePath), StatusSeverity.Info);
+                break;
+            case LanguageServerState.Missing when !_missingAnnounced:
+                _missingAnnounced = true;
+                SetStatus(UiText.Get("DevelopmentStudio.LanguageServerMissing", "csharp-ls was not found. Install it with dotnet tool install -g csharp-ls."), StatusSeverity.Info);
+                break;
+        }
+    }
+
+    /// <summary>The gutter mark of each line the server reported on: '!' when the line has an error, '~' for a warning only.</summary>
+    private Dictionary<int, string> LiveMarks(string path)
+    {
+        var marks = new Dictionary<int, string>();
+        foreach (LiveDiagnostic diagnostic in _languageServer.DiagnosticsFor(path))
+        {
+            if (diagnostic.IsError || !marks.ContainsKey(diagnostic.Line))
+            {
+                marks[diagnostic.Line] = diagnostic.IsError ? "!" : "~";
+            }
+        }
+
+        return marks;
+    }
+
+    /// <summary>
+    /// The Error List's rows: the errors and warnings the commands printed, then the live ones of the server. A live diagnostic
+    /// that repeats a build one (same file, line and message) is left out, so a compile error is listed once.
+    /// </summary>
+    private List<BuildDiagnostic> MergedDiagnostics()
+    {
+        List<BuildDiagnostic> build;
+        lock (_stateLock) build = [.. _diagnostics];
+
+        string folder = ServerFolder;
+        var merged = new List<BuildDiagnostic>(build);
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        foreach (BuildDiagnostic diagnostic in build)
+        {
+            seen.Add(DiagnosticKey(FullPathOf(diagnostic.File, folder), diagnostic.Line, diagnostic.Message));
+        }
+
+        foreach (LiveDiagnostic live in _languageServer.AllDiagnostics())
+        {
+            if (!seen.Add(DiagnosticKey(live.Path, live.Line, live.Message))) continue;
+            string severity = live.IsError ? "error" : "warning";
+            merged.Add(new BuildDiagnostic(live.IsError, live.Path, live.Line, live.Column, live.Message,
+                $"{live.Path}({live.Line},{live.Column}): {severity} {live.Code}: {live.Message}"));
+        }
+
+        return merged;
+    }
+
+    private static string DiagnosticKey(string path, int line, string message) => $"{path.ToLowerInvariant()}|{line}|{message}";
+
+    private static string FullPathOf(string file, string folder)
+    {
+        try
+        {
+            return Path.GetFullPath(file, folder);
+        }
+        catch (ArgumentException)
+        {
+            return file;
+        }
+    }
+
     /// <summary>Opens a source file in the editor. The read runs on a background task; the newest request wins.</summary>
     private void OpenSource(string path, int line = 1)
     {
@@ -1153,6 +1260,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 _sourcePath = path;
                 _sourceLines.Clear();
                 _sourceLines.AddRange(lines);
+            }
+
+            if (error is null && path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            {
+                _languageServer.OpenFile(ServerFolder, path, string.Join('\n', lines));
             }
 
             RebuildView();
@@ -2164,13 +2276,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The Error List's band: its name and how many errors and warnings the commands printed.</summary>
     private string ErrorHeading()
     {
-        int errors;
-        int warnings;
-        lock (_stateLock)
-        {
-            errors = _diagnostics.Count(diagnostic => diagnostic.IsError);
-            warnings = _diagnostics.Count - errors;
-        }
+        List<BuildDiagnostic> merged = MergedDiagnostics();
+        int errors = merged.Count(diagnostic => diagnostic.IsError);
+        int warnings = merged.Count - errors;
 
         return UiText.Get("DevelopmentStudio.ErrorListHeading", "Error List") + "   "
             + string.Format(UiText.Get("DevelopmentStudio.ErrorCounts", "{0} errors, {1} warnings"), errors, warnings);
@@ -2179,8 +2287,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>Rebuilds the Error List from the diagnostics the output holds, in the order they were printed.</summary>
     private void RebuildErrorPanel()
     {
-        var lines = new List<string>();
-        lock (_stateLock) lines.AddRange(_diagnostics.Select(diagnostic => diagnostic.Text));
+        List<string> lines = MergedDiagnostics().Select(diagnostic => diagnostic.Text).ToList();
         _errorItems.ReplaceAll(lines);
         _errorListBox.UpdateModel();
     }
@@ -2197,9 +2304,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private void OpenDiagnosticAtCursor()
     {
         int row = (int)_errorListBox.ScrollableModel.CursorPosition.Y;
-        BuildDiagnostic? diagnostic;
-        lock (_stateLock) diagnostic = row >= 0 && row < _diagnostics.Count ? _diagnostics[row] : null;
-        if (diagnostic is null) return;
+        List<BuildDiagnostic> merged = MergedDiagnostics();
+        if (row < 0 || row >= merged.Count) return;
+        BuildDiagnostic diagnostic = merged[row];
 
         string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
         string path;

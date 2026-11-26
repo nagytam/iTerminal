@@ -21,6 +21,14 @@ public static class SandboxServices
     /// Path completion over the sandbox only: a folder under the sandbox root is listed from disk, any other lists as
     /// empty, so typing <c>C:\</c> or <c>/</c> in a path box never reads the machine's own folders.
     /// </summary>
+    /// <summary>Reports no language server, so a test that opens a .cs file never starts csharp-ls.</summary>
+    public sealed class LanguageServers : iTerminal.DevelopmentStudio.Services.Lsp.ILanguageServerLauncher
+    {
+        public string? Locate() => null;
+
+        public iTerminal.DevelopmentStudio.Services.Lsp.ILanguageServerProcess? Launch(string fileName, string workingDirectory) => null;
+    }
+
     public sealed class DirectoryLister(string root) : IDirectoryLister
     {
         private readonly Core.Services.DirectoryLister _real = new();

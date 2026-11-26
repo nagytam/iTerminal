@@ -3,6 +3,7 @@ using iTerminal.DevelopmentStudio.Commands;
 using iTerminal.DevelopmentStudio.Contributions;
 using iTerminal.DevelopmentStudio.Dialogs;
 using iTerminal.DevelopmentStudio.Services;
+using iTerminal.DevelopmentStudio.Services.Lsp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -24,6 +25,9 @@ public static class DevelopmentStudioApplicationBuilderExtension
         services.AddSingleton<BreakpointStore>();
         // The Main program is a singleton too, so the choice survives closing the dialog.
         services.AddSingleton<MainProgramStore>();
+        // The C# language server is a singleton: one server per folder, shared by every studio dialog.
+        services.TryAddSingleton<ILanguageServerLauncher, LanguageServerLauncher>();
+        services.AddSingleton<CSharpLanguageServer>();
         services.AddTransient<DevelopmentStudioDialog>();
 
         // Tools > Development studio, in the "sys" submenu.
