@@ -1,0 +1,1481 @@
+using iConsole.Buffers;
+using iConsole.Controls;
+using iConsole.Data;
+using iConsole.Dialogs;
+using iConsole.Display;
+using iConsole.Localization;
+using iConsole.Model;
+using iConsole.Services;
+using iTerminal.Core.Dialogs;
+using iTerminal.DevelopmentStudio.Model;
+using iTerminal.DevelopmentStudio.Services;
+using iTerminal.Core.Model.Dotnet;
+using iTerminal.DevelopmentStudio.Services.Dap;
+using iTerminal.Core.Services.Dotnet;
+
+namespace iTerminal.DevelopmentStudio.Dialogs;
+
+/// <summary>
+/// The Development Studio (Tools &gt; Development studio): a Solution Explorer of the .NET solutions and projects, Python
+/// and PowerShell scripts under <see cref="Folder"/>, a Test Explorer of the test items with their results, a source view
+/// with breakpoints, the output of build, run, clean and test, and a debug view (call stack, locals, watch, breakpoints).
+/// The keys follow Visual Studio and VS Code: F5 starts or continues, Shift+F5 stops, F9 toggles a breakpoint, F10 steps
+/// over, F11 steps into and Shift+F11 steps out. Commands run on background tasks; key handlers and drawing never wait for them.
+/// </summary>
+public class DevelopmentStudioDialog : SplitPaneDialog
+{
+    /// <summary>What the left pane lists: the Solution Explorer, or the Test Explorer.</summary>
+    private enum ExplorerMode { Solution, Tests }
+
+    /// <summary>What the right pane shows: the source of the open file, the output log, or the debug view.</summary>
+    private enum ViewMode { Source, Output, Debug }
+
+    private enum StatusSeverity { Info, Success, Error }
+
+    /// <summary>One row of the explorer. <see cref="Item"/> is null for a heading row.</summary>
+    private sealed record ExplorerRow(string DisplayName, DevelopmentProject? Item, Color? Tint);
+
+    /// <summary>The result of the last test run of one test item.</summary>
+    private sealed record TestOutcome(bool Passed, TestTotals Totals);
+
+    /// <summary>Output lines kept for the log; the oldest are dropped past this.</summary>
+    public const int MaxOutputLines = 5000;
+
+    /// <summary>Source files larger than this are not opened in the source view.</summary>
+    public const long MaxSourceBytes = 2 * 1024 * 1024;
+
+    private sealed class ExplorerListBox(IListBoxModel<ExplorerRow> listModel, IThemeService themeService)
+        : ListBox<ExplorerRow>(listModel, themeService)
+    {
+        protected override Color? GetItemForegroundOverride(int index)
+        {
+            if (index < 0 || index >= ListModel.ListItems.Count) return null;
+            return ListModel.ListItems[index].Item.Tint;
+        }
+    }
+
+    private sealed class ViewListBox(IListBoxModel<string> listModel, IThemeService themeService)
+        : ListBox<string>(listModel, themeService)
+    {
+        protected override Color? GetItemForegroundOverride(int index)
+        {
+            if (index < 0 || index >= ListModel.ListItems.Count) return null;
+            string line = ListModel.ListItems[index].Item;
+            if (line.StartsWith("→", StringComparison.Ordinal)) return Color.Yellow;
+            if (line.StartsWith("●", StringComparison.Ordinal)) return Color.Red;
+            if (line.StartsWith("$ ", StringComparison.Ordinal)) return Color.Cyan;
+            if (line.Contains(": error", StringComparison.OrdinalIgnoreCase) || line.Contains("FAILED", StringComparison.Ordinal)
+                || line.Contains("Failed", StringComparison.Ordinal)) return Color.Red;
+            if (line.Contains(": warning", StringComparison.OrdinalIgnoreCase)) return Color.Yellow;
+            if (line.Contains("succeeded", StringComparison.OrdinalIgnoreCase) || line.Contains("passed", StringComparison.OrdinalIgnoreCase)) return Color.Green;
+            return null;
+        }
+    }
+
+    private readonly IDevelopmentWorkspaceScanner _scanner;
+    private readonly IDevelopmentProcessRunner _runner;
+    private readonly DevelopmentToolchains _toolchains;
+    private readonly BreakpointStore _breakpoints;
+    private readonly IDotnetSolutionService _dotnet;
+
+    /// <summary>The .NET SDKs installed, newest first, and the one new .NET commands use (-1 when none was found).</summary>
+    private IReadOnlyList<DotnetSdk> _sdks = [];
+    private int _sdkIndex = -1;
+
+    /// <summary>The .NET projects checked with Space. Empty means the cursor item is the target.</summary>
+    private readonly HashSet<string> _checked = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>The serialisation S writes the SBOM in. XML by default; F switches it to JSON.</summary>
+    private SbomFormat _sbomFormat = SbomFormat.Xml;
+
+    /// <summary>The solution the dialog was opened on (F3), or empty for the whole folder.</summary>
+    private string _solutionPath = string.Empty;
+
+    private readonly ConcurrentObservableCollection<ExplorerRow> _explorerItems = new();
+    private readonly ConcurrentObservableCollection<string> _viewItems = new();
+    private readonly ExplorerListBox _explorerListBox;
+    private readonly ViewListBox _viewListBox;
+
+    /// <summary>Guards everything the background tasks write: output, the debug state and the source.</summary>
+    private readonly Lock _stateLock = new();
+    private readonly List<string> _output = [];
+    private readonly List<string> _sourceLines = [];
+    private string _sourcePath = string.Empty;
+    private string _sourceRequest = string.Empty;
+    private IReadOnlyList<DebugStackFrame> _stack = [];
+    private readonly List<DebugVariable> _locals = [];
+    private readonly List<string> _watchExpressions = [];
+    private readonly List<DebugVariable> _watchValues = [];
+    private readonly Dictionary<int, int> _watchRows = [];
+    private string _stopPath = string.Empty;
+    private int _stopLine;
+
+    private IReadOnlyList<DevelopmentProject> _items = [];
+    private readonly Dictionary<string, TestOutcome> _testOutcomes = new(StringComparer.OrdinalIgnoreCase);
+    private ExplorerMode _explorerMode = ExplorerMode.Solution;
+    private ViewMode _viewMode = ViewMode.Source;
+
+    private DebugSession? _session;
+    private volatile bool _paused;
+    private volatile bool _busy;
+    private CancellationTokenSource? _runCts;
+    private string _status = string.Empty;
+    private StatusSeverity _statusSeverity = StatusSeverity.Info;
+
+    /// <summary>The folder scanned for solutions and scripts. Set by the caller before the dialog is shown.</summary>
+    public string Folder { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The solution to open (F3 on a <c>.sln</c> or <c>.slnx</c>). Its folder is scanned, and only the solution and the
+    /// projects it lists are shown. Empty opens the whole folder.
+    /// </summary>
+    public string SolutionPath
+    {
+        get => _solutionPath;
+        set
+        {
+            _solutionPath = value;
+            if (!string.IsNullOrEmpty(value)) Folder = Path.GetDirectoryName(value) ?? string.Empty;
+        }
+    }
+
+    /// <summary>The .NET SDK new commands run with (the newest stable one by default), or null when none was found.</summary>
+    public DotnetSdk? SelectedSdk => _sdkIndex >= 0 && _sdkIndex < _sdks.Count ? _sdks[_sdkIndex] : null;
+
+    public DevelopmentStudioDialog(
+        IDevelopmentWorkspaceScanner scanner,
+        IDevelopmentProcessRunner runner,
+        DevelopmentToolchains toolchains,
+        BreakpointStore breakpoints,
+        IDotnetSolutionService dotnetSolutionService,
+        IThemeService themeService)
+        : base(nameof(DevelopmentStudioDialog), themeService)
+    {
+        _scanner = scanner;
+        _runner = runner;
+        _toolchains = toolchains;
+        _breakpoints = breakpoints;
+        _dotnet = dotnetSolutionService;
+        Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
+
+        _explorerListBox = new ExplorerListBox(
+            new ListBoxModel<ExplorerRow>(_explorerItems) { TransformItem = (row, _) => new ListItem<ExplorerRow>(row) { Value = row.DisplayName, IsEnabled = true } },
+            themeService);
+        _viewListBox = new ViewListBox(
+            new ListBoxModel<string>(_viewItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
+            themeService);
+
+        AddControl(_explorerListBox);
+        AddControl(_viewListBox);
+    }
+
+    /// <summary>The status line text (the last command's outcome, or the reason a key did nothing).</summary>
+    public string Status => _status;
+
+    /// <summary>The breakpoints of the studio, shared by every opening of it.</summary>
+    public BreakpointStore Breakpoints => _breakpoints;
+
+    /// <summary>Whether a build, clean, test or run command (or a debug start) is running.</summary>
+    public bool IsBusy => _busy;
+
+    /// <summary>The explorer rows as they are drawn, in order.</summary>
+    public IReadOnlyList<string> ExplorerRows => _explorerItems.Select(row => row.DisplayName).ToList();
+
+    /// <summary>The lines of the right pane as they are drawn, in order.</summary>
+    public IReadOnlyList<string> ViewLines => [.. _viewItems];
+
+    /// <summary>Whether a debugging session is running (started, not yet ended).</summary>
+    public bool IsDebugging => _session is not null;
+
+    /// <summary>Whether the debugged program is stopped at a breakpoint or a step.</summary>
+    public bool IsPaused => _paused;
+
+    /// <summary>The items the scan found, in explorer order.</summary>
+    public IReadOnlyList<DevelopmentProject> Items => _items;
+
+    #region Lifecycle
+
+    public override async Task OnInitializeAsync()
+    {
+        await base.OnInitializeAsync();
+
+        _checked.Clear();
+        _testOutcomes.Clear();
+        _items = await ScanAsync();
+        _sdks = await Task.Run(() => _dotnet.ListSdks().ToList(), CancellationToken.None);
+        DotnetSdk? defaultSdk = DotnetSdk.Default(_sdks);
+        _sdkIndex = defaultSdk is null ? -1 : _sdks.ToList().IndexOf(defaultSdk);
+        _explorerMode = ExplorerMode.Solution;
+        SelectSolutionRow();
+        _viewMode = ViewMode.Source;
+        _status = _items.Count == 0
+            ? UiText.Get("DevelopmentStudio.NothingFound", "No solutions, projects or scripts were found in this folder.")
+            : string.Format(UiText.Get("DevelopmentStudio.Found", "Found {0} items. Enter opens a file; F5 starts debugging."), _items.Count);
+        _statusSeverity = StatusSeverity.Info;
+        RebuildExplorer();
+        RebuildView();
+        StateHasChanged();
+    }
+
+    public override void OnInitializeLayout()
+    {
+        if (Parent is not null)
+        {
+            ViewSize = Parent.ViewSize;
+            Position = new Position(0, 0);
+        }
+
+        var iw = (int)ViewSize.Width - 2;
+        var ih = (int)ViewSize.Height - 2;
+        if (iw > 0 && ih > 0)
+        {
+            var midH = ih - 2;
+            if (midH > 0)
+            {
+                var leftW = Math.Max(26, iw * 34 / 100);
+                var rightX = 1 + leftW + 1;
+                var rightW = iw - leftW - 1;
+                _explorerListBox.Position = new Position(1, 3 + 1);
+                _explorerListBox.ViewSize = new Size(leftW, Math.Max(0, midH - 1));
+                _viewListBox.Position = new Position(rightX, 3 + 1);
+                _viewListBox.ViewSize = rightW > 0 ? new Size(rightW, Math.Max(0, midH - 1)) : new Size(0, 0);
+            }
+        }
+
+        base.OnInitializeLayout();
+    }
+
+    /// <summary>Esc: stops a running command and the debugged program, then closes.</summary>
+    private async Task CloseAsync()
+    {
+        if (_runCts is not null) await _runCts.CancelAsync();
+        DebugSession? session;
+        lock (_stateLock)
+        {
+            session = _session;
+            _session = null;
+        }
+
+        if (session is not null)
+        {
+            _ = Task.Run(async () => { await session.TerminateAsync(); await session.DisposeAsync(); }, CancellationToken.None);
+        }
+
+        Close();
+    }
+
+    #endregion
+
+    #region Keys
+
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("F5", UiText.Get("DevelopmentStudio.HintStart", "Start debugging, or continue"));
+        yield return ("Ctrl+F5", UiText.Get("DevelopmentStudio.HintRunNoDebug", "Run without debugging"));
+        yield return ("Shift+F5", UiText.Get("DevelopmentStudio.HintStop", "Stop debugging"));
+        yield return ("F9", UiText.Get("DevelopmentStudio.HintBreakpoint", "Toggle a breakpoint on the cursor line"));
+        yield return ("F10 / F11", UiText.Get("DevelopmentStudio.HintStep", "Step over / step into"));
+        yield return ("Shift+F11", UiText.Get("DevelopmentStudio.HintStepOut", "Step out"));
+        yield return ("B / C / T / R", UiText.Get("DevelopmentStudio.HintCommands", "Build, clean, test, run the selected item"));
+        yield return ("W", UiText.Get("DevelopmentStudio.HintWatch", "Watch the word under the cursor (in the debug view, remove it)"));
+        yield return ("F6 / F7", UiText.Get("DevelopmentStudio.HintPanes", "Explorer or Tests / source, output or debug view"));
+        yield return ("Enter", UiText.Get("DevelopmentStudio.HintOpen", "Open the file (or run the test)"));
+        yield return ("Space", UiText.Get("DevelopmentStudio.HintCheck", "Check or uncheck the .NET project; B, C, T and R then run on the checked ones"));
+        yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
+        yield return ("V", UiText.Get("DevelopmentStudio.HintSdk", "Switch to the next .NET SDK"));
+        yield return ("S / F", UiText.Get("DevelopmentStudio.HintSbom", "Write a CycloneDX SBOM of the solution / switch it between XML and JSON"));
+        yield return ("X", UiText.Get("DevelopmentStudio.HintCancel", "Cancel the running command"));
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool plain = !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;
+        bool shift = keyEvent.Shift && !keyEvent.Alt && !keyEvent.Control;
+        bool ctrl = keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
+
+        switch (keyEvent.ConsoleKey)
+        {
+            case ConsoleKey.Escape:
+                await CloseAsync();
+                return true;
+            case ConsoleKey.F5 when ctrl:
+                RunSelected("run");
+                return true;
+            case ConsoleKey.F5 when shift:
+                StopDebugging();
+                return true;
+            case ConsoleKey.F5 when plain:
+                StartOrContinueDebugging();
+                return true;
+            case ConsoleKey.F6 when plain:
+                ToggleExplorerMode();
+                return true;
+            case ConsoleKey.F7 when plain:
+                CycleViewMode();
+                return true;
+            case ConsoleKey.F9 when plain:
+                ToggleBreakpointAtCursor();
+                return true;
+            case ConsoleKey.F10 when plain:
+                DebugStep(session => session.StepOverAsync());
+                return true;
+            case ConsoleKey.F11 when plain:
+                DebugStep(session => session.StepInAsync());
+                return true;
+            case ConsoleKey.F11 when shift:
+                DebugStep(session => session.StepOutAsync());
+                return true;
+            case ConsoleKey.Enter when plain:
+                EnterPressed();
+                return true;
+            case ConsoleKey.Delete when plain:
+                RemoveWatchAtCursor();
+                return true;
+            case ConsoleKey.R when ctrl:
+                _ = RefreshAsync();
+                return true;
+            case ConsoleKey.R when plain:
+                RunSelected("run");
+                return true;
+            case ConsoleKey.B when plain:
+                RunSelected("build");
+                return true;
+            case ConsoleKey.C when plain:
+                RunSelected("clean");
+                return true;
+            case ConsoleKey.T when plain:
+                RunSelected("test");
+                return true;
+            case ConsoleKey.W when plain:
+                ToggleWatchAtCursor();
+                return true;
+            case ConsoleKey.Spacebar when plain:
+                ToggleCheckAtCursor();
+                return true;
+            case ConsoleKey.A when plain:
+                CheckAllProjects();
+                return true;
+            case ConsoleKey.T when shift:
+                CheckAllTestProjects();
+                return true;
+            case ConsoleKey.V when plain:
+                CycleSdk();
+                return true;
+            case ConsoleKey.S when plain:
+                WriteSbom();
+                return true;
+            case ConsoleKey.F when plain:
+                ToggleSbomFormat();
+                return true;
+            case ConsoleKey.X when plain:
+                if (_runCts is not null) await _runCts.CancelAsync();
+                return true;
+        }
+
+        // Keys the dialog does not use (the arrows, Page Up and Down) go to the focused list.
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    private void EnterPressed()
+    {
+        var item = SelectedItem;
+        if (_explorerMode == ExplorerMode.Tests)
+        {
+            if (item is not null) RunSelected("test");
+            return;
+        }
+
+        if (item is null || item.Kind == DevelopmentProjectKind.Solution)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.SelectFile", "Select a project or a script to open."), StatusSeverity.Info);
+            return;
+        }
+
+        OpenSource(item.Path);
+    }
+
+    private void ToggleExplorerMode()
+    {
+        _explorerMode = _explorerMode == ExplorerMode.Solution ? ExplorerMode.Tests : ExplorerMode.Solution;
+        RebuildExplorer();
+        SetStatus(_explorerMode == ExplorerMode.Tests
+            ? UiText.Get("DevelopmentStudio.TestExplorer", "Test Explorer: Enter or T runs the test item under the cursor.")
+            : UiText.Get("DevelopmentStudio.SolutionExplorer", "Solution Explorer."), StatusSeverity.Info);
+    }
+
+    private void CycleViewMode()
+    {
+        _viewMode = _viewMode switch
+        {
+            ViewMode.Source => ViewMode.Output,
+            ViewMode.Output => ViewMode.Debug,
+            _ => ViewMode.Source,
+        };
+        RebuildView();
+        StateHasChanged();
+    }
+
+    #endregion
+
+    #region Explorer and views
+
+    private DevelopmentProject? SelectedItem
+    {
+        get
+        {
+            var rows = _explorerListBox.ListModel.ListItems;
+            var index = (int)_explorerListBox.ScrollableModel.CursorPosition.Y;
+            return index >= 0 && index < rows.Count ? rows[index].Item.Item : null;
+        }
+    }
+
+    /// <summary>Rebuilds the explorer rows from the scan and, in the Test Explorer, the test results.</summary>
+    private void RebuildExplorer()
+    {
+        var rows = new List<ExplorerRow>();
+        if (_explorerMode == ExplorerMode.Solution)
+        {
+            foreach (var item in _items)
+            {
+                rows.Add(new ExplorerRow(SolutionRowName(item, _checked.Contains(item.Path)), item, TintFor(item)));
+            }
+        }
+        else
+        {
+            foreach (var item in _items.Where(i => i.IsTest))
+            {
+                string marker = "    ";
+                Color? tint = null;
+                if (_testOutcomes.TryGetValue(item.Path, out var outcome))
+                {
+                    marker = outcome.Passed ? "pass" : "fail";
+                    tint = outcome.Passed ? Color.Green : Color.Red;
+                }
+
+                rows.Add(new ExplorerRow($" [{marker}] {LanguageLabel(item.Language)}  {item.Name}", item, tint));
+            }
+        }
+
+        if (rows.Count == 0)
+        {
+            rows.Add(new ExplorerRow(UiText.Get("DevelopmentStudio.EmptyExplorer", "(nothing here)"), null, null));
+        }
+
+        _explorerItems.ReplaceAll(rows);
+        _explorerListBox.UpdateModel();
+    }
+
+    private static string SolutionRowName(DevelopmentProject item, bool isChecked)
+    {
+        string test = item.IsTest ? "  [test]" : string.Empty;
+        return item.Kind switch
+        {
+            DevelopmentProjectKind.Solution => $"Solution  {item.Name}",
+            DevelopmentProjectKind.DotNetProject => $"   [{(isChecked ? 'x' : ' ')}] {LanguageLabel(item.Language)}  {item.Name}{test}",
+            _ => $"       {LanguageLabel(item.Language)}  {item.Name}{test}",
+        };
+    }
+
+    private static Color? TintFor(DevelopmentProject item) =>
+        item.Kind == DevelopmentProjectKind.Solution ? Color.Cyan : null;
+
+    private static string LanguageLabel(DevelopmentLanguage language) => language switch
+    {
+        DevelopmentLanguage.DotNet => "C#",
+        DevelopmentLanguage.Python => "Python",
+        DevelopmentLanguage.Java => "Java",
+        _ => "PowerShell",
+    };
+
+    /// <summary>Rebuilds the right pane for its mode: the source with its gutter, the output log, or the debug view.</summary>
+    private void RebuildView()
+    {
+        var lines = new List<string>();
+        lock (_stateLock)
+        {
+            switch (_viewMode)
+            {
+                case ViewMode.Source:
+                    if (_sourcePath.Length == 0)
+                    {
+                        lines.Add(UiText.Get("DevelopmentStudio.NoSource", "Select a file in the explorer and press Enter to open it here."));
+                    }
+
+                    for (int i = 0; i < _sourceLines.Count; i++)
+                    {
+                        int number = i + 1;
+                        string gutter = number == _stopLine && _sourcePath.Equals(_stopPath, StringComparison.OrdinalIgnoreCase)
+                            ? "→"
+                            : _breakpoints.Contains(_sourcePath, number) ? "●" : " ";
+                        lines.Add($"{gutter}{number,5}  {_sourceLines[i]}");
+                    }
+
+                    break;
+                case ViewMode.Output:
+                    lines.AddRange(_output);
+                    break;
+                default:
+                    lines.AddRange(DebugLines());
+                    break;
+            }
+        }
+
+        if (lines.Count == 0)
+        {
+            lines.Add(string.Empty);
+        }
+
+        _viewItems.ReplaceAll(lines);
+        _viewListBox.UpdateModel();
+    }
+
+    /// <summary>The debug view's lines; <see cref="_watchRows"/> maps the watch rows to their watch so Delete can remove one. Caller holds the lock.</summary>
+    private List<string> DebugLines()
+    {
+        var lines = new List<string>();
+        _watchRows.Clear();
+
+        string state = _session is null
+            ? UiText.Get("DevelopmentStudio.NotDebugging", "Not debugging.")
+            : _paused
+                ? string.Format(UiText.Get("DevelopmentStudio.Paused", "Stopped at {0}:{1}"), Path.GetFileName(_stopPath), _stopLine)
+                : UiText.Get("DevelopmentStudio.RunningState", "Running.");
+        lines.Add(state);
+        lines.Add(string.Empty);
+
+        lines.Add(UiText.Get("DevelopmentStudio.CallStack", "Call stack"));
+        foreach (var frame in _stack)
+        {
+            lines.Add($"   {frame.Name}  {(frame.Path.Length == 0 ? string.Empty : Path.GetFileName(frame.Path) + ":" + frame.Line)}");
+        }
+
+        lines.Add(string.Empty);
+        lines.Add(UiText.Get("DevelopmentStudio.Locals", "Locals"));
+        foreach (var variable in _locals)
+        {
+            lines.Add($"   {variable.Name} = {variable.Value}");
+        }
+
+        lines.Add(string.Empty);
+        lines.Add(UiText.Get("DevelopmentStudio.Watch", "Watch"));
+        for (int i = 0; i < _watchExpressions.Count; i++)
+        {
+            string value = i < _watchValues.Count ? _watchValues[i].Value : UiText.Get("DevelopmentStudio.NotEvaluated", "(not evaluated)");
+            _watchRows[lines.Count] = i;
+            lines.Add($"   {_watchExpressions[i]} = {value}");
+        }
+
+        lines.Add(string.Empty);
+        lines.Add(UiText.Get("DevelopmentStudio.Breakpoints", "Breakpoints"));
+        foreach (var (path, line) in _breakpoints.All())
+        {
+            lines.Add($"   ● {Path.GetFileName(path)}:{line}");
+        }
+
+        return lines;
+    }
+
+    private void AppendOutput(string line)
+    {
+        lock (_stateLock)
+        {
+            _output.Add(line);
+            if (_output.Count > MaxOutputLines)
+            {
+                _output.RemoveRange(0, _output.Count - MaxOutputLines);
+            }
+
+        }
+
+        if (_viewMode == ViewMode.Output) RebuildView();
+    }
+
+    private void SetStatus(string text, StatusSeverity severity)
+    {
+        _status = text;
+        _statusSeverity = severity;
+        StateHasChanged();
+    }
+
+    /// <summary>Opens a source file in the source view. The read runs on a background task; the newest request wins.</summary>
+    private void OpenSource(string path)
+    {
+        _sourceRequest = path;
+        _viewMode = ViewMode.Source;
+        _ = Task.Run(() =>
+        {
+            string[] lines;
+            string? error = null;
+            try
+            {
+                if (new FileInfo(path).Length > MaxSourceBytes)
+                {
+                    lines = [];
+                    error = UiText.Get("DevelopmentStudio.TooLarge", "The file is too large to show here.");
+                }
+                else
+                {
+                    lines = File.ReadAllLines(path);
+                }
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                lines = [];
+                error = exception.Message;
+            }
+
+            lock (_stateLock)
+            {
+                if (_sourceRequest != path) return;
+                _sourcePath = path;
+                _sourceLines.Clear();
+                _sourceLines.AddRange(lines);
+            }
+
+            RebuildView();
+            _viewListBox.ScrollableModel.CursorPosition.Y = 0;
+            SetStatus(error ?? Path.GetFileName(path), error is null ? StatusSeverity.Info : StatusSeverity.Error);
+        }, CancellationToken.None);
+    }
+
+    /// <summary>Columns before the text of a source row: the gutter mark, a five-column line number and two spaces.</summary>
+    private const int GutterWidth = 8;
+
+    /// <summary>The 1-based line under the source cursor, or 0 when the source view is not showing a file.</summary>
+    private int CursorLine
+    {
+        get
+        {
+            if (_viewMode != ViewMode.Source) return 0;
+            var rows = _viewListBox.ListModel.ListItems;
+            var index = (int)_viewListBox.ScrollableModel.CursorPosition.Y;
+            return index >= 0 && index < rows.Count && rows.Count > 0 ? index + 1 : 0;
+        }
+    }
+
+    #endregion
+
+    #region Breakpoints and watches
+
+    private void ToggleBreakpointAtCursor()
+    {
+        string path;
+        int line;
+        int sourceCount;
+        lock (_stateLock)
+        {
+            path = _sourcePath;
+            line = CursorLine;
+            sourceCount = _sourceLines.Count;
+        }
+
+        if (path.Length == 0 || line < 1 || line > sourceCount)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NoBreakpointTarget", "Open a file (Enter) and put the cursor on a line to set a breakpoint."), StatusSeverity.Info);
+            return;
+        }
+
+        bool set = _breakpoints.Toggle(path, line);
+        RebuildView();
+        SetStatus(string.Format(set
+            ? UiText.Get("DevelopmentStudio.BreakpointSet", "Breakpoint set at line {0}.")
+            : UiText.Get("DevelopmentStudio.BreakpointRemoved", "Breakpoint removed from line {0}."), line), StatusSeverity.Info);
+
+        // While a program runs, the adapter gets the file's new list at once; a breakpoint set between sessions goes at the start.
+        DebugSession? session = _session;
+        if (session is not null)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await session.SetBreakpointsAsync(path, _breakpoints.LinesIn(path));
+                }
+                catch (Exception exception) when (exception is DapException or OperationCanceledException or InvalidOperationException)
+                {
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.BreakpointFailed", "The debugger did not take the breakpoint: {0}"), exception.Message), StatusSeverity.Error);
+                }
+            }, CancellationToken.None);
+        }
+    }
+
+    /// <summary>W in the source view: adds the word under the cursor to the watch list.</summary>
+    private void ToggleWatchAtCursor()
+    {
+        if (_viewMode == ViewMode.Debug)
+        {
+            RemoveWatchAtCursor();
+            return;
+        }
+
+        string? word = WordUnderCursor();
+        if (word is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NoWord", "Put the cursor on a name to watch it."), StatusSeverity.Info);
+            return;
+        }
+
+        lock (_stateLock)
+        {
+            if (!_watchExpressions.Contains(word)) _watchExpressions.Add(word);
+        }
+
+        SetStatus(string.Format(UiText.Get("DevelopmentStudio.Watching", "Watching {0}."), word), StatusSeverity.Info);
+        if (_session is not null && _paused) _ = RefreshWatchesAsync();
+        RebuildView();
+    }
+
+    /// <summary>Delete in the debug view: removes the watch on the cursor row.</summary>
+    private void RemoveWatchAtCursor()
+    {
+        if (_viewMode != ViewMode.Debug) return;
+        lock (_stateLock)
+        {
+            int row = (int)_viewListBox.ScrollableModel.CursorPosition.Y;
+            if (!_watchRows.TryGetValue(row, out int watch)) return;
+            _watchExpressions.RemoveAt(watch);
+            if (watch < _watchValues.Count) _watchValues.RemoveAt(watch);
+        }
+
+        RebuildView();
+    }
+
+    private string? WordUnderCursor()
+    {
+        lock (_stateLock)
+        {
+            int line = CursorLine;
+            if (line < 1 || line > _sourceLines.Count) return null;
+            string text = _sourceLines[line - 1];
+            // The rows are "<gutter><line number,5>  <text>": eight columns before the text, so the cursor's column is shifted back by them.
+            int column = Math.Clamp((int)_viewListBox.ScrollableModel.CursorPosition.X - GutterWidth, 0, text.Length);
+            int start = column, end = column;
+            while (start > 0 && (char.IsLetterOrDigit(text[start - 1]) || text[start - 1] == '_')) start--;
+            while (end < text.Length && (char.IsLetterOrDigit(text[end]) || text[end] == '_')) end++;
+            return end > start ? text[start..end] : null;
+        }
+    }
+
+    #endregion
+
+    #region Commands (build, clean, test, run)
+
+    /// <summary>Runs one command on the checked projects, or on the cursor item when nothing is checked.</summary>
+    private void RunSelected(string verb)
+    {
+        var targets = ResolveTargets();
+        if (targets.Count == 0)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.SelectItem", "Select an item first."), StatusSeverity.Info);
+            return;
+        }
+
+        RunCommand(targets, verb);
+    }
+
+    /// <summary>The checked projects in explorer order, or the cursor item when none is checked (empty on a heading row).</summary>
+    private IReadOnlyList<DevelopmentProject> ResolveTargets()
+    {
+        if (_checked.Count > 0)
+        {
+            return _items.Where(item => _checked.Contains(item.Path)).ToList();
+        }
+
+        var item = SelectedItem;
+        return item is null ? [] : [item];
+    }
+
+    /// <summary>The toolchain of an item. A .NET item uses the SDK chosen with V, so each command runs on that SDK's host.</summary>
+    private IDevelopmentToolchain ToolchainFor(DevelopmentProject item) =>
+        item.Language == DevelopmentLanguage.DotNet && SelectedSdk is { } sdk
+            ? new DotNetToolchain { Host = sdk.HostPath }
+            : _toolchains.For(item);
+
+    /// <summary>
+    /// Runs the verb on each target, one after another, in one run: the output of all of them is one log, and a test run's
+    /// totals are summed over the targets. A target without that command is noted and skipped.
+    /// </summary>
+    private void RunCommand(IReadOnlyList<DevelopmentProject> targets, string verb)
+    {
+        if (_busy)
+        {
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.Busy", "A command is still running; X cancels it ({0} was not started)."), verb), StatusSeverity.Info);
+            return;
+        }
+
+        var plan = new List<(DevelopmentProject Item, ProcessCommand Command)>();
+        var cleanable = new List<DevelopmentProject>();
+        var notes = new List<string>();
+        foreach (var item in targets)
+        {
+            var toolchain = ToolchainFor(item);
+            ProcessCommand? command = verb switch
+            {
+                "build" => toolchain.Build(item),
+                "clean" => toolchain.Clean(item),
+                "test" => toolchain.Test(item),
+                _ => toolchain.Run(item),
+            };
+
+            if (command is not null)
+            {
+                plan.Add((item, command));
+            }
+            else if (verb == "clean" && toolchain.CacheFolders(item).Count > 0)
+            {
+                cleanable.Add(item);
+            }
+            else
+            {
+                notes.Add(string.Format(UiText.Get("DevelopmentStudio.NoCommand", "{0} cannot {1} {2}."), LanguageLabel(item.Language), verb, item.Name));
+            }
+        }
+
+        if (plan.Count == 0)
+        {
+            foreach (var item in cleanable) CleanCacheFolders(item, ToolchainFor(item).CacheFolders(item));
+            if (cleanable.Count == 0)
+            {
+                SetStatus(notes.Count > 0 ? string.Join(" ", notes) : UiText.Get("DevelopmentStudio.SelectItem", "Select an item first."), StatusSeverity.Info);
+            }
+
+            return;
+        }
+
+        string targetLabel = plan.Count == 1 ? plan[0].Item.Name : string.Format(UiText.Get("DevelopmentStudio.ProjectCount", "{0} projects"), plan.Count);
+        var cts = new CancellationTokenSource();
+        _runCts = cts;
+        _busy = true;
+        lock (_stateLock)
+        {
+            _output.Clear();
+        }
+
+        SetStatus(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, targetLabel), StatusSeverity.Info);
+        _viewMode = ViewMode.Output;
+        RebuildView();
+
+        _ = Task.Run(async () =>
+        {
+            int firstFailure = 0;
+            var runTotals = TestTotals.Empty;
+            try
+            {
+                foreach (var (item, command) in plan)
+                {
+                    if (cts.IsCancellationRequested) break;
+                    int start;
+                    lock (_stateLock) start = _output.Count;
+
+                    string sdkNote = item.Language == DevelopmentLanguage.DotNet && SelectedSdk is { } sdk
+                        ? string.Format(UiText.Get("DevelopmentStudio.SdkNote", "   (.NET SDK {0})"), sdk.Version)
+                        : string.Empty;
+                    AppendOutput($"$ {command.Display}{sdkNote}");
+                    int exitCode = await _runner.RunAsync(command, AppendOutput, cts.Token);
+                    if (exitCode != 0 && firstFailure == 0) firstFailure = exitCode;
+
+                    if (verb == "test")
+                    {
+                        List<string> segment;
+                        lock (_stateLock) segment = _output.Skip(start).ToList();
+                        var totals = TestOutputParser.Parse(segment);
+                        _testOutcomes[item.Path] = new TestOutcome(exitCode == 0 && totals.Failed == 0, totals);
+                        runTotals = runTotals.Add(totals);
+                        RebuildExplorer();
+                    }
+
+                    AppendOutput(string.Empty);
+                }
+
+                if (cts.IsCancellationRequested)
+                {
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.Cancelled", "{0} cancelled."), verb), StatusSeverity.Info);
+                }
+                else if (verb == "test" && runTotals.Total > 0)
+                {
+                    string summary = string.Format(UiText.Get("DevelopmentStudio.TestTotals", "Tests: {0} passed, {1} failed, {2} skipped."), runTotals.Passed, runTotals.Failed, runTotals.Skipped);
+                    AppendOutput(summary);
+                    SetStatus(summary, runTotals.Failed == 0 && firstFailure == 0 ? StatusSeverity.Success : StatusSeverity.Error);
+                }
+                else if (firstFailure == 0)
+                {
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.Succeeded", "{0} succeeded: {1}."), verb, targetLabel), StatusSeverity.Success);
+                }
+                else
+                {
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.FailedExit", "{0} failed (exit {1})."), verb, firstFailure), StatusSeverity.Error);
+                }
+            }
+            catch (Exception exception) when (exception is OperationCanceledException or InvalidOperationException or IOException)
+            {
+                SetStatus(exception.Message, StatusSeverity.Error);
+            }
+            finally
+            {
+                _busy = false;
+                _runCts = null;
+                RebuildView();
+                StateHasChanged();
+            }
+        }, CancellationToken.None);
+    }
+
+    /// <summary>Re-scans the folder. The Test Explorer keeps the results of the items still there.</summary>
+    private async Task RefreshAsync()
+    {
+        _items = await ScanAsync();
+        RebuildExplorer();
+        SetStatus(string.Format(UiText.Get("DevelopmentStudio.Refreshed", "Found {0} items."), _items.Count), StatusSeverity.Info);
+    }
+
+    /// <summary>The items to list: the folder's, or, when the dialog was opened on a solution, that solution and the projects it lists.</summary>
+    private async Task<IReadOnlyList<DevelopmentProject>> ScanAsync()
+    {
+        string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
+        var all = await Task.Run(() => _scanner.Scan(folder).ToList(), CancellationToken.None);
+        if (string.IsNullOrEmpty(_solutionPath)) return all;
+
+        var projectPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            string solutionPath = _solutionPath;
+            var solution = await Task.Run(() => _dotnet.ParseSolution(solutionPath), CancellationToken.None);
+            projectPaths = solution.Projects.Select(project => project.AbsolutePath).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Xml.XmlException or FormatException)
+        {
+            SetStatus(string.Format(UiText.Get("Solution.ReadFailed", "Failed to read solution: {0}"), exception.Message), StatusSeverity.Error);
+        }
+
+        return all.Where(item => item.Path.Equals(_solutionPath, StringComparison.OrdinalIgnoreCase) || projectPaths.Contains(item.Path)).ToList();
+    }
+
+    /// <summary>Puts the explorer cursor on the solution the dialog was opened on.</summary>
+    private void SelectSolutionRow()
+    {
+        if (string.IsNullOrEmpty(_solutionPath)) return;
+        int index = _items.ToList().FindIndex(item => item.Path.Equals(_solutionPath, StringComparison.OrdinalIgnoreCase));
+        _explorerListBox.ScrollableModel.CursorPosition.Y = Math.Max(0, index);
+    }
+
+    /// <summary>Space: checks or unchecks the .NET project under the cursor.</summary>
+    private void ToggleCheckAtCursor()
+    {
+        var item = SelectedItem;
+        if (item is not { Kind: DevelopmentProjectKind.DotNetProject })
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.OnlyCheckProjects", "Only .NET projects can be checked."), StatusSeverity.Info);
+            return;
+        }
+
+        if (!_checked.Remove(item.Path)) _checked.Add(item.Path);
+        RebuildExplorer();
+        StateHasChanged();
+    }
+
+    /// <summary>A: checks every .NET project, or clears them when all are checked already.</summary>
+    private void CheckAllProjects() => CheckProjects(_items.Where(item => item.Kind == DevelopmentProjectKind.DotNetProject).ToList());
+
+    /// <summary>Shift+T: checks every .NET test project, or clears them when all are checked already.</summary>
+    private void CheckAllTestProjects()
+    {
+        var tests = _items.Where(item => item.Kind == DevelopmentProjectKind.DotNetProject && item.IsTest).ToList();
+        if (tests.Count == 0)
+        {
+            SetStatus(UiText.Get("Solution.NoTests", "No test projects in this solution."), StatusSeverity.Info);
+            return;
+        }
+
+        CheckProjects(tests);
+    }
+
+    private void CheckProjects(IReadOnlyList<DevelopmentProject> projects)
+    {
+        if (projects.Count == 0)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NoProjectsToCheck", "No .NET projects to check."), StatusSeverity.Info);
+            return;
+        }
+
+        if (projects.All(project => _checked.Contains(project.Path)))
+        {
+            foreach (var project in projects) _checked.Remove(project.Path);
+        }
+        else
+        {
+            foreach (var project in projects) _checked.Add(project.Path);
+        }
+
+        RebuildExplorer();
+        StateHasChanged();
+    }
+
+    /// <summary>V: the next installed .NET SDK. A command already running keeps the SDK it started with.</summary>
+    private void CycleSdk()
+    {
+        if (_sdks.Count == 0)
+        {
+            SetStatus(UiText.Get("Solution.NoSdk", "No .NET SDK was found; commands run with the dotnet on the PATH."), StatusSeverity.Info);
+            return;
+        }
+
+        if (_sdks.Count == 1)
+        {
+            SetStatus(string.Format(UiText.Get("Solution.OnlySdk", "Only .NET SDK {0} is installed."), SelectedSdk!.Version), StatusSeverity.Info);
+            return;
+        }
+
+        _sdkIndex = (_sdkIndex + 1) % _sdks.Count;
+        var chosen = SelectedSdk!;
+        string version = chosen.IsPrerelease ? string.Format(UiText.Get("Solution.SdkPreview", "{0} (preview)"), chosen.Version) : chosen.Version;
+        SetStatus(string.Format(UiText.Get("Solution.UsingSdk", "Using .NET SDK {0}."), version), StatusSeverity.Info);
+    }
+
+    /// <summary>S: writes a CycloneDX SBOM of the solution (the cursor's, or the first in the list) beside it. Off the UI thread.</summary>
+    private void WriteSbom()
+    {
+        var solution = SelectedItem is { Kind: DevelopmentProjectKind.Solution } selected ? selected : _items.FirstOrDefault(item => item.Kind == DevelopmentProjectKind.Solution);
+        if (solution is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NoSolutionForSbom", "There is no solution here to write an SBOM for."), StatusSeverity.Info);
+            return;
+        }
+
+        SetStatus(UiText.Get("DevelopmentStudio.SbomWriting", "Writing the SBOM..."), StatusSeverity.Info);
+        var format = _sbomFormat;
+        string solutionPath = solution.Path;
+        _ = Task.Run(() =>
+        {
+            string message;
+            var severity = StatusSeverity.Success;
+            try
+            {
+                var result = _dotnet.GenerateSbom(_dotnet.ParseSolution(solutionPath), format);
+                if (result.Path.Length == 0)
+                {
+                    message = UiText.Get("Solution.SbomNoAssets", "No project.assets.json found: build or restore the solution first.");
+                    severity = StatusSeverity.Error;
+                }
+                else
+                {
+                    message = string.Format(UiText.Get("Solution.SbomWritten", "Wrote an SBOM of {0} packages to {1}."), result.ComponentCount, result.Path);
+                    if (result.ProjectsWithoutAssets > 0)
+                    {
+                        message += " " + string.Format(UiText.Get("Solution.SbomMissingSome", "{0} projects had no assets file and are left out."), result.ProjectsWithoutAssets);
+                    }
+                }
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Xml.XmlException or FormatException or InvalidOperationException)
+            {
+                message = string.Format(UiText.Get("Solution.SbomFailed", "SBOM failed: {0}"), exception.Message);
+                severity = StatusSeverity.Error;
+            }
+
+            SetStatus(message, severity);
+        }, CancellationToken.None);
+    }
+
+    /// <summary>F: switches the SBOM between XML and JSON. Takes effect on the next S.</summary>
+    private void ToggleSbomFormat()
+    {
+        _sbomFormat = _sbomFormat == SbomFormat.Xml ? SbomFormat.Json : SbomFormat.Xml;
+        SetStatus(string.Format(UiText.Get("Solution.SbomFormat", "SBOM format: {0}."), _sbomFormat == SbomFormat.Json ? "JSON" : "XML"), StatusSeverity.Info);
+    }
+
+    /// <summary>Clean of a script: deletes its cache folders (there is no clean command for Python).</summary>
+    private void CleanCacheFolders(DevelopmentProject item, IReadOnlyList<string> folders)
+    {
+        _ = Task.Run(() =>
+        {
+            int removed = 0;
+            foreach (string folder in folders)
+            {
+                try
+                {
+                    Directory.Delete(folder, recursive: true);
+                    removed++;
+                }
+                catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+                {
+                    SetStatus(exception.Message, StatusSeverity.Error);
+                    return;
+                }
+            }
+
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.Cleaned", "Removed {0} cache folders of {1}."), removed, item.Name), StatusSeverity.Success);
+        }, CancellationToken.None);
+    }
+
+    #endregion
+
+    #region Debugging
+
+    /// <summary>F5: starts debugging the selected item, or continues the program when it is stopped.</summary>
+    private void StartOrContinueDebugging()
+    {
+        if (_session is not null)
+        {
+            if (_paused) DebugStep(session => session.ContinueAsync());
+            else SetStatus(UiText.Get("DevelopmentStudio.AlreadyRunning", "The program is running. It stops at a breakpoint."), StatusSeverity.Info);
+            return;
+        }
+
+        var item = SelectedItem;
+        if (item is null || item.Kind == DevelopmentProjectKind.Solution)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.SelectToDebug", "Select a project or a script to debug. A solution cannot be debugged."), StatusSeverity.Info);
+            return;
+        }
+
+        if (_busy)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.BusyDebug", "A command is still running; X cancels it before debugging."), StatusSeverity.Info);
+            return;
+        }
+
+        _ = StartDebuggingAsync(item, debugTests: _explorerMode == ExplorerMode.Tests);
+    }
+
+    private async Task StartDebuggingAsync(DevelopmentProject item, bool debugTests)
+    {
+        _busy = true;
+        var cts = new CancellationTokenSource();
+        _runCts = cts;
+        try
+        {
+            var toolchain = _toolchains.For(item);
+            string? assembly = null;
+            if (item.Language == DevelopmentLanguage.DotNet)
+            {
+                // A .NET program is built first, so the debugger starts the DLL that matches the source.
+                var build = toolchain.Build(item)!;
+                lock (_stateLock) _output.Clear();
+                AppendOutput($"$ {build.Display}");
+                int buildExit = await _runner.RunAsync(build, AppendOutput, cts.Token);
+                if (buildExit != 0)
+                {
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.BuildFailedNoDebug", "The build failed, so {0} was not started."), item.Name), StatusSeverity.Error);
+                    _viewMode = ViewMode.Output;
+                    return;
+                }
+
+                assembly = toolchain.FindBuiltAssembly(item);
+            }
+
+            var plan = toolchain.PlanDebug(item, assembly, debugTests);
+            if (plan is null)
+            {
+                SetStatus(string.Format(UiText.Get("DevelopmentStudio.NoDebugger", "Debugging {0} is not available for {1} here."), item.Name, LanguageLabel(item.Language)), StatusSeverity.Error);
+                return;
+            }
+
+            DebugSession session = DebugSession.Start(plan, item.Directory, OnDebugNotification);
+            lock (_stateLock)
+            {
+                _session = session;
+                _stack = [];
+                _locals.Clear();
+                _watchValues.Clear();
+            }
+
+            var breakpoints = _breakpoints.Files().ToDictionary(file => file, file => _breakpoints.LinesIn(file), StringComparer.OrdinalIgnoreCase);
+            AppendOutput($"Debugging {item.Name} with {plan.FileName}");
+            await session.LaunchAsync(plan.Launch, breakpoints, cts.Token);
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.Started", "Debugging {0}. F5 continues, F10 steps over."), item.Name), StatusSeverity.Success);
+            _viewMode = ViewMode.Debug;
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or DapException or OperationCanceledException or IOException)
+        {
+            DebugSession? failed;
+            lock (_stateLock)
+            {
+                failed = _session;
+                _session = null;
+            }
+
+            if (failed is not null) await failed.DisposeAsync();
+            SetStatus(exception.Message, StatusSeverity.Error);
+        }
+        finally
+        {
+            _busy = false;
+            _runCts = null;
+            RebuildView();
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>Runs one step (or continue, pause) on the session, off the UI thread. A failure is shown on the status line.</summary>
+    private void DebugStep(Func<DebugSession, Task> step)
+    {
+        DebugSession? session = _session;
+        if (session is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NotDebugging", "Not debugging. F5 starts it."), StatusSeverity.Info);
+            return;
+        }
+
+        if (!_paused)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NotStopped", "The program is running. It stops at a breakpoint."), StatusSeverity.Info);
+            return;
+        }
+
+        _paused = false;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await step(session);
+            }
+            catch (Exception exception) when (exception is DapException or OperationCanceledException or InvalidOperationException)
+            {
+                SetStatus(exception.Message, StatusSeverity.Error);
+            }
+        }, CancellationToken.None);
+    }
+
+    /// <summary>Shift+F5: ends the debugged program and the adapter.</summary>
+    private void StopDebugging()
+    {
+        DebugSession? session;
+        lock (_stateLock)
+        {
+            session = _session;
+            _session = null;
+            _paused = false;
+            _stack = [];
+            _locals.Clear();
+            _watchValues.Clear();
+        }
+
+        if (session is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NotDebugging", "Not debugging. F5 starts it."), StatusSeverity.Info);
+            return;
+        }
+
+        _ = Task.Run(async () =>
+        {
+            await session.TerminateAsync();
+            await session.DisposeAsync();
+        }, CancellationToken.None);
+        SetStatus(UiText.Get("DevelopmentStudio.Stopped", "Debugging stopped."), StatusSeverity.Info);
+        RebuildView();
+        StateHasChanged();
+    }
+
+    /// <summary>Events from the adapter, on its reader thread. Stopping reads the stack in the background; the rest updates state.</summary>
+    private void OnDebugNotification(IDebugNotification notification)
+    {
+        switch (notification)
+        {
+            case DebugStoppedNotification stopped:
+                _paused = true;
+                _ = Task.Run(() => RefreshStopAsync(stopped.Stop), CancellationToken.None);
+                break;
+            case DebugContinuedNotification:
+                _paused = false;
+                lock (_stateLock)
+                {
+                    _stack = [];
+                    _locals.Clear();
+                    _watchValues.Clear();
+                }
+                SetStatus(UiText.Get("DevelopmentStudio.RunningState", "Running."), StatusSeverity.Info);
+                break;
+            case DebugOutputNotification output:
+                foreach (string line in output.Text.Replace("\r", string.Empty).Split('\n'))
+                {
+                    if (line.Length > 0) AppendOutput(line);
+                }
+                break;
+            case DebugEndedNotification ended:
+                DebugSession? session;
+                lock (_stateLock)
+                {
+                    session = _session;
+                    _session = null;
+                    _paused = false;
+                    _stack = [];
+                    _locals.Clear();
+                    _watchValues.Clear();
+                }
+
+                AppendOutput(ended.Reason);
+                SetStatus(ended.Reason, StatusSeverity.Info);
+                if (session is not null) _ = Task.Run(() => session.DisposeAsync().AsTask(), CancellationToken.None);
+                RebuildView();
+                break;
+        }
+    }
+
+    /// <summary>Re-evaluates the watches of the stopped program, without moving the view. Used when a watch is added at a stop.</summary>
+    private async Task RefreshWatchesAsync()
+    {
+        DebugSession? session = _session;
+        if (session is null) return;
+        try
+        {
+            var frames = await session.StackTraceAsync();
+            int frameId = frames.FirstOrDefault()?.Id ?? 0;
+            List<string> expressions;
+            lock (_stateLock) expressions = [.. _watchExpressions];
+            var values = new List<DebugVariable>();
+            foreach (string expression in expressions)
+            {
+                values.Add(await session.EvaluateAsync(expression, frameId));
+            }
+
+            lock (_stateLock)
+            {
+                _watchValues.Clear();
+                _watchValues.AddRange(values);
+            }
+
+            RebuildView();
+        }
+        catch (Exception exception) when (exception is DapException or OperationCanceledException or InvalidOperationException or ObjectDisposedException)
+        {
+            SetStatus(exception.Message, StatusSeverity.Error);
+        }
+    }
+
+    /// <summary>Reads the stack, the locals and the watches at a stop, then shows the stopped line in the source view.</summary>
+    private async Task RefreshStopAsync(DebugStop stop)
+    {
+        DebugSession? session = _session;
+        if (session is null) return;
+        try
+        {
+            IReadOnlyList<DebugStackFrame> frames = await session.StackTraceAsync();
+            DebugStackFrame? top = frames.FirstOrDefault();
+            var locals = new List<DebugVariable>();
+            var watchValues = new List<DebugVariable>();
+            if (top is not null)
+            {
+                foreach (var scope in await session.ScopesAsync(top.Id))
+                {
+                    if (scope.Name.Contains("Local", StringComparison.OrdinalIgnoreCase) || scope.Name.Length == 0)
+                    {
+                        locals.AddRange(await session.VariablesAsync(scope.Reference));
+                    }
+                }
+            }
+
+            List<string> expressions;
+            lock (_stateLock) expressions = [.. _watchExpressions];
+            foreach (string expression in expressions)
+            {
+                watchValues.Add(await session.EvaluateAsync(expression, top?.Id ?? 0));
+            }
+
+            bool openFile = top is not null && top.Path.Length > 0 && File.Exists(top.Path)
+                && !top.Path.Equals(_sourcePath, StringComparison.OrdinalIgnoreCase);
+            lock (_stateLock)
+            {
+                _stack = frames;
+                _locals.Clear();
+                _locals.AddRange(locals);
+                _watchValues.Clear();
+                _watchValues.AddRange(watchValues);
+                _stopPath = top?.Path ?? string.Empty;
+                _stopLine = top?.Line ?? 0;
+                _viewMode = ViewMode.Source;
+            }
+
+            if (openFile) OpenSourceAndWait(top!.Path);
+            RebuildView();
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.StoppedAt", "Stopped ({0}) at {1}:{2}."), stop.Reason, top is null ? "?" : Path.GetFileName(top.Path), top?.Line ?? 0), StatusSeverity.Info);
+            if (_stopLine > 0) _viewListBox.ScrollableModel.CursorPosition.Y = _stopLine - 1;
+        }
+        catch (Exception exception) when (exception is DapException or OperationCanceledException or InvalidOperationException or ObjectDisposedException)
+        {
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.StackFailed", "Could not read the program's state: {0}"), exception.Message), StatusSeverity.Error);
+        }
+    }
+
+    /// <summary>Loads the stopped file synchronously; a stop is not a key handler, so the short read is allowed here.</summary>
+    private void OpenSourceAndWait(string path)
+    {
+        try
+        {
+            string[] lines = new FileInfo(path).Length > MaxSourceBytes ? [] : File.ReadAllLines(path);
+            lock (_stateLock)
+            {
+                _sourceRequest = path;
+                _sourcePath = path;
+                _sourceLines.Clear();
+                _sourceLines.AddRange(lines);
+            }
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            SetStatus(exception.Message, StatusSeverity.Error);
+        }
+    }
+
+    #endregion
+
+    #region Drawing
+
+    public override void Draw(IBuffer buffer)
+    {
+        base.Draw(buffer);
+
+        if (ViewSize.IsEmpty) return;
+
+        var colorScheme = ThemeService.CurrentColorScheme;
+        var ix = (int)AbsolutePosition.X + 1;
+        var iy = (int)AbsolutePosition.Y + 1;
+        var iw = (int)ViewSize.Width - 2;
+        var ih = (int)ViewSize.Height - 2;
+        if (iw <= 0 || ih <= 0) return;
+
+        DrawHeader(buffer, ix, iy, iw, colorScheme);
+        DrawFooter(buffer, ix, iy + ih - 1, iw, colorScheme);
+
+        var midY = iy + 1;
+        if (ih - 2 <= 0) return;
+        var leftW = Math.Max(26, iw * 34 / 100);
+        var rightX = ix + leftW + 1;
+        var rightW = iw - leftW - 1;
+
+        DrawSectionHeader(buffer, ix, midY, leftW,
+            _explorerMode == ExplorerMode.Solution
+                ? UiText.Get("DevelopmentStudio.SolutionExplorerHeading", "Solution Explorer")
+                : UiText.Get("DevelopmentStudio.TestExplorerHeading", "Test Explorer"),
+            true, colorScheme);
+        if (rightW > 0)
+        {
+            string heading = _viewMode switch
+            {
+                ViewMode.Source => UiText.Get("DevelopmentStudio.SourceHeading", "Source"),
+                ViewMode.Output => UiText.Get("DevelopmentStudio.OutputHeading", "Output"),
+                _ => UiText.Get("DevelopmentStudio.DebugHeading", "Debug"),
+            };
+            DrawSectionHeader(buffer, rightX, midY, rightW, heading, false, colorScheme);
+        }
+    }
+
+    private void DrawHeader(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
+    {
+        string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
+        string debugState = _session is null ? string.Empty : _paused ? "   ● paused" : "   ▶ running";
+        string busy = _busy ? "   *" : string.Empty;
+        WriteLine(buffer, x, y, w, $"{folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
+    }
+
+    private void DrawFooter(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
+    {
+        string hints = UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK S/F:SBOM F6/F7:panes Enter:open Esc:close");
+        DrawStatusAndHints(buffer, x, y, w, _status, _statusSeverity switch
+        {
+            StatusSeverity.Error => colorScheme.Error,
+            StatusSeverity.Success => Color.Green,
+            _ => colorScheme.Foreground,
+        }, hints, colorScheme);
+    }
+
+    #endregion
+}

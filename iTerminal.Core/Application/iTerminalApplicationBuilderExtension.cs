@@ -234,7 +234,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Plugins.IPluginManagerService, iTerminal.Core.Services.Plugins.PluginManagerService>();
         services.AddTransient<iTerminal.Core.Dialogs.Plugins.PluginManagerDialog>();
         services.AddSingleton<iTerminal.Core.Services.Dotnet.IDotnetSolutionService, iTerminal.Core.Services.Dotnet.DotnetSolutionService>();
-        services.AddTransient<iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog>();
         services.AddSingleton<iTerminal.Core.Services.PackageManager.IPackageManagerService>(_ =>
             OperatingSystem.IsWindows()
                 ? new iTerminal.Core.Services.PackageManager.WinGetPackageManagerService()

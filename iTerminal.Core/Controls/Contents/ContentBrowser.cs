@@ -41,7 +41,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private TextFileEditorDialog? _textFileEditorDialog { get; set; }
     private HelpDialog? _helpDialog { get; set; }
     private FileViewerDialog? _fileViewerDialog { get; set; }
-    private iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog? _solutionViewerDialog { get; set; }
+    private iTerminal.Core.Extensions.ISolutionDialogFactory? _solutionDialogFactory { get; set; }
     private iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? _musicFileViewerDialog { get; set; }
     private iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? _videoFileViewerDialog { get; set; }
     private iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? _imageFileViewerDialog { get; set; }
@@ -111,7 +111,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         TextFileEditorDialog? textFileEditorDialog = null,
         HelpDialog? helpDialog = null,
         FileViewerDialog? fileViewerDialog = null,
-        iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog? solutionViewerDialog = null,
+        iTerminal.Core.Extensions.ISolutionDialogFactory? solutionDialogFactory = null,
         IEnumerable<IContentLens>? contentLenses = null,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
@@ -229,7 +229,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _textFileEditorDialog = textFileEditorDialog;
         _helpDialog = helpDialog;
         _fileViewerDialog = fileViewerDialog;
-        _solutionViewerDialog = solutionViewerDialog;
+        _solutionDialogFactory = solutionDialogFactory;
         _musicFileViewerDialog = musicFileViewerDialog;
         _videoFileViewerDialog = videoFileViewerDialog;
         _imageFileViewerDialog = imageFileViewerDialog;
@@ -480,7 +480,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog, harViewerDialog: _harViewerDialog, parquetViewerDialog: _parquetViewerDialog, markdownViewerDialog: _markdownViewerDialog, yamlViewerDialog: _yamlViewerDialog, tomlViewerDialog: _tomlViewerDialog, dbfViewerDialog: _dbfViewerDialog, fileViewers: _fileViewers));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionDialogFactory, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog, harViewerDialog: _harViewerDialog, parquetViewerDialog: _parquetViewerDialog, markdownViewerDialog: _markdownViewerDialog, yamlViewerDialog: _yamlViewerDialog, tomlViewerDialog: _tomlViewerDialog, dbfViewerDialog: _dbfViewerDialog, fileViewers: _fileViewers));
         }
         if (_textFileEditorDialog is not null)
         {

@@ -1,0 +1,40 @@
+using System.Text.Json.Nodes;
+using iTerminal.DevelopmentStudio.Model;
+
+namespace iTerminal.DevelopmentStudio.Services;
+
+/// <summary>How to start the debug adapter for a language: the adapter speaks the Debug Adapter Protocol on its standard input and output.</summary>
+/// <param name="FileName">The adapter executable.</param>
+/// <param name="Arguments">Its arguments.</param>
+/// <param name="Launch">The <c>launch</c> request's arguments: what the adapter starts and how.</param>
+public sealed record DebugPlan(string FileName, IReadOnlyList<string> Arguments, JsonObject Launch);
+
+/// <summary>The commands for one language. A null command means the language does not offer that action.</summary>
+public interface IDevelopmentToolchain
+{
+    DevelopmentLanguage Language { get; }
+
+    /// <summary>Builds the item (a syntax check for scripts).</summary>
+    ProcessCommand? Build(DevelopmentProject project);
+
+    /// <summary>Runs the item without a debugger.</summary>
+    ProcessCommand? Run(DevelopmentProject project);
+
+    /// <summary>Runs the item's tests.</summary>
+    ProcessCommand? Test(DevelopmentProject project);
+
+    /// <summary>Removes what a build leaves behind: <c>dotnet clean</c>, or the cache folders of a script.</summary>
+    ProcessCommand? Clean(DevelopmentProject project);
+
+    /// <summary>The folders a clean deletes when the language has no clean command (empty otherwise).</summary>
+    IReadOnlyList<string> CacheFolders(DevelopmentProject project);
+
+    /// <summary>
+    /// The plan to debug the item. For .NET, <paramref name="builtAssembly"/> is the built DLL (see <see cref="FindBuiltAssembly"/>).
+    /// Null when the language has no debugger here.
+    /// </summary>
+    DebugPlan? PlanDebug(DevelopmentProject project, string? builtAssembly, bool debugTests);
+
+    /// <summary>The DLL a build of a .NET project leaves in <c>bin/Debug</c>, the newest one; null when there is none.</summary>
+    string? FindBuiltAssembly(DevelopmentProject project) => null;
+}

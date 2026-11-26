@@ -6,7 +6,7 @@ using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs;
-using iTerminal.Core.Dialogs.Dotnet;
+using iTerminal.Core.Extensions;
 
 namespace iTerminal.Core.Controls.MenuBar;
 
@@ -20,7 +20,7 @@ public class FileMenuItem : MenuItem
         CreateFileDialog createFileDialog,
         RenameDialog renameDialog,
         IThemeService themeService,
-        SolutionViewerDialog? solutionViewerDialog = null,
+        ISolutionDialogFactory? solutionDialogFactory = null,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
@@ -64,7 +64,7 @@ public class FileMenuItem : MenuItem
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog, fileViewers: fileViewers), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionDialogFactory, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog, fileViewers: fileViewers), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations, fileEditors), [], themeService));
         if (openWithDialogFactory is not null)

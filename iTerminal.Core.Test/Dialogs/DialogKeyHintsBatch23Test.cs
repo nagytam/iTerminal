@@ -4,7 +4,6 @@ using iConsole.Tasks;
 using iTerminal.Core.Dialogs;
 using iTerminal.Widgets.Dialogs.CurrencyConverter;
 using iTerminal.Core.Dialogs.Documents;
-using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.PackageManager;
 using iTerminal.Core.Dialogs.PasswordManager;
 using iTerminal.Core.Dialogs.Search;
@@ -49,15 +48,6 @@ public class DialogKeyHintsBatch23Test
 
         Assert.AreEqual(0, without.GetKeyHints().Count());
         CollectionAssert.AreEqual(new[] { "E", "F", "M", "B" }, Keys(with.GetKeyHints()));
-    }
-
-    [Timeout(60_000)]
-    [TestMethod]
-    public void SolutionViewer_KeyHints_NameBuildCleanTestAndRun()
-    {
-        SolutionViewerDialog dialog = new(Mock.Of<IDotnetSolutionService>(), TestTheme());
-
-        CollectionAssert.IsSubsetOf(new[] { "Space", "A", "Shift+T", "B", "C", "T", "R", "X", "V" }, Keys(dialog.GetKeyHints()));
     }
 
     [Timeout(60_000)]
