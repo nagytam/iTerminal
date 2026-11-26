@@ -134,6 +134,22 @@ public class OfficeAndImageExtractorTest
         StringAssert.Contains(result.Note, "not a valid Office package");
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Office_ReportsAnEncryptedOoxmlFileAsEncrypted()
+    {
+        // Office writes an encrypted .docx as an OLE2 compound file: the signature, then the
+        // ciphertext. The extension still says .docx, which is why the note has to come from the bytes.
+        string path = Path.Combine(_folder, "secret.docx");
+        byte[] ole2 = [0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1, 0, 0, 0, 0, 0, 0, 0, 0];
+        File.WriteAllBytes(path, [.. ole2, .. new byte[512]]);
+
+        DocumentTextResult result = new OfficeTextExtractor().Extract(path);
+
+        Assert.AreEqual(DocumentExtractionStatus.Failed, result.Status);
+        Assert.AreEqual("the document is encrypted", result.Note);
+    }
+
     #region Images
 
     /// <summary>Writes a minimal PNG carrying one <c>tEXt</c> chunk and nothing else.</summary>

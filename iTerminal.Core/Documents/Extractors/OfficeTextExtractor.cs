@@ -78,6 +78,14 @@ public sealed class OfficeTextExtractor : IDocumentTextExtractor
         }
         catch (InvalidDataException)
         {
+            // An Office Open XML file that Office encrypted is not a zip any more: it is an OLE2
+            // compound file holding the ciphertext in an EncryptedPackage stream. The extension still
+            // says Office, so this is the case to name, rather than a generic "not a valid" note.
+            if (IsOleCompoundFile(path))
+            {
+                return DocumentTextResult.None(DocumentExtractionStatus.Failed, "the document is encrypted");
+            }
+
             // The extension said Office, the bytes said otherwise. A common enough thing in a real
             // folder that it deserves a readable note rather than a zip library's own wording.
             return DocumentTextResult.None(DocumentExtractionStatus.Failed, "not a valid Office package");
@@ -130,6 +138,32 @@ public sealed class OfficeTextExtractor : IDocumentTextExtractor
             // OpenDocument keeps the body in one part regardless of which application wrote it.
             _ => partName.Equals("content.xml", StringComparison.OrdinalIgnoreCase),
         };
+    }
+
+    /// <summary>The eight-byte signature every OLE2 compound file starts with (the legacy .doc/.xls/.ppt container).</summary>
+    private static readonly byte[] OleCompoundFileSignature = [0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1];
+
+    /// <summary>
+    /// Whether the file starts with the OLE2 signature. Only the first eight bytes are read: the file is
+    /// already known not to be a zip, and a file that cannot be read is simply not reported as encrypted.
+    /// </summary>
+    private static bool IsOleCompoundFile(string path)
+    {
+        try
+        {
+            using FileStream stream = File.OpenRead(path);
+            byte[] header = new byte[OleCompoundFileSignature.Length];
+            int read = stream.ReadAtLeast(header, header.Length, throwOnEndOfStream: false);
+            return read == header.Length && header.AsSpan().SequenceEqual(OleCompoundFileSignature);
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return false;
+        }
     }
 
     /// <summary>
