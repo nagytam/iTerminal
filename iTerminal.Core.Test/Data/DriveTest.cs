@@ -141,6 +141,15 @@ public class DriveTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void IsCloud_IsTrue_ForEveryCloudProvider()
+    {
+        Assert.IsTrue(new Drive { Name = Container.DROPBOX, Url = Container.DROPBOX }.IsCloud);
+        Assert.IsTrue(new Drive { Name = Container.AZURE_BLOB, Url = Container.AZURE_BLOB }.IsCloud);
+        Assert.IsTrue(new Drive { Name = Container.S3, Url = Container.S3 }.IsCloud);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void IsCloud_IsFalse_ForALocalRow_AndForARowWithNoUrl()
     {
         var local = new Drive { Name = "local", Url = new Url(Path.GetTempPath()) };
