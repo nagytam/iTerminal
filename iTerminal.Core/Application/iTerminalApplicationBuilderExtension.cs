@@ -189,6 +189,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
         services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Recipes.IRecipeService, iTerminal.Core.Services.Recipes.RecipeService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Recipes.RecipeEditDialog>();
+        services.AddSingleton<Func<iTerminal.Core.Dialogs.Recipes.RecipeEditDialog>>(provider => () => provider.GetRequiredService<iTerminal.Core.Dialogs.Recipes.RecipeEditDialog>());
+        services.AddTransient<iTerminal.Core.Dialogs.Recipes.RecipeManagerDialog>();
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISessionEnvironment, iTerminal.Core.Services.SystemSettings.SessionEnvironment>();
         services.AddTransient<iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog>();
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
