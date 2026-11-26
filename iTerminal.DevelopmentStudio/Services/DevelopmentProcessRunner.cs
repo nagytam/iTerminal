@@ -29,6 +29,14 @@ public sealed class DevelopmentProcessRunner : IDevelopmentProcessRunner
             startInfo.ArgumentList.Add(argument);
         }
 
+        if (command.Environment is { } variables)
+        {
+            foreach (var (name, value) in variables)
+            {
+                startInfo.Environment[name] = value;
+            }
+        }
+
         using var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
         process.Exited += (_, _) => exited.TrySetResult(process.ExitCode);
         process.OutputDataReceived += (_, e) => { if (e.Data is not null) onOutputLine(e.Data); };

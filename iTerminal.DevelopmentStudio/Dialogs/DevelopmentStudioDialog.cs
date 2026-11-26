@@ -16,6 +16,7 @@ using iTerminal.DevelopmentStudio.Services.Analysis;
 using iTerminal.DevelopmentStudio.Services.Dap;
 using iTerminal.DevelopmentStudio.Services.Lsp;
 using iTerminal.Core.Services.Dotnet;
+using iTerminal.Core.Services.Sdk;
 
 namespace iTerminal.DevelopmentStudio.Dialogs;
 
@@ -112,6 +113,14 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly MainProgramStore _mainProgram;
     private readonly IDotnetSolutionService _dotnet;
     private readonly ISyntaxHighlightingService _highlighting;
+    private readonly ISdkManager _sdkManager;
+
+    /// <summary>The JDK home Java builds and runs use, or null for the javac and java on the PATH. Read when the studio opens and when the SDK manager closes.</summary>
+    private string? _javaHome;
+
+    /// <summary>The SDK list a background reload read, applied on the UI thread by <see cref="ApplySdkReload"/>.</summary>
+    private readonly Lock _sdkGate = new();
+    private SdkReload? _sdkReload;
 
     /// <summary>The .NET SDKs installed, newest first, and the one new .NET commands use (-1 when none was found).</summary>
     private IReadOnlyList<DotnetSdk> _sdks = [];
@@ -241,7 +250,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         IDotnetSolutionService dotnetSolutionService,
         IThemeService themeService,
         CSharpLanguageServer languageServer,
-        ISyntaxHighlightingService highlighting)
+        ISyntaxHighlightingService highlighting,
+        ISdkManager sdkManager)
         : base(nameof(DevelopmentStudioDialog), themeService)
     {
         _scanner = scanner;
@@ -252,6 +262,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _breakpoints = breakpoints;
         _mainProgram = mainProgram;
         _dotnet = dotnetSolutionService;
+        _sdkManager = sdkManager;
         Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
 
         _explorerListBox = new ExplorerListBox(
@@ -341,9 +352,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _projectFiles.Clear();
         _loadingProjects.Clear();
         _items = await ScanAsync();
-        _sdks = await Task.Run(() => _dotnet.ListSdks().ToList(), CancellationToken.None);
-        DotnetSdk? defaultSdk = DotnetSdk.Default(_sdks);
-        _sdkIndex = defaultSdk is null ? -1 : _sdks.ToList().IndexOf(defaultSdk);
+        ApplySdks(await Task.Run(ReadSdks, CancellationToken.None), keep: null);
+        _javaHome = _sdkManager.ActiveJavaHome;
         _explorerMode = ExplorerMode.Solution;
         OpenSolutionsInTree();
         _outputTab = OutputTab.Output;
@@ -437,6 +447,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("Space", UiText.Get("DevelopmentStudio.HintCheck", "Check or uncheck the .NET project; B, C, T and R then run on the checked ones"));
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
         yield return ("V", UiText.Get("DevelopmentStudio.HintSdk", "Switch to the next .NET SDK"));
+        yield return ("K", UiText.Get("DevelopmentStudio.HintSdkManager", "Install .NET SDKs and JDKs, and choose the JDK that Java builds and runs use"));
         yield return ("S / F", UiText.Get("DevelopmentStudio.HintSbom", "Write a CycloneDX SBOM of the solution / switch it between XML and JSON"));
         yield return ("O / P", UiText.Get("DevelopmentStudio.HintCoverage", "Measure the coverage of the selected item / profile the selected Python script"));
         yield return ("G", UiText.Get("DevelopmentStudio.HintGoToFile", "In the coverage view, open the file under the cursor"));
@@ -546,6 +557,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.G when plain:
                 OpenCoverageFileAtCursor();
+                return true;
+            case ConsoleKey.K when plain:
+                await OpenSdkManagerAsync();
                 return true;
             case ConsoleKey.X when plain:
                 if (_runCts is not null) await _runCts.CancelAsync();
@@ -1197,6 +1211,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     public override void OnIdle()
     {
         base.OnIdle();
+        ApplySdkReload();
         long version = _languageServer.Version;
         if (version == _seenServerVersion) return;
         _seenServerVersion = version;
@@ -1669,10 +1684,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     }
 
     /// <summary>The toolchain of an item. A .NET item uses the SDK chosen with V, so each command runs on that SDK's host.</summary>
-    private IDevelopmentToolchain ToolchainFor(DevelopmentProject item) =>
-        item.Language == DevelopmentLanguage.DotNet && SelectedSdk is { } sdk
-            ? new DotNetToolchain { Host = sdk.HostPath }
-            : _toolchains.For(item);
+    private IDevelopmentToolchain ToolchainFor(DevelopmentProject item)
+    {
+        if (item.Language == DevelopmentLanguage.DotNet && SelectedSdk is { } sdk) return new DotNetToolchain { Host = sdk.HostPath };
+        if (item.Language == DevelopmentLanguage.Java && _javaHome is not null) return new JavaToolchain { JavaHome = _javaHome };
+        return _toolchains.For(item);
+    }
 
     /// <summary>
     /// Runs the verb on each target, one after another, in one run: the output of all of them is one log, and a test run's
@@ -1898,6 +1915,62 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         RebuildExplorer();
         StateHasChanged();
     }
+
+    /// <summary>The .NET SDKs the system lists and the ones the SDK manager installed, one per host, newest first. Runs a process, so it is never called on the UI thread.</summary>
+    private IReadOnlyList<DotnetSdk> ReadSdks() =>
+        DotnetSdk.Newest(_dotnet.ListSdks().Concat(_sdkManager.InstalledDotNetSdks()).DistinctBy(sdk => sdk.HostPath, StringComparer.OrdinalIgnoreCase));
+
+    /// <summary>Sets the SDK list; the SDK that was selected stays selected when it is still there, else the default one is.</summary>
+    private void ApplySdks(IReadOnlyList<DotnetSdk> sdks, DotnetSdk? keep)
+    {
+        DotnetSdk? chosen = keep is null ? null : sdks.FirstOrDefault(sdk => sdk.HostPath.Equals(keep.HostPath, StringComparison.OrdinalIgnoreCase));
+        chosen ??= DotnetSdk.Default(sdks);
+        _sdks = sdks;
+        _sdkIndex = chosen is null ? -1 : sdks.ToList().IndexOf(chosen);
+    }
+
+    /// <summary>K: the SDK manager. When it closes, the SDKs and the chosen JDK are read again.</summary>
+    private async Task OpenSdkManagerAsync()
+    {
+        DotnetSdk? previous = SelectedSdk;
+        var manager = new SdkManagerDialog(_sdkManager, ThemeService)
+        {
+            Closed = () => RequestSdkReload(previous),
+        };
+        await ShowDialogAsync(manager);
+    }
+
+    /// <summary>Reads the SDKs and the JDK choice on a background task; <see cref="ApplySdkReload"/> applies them on the UI thread.</summary>
+    private void RequestSdkReload(DotnetSdk? keep)
+    {
+        _ = Task.Run(() =>
+        {
+            var sdks = ReadSdks();
+            string? javaHome = _sdkManager.ActiveJavaHome;
+            lock (_sdkGate)
+            {
+                _sdkReload = new SdkReload(keep, sdks, javaHome);
+            }
+        });
+    }
+
+    private void ApplySdkReload()
+    {
+        SdkReload? reload;
+        lock (_sdkGate)
+        {
+            reload = _sdkReload;
+            _sdkReload = null;
+        }
+
+        if (reload is not { } answer) return;
+        ApplySdks(answer.Sdks, answer.Keep);
+        _javaHome = answer.JavaHome;
+        RebuildView();
+    }
+
+    /// <summary>A reload of the SDK list: the selection to keep, the list read and the JDK chosen at that time.</summary>
+    private sealed record SdkReload(DotnetSdk? Keep, IReadOnlyList<DotnetSdk> Sdks, string? JavaHome);
 
     /// <summary>V: the next installed .NET SDK. A command already running keeps the SDK it started with.</summary>
     private void CycleSdk()
@@ -2592,7 +2665,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private void DrawFooter(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
-        string hints = UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close");
+        string hints = UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close");
         DrawStatusAndHints(buffer, x, y, w, _status, _statusSeverity switch
         {
             StatusSeverity.Error => colorScheme.Error,
