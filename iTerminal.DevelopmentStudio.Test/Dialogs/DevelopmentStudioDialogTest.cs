@@ -1,4 +1,5 @@
 using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
+using iConsole.Controls;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
 using iTerminal.DevelopmentStudio.Dialogs;
@@ -310,5 +311,202 @@ public class DevelopmentStudioDialogTest
 
         CollectionAssert.AreEqual(editorBefore, harness.Dialog.EditorLines.ToList(), "the editor keeps the source through the whole cycle");
         CollectionAssert.DoesNotContain(harness.Dialog.OutputLines.ToList(), "Watch", "four presses come back to the output log");
+    }
+
+    private static DockSide SideOf(DevelopmentStudioDialog dialog, StudioPanelKind kind) =>
+        dialog.Panels.Single(panel => panel.Kind == kind).Side;
+
+    private static int PercentOf(DevelopmentStudioDialog dialog, StudioPanelKind kind) =>
+        dialog.Panels.Single(panel => panel.Kind == kind).Percent;
+
+    /// <summary>Tab (the Tab command's own move) until the focus is on the panel, or fails after the four panels.</summary>
+    private static void FocusPanel(DevelopmentStudioDialog dialog, StudioPanelKind kind)
+    {
+        for (int i = 0; i < 4 && dialog.FocusedPanel != kind; i++)
+        {
+            dialog.OnHandleTabForward();
+        }
+
+        Assert.AreEqual(kind, dialog.FocusedPanel, $"Tab reaches the {kind} panel");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSolutionExplorerHasTheFocusWhenTheStudioOpens()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        Assert.AreEqual(StudioPanelKind.Explorer, harness.Dialog.FocusedPanel);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheErrorListCollectsTheErrorsAndWarningsOfACommandOnce()
+    {
+        var runner = new FakeProcessRunner
+        {
+            Output =
+            [
+                "/src/App/Program.cs(3,5): error CS1002: ; expected [/src/App/App.csproj]",
+                "/src/App/Program.cs(5,9): warning CS0168: The variable 'x' is declared but never used [/src/App/App.csproj]",
+                "Build FAILED.",
+                "/src/App/Program.cs(3,5): error CS1002: ; expected [/src/App/App.csproj]",
+                "    1 Error(s)",
+            ],
+        };
+        var harness = await OpenAsync([Solution, App], runner: runner);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "/src/App/Program.cs(3,5): error CS1002: ; expected [/src/App/App.csproj]",
+            "/src/App/Program.cs(5,9): warning CS0168: The variable 'x' is declared but never used [/src/App/App.csproj]",
+        }, harness.Dialog.ErrorLines.ToList(), "MSBuild prints the error again in its summary, and the list shows it once");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheErrorListStartsOverWithTheNextCommand()
+    {
+        var runner = new FakeProcessRunner { Output = ["/src/App/Program.cs(3,5): error CS1002: ; expected"] };
+        var harness = await OpenAsync([Solution, App], runner: runner);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+        Assert.AreEqual(1, harness.Dialog.ErrorLines.Count);
+
+        runner.Output = ["Build succeeded."];
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+
+        CollectionAssert.AreEqual(Array.Empty<string>(), harness.Dialog.ErrorLines.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EnterOnAnErrorOpensItsFileAtTheLine()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "Program.cs");
+        File.WriteAllText(path, "one\ntwo\nthree\nfour\n");
+        try
+        {
+            var runner = new FakeProcessRunner { Output = [$"{path}(3,5): error CS1002: ; expected"] };
+            var harness = await OpenAsync([Solution, App], runner: runner);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+            await WaitIdleAsync(harness.Dialog);
+
+            FocusPanel(harness.Dialog, StudioPanelKind.Errors);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+            await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, "the editor to open the file at line 3");
+            StringAssert.Contains(harness.Dialog.EditorLines[2], "three");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task F8StartsThePanelLayoutAndArrowsMoveTheFocusedPanelToAnEmptyEdge()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+        Assert.IsTrue(harness.Dialog.IsLayoutMode);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+
+        Assert.AreEqual(DockSide.Left, SideOf(harness.Dialog, StudioPanelKind.Explorer));
+        Assert.AreEqual(StudioPanelKind.Explorer, harness.Dialog.FocusedPanel, "the panel keeps the focus when it moves");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnArrowMovesThePanelOntoAnOccupiedEdgeBySwapping()
+    {
+        var harness = await OpenAsync([Solution, App]);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.UpArrow));
+
+        Assert.AreEqual(DockSide.Top, SideOf(harness.Dialog, StudioPanelKind.Explorer));
+        Assert.AreEqual(DockSide.Right, SideOf(harness.Dialog, StudioPanelKind.Errors));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheCentrePanelCannotLeaveTheCentreForAnEmptyEdge()
+    {
+        var harness = await OpenAsync([Solution, App]);
+        FocusPanel(harness.Dialog, StudioPanelKind.Editor);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+
+        Assert.AreEqual(DockSide.Fill, SideOf(harness.Dialog, StudioPanelKind.Editor));
+        StringAssert.Contains(harness.Dialog.Status, "swap places");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ShiftArrowsMoveTheInnerBorderOfAnEdgePanel()
+    {
+        var harness = await OpenAsync([Solution, App]);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow, shift: true));
+        Assert.AreEqual(39, PercentOf(harness.Dialog, StudioPanelKind.Explorer), "the Explorer is on the right, so Shift+Left grows it");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow, shift: true));
+        Assert.AreEqual(39, PercentOf(harness.Dialog, StudioPanelKind.Explorer), "the arrow along the panel's edge does nothing");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ShiftArrowsDoNotResizeTheCentrePanel()
+    {
+        var harness = await OpenAsync([Solution, App]);
+        FocusPanel(harness.Dialog, StudioPanelKind.Editor);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow, shift: true));
+
+        StringAssert.Contains(harness.Dialog.Status, "fills what the edges leave");
+        Assert.AreEqual(DockSide.Fill, SideOf(harness.Dialog, StudioPanelKind.Editor));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EscEndsThePanelLayoutWithoutClosingTheDialog()
+    {
+        var harness = await OpenAsync([Solution, App]);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+
+        Assert.IsFalse(harness.Dialog.IsLayoutMode);
+        Assert.IsTrue(harness.Dialog.IsVisible, "Esc ends the layout mode first; a second Esc closes the dialog");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheErrorListIsDockedToTheTopEdgeAboveTheExplorer()
+    {
+        var runner = new FakeProcessRunner { Output = ["/src/App/Program.cs(3,5): error CS1002: ; expected"] };
+        var harness = await OpenAsync([Solution, App], runner: runner);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+
+        var screen = Render(harness.Dialog);
+
+        var errors = Locate(screen, "Error List");
+        var explorer = Locate(screen, " Solution Explorer");
+        Assert.IsTrue(errors.Row < explorer.Row, "the Error List sits on the top edge, above the Explorer's band");
+        StringAssert.Contains(screen.Line(errors.Row), "1 errors, 0 warnings");
+        AssertScreenContains(screen, "Program.cs(3,5): error CS1002");
     }
 }
