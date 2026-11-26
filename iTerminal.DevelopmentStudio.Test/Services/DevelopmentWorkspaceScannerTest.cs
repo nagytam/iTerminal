@@ -58,6 +58,9 @@ public class DevelopmentWorkspaceScannerTest
             CollectionAssert.Contains(summary, (DevelopmentProjectKind.Script, DevelopmentLanguage.Python, "test_tool.py", true));
             CollectionAssert.Contains(summary, (DevelopmentProjectKind.Script, DevelopmentLanguage.PowerShell, "Deploy.Tests.ps1", true));
             CollectionAssert.Contains(summary, (DevelopmentProjectKind.JavaProject, DevelopmentLanguage.Java, "svc", false));
+            Assert.AreEqual(Path.Combine(folder, "App.slnx"), items.Single(i => i.Name == "App" && i.Kind == DevelopmentProjectKind.DotNetProject).SolutionPath,
+                "a project the solution lists names that solution, so the explorer draws it under it");
+            Assert.IsNull(items.Single(i => i.Kind == DevelopmentProjectKind.Solution).SolutionPath);
             Assert.IsFalse(items.Any(i => i.Name == "ignored.py"), "__pycache__ is skipped");
             Assert.IsFalse(items.Any(i => i.Name == "Main.java"), "a .java file inside a Java module is shown under the module");
         }

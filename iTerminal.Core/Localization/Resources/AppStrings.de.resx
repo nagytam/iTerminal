@@ -2377,11 +2377,17 @@
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Abdeckung des ausgewählten Elements messen / ausgewähltes Python-Skript profilieren</value>
   </data>
+  <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
+    <value>Den Eintrag unter dem Cursor (Projektmappe, Projekt oder Ordner) einklappen oder ausklappen</value>
+  </data>
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>In der Abdeckungsansicht die Datei unter dem Cursor öffnen</value>
   </data>
   <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
     <value>Panels verschieben und in der Größe ändern: Pfeile verschieben das markierte Panel zu dieser Kante, Umschalt+Pfeile ändern die Größe</value>
+  </data>
+  <data name="DevelopmentStudio.HintMain" xml:space="preserve">
+    <value>Den Eintrag unter dem Cursor zum Hauptprogramm machen: F5 und Strg+F5 starten es</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Open the file (or run the test)</value>
@@ -2424,6 +2430,18 @@
   </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Locals</value>
+  </data>
+  <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
+    <value>Kein Hauptprogramm: F5 startet den Eintrag unter dem Cursor.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSet" xml:space="preserve">
+    <value>{0} ist das Hauptprogramm. F5 und Strg+F5 starten es.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSolution" xml:space="preserve">
+    <value>Eine Projektmappe kann nicht das Hauptprogramm sein. Wählen Sie ein Projekt oder ein Skript.</value>
+  </data>
+  <data name="DevelopmentStudio.MainTag" xml:space="preserve">
+    <value>Start</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Open a file (Enter) and put the cursor on a line to set a breakpoint.</value>

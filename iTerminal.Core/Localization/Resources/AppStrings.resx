@@ -2519,11 +2519,17 @@
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Measure the coverage of the selected item / profile the selected Python script</value>
   </data>
+  <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
+    <value>Collapse or expand the solution, project or folder under the cursor</value>
+  </data>
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>In the coverage view, open the file under the cursor</value>
   </data>
   <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
     <value>Move and resize the panels: arrows move the focused one to that edge, Shift+arrows resize it</value>
+  </data>
+  <data name="DevelopmentStudio.HintMain" xml:space="preserve">
+    <value>Make the item under the cursor the Main program: F5 and Ctrl+F5 start it</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Open the file (or run the test)</value>
@@ -2566,6 +2572,18 @@
   </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Locals</value>
+  </data>
+  <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
+    <value>No Main program: F5 starts the item under the cursor.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSet" xml:space="preserve">
+    <value>{0} is the Main program. F5 and Ctrl+F5 start it.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSolution" xml:space="preserve">
+    <value>A solution cannot be the Main program. Select a project or a script.</value>
+  </data>
+  <data name="DevelopmentStudio.MainTag" xml:space="preserve">
+    <value>main</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Open a file (Enter) and put the cursor on a line to set a breakpoint.</value>

@@ -2377,11 +2377,17 @@
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Misura la copertura dell'elemento selezionato / profila lo script Python selezionato</value>
   </data>
+  <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
+    <value>Comprimi o espandi la soluzione, il progetto o la cartella sotto il cursore</value>
+  </data>
   <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
     <value>Nella vista copertura, apri il file sotto il cursore</value>
   </data>
   <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
     <value>Sposta e ridimensiona i pannelli: le frecce spostano il pannello attivo verso quel bordo, Maiusc+frecce ne cambiano le dimensioni</value>
+  </data>
+  <data name="DevelopmentStudio.HintMain" xml:space="preserve">
+    <value>Rendi l'elemento sotto il cursore il programma principale: F5 e Ctrl+F5 lo avviano</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Abrir el archivo (o ejecutar la prueba)</value>
@@ -2424,6 +2430,18 @@
   </data>
   <data name="DevelopmentStudio.Locals" xml:space="preserve">
     <value>Variables locales</value>
+  </data>
+  <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
+    <value>Nessun programma principale: F5 avvia l'elemento sotto il cursore.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSet" xml:space="preserve">
+    <value>{0} è il programma principale. F5 e Ctrl+F5 lo avviano.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSolution" xml:space="preserve">
+    <value>Una soluzione non può essere il programma principale. Seleziona un progetto o uno script.</value>
+  </data>
+  <data name="DevelopmentStudio.MainTag" xml:space="preserve">
+    <value>principale</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Abra un archivo (Intro) y coloque el cursor en una línea para poner un punto de interrupción.</value>

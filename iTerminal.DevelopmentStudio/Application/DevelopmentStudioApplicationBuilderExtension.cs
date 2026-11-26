@@ -22,6 +22,8 @@ public static class DevelopmentStudioApplicationBuilderExtension
         services.AddSingleton(_ => new DevelopmentToolchains());
         // The breakpoints are a singleton, so they survive closing the dialog.
         services.AddSingleton<BreakpointStore>();
+        // The Main program is a singleton too, so the choice survives closing the dialog.
+        services.AddSingleton<MainProgramStore>();
         services.AddTransient<DevelopmentStudioDialog>();
 
         // Tools > Development studio, in the "sys" submenu.
