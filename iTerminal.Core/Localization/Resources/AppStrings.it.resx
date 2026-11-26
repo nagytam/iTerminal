@@ -2335,6 +2335,9 @@
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Depuración</value>
   </data>
+  <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
+    <value>Riga {0}, Col {1}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nada aquí)</value>
   </data>
@@ -2375,7 +2378,7 @@
     <value>Abrir el archivo (o ejecutar la prueba)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Explorador o pruebas / código, salida o vista de depuración</value>
+    <value>Scheda dell'esplora (Soluzione, Test, File) / scheda del pannello di output (Output, Debug, Copertura, Profilo)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Ejecutar sin depurar</value>

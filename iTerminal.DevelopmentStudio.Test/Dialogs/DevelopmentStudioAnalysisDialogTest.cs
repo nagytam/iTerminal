@@ -70,7 +70,7 @@ public class DevelopmentStudioAnalysisDialogTest
 
             await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
-            await WaitUntilAsync(() => dialog.ViewLines.Any(line => line.Contains("root", StringComparison.Ordinal)), "the file to open");
+            await WaitUntilAsync(() => dialog.EditorLines.Any(line => line.Contains("root", StringComparison.Ordinal)), "the file to open");
         }
         finally
         {
@@ -108,7 +108,7 @@ public class DevelopmentStudioAnalysisDialogTest
             await WaitUntilAsync(() => !dialog.IsBusy, "the coverage run to finish");
 
             StringAssert.StartsWith(dialog.Status, "Coverage 50.0%: 1 of 2 lines in 1 files.");
-            CollectionAssert.Contains(dialog.ViewLines.ToList(), "Coverage 50.0%: 1 of 2 lines in 1 files.");
+            CollectionAssert.Contains(dialog.OutputLines.ToList(), "Coverage 50.0%: 1 of 2 lines in 1 files.");
             Assert.AreEqual(2, runner.Commands.Count, "coverage run, then the report");
             StringAssert.Contains(runner.Commands[0].Arguments.Last(), "prog.py");
         }
@@ -145,7 +145,7 @@ public class DevelopmentStudioAnalysisDialogTest
             await WaitUntilAsync(() => !dialog.IsBusy, "the profile to finish");
 
             Assert.AreEqual("Profiled prog.py: 2 functions. Most time: prog.py:5(<module>).", dialog.Status);
-            StringAssert.Contains(string.Join("\n", dialog.ViewLines), "prog.py:2(add)");
+            StringAssert.Contains(string.Join("\n", dialog.OutputLines), "prog.py:2(add)");
         }
         finally
         {

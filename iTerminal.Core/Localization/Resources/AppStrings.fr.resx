@@ -2335,6 +2335,9 @@
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Debuggen</value>
   </data>
+  <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
+    <value>Ligne {0}, Col {1}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(hier ist nichts)</value>
   </data>
@@ -2375,7 +2378,7 @@
     <value>Datei öffnen (oder Test ausführen)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Explorer oder Tests / Quelltext, Ausgabe oder Debug-Ansicht</value>
+    <value>Onglet de l'explorateur (Solution, Tests, Fichiers) / onglet du panneau de sortie (Sortie, Debug, Couverture, Profil)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Ohne Debugger ausführen</value>
