@@ -14,8 +14,17 @@ public static class GitSignature
     /// <summary>True for any letter other than none; a commit without a signature shows nothing.</summary>
     public static bool IsSigned(char letter) => letter is not (None or '\0' or ' ');
 
-    /// <summary>A short phrase for the letter, preceded by a separator, or an empty string for an unsigned commit.</summary>
-    public static string Describe(char letter) => letter switch
+    /// <summary>
+    /// A short phrase for the letter, preceded by a separator, or an empty string for an unsigned commit. A known
+    /// <paramref name="signer"/> is named at the end of the phrase.
+    /// </summary>
+    public static string Describe(char letter, string signer = "")
+    {
+        string phrase = DescribeLetter(letter);
+        return phrase.Length > 0 && signer.Length > 0 ? phrase[..^1] + $"; signer: {signer})" : phrase;
+    }
+
+    private static string DescribeLetter(char letter) => letter switch
     {
         'G' => " (signed: good signature; the key is not checked for trust)",
         'U' => " (signed: good signature, key validity unknown)",
