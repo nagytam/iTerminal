@@ -73,7 +73,7 @@ public class DevelopmentStudioDialogTest
         var harness = await OpenAsync([Solution, App, AppTest, Script], solutionPath: "/src/App.slnx");
 
         CollectionAssert.AreEqual(new[] { "▾ Solution  App", "  ▸ [ ] C#  App", "  ▸ [ ] C#  App.Test  [test]" }, harness.Dialog.ExplorerRows.ToArray());
-        Assert.AreEqual("/src", harness.Dialog.Folder);
+        Assert.AreEqual(Path.GetDirectoryName("/src/App.slnx"), harness.Dialog.Folder);
     }
 
     [Timeout(60_000)]
@@ -279,7 +279,7 @@ public class DevelopmentStudioDialogTest
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
         await WaitIdleAsync(harness.Dialog);
 
-        Assert.AreEqual("/sdk/8/dotnet".Replace('/', Path.DirectorySeparatorChar), runner.Commands.Single().FileName);
+        Assert.AreEqual(Path.Combine("/sdk/8", OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet"), runner.Commands.Single().FileName);
     }
 
     [Timeout(60_000)]
