@@ -27,6 +27,8 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
     public DbSet<Documents.DocumentEntry> DocumentEntries => Set<Documents.DocumentEntry>();
     public DbSet<Documents.DocumentContentEntry> DocumentContentEntries => Set<Documents.DocumentContentEntry>();
 
+    public DbSet<RecipeEntry> Recipes => Set<RecipeEntry>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<PersistedSetting>(entity =>
@@ -157,6 +159,19 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
             // No length cap: the extractors already apply DocumentTextLimits.MaxTextLength, and a
             // second, smaller limit here would silently truncate what they deliberately kept.
             entity.Property(item => item.Text).HasColumnType("TEXT");
+        });
+
+        modelBuilder.Entity<RecipeEntry>(entity =>
+        {
+            entity.ToTable("Recipes");
+            entity.HasKey(item => item.Id);
+
+            // The lengths match the limits in Recipe.Check, which is where a recipe is refused; the lists have no cap here,
+            // because they are bounded by their item count and line length there.
+            entity.Property(item => item.Title).HasMaxLength(256);
+            entity.Property(item => item.Origin).HasMaxLength(128);
+            entity.Property(item => item.Ingredients).HasColumnType("TEXT");
+            entity.Property(item => item.Steps).HasColumnType("TEXT");
         });
     }
 }

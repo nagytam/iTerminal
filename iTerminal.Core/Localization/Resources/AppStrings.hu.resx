@@ -1216,11 +1216,17 @@
   <data name="CmdDesc.e5eb05a0" xml:space="preserve">
     <value>A bejegyzések megjelenítése több névoszlopban, vagy újra egyben.</value>
   </data>
+  <data name="CmdDesc.e662ef41" xml:space="preserve">
+    <value>Recept mentése.</value>
+  </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Lehúzás, majd feltöltés: a git-szinkronizálás.</value>
   </data>
   <data name="CmdDesc.e710dca5" xml:space="preserve">
     <value>Ugrás a kurzor alatti kedvenc mappába.</value>
+  </data>
+  <data name="CmdDesc.e902212e" xml:space="preserve">
+    <value>Svájc, Németország, Franciaország, Olaszország és Magyarország kedvenc receptjeinek böngészése, a saját receptek hozzávalókkal és lépésekkel való mentése.</value>
   </data>
   <data name="CmdDesc.e9d16235" xml:space="preserve">
     <value>Bluetooth-eszközök keresése, csatlakoztatása, párosítása és elfelejtése.</value>
@@ -1866,6 +1872,9 @@
   </data>
   <data name="CmdTitle.d5d0a30b" xml:space="preserve">
     <value>Naptár</value>
+  </data>
+  <data name="CmdTitle.d664282e" xml:space="preserve">
+    <value>Receptek</value>
   </data>
   <data name="CmdTitle.d7977505" xml:space="preserve">
     <value>Összes kijelölése</value>
@@ -2742,6 +2751,12 @@
   </data>
   <data name="Dialog.PropertiesOf" xml:space="preserve">
     <value>{0} tulajdonságai</value>
+  </data>
+  <data name="Dialog.RecipeEdit" xml:space="preserve">
+    <value>Recept</value>
+  </data>
+  <data name="Dialog.Recipes" xml:space="preserve">
+    <value>Receptek</value>
   </data>
   <data name="Dialog.RemoteConnections" xml:space="preserve">
     <value>Távoli kapcsolatok</value>
@@ -3639,6 +3654,30 @@
   </data>
   <data name="DialogHint.RecentOnly" xml:space="preserve">
     <value>Az utoljára lejátszott öt állomás megjelenítése</value>
+  </data>
+  <data name="DialogHint.RecipeBrowse" xml:space="preserve">
+    <value>Mozgás a receptek között</value>
+  </data>
+  <data name="DialogHint.RecipeCancel" xml:space="preserve">
+    <value>Bezárás mentés nélkül</value>
+  </data>
+  <data name="DialogHint.RecipeClose" xml:space="preserve">
+    <value>Receptek bezárása</value>
+  </data>
+  <data name="DialogHint.RecipeDelete" xml:space="preserve">
+    <value>Saját recept törlése (előbb megkérdez)</value>
+  </data>
+  <data name="DialogHint.RecipeEdit" xml:space="preserve">
+    <value>Saját recept módosítása (nem az előre telepítettek)</value>
+  </data>
+  <data name="DialogHint.RecipeEnter" xml:space="preserve">
+    <value>Mentés a Mentés gombon; szerkesztőben új sor</value>
+  </data>
+  <data name="DialogHint.RecipeFirstLast" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó receptre</value>
+  </data>
+  <data name="DialogHint.RecipeNew" xml:space="preserve">
+    <value>Saját recept hozzáadása</value>
   </data>
   <data name="DialogHint.Refresh" xml:space="preserve">
     <value>Frissítés</value>
@@ -5037,6 +5076,18 @@
   </data>
   <data name="Field.ReadTextFromImages" xml:space="preserve">
     <value>Szöveg olvasása képekből (OCR)</value>
+  </data>
+  <data name="Field.RecipeIngredients" xml:space="preserve">
+    <value>Hozzávalók, soronként egy</value>
+  </data>
+  <data name="Field.RecipeOrigin" xml:space="preserve">
+    <value>Származás</value>
+  </data>
+  <data name="Field.RecipeSteps" xml:space="preserve">
+    <value>Lépések, soronként egy</value>
+  </data>
+  <data name="Field.RecipeTitle" xml:space="preserve">
+    <value>Cím</value>
   </data>
   <data name="Field.RecursivelyDeleteFolder" xml:space="preserve">
     <value>Mappa rekurzív törlése</value>
@@ -7336,6 +7387,9 @@
   <data name="Menu.Quit" xml:space="preserve">
     <value>Kilépés</value>
   </data>
+  <data name="Menu.Recipes" xml:space="preserve">
+    <value>Receptek</value>
+  </data>
   <data name="Menu.RecycleBin" xml:space="preserve">
     <value>Lomtár</value>
   </data>
@@ -8584,6 +8638,9 @@
   <data name="Prompt.DeleteNamed" xml:space="preserve">
     <value>Töröljük: "{0}"? (i/n)</value>
   </data>
+  <data name="Prompt.DeleteRecipe" xml:space="preserve">
+    <value>Törli: "{0}"? (i/n)</value>
+  </data>
   <data name="Properties.Cap.Accessed" xml:space="preserve">
     <value>Elérve</value>
   </data>
@@ -8766,6 +8823,60 @@
   </data>
   <data name="Radio.Title" xml:space="preserve">
     <value>Internetes rádió</value>
+  </data>
+  <data name="Recipe.ColKind" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Recipe.Count" xml:space="preserve">
+    <value>{0} recept</value>
+  </data>
+  <data name="Recipe.Deleted" xml:space="preserve">
+    <value>Recept törölve.</value>
+  </data>
+  <data name="Recipe.ErrIngredient" xml:space="preserve">
+    <value>A recepthez legalább egy hozzávaló kell.</value>
+  </data>
+  <data name="Recipe.ErrLineBreak" xml:space="preserve">
+    <value>Minden cím, származás, hozzávaló és lépés egy sorba férjen.</value>
+  </data>
+  <data name="Recipe.ErrStep" xml:space="preserve">
+    <value>A recepthez legalább egy lépés kell.</value>
+  </data>
+  <data name="Recipe.ErrTitle" xml:space="preserve">
+    <value>A recepthez cím kell.</value>
+  </data>
+  <data name="Recipe.ErrTooLong" xml:space="preserve">
+    <value>A szöveg túl hosszú: a cím legfeljebb 256, a származás 128, a hozzávaló vagy lépés 1000 karakter lehet.</value>
+  </data>
+  <data name="Recipe.ErrTooMany" xml:space="preserve">
+    <value>A recept legfeljebb 100 hozzávalót és 100 lépést tartalmazhat.</value>
+  </data>
+  <data name="Recipe.Failed" xml:space="preserve">
+    <value>A receptek nem olvashatók vagy nem menthetők: {0}</value>
+  </data>
+  <data name="Recipe.Hint" xml:space="preserve">
+    <value>Fel/Le mozgás  N új  E módosítás  D törlés  Esc bezár</value>
+  </data>
+  <data name="Recipe.Ingredients" xml:space="preserve">
+    <value>Hozzávalók</value>
+  </data>
+  <data name="Recipe.OriginLine" xml:space="preserve">
+    <value>Innen: {0}</value>
+  </data>
+  <data name="Recipe.Own" xml:space="preserve">
+    <value>Saját</value>
+  </data>
+  <data name="Recipe.Preloaded" xml:space="preserve">
+    <value>Előre telepített</value>
+  </data>
+  <data name="Recipe.PreloadedReadOnly" xml:space="preserve">
+    <value>Az előre telepített receptek nem módosíthatók.</value>
+  </data>
+  <data name="Recipe.Saved" xml:space="preserve">
+    <value>Recept mentve.</value>
+  </data>
+  <data name="Recipe.Steps" xml:space="preserve">
+    <value>Lépések</value>
   </data>
   <data name="Recycle.Drive.Hints" xml:space="preserve">
     <value>Enter:visszaállít  F8:végleges törlés</value>

@@ -1342,12 +1342,18 @@
     <value>Show the entries in several name columns, or back to one column.</value>
     <comment>Show the entries in several name columns, or back to one column.</comment>
   </data>
+  <data name="CmdDesc.e662ef41" xml:space="preserve">
+    <value>Save the recipe.</value>
+  </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, then push: the git sync.</value>
   </data>
   <data name="CmdDesc.e710dca5" xml:space="preserve">
     <value>Go to the favourite folder under the cursor.</value>
     <comment>Go to the favourite folder under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.e902212e" xml:space="preserve">
+    <value>Browse favourite recipes from Switzerland, Germany, France, Italy and Hungary, and keep your own with their ingredients and steps.</value>
   </data>
   <data name="CmdDesc.e9d16235" xml:space="preserve">
     <value>Scan for, connect, pair and forget Bluetooth devices.</value>
@@ -2008,6 +2014,9 @@
   </data>
   <data name="CmdTitle.d5d0a30b" xml:space="preserve">
     <value>Calendar</value>
+  </data>
+  <data name="CmdTitle.d664282e" xml:space="preserve">
+    <value>Recipes</value>
   </data>
   <data name="CmdTitle.d7977505" xml:space="preserve">
     <value>Mark all</value>
@@ -2884,6 +2893,12 @@
   </data>
   <data name="Dialog.PropertiesOf" xml:space="preserve">
     <value>Properties of {0}</value>
+  </data>
+  <data name="Dialog.RecipeEdit" xml:space="preserve">
+    <value>Recipe</value>
+  </data>
+  <data name="Dialog.Recipes" xml:space="preserve">
+    <value>Recipes</value>
   </data>
   <data name="Dialog.RemoteConnections" xml:space="preserve">
     <value>Remote connections</value>
@@ -3781,6 +3796,30 @@
   </data>
   <data name="DialogHint.RecentOnly" xml:space="preserve">
     <value>Show the last five stations played</value>
+  </data>
+  <data name="DialogHint.RecipeBrowse" xml:space="preserve">
+    <value>Move over the recipes</value>
+  </data>
+  <data name="DialogHint.RecipeCancel" xml:space="preserve">
+    <value>Close without saving</value>
+  </data>
+  <data name="DialogHint.RecipeClose" xml:space="preserve">
+    <value>Close the recipes</value>
+  </data>
+  <data name="DialogHint.RecipeDelete" xml:space="preserve">
+    <value>Delete your recipe (asks first)</value>
+  </data>
+  <data name="DialogHint.RecipeEdit" xml:space="preserve">
+    <value>Change your recipe (not the preloaded ones)</value>
+  </data>
+  <data name="DialogHint.RecipeEnter" xml:space="preserve">
+    <value>Save on the Save button; in an editor, a new line</value>
+  </data>
+  <data name="DialogHint.RecipeFirstLast" xml:space="preserve">
+    <value>Jump to the first or last recipe</value>
+  </data>
+  <data name="DialogHint.RecipeNew" xml:space="preserve">
+    <value>Add a recipe of your own</value>
   </data>
   <data name="DialogHint.Refresh" xml:space="preserve">
     <value>Refresh</value>
@@ -5179,6 +5218,18 @@
   </data>
   <data name="Field.ReadTextFromImages" xml:space="preserve">
     <value>Read text from images (OCR)</value>
+  </data>
+  <data name="Field.RecipeIngredients" xml:space="preserve">
+    <value>Ingredients, one per line</value>
+  </data>
+  <data name="Field.RecipeOrigin" xml:space="preserve">
+    <value>Origin</value>
+  </data>
+  <data name="Field.RecipeSteps" xml:space="preserve">
+    <value>Steps, one per line</value>
+  </data>
+  <data name="Field.RecipeTitle" xml:space="preserve">
+    <value>Title</value>
   </data>
   <data name="Field.RecursivelyDeleteFolder" xml:space="preserve">
     <value>Recursively delete folder</value>
@@ -7542,6 +7593,9 @@
   <data name="Menu.Quit" xml:space="preserve">
     <value>Quit</value>
   </data>
+  <data name="Menu.Recipes" xml:space="preserve">
+    <value>Recipes</value>
+  </data>
   <data name="Menu.RecycleBin" xml:space="preserve">
     <value>Recycle Bin</value>
   </data>
@@ -8790,6 +8844,9 @@
   <data name="Prompt.DeleteNamed" xml:space="preserve">
     <value>Delete "{0}"? (y/n)</value>
   </data>
+  <data name="Prompt.DeleteRecipe" xml:space="preserve">
+    <value>Delete "{0}"? (y/n)</value>
+  </data>
   <data name="Properties.Cap.Accessed" xml:space="preserve">
     <value>Accessed</value>
   </data>
@@ -8972,6 +9029,60 @@
   </data>
   <data name="Radio.Title" xml:space="preserve">
     <value>Online radio</value>
+  </data>
+  <data name="Recipe.ColKind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="Recipe.Count" xml:space="preserve">
+    <value>{0} recipes</value>
+  </data>
+  <data name="Recipe.Deleted" xml:space="preserve">
+    <value>Recipe deleted.</value>
+  </data>
+  <data name="Recipe.ErrIngredient" xml:space="preserve">
+    <value>A recipe needs at least one ingredient.</value>
+  </data>
+  <data name="Recipe.ErrLineBreak" xml:space="preserve">
+    <value>Each title, origin, ingredient and step must fit on one line.</value>
+  </data>
+  <data name="Recipe.ErrStep" xml:space="preserve">
+    <value>A recipe needs at least one step.</value>
+  </data>
+  <data name="Recipe.ErrTitle" xml:space="preserve">
+    <value>A recipe needs a title.</value>
+  </data>
+  <data name="Recipe.ErrTooLong" xml:space="preserve">
+    <value>Text is too long: a title is at most 256 characters, an origin 128, and an ingredient or step 1000.</value>
+  </data>
+  <data name="Recipe.ErrTooMany" xml:space="preserve">
+    <value>A recipe has at most 100 ingredients and 100 steps.</value>
+  </data>
+  <data name="Recipe.Failed" xml:space="preserve">
+    <value>Could not read or save the recipes: {0}</value>
+  </data>
+  <data name="Recipe.Hint" xml:space="preserve">
+    <value>Up/Down move  N new  E change  D delete  Esc close</value>
+  </data>
+  <data name="Recipe.Ingredients" xml:space="preserve">
+    <value>Ingredients</value>
+  </data>
+  <data name="Recipe.OriginLine" xml:space="preserve">
+    <value>From {0}</value>
+  </data>
+  <data name="Recipe.Own" xml:space="preserve">
+    <value>Your own</value>
+  </data>
+  <data name="Recipe.Preloaded" xml:space="preserve">
+    <value>Preloaded</value>
+  </data>
+  <data name="Recipe.PreloadedReadOnly" xml:space="preserve">
+    <value>Preloaded recipes cannot be changed.</value>
+  </data>
+  <data name="Recipe.Saved" xml:space="preserve">
+    <value>Recipe saved.</value>
+  </data>
+  <data name="Recipe.Steps" xml:space="preserve">
+    <value>Steps</value>
   </data>
   <data name="Recycle.Drive.Hints" xml:space="preserve">
     <value>Enter:restore  F8:delete for good</value>
