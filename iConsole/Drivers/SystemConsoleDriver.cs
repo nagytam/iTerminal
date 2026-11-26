@@ -344,11 +344,20 @@ public class SystemConsoleDriver : IConsoleDriver
             _writeBuilder.Clear();
             var runFg = list[0].ForegroundColor;
             var runBg = list[0].BackgroundColor;
-            foreach (var c in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                var c = list[index];
                 if (c.Char == TextWidth.Continuation)
                 {
                     continue;
+                }
+
+                // A cell next to a character the terminal may draw at another width is written at its own column,
+                // so a width mismatch cannot move the rest of the row (see TextWidth.NeedsAbsolutePosition).
+                if (index > 0 && TextWidth.NeedsAbsolutePosition(list[index - 1].Char, c.Char))
+                {
+                    FlushRun(runFg, runBg);
+                    SetCursorPosition(x + index, y);
                 }
 
                 if (c.ForegroundColor != runFg || c.BackgroundColor != runBg)
