@@ -1,5 +1,6 @@
 using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iConsole.Controls;
+using iConsole.Services;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
 using iTerminal.DevelopmentStudio.Dialogs;
@@ -34,7 +35,7 @@ public class DevelopmentStudioDialogTest
         dotnet ??= new FakeDotnetSolutionService { Solution = TwoProjects, Sdks = [new DotnetSdk("9.0.100", "/sdk/9")] };
         runner ??= new FakeProcessRunner();
         var breakpoints = new BreakpointStore();
-        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()))
+        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()), SyntaxHighlightingService.Default)
         {
             Folder = "/src",
         };
@@ -459,6 +460,37 @@ public class DevelopmentStudioDialogTest
     }
 
     /// <summary>The row and column of the first screen line that holds <paramref name="text"/>.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheEditorColoursTheKeywordsStringsAndCommentsOfTheOpenSource()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "tool.py");
+        File.WriteAllText(path, "def greet():\n    return 'hi'  # note\n");
+        try
+        {
+            var script = new DevelopmentProject("tool.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, path);
+            var harness = await OpenAsync([script]);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+            await WaitUntilAsync(() => harness.Dialog.EditorLines.Any(line => line.Contains("return", StringComparison.Ordinal)), "the file to open");
+
+            // The cursor starts on line 1 and the selected row is drawn in the selection colours, so the test reads line 2.
+            var screen = Render(harness.Dialog);
+            var keyword = Locate(screen, "return");
+            var text = Locate(screen, "'hi'");
+            var comment = Locate(screen, "# note");
+            Assert.AreEqual(SyntaxPalette.Default.Keyword, screen.ForegroundAt(keyword.Column, keyword.Row), "the keyword is coloured as one");
+            Assert.AreEqual(SyntaxPalette.Default.String, screen.ForegroundAt(text.Column, text.Row), "the string is coloured as one");
+            Assert.AreEqual(SyntaxPalette.Default.Comment, screen.ForegroundAt(comment.Column, comment.Row), "the comment is coloured as one");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
     private static (int Row, int Column) Locate(ScreenBuffer screen, string text)
     {
         for (int row = 0; row < iTerminal.Core.Test.Helper.UiTestHelper.ScreenSize.Height; row++)
