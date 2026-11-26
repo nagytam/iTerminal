@@ -14,7 +14,7 @@ using iTerminal.Core.Services.VirtualMachines;
 namespace iTerminal.Core.Dialogs;
 
 /// <summary>
-/// The virtual machines of the local libvirt hypervisor, and what can be done to each: S (or Enter on a
+/// The virtual machines of every hypervisor installed here (libvirt, GNOME Boxes, Hyper-V, VirtualBox), and what can be done to each: S (or Enter on a
 /// shut-off machine) starts it, D shuts it down, Shift+X powers it off, R restarts it, P pauses or resumes,
 /// V saves its state, C opens its console and F5 lists them again. Anything that stops or restarts a guest
 /// asks y/n first.
@@ -137,7 +137,7 @@ public class VirtualMachineManagerDialog : Dialog
     {
         return new ListItem<VirtualMachine>(item)
         {
-            Value = $"{item.Name,-32} {item.StateText}",
+            Value = $"{item.Name,-32} {item.StateText,-12} {item.Hypervisor}",
             IsEnabled = true,
         };
     }
@@ -256,12 +256,11 @@ public class VirtualMachineManagerDialog : Dialog
     {
         _isBusy = true;
         SetStatus(string.Format(UiText.Get("VirtualMachineManager.Working", "Working on {0}…"), machine.Name), isError: false);
-        var name = machine.Name;
         PendingOperation = Task.Run(async () =>
         {
             try
             {
-                var result = await _service.RunAsync(name, action);
+                var result = await _service.RunAsync(machine, action);
                 lock (_gate)
                 {
                     _finished = (result.Message, !result.Success);
