@@ -8038,6 +8038,24 @@
   <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
     <value>Chiede al registro chi detiene un dominio o un indirizzo.</value>
   </data>
+  <data name="Nfs.ConnectionFailed" xml:space="preserve">
+    <value>Connessione NFS a {0} non riuscita: {1}</value>
+  </data>
+  <data name="Nfs.ExportIsNotFile" xml:space="preserve">
+    <value>Un'esportazione è un mount, non un file: aprirla per lavorare su ciò che contiene.</value>
+  </data>
+  <data name="Nfs.Header" xml:space="preserve">
+    <value>NFS: {0}</value>
+  </data>
+  <data name="Nfs.HostsNotListed" xml:space="preserve">
+    <value>NFS non ha un elenco di server: digitare nfs://host/ per elencarne le esportazioni.</value>
+  </data>
+  <data name="Nfs.MoveFolderUnsupported" xml:space="preserve">
+    <value>Una cartella non può essere spostata tra esportazioni; copiarla, poi eliminarla.</value>
+  </data>
+  <data name="Nfs.ReadOnlyExport" xml:space="preserve">
+    <value>Host ed esportazioni sono in sola lettura qui: creare, copiare, spostare ed eliminare funzionano all'interno di un'esportazione.</value>
+  </data>
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Posizioni il cursore su un file o una cartella, oppure ne selezioni prima alcuni.</value>
   </data>

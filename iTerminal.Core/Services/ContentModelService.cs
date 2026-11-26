@@ -42,7 +42,8 @@ public sealed class ContentModelService(
     iTerminal.Core.Services.Cloud.IOneDriveFileSystemService? oneDriveFileSystemService = null,
     iTerminal.Core.Services.Cloud.IGoogleDriveFileSystemService? googleDriveFileSystemService = null,
     Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>? cloudOptions = null,
-    iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null)
+    iTerminal.Core.Services.Evidence.IEvidenceNotebookService? evidenceNotebookService = null,
+    iTerminal.Core.Services.Nfs.INfsDriveService? nfsDriveService = null)
     : IContentModelService, IDisposable
 {
     /// <summary>The singletons the music drives are views over, resolved together.</summary>
@@ -248,6 +249,11 @@ public sealed class ContentModelService(
             case ContainerType.Mtp when mtpDriveService is not null:
                 {
                     contentModel = new ContentModelMtpDrive(name, settingsService, mtpDriveService, folderHistoryService, frequentExecutionGuardService, logger);
+                    break;
+                }
+            case ContainerType.Nfs when nfsDriveService is not null:
+                {
+                    contentModel = new ContentModelNfsDrive(name, settingsService, nfsDriveService, folderHistoryService, frequentExecutionGuardService, logger);
                     break;
                 }
             case ContainerType.Recycle:

@@ -24,6 +24,7 @@ public sealed class FileSystemResolver(
     public IFileSystem Resolve(Url url, IContentModel? model = null, string? operation = null) => url.ContainerType switch
     {
         ContainerType.FileSystem => fileSystemService,
+        ContainerType.Nfs => ResolveNfs(url, model, operation),
         ContainerType.MemoryDrive => memoryDriveService,
         ContainerType.SshFileSystem => sshFileSystemService,
         ContainerType.FileSystemArchive => archiveFileSystemService,
@@ -36,6 +37,19 @@ public sealed class FileSystemResolver(
              ?? model
              ?? throw new NotSupportedException($"{operation ?? "This"} is not supported on {url.ContainerType} drives."),
     };
+
+    /// <summary>
+    /// The NFS drive's file system, reached through an open NFS panel. It never falls back to <paramref name="model"/>: a local
+    /// panel's file system would take an <c>nfs://</c> URL for a relative path.
+    /// </summary>
+    private IFileSystem ResolveNfs(Url url, IContentModel? model, string? operation) =>
+        (model as IFileSystemProvider) is { ContainerType: ContainerType.Nfs } own
+            ? own.FileSystem
+            : contentModelService.ContentModels
+                .OfType<IFileSystemProvider>()
+                .FirstOrDefault(provider => provider.ContainerType == ContainerType.Nfs)
+                ?.FileSystem
+              ?? throw new NotSupportedException($"{operation ?? "This"} is not supported on {url.ContainerType} drives.");
 
     /// <summary>
     /// The panel that is showing the same remote account as <paramref name="url"/> — FTP, SMB, WebDAV and
