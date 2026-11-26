@@ -2779,6 +2779,9 @@
   <data name="DialogHint.CloseAskLater" xml:space="preserve">
     <value>Cerrar y preguntar más tarde</value>
   </data>
+  <data name="DialogHint.CloseEditor" xml:space="preserve">
+    <value>Cerrar el editor</value>
+  </data>
   <data name="DialogHint.CloseReport" xml:space="preserve">
     <value>Cerrar el informe</value>
   </data>
@@ -3229,6 +3232,9 @@
   <data name="DialogHint.NextLinkOrField" xml:space="preserve">
     <value>Ir al siguiente enlace o campo</value>
   </data>
+  <data name="DialogHint.NextPane" xml:space="preserve">
+    <value>Cambiar de panel</value>
+  </data>
   <data name="DialogHint.NextSection" xml:space="preserve">
     <value>Siguiente sección (cambios, ramas, registro, alijos, detalle)</value>
   </data>
@@ -3244,8 +3250,14 @@
   <data name="DialogHint.OpenCloseTab" xml:space="preserve">
     <value>Abrir o cerrar una pestaña</value>
   </data>
+  <data name="DialogHint.OpenErrorLine" xml:space="preserve">
+    <value>Abrir el archivo del error en esa línea</value>
+  </data>
   <data name="DialogHint.OpenInBrowser" xml:space="preserve">
     <value>Abrir el artículo en el navegador</value>
+  </data>
+  <data name="DialogHint.OpenProjectFile" xml:space="preserve">
+    <value>Abrir el archivo del proyecto en el editor</value>
   </data>
   <data name="DialogHint.OpenReputationPage" xml:space="preserve">
     <value>Abrir la página de VirusTotal en el navegador</value>
@@ -6096,8 +6108,17 @@
   <data name="Hints.PackagesSearch" xml:space="preserve">
     <value>Space/Enter:instalar  i:instalados  s:nueva búsqueda  r:actualizar  x:cancelar  PgUp/PgDn:salida  Esc:cerrar</value>
   </data>
+  <data name="Hints.SolutionEditor" xml:space="preserve">
+    <value>Ctrl+S:guardar Esc:cerrar el editor</value>
+  </data>
+  <data name="Hints.SolutionErrors" xml:space="preserve">
+    <value>Intro:abrir en la línea PgUp/PgDn/Inicio/Fin:desplazar Tab:panel Esc:cerrar</value>
+  </data>
+  <data name="Hints.SolutionOutput" xml:space="preserve">
+    <value>PgUp/PgDn/Inicio/Fin:desplazar Arriba/Abajo:línea Tab:panel Esc:cerrar</value>
+  </data>
   <data name="Hints.SolutionViewer" xml:space="preserve">
-    <value>b:compilar c:limpiar t:probar r:ejecutar x:cancelar v:SDK s:SBOM f:XML/JSON Space:marcar a:todo T:pruebas PgUp/PgDn/Home/End:salida Esc:cerrar</value>
+    <value>b:compilar c:limpiar t:probar r:ejecutar x:cancelar v:SDK s:SBOM f:XML/JSON Space:marcar a:todo T:tests Intro:abrir Tab:panel Esc:cerrar</value>
   </data>
   <data name="Hints.StockBrowser" xml:space="preserve">
     <value>a:añadir  d/Del:quitar  r:actualizar  Esc:cerrar</value>
@@ -9032,6 +9053,18 @@
   <data name="Signature.SeveralCerts" xml:space="preserve">
     <value>Varios certificados: escriba en Clave la huella del que desea usar.</value>
   </data>
+  <data name="Solution.Editor" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="Solution.Errors" xml:space="preserve">
+    <value>Errores</value>
+  </data>
+  <data name="Solution.NoErrorLocation" xml:space="preserve">
+    <value>Este error no nombra ningún archivo, así que no hay nada que abrir.</value>
+  </data>
+  <data name="Solution.NoProjectFile" xml:space="preserve">
+    <value>Selecciona un proyecto para abrir su archivo de proyecto.</value>
+  </data>
   <data name="Solution.NoProjects" xml:space="preserve">
     <value>No se encontraron proyectos en la solución.</value>
   </data>
@@ -9044,11 +9077,23 @@
   <data name="Solution.OnlySdk" xml:space="preserve">
     <value>Solo está instalado el SDK de .NET {0}.</value>
   </data>
+  <data name="Solution.OpenFailed" xml:space="preserve">
+    <value>No se pudo abrir {0}: {1}</value>
+  </data>
   <data name="Solution.Projects" xml:space="preserve">
     <value>Proyectos</value>
   </data>
   <data name="Solution.ReadFailed" xml:space="preserve">
     <value>No se pudo leer la solución: {0}</value>
+  </data>
+  <data name="Solution.SaveFailed" xml:space="preserve">
+    <value>Error al guardar: {0}</value>
+  </data>
+  <data name="Solution.Saved" xml:space="preserve">
+    <value>Guardado {0}.</value>
+  </data>
+  <data name="Solution.Saving" xml:space="preserve">
+    <value>Guardando...</value>
   </data>
   <data name="Solution.SbomBusy" xml:space="preserve">
     <value>dotnet {0} sigue en ejecución; escriba el SBOM al terminar.</value>
@@ -9076,6 +9121,9 @@
   </data>
   <data name="Solution.SelectToRun" xml:space="preserve">
     <value>Seleccione un proyecto para ejecutar (no se puede ejecutar toda la solución).</value>
+  </data>
+  <data name="Solution.UnsavedEscape" xml:space="preserve">
+    <value>Cambios sin guardar: Ctrl+S los guarda; Esc otra vez los descarta.</value>
   </data>
   <data name="Solution.UsingSdk" xml:space="preserve">
     <value>Se usa el SDK de .NET {0}.</value>

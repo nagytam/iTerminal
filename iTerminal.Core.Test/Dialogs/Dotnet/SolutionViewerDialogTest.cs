@@ -558,4 +558,113 @@ public class SolutionViewerDialogTest
 
         AssertScreenContains(Render(dialog), "[ ] App.Test");
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ErrorLinesGoToTheErrorsPaneWhileTheOutputKeepsTheWholeRun()
+    {
+        var service = new FakeDotnetSolutionService
+        {
+            Solution = TwoProjects(),
+            Output = { "/src/App/Program.cs(12,5): error CS1002: ; expected [/src/App/App.csproj]", "warning CS8019: unused", "Build FAILED." },
+            ExitCode = 1,
+        };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('b'));
+        await WaitIdleAsync(dialog);
+
+        Assert.AreEqual(1, dialog.ErrorsForTest.Count, "only the error line goes to the Errors pane");
+        Assert.IsTrue(dialog.OutputForTest.Count > dialog.ErrorsForTest.Count, "the Output pane keeps the warning and the rest of the run");
+        AssertScreenContains(Render(dialog), "Errors (1)");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EnterOnAnErrorOpensItsFileInTheEditorAndCtrlSSavesIt()
+    {
+        var directory = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var file = Path.Combine(directory, "Program.cs");
+            File.WriteAllText(file, "first\nsecond\nthird\n");
+            var service = new FakeDotnetSolutionService
+            {
+                Solution = new SolutionInfo("/src/App.slnx", "App", directory, [new SolutionProject("App", "App.csproj", Path.Combine(directory, "App.csproj"))]),
+                Output = { $"{file}(2,1): error CS1002: ; expected" },
+                ExitCode = 1,
+            };
+            var dialog = await OpenAsync(service);
+
+            await dialog.HandleKeyEventAsync(Char('b'));
+            await WaitIdleAsync(dialog);
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab));
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab));
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+            await WaitUntilAsync(() => { dialog.OnIdle(); return dialog.EditorOpenForTest; }, "the error's file to open in the editor");
+
+            Assert.AreEqual("Editor", dialog.PaneForTest, "the editor takes the keys once the file is open");
+            Assert.AreEqual("first\nsecond\nthird\n", dialog.EditorTextForTest);
+
+            await dialog.HandleKeyEventAsync(Char('X'));
+            Assert.IsTrue(dialog.EditorDirtyForTest, "typing makes the text unsaved");
+
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.S, 's', control: true));
+            await WaitUntilAsync(() => { dialog.OnIdle(); return !dialog.EditorDirtyForTest; }, "the save to land");
+
+            StringAssert.Contains(File.ReadAllText(file), "X", "Ctrl+S writes the edited text to the file");
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EscOnUnsavedEditorTextWarnsBeforeItDiscardsIt()
+    {
+        var directory = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var file = Path.Combine(directory, "App.csproj");
+            File.WriteAllText(file, "<Project />\n");
+            var dialog = await OpenAsync(new FakeDotnetSolutionService
+            {
+                Solution = new SolutionInfo("/src/App.slnx", "App", directory, [new SolutionProject("App", "App.csproj", file)]),
+            });
+
+            // The cursor starts on the [Solution] row, which has no project file: move down to the project.
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+            await WaitUntilAsync(() => { dialog.OnIdle(); return dialog.EditorOpenForTest; }, "the project file to open");
+            await dialog.HandleKeyEventAsync(Char('X'));
+
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+            Assert.IsTrue(dialog.EditorOpenForTest, "the first Esc only warns about the unsaved text");
+            StringAssert.Contains(dialog.StatusForTest, "Unsaved changes");
+
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+            Assert.IsFalse(dialog.EditorOpenForTest, "the second Esc discards the text and closes the editor");
+            Assert.AreEqual("<Project />\n", File.ReadAllText(file), "nothing was written to the project file");
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheHintsNameTheKeysOfThePaneThatHasTheFocus()
+    {
+        var dialog = await OpenAsync(new FakeDotnetSolutionService { Solution = TwoProjects() });
+        CollectionAssert.Contains(dialog.KeyHintsForTest.ToList(), "Space", "the project list answers to Space");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab));
+        CollectionAssert.Contains(dialog.KeyHintsForTest.ToList(), "Enter", "the Errors pane opens an error line with Enter");
+        CollectionAssert.DoesNotContain(dialog.KeyHintsForTest.ToList(), "Space", "Space belongs to the project list only");
+        AssertScreenContains(Render(dialog), "Enter:open at line");
+    }
 }

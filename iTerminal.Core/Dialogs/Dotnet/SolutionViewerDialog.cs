@@ -1,6 +1,7 @@
 using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
+using iConsole.Controls.Editors;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -8,15 +9,19 @@ using iConsole.Model;
 using iConsole.Services;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace iTerminal.Core.Dialogs.Dotnet;
 
 /// <summary>
-/// Full-screen modal solution viewer for <c>.slnx</c>/<c>.sln</c> files: the parsed project
-/// list (plus a whole-solution entry) on the left, live <c>dotnet build/test/run</c> output on
-/// the right. The CLI runs on a background task; the key handler and <see cref="Draw"/> never
-/// block on it.
+/// Full-screen modal solution viewer for <c>.slnx</c>/<c>.sln</c> files. The left column is the
+/// parsed project list (plus a whole-solution entry). The right column holds three panes: the live
+/// <c>dotnet build/test/run</c> output, the errors of that output (opened at their line in the
+/// editor with Enter), and the code editor, which opens a project file or an error's file and saves
+/// it with Ctrl+S. Tab moves between the panes, and the footer's hints name the keys the focused pane
+/// answers to. The CLI runs on a background task; the key handler and <see cref="Draw"/> never block on it.
 /// </summary>
 public class SolutionViewerDialog : SplitPaneDialog
 {
@@ -31,6 +36,18 @@ public class SolutionViewerDialog : SplitPaneDialog
 
     /// <summary>Drives footer status coloring without relying on brittle substring matching of <see cref="_status"/>.</summary>
     private enum StatusSeverity { Info, Success, Error }
+
+    /// <summary>The pane that has the keys. Tab cycles through them; the editor is in the cycle only while it is open.</summary>
+    private enum Pane { Projects, Output, Errors, Editor }
+
+    /// <summary>Where an error line points: the file and its line (1-based). Null when the line names no file.</summary>
+    private sealed record ErrorLocation(string Path, int Line);
+
+    /// <summary>A file read in the background, waiting for the next idle pass to be shown in the editor.</summary>
+    private sealed record LoadedFile(string Path, int Line, string[] Lines, string LineEnding, Encoding Encoding, string? Error);
+
+    /// <summary>The outcome of a background save, applied on the next idle pass.</summary>
+    private sealed record SaveOutcome(string Path, string Text, string? Error);
 
     private sealed class DotnetProjectListBox(IListBoxModel<ProjectRow> listModel, IThemeService themeService)
         : ListBox<ProjectRow>(listModel, themeService)
@@ -49,54 +66,36 @@ public class SolutionViewerDialog : SplitPaneDialog
         }
     }
 
-    private sealed class DotnetOutputListBox(IListBoxModel<string> listModel, IThemeService themeService)
-        : ListBox<string>(listModel, themeService)
-    {
-        protected override Color? GetItemForegroundOverride(int index)
-        {
-            if (index < 0 || index >= ListModel.ListItems.Count)
-            {
-                return null;
-            }
-
-            var line = ListModel.ListItems[index].Item;
-            if (line.StartsWith("$ ", StringComparison.Ordinal)) return Color.Cyan;
-            if (line.Contains(": error", StringComparison.OrdinalIgnoreCase)
-                || line.StartsWith("Error", StringComparison.Ordinal)
-                || line.Contains("Build FAILED", StringComparison.OrdinalIgnoreCase)
-                || line.Contains("Failed!", StringComparison.Ordinal)) return Color.Red;
-            if (line.Contains(": warning", StringComparison.OrdinalIgnoreCase)) return Color.Yellow;
-            if (line.Contains("Build succeeded", StringComparison.OrdinalIgnoreCase)
-                || line.Contains("Passed!", StringComparison.Ordinal)) return Color.Green;
-            return null;
-        }
-    }
-
     // VSTest console summary line, e.g. "Passed!  - Failed: 0, Passed: 42, Skipped: 0, Total: 42, Duration: 1 s - Foo.dll"
     private static readonly Regex TestSummaryLineRegex = new(
         @"^(?:Passed|Failed)!\s*-\s*Failed:\s*(\d+),\s*Passed:\s*(\d+),\s*Skipped:\s*(\d+),\s*Total:\s*(\d+)",
         RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+
+    // MSBuild diagnostic, e.g. "C:\src\App\Program.cs(12,5): error CS1002: ; expected [C:\src\App\App.csproj]".
+    private static readonly Regex ErrorLocationRegex = new(
+        @"^(?<path>.+?)\((?<line>\d+)(?:,\d+)?\):\s*error\b",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
 
     private readonly IDotnetSolutionService _dotnetSolutionService;
     private IReadOnlyList<DotnetSdk> _sdks = [];
     private int _sdkIndex = -1;
 
     private readonly ConcurrentObservableCollection<ProjectRow> _projectItems = new();
-    private readonly ConcurrentObservableCollection<string> _outputItems = new();
+
+    private readonly SolutionOutputPane _output;
+    private readonly SolutionOutputPane _errors;
+
+    /// <summary>One entry per line of the Error pane, in the same order. Guarded by <see cref="_outputLock"/>.</summary>
+    private readonly List<ErrorLocation?> _errorLocations = [];
     private readonly Lock _outputLock = new();
-    private readonly List<string> _output = [];
 
     private readonly DotnetProjectListBox _projectListBox;
-    private readonly DotnetOutputListBox _outputListBox;
 
     /// <summary>Checked projects. Empty means "use the cursor row (or the whole solution)" for build/test.</summary>
     private readonly HashSet<SolutionProject> _selectedProjects = [];
 
     private SolutionInfo _solution = SolutionInfo.Empty;
     private string _loadError = string.Empty;
-
-    private bool _followTail = true;
-    private bool _syncingScroll;
 
     private volatile bool _busy;
     private string _status = string.Empty;
@@ -109,6 +108,20 @@ public class SolutionViewerDialog : SplitPaneDialog
     /// <summary>Verb of the run in progress ("build"/"test"/"run"); drives test-summary parsing in <see cref="AppendOutput"/>.</summary>
     private string _currentVerb = string.Empty;
     private TestTotals _testTotals = TestTotals.Empty;
+
+    private Pane _pane = Pane.Projects;
+
+    private readonly TextEditorControl _editor;
+    private bool _editorOpen;
+    private string _editorPath = string.Empty;
+    private string _editorLineEnding = "\n";
+    private Encoding _editorEncoding = new UTF8Encoding(false);
+
+    /// <summary>Set by an Esc on an editor with unsaved text: the next Esc discards them.</summary>
+    private bool _escArmed;
+
+    private volatile LoadedFile? _loadedFile;
+    private volatile SaveOutcome? _saveOutcome;
 
     /// <summary>Absolute path to the solution file. Set by the caller before the dialog is shown.</summary>
     public string SolutionPath { get; set; } = string.Empty;
@@ -124,30 +137,18 @@ public class SolutionViewerDialog : SplitPaneDialog
         _projectListBox = new DotnetProjectListBox(
             new ListBoxModel<ProjectRow>(_projectItems) { TransformItem = TransformProjectRow },
             themeService);
-        _outputListBox = new DotnetOutputListBox(
-            new ListBoxModel<string>(_outputItems) { TransformItem = TransformOutputLine },
-            themeService)
-        {
-            CanFocus = false,
-        };
+
+        _output = new SolutionOutputPane(themeService);
+        _errors = new SolutionOutputPane(themeService);
+        _editor = new TextEditorControl(themeService);
 
         AddControl(_projectListBox);
-        AddControl(_outputListBox);
-
-        _outputListBox.ScrollableModel.PropertyChanged += (_, e) =>
-        {
-            if (!_syncingScroll && e.PropertyName == nameof(IScrollableModel.CursorPosition))
-            {
-                _followTail = false;
-            }
-        };
+        AddControl(_output.ListBox);
+        AddControl(_errors.ListBox);
     }
 
     private static ListItem<ProjectRow> TransformProjectRow(ProjectRow row, CancellationToken cancellationToken) =>
         new(row) { Value = row.DisplayName, IsEnabled = true };
-
-    private static ListItem<string> TransformOutputLine(string line, CancellationToken cancellationToken) =>
-        new(line) { Value = line, IsEnabled = true };
 
     #region Selection
 
@@ -250,9 +251,14 @@ public class SolutionViewerDialog : SplitPaneDialog
     {
         await base.OnInitializeAsync();
 
+        CloseEditorWithoutAsking();
+        _pane = Pane.Projects;
+        _escArmed = false;
+        _loadedFile = null;
+        _saveOutcome = null;
+
         _output.Clear();
-        _outputItems.ReplaceAll([]);
-        _followTail = true;
+        ClearErrors();
         _busy = false;
         _status = string.Empty;
         _statusSeverity = StatusSeverity.Info;
@@ -305,18 +311,22 @@ public class SolutionViewerDialog : SplitPaneDialog
         if (iw > 0 && ih > 0)
         {
             var midY = 2; // interior offset (1) + header row (1)
-            var midH = ih - 2; // minus header row and footer row
-            if (midH > 0)
+            var columns = ComputeColumns(iw, ih);
+            if (columns.MidHeight > 0)
             {
-                var leftW = Math.Max(24, iw * 38 / 100);
-                var rightX = 1 + leftW + 1;
-                var rightW = iw - leftW - 1;
-
                 _projectListBox.Position = new Position(1, midY + 1); // +1 reserves the section-header band
-                _projectListBox.ViewSize = new Size(leftW, Math.Max(0, midH - 1));
+                _projectListBox.ViewSize = new Size(columns.LeftWidth, Math.Max(0, columns.MidHeight - 1));
 
-                _outputListBox.Position = new Position(rightX, midY + 1);
-                _outputListBox.ViewSize = rightW > 0 ? new Size(rightW, Math.Max(0, midH - 1)) : new Size(0, 0);
+                var rightX = columns.RightX;
+                var rightW = columns.RightWidth;
+                _output.ListBox.Position = new Position(rightX, midY + 1);
+                _output.ListBox.ViewSize = rightW > 0 && columns.OutputRows > 1 ? new Size(rightW, columns.OutputRows - 1) : new Size(0, 0);
+
+                _errors.ListBox.Position = new Position(rightX, midY + columns.OutputRows + 1);
+                _errors.ListBox.ViewSize = rightW > 0 && columns.ErrorRows > 1 ? new Size(rightW, columns.ErrorRows - 1) : new Size(0, 0);
+
+                _editor.Position = new Position(rightX, midY + 1);
+                _editor.ViewSize = rightW > 0 && columns.MidHeight > 1 ? new Size(rightW, columns.MidHeight - 1) : new Size(0, 0);
             }
         }
 
@@ -325,7 +335,24 @@ public class SolutionViewerDialog : SplitPaneDialog
         // its own ViewSize) and focuses the first focusable child.
         base.OnInitializeLayout();
 
-        ResyncTailScroll();
+        _output.ResyncTailScroll();
+        _errors.ResyncTailScroll();
+    }
+
+    /// <summary>The widths and heights of the three columns' parts, from the interior size (the frame excluded).</summary>
+    private readonly record struct Columns(int LeftWidth, int RightX, int RightWidth, int MidHeight, int OutputRows, int ErrorRows);
+
+    /// <summary>The left column takes 38% (at least 24 columns); the right column is split into Output (three
+    /// fifths of the height) and Errors (the rest). On a very short dialog the Errors pane gets no rows.</summary>
+    private static Columns ComputeColumns(int interiorWidth, int interiorHeight)
+    {
+        var midHeight = interiorHeight - 2;
+        var leftWidth = Math.Max(24, interiorWidth * 38 / 100);
+        var rightX = 1 + leftWidth + 1;
+        var rightWidth = interiorWidth - leftWidth - 1;
+        var outputRows = midHeight >= 4 ? midHeight * 3 / 5 : Math.Max(0, midHeight);
+        var errorRows = Math.Max(0, midHeight - outputRows);
+        return new Columns(leftWidth, rightX, rightWidth, Math.Max(0, midHeight), outputRows, errorRows);
     }
 
     #region Running dotnet (background)
@@ -407,12 +434,8 @@ public class SolutionViewerDialog : SplitPaneDialog
         _testTotals = TestTotals.Empty;
         _status = $"dotnet {verb} {targetLabel}...";
         _statusSeverity = StatusSeverity.Info;
-        lock (_outputLock)
-        {
-            _output.Clear();
-        }
-        _followTail = true;
-        SyncOutputItems();
+        _output.Clear();
+        ClearErrors();
         StateHasChanged();
 
         _ = Task.Run(async () =>
@@ -498,13 +521,9 @@ public class SolutionViewerDialog : SplitPaneDialog
         }
     }
 
+    /// <summary>Called from the run's background task. Adds a line to the Output pane, and to the Error pane when it is an error.</summary>
     private void AppendOutput(string line)
     {
-        lock (_outputLock)
-        {
-            _output.Add(line);
-        }
-
         if (_currentVerb == "test")
         {
             var match = TestSummaryLineRegex.Match(line);
@@ -519,43 +538,52 @@ public class SolutionViewerDialog : SplitPaneDialog
             }
         }
 
-        SyncOutputItems();
+        _output.Append(line);
+        if (IsErrorLine(line))
+        {
+            lock (_outputLock)
+            {
+                _errorLocations.Add(ParseErrorLocation(line));
+            }
+
+            _errors.Append(line);
+        }
+
         StateHasChanged();
     }
 
-    /// <summary>Pushes <see cref="_output"/> into the output list box's model and keeps the tail visible when following.</summary>
-    private void SyncOutputItems()
+    private static bool IsErrorLine(string line) =>
+        ErrorLocationRegex.IsMatch(line)
+        || line.Contains(": error", StringComparison.OrdinalIgnoreCase)
+        || line.StartsWith("Error", StringComparison.Ordinal);
+
+    /// <summary>The file and line an MSBuild error names, resolved against the solution folder. Null when it names none.</summary>
+    private ErrorLocation? ParseErrorLocation(string line)
     {
-        string[] lines;
-        lock (_outputLock)
+        var match = ErrorLocationRegex.Match(line);
+        if (!match.Success || !int.TryParse(match.Groups["line"].Value, out var lineNumber) || lineNumber < 1)
         {
-            lines = [.. _output];
+            return null;
         }
 
-        _outputItems.ReplaceAll(lines);
-        _outputListBox.UpdateModel();
-        ResyncTailScroll();
+        var path = match.Groups["path"].Value.Trim();
+        if (path.Length == 0)
+        {
+            return null;
+        }
+
+        var fullPath = Path.IsPathRooted(path) || string.IsNullOrEmpty(_solution.Directory)
+            ? path
+            : Path.Combine(_solution.Directory, path);
+        return new ErrorLocation(fullPath, lineNumber);
     }
 
-    /// <summary>When following the tail, keeps the output list box scrolled to the last line.</summary>
-    private void ResyncTailScroll()
+    private void ClearErrors()
     {
-        if (!_followTail)
+        _errors.Clear();
+        lock (_outputLock)
         {
-            return;
-        }
-
-        _syncingScroll = true;
-        try
-        {
-            var count = _outputListBox.ListModel.ListItems.Count;
-            var rows = (int)_outputListBox.ViewSize.Height;
-            _outputListBox.ScrollableModel.ScrollPosition.Y = Math.Max(0, count - rows);
-            _outputListBox.ScrollableModel.CursorPosition.Y = Math.Max(0, count - 1);
-        }
-        finally
-        {
-            _syncingScroll = false;
+            _errorLocations.Clear();
         }
     }
 
@@ -568,6 +596,241 @@ public class SolutionViewerDialog : SplitPaneDialog
             _runCts.Cancel();
             StateHasChanged();
         }
+    }
+
+    #endregion
+
+    #region Editor
+
+    /// <summary>Enter on a project row: opens the project's file in the editor.</summary>
+    private void OpenProjectFile()
+    {
+        var project = SelectedProject;
+        if (project is null)
+        {
+            _status = iConsole.Localization.UiText.Get("Solution.NoProjectFile", "Select a project to open its project file.");
+            _statusSeverity = StatusSeverity.Info;
+            StateHasChanged();
+            return;
+        }
+
+        OpenInEditor(project.AbsolutePath, 1);
+    }
+
+    /// <summary>Enter on an error line: opens its file at the line it names.</summary>
+    private void OpenErrorLine()
+    {
+        var index = (int)_errors.ListBox.ScrollableModel.CursorPosition.Y;
+        ErrorLocation? location;
+        lock (_outputLock)
+        {
+            location = index >= 0 && index < _errorLocations.Count ? _errorLocations[index] : null;
+        }
+
+        if (location is null)
+        {
+            _status = iConsole.Localization.UiText.Get("Solution.NoErrorLocation", "This error names no file, so there is nothing to open.");
+            _statusSeverity = StatusSeverity.Info;
+            StateHasChanged();
+            return;
+        }
+
+        OpenInEditor(location.Path, location.Line);
+    }
+
+    /// <summary>Reads the file on a background task; the editor shows it on the next idle pass.</summary>
+    private void OpenInEditor(string path, int line)
+    {
+        if (_editorOpen && _editor.IsDirty)
+        {
+            // Opening another file would throw away the unsaved text of this one.
+            _status = iConsole.Localization.UiText.Get("Solution.UnsavedEscape", "Unsaved changes: Ctrl+S saves them, Esc again discards them.");
+            _statusSeverity = StatusSeverity.Error;
+            StateHasChanged();
+            return;
+        }
+
+        _ = Task.Run(() => _loadedFile = ReadFile(path, line), CancellationToken.None);
+    }
+
+    /// <summary>Reads a file as UTF-8, keeping a byte order mark only when the file had one, so a save writes it back unchanged.</summary>
+    private static LoadedFile ReadFile(string path, int line)
+    {
+        try
+        {
+            var bytes = File.ReadAllBytes(path);
+            var hasBom = bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF;
+            var encoding = hasBom ? Encoding.UTF8 : new UTF8Encoding(false);
+            var skip = hasBom ? 3 : 0;
+            var content = encoding.GetString(bytes, skip, bytes.Length - skip);
+            var lineEnding = content.Contains("\r\n", StringComparison.Ordinal) ? "\r\n" : "\n";
+            var lines = content.ReplaceLineEndings("\n").Split('\n');
+            return new LoadedFile(path, line, lines, lineEnding, encoding, null);
+        }
+        catch (Exception exception)
+        {
+            return new LoadedFile(path, line, [], "\n", new UTF8Encoding(false), exception.Message);
+        }
+    }
+
+    /// <summary>Shows a file that the background read has finished with, and moves the cursor to its line.</summary>
+    private void ShowLoadedFile(LoadedFile loaded)
+    {
+        if (loaded.Error is not null)
+        {
+            _status = string.Format(iConsole.Localization.UiText.Get("Solution.OpenFailed", "Could not open {0}: {1}"), Path.GetFileName(loaded.Path), loaded.Error);
+            _statusSeverity = StatusSeverity.Error;
+            StateHasChanged();
+            return;
+        }
+
+        if (_editorOpen)
+        {
+            RemoveControl(_editor);
+        }
+
+        _editorOpen = true;
+        _editorPath = loaded.Path;
+        _editorLineEnding = loaded.LineEnding;
+        _editorEncoding = loaded.Encoding;
+        _escArmed = false;
+
+        AddControl(_editor);
+        _editor.OnInitializeLayout();
+        _editor.ReplaceAllText(loaded.Lines, loaded.LineEnding, loaded.Encoding);
+        _editor.IsDirty = false;
+
+        var rows = Math.Max(1, (int)_editor.ViewSize.Height);
+        var target = Math.Max(0, loaded.Line - 1);
+        _editor.ScrollableModel.CursorPosition.Y = target;
+        _editor.ScrollableModel.ScrollPosition.Y = Math.Max(0, target - rows / 2);
+
+        _output.ListBox.IsVisible = false;
+        _errors.ListBox.IsVisible = false;
+        _status = string.Empty;
+        _statusSeverity = StatusSeverity.Info;
+        SetPane(Pane.Editor);
+    }
+
+    /// <summary>Writes the editor's text to its file on a background task. The editor's dirty flag is cleared when it lands.</summary>
+    private void SaveEditor()
+    {
+        if (!_editorOpen)
+        {
+            return;
+        }
+
+        var lines = _editor.TextModel.Lines.AsSnapshot().ToArray();
+        var text = string.Join(_editorLineEnding, lines);
+        var path = _editorPath;
+        var encoding = _editorEncoding;
+        _status = iConsole.Localization.UiText.Get("Solution.Saving", "Saving...");
+        _statusSeverity = StatusSeverity.Info;
+        StateHasChanged();
+
+        _ = Task.Run(() =>
+        {
+            string? error = null;
+            try
+            {
+                File.WriteAllText(path, text, encoding);
+            }
+            catch (Exception exception)
+            {
+                error = exception.Message;
+            }
+
+            _saveOutcome = new SaveOutcome(path, text, error);
+        }, CancellationToken.None);
+    }
+
+    /// <summary>Applies a finished save: the editor is clean only if it still holds the text that was written.</summary>
+    private void ApplySaveOutcome(SaveOutcome outcome)
+    {
+        if (outcome.Error is not null)
+        {
+            _status = string.Format(iConsole.Localization.UiText.Get("Solution.SaveFailed", "Save failed: {0}"), outcome.Error);
+            _statusSeverity = StatusSeverity.Error;
+        }
+        else
+        {
+            var current = string.Join(_editorLineEnding, _editor.TextModel.Lines.AsSnapshot());
+            if (current == outcome.Text)
+            {
+                _editor.IsDirty = false;
+            }
+
+            _status = string.Format(iConsole.Localization.UiText.Get("Solution.Saved", "Saved {0}."), Path.GetFileName(outcome.Path));
+            _statusSeverity = StatusSeverity.Success;
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>Esc in the editor: the first press on unsaved text only warns; the next one closes and discards.</summary>
+    private void CloseOrWarnEditor()
+    {
+        if (_editor.IsDirty && !_escArmed)
+        {
+            _escArmed = true;
+            _status = iConsole.Localization.UiText.Get("Solution.UnsavedEscape", "Unsaved changes: Ctrl+S saves them, Esc again discards them.");
+            _statusSeverity = StatusSeverity.Error;
+            StateHasChanged();
+            return;
+        }
+
+        CloseEditorWithoutAsking();
+        SetPane(Pane.Projects);
+    }
+
+    /// <summary>Takes the editor out of the layout and gives the output panes their rows back. Does not ask about unsaved text.</summary>
+    private void CloseEditorWithoutAsking()
+    {
+        if (!_editorOpen)
+        {
+            return;
+        }
+
+        RemoveControl(_editor);
+        _editorOpen = false;
+        _escArmed = false;
+        _output.ListBox.IsVisible = true;
+        _errors.ListBox.IsVisible = true;
+    }
+
+    #endregion
+
+    #region Panes
+
+    /// <summary>The pane the scroll keys move: the Errors pane when it has the keys, the Output pane otherwise.</summary>
+    private SolutionOutputPane FocusedOutputPane => _pane == Pane.Errors ? _errors : _output;
+
+    private void CyclePane()
+    {
+        var next = _pane switch
+        {
+            Pane.Projects => Pane.Output,
+            Pane.Output => Pane.Errors,
+            Pane.Errors => _editorOpen ? Pane.Editor : Pane.Projects,
+            _ => Pane.Projects,
+        };
+        SetPane(next);
+    }
+
+    private void SetPane(Pane pane)
+    {
+        _pane = pane;
+        switch (pane)
+        {
+            case Pane.Editor:
+                _editor.SetFocus();
+                break;
+            case Pane.Projects:
+                _projectListBox.SetFocus();
+                break;
+        }
+
+        StateHasChanged();
     }
 
     #endregion
@@ -645,8 +908,29 @@ public class SolutionViewerDialog : SplitPaneDialog
 
     #region Input
 
+    /// <summary>The keys the focused pane answers to, named the way the footer shows them.</summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
+        yield return ("Tab", UiText.Get("DialogHint.NextPane", "Switch the pane"));
+
+        switch (_pane)
+        {
+            case Pane.Editor:
+                yield return ("Ctrl+S", UiText.Get("Viewer.HintSave", "Save the file"));
+                yield return ("Esc", UiText.Get("DialogHint.CloseEditor", "Close the editor"));
+                yield break;
+            case Pane.Output:
+            case Pane.Errors:
+                if (_pane == Pane.Errors)
+                {
+                    yield return ("Enter", UiText.Get("DialogHint.OpenErrorLine", "Open the error's file at its line"));
+                }
+
+                yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollOutput", "Scroll the output"));
+                yield return ("Home/End", UiText.Get("DialogHint.TopOfOutputOrFollow", "Top of the output, or follow the end"));
+                yield break;
+        }
+
         yield return ("Space", UiText.Get("DialogHint.SelectProject", "Select or unselect the project"));
         yield return ("A", UiText.Get("DialogHint.SelectAllProjects", "Select all projects"));
         yield return ("Shift+T", UiText.Get("DialogHint.SelectAllTestProjects", "Select all test projects"));
@@ -658,44 +942,66 @@ public class SolutionViewerDialog : SplitPaneDialog
         yield return ("V", UiText.Get("DialogHint.NextDotnetSdk", "Switch to the next .NET SDK"));
         yield return ("S", UiText.Get("DialogHint.GenerateSbom", "Write a CycloneDX SBOM of the solution"));
         yield return ("F", UiText.Get("DialogHint.SbomFormat", "Switch the SBOM between XML and JSON"));
+        yield return ("Enter", UiText.Get("DialogHint.OpenProjectFile", "Open the project file in the editor"));
         yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollOutput", "Scroll the output"));
         yield return ("Home/End", UiText.Get("DialogHint.TopOfOutputOrFollow", "Top of the output, or follow the end"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // The editor takes every key while it has the focus; its letters are text, not commands.
+        if (_editorOpen && _pane == Pane.Editor)
+        {
+            return await HandleEditorKeyAsync(keyEvent);
+        }
+
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.Escape:
                 if (_runCts is not null) await _runCts.CancelAsync();
                 Close();
                 return true;
-            case ConsoleKey.Spacebar:
+            case ConsoleKey.Tab when !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift:
+                CyclePane();
+                return true;
+            case ConsoleKey.Enter when !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift:
+                if (_pane == Pane.Projects)
+                {
+                    OpenProjectFile();
+                    return true;
+                }
+
+                if (_pane == Pane.Errors)
+                {
+                    OpenErrorLine();
+                    return true;
+                }
+                break;
+            case ConsoleKey.Spacebar when _pane == Pane.Projects:
                 ToggleSelectionAtCursor();
                 return true;
+            case ConsoleKey.UpArrow when _pane is Pane.Output or Pane.Errors:
+                FocusedOutputPane.Scroll(-1);
+                StateHasChanged();
+                return true;
+            case ConsoleKey.DownArrow when _pane is Pane.Output or Pane.Errors:
+                FocusedOutputPane.Scroll(1);
+                StateHasChanged();
+                return true;
             case ConsoleKey.PageUp:
-                ScrollOutput(-10);
+                FocusedOutputPane.Scroll(-10);
+                StateHasChanged();
                 return true;
             case ConsoleKey.PageDown:
-                ScrollOutput(10);
+                FocusedOutputPane.Scroll(10);
+                StateHasChanged();
                 return true;
             case ConsoleKey.Home:
-                _followTail = false;
-                _syncingScroll = true;
-                try
-                {
-                    _outputListBox.ScrollableModel.ScrollPosition.Y = 0;
-                    _outputListBox.ScrollableModel.CursorPosition.Y = 0;
-                }
-                finally
-                {
-                    _syncingScroll = false;
-                }
+                FocusedOutputPane.ScrollToTop();
                 StateHasChanged();
                 return true;
             case ConsoleKey.End:
-                _followTail = true;
-                ResyncTailScroll();
+                FocusedOutputPane.FollowTail();
                 StateHasChanged();
                 return true;
         }
@@ -742,24 +1048,46 @@ public class SolutionViewerDialog : SplitPaneDialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
-    private void ScrollOutput(int delta)
+    private async Task<bool> HandleEditorKeyAsync(KeyEvent keyEvent)
     {
-        _followTail = false;
-        var rows = (int)_outputListBox.ViewSize.Height;
-        var count = _outputListBox.ListModel.ListItems.Count;
-        _syncingScroll = true;
-        try
+        if (keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
         {
-            var newScroll = Math.Clamp((int)_outputListBox.ScrollableModel.ScrollPosition.Y + delta, 0, Math.Max(0, count - rows));
-            var newCursor = Math.Clamp((int)_outputListBox.ScrollableModel.CursorPosition.Y + delta, 0, Math.Max(0, count - 1));
-            _outputListBox.ScrollableModel.ScrollPosition.Y = newScroll;
-            _outputListBox.ScrollableModel.CursorPosition.Y = newCursor;
+            CloseOrWarnEditor();
+            return true;
         }
-        finally
+
+        if (keyEvent.ConsoleKey == ConsoleKey.S && keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
         {
-            _syncingScroll = false;
+            SaveEditor();
+            return true;
         }
-        StateHasChanged();
+
+        _escArmed = false;
+        if (await _editor.HandleKeyEventAsync(keyEvent))
+        {
+            StateHasChanged();
+            return true;
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>Runs on the UI thread between frames: shows a file that was read and applies a finished save.</summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+
+        if (_loadedFile is { } loaded)
+        {
+            _loadedFile = null;
+            ShowLoadedFile(loaded);
+        }
+
+        if (_saveOutcome is { } outcome)
+        {
+            _saveOutcome = null;
+            ApplySaveOutcome(outcome);
+        }
     }
 
     #endregion
@@ -769,19 +1097,16 @@ public class SolutionViewerDialog : SplitPaneDialog
     internal string StatusForTest => _status;
     internal string SdkVersionForTest => SelectedSdk?.Version ?? string.Empty;
     internal string DotnetHostForTest => DotnetHost;
-    internal int OutputScrollForTest => (int)_outputListBox.ScrollableModel.ScrollPosition.Y;
-    internal int OutputRowsForTest => (int)_outputListBox.ViewSize.Height;
+    internal int OutputScrollForTest => (int)_output.ListBox.ScrollableModel.ScrollPosition.Y;
+    internal int OutputRowsForTest => (int)_output.ListBox.ViewSize.Height;
     internal bool IsBusyForTest => _busy;
-    internal IReadOnlyList<string> OutputForTest
-    {
-        get
-        {
-            lock (_outputLock)
-            {
-                return [.. _output];
-            }
-        }
-    }
+    internal IReadOnlyList<string> OutputForTest => _output.Lines;
+    internal IReadOnlyList<string> ErrorsForTest => _errors.Lines;
+    internal bool EditorOpenForTest => _editorOpen;
+    internal string EditorTextForTest => string.Join('\n', _editor.TextModel.Lines.AsSnapshot());
+    internal bool EditorDirtyForTest => _editor.IsDirty;
+    internal string PaneForTest => _pane.ToString();
+    internal IReadOnlyList<string> KeyHintsForTest => [.. GetKeyHints().Select(hint => hint.Key)];
 
     #endregion
 
@@ -810,21 +1135,35 @@ public class SolutionViewerDialog : SplitPaneDialog
         DrawFooter(buffer, ix, iy + ih - 1, iw, colorScheme);
 
         var midY = iy + 1;
-        var midH = ih - 2;
-        if (midH <= 0)
+        var columns = ComputeColumns(iw, ih);
+        if (columns.MidHeight <= 0)
         {
             return;
         }
 
-        var leftW = Math.Max(24, iw * 38 / 100);
-        var rightX = ix + leftW + 1;
-        var rightW = iw - leftW - 1;
+        var leftW = columns.LeftWidth;
+        var rightX = ix + columns.RightX - 1; // the layout's column is measured from the frame's edge; ix is one in
+        var rightW = columns.RightWidth;
 
-        DrawSectionHeader(buffer, ix, midY, leftW, UiText.Get("Solution.Projects", "Projects"), true, colorScheme);
+        DrawSectionHeader(buffer, ix, midY, leftW, UiText.Get("Solution.Projects", "Projects"), _pane == Pane.Projects, colorScheme);
 
         if (rightW > 0)
         {
-            DrawSectionHeader(buffer, rightX, midY, rightW, UiText.Get("Packages.Output", "Output"), false, colorScheme);
+            if (_editorOpen)
+            {
+                var name = Path.GetFileName(_editorPath) + (_editor.IsDirty ? " *" : string.Empty);
+                var title = $"{UiText.Get("Solution.Editor", "Editor")}: {name}";
+                DrawSectionHeader(buffer, rightX, midY, rightW, title, _pane == Pane.Editor, colorScheme);
+            }
+            else
+            {
+                DrawSectionHeader(buffer, rightX, midY, rightW, UiText.Get("Packages.Output", "Output"), _pane == Pane.Output, colorScheme);
+                if (columns.ErrorRows > 0)
+                {
+                    var errorsTitle = $"{UiText.Get("Solution.Errors", "Errors")} ({_errors.Count})";
+                    DrawSectionHeader(buffer, rightX, midY + columns.OutputRows, rightW, errorsTitle, _pane == Pane.Errors, colorScheme);
+                }
+            }
         }
     }
 
@@ -839,7 +1178,25 @@ public class SolutionViewerDialog : SplitPaneDialog
         WriteLine(buffer, x, y, w, text, Color.Cyan, colorScheme.Background);
     }
 
-    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.SolutionViewer", "b:build c:clean t:test r:run x:cancel v:SDK s:SBOM f:XML/JSON Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close");
+    /// <summary>The hints of the focused pane, in the short form the footer uses. Projects: the run keys; Output and
+    /// Errors: scrolling; the editor: its save and close keys.</summary>
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.SolutionViewer", "b:build c:clean t:test r:run x:cancel v:SDK s:SBOM f:XML/JSON Space:check a:all T:tests Enter:open Tab:pane Esc:close");
+
+    /// <summary>The footer's hints for the pane that has the keys. A run in progress adds x:cancel, except in the editor, where x is a letter to type.</summary>
+    private string ContextHints
+    {
+        get
+        {
+            var hints = _pane switch
+            {
+                Pane.Editor => iConsole.Localization.UiText.Get("Hints.SolutionEditor", "Ctrl+S:save Esc:close the editor"),
+                Pane.Errors => iConsole.Localization.UiText.Get("Hints.SolutionErrors", "Enter:open at line PgUp/PgDn/Home/End:scroll Tab:pane Esc:close"),
+                Pane.Output => iConsole.Localization.UiText.Get("Hints.SolutionOutput", "PgUp/PgDn/Home/End:scroll Up/Down:line Tab:pane Esc:close"),
+                _ => KeyHints,
+            };
+            return _busy && _pane != Pane.Editor ? "x:cancel  " + hints : hints;
+        }
+    }
 
     /// <summary>The SDK new commands run with: the one chosen with v, the newest stable one by default.</summary>
     private DotnetSdk? SelectedSdk => _sdkIndex >= 0 && _sdkIndex < _sdks.Count ? _sdks[_sdkIndex] : null;
@@ -871,7 +1228,7 @@ public class SolutionViewerDialog : SplitPaneDialog
     }
 
     /// <summary>
-    /// Status (coloured by severity) followed by the key hints. The hints used to be shown only
+    /// Status (coloured by severity) followed by the hints of the focused pane. The hints used to be shown only
     /// while there was no status — and every run leaves one — so after the first build the dialog
     /// never told the user its keys again.
     /// </summary>
@@ -882,7 +1239,7 @@ public class SolutionViewerDialog : SplitPaneDialog
             StatusSeverity.Error => colorScheme.Error,
             StatusSeverity.Success => Color.Green,
             _ => colorScheme.Foreground,
-        }, KeyHints, colorScheme);
+        }, ContextHints, colorScheme);
     }
 
     #endregion

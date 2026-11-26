@@ -459,6 +459,8 @@ The document is parsed and validated on background tasks; the validation result 
 F3 on a solution opens its projects, with build (`b`), clean (`c`), test (`t`) and run (`r`) on the checked projects, or
 on the project under the cursor, or on the whole solution for build, clean and test. `x` cancels a run.
 
+- **Panes.** The right column holds three panes, and Tab cycles the keys between them: **Output** (the whole log of a run), **Errors** (only the error lines of that log; it is a second `SolutionOutputPane`, so it scrolls and follows the tail the same way as Output) and, when open, the **Editor**. Enter on a project opens its project file in the editor; Enter on an error opens the file the error names at its line (`ErrorLocationRegex` reads MSBuild's `path(line,col): error` form, and a line with no file says so). The editor is a `TextEditorControl` added to the tree only while it is open; Ctrl+S writes the file in the background and the dirty flag clears when the text written is still the text shown. Esc on unsaved text warns, and the next Esc discards it. A file is read as UTF-8 with its byte order mark kept, so other code pages are not preserved. The editor does not highlight syntax.
+- **Hint bar.** The footer's hints are those of the focused pane (`ContextHints`), with `x:cancel` added while a run is going. The keys of the other panes are not shown, since they do nothing there.
 - **SDKs.** `DotnetSolutionService.ListSdks` reads `dotnet --list-sdks` off the UI thread. The newest stable SDK is the
   default (`DotnetSdk.Default`); a preview is chosen only when no stable one is installed. The header shows the selected
   SDK's version, and each command's first output line names it. `v` cycles through the installed SDKs; the next command
