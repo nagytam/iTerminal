@@ -1051,6 +1051,9 @@
   <data name="Hint.FindPrevious" xml:space="preserve">
     <value>Vorherigen Treffer suchen</value>
   </data>
+  <data name="Hint.FindStart" xml:space="preserve">
+    <value>Text im Protokoll suchen</value>
+  </data>
   <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
     <value>Erster oder letzter Tag des Monats</value>
   </data>
@@ -1455,6 +1458,9 @@
   </data>
   <data name="Key.Writable" xml:space="preserve">
     <value>F6-Schreibb.</value>
+  </data>
+  <data name="LogView.FindPrompt" xml:space="preserve">
+    <value>Suchen: </value>
   </data>
   <data name="Msg.EnterLineNumber" xml:space="preserve">
     <value>Geben Sie eine Zeilennummer ein.</value>
