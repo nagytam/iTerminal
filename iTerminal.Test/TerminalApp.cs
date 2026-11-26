@@ -268,8 +268,17 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.VirtCli>();
                 services.AddSingleton<Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
                 {
+                    // Every backend runs on the sandboxed CLI, whichever operating system the suite is on, so no test
+                    // reaches a real hypervisor. Only the system libvirt answers; the other two are left out of the list.
                     var cli = provider.GetRequiredService<SandboxServices.VirtCli>();
-                    return new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer);
+                    return new Core.Services.VirtualMachines.CombinedVirtualMachineService(
+                    [
+                        new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer),
+                        new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer,
+                            Core.Services.VirtualMachines.LibvirtVirtualMachineService.SessionConnection,
+                            Core.Services.VirtualMachines.LibvirtVirtualMachineService.BoxesLabel),
+                        new Core.Services.VirtualMachines.VirtualBoxVirtualMachineService(cli, cli.LaunchViewer),
+                    ]);
                 });
 
                 // No test asks the machine it runs on for its phones: mtp:// is there, and empty-handed.

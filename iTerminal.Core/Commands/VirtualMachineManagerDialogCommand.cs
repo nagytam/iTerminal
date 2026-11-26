@@ -5,7 +5,7 @@ namespace iTerminal.Core.Commands;
 
 /// <summary>
 /// Shift+Alt+F9 and Tools &gt; Virtual Machine Manager. It needs a hypervisor backend, which exists on Linux
-/// (libvirt) and Windows (Hyper-V); elsewhere the command is not available.
+/// (libvirt, GNOME Boxes and VirtualBox) and Windows (Hyper-V and VirtualBox); elsewhere the command is not available.
 /// </summary>
 public class VirtualMachineManagerDialogCommand(VirtualMachineManagerDialog virtualMachineManagerDialog) : ShowDialogCommand<VirtualMachineManagerDialog>(virtualMachineManagerDialog)
 {
