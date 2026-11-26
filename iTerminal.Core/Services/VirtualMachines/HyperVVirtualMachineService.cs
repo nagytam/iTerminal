@@ -25,16 +25,19 @@ namespace iTerminal.Core.Services.VirtualMachines;
 /// </summary>
 public sealed class HyperVVirtualMachineService(
     IExternalProcessRunner processRunner,
-    Func<string, IReadOnlyList<string>, bool>? launchDetached = null) : IVirtualMachineService
+    Func<string, IReadOnlyList<string>, bool>? launchDetached = null) : IVirtualMachineBackend
 {
     public const string PowerShell = "powershell";
     public const string VmConnect = "vmconnect";
+    public const string Label = "Hyper-V";
 
     internal const string MissingMarker = "HYPERV_MISSING";
     internal const string DeniedMarker = "HYPERV_DENIED";
     internal const string NoMachineMarker = "HYPERV_NOVM";
 
     private readonly Func<string, IReadOnlyList<string>, bool> _launchDetached = launchDetached ?? LibvirtVirtualMachineService.LaunchDetached;
+
+    public string Hypervisor => Label;
 
     public async Task<IReadOnlyList<VirtualMachine>> ListAsync(CancellationToken cancellationToken = default)
     {
@@ -46,11 +49,14 @@ public sealed class HyperVVirtualMachineService(
             throw new InvalidOperationException(Describe(result));
         }
 
-        return HyperVListParser.Parse(result.StandardOutput);
+        return HyperVListParser.Parse(result.StandardOutput)
+            .Select(machine => machine with { Hypervisor = Label })
+            .ToList();
     }
 
-    public async Task<VirtualMachineActionResult> RunAsync(string name, VirtualMachineAction action, CancellationToken cancellationToken = default)
+    public async Task<VirtualMachineActionResult> RunAsync(VirtualMachine machine, VirtualMachineAction action, CancellationToken cancellationToken = default)
     {
+        var name = machine.Name;
         if (string.IsNullOrWhiteSpace(name) || name.StartsWith('-') || name.Any(char.IsControl))
         {
             return new VirtualMachineActionResult(false, $"Not a virtual machine name: {name}");

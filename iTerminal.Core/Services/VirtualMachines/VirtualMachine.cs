@@ -1,6 +1,6 @@
 namespace iTerminal.Core.Services.VirtualMachines;
 
-/// <summary>What libvirt says a domain is doing, as <c>virsh list</c> names it.</summary>
+/// <summary>What the hypervisor says a machine is doing. Each backend maps its own words onto these.</summary>
 public enum VirtualMachineState
 {
     Running,
@@ -14,8 +14,11 @@ public enum VirtualMachineState
     Unknown,
 }
 
-/// <summary>One libvirt domain. <see cref="StateText"/> keeps the word virsh printed.</summary>
-public sealed record VirtualMachine(string Name, VirtualMachineState State, string StateText);
+/// <summary>
+/// One machine. <see cref="StateText"/> keeps the word the hypervisor printed, and <see cref="Hypervisor"/>
+/// names the backend it belongs to (empty until the list has been through a backend).
+/// </summary>
+public sealed record VirtualMachine(string Name, VirtualMachineState State, string StateText, string Hypervisor = "");
 
 public enum VirtualMachineAction
 {
