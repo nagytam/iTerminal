@@ -11,10 +11,9 @@ using iConsole.Services;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Dialogs;
-using iTerminal.Core.Dialogs.Dotnet;
+using iTerminal.Core.Extensions;
 using iTerminal.Core.Dialogs.Git;
 using iTerminal.Core.Dialogs.PackageManager;
-using iTerminal.Core.Extensions;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Git;
@@ -65,7 +64,7 @@ public class HotKeys : StatusBarItem
         INetworkProfileService networkProfileService,
         IRemoteConnectionService remoteConnectionService,
         IPasswordManager passwordManager,
-        SolutionViewerDialog? solutionViewerDialog = null,
+        ISolutionDialogFactory? solutionDialogFactory = null,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
@@ -125,7 +124,7 @@ public class HotKeys : StatusBarItem
             AddCommand(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         }
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog, fileViewers: fileViewers);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionDialogFactory, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog, fileViewers: fileViewers);
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations, fileEditors);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);

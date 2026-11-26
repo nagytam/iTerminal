@@ -1,6 +1,7 @@
 ﻿using iConsole.Interfaces;
 using iConsole.Jobs;
 using iTerminal.Widgets.Application;
+using iTerminal.DevelopmentStudio.Application;
 using iTerminal.Widgets.Jobs;
 using iConsole.Test.Core.Automation;
 using iTerminal.Core.Application;
@@ -202,6 +203,7 @@ public sealed class TerminalApp : IAsyncDisposable
             {
                 services.AddiTerminal(configuration);
                 services.AddWidgets(configuration);
+                services.AddDevelopmentStudio();
 
                 foreach (var descriptor in services
                     .Where(d => d.ServiceType == typeof(IJob) && OmittedJobs.Contains(d.ImplementationType))

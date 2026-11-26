@@ -2281,6 +2281,282 @@
   <data name="Dep.WhisperReady" xml:space="preserve">
     <value>Whisper-Modell {0} ist bereit</value>
   </data>
+  <data name="DevelopmentStudio.AlreadyRunning" xml:space="preserve">
+    <value>The program is running. It stops at a breakpoint.</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
+    <value>The debugger did not take the breakpoint: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointRemoved" xml:space="preserve">
+    <value>Breakpoint removed from line {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointSet" xml:space="preserve">
+    <value>Breakpoint set at line {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.Breakpoints" xml:space="preserve">
+    <value>Breakpoints</value>
+  </data>
+  <data name="DevelopmentStudio.BuildFailedNoDebug" xml:space="preserve">
+    <value>The build failed, so {0} was not started.</value>
+  </data>
+  <data name="DevelopmentStudio.Busy" xml:space="preserve">
+    <value>A command is still running; X cancels it ({0} was not started).</value>
+  </data>
+  <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
+    <value>Ein Befehl läuft noch; X bricht ihn vor der Messung ab.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyDebug" xml:space="preserve">
+    <value>A command is still running; X cancels it before debugging.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyProfile" xml:space="preserve">
+    <value>Ein Befehl läuft noch; X bricht ihn vor dem Profilieren ab.</value>
+  </data>
+  <data name="DevelopmentStudio.CallStack" xml:space="preserve">
+    <value>Call stack</value>
+  </data>
+  <data name="DevelopmentStudio.Cancelled" xml:space="preserve">
+    <value>{0} cancelled.</value>
+  </data>
+  <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
+    <value>Removed {0} cache folders of {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
+    <value>Abdeckungsmessung abgebrochen.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageHeading" xml:space="preserve">
+    <value>Abdeckung</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageSummary" xml:space="preserve">
+    <value>Abdeckung {0:0.0} %: {1} von {2} Zeilen in {3} Dateien.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageTotal" xml:space="preserve">
+    <value>Abdeckung {0:0.0} %: {1} von {2} Zeilen in {3} Dateien.</value>
+  </data>
+  <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
+    <value>(nothing here)</value>
+  </data>
+  <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
+    <value>{0} failed (exit {1}).</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorer" xml:space="preserve">
+    <value>Dateien-Explorer: Enter klappt einen Ordner auf oder öffnet eine Datei.</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorerHeading" xml:space="preserve">
+    <value>Dateien-Explorer</value>
+  </data>
+  <data name="DevelopmentStudio.Found" xml:space="preserve">
+    <value>Found {0} items. Enter opens a file; F5 starts debugging.</value>
+  </data>
+  <data name="DevelopmentStudio.HintBreakpoint" xml:space="preserve">
+    <value>Toggle a breakpoint on the cursor line</value>
+  </data>
+  <data name="DevelopmentStudio.HintCancel" xml:space="preserve">
+    <value>Cancel the running command</value>
+  </data>
+  <data name="DevelopmentStudio.HintCheck" xml:space="preserve">
+    <value>Check or uncheck the .NET project; B, C, T and R then run on the checked ones</value>
+  </data>
+  <data name="DevelopmentStudio.HintCheckAll" xml:space="preserve">
+    <value>Check all projects / all test projects</value>
+  </data>
+  <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
+    <value>Build, clean, test, run the selected item</value>
+  </data>
+  <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
+    <value>Abdeckung des ausgewählten Elements messen / ausgewähltes Python-Skript profilieren</value>
+  </data>
+  <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
+    <value>In der Abdeckungsansicht die Datei unter dem Cursor öffnen</value>
+  </data>
+  <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
+    <value>Open the file (or run the test)</value>
+  </data>
+  <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
+    <value>Explorer or Tests / source, output or debug view</value>
+  </data>
+  <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
+    <value>Run without debugging</value>
+  </data>
+  <data name="DevelopmentStudio.HintSbom" xml:space="preserve">
+    <value>Write a CycloneDX SBOM of the solution / switch it between XML and JSON</value>
+  </data>
+  <data name="DevelopmentStudio.HintSdk" xml:space="preserve">
+    <value>Switch to the next .NET SDK</value>
+  </data>
+  <data name="DevelopmentStudio.HintStart" xml:space="preserve">
+    <value>Start debugging, or continue</value>
+  </data>
+  <data name="DevelopmentStudio.HintStep" xml:space="preserve">
+    <value>Step over / step into</value>
+  </data>
+  <data name="DevelopmentStudio.HintStepOut" xml:space="preserve">
+    <value>Step out</value>
+  </data>
+  <data name="DevelopmentStudio.HintStop" xml:space="preserve">
+    <value>Stop debugging</value>
+  </data>
+  <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
+    <value>Watch the word under the cursor (in the debug view, remove it)</value>
+  </data>
+  <data name="DevelopmentStudio.Locals" xml:space="preserve">
+    <value>Locals</value>
+  </data>
+  <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
+    <value>Open a file (Enter) and put the cursor on a line to set a breakpoint.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCommand" xml:space="preserve">
+    <value>{0} cannot {1} {2}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverage" xml:space="preserve">
+    <value>Noch keine Abdeckung. O misst die Abdeckung des ausgewählten Elements.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageFor" xml:space="preserve">
+    <value>{0} hat hier keine Abdeckungsmessung.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageReport" xml:space="preserve">
+    <value>Der Lauf hat keinen Abdeckungsbericht hinterlassen. Prüfen Sie die Ausgabe.</value>
+  </data>
+  <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
+    <value>Debugging {0} is not available for {1} here.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
+    <value>Noch kein Profil. P profiliert das ausgewählte Python-Skript.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfileWritten" xml:space="preserve">
+    <value>Der Profiler hat kein Profil geschrieben. Prüfen Sie die Ausgabe.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfilerFor" xml:space="preserve">
+    <value>{0} hat hier keinen Profiler.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProjectsToCheck" xml:space="preserve">
+    <value>No .NET projects to check.</value>
+  </data>
+  <data name="DevelopmentStudio.NoSolutionForSbom" xml:space="preserve">
+    <value>There is no solution here to write an SBOM for.</value>
+  </data>
+  <data name="DevelopmentStudio.NoSource" xml:space="preserve">
+    <value>Select a file in the explorer and press Enter to open it here.</value>
+  </data>
+  <data name="DevelopmentStudio.NoWord" xml:space="preserve">
+    <value>Put the cursor on a name to watch it.</value>
+  </data>
+  <data name="DevelopmentStudio.NotDebugging" xml:space="preserve">
+    <value>Not debugging.</value>
+  </data>
+  <data name="DevelopmentStudio.NotEvaluated" xml:space="preserve">
+    <value>(not evaluated)</value>
+  </data>
+  <data name="DevelopmentStudio.NotStopped" xml:space="preserve">
+    <value>The program is running. It stops at a breakpoint.</value>
+  </data>
+  <data name="DevelopmentStudio.NothingFound" xml:space="preserve">
+    <value>No solutions, projects or scripts were found in this folder.</value>
+  </data>
+  <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
+    <value>Only .NET projects can be checked.</value>
+  </data>
+  <data name="DevelopmentStudio.OutputHeading" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="DevelopmentStudio.Paused" xml:space="preserve">
+    <value>Stopped at {0}:{1}</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileEmpty" xml:space="preserve">
+    <value>Das Profil enthält keine Funktionen.</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeader" xml:space="preserve">
+    <value>     Aufrufe   gesamt s   kumul. s  Funktion</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeading" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileSummary" xml:space="preserve">
+    <value>{0} profiliert: {1} Funktionen. Die meiste Zeit: {2}.</value>
+  </data>
+  <data name="DevelopmentStudio.ProjectCount" xml:space="preserve">
+    <value>{0} projects</value>
+  </data>
+  <data name="DevelopmentStudio.ReadingFolder" xml:space="preserve">
+    <value>(Ordner wird gelesen ...)</value>
+  </data>
+  <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
+    <value>Found {0} items.</value>
+  </data>
+  <data name="DevelopmentStudio.Running" xml:space="preserve">
+    <value>Running {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
+    <value>Abdeckung von {0} wird gemessen ...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
+    <value>{0} wird profiliert ...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningState" xml:space="preserve">
+    <value>Running.</value>
+  </data>
+  <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
+    <value>Writing the SBOM...</value>
+  </data>
+  <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
+    <value>   (.NET SDK {0})</value>
+  </data>
+  <data name="DevelopmentStudio.SelectFile" xml:space="preserve">
+    <value>Select a project or a script to open.</value>
+  </data>
+  <data name="DevelopmentStudio.SelectItem" xml:space="preserve">
+    <value>Select an item first.</value>
+  </data>
+  <data name="DevelopmentStudio.SelectToDebug" xml:space="preserve">
+    <value>Select a project or a script to debug. A solution cannot be debugged.</value>
+  </data>
+  <data name="DevelopmentStudio.SolutionExplorer" xml:space="preserve">
+    <value>Solution Explorer.</value>
+  </data>
+  <data name="DevelopmentStudio.SolutionExplorerHeading" xml:space="preserve">
+    <value>Solution Explorer</value>
+  </data>
+  <data name="DevelopmentStudio.SourceHeading" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="DevelopmentStudio.StackFailed" xml:space="preserve">
+    <value>Could not read the program's state: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.Started" xml:space="preserve">
+    <value>Debugging {0}. F5 continues, F10 steps over.</value>
+  </data>
+  <data name="DevelopmentStudio.Stopped" xml:space="preserve">
+    <value>Debugging stopped.</value>
+  </data>
+  <data name="DevelopmentStudio.StoppedAt" xml:space="preserve">
+    <value>Stopped ({0}) at {1}:{2}.</value>
+  </data>
+  <data name="DevelopmentStudio.Succeeded" xml:space="preserve">
+    <value>{0} succeeded: {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.TestExplorer" xml:space="preserve">
+    <value>Test Explorer: Enter or T runs the test item under the cursor.</value>
+  </data>
+  <data name="DevelopmentStudio.TestExplorerHeading" xml:space="preserve">
+    <value>Test Explorer</value>
+  </data>
+  <data name="DevelopmentStudio.TestTotals" xml:space="preserve">
+    <value>Tests: {0} passed, {1} failed, {2} skipped.</value>
+  </data>
+  <data name="DevelopmentStudio.Title" xml:space="preserve">
+    <value>Development studio</value>
+  </data>
+  <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
+    <value>The file is too large to show here.</value>
+  </data>
+  <data name="DevelopmentStudio.Watch" xml:space="preserve">
+    <value>Watch</value>
+  </data>
+  <data name="DevelopmentStudio.Watching" xml:space="preserve">
+    <value>Watching {0}.</value>
+  </data>
   <data name="Dialog.AddServer" xml:space="preserve">
     <value>Server hinzufügen</value>
   </data>
@@ -6141,6 +6417,9 @@
   </data>
   <data name="Hints.CurrencyConverter" xml:space="preserve">
     <value>Tab:nächstes Feld  Auf/Ab:wählen  F5:Kurse aktualisieren  F6:tauschen  Esc:schließen</value>
+  </data>
+  <data name="Hints.DevelopmentStudio" xml:space="preserve">
+    <value>F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK S/F:SBOM F6/F7:panes Enter:open Esc:close</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:suchen/lesen  Tab:Feld  F3:ganz  F2:Browser  Esc:schließen</value>

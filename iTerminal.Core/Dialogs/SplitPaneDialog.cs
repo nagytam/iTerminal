@@ -10,7 +10,7 @@ namespace iTerminal.Core.Dialogs;
 /// <summary>
 /// Base for full-screen, modal split-pane dialogs (a list/section column on the left, a detail
 /// pane on the right) such as <see cref="Git.GitClientDialog"/> and
-/// <see cref="Dotnet.SolutionViewerDialog"/>. Centralises the shared header/footer chrome — the
+/// the Development studio (in iTerminal.DevelopmentStudio). Centralises the shared header/footer chrome — the
 /// section-header bands and single-line writes — that surrounds their composed
 /// <see cref="iConsole.Controls.ListBox{T}"/> content, so the dialogs render consistently and
 /// stay in step with the active theme.

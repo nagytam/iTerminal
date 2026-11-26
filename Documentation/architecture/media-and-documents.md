@@ -129,7 +129,7 @@ the bottom (Space play/pause, Enter from the start, `s` stop, ←/→ seek, +/- 
 - The progress bar needs no timer: `Dialog.OnIdle` marks the dialog changed every idle pass, and
   `Draw` reads the player's live position.
 - `ViewFileDialogCommand` routes to it only when the file exists locally (`File.Exists`), like the
-  solution viewer — the player decodes from a path, so an `ssh://` track has nothing to open.
+  Development studio — the player decodes from a path, so an `ssh://` track has nothing to open.
 
 ### The music player is two panel drives, not a dialog
 Ctrl+F7 (or Ctrl+Shift+M) runs `MusicPanelsCommand`, which points the left panel at `musiccatalog://`
