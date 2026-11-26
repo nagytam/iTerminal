@@ -78,7 +78,26 @@ public class DriveInfoJobTest
         await RunFirstPassAsync(job, model);
 
         var cloudRows = model.Drives.Where(d => d.IsCloud).ToList();
-        Assert.AreEqual(2, cloudRows.Count);
-        Assert.IsTrue(cloudRows.All(d => !d.IsEnabled && d.Name.Contains(NotConfiguredText)));
+        Assert.AreEqual(5, cloudRows.Count);
+        Assert.IsTrue(cloudRows.Where(d => d.Url.ContainerType is iConsole.Data.ContainerType.OneDrive or iConsole.Data.ContainerType.GoogleDrive or iConsole.Data.ContainerType.Dropbox)
+            .All(d => !d.IsEnabled && d.Name.Contains(NotConfiguredText)));
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task CloudProviders_AreListedAfterTheLocalDrives()
+    {
+        var model = new DriveInfoModel();
+        var options = Options.Create(new CloudOptions { Dropbox = new OAuthClientOptions { ClientId = "dropbox-app" } });
+        var job = new DriveInfoJob(model, options);
+
+        await RunFirstPassAsync(job, model);
+
+        var rows = model.Drives.ToList();
+        var firstCloud = rows.FindIndex(d => d.IsCloud);
+        Assert.IsTrue(firstCloud >= 0);
+        Assert.AreEqual(5, rows.Count(d => d.IsCloud), "OneDrive, Google Drive, Dropbox, Azure Blob and S3 are each listed once.");
+        Assert.IsTrue(rows.Skip(firstCloud).All(d => d.IsCloud), "Every cloud provider row comes after the local drives.");
+        Assert.IsTrue(model.Drives.Single(d => d.Url.ContainerType == iConsole.Data.ContainerType.Dropbox).IsEnabled);
     }
 }
