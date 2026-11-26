@@ -4037,14 +4037,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Shift+F9: start/stop  Ctrl+Shift+F9: restart</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>No containers yet — create one with docker run.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>Docker is not installed — install Docker Desktop or the docker command-line tool to browse containers.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>Docker is not running — start Docker Desktop or the docker service.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Open a container, or put the cursor on one, to run commands inside it.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>Docker is installed, but this user cannot reach its daemon — add the user to the docker group, then log in again.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>The container is stopped — start it first (Shift+F9 on its row).</value>
+    <value>The container is stopped — start it from the container list (Shift+F9 on its row).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>Documents folder not found: {0}</value>

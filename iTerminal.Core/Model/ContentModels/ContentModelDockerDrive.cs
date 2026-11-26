@@ -60,10 +60,19 @@ public class ContentModelDockerDrive(
     {
         // On the container list the keys that operate a container are named here: no row says them.
         // Short enough for a half-width panel at 140 columns — the border elides a longer one in the middle.
+        // With no containers at all there is nothing to operate, so the footer says how to get one.
         var footer = base.GetFooter();
-        return IsContainerList && StatusMessage.Length == 0
-            ? footer + "│ " + UiText.Get("Docker.Drive.Hints", "Shift+F9: start/stop  Ctrl+Shift+F9: restart") + " "
-            : footer;
+        if (!IsContainerList || StatusMessage.Length > 0)
+        {
+            return footer;
+        }
+
+        // Read from Entries, not from a flag the listing sets: only a listing that is still current lands
+        // here, so a superseded empty answer cannot say there are no containers above a real list.
+        var hint = !IsLoading && Entries.Count == 1
+            ?UiText.Get("Docker.NoContainers", "No containers yet — create one with docker run.")
+            : UiText.Get("Docker.Drive.Hints", "Shift+F9: start/stop  Ctrl+Shift+F9: restart");
+        return footer + "│ " + hint + " ";
     }
 
     #region Starting and stopping

@@ -59,6 +59,17 @@ public class ContentModelDockerDriveTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AnEmptyContainerListSaysHowToGetOneInsteadOfShowingOnlyUp()
+    {
+        var model = await OpenAsync(new FakeProcessRunner().Answer("docker ps", string.Empty));
+
+        var footer = model.GetFooter();
+        StringAssert.Contains(footer, "No containers yet");
+        Assert.IsFalse(footer.Contains("Shift+F9: start/stop", StringComparison.Ordinal), "there is no container to start or stop");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ShiftF9StopsARunningContainerAndTheRowShowsIt()
     {
         var stopped = false;

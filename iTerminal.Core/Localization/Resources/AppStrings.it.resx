@@ -3895,14 +3895,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Maiusc+F9: avvia/ferma  Ctrl+Maiusc+F9: riavvia</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>Nessun container per ora — creane uno con docker run.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>Docker non è installato — installa Docker Desktop o lo strumento a riga di comando docker per esplorare i container.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>Docker non è in esecuzione — avvia Docker Desktop o il servizio docker.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Apri un container, o posiziona il cursore su uno, per eseguirvi comandi.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>Docker è installato, ma questo utente non può raggiungerne il daemon — aggiungilo al gruppo «docker» e accedi di nuovo.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>Il container è fermo — avvialo prima (Maiusc+F9 sulla sua riga).</value>
+    <value>Il container è fermo — avvialo dalla lista dei container (Maiusc+F9 sulla sua riga).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>Cartella di documenti non trovata: {0}</value>

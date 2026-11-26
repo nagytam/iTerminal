@@ -3895,14 +3895,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Maj+F9 : démarrer/arrêter  Ctrl+Maj+F9 : redémarrer</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>Aucun conteneur pour l’instant — créez-en un avec docker run.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>Docker n’est pas installé — installez Docker Desktop ou l’outil en ligne de commande docker pour parcourir les conteneurs.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>Docker n’est pas en cours d’exécution — démarrez Docker Desktop ou le service docker.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Ouvrez un conteneur, ou placez le curseur dessus, pour y exécuter des commandes.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>Docker est installé, mais cet utilisateur ne peut pas atteindre son démon — ajoutez-le au groupe « docker », puis reconnectez-vous.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>Le conteneur est arrêté — démarrez-le d’abord (Maj+F9 sur sa ligne).</value>
+    <value>Le conteneur est arrêté — démarrez-le depuis la liste des conteneurs (Maj+F9 sur sa ligne).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>Dossier de documents introuvable : {0}</value>
