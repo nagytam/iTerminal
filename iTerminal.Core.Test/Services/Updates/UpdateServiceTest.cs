@@ -636,10 +636,19 @@ public class UpdateServiceTest
     [TestMethod]
     public void TheLinuxArchiveIsTheOneForTheArchitectureOfThisSystem()
     {
-        Assert.AreEqual("-linux-x64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.X64));
-        Assert.AreEqual("-linux-arm64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.Arm64));
-        Assert.IsNull(UpdateService.PortableSuffixFor(windows: false, Architecture.X86), "No portable archive is published for other architectures.");
-        Assert.AreEqual(UpdateService.PortableArchiveSuffix, UpdateService.PortableSuffixFor(windows: true, Architecture.X64));
+        Assert.AreEqual("-linux-x64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.X64, macOS: false));
+        Assert.AreEqual("-linux-arm64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.Arm64, macOS: false));
+        Assert.IsNull(UpdateService.PortableSuffixFor(windows: false, Architecture.X86, macOS: false), "No portable archive is published for other architectures.");
+        Assert.AreEqual(UpdateService.PortableArchiveSuffix, UpdateService.PortableSuffixFor(windows: true, Architecture.X64, macOS: false));
+    }
+
+    [TestMethod]
+    public void TheMacArchiveIsNeverTheLinuxOne()
+    {
+        // A portable copy on macOS must look for its own archive, not a Linux one that would never be found there.
+        Assert.AreEqual("-osx-x64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.X64, macOS: true));
+        Assert.AreEqual("-osx-arm64-portable.tar.gz", UpdateService.PortableSuffixFor(windows: false, Architecture.Arm64, macOS: true));
+        Assert.IsNull(UpdateService.PortableSuffixFor(windows: false, Architecture.X86, macOS: true));
     }
 
     [TestMethod]

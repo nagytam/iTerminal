@@ -1,7 +1,7 @@
 name: Release builds
 
-# Builds the Windows installer, the Windows portable archive and the Linux packages. Merging a pull request into main runs it
-# and publishes the packages as a GitHub Release tagged v<version>; a manual run only attaches
+# Builds the Windows installer, the Windows portable archive, the Linux packages and the macOS portable archives. Merging a
+# pull request into main runs it and publishes the packages as a GitHub Release tagged v<version>; a manual run only attaches
 # them to the run as artifacts.
 
 on:
@@ -103,10 +103,69 @@ jobs:
             iTerminal-*-portable.tar.gz
           if-no-files-found: error
 
+  macos:
+    name: macOS portable archives (arm64, x64)
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
+
+      - name: Build the portable archives
+        run: |
+          # The same self-contained build as the Linux archives, one per architecture, with the marker file that tells the
+          # app it is a portable copy. tar is told not to store the macOS extended attributes, which would show up as
+          # stray "._" files wherever the archive is unpacked on another system.
+          for rid in osx-arm64 osx-x64; do
+            folder="iTerminal-$VERSION-$rid-portable"
+            dotnet publish iTerminal/iTerminal.csproj -c Release -r "$rid" --self-contained -p:Version=$VERSION -o "$folder"
+            touch "$folder/iTerminal.portable"
+            COPYFILE_DISABLE=1 tar -czf "$folder.tar.gz" "$folder"
+          done
+
+      - name: Check that the app starts
+        run: |
+          # The app has no --version switch, so it is started without a terminal. macOS has no timeout command, so it runs in
+          # the background for ten seconds: still running then is the expected state. Exiting at once is fine too, unless the
+          # code says the file cannot run (126, 127) or the system killed it, as it does an unsigned or damaged binary (137).
+          for rid in osx-arm64 osx-x64; do
+            "iTerminal-$VERSION-$rid-portable/iTerminal" < /dev/null > /dev/null 2>&1 &
+            pid=$!
+            sleep 10
+            if kill -0 "$pid" 2>/dev/null; then
+              echo "$rid: running after 10 seconds"
+              kill "$pid"
+              wait "$pid" 2>/dev/null || true
+              continue
+            fi
+            set +e
+            wait "$pid"
+            code=$?
+            set -e
+            echo "$rid: exited with code $code"
+            if [ "$code" -eq 126 ] || [ "$code" -eq 127 ] || [ "$code" -eq 137 ]; then
+              echo "$rid does not start"
+              exit 1
+            fi
+          done
+
+      - name: Upload the portable archives
+        uses: actions/upload-artifact@v7
+        with:
+          name: iTerminal-${{ env.VERSION }}-macos
+          path: iTerminal-*-portable.tar.gz
+          if-no-files-found: error
+
   release:
     name: Publish GitHub Release
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-    needs: [windows, linux]
+    needs: [windows, linux, macos]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

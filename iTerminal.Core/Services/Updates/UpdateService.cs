@@ -75,7 +75,7 @@ public sealed class UpdateService : IUpdateService
             OperatingSystem.IsWindows() ? StartPortableScript : StartShellScript,
             AppContext.BaseDirectory,
             OperatingSystem.IsWindows(),
-            PortableSuffixFor(OperatingSystem.IsWindows(), RuntimeInformation.ProcessArchitecture))
+            PortableSuffixFor(OperatingSystem.IsWindows(), RuntimeInformation.ProcessArchitecture, OperatingSystem.IsMacOS()))
     {
     }
 
@@ -178,19 +178,20 @@ public sealed class UpdateService : IUpdateService
 
     /// <summary>
     /// The end of the portable archive's name for this system: the zip on Windows, the tar.gz of the matching
-    /// architecture on Linux. Null where no portable archive is published.
+    /// architecture on Linux or macOS. Null where no portable archive is published.
     /// </summary>
-    internal static string? PortableSuffixFor(bool windows, Architecture architecture)
+    internal static string? PortableSuffixFor(bool windows, Architecture architecture, bool macOS)
     {
         if (windows)
         {
             return PortableArchiveSuffix;
         }
 
+        var system = macOS ? "osx" : "linux";
         return architecture switch
         {
-            Architecture.X64 => "-linux-x64-portable.tar.gz",
-            Architecture.Arm64 => "-linux-arm64-portable.tar.gz",
+            Architecture.X64 => $"-{system}-x64-portable.tar.gz",
+            Architecture.Arm64 => $"-{system}-arm64-portable.tar.gz",
             _ => null,
         };
     }

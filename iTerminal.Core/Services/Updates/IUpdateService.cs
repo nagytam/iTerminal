@@ -15,8 +15,8 @@ public enum UpdateInstallKind
     Installer,
 
     /// <summary>
-    /// An unzipped portable copy (it carries the portable marker file) on Windows or Linux: the release's portable
-    /// archive (zip, or tar.gz on Linux) replaces its files.
+    /// An unzipped portable copy (it carries the portable marker file) on Windows, Linux or macOS: the release's portable
+    /// archive (zip, or tar.gz on Linux and macOS) replaces its files.
     /// </summary>
     PortableArchive,
 

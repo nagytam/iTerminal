@@ -9,4 +9,4 @@ How iTerminal is packaged and distributed. The project internals (what builds ea
 | [linux.md](linux.md) | The tar.gz, deb and rpm packages: install, dependencies, building, what was tested |
 | [winget.md](winget.md) | Releasing a version on WinGet: the immutable `iTerminal-WinGet` repository, manifests, test install, the `microsoft/winget-pkgs` pull request |
 
-Every GitHub release `v0.0.0.<run number>` of `nagytam/iTerminal` carries: the MSI, the Windows portable zip, the deb, rpm and tar.gz of both Linux architectures, and the two Linux portable archives. Only the versions chosen for WinGet are also published to `nagytam/iTerminal-WinGet`.
+Every GitHub release `v0.0.0.<run number>` of `nagytam/iTerminal` carries: the MSI, the Windows portable zip, the deb, rpm and tar.gz of both Linux architectures, the two Linux portable archives, and the two macOS portable archives. Only the versions chosen for WinGet are also published to `nagytam/iTerminal-WinGet`.
