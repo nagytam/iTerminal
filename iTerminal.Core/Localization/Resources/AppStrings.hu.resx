@@ -3895,14 +3895,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Shift+F9: indít/leállít  Ctrl+Shift+F9: újraindít</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>Még nincs konténer — hozzon létre egyet a docker run paranccsal.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>A Docker nincs telepítve — telepítse a Docker Desktopot vagy a docker parancssori eszközt a konténerek böngészéséhez.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>A Docker nem fut — indítsa el a Docker Desktopot vagy a docker szolgáltatást.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Nyisson meg egy konténert, vagy álljon rá a kurzorral, hogy parancsokat futtasson benne.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>A Docker telepítve van, de ez a felhasználó nem éri el a démonját — vegye fel a „docker” csoportba, majd jelentkezzen be újra.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>A konténer le van állítva — előbb indítsa el (Shift+F9 a során).</value>
+    <value>A konténer le van állítva — indítsa el a konténerlistából (Shift+F9 a során).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>A dokumentummappa nem található: {0}</value>

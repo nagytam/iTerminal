@@ -599,6 +599,14 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
     internal static string? DescribeDockerProblem(ProcessOutput result)
     {
         var text = result.StandardError + "\n" + result.StandardOutput;
+
+        // The runner's own words when the executable does not exist (ExternalProcessRunner.DescribeStartFailure).
+        // The exit code of -1 keeps a command's text that happens to repeat the phrase from matching.
+        if (result.ExitCode == -1 && text.Contains("docker is not installed or not on PATH", StringComparison.OrdinalIgnoreCase))
+        {
+            return UiText.Get("Docker.NotInstalled", "Docker is not installed — install Docker Desktop or the docker command-line tool to browse containers.");
+        }
+
         if (text.Contains("error during connect", StringComparison.OrdinalIgnoreCase)
             || text.Contains("Cannot connect to the Docker daemon", StringComparison.OrdinalIgnoreCase)
             || text.Contains("dockerDesktopLinuxEngine", StringComparison.OrdinalIgnoreCase))
@@ -606,12 +614,19 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
             return UiText.Get("Docker.NotRunning", "Docker is not running — start Docker Desktop or the docker service.");
         }
 
+        // The daemon is there but its socket refuses this user: the usual Linux case after installing docker.
+        if (text.Contains("permission denied", StringComparison.OrdinalIgnoreCase)
+            && text.Contains("Docker daemon socket", StringComparison.OrdinalIgnoreCase))
+        {
+            return UiText.Get("Docker.Permission", "Docker is installed, but this user cannot reach its daemon — add the user to the docker group, then log in again.");
+        }
+
         // The daemon's own words, so a command inside the container that prints "is not running"
         // about some service of its own is not mistaken for this.
         if (text.Contains("Error response from daemon", StringComparison.OrdinalIgnoreCase)
             && text.Contains("is not running", StringComparison.OrdinalIgnoreCase))
         {
-            return UiText.Get("Docker.Stopped", "The container is stopped — start it first (Shift+F9 on its row).");
+            return UiText.Get("Docker.Stopped", "The container is stopped — start it from the container list (Shift+F9 on its row).");
         }
 
         return null;

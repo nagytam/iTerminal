@@ -3895,14 +3895,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Mayús+F9: iniciar/detener  Ctrl+Mayús+F9: reiniciar</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>Aún no hay contenedores — cree uno con docker run.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>Docker no está instalado — instale Docker Desktop o la herramienta de línea de comandos docker para explorar contenedores.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>Docker no se está ejecutando — inicie Docker Desktop o el servicio docker.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Abra un contenedor, o ponga el cursor en uno, para ejecutar comandos dentro.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>Docker está instalado, pero este usuario no puede acceder a su demonio — añádalo al grupo «docker» e inicie sesión de nuevo.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>El contenedor está detenido — inícielo primero (Mayús+F9 en su fila).</value>
+    <value>El contenedor está detenido — inícielo desde la lista de contenedores (Mayús+F9 en su fila).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>No se encontró la carpeta de documentos: {0}</value>

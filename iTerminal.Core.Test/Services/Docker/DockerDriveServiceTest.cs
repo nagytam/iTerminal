@@ -387,6 +387,45 @@ public class DockerDriveServiceTest
             new ProcessOutput(1, string.Empty, "Error response from daemon: container 4f2a is not running")));
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AMissingDockerCliIsSaidAsNotInstalled()
+    {
+        // The runner's own words for an executable that is not on the PATH (ExternalProcessRunner.DescribeStartFailure).
+        var message = DockerDriveService.DescribeDockerProblem(new ProcessOutput(-1, string.Empty, "docker is not installed or not on PATH."));
+
+        StringAssert.StartsWith(message, "Docker is not installed");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ACommandThatRepeatsTheMissingCliPhraseIsNotADockerProblem()
+    {
+        Assert.IsNull(DockerDriveService.DescribeDockerProblem(new ProcessOutput(3, string.Empty, "docker is not installed or not on PATH.")));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ASocketRefusingThisUserIsSaidWithTheDockerGroupFix()
+    {
+        var message = DockerDriveService.DescribeDockerProblem(new ProcessOutput(1, string.Empty,
+            "permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock"));
+
+        StringAssert.StartsWith(message, "Docker is installed, but this user cannot reach its daemon");
+        StringAssert.Contains(message, "docker group");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AStoppedContainerIsSaidWhereTheKeyWorks()
+    {
+        var message = DockerDriveService.DescribeDockerProblem(new ProcessOutput(1, string.Empty,
+            "Error response from daemon: Container 4f2a is not running"));
+
+        // Shift+F9 works on a row of the container list, not inside the container's folders.
+        StringAssert.Contains(message, "container list");
+    }
+
     private static byte[] Tar(string name, string content)
     {
         using var buffer = new MemoryStream();

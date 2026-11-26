@@ -3895,14 +3895,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Umschalt+F9: starten/stoppen  Strg+Umschalt+F9: neu starten</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>Noch keine Container — erstellen Sie einen mit docker run.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>Docker ist nicht installiert — installieren Sie Docker Desktop oder das Kommandozeilenwerkzeug docker, um Container zu durchsuchen.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>Docker läuft nicht — starten Sie Docker Desktop oder den Docker-Dienst.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Öffnen Sie einen Container oder stellen Sie den Cursor darauf, um darin Befehle auszuführen.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>Docker ist installiert, aber dieser Benutzer kann den Docker-Daemon nicht erreichen — nehmen Sie ihn in die Gruppe „docker“ auf und melden Sie sich erneut an.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>Der Container ist angehalten — starten Sie ihn zuerst (Umschalt+F9 in seiner Zeile).</value>
+    <value>Der Container ist angehalten — starten Sie ihn über die Container-Liste (Umschalt+F9 in seiner Zeile).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>Dokumentenordner nicht gefunden: {0}</value>
