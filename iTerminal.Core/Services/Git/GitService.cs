@@ -48,7 +48,7 @@ public sealed class GitService : IGitService
 
     public async Task<IReadOnlyList<GitCommit>> GetLogAsync(string repositoryRoot, int maxCount, CancellationToken cancellationToken = default)
     {
-        var format = $"%h{UnitSeparator}%s{UnitSeparator}%an{UnitSeparator}%ar{UnitSeparator}%G?{RecordSeparator}";
+        var format = $"%h{UnitSeparator}%s{UnitSeparator}%an{UnitSeparator}%ar{UnitSeparator}%G?{UnitSeparator}%GS{RecordSeparator}";
         var result = await RunAsync(repositoryRoot, cancellationToken,
             "log", $"-n{Math.Max(1, maxCount)}", "--pretty=format:" + format);
         if (!result.Success)
@@ -59,7 +59,7 @@ public sealed class GitService : IGitService
         return ParseLog(result.StandardOutput);
     }
 
-    /// <summary>Reads the output of the log format above; the signature letter is optional and defaults to N (none).</summary>
+    /// <summary>Reads the output of the log format above; the signature letter and signer are optional and default to N (none) and empty.</summary>
     public static IReadOnlyList<GitCommit> ParseLog(string output)
     {
         var commits = new List<GitCommit>();
@@ -69,7 +69,8 @@ public sealed class GitService : IGitService
             if (fields.Length >= 4)
             {
                 char signature = fields.Length >= 5 && fields[4].Length == 1 ? fields[4][0] : GitSignature.None;
-                commits.Add(new GitCommit(fields[0], fields[1], fields[2], fields[3], signature));
+                string signer = fields.Length >= 6 ? fields[5] : string.Empty;
+                commits.Add(new GitCommit(fields[0], fields[1], fields[2], fields[3], signature, signer));
             }
         }
 

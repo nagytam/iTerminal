@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Text;
+using iTerminal.Security.Headers;
 
 namespace iTerminal.Core.Services.NetworkTools;
 
@@ -261,9 +262,17 @@ public sealed class NetworkToolService : INetworkToolService
         using HttpResponseMessage response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         writeLine($"HTTP/{response.Version} {(int)response.StatusCode} {response.ReasonPhrase}");
         writeLine($"Address: {response.RequestMessage?.RequestUri ?? uri}");
+        var received = new List<KeyValuePair<string, string>>();
         foreach (KeyValuePair<string, IEnumerable<string>> header in response.Headers.Concat(response.Content.Headers))
         {
-            writeLine($"{header.Key}: {string.Join(", ", header.Value)}");
+            string value = string.Join(", ", header.Value);
+            writeLine($"{header.Key}: {value}");
+            received.Add(new KeyValuePair<string, string>(header.Key, value));
+        }
+
+        foreach (string line in SecurityHeaderGrader.Grade(received).Lines)
+        {
+            writeLine(line);
         }
     }
 

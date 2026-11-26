@@ -653,6 +653,21 @@ public class GitServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ParseLog_ReadsTheSignerAsTheSixthField_AndEmptyWhenUnsigned()
+    {
+        string us = ((char)0x1f).ToString();
+        string rs = ((char)0x1e).ToString();
+        string output = $"abc1234{us}signed{us}Ann{us}now{us}G{us}Ann Example <ann@example.org>{rs}" + Environment.NewLine + $"def5678{us}plain{us}Bob{us}now{us}N{us}{rs}";
+
+        IReadOnlyList<GitCommit> commits = GitService.ParseLog(output);
+
+        Assert.AreEqual("Ann Example <ann@example.org>", commits[0].Signer);
+        Assert.AreEqual(string.Empty, commits[1].Signer);
+        Assert.AreEqual(GitSignature.None, commits[1].Signature);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void ParseLog_WithoutTheFifthFieldReadsAsUnsigned()
     {
         string us = ((char)0x1f).ToString();

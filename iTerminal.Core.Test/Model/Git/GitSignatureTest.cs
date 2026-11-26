@@ -34,6 +34,17 @@ public class GitSignatureTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void Describe_NamesTheSignerInsideThePhrase_AndStaysEmptyForUnsigned()
+    {
+        string phrase = GitSignature.Describe('G', "Ann Example");
+
+        StringAssert.Contains(phrase, "not checked for trust; signer: Ann Example)");
+        Assert.AreEqual(GitSignature.Describe('G'), GitSignature.Describe('G', string.Empty));
+        Assert.AreEqual(string.Empty, GitSignature.Describe('N', "Ann Example"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void AGoodSignatureSaysTheKeyIsNotCheckedForTrust()
     {
         StringAssert.Contains(GitSignature.Describe('G'), "not checked for trust");

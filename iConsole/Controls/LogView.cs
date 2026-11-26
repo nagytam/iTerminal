@@ -30,7 +30,7 @@ public sealed record LogEntry(string Text, LogEntryLevel Level, IReadOnlyList<Lo
 /// deleting them. Lines are cut at the right edge; Left and Right scroll sideways. <see cref="Find"/> searches the lines
 /// shown for a text, highlights its matches and scrolls to them; F3 and Shift+F3 step to the next and previous match.
 /// </summary>
-public class LogView : Control
+public class LogView : Control, ITransientOverlayHost
 {
     private const int WheelRows = 3;
     private const int ColumnStep = 8;
@@ -52,6 +52,8 @@ public class LogView : Control
     private int _drawnVersion = -1;
     private string _searchText = string.Empty;
     private int _matchIndex = -1;
+    private bool _findEntry;
+    private string _findQuery = string.Empty;
 
     public LogView(IThemeService themeService) : base(themeService)
     {
@@ -140,6 +142,25 @@ public class LogView : Control
     public string SearchText
     {
         get { lock (_gate) { return _searchText; } }
+    }
+
+    /// <summary>True while the inline find line is open: typed text builds the query, Enter runs it and Esc closes the line.</summary>
+    public bool IsOverlayOpen
+    {
+        get { lock (_gate) { return _findEntry; } }
+    }
+
+    /// <summary>Closes the inline find line and keeps the current search, so the highlights and F3 stay.</summary>
+    public void CloseOverlay()
+    {
+        lock (_gate)
+        {
+            if (_findEntry)
+            {
+                _findEntry = false;
+                _version++;
+            }
+        }
     }
 
     /// <summary>
@@ -452,6 +473,14 @@ public class LogView : Control
         yield return ("Home", UiText.Get("Hint.OldestLine", "Oldest line"));
         yield return ("End", UiText.Get("Hint.NewestLineFollow", "Newest line, and follow new lines"));
         yield return ("Left/Right", UiText.Get("Hint.ScrollSideways", "Scroll sideways"));
+        if (IsOverlayOpen)
+        {
+            yield return ("Enter", UiText.Get("Hint.PromptAccept", "Accept the value"));
+            yield return ("Esc", UiText.Get("Hint.PromptCancel", "Cancel"));
+            yield break;
+        }
+
+        yield return ("F7", UiText.Get("Hint.FindStart", "Find text in the log"));
         if (SearchText.Length > 0)
         {
             yield return ("F3", UiText.Get("Hint.FindNext", "Find the next match"));
@@ -467,8 +496,22 @@ public class LogView : Control
             return isHandled;
         }
 
+        if (IsOverlayOpen)
+        {
+            return HandleFindEntryKey(keyEvent);
+        }
+
         switch (keyEvent.ConsoleKey)
         {
+            case ConsoleKey.F7:
+                lock (_gate)
+                {
+                    _findEntry = true;
+                    _findQuery = _searchText;
+                    _version++;
+                }
+
+                return true;
             case ConsoleKey.UpArrow:
                 ScrollBy(-1);
                 return true;
@@ -504,6 +547,65 @@ public class LogView : Control
                 }
 
                 return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>Keys while the find line is open: they edit the query, and Enter runs it. Other keys are declined.</summary>
+    private bool HandleFindEntryKey(KeyEvent keyEvent)
+    {
+        switch (keyEvent.ConsoleKey)
+        {
+            case ConsoleKey.Enter:
+                string query;
+                lock (_gate)
+                {
+                    query = _findQuery;
+                    _findEntry = false;
+                }
+
+                if (query.Length > 0)
+                {
+                    Find(query);
+                }
+                else
+                {
+                    lock (_gate)
+                    {
+                        _searchText = string.Empty;
+                        _matchIndex = -1;
+                        _version++;
+                    }
+                }
+
+                return true;
+            case ConsoleKey.Escape:
+                CloseOverlay();
+                return true;
+            case ConsoleKey.Backspace:
+                lock (_gate)
+                {
+                    if (_findQuery.Length > 0)
+                    {
+                        _findQuery = _findQuery[..^1];
+                    }
+
+                    _version++;
+                }
+
+                return true;
+        }
+
+        if (keyEvent.KeyChar >= ' ' && !char.IsControl(keyEvent.KeyChar))
+        {
+            lock (_gate)
+            {
+                _findQuery += keyEvent.KeyChar;
+                _version++;
+            }
+
+            return true;
         }
 
         return false;
@@ -550,6 +652,8 @@ public class LogView : Control
         int left;
         bool following;
         string search;
+        bool findOpen;
+        string findQuery;
         lock (_gate)
         {
             int top = EffectiveTop();
@@ -558,6 +662,8 @@ public class LogView : Control
             left = _left;
             following = _follow;
             search = _searchText;
+            findOpen = _findEntry;
+            findQuery = _findQuery;
             _drawnVersion = _version;
         }
 
@@ -575,6 +681,15 @@ public class LogView : Control
             {
                 text = "No log lines";
                 foreground = colorScheme.DisabledForeground;
+            }
+
+            if (findOpen && line == height - 1)
+            {
+                // The find line takes the bottom row while it is open; it paints the whole row, so no stale text survives.
+                string prompt = UiText.Get("LogView.FindPrompt", "Find: ") + findQuery + "_";
+                var promptString = new ConxelString(prompt.Cut(width).PadRight(width), colorScheme.SelectedForeground, colorScheme.SelectedBackground);
+                buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + line), new Size(width, 1), promptString);
+                continue;
             }
 
             string badge = line == height - 1 && !following && unread > 0 ? $" ▼ {unread} new " : string.Empty;
