@@ -1,3 +1,4 @@
+using System.Globalization;
 using iConsole.Controls;
 
 namespace iTerminal.DevelopmentStudio.Model;
@@ -124,5 +125,50 @@ public sealed class StudioPanelLayout
 
         _placements[kind] = (side, resized);
         return true;
+    }
+
+    /// <summary>
+    /// The arrangement as one line for the settings: each panel as <c>Kind:Side:Percent</c>, the panels separated by <c>;</c>.
+    /// <see cref="Parse"/> reads it back.
+    /// </summary>
+    public string Serialize() =>
+        string.Join(';', _placements.Select(pair => $"{pair.Key}:{pair.Value.Side}:{pair.Value.Percent}"));
+
+    /// <summary>
+    /// The arrangement a stored line describes. A missing or damaged line gives <see cref="Default"/>, and so does one that does
+    /// not place every panel once on its own side with the centre taken: the studio must always open with a usable arrangement.
+    /// An edge share is kept within <see cref="MinPercent"/> and <see cref="MaxPercent"/>.
+    /// </summary>
+    public static StudioPanelLayout Parse(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return Default();
+
+        var placed = new Dictionary<StudioPanelKind, (DockSide Side, int Percent)>();
+        var sides = new HashSet<DockSide>();
+        foreach (string entry in text.Split(';'))
+        {
+            string[] parts = entry.Split(':');
+            if (parts.Length != 3
+                || !Enum.TryParse(parts[0], out StudioPanelKind kind)
+                || !Enum.TryParse(parts[1], out DockSide side)
+                || !int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int percent)
+                || !placed.TryAdd(kind, (side, percent))
+                || !sides.Add(side))
+            {
+                return Default();
+            }
+        }
+
+        if (placed.Count != Enum.GetValues<StudioPanelKind>().Length || !sides.Contains(DockSide.Fill)) return Default();
+
+        var layout = new StudioPanelLayout();
+        foreach ((StudioPanelKind kind, (DockSide side, int percent)) in placed)
+        {
+            // The centre keeps 0. An edge keeps 0 as well, which reads as the default share.
+            int share = side == DockSide.Fill || percent == 0 ? 0 : Math.Clamp(percent, MinPercent, MaxPercent);
+            layout._placements[kind] = (side, share);
+        }
+
+        return layout;
     }
 }

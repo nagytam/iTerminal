@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using iConsole.Buffers;
 using iConsole.Controls;
@@ -10,6 +12,7 @@ using iConsole.Localization;
 using iConsole.Model;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services;
 using iTerminal.DevelopmentStudio.Model;
 using iTerminal.DevelopmentStudio.Services;
 using iTerminal.Core.Model.Dotnet;
@@ -95,8 +98,21 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly IDotnetSolutionService _dotnet;
     private readonly ISyntaxHighlightingService _highlighting;
     private readonly ISdkManager _sdkManager;
+    private readonly ISettingsService _settings;
     /// <summary>Shows the explorer's context menu (the Menu key). Null where no popover service is registered, as in the tests.</summary>
     private readonly IPopoverService? _popover;
+
+    /// <summary>The row the explorer's cursor was on when it was saved, to be put back once that row is listed (null when there is none to wait for).</summary>
+    private string? _pendingSelection;
+
+    /// <summary>The cursor row last written to the settings, so a cursor that has not moved is not written again.</summary>
+    private string? _savedSelection;
+
+    /// <summary>The clock of the command running (or the last one run): its elapsed time is shown while it runs and in the status after it.</summary>
+    private Stopwatch? _runClock;
+
+    /// <summary>The whole second the header last showed for the running command; the dialog redraws when the second changes.</summary>
+    private long _shownSeconds = -1;
 
     /// <summary>The JDK home Java builds and runs use, or null for the javac and java on the PATH. Read when the studio opens and when the SDK manager closes.</summary>
     private string? _javaHome;
@@ -163,7 +179,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The panels, docked by <see cref="_dock"/> in the arrangement <see cref="_layout"/> gives them. F8 changes the arrangement.</summary>
     private readonly DockPanel _dock;
     private readonly Dictionary<StudioPanelKind, StudioPanel> _panels = [];
-    private readonly StudioPanelLayout _layout = StudioPanelLayout.Default();
+    private readonly StudioPanelLayout _layout;
     private bool _layoutMode;
     private string _statusBeforeLayout = string.Empty;
     private StatusSeverity _statusSeverityBeforeLayout = StatusSeverity.Info;
@@ -242,6 +258,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         CSharpLanguageServer languageServer,
         ISyntaxHighlightingService highlighting,
         ISdkManager sdkManager,
+        ISettingsService settings,
         IPopoverService? popoverService = null)
         : base(nameof(DevelopmentStudioDialog), themeService)
     {
@@ -254,7 +271,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _mainProgram = mainProgram;
         _dotnet = dotnetSolutionService;
         _sdkManager = sdkManager;
+        _settings = settings;
         _popover = popoverService;
+
+        // The settings the studio keeps between openings; each one is written again when the user changes it.
+        _layout = StudioPanelLayout.Parse(settings.Get(StudioSettings.LayoutKey));
+        _sbomFormat = ParseSetting(settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
+        _explorerMode = ParseSetting(settings.Get(StudioSettings.ExplorerModeKey), ExplorerMode.Solution);
+        _outputTab = ParseSetting(settings.Get(StudioSettings.OutputTabKey), OutputTab.Output);
+        foreach (string folder in StudioSettings.DecodeList(settings.Get(StudioSettings.ExpandedFoldersKey))) _expandedFolders.Add(folder);
         Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
 
         _explorerListBox = new ExplorerListBox(
@@ -335,19 +360,31 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _projectFiles.Clear();
         _loadingProjects.Clear();
         _items = await ScanAsync();
-        ApplySdks(await Task.Run(ReadSdks, CancellationToken.None), keep: null);
+        string? savedSdk = _settings.Get(StudioSettings.SdkHostKey);
+        var sdks = await Task.Run(ReadSdks, CancellationToken.None);
+        ApplySdks(sdks, sdks.FirstOrDefault(sdk => sdk.HostPath.Equals(savedSdk, StringComparison.OrdinalIgnoreCase)));
         _javaHome = _sdkManager.ActiveJavaHome;
-        _explorerMode = ExplorerMode.Solution;
-        OpenSolutionsInTree();
-        _outputTab = OutputTab.Output;
+
+        // The explorer keeps the expansion and the cursor the user left it with. A studio that has never saved them opens its solutions.
+        if (_settings.Get(StudioSettings.ExpandedFoldersKey) is null) OpenSolutionsInTree();
+        _savedSelection = string.IsNullOrEmpty(_solutionPath) ? SavedSelection() : null;
+        _pendingSelection = _savedSelection;
         _status = _items.Count == 0
             ? UiText.Get("DevelopmentStudio.NothingFound", "No solutions, projects or scripts were found in this folder.")
             : string.Format(UiText.Get("DevelopmentStudio.Found", "Found {0} items. Enter opens a file; F5 starts debugging."), _items.Count);
         _statusSeverity = StatusSeverity.Info;
         RebuildExplorer();
-        SelectSolutionRow();
+        if (_pendingSelection is null) SelectSolutionRow();
+        if (_explorerMode == ExplorerMode.Files && !_fileTreeBuilt) _ = LoadFileTreeAsync();
         RebuildView();
         StateHasChanged();
+    }
+
+    /// <summary>The row the explorer's cursor was on when the studio last saved it, or null.</summary>
+    private string? SavedSelection()
+    {
+        string? path = _settings.Get(StudioSettings.SelectedPathKey);
+        return string.IsNullOrEmpty(path) ? null : path;
     }
 
     /// <summary>The solutions start expanded, as they do in Visual Studio: their projects show at once. The projects start collapsed.</summary>
@@ -405,6 +442,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             _ = Task.Run(async () => { await session.TerminateAsync(); await session.DisposeAsync(); }, CancellationToken.None);
         }
 
+        SaveExplorerSelection();
         Close();
     }
 
@@ -625,8 +663,24 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private void ToggleExpandedAt(string path)
     {
         if (!_expandedFolders.Remove(path)) _expandedFolders.Add(path);
+        _settings.Set(StudioSettings.ExpandedFoldersKey, StudioSettings.EncodeList(_expandedFolders));
         RebuildExplorer();
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Writes the row under the explorer's cursor to the settings, when it has moved since the last write. It runs on the UI
+    /// thread's idle pass, so a cursor move costs a key press and no more. While a saved row is still waiting to be listed, the
+    /// cursor is not the user's, so nothing is written.
+    /// </summary>
+    private void SaveExplorerSelection()
+    {
+        if (_pendingSelection is not null) return;
+        var row = SelectedRow;
+        string? path = row?.Item?.Path ?? row?.FilePath;
+        if (path is null || path == _savedSelection) return;
+        _savedSelection = path;
+        _settings.Set(StudioSettings.SelectedPathKey, path);
     }
 
     /// <summary>Left and Right: collapse or expand the container under the cursor. A file, or a row that is already so, does nothing.</summary>
@@ -702,6 +756,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             ExplorerMode.Tests => ExplorerMode.Files,
             _ => ExplorerMode.Solution,
         };
+        _settings.Set(StudioSettings.ExplorerModeKey, _explorerMode.ToString());
         RebuildExplorer();
         if (_explorerMode == ExplorerMode.Files)
         {
@@ -793,6 +848,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             OutputTab.Coverage => OutputTab.Profile,
             _ => OutputTab.Output,
         };
+        _settings.Set(StudioSettings.OutputTabKey, _outputTab.ToString());
         RebuildOutputPanel();
 
         // The cursor row belongs to the list it was on; a new tab starts at its first row, so Enter reads the row shown.
@@ -872,6 +928,25 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         _explorerItems.ReplaceAll(rows);
         _explorerListBox.UpdateModel();
+        ApplyPendingSelection();
+    }
+
+    /// <summary>
+    /// Puts the cursor back on the saved row once it is listed. A project's files and the File Explorer's tree are read in the
+    /// background, so their rows can appear after the first listing: the wait ends with the row, or when nothing is being read.
+    /// </summary>
+    private void ApplyPendingSelection()
+    {
+        if (_pendingSelection is not { } path) return;
+        int index = _explorerItems.ToList().FindIndex(row => string.Equals(row.Item?.Path ?? row.FilePath, path, StringComparison.OrdinalIgnoreCase));
+        if (index >= 0)
+        {
+            _explorerListBox.ScrollableModel.CursorPosition.Y = index;
+            _pendingSelection = null;
+            return;
+        }
+
+        if (_loadingProjects.Count == 0 && (_explorerMode != ExplorerMode.Files || _fileTreeBuilt)) _pendingSelection = null;
     }
 
     /// <summary>
@@ -1317,12 +1392,37 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         ApplySavedText();
         if (_marksStale) RefreshEditorMarks();
         RevealPending();
+        RedrawRunningClock();
+        SaveExplorerSelection();
         long version = _languageServer.Version;
         if (version == _seenServerVersion) return;
         _seenServerVersion = version;
         RefreshEditorMarks();
         RebuildErrorPanel();
         ShowServerStatus();
+    }
+
+    /// <summary>The elapsed time of the running command as the header shows it (m:ss, or h:mm:ss from an hour), or null when none is running.</summary>
+    private string? RunningElapsedText()
+    {
+        TimeSpan? elapsed;
+        lock (_stateLock) elapsed = _runClock is { IsRunning: true } clock ? clock.Elapsed : null;
+        return elapsed is { } time ? FormatElapsed(time) : null;
+    }
+
+    /// <summary>The time a command took, as the status and the output show it: m:ss, or h:mm:ss from an hour.</summary>
+    private static string FormatElapsed(TimeSpan elapsed) =>
+        elapsed.TotalHours >= 1 ? elapsed.ToString(@"h\:mm\:ss", CultureInfo.InvariantCulture) : elapsed.ToString(@"m\:ss", CultureInfo.InvariantCulture);
+
+    /// <summary>The header's clock moves while a command runs, so the dialog redraws when the second on screen changes.</summary>
+    private void RedrawRunningClock()
+    {
+        if (!_busy) return;
+        long seconds;
+        lock (_stateLock) seconds = _runClock is { IsRunning: true } clock ? (long)clock.Elapsed.TotalSeconds : -1;
+        if (seconds < 0 || seconds == _shownSeconds) return;
+        _shownSeconds = seconds;
+        StateHasChanged();
     }
 
     /// <summary>The status line while a C# file is open: starting, then back to the file name, or not installed (once per dialog).</summary>
@@ -1853,9 +1953,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         var cts = new CancellationTokenSource();
         _runCts = cts;
         _busy = true;
+        var clock = Stopwatch.StartNew();
         lock (_stateLock)
         {
             ClearOutputLocked();
+            _runClock = clock;
         }
 
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, targetLabel), StatusSeverity.Info);
@@ -1895,23 +1997,34 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                     AppendOutput(string.Empty);
                 }
 
+                // The run's time stops with its last command; the output and the status both say how long it took.
+                TimeSpan elapsed;
+                lock (_stateLock)
+                {
+                    clock.Stop();
+                    elapsed = clock.Elapsed;
+                }
+
+                string tookText = string.Format(UiText.Get("DevelopmentStudio.Elapsed", "Elapsed {0}"), FormatElapsed(elapsed));
+                AppendOutput(tookText);
+
                 if (cts.IsCancellationRequested)
                 {
-                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.Cancelled", "{0} cancelled."), verb), StatusSeverity.Info);
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.Cancelled", "{0} cancelled."), verb) + " " + tookText, StatusSeverity.Info);
                 }
                 else if (verb == "test" && runTotals.Total > 0)
                 {
                     string summary = string.Format(UiText.Get("DevelopmentStudio.TestTotals", "Tests: {0} passed, {1} failed, {2} skipped."), runTotals.Passed, runTotals.Failed, runTotals.Skipped);
                     AppendOutput(summary);
-                    SetStatus(summary, runTotals.Failed == 0 && firstFailure == 0 ? StatusSeverity.Success : StatusSeverity.Error);
+                    SetStatus(summary + " " + tookText, runTotals.Failed == 0 && firstFailure == 0 ? StatusSeverity.Success : StatusSeverity.Error);
                 }
                 else if (firstFailure == 0)
                 {
-                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.Succeeded", "{0} succeeded: {1}."), verb, targetLabel), StatusSeverity.Success);
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.Succeeded", "{0} succeeded: {1}."), verb, targetLabel) + " " + tookText, StatusSeverity.Success);
                 }
                 else
                 {
-                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.FailedExit", "{0} failed (exit {1})."), verb, firstFailure), StatusSeverity.Error);
+                    SetStatus(string.Format(UiText.Get("DevelopmentStudio.FailedExit", "{0} failed (exit {1})."), verb, firstFailure) + " " + tookText, StatusSeverity.Error);
                 }
             }
             catch (Exception exception) when (exception is OperationCanceledException or InvalidOperationException or IOException)
@@ -1920,6 +2033,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             }
             finally
             {
+                lock (_stateLock) clock.Stop();
                 _busy = false;
                 _runCts = null;
                 RebuildView();
@@ -2097,6 +2211,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         _sdkIndex = (_sdkIndex + 1) % _sdks.Count;
         var chosen = SelectedSdk!;
+        _settings.Set(StudioSettings.SdkHostKey, chosen.HostPath);
         string version = chosen.IsPrerelease ? string.Format(UiText.Get("Solution.SdkPreview", "{0} (preview)"), chosen.Version) : chosen.Version;
         SetStatus(string.Format(UiText.Get("Solution.UsingSdk", "Using .NET SDK {0}."), version), StatusSeverity.Info);
     }
@@ -2149,6 +2264,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private void ToggleSbomFormat()
     {
         _sbomFormat = _sbomFormat == SbomFormat.Xml ? SbomFormat.Json : SbomFormat.Xml;
+        _settings.Set(StudioSettings.SbomFormatKey, _sbomFormat.ToString());
         SetStatus(string.Format(UiText.Get("Solution.SbomFormat", "SBOM format: {0}."), _sbomFormat == SbomFormat.Json ? "JSON" : "XML"), StatusSeverity.Info);
     }
 
@@ -2501,6 +2617,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     #region Editing
 
+    /// <summary>A stored setting as its enum value, or the fallback when it is missing or names no value of the enum.</summary>
+    private static T ParseSetting<T>(string? text, T fallback) where T : struct, Enum =>
+        Enum.TryParse(text, out T value) && Enum.IsDefined(value) ? value : fallback;
+
     /// <summary>Whether a file is open in the editor.</summary>
     private bool SourceOpen
     {
@@ -2741,6 +2861,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 break;
             case StudioPanelMove.Moved:
             case StudioPanelMove.Swapped:
+                SaveLayout();
                 RebuildDock();
                 break;
         }
@@ -2768,8 +2889,13 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             (DockSide.Left, DockSide.Left) or (DockSide.Right, DockSide.Right) or (DockSide.Top, DockSide.Top) or (DockSide.Bottom, DockSide.Bottom) => -step,
             _ => 0,
         };
-        if (delta != 0 && _layout.Resize(kind, delta)) RebuildDock();
+        if (delta == 0 || !_layout.Resize(kind, delta)) return;
+        SaveLayout();
+        RebuildDock();
     }
+
+    /// <summary>Writes the panel arrangement to the settings, so the next studio opens with it.</summary>
+    private void SaveLayout() => _settings.Set(StudioSettings.LayoutKey, _layout.Serialize());
 
     #endregion
 
@@ -2828,7 +2954,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     {
         string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
         string debugState = _session is null ? string.Empty : _paused ? "   ● paused" : "   ▶ running";
-        string busy = _busy ? "   *" : string.Empty;
+        string busy = _busy ? "   * " + (RunningElapsedText() ?? string.Empty) : string.Empty;
         WriteLine(buffer, x, y, w, $"{folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
     }
 
