@@ -46,6 +46,13 @@ public sealed class DotNetToolchain : IDevelopmentToolchain
 
     public IReadOnlyList<string> CacheFolders(DevelopmentProject project) => [];
 
+    /// <summary>
+    /// A build with the IDE and the CA analyzers on (<c>EnforceCodeStyleInBuild</c>, the recommended CA set). <c>--no-incremental</c>
+    /// makes the compiler run the analyzers again, since an up-to-date build prints none of their findings.
+    /// </summary>
+    public ProcessCommand? Analyze(DevelopmentProject project) =>
+        Dotnet(project, "build", project.Path, "--no-incremental", "-p:EnforceCodeStyleInBuild=true", "-p:AnalysisLevel=latest-recommended");
+
     /// <summary>The tests under coverlet's collector (<c>XPlat Code Coverage</c>), which writes a Cobertura report under the results folder.</summary>
     public IReadOnlyList<ProcessCommand> Coverage(DevelopmentProject project, string resultsFolder) =>
         [Dotnet(project, "test", project.Path, "--collect:XPlat Code Coverage", "--results-directory", resultsFolder)];

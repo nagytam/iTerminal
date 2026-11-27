@@ -2293,6 +2293,24 @@
   <data name="DevelopmentStudio.AlreadyRunning" xml:space="preserve">
     <value>The program is running. It stops at a breakpoint.</value>
   </data>
+  <data name="DevelopmentStudio.AnalysisCancelled" xml:space="preserve">
+    <value>Codeanalyse von {0} abgebrochen.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisFailed" xml:space="preserve">
+    <value>Codeanalyse von {0} fehlgeschlagen (Exitcode {1}). Die Ausgabe nennt den Grund.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunning" xml:space="preserve">
+    <value>Analyse von {0}: {1} vergangen, etwa {2} erwartet.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunningNoEstimate" xml:space="preserve">
+    <value>Analyse von {0}: {1} vergangen.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisSummary" xml:space="preserve">
+    <value>Codeanalyse von {0}: {1} Fehler, {2} Warnungen. Dauer {3}.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
+    <value>Analyse</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>The debugger did not take the breakpoint: {0}</value>
   </data>
@@ -2310,6 +2328,9 @@
   </data>
   <data name="DevelopmentStudio.Busy" xml:space="preserve">
     <value>A command is still running; X cancels it ({0} was not started).</value>
+  </data>
+  <data name="DevelopmentStudio.BusyAnalysis" xml:space="preserve">
+    <value>Ein Befehl läuft noch; X bricht ihn ab, bevor analysiert wird.</value>
   </data>
   <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
     <value>Ein Befehl läuft noch; X bricht ihn vor der Messung ab.</value>
@@ -2347,6 +2368,9 @@
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>Zeile {0}, Spalte {1}</value>
   </data>
+  <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
+    <value>Dauer {0}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nothing here)</value>
   </data>
@@ -2370,6 +2394,9 @@
   </data>
   <data name="DevelopmentStudio.Found" xml:space="preserve">
     <value>Found {0} items. Enter opens a file; F5 starts debugging.</value>
+  </data>
+  <data name="DevelopmentStudio.HintAnalysis" xml:space="preserve">
+    <value>Den Code des gewählten Elements analysieren: der Reiter Analyse listet die Befunde, Enter oder ein Klick öffnet einen</value>
   </data>
   <data name="DevelopmentStudio.HintBreakpoint" xml:space="preserve">
     <value>Toggle a breakpoint on the cursor line</value>
@@ -2399,7 +2426,10 @@
     <value>Panels verschieben und in der Größe ändern: Pfeile verschieben das markierte Panel zu dieser Kante, Umschalt+Pfeile ändern die Größe</value>
   </data>
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
-    <value>Den Eintrag unter dem Cursor zum Hauptprogramm machen: F5 und Strg+F5 starten es</value>
+    <value>Das Hauptprojekt festlegen (M): F5 und Strg+F5 starten es</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Das Menü des Elements: seine Befehle und Als Hauptprojekt festlegen</value>
   </data>
   <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
     <value>Manage the NuGet packages of the selected solution or project</value>
@@ -2408,7 +2438,7 @@
     <value>Open the file (or run the test)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Explorer-Reiter (Solution, Tests, Dateien) / Reiter des Ausgabebereichs (Ausgabe, Debug, Abdeckung, Profil)</value>
+    <value>Explorer-Reiter (Solution, Tests, Dateien) / Reiter des Ausgabebereichs (Ausgabe, Fehler, Analyse, Debug, Abdeckung, Profil)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Run without debugging</value>
@@ -2469,6 +2499,36 @@
   </data>
   <data name="DevelopmentStudio.MainTag" xml:space="preserve">
     <value>Start</value>
+  </data>
+  <data name="DevelopmentStudio.MenuAnalyze" xml:space="preserve">
+    <value>Code analysieren</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Bereinigen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Hauptprojekt aufheben</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Debuggen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Ausführen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Als Hauptprojekt festlegen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Testen</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysis" xml:space="preserve">
+    <value>Noch keine Codeanalyse. N analysiert das gewählte Element; die Befunde stehen hier.</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysisFor" xml:space="preserve">
+    <value>{0} hat hier keine Codeanalyse.</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Open a file (Enter) and put the cursor on a line to set a breakpoint.</value>
@@ -2562,6 +2622,9 @@
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Running {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningAnalysis" xml:space="preserve">
+    <value>Analysiere {0}...</value>
   </data>
   <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
     <value>Abdeckung von {0} wird gemessen ...</value>
@@ -6547,6 +6610,9 @@
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:Layout Enter:open Esc:close</value>
   </data>
+  <data name="Hints.DevelopmentStudioAnalysis" xml:space="preserve">
+    <value>Enter oder Klick:Befund an seiner Zeile öffnen  N:analysieren  F7:Ausgabereiter  X:abbrechen  Esc:schließen</value>
+  </data>
   <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
     <value>Schreiben  Strg+S:speichern  F9:Haltepunkt  F5:Debuggen  F7:Ausgabe-Reiter  Esc:schließen</value>
   </data>
@@ -9673,7 +9739,7 @@
     <value>Ordner, Favoriten und Remote-Hosts: Ordnerauswahl (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Gespeicherte Hosts und ihre Zugangsdaten: Netzwerkbrowser (Ctrl+N).</value>
+    <value>Gespeicherte Hosts und ihre Zugangsdaten: Netzwerkbrowser (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Netzwerkschnittstellen: Netzwerkverwaltung.</value>

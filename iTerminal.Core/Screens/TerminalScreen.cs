@@ -122,10 +122,11 @@ public class TerminalScreen : iConsole.Screens.Screen
             return true;
         }
 
-        // Global shortcut: Ctrl+N opens the Network Browser, same reasoning as Ctrl+G above.
+        // Global shortcut: Alt+Shift+F8 opens the Network Browser, same reasoning as Ctrl+G above. Ctrl+N is the
+        // Navigate menu's hot key and must reach the menu from a file panel.
         if (_networkBrowserDialog is not null
-            && keyEvent.ConsoleKey == ConsoleKey.N
-            && keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt)
+            && keyEvent.ConsoleKey == ConsoleKey.F8
+            && keyEvent.Alt && keyEvent.Shift && !keyEvent.Control)
         {
             await ShowDialogAsync(_networkBrowserDialog);
             return true;

@@ -159,6 +159,8 @@ public class ContentModelFileSystemArchive(
     public override async Task<IMemoryFile?> ReadFileAsync(Url url) => await archiveFileSystemService.ReadFileAsync(url);
     public override bool ExistsFile(Url url) => archiveFileSystemService.ExistsFile(url);
     public override bool ExistsFolder(Url url) => archiveFileSystemService.ExistsFolder(url);
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => archiveFileSystemService.ExistsFileAsync(url, cancellationToken);
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => archiveFileSystemService.ExistsFolderAsync(url, cancellationToken);
 
     public override void Delete(Url url, bool recursive, bool moveToRecycleBin) => throw ReadOnlyException();
     public override Task CopyAsync(Url sourceUrl, Url targetUrl, bool overwrite) => throw ReadOnlyException();

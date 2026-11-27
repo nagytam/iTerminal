@@ -69,17 +69,17 @@ public class ContentModelDeleteTask(
             }
             else if (url.PathType == PathType.Folder)
             {
-                // One call that cannot be interrupted once started (on Windows the shell's recycle of
-                // a large tree can take a while), so the cancel is honoured before it, not during it.
+                // The cancel is honoured before the call and again inside it, where the drive can stop
+                // (a network drive's request). On Windows the shell's recycle of a large tree still runs to its end.
                 CancellationToken.ThrowIfCancellationRequested();
-                if (!target.DeleteFolder(url, recursive, moveToRecycleBin))
+                if (!await target.DeleteFolderAsync(url, recursive, moveToRecycleBin, CancellationToken).ConfigureAwait(false))
                 {
                     throw new DirectoryNotFoundException($"The folder is no longer there: {url.FullName}");
                 }
             }
             else
             {
-                target.DeleteFile(url, moveToRecycleBin);
+                await target.DeleteFileAsync(url, moveToRecycleBin, CancellationToken).ConfigureAwait(false);
             }
 
             Description = FormatFinishedDescription(failedItems);

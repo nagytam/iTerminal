@@ -25,7 +25,7 @@ namespace iTerminal.Core.Dialogs;
 ///
 /// The SSH entries of the Remote connections dialog are listed too, as SFTP. Nothing is scanned here. N adds a server
 /// through <see cref="FolderSelectorAddServerDialog"/>, which saves it and opens it; the other connections are edited
-/// in the Remote connections dialog (Alt+F2), and an SSH login is kept by the Network Browser (Ctrl+N).
+/// in the Remote connections dialog (Alt+F2), and an SSH login is kept by the Network Browser (Alt+Shift+F8).
 /// </summary>
 public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
 {
@@ -79,7 +79,7 @@ public class FolderSelectorRemoteFilesTabPage : FolderSelectorTabPage
         {
             HotKeyChar = 'S'
         };
-        // No HotKeyChar: a button's hot key is Ctrl+letter, and Ctrl+N is the Network Browser's. N on the page is the key.
+        // No HotKeyChar: a button's hot key is Ctrl+letter, and Ctrl+N is the Navigate menu's. N on the page is the key.
         _addServerButton = new Button(UiText.Get("FolderSelector.Remote.New", "New server…"), new AddServerCommand(), themeService);
 
         AddControl(_listBox);

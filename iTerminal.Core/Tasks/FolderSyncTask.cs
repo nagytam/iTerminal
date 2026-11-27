@@ -67,7 +67,7 @@ public sealed class FolderSyncTask(
                 {
                     if (action.IsDelete)
                     {
-                        Delete(action);
+                        await DeleteAsync(action).ConfigureAwait(false);
                         Deleted++;
                     }
                     else
@@ -131,17 +131,17 @@ public sealed class FolderSyncTask(
         return text.ToString();
     }
 
-    private void Delete(SyncAction action)
+    private async Task DeleteAsync(SyncAction action)
     {
         var victim = action.Victim!;
         var fileSystem = action.Kind == SyncActionKind.DeleteLeft ? left : right;
         if (action.Item.IsFolder)
         {
-            fileSystem.DeleteFolder(victim, recursive: true, moveToRecycleBin: true);
+            await fileSystem.DeleteFolderAsync(victim, recursive: true, moveToRecycleBin: true, CancellationToken).ConfigureAwait(false);
         }
         else
         {
-            fileSystem.DeleteFile(victim, moveToRecycleBin: true);
+            await fileSystem.DeleteFileAsync(victim, moveToRecycleBin: true, CancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -168,7 +168,7 @@ public sealed class FolderSyncTask(
     private async Task CopyFolderAsync(IFileSystem sourceSystem, Url source, IFileSystem targetSystem, Url target)
     {
         CancellationToken.ThrowIfCancellationRequested();
-        if (!targetSystem.ExistsFolder(target))
+        if (!await targetSystem.ExistsFolderAsync(target, CancellationToken).ConfigureAwait(false))
         {
             await targetSystem.CreateFolderAsync(target);
         }

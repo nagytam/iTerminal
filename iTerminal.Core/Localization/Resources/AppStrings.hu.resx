@@ -2293,6 +2293,24 @@
   <data name="DevelopmentStudio.AlreadyRunning" xml:space="preserve">
     <value>Il programma è in esecuzione. Si ferma su un punto di interruzione.</value>
   </data>
+  <data name="DevelopmentStudio.AnalysisCancelled" xml:space="preserve">
+    <value>A(z) {0} kódelemzése megszakítva.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisFailed" xml:space="preserve">
+    <value>A(z) {0} kódelemzése sikertelen (kilépési kód: {1}). A kimenet megmondja, miért.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunning" xml:space="preserve">
+    <value>{0} elemzése: {1} eltelt, várhatóan körülbelül {2}.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunningNoEstimate" xml:space="preserve">
+    <value>{0} elemzése: {1} eltelt.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisSummary" xml:space="preserve">
+    <value>A(z) {0} kódelemzése: {1} hiba, {2} figyelmeztetés. Eltelt idő: {3}.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
+    <value>Elemzés</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>Il debugger non ha accettato il punto di interruzione: {0}</value>
   </data>
@@ -2310,6 +2328,9 @@
   </data>
   <data name="DevelopmentStudio.Busy" xml:space="preserve">
     <value>Un comando è ancora in esecuzione; X lo annulla ({0} non è stato avviato).</value>
+  </data>
+  <data name="DevelopmentStudio.BusyAnalysis" xml:space="preserve">
+    <value>Egy parancs még fut; az X megszakítja, mielőtt elemzés indul.</value>
   </data>
   <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
     <value>Egy parancs még fut; a mérés előtt az X megszakítja.</value>
@@ -2347,6 +2368,9 @@
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>{0}. sor, {1}. oszlop</value>
   </data>
+  <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
+    <value>Eltelt idő {0}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(niente qui)</value>
   </data>
@@ -2370,6 +2394,9 @@
   </data>
   <data name="DevelopmentStudio.Found" xml:space="preserve">
     <value>Trovati {0} elementi. Invio apre un file; F5 avvia il debug.</value>
+  </data>
+  <data name="DevelopmentStudio.HintAnalysis" xml:space="preserve">
+    <value>A kijelölt elem kódjának elemzése: az Elemzés fül listázza az eredményeket, Enter vagy kattintás megnyit egyet</value>
   </data>
   <data name="DevelopmentStudio.HintBreakpoint" xml:space="preserve">
     <value>Attiva o disattiva un punto di interruzione sulla riga del cursore</value>
@@ -2399,7 +2426,10 @@
     <value>Panelek mozgatása és átméretezése: a nyilak a kijelölt panelt az adott szélre viszik, a Shift+nyilak átméretezik</value>
   </data>
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
-    <value>A kurzor alatti elem legyen a főprogram: az F5 és a Ctrl+F5 ezt indítja</value>
+    <value>Főprojekt beállítása (M): az F5 és a Ctrl+F5 ezt indítja</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Az elem menüje: parancsai és a Beállítás főprojektként</value>
   </data>
   <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
     <value>Gestire i pacchetti NuGet della soluzione o del progetto selezionato</value>
@@ -2408,7 +2438,7 @@
     <value>Apri il file (o esegui il test)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Böngésző-fül (Megoldás, Tesztek, Fájlok) / kimeneti panel fül (Kimenet, Hibakeresés, Lefedettség, Profil)</value>
+    <value>Böngésző-fül (Megoldás, Tesztek, Fájlok) / kimeneti panel fül (Kimenet, Hibák, Elemzés, Hibakeresés, Lefedettség, Profil)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Esegui senza debug</value>
@@ -2469,6 +2499,36 @@
   </data>
   <data name="DevelopmentStudio.MainTag" xml:space="preserve">
     <value>fő</value>
+  </data>
+  <data name="DevelopmentStudio.MenuAnalyze" xml:space="preserve">
+    <value>Kód elemzése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Fordítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Tisztítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Főprojekt törlése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Hibakeresés</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Futtatás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Beállítás főprojektként</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Tesztelés</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysis" xml:space="preserve">
+    <value>Még nincs kódelemzés. Az N a kijelölt elemet elemzi, az eredményei itt jelennek meg.</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysisFor" xml:space="preserve">
+    <value>A(z) {0} itt nem támogat kódelemzést.</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Apri un file (Invio) e posiziona il cursore su una riga per impostare un punto di interruzione.</value>
@@ -2562,6 +2622,9 @@
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Esecuzione di {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningAnalysis" xml:space="preserve">
+    <value>{0} elemzése...</value>
   </data>
   <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
     <value>{0} lefedettségének mérése...</value>
@@ -6483,6 +6546,9 @@
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:debug F9:punto di interruzione F10/F11:passo Spazio:seleziona B/C/T/R:compila/pulisci/testa/esegui V:SDK K:SDKs S/F:SBOM F6/F7:pannelli Invio:apri Esc:chiudi</value>
   </data>
+  <data name="Hints.DevelopmentStudioAnalysis" xml:space="preserve">
+    <value>Enter vagy kattintás:az eredmény megnyitása a sorában  N:elemzés  F7:fül  X:megszakítás  Esc:bezárás</value>
+  </data>
   <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
     <value>Gépelés a szerkesztéshez  Ctrl+S:mentés  F9:töréspont  F5:hibakeresés  F7:fül  Esc:bezár</value>
   </data>
@@ -9609,7 +9675,7 @@
     <value>Mappák, kedvencek és távoli gépek: Mappaválasztó (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Mentett gépek és hitelesítő adataik: Hálózatböngésző (Ctrl+N).</value>
+    <value>Mentett gépek és hitelesítő adataik: Hálózatböngésző (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Hálózati csatolók: Hálózatkezelő.</value>

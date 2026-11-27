@@ -251,6 +251,19 @@ public abstract class ContentModelAsyncDrive : ContentModelBase, IFileSystemProv
 
     public override Task CreateFolderAsync(Url url) => FileSystem.CreateFolderAsync(url);
 
+    /// <summary>
+    /// Asked of the drive, not of the listing: a walker needs the answer as it is now, and a file made after the last
+    /// listing must not be missed (an overwrite check). The current folder is known without a call.
+    /// </summary>
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => FileSystem.ExistsFileAsync(url, cancellationToken);
+
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) =>
+        IsSameLocation(url.FullUrl, Url?.FullUrl) ? Task.FromResult(true) : FileSystem.ExistsFolderAsync(url, cancellationToken);
+
+    public override Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => FileSystem.DeleteFileAsync(url, moveToRecycleBin, cancellationToken);
+
+    public override Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken) => FileSystem.DeleteFolderAsync(url, recursive, moveToRecycleBin, cancellationToken);
+
     public override bool DeleteFile(Url url, bool moveToRecycleBin) => FileSystem.DeleteFile(url, moveToRecycleBin);
 
     public override bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin) => FileSystem.DeleteFolder(url, recursive, moveToRecycleBin);

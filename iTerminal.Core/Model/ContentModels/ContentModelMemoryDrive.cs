@@ -117,6 +117,10 @@ public class ContentModelMemoryDrive(
         return memoryDriveService.ExistsFolder(url);
     }
 
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => memoryDriveService.ExistsFileAsync(url, cancellationToken);
+
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => memoryDriveService.ExistsFolderAsync(url, cancellationToken);
+
     public override void Delete(Url url, bool recursive, bool moveToRecycleBin)
     {
         if (url.PathType == PathType.Folder)

@@ -29,6 +29,8 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
 
     public DbSet<RecipeEntry> Recipes => Set<RecipeEntry>();
 
+    public DbSet<DevelopmentBreakpointEntry> DevelopmentBreakpoints => Set<DevelopmentBreakpointEntry>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<PersistedSetting>(entity =>
@@ -172,6 +174,14 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
             entity.Property(item => item.Origin).HasMaxLength(128);
             entity.Property(item => item.Ingredients).HasColumnType("TEXT");
             entity.Property(item => item.Steps).HasColumnType("TEXT");
+        });
+
+        // The breakpoints of the Development studio: one row per file and line.
+        modelBuilder.Entity<DevelopmentBreakpointEntry>(entity =>
+        {
+            entity.ToTable("DevelopmentBreakpoints");
+            entity.HasKey(item => new { item.Path, item.Line });
+            entity.Property(item => item.Path).HasMaxLength(4096);
         });
     }
 }

@@ -43,15 +43,27 @@ public abstract class HttpFileSystemServiceBase(HttpMessageHandler? handler, ILo
     /// <summary>The rows of <paramref name="url"/>, without a <c>..</c> row (the panel adds that), with size and date.</summary>
     public abstract Task<IReadOnlyList<IEntry>> ListAsync(Url url, CancellationToken cancellationToken);
 
-    public abstract bool ExistsFile(Url url);
+    /// <summary>Whether a file is at <paramref name="url"/>. A cancelled token is rethrown, not read as "not there".</summary>
+    public abstract Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken);
 
-    public abstract bool ExistsFolder(Url url);
+    /// <summary>Whether a folder is at <paramref name="url"/>. A cancelled token is rethrown, not read as "not there".</summary>
+    public abstract Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken);
 
     public abstract Task CreateFolderAsync(Url url);
 
-    public abstract bool DeleteFile(Url url, bool moveToRecycleBin);
+    public abstract Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken);
 
-    public abstract bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin);
+    public abstract Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken);
+
+    // The synchronous members are the async ones waited on, so each service has one implementation. They are for callers
+    // that already run off the key handler and have no token to pass; the walkers use the async members.
+    public bool ExistsFile(Url url) => ExistsFileAsync(url, CancellationToken.None).GetAwaiter().GetResult();
+
+    public bool ExistsFolder(Url url) => ExistsFolderAsync(url, CancellationToken.None).GetAwaiter().GetResult();
+
+    public bool DeleteFile(Url url, bool moveToRecycleBin) => DeleteFileAsync(url, moveToRecycleBin, CancellationToken.None).GetAwaiter().GetResult();
+
+    public bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin) => DeleteFolderAsync(url, recursive, moveToRecycleBin, CancellationToken.None).GetAwaiter().GetResult();
 
     public abstract Task MoveAsync(Url sourceUrl, Url targetUrl, bool overwrite);
 

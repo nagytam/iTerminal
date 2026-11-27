@@ -123,8 +123,10 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitUntilAsync(() => dialog.SelectedDrive is not null, "a drive under the cursor");
 
         // The memory drive is listed first and has no volume to act on: walk down to a real one. The real
-        // drives are read in the background and can land after the first keys, so pause between the steps.
-        for (var step = 0; step < 100 && dialog.SelectedDrive?.DriveInfo is null; step++)
+        // drives are read in the background and can land well after the first keys (a slow runner's drive
+        // query outlasted the old fixed ten-second walk), so keep stepping within a generous time budget.
+        DateTime deadline = DateTime.UtcNow + TimeSpan.FromSeconds(60);
+        while (dialog.SelectedDrive?.DriveInfo is null && DateTime.UtcNow < deadline)
         {
             await _app.PressAsync("Down");
             await Task.Delay(100);

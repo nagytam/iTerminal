@@ -2435,6 +2435,24 @@
   <data name="DevelopmentStudio.AlreadyRunning" xml:space="preserve">
     <value>The program is running. It stops at a breakpoint.</value>
   </data>
+  <data name="DevelopmentStudio.AnalysisCancelled" xml:space="preserve">
+    <value>Code analysis of {0} cancelled.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisFailed" xml:space="preserve">
+    <value>Code analysis of {0} failed (exit {1}). The output says why.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunning" xml:space="preserve">
+    <value>Analyzing {0}: {1} elapsed, about {2} expected.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunningNoEstimate" xml:space="preserve">
+    <value>Analyzing {0}: {1} elapsed.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisSummary" xml:space="preserve">
+    <value>Code analysis of {0}: {1} error(s), {2} warning(s). Elapsed {3}.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
+    <value>Analysis</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>The debugger did not take the breakpoint: {0}</value>
   </data>
@@ -2452,6 +2470,9 @@
   </data>
   <data name="DevelopmentStudio.Busy" xml:space="preserve">
     <value>A command is still running; X cancels it ({0} was not started).</value>
+  </data>
+  <data name="DevelopmentStudio.BusyAnalysis" xml:space="preserve">
+    <value>A command is still running; X cancels it before analyzing.</value>
   </data>
   <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
     <value>A command is still running; X cancels it before measuring coverage.</value>
@@ -2489,6 +2510,9 @@
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>Ln {0}, Col {1}</value>
   </data>
+  <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
+    <value>Elapsed {0}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nothing here)</value>
   </data>
@@ -2512,6 +2536,9 @@
   </data>
   <data name="DevelopmentStudio.Found" xml:space="preserve">
     <value>Found {0} items. Enter opens a file; F5 starts debugging.</value>
+  </data>
+  <data name="DevelopmentStudio.HintAnalysis" xml:space="preserve">
+    <value>Analyze the code of the selected item: the Analysis tab lists the findings, and Enter or a click opens one</value>
   </data>
   <data name="DevelopmentStudio.HintBreakpoint" xml:space="preserve">
     <value>Toggle a breakpoint on the cursor line</value>
@@ -2541,7 +2568,10 @@
     <value>Move and resize the panels: arrows move the focused one to that edge, Shift+arrows resize it</value>
   </data>
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
-    <value>Make the item under the cursor the Main program: F5 and Ctrl+F5 start it</value>
+    <value>Set the main project (M): F5 and Ctrl+F5 start it</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>The item's menu: its commands, and Set as main project</value>
   </data>
   <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
     <value>Manage the NuGet packages of the selected solution or project</value>
@@ -2550,7 +2580,7 @@
     <value>Open the file (or run the test)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Explorer tab (Solution, Tests, Files) / output panel tab (Output, Debug, Coverage, Profile)</value>
+    <value>Explorer tab (Solution, Tests, Files) / output panel tab (Output, Errors, Analysis, Debug, Coverage, Profile)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Run without debugging</value>
@@ -2611,6 +2641,36 @@
   </data>
   <data name="DevelopmentStudio.MainTag" xml:space="preserve">
     <value>main</value>
+  </data>
+  <data name="DevelopmentStudio.MenuAnalyze" xml:space="preserve">
+    <value>Analyze code</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Clean</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Clear the main project</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Set as main project</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysis" xml:space="preserve">
+    <value>No code analysis yet. N analyzes the selected item, and its findings are listed here.</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysisFor" xml:space="preserve">
+    <value>{0} has no code analysis here.</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Open a file (Enter) and put the cursor on a line to set a breakpoint.</value>
@@ -2704,6 +2764,9 @@
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Running {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningAnalysis" xml:space="preserve">
+    <value>Analyzing {0}...</value>
   </data>
   <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
     <value>Measuring the coverage of {0}...</value>
@@ -6689,6 +6752,9 @@
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close</value>
   </data>
+  <data name="Hints.DevelopmentStudioAnalysis" xml:space="preserve">
+    <value>Enter or click:open the finding at its line  N:analyze  F7:output tab  X:cancel  Esc:close</value>
+  </data>
   <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
     <value>Type to edit  Ctrl+S:save  F9:breakpoint  F5:debug  F7:output tab  Esc:close</value>
   </data>
@@ -9815,7 +9881,7 @@
     <value>Folders, favourites and remote hosts: Folder selector (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Saved hosts and their credentials: Network browser (Ctrl+N).</value>
+    <value>Saved hosts and their credentials: Network browser (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Network interfaces: Network manager.</value>

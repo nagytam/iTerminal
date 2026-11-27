@@ -85,7 +85,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
 
-        await narrow.PressAsync("Ctrl+E");
+        await narrow.PressAsync("Alt+Shift+F5");
 
         await narrow.WaitForTextAsync("Unit Converter");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Nautical")), "the longest unit name");
@@ -205,7 +205,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
 
-        await narrow.PressAsync("Ctrl+E");
+        await narrow.PressAsync("Alt+Shift+F5");
 
         await narrow.WaitForTextAsync("Unit Converter");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Temperat")), "the Temperature category");
@@ -1214,10 +1214,10 @@ public class SmallScreenDialogsTest
     [Timeout(120_000)]
     [TestMethod]
     [DataRow("Alt+F11", "Verbundene Geräte")]
-    [DataRow("Ctrl+N", "Netzwerkbrowser")]
-    [DataRow("Ctrl+E", "Einheitenumrechner —")]
-    [DataRow("Ctrl+E", "Länge")]
-    [DataRow("Ctrl+E", "Zentimeter")]
+    [DataRow("Alt+Shift+F8", "Netzwerkbrowser")]
+    [DataRow("Alt+Shift+F5", "Einheitenumrechner —")]
+    [DataRow("Alt+Shift+F5", "Länge")]
+    [DataRow("Alt+Shift+F5", "Zentimeter")]
     [DataRow("Ctrl+F4", "iTerminal-Editor")]
     [DataRow("Ctrl+Shift+F10", "Der Name, unter dem")]
     [DataRow("Ctrl+Shift+F10", "Umgebung")]

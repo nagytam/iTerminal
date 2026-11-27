@@ -45,16 +45,16 @@ public class NetworkBrowserDialogCommandTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void Constructor_SetsCtrlNKey()
+    public void Constructor_SetsAltShiftF8Key()
     {
         var themeService = CreateThemeService();
         var command = new NetworkBrowserDialogCommand(CreateDialog(themeService));
 
         Assert.IsNotNull(command.Key);
-        Assert.AreEqual(ConsoleKey.N, command.Key!.ConsoleKey);
-        Assert.IsTrue(command.Key.Control);
-        Assert.IsFalse(command.Key.Shift);
-        Assert.IsFalse(command.Key.Alt);
+        Assert.AreEqual(ConsoleKey.F8, command.Key!.ConsoleKey);
+        Assert.IsFalse(command.Key.Control);
+        Assert.IsTrue(command.Key.Shift);
+        Assert.IsTrue(command.Key.Alt);
     }
 
     [Timeout(60_000)]

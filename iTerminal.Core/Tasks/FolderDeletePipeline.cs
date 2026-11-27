@@ -67,7 +67,7 @@ internal static class FolderDeletePipeline
                 {
                     try
                     {
-                        target.DeleteFile(fileUrl, moveToRecycleBin);
+                        await target.DeleteFileAsync(fileUrl, moveToRecycleBin, linkedCts.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {
@@ -134,7 +134,11 @@ internal static class FolderDeletePipeline
             cancellationToken.ThrowIfCancellationRequested();
             try
             {
-                target.DeleteFolder(folders[i], recursive: false, moveToRecycleBin);
+                await target.DeleteFolderAsync(folders[i], recursive: false, moveToRecycleBin, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

@@ -423,7 +423,7 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
 
     // --- existence ----------------------------------------------------------------------------
 
-    private bool Probe(Func<Task<bool>> ask)
+    private async Task<bool> ProbeAsync(Func<CancellationToken, Task<bool>> ask, CancellationToken cancellationToken)
     {
         if (!IsConnected)
         {
@@ -432,16 +432,16 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
 
         try
         {
-            return ask().GetAwaiter().GetResult();
+            return await ask(cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException)
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
         {
             Logger?.Warning(exception, "S3 exists check failed");
             return false;
         }
     }
 
-    public override bool ExistsFile(Url url) => Probe(async () =>
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => ProbeAsync(async token =>
     {
         var (bucket, key) = Split(url);
         if (bucket.Length == 0 || key.Length == 0)
@@ -449,11 +449,11 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
             return false;
         }
 
-        using var response = await SendS3Async(bucket, region => Build(Head, bucket, key, region)).ConfigureAwait(false);
+        using var response = await SendS3Async(bucket, region => Build(Head, bucket, key, region), cancellationToken: token).ConfigureAwait(false);
         return response.IsSuccessStatusCode;
-    });
+    }, cancellationToken);
 
-    public override bool ExistsFolder(Url url) => Probe(async () =>
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => ProbeAsync(async token =>
     {
         var (bucket, key) = Split(url);
         if (bucket.Length == 0)
@@ -463,13 +463,13 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
 
         if (key.Length == 0)
         {
-            using var head = await SendS3Async(bucket, region => Build(Head, bucket, string.Empty, region)).ConfigureAwait(false);
+            using var head = await SendS3Async(bucket, region => Build(Head, bucket, string.Empty, region), cancellationToken: token).ConfigureAwait(false);
             return head.IsSuccessStatusCode;
         }
 
         var prefix = key.EndsWith('/') ? key : key + "/";
         var query = new List<KeyValuePair<string, string>> { new("list-type", "2"), new("max-keys", "1"), new("prefix", prefix) };
-        using var response = await SendS3Async(bucket, region => Build(HttpMethod.Get, bucket, string.Empty, region, query)).ConfigureAwait(false);
+        using var response = await SendS3Async(bucket, region => Build(HttpMethod.Get, bucket, string.Empty, region, query), cancellationToken: token).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             return false;
@@ -477,7 +477,7 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
 
         var document = XDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
         return Elements(document, "Contents").Any();
-    });
+    }, cancellationToken);
 
     // --- transfer -----------------------------------------------------------------------------
 
@@ -551,9 +551,9 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
         }
     }
 
-    private async Task DeleteKeyAsync(string bucket, string key)
+    private async Task DeleteKeyAsync(string bucket, string key, CancellationToken cancellationToken = default)
     {
-        using var response = await SendS3Async(bucket, region => Build(HttpMethod.Delete, bucket, key, region)).ConfigureAwait(false);
+        using var response = await SendS3Async(bucket, region => Build(HttpMethod.Delete, bucket, key, region), cancellationToken: cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NotFound)
         {
             throw await ErrorAsync("delete", response).ConfigureAwait(false);
@@ -561,7 +561,7 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
     }
 
     // There is no bin to move to; the flag is ignored, as on the other remote drives.
-    public override bool DeleteFile(Url url, bool moveToRecycleBin)
+    public override async Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken)
     {
         var (bucket, key) = Split(url);
         if (bucket.Length == 0 || key.Length == 0)
@@ -569,11 +569,11 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
             return false;
         }
 
-        DeleteKeyAsync(bucket, key).GetAwaiter().GetResult();
+        await DeleteKeyAsync(bucket, key, cancellationToken).ConfigureAwait(false);
         return true;
     }
 
-    public override bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin)
+    public override async Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken)
     {
         var (bucket, key) = Split(url);
         if (bucket.Length == 0 || key.Length == 0)
@@ -582,9 +582,9 @@ public class S3FileSystemService : HttpFileSystemServiceBase, IS3FileSystemServi
         }
 
         var prefix = key.EndsWith('/') ? key : key + "/";
-        foreach (var existing in ListAllKeysAsync(bucket, prefix, CancellationToken.None).GetAwaiter().GetResult())
+        foreach (var existing in await ListAllKeysAsync(bucket, prefix, cancellationToken).ConfigureAwait(false))
         {
-            DeleteKeyAsync(bucket, existing).GetAwaiter().GetResult();
+            await DeleteKeyAsync(bucket, existing, cancellationToken).ConfigureAwait(false);
         }
 
         // The placeholder some tools leave for an empty folder is one of the keys above when present.

@@ -318,4 +318,47 @@ public class WebDavFileSystemServiceTest
 
         Assert.AreEqual(2, created);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task DeleteAsync_ReportsWhetherThereWasSomethingToDelete_LikeTheSynchronousMember()
+    {
+        var (service, _, _) = Create(request => request.Uri.AbsolutePath.Contains("gone")
+            ? Reply(HttpStatusCode.NotFound)
+            : Reply(HttpStatusCode.NoContent));
+        using var owned = service;
+        service.Connect("example.org", secure: false, null, null);
+
+        Assert.IsTrue(await service.DeleteFileAsync(new Url("dav://example.org/here.txt"), moveToRecycleBin: true, CancellationToken.None));
+        Assert.IsFalse(await service.DeleteFileAsync(new Url("dav://example.org/gone.txt"), moveToRecycleBin: false, CancellationToken.None));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AsyncMembers_RethrowACancelledToken_InsteadOfReadingItAsNotThere()
+    {
+        var (service, _, _) = Create(_ => Reply(HttpStatusCode.NoContent));
+        using var owned = service;
+        service.Connect("example.org", secure: false, null, null);
+        using var cancelled = new CancellationTokenSource();
+        await cancelled.CancelAsync();
+
+        var url = new Url("dav://example.org/here.txt");
+        await AssertCancelledAsync(() => service.ExistsFileAsync(url, cancelled.Token));
+        await AssertCancelledAsync(() => service.DeleteFileAsync(url, moveToRecycleBin: false, cancelled.Token));
+    }
+
+    private static async Task AssertCancelledAsync(Func<Task> call)
+    {
+        try
+        {
+            await call();
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        Assert.Fail("A cancelled token must end the call with OperationCanceledException.");
+    }
 }

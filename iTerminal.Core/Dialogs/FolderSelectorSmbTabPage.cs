@@ -24,7 +24,7 @@ namespace iTerminal.Core.Dialogs;
 /// A host that lists no shares anonymously can be logged in to with L: the username and password are asked
 /// for, the host's shares are listed with them, and the login is kept in the password safe so the shares are
 /// listed again at every scan and opening one as that user finds the password. A saved connection (the
-/// Network Browser, Ctrl+N) still works as before.
+/// Network Browser, Alt+Shift+F8) still works as before.
 ///
 /// The scan and the logins run on background tasks and park their results; <see cref="OnIdle"/> applies
 /// them, so the list is only ever rebuilt on the UI thread.

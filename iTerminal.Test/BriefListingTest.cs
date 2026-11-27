@@ -3,8 +3,8 @@ using System.Text.RegularExpressions;
 namespace iTerminal.Test;
 
 /// <summary>
-/// Ctrl+T, end to end: the focused panel lists its entries in several name columns, names only, and a second
-/// Ctrl+T gives the one-column listing back.
+/// Alt+Shift+F11, end to end: the focused panel lists its entries in several name columns, names only, and a second
+/// Alt+Shift+F11 gives the one-column listing back.
 /// </summary>
 [TestClass]
 public class BriefListingTest
@@ -21,7 +21,7 @@ public class BriefListingTest
 
     [Timeout(120_000)]
     [TestMethod]
-    public async Task CtrlT_ListsTheFocusedPanelInColumns_AndBack()
+    public async Task AltShiftF11_ListsTheFocusedPanelInColumns_AndBack()
     {
         _app = await TerminalApp.StartAsync(seed: (left, _) =>
         {
@@ -36,7 +36,7 @@ public class BriefListingTest
         var longScreen = await _app.WaitUntilAsync(s => _app.LeftPanel(s).Any(row => row.Contains("alpha.txt")), "the Long listing");
         Assert.IsFalse(_app.LeftPanel(longScreen).Any(HasTwoNamesOnARow), "Long shows one name per row");
 
-        await _app.PressAsync("Ctrl+T");
+        await _app.PressAsync("Alt+Shift+F11");
 
         // Brief: several names share a row, and no row carries a date.
         var briefScreen = await _app.WaitUntilAsync(
@@ -45,7 +45,7 @@ public class BriefListingTest
         var rows = _app.LeftPanel(briefScreen);
         Assert.IsFalse(rows.Any(row => Regex.IsMatch(row, @"\d{4}-\d{2}-\d{2}")), "Brief shows names only" + Environment.NewLine + briefScreen.Dump());
 
-        await _app.PressAsync("Ctrl+T");
+        await _app.PressAsync("Alt+Shift+F11");
 
         // Back in one column.
         var backScreen = await _app.WaitUntilAsync(

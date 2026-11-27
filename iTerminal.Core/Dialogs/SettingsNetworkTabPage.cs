@@ -13,7 +13,7 @@ public class SettingsNetworkTabPage : TabPage
 {
     internal static string[] Lines =>
     [
-        iConsole.Localization.UiText.Get("SettingsPage.Hosts", "Saved hosts and their credentials: Network browser (Ctrl+N)."),
+        iConsole.Localization.UiText.Get("SettingsPage.Hosts", "Saved hosts and their credentials: Network browser (Alt+Shift+F8)."),
         iConsole.Localization.UiText.Get("SettingsPage.Interfaces", "Network interfaces: Network manager."),
     ];
 

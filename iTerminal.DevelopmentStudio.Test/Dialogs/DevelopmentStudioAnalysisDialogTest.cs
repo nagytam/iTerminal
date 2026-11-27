@@ -15,8 +15,8 @@ public class DevelopmentStudioAnalysisDialogTest
 {
     private static async Task<DevelopmentStudioDialog> OpenAsync(string folder, IReadOnlyList<DevelopmentProject> items, FakeProcessRunner runner)
     {
-        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), new BreakpointStore(),
-            new MainProgramStore(), new FakeDotnetSolutionService { Sdks = [] }, TestTheme(), new CSharpLanguageServer(new FakeLanguageServer()), iConsole.Services.SyntaxHighlightingService.Default, new FakeSdkManager(), new FakeNuGetPackageService(), new FakePromptService())
+        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), new BreakpointStore(new TestDatabase()),
+            new MainProgramStore(), new FakeDotnetSolutionService { Sdks = [] }, TestTheme(), new CSharpLanguageServer(new FakeLanguageServer()), iConsole.Services.SyntaxHighlightingService.Default, new FakeSdkManager(), new FakeSettingsService(), new FakeNuGetPackageService(), new FakePromptService())
         {
             Folder = folder,
         };
@@ -72,7 +72,12 @@ public class DevelopmentStudioAnalysisDialogTest
 
             await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
-            await WaitUntilAsync(() => dialog.EditorLines.Any(line => line.Contains("root", StringComparison.Ordinal)), "the file to open");
+            // The file is put in the editor on the idle pass, as the application's loop does.
+            await WaitUntilAsync(() =>
+            {
+                dialog.OnIdle();
+                return dialog.EditorLines.Any(line => line.Contains("root", StringComparison.Ordinal));
+            }, "the file to open");
         }
         finally
         {

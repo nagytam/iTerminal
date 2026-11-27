@@ -2293,6 +2293,24 @@
   <data name="DevelopmentStudio.AlreadyRunning" xml:space="preserve">
     <value>El programa se está ejecutando. Se detiene en un punto de interrupción.</value>
   </data>
+  <data name="DevelopmentStudio.AnalysisCancelled" xml:space="preserve">
+    <value>Analisi del codice di {0} annullata.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisFailed" xml:space="preserve">
+    <value>L'analisi del codice di {0} non è riuscita (uscita {1}). L'output indica il motivo.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunning" xml:space="preserve">
+    <value>Analisi di {0}: {1} trascorsi, circa {2} previsti.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisRunningNoEstimate" xml:space="preserve">
+    <value>Analisi di {0}: {1} trascorsi.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisSummary" xml:space="preserve">
+    <value>Analisi del codice di {0}: {1} errore/i, {2} avviso/i. Tempo {3}.</value>
+  </data>
+  <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
+    <value>Analisi</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>El depurador no aceptó el punto de interrupción: {0}</value>
   </data>
@@ -2310,6 +2328,9 @@
   </data>
   <data name="DevelopmentStudio.Busy" xml:space="preserve">
     <value>Un comando sigue en ejecución; X lo cancela ({0} no se inició).</value>
+  </data>
+  <data name="DevelopmentStudio.BusyAnalysis" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla prima di analizzare.</value>
   </data>
   <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
     <value>Un comando è ancora in esecuzione; X lo annulla prima della misura.</value>
@@ -2347,6 +2368,9 @@
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>Riga {0}, Col {1}</value>
   </data>
+  <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
+    <value>Tempo trascorso {0}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nada aquí)</value>
   </data>
@@ -2370,6 +2394,9 @@
   </data>
   <data name="DevelopmentStudio.Found" xml:space="preserve">
     <value>{0} elementos encontrados. Intro abre un archivo; F5 inicia la depuración.</value>
+  </data>
+  <data name="DevelopmentStudio.HintAnalysis" xml:space="preserve">
+    <value>Analizza il codice dell'elemento selezionato: la scheda Analisi elenca i risultati; Invio o un clic ne apre uno</value>
   </data>
   <data name="DevelopmentStudio.HintBreakpoint" xml:space="preserve">
     <value>Alternar un punto de interrupción en la línea del cursor</value>
@@ -2399,7 +2426,10 @@
     <value>Sposta e ridimensiona i pannelli: le frecce spostano il pannello attivo verso quel bordo, Maiusc+frecce ne cambiano le dimensioni</value>
   </data>
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
-    <value>Rendi l'elemento sotto il cursore il programma principale: F5 e Ctrl+F5 lo avviano</value>
+    <value>Imposta il progetto principale (M): F5 e Ctrl+F5 lo avviano</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Il menu dell'elemento: i suoi comandi e Imposta come progetto principale</value>
   </data>
   <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
     <value>Administrar los paquetes NuGet de la solución o del proyecto seleccionado</value>
@@ -2408,7 +2438,7 @@
     <value>Abrir el archivo (o ejecutar la prueba)</value>
   </data>
   <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
-    <value>Scheda dell'esplora (Soluzione, Test, File) / scheda del pannello di output (Output, Debug, Copertura, Profilo)</value>
+    <value>Scheda dell'esplora (Soluzione, Test, File) / scheda del pannello di output (Output, Errori, Analisi, Debug, Copertura, Profilo)</value>
   </data>
   <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
     <value>Ejecutar sin depurar</value>
@@ -2469,6 +2499,36 @@
   </data>
   <data name="DevelopmentStudio.MainTag" xml:space="preserve">
     <value>principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuAnalyze" xml:space="preserve">
+    <value>Analizza codice</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Compila</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Pulisci</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Rimuovi il progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Esegui il debug</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Esegui</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Imposta come progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Testa</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysis" xml:space="preserve">
+    <value>Nessuna analisi del codice ancora. N analizza l'elemento selezionato e i risultati sono elencati qui.</value>
+  </data>
+  <data name="DevelopmentStudio.NoAnalysisFor" xml:space="preserve">
+    <value>{0} non ha un'analisi del codice qui.</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Abra un archivo (Intro) y coloque el cursor en una línea para poner un punto de interrupción.</value>
@@ -2562,6 +2622,9 @@
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Ejecutando {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningAnalysis" xml:space="preserve">
+    <value>Analisi di {0}...</value>
   </data>
   <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
     <value>Misura della copertura di {0}...</value>
@@ -6483,6 +6546,9 @@
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:depurar F9:punto de interrupción F10/F11:paso Espacio:marcar B/C/T/R:compilar/limpiar/probar/ejecutar V:SDK K:SDKs S/F:SBOM F6/F7:paneles Intro:abrir Esc:cerrar</value>
   </data>
+  <data name="Hints.DevelopmentStudioAnalysis" xml:space="preserve">
+    <value>Invio o clic:apri il risultato alla sua riga  N:analizza  F7:scheda  X:annulla  Esc:chiudi</value>
+  </data>
   <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
     <value>Scrivi per modificare  Ctrl+S:salva  F9:punto di interruzione  F5:debug  F7:scheda  Esc:chiudi</value>
   </data>
@@ -9609,7 +9675,7 @@
     <value>Cartelle, preferiti e host remoti: selettore cartelle (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Host salvati e loro credenziali: esplora rete (Ctrl+N).</value>
+    <value>Host salvati e loro credenziali: esplora rete (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Interfacce di rete: gestione rete.</value>
