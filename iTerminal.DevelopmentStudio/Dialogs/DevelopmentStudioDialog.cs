@@ -1,3 +1,4 @@
+using System.Text;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -49,6 +50,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The result of the last test run of one test item.</summary>
     private sealed record TestOutcome(bool Passed, TestTotals Totals);
 
+    /// <summary>A source file read in the background: its lines, its line ending, and why it could not be shown (null when it was read).</summary>
+    private sealed record LoadedSource(string Path, string[] Lines, string LineEnding, string? Error);
+
     /// <summary>Output lines kept for the log; the oldest are dropped past this.</summary>
     public const int MaxOutputLines = 5000;
 
@@ -81,29 +85,6 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             if (line.Contains("succeeded", StringComparison.OrdinalIgnoreCase) || line.Contains("passed", StringComparison.OrdinalIgnoreCase)) return Color.Green;
             return null;
         }
-
-        /// <summary>The colours of the source rows, by the highlighter's palette. Null for the output and error lists.</summary>
-        public ISyntaxHighlightingService? Highlighting { get; set; }
-
-        /// <summary>The coloured stretches of each source row, in the row's own characters (the gutter already counted). Null for the other lists.</summary>
-        public IReadOnlyList<IReadOnlyList<SyntaxSpan>>? RowSpans { get; set; }
-
-        protected override void ColorizeItemText(ConxelString row, int index)
-        {
-            if (Highlighting is null || RowSpans is null || index < 0 || index >= RowSpans.Count) return;
-            foreach (SyntaxSpan span in RowSpans[index])
-            {
-                if (span.Kind == SyntaxKind.Plain) continue;
-                Color color = Highlighting.Palette.ColorOf(span.Kind, Color.White);
-                int end = Math.Min(row.Count, span.Start + span.Length);
-                for (int x = Math.Max(0, span.Start); x < end; x++)
-                {
-                    Conxel cell = row.String[x];
-                    cell.ForegroundColor = color;
-                    row.String[x] = cell;
-                }
-            }
-        }
     }
 
     private readonly IDevelopmentWorkspaceScanner _scanner;
@@ -114,6 +95,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly IDotnetSolutionService _dotnet;
     private readonly ISyntaxHighlightingService _highlighting;
     private readonly ISdkManager _sdkManager;
+    /// <summary>Shows the explorer's context menu (the Menu key). Null where no popover service is registered, as in the tests.</summary>
+    private readonly IPopoverService? _popover;
 
     /// <summary>The JDK home Java builds and runs use, or null for the javac and java on the PATH. Read when the studio opens and when the SDK manager closes.</summary>
     private string? _javaHome;
@@ -136,10 +119,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private string _solutionPath = string.Empty;
 
     private readonly ConcurrentObservableCollection<ExplorerRow> _explorerItems = new();
-    private readonly ConcurrentObservableCollection<string> _editorItems = new();
     private readonly ConcurrentObservableCollection<string> _outputItems = new();
     private readonly ExplorerListBox _explorerListBox;
-    private readonly ViewListBox _editorListBox;
+    private readonly StudioSourceEditor _editor;
     private readonly ViewListBox _outputListBox;
 
     /// <summary>Guards everything the background tasks write: output, the debug state and the source.</summary>
@@ -154,15 +136,19 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private long _seenServerVersion = -1;
     private bool _startingShown;
     private bool _missingAnnounced;
-    private readonly List<string> _sourceLines = [];
+    /// <summary>The file open in the editor, or empty when none is. Set on the UI thread, when a read is put in the editor.</summary>
     private string _sourcePath = string.Empty;
-    /// <summary>Whether the open file has edits not yet saved. <see cref="_sourceVersion"/> counts every edit, so a save
-    /// that lands after more typing does not clear the flag.</summary>
-    private bool _sourceDirty;
-    private long _sourceVersion;
-    /// <summary>The line ending the open file is saved with, as the file had it.</summary>
-    private string _sourceLineEnding = "\n";
+    /// <summary>The newest file asked for. A read that finishes for an older request is dropped.</summary>
     private string _sourceRequest = string.Empty;
+    /// <summary>A file read in the background, waiting for the UI thread to put it in the editor (<see cref="ApplyLoadedSource"/>).</summary>
+    private LoadedSource? _loadedSource;
+    /// <summary>The line the editor shows once its file is the one in it: a stop's line, or the line an open asked for.</summary>
+    private (string Path, int Line)? _reveal;
+    /// <summary>What the last save wrote, applied on the UI thread: when the editor still holds that text, it is clean again.</summary>
+    private (string Path, string Text)? _savedWrite;
+    /// <summary>Set by a background change to the marks in the editor's gutter; the UI thread redraws them on its idle pass.</summary>
+    private volatile bool _marksStale;
+    private static readonly UTF8Encoding Utf8NoBom = new(false);
     private IReadOnlyList<DebugStackFrame> _stack = [];
     private readonly List<DebugVariable> _locals = [];
     private readonly List<string> _watchExpressions = [];
@@ -255,7 +241,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         IThemeService themeService,
         CSharpLanguageServer languageServer,
         ISyntaxHighlightingService highlighting,
-        ISdkManager sdkManager)
+        ISdkManager sdkManager,
+        IPopoverService? popoverService = null)
         : base(nameof(DevelopmentStudioDialog), themeService)
     {
         _scanner = scanner;
@@ -267,29 +254,26 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _mainProgram = mainProgram;
         _dotnet = dotnetSolutionService;
         _sdkManager = sdkManager;
+        _popover = popoverService;
         Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
 
         _explorerListBox = new ExplorerListBox(
             new ListBoxModel<ExplorerRow>(_explorerItems) { TransformItem = (row, _) => new ListItem<ExplorerRow>(row) { Value = row.DisplayName, IsEnabled = true } },
             themeService);
-        _editorListBox = new ViewListBox(
-            new ListBoxModel<string>(_editorItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
-            themeService)
-        {
-            Highlighting = highlighting,
-        };
+        _editor = new StudioSourceEditor(themeService, highlighting);
         _outputListBox = new ViewListBox(
             new ListBoxModel<string>(_outputItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
             themeService);
 
         // Each panel is a component of its own; the dock places them in the order _layout gives.
         _dock = new DockPanel(themeService) { Gap = 1 };
-        _panels[StudioPanelKind.Editor] = new StudioPanel(StudioPanelKind.Editor, _editorListBox, EditorTitle, themeService);
+        _panels[StudioPanelKind.Editor] = new StudioPanel(StudioPanelKind.Editor, _editor, EditorTitle, themeService);
         _panels[StudioPanelKind.Explorer] = new StudioPanel(StudioPanelKind.Explorer, _explorerListBox, ExplorerHeading, themeService);
         _panels[StudioPanelKind.Output] = new StudioPanel(StudioPanelKind.Output, _outputListBox, () => string.Empty, themeService)
         {
             BandPainter = (buffer, x, y, width, colorScheme, focused) => DrawOutputTabs(buffer, x, y, width, colorScheme, focused),
         };
+        ShowNoSource();
         AddControl(_dock);
         RebuildDock();
     }
@@ -307,7 +291,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     public IReadOnlyList<string> ExplorerRows => _explorerItems.Select(row => row.DisplayName).ToList();
 
     /// <summary>The lines of the editor as they are drawn, in order (the gutter included).</summary>
-    public IReadOnlyList<string> EditorLines => [.. _editorItems];
+    public IReadOnlyList<string> EditorLines => [.. _editor.TextModel.Lines.AsSnapshot()];
+
+    /// <summary>The gutter mark of a line of the editor (1-based), such as the breakpoint, the stop line or an error; null for none.</summary>
+    public string? EditorMark(int lineNumber) => _editor.MarkAt(lineNumber - 1);
 
     /// <summary>The lines of the bottom output panel as they are drawn, in order.</summary>
     public IReadOnlyList<string> OutputLines => [.. _outputItems];
@@ -440,6 +427,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("Enter", UiText.Get("DevelopmentStudio.HintOpen", "Open the file (or run the test)"));
         yield return ("Left / Right", UiText.Get("DevelopmentStudio.HintExpand", "Collapse or expand the solution, project or folder under the cursor"));
         yield return ("M", UiText.Get("DevelopmentStudio.HintMain", "Make the item under the cursor the Main program: F5 and Ctrl+F5 start it"));
+        yield return ("Menu", UiText.Get("DevelopmentStudio.HintMenu", "The item's menu: its commands, and Set as main project"));
         yield return ("Space", UiText.Get("DevelopmentStudio.HintCheck", "Check or uncheck the .NET project; B, C, T and R then run on the checked ones"));
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
         yield return ("V", UiText.Get("DevelopmentStudio.HintSdk", "Switch to the next .NET SDK"));
@@ -455,8 +443,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         // In the layout mode Esc ends the mode rather than closing the dialog.
         if (_layoutMode && HandleLayoutKey(keyEvent)) return true;
 
-        // While the editor has the focus and a file is open, the keys type into the file: its letters are text, not commands.
-        if (TryEditSource(keyEvent)) return true;
+        // While the editor has the focus and a file is open, the editor takes the keys: its letters are text, not commands, and the
+        // cursor, selection, undo and clipboard keys are its own. A key it declines goes on to the studio's commands.
+        if (IsEditorKey(keyEvent) && await _editor.HandleKeyEventAsync(keyEvent)) return true;
 
         bool plain = !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;
         bool shift = keyEvent.Shift && !keyEvent.Alt && !keyEvent.Control;
@@ -560,6 +549,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             case ConsoleKey.G when plain:
                 OpenCoverageFileAtCursor();
                 return true;
+            case ConsoleKey.Applications when plain:
+                await ShowExplorerMenuAsync();
+                return true;
             case ConsoleKey.K when plain:
                 await OpenSdkManagerAsync();
                 return true;
@@ -649,6 +641,57 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         if (path is null || !container || _expandedFolders.Contains(path) == expand) return;
         ToggleExpandedAt(path);
     }
+
+    /// <summary>
+    /// The Menu key on the Solution Explorer: a menu of what can be done with the item under the cursor. Its first entry sets the
+    /// item as the main project (or clears it), the way M does; the others are the build, run, debug, test and clean commands.
+    /// Does nothing without a popover service, with the Explorer not focused, or with no item under the cursor.
+    /// </summary>
+    private async Task ShowExplorerMenuAsync()
+    {
+        var item = SelectedItem;
+        if (_popover is null || item is null || FocusedPanelKind() != StudioPanelKind.Explorer) return;
+
+        var menu = new ContextMenu(_popover, ThemeService);
+        if (item.Kind != DevelopmentProjectKind.Solution)
+        {
+            bool main = IsMain(item);
+            menu.Items.Add(new ContextMenuItem(main
+                ? UiText.Get("DevelopmentStudio.MenuClearMain", "Clear the main project")
+                : UiText.Get("DevelopmentStudio.MenuSetMain", "Set as main project"))
+            {
+                Shortcut = "M",
+                IsEnabled = main || item.IsStartable,
+                Execute = () =>
+                {
+                    ToggleMainProgramAtCursor();
+                    return Task.CompletedTask;
+                },
+            });
+        }
+
+        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuBuild", "Build"), "B", () => RunSelected("build")));
+        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuRun", "Run"), "R", () => RunSelected("run")));
+        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuDebug", "Debug"), "F5", StartOrContinueDebugging));
+        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuTest", "Test"), "T", () => RunSelected("test")));
+        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuClean", "Clean"), "C", () => RunSelected("clean")));
+
+        // The menu opens beside the cursor row, as a click on that row would.
+        var list = _explorerListBox.ScrollableModel;
+        var point = new Position(_explorerListBox.AbsolutePosition.X + 2, _explorerListBox.AbsolutePosition.Y + list.CursorPosition.Y - list.ScrollPosition.Y + 1);
+        await menu.OpenAtAsync(this, point);
+    }
+
+    private static ContextMenuItem CommandMenuItem(string title, string shortcut, Action run) =>
+        new(title)
+        {
+            Shortcut = shortcut,
+            Execute = () =>
+            {
+                run();
+                return Task.CompletedTask;
+            },
+        };
 
     /// <summary>F6 cycles the left pane: Solution Explorer, Test Explorer, File Explorer.</summary>
     private void ToggleExplorerMode()
@@ -999,62 +1042,109 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>Rebuilds both the editor and the output panel.</summary>
     private void RebuildView()
     {
-        RebuildEditor();
+        MarkEditorStale();
         RebuildOutputPanel();
     }
 
-    /// <summary>Rebuilds the editor: the open file with its gutter (breakpoint, stop line, coverage), or the hint when none is open.</summary>
-    private void RebuildEditor()
+    /// <summary>
+    /// Marks the editor's gutter for a redraw on the UI thread's next idle pass. A background task uses this, since it must not
+    /// touch the editor; a change made on the UI thread calls <see cref="RefreshEditorMarks"/> directly.
+    /// </summary>
+    private void MarkEditorStale() => _marksStale = true;
+
+    /// <summary>
+    /// Rebuilds the gutter marks of the open file, in order of precedence (the last one wins): the coverage, the server's
+    /// diagnostics, the breakpoints and the stop line. Runs on the UI thread only.
+    /// </summary>
+    private void RefreshEditorMarks()
     {
-        var lines = new List<string>();
-        var rowSpans = new List<IReadOnlyList<SyntaxSpan>>();
+        _marksStale = false;
+        string path;
+        lock (_stateLock) path = _sourcePath;
+
+        var marks = new Dictionary<int, string>();
+        if (path.Length > 0)
+        {
+            CoverageFile? covered = _coverage?.Files.FirstOrDefault(file => file.Path.Equals(path, StringComparison.OrdinalIgnoreCase));
+            if (covered is not null)
+            {
+                foreach ((int number, int hits) in covered.Hits) marks[number - 1] = hits > 0 ? "+" : "-";
+            }
+
+            foreach ((int number, string mark) in LiveMarks(path)) marks[number - 1] = mark;
+            foreach (int number in _breakpoints.LinesIn(path)) marks[number - 1] = "●";
+
+            lock (_stateLock)
+            {
+                if (_stopLine > 0 && _stopPath.Equals(path, StringComparison.OrdinalIgnoreCase)) marks[_stopLine - 1] = "→";
+            }
+        }
+
+        _editor.SetMarks(marks);
+    }
+
+    /// <summary>The hint shown while no file is open: a read-only line that no key can change.</summary>
+    private void ShowNoSource()
+    {
+        lock (_stateLock) _sourcePath = string.Empty;
+        _editor.IsReadOnly = false;
+        _editor.Syntax = null;
+        _editor.ReplaceAllText([UiText.Get("DevelopmentStudio.NoSource", "Select a file in the explorer and press Enter to open it here.")], "\n", Utf8NoBom);
+        _editor.IsReadOnly = true;
+        RefreshEditorMarks();
+    }
+
+    /// <summary>Puts the file read in the background into the editor. Runs on the UI thread, from the idle pass.</summary>
+    private void ApplyLoadedSource()
+    {
+        LoadedSource? loaded;
         lock (_stateLock)
         {
-            if (_sourcePath.Length == 0)
-            {
-                lines.Add(UiText.Get("DevelopmentStudio.NoSource", "Select a file in the explorer and press Enter to open it here."));
-                rowSpans.Add([]);
-            }
-
-            // Java, C#, PowerShell, Python and the other languages the highlighter knows are coloured line by line; a block
-            // comment carries from one line to the next, so the lines are tokenized in order.
-            SyntaxLanguage? language = _highlighting.FindByFile(_sourcePath);
-            bool inComment = false;
-            var spans = new List<SyntaxSpan>();
-            CoverageFile? covered = _coverage?.Files.FirstOrDefault(file => file.Path.Equals(_sourcePath, StringComparison.OrdinalIgnoreCase));
-            Dictionary<int, string> liveMarks = LiveMarks(_sourcePath);
-            for (int i = 0; i < _sourceLines.Count; i++)
-            {
-                int number = i + 1;
-                bool isStop = number == _stopLine && _sourcePath.Equals(_stopPath, StringComparison.OrdinalIgnoreCase);
-                string gutter = isStop ? "→"
-                    : _breakpoints.Contains(_sourcePath, number) ? "●"
-                    : liveMarks.TryGetValue(number, out string? liveMark) ? liveMark
-                    : covered is not null && covered.Hits.TryGetValue(number, out int hits) ? (hits > 0 ? "+" : "-")
-                    : " ";
-                lines.Add($"{gutter}{number,5}  {_sourceLines[i]}");
-
-                if (language is null)
-                {
-                    rowSpans.Add([]);
-                    continue;
-                }
-
-                spans.Clear();
-                inComment = _highlighting.Tokenize(language, _sourceLines[i], inComment, spans);
-                rowSpans.Add([.. spans.Select(span => span with { Start = span.Start + GutterWidth })]);
-            }
+            loaded = _loadedSource;
+            _loadedSource = null;
         }
 
-        if (lines.Count == 0)
+        if (loaded is null) return;
+        if (IsSourceDirty)
         {
-            lines.Add(string.Empty);
-            rowSpans.Add([]);
+            // Edits the file would replace are kept, and the file is not opened over them (a debugger stop in another file, say).
+            _editor.IsReadOnly = false;
+            SetStatus(UiText.Get("DevelopmentStudio.UnsavedSource", "Unsaved changes in the editor: Ctrl+S saves them first."), StatusSeverity.Error);
+            return;
         }
 
-        _editorItems.ReplaceAll(lines);
-        _editorListBox.RowSpans = rowSpans;
-        _editorListBox.UpdateModel();
+        if (loaded.Error is not null)
+        {
+            ShowNoSource();
+            SetStatus(loaded.Error, StatusSeverity.Error);
+            RebuildView();
+            return;
+        }
+
+        lock (_stateLock) _sourcePath = loaded.Path;
+        _editor.IsReadOnly = false;
+        _editor.Syntax = _highlighting.FindByFile(loaded.Path);
+        _editor.ReplaceAllText(loaded.Lines.Length == 0 ? new[] { string.Empty } : loaded.Lines, loaded.LineEnding, Utf8NoBom);
+        RefreshEditorMarks();
+        RevealPending();
+        SetStatus(Path.GetFileName(loaded.Path), StatusSeverity.Info);
+        RebuildView();
+    }
+
+    /// <summary>Moves the editor's cursor to the line a stop or an open asked for, once that file is the one in the editor.</summary>
+    private void RevealPending()
+    {
+        (string Path, int Line)? reveal;
+        string path;
+        lock (_stateLock)
+        {
+            reveal = _reveal;
+            path = _sourcePath;
+        }
+
+        if (reveal is not { } target || !path.Equals(target.Path, StringComparison.OrdinalIgnoreCase)) return;
+        lock (_stateLock) _reveal = null;
+        _editor.ShowLine(Math.Max(0, target.Line - 1), 0);
     }
 
     /// <summary>Rebuilds the output panel for its tab: the output log, the debug view, the coverage or the profile.</summary>
@@ -1223,10 +1313,14 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     {
         base.OnIdle();
         ApplySdkReload();
+        ApplyLoadedSource();
+        ApplySavedText();
+        if (_marksStale) RefreshEditorMarks();
+        RevealPending();
         long version = _languageServer.Version;
         if (version == _seenServerVersion) return;
         _seenServerVersion = version;
-        RebuildEditor();
+        RefreshEditorMarks();
         RebuildErrorPanel();
         ShowServerStatus();
     }
@@ -1309,7 +1403,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
     }
 
-    /// <summary>Opens a source file in the editor. The read runs on a background task; the newest request wins.</summary>
+    /// <summary>
+    /// Opens a source file in the editor and gives the editor the focus. The read runs on a background task and the newest request
+    /// wins; the text is put in the editor on the UI thread's idle pass (<see cref="ApplyLoadedSource"/>), with the cursor on <paramref name="line"/>.
+    /// </summary>
     private void OpenSource(string path, int line = 1)
     {
         if (IsSourceDirty)
@@ -1319,70 +1416,60 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             return;
         }
 
-        _sourceRequest = path;
+        lock (_stateLock)
+        {
+            _sourceRequest = path;
+            _reveal = (path, line);
+        }
 
-        // The file the user opened takes the focus at once, so the next key types into it; the read below fills it in.
-        ResetFocus();
-        _panels[StudioPanelKind.Editor].Body.SetFocus();
+        // Read-only until the file is in the editor, so a key typed in the meantime cannot be lost with the old text.
+        _editor.IsReadOnly = true;
+        _editor.SetFocus();
         _ = Task.Run(() =>
         {
-            string[] lines;
-            string lineEnding = "\n";
-            string? error = null;
-            try
+            LoadedSource loaded = ReadSource(path);
+            if (loaded.Error is null && path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
             {
-                if (new FileInfo(path).Length > MaxSourceBytes)
-                {
-                    lines = [];
-                    error = UiText.Get("DevelopmentStudio.TooLarge", "The file is too large to show here.");
-                }
-                else
-                {
-                    lines = File.ReadAllLines(path);
-                    lineEnding = File.ReadAllText(path).Contains("\r\n", StringComparison.Ordinal) ? "\r\n" : "\n";
-                }
-            }
-            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-            {
-                lines = [];
-                error = exception.Message;
+                _languageServer.OpenFile(ServerFolder, path, string.Join('\n', loaded.Lines));
             }
 
             lock (_stateLock)
             {
                 if (_sourceRequest != path) return;
-                _sourcePath = path;
-                _sourceLines.Clear();
-                _sourceLines.AddRange(lines);
-                _sourceLineEnding = lineEnding;
-                _sourceDirty = false;
-                _sourceVersion++;
+                _loadedSource = loaded;
             }
-
-            if (error is null && path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
-            {
-                _languageServer.OpenFile(ServerFolder, path, string.Join('\n', lines));
-            }
-
-            RebuildView();
-            _editorListBox.ScrollableModel.CursorPosition.Y = Math.Clamp(line - 1, 0, Math.Max(0, lines.Length - 1));
-            SetStatus(error ?? Path.GetFileName(path), error is null ? StatusSeverity.Info : StatusSeverity.Error);
         }, CancellationToken.None);
     }
 
-    /// <summary>Columns before the text of a source row: the gutter mark, a five-column line number and two spaces.</summary>
-    private const int GutterWidth = 8;
-
-    /// <summary>The 1-based line under the source cursor, or 0 when the source view is not showing a file.</summary>
-    private int CursorLine
+    /// <summary>Reads a source file for the editor. Runs on a background task: it never touches the controls.</summary>
+    private static LoadedSource ReadSource(string path)
     {
-        get
+        try
         {
-            var rows = _editorListBox.ListModel.ListItems;
-            var index = (int)_editorListBox.ScrollableModel.CursorPosition.Y;
-            return index >= 0 && index < rows.Count && rows.Count > 0 ? index + 1 : 0;
+            if (new FileInfo(path).Length > MaxSourceBytes)
+            {
+                return new LoadedSource(path, [], "\n", UiText.Get("DevelopmentStudio.TooLarge", "The file is too large to show here."));
+            }
+
+            string[] lines = File.ReadAllLines(path);
+            string lineEnding = File.ReadAllText(path).Contains("\r\n", StringComparison.Ordinal) ? "\r\n" : "\n";
+            return new LoadedSource(path, lines, lineEnding, null);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return new LoadedSource(path, [], "\n", exception.Message);
         }
     }
+
+    /// <summary>The open file's text as the editor holds it, with its line ending after the last line, as a save writes it.</summary>
+    private string TextOfSource()
+    {
+        string lineEnding = _editor.TextModel.LineEnding;
+        return string.Join(lineEnding, _editor.TextModel.Lines.AsSnapshot()) + lineEnding;
+    }
+
+    /// <summary>The 1-based line under the editor's cursor, or 0 when no file is open.</summary>
+    private int CursorLine => SourceOpen ? (int)_editor.ScrollableModel.CursorPosition.Y + 1 : 0;
 
     #endregion
 
@@ -1391,14 +1478,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private void ToggleBreakpointAtCursor()
     {
         string path;
-        int line;
-        int sourceCount;
-        lock (_stateLock)
-        {
-            path = _sourcePath;
-            line = CursorLine;
-            sourceCount = _sourceLines.Count;
-        }
+        lock (_stateLock) path = _sourcePath;
+        int line = CursorLine;
+        int sourceCount = _editor.TextModel.Lines.Count;
 
         if (path.Length == 0 || line < 1 || line > sourceCount)
         {
@@ -1407,6 +1489,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
 
         bool set = _breakpoints.Toggle(path, line);
+        RefreshEditorMarks();
         RebuildView();
         SetStatus(string.Format(set
             ? UiText.Get("DevelopmentStudio.BreakpointSet", "Breakpoint set at line {0}.")
@@ -1474,18 +1557,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private string? WordUnderCursor()
     {
-        lock (_stateLock)
-        {
-            int line = CursorLine;
-            if (line < 1 || line > _sourceLines.Count) return null;
-            string text = _sourceLines[line - 1];
-            // The rows are "<gutter><line number,5>  <text>": eight columns before the text, so the cursor's column is shifted back by them.
-            int column = Math.Clamp((int)_editorListBox.ScrollableModel.CursorPosition.X - GutterWidth, 0, text.Length);
-            int start = column, end = column;
-            while (start > 0 && (char.IsLetterOrDigit(text[start - 1]) || text[start - 1] == '_')) start--;
-            while (end < text.Length && (char.IsLetterOrDigit(text[end]) || text[end] == '_')) end++;
-            return end > start ? text[start..end] : null;
-        }
+        int line = CursorLine;
+        if (line < 1 || line > _editor.TextModel.Lines.Count) return null;
+        string text = _editor.TextModel.Lines[line - 1];
+        // The editor's cursor column is the text's own column: the editor draws its gutter itself.
+        int column = Math.Clamp((int)_editor.ScrollableModel.CursorPosition.X, 0, text.Length);
+        int start = column, end = column;
+        while (start > 0 && (char.IsLetterOrDigit(text[start - 1]) || text[start - 1] == '_')) start--;
+        while (end < text.Length && (char.IsLetterOrDigit(text[end]) || text[end] == '_')) end++;
+        return end > start ? text[start..end] : null;
     }
 
     #endregion
@@ -1780,6 +1860,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, targetLabel), StatusSeverity.Info);
         _outputTab = OutputTab.Output;
+        _outputListBox.SetFocus();
         RebuildView();
 
         _ = Task.Run(async () =>
@@ -2122,17 +2203,19 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             return;
         }
 
-        _ = StartDebuggingAsync(item, debugTests: _explorerMode == ExplorerMode.Tests);
+        // The build's output is what the user looks at first: the Output tab shows it, and the panel takes the focus.
+        _outputTab = OutputTab.Output;
+        _outputListBox.SetFocus();
+        _ = StartDebuggingAsync(item, ToolchainFor(item), debugTests: _explorerMode == ExplorerMode.Tests);
     }
 
-    private async Task StartDebuggingAsync(DevelopmentProject item, bool debugTests)
+    private async Task StartDebuggingAsync(DevelopmentProject item, IDevelopmentToolchain toolchain, bool debugTests)
     {
         _busy = true;
         var cts = new CancellationTokenSource();
         _runCts = cts;
         try
         {
-            var toolchain = _toolchains.For(item);
             string? assembly = null;
             if (item.Language == DevelopmentLanguage.DotNet)
             {
@@ -2172,7 +2255,6 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             AppendOutput($"Debugging {item.Name} with {plan.FileName}");
             await session.LaunchAsync(plan.Launch, breakpoints, cts.Token);
             SetStatus(string.Format(UiText.Get("DevelopmentStudio.Started", "Debugging {0}. F5 continues, F10 steps over."), item.Name), StatusSeverity.Success);
-            _outputTab = OutputTab.Debug;
         }
         catch (Exception exception) when (exception is InvalidOperationException or DapException or OperationCanceledException or IOException)
         {
@@ -2372,12 +2454,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 _stopPath = top?.Path ?? string.Empty;
                 _stopLine = top?.Line ?? 0;
                 _outputTab = OutputTab.Debug;
+                if (top is { Path.Length: > 0 } stopFrame) _reveal = (stopFrame.Path, stopFrame.Line);
             }
 
             if (openFile) OpenSourceAndWait(top!.Path);
             RebuildView();
             SetStatus(string.Format(UiText.Get("DevelopmentStudio.StoppedAt", "Stopped ({0}) at {1}:{2}."), stop.Reason, top is null ? "?" : Path.GetFileName(top.Path), top?.Line ?? 0), StatusSeverity.Info);
-            if (_stopLine > 0) _editorListBox.ScrollableModel.CursorPosition.Y = _stopLine - 1;
         }
         catch (Exception exception) when (exception is DapException or OperationCanceledException or InvalidOperationException or ObjectDisposedException)
         {
@@ -2385,23 +2467,14 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
     }
 
-    /// <summary>Loads the stopped file synchronously; a stop is not a key handler, so the short read is allowed here.</summary>
+    /// <summary>Loads the stopped file for the editor. A stop is not a key handler, so the short read is allowed here; the editor takes the file on its idle pass.</summary>
     private void OpenSourceAndWait(string path)
     {
-        try
+        LoadedSource loaded = ReadSource(path);
+        lock (_stateLock)
         {
-            string[] lines = new FileInfo(path).Length > MaxSourceBytes ? [] : File.ReadAllLines(path);
-            lock (_stateLock)
-            {
-                _sourceRequest = path;
-                _sourcePath = path;
-                _sourceLines.Clear();
-                _sourceLines.AddRange(lines);
-            }
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-        {
-            SetStatus(exception.Message, StatusSeverity.Error);
+            _sourceRequest = path;
+            _loadedSource = loaded;
         }
     }
 
@@ -2438,122 +2511,33 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     }
 
     /// <summary>Whether the open file has edits not yet saved.</summary>
-    private bool IsSourceDirty
-    {
-        get
-        {
-            lock (_stateLock) return _sourceDirty;
-        }
-    }
+    private bool IsSourceDirty => _editor.IsDirty;
 
     /// <summary>
-    /// Types, deletes or splits lines in the open file while the editor has the focus. Returns false for a key the editor
-    /// does not use, so the commands and the arrows still get it. Breakpoints and the stop line keep their line numbers.
+    /// Whether a key goes to the editor: it has the focus and a file is open. The function keys and Esc stay the studio's, so the
+    /// debugger, the panels and the close key work from the editor; a key the editor declines goes on to the studio's commands.
     /// </summary>
-    private bool TryEditSource(KeyEvent keyEvent)
-    {
-        if (FocusedPanelKind() != StudioPanelKind.Editor) return false;
-
-        // Typed text: a character with Control and Alt both held (AltGr) or with neither. Control or Alt alone is a command.
-        bool typed = keyEvent.KeyChar != '\0' && !char.IsControl(keyEvent.KeyChar) && keyEvent.Control == keyEvent.Alt;
-        bool editing = keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete or ConsoleKey.Enter or ConsoleKey.Tab;
-        if (!typed && !editing) return false;
-
-        int lineIndex;
-        int column;
-        lock (_stateLock)
-        {
-            if (_sourcePath.Length == 0) return false;
-            if (_sourceLines.Count == 0) _sourceLines.Add(string.Empty);
-
-            lineIndex = Math.Clamp(CursorLine - 1, 0, _sourceLines.Count - 1);
-            string current = _sourceLines[lineIndex];
-            column = Math.Clamp((int)_editorListBox.ScrollableModel.CursorPosition.X - GutterWidth, 0, current.Length);
-
-            if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
-            {
-                if (column > 0)
-                {
-                    _sourceLines[lineIndex] = current.Remove(column - 1, 1);
-                    column--;
-                }
-                else if (lineIndex > 0)
-                {
-                    string previous = _sourceLines[lineIndex - 1];
-                    _sourceLines[lineIndex - 1] = previous + current;
-                    _sourceLines.RemoveAt(lineIndex);
-                    lineIndex--;
-                    column = previous.Length;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else if (keyEvent.ConsoleKey == ConsoleKey.Delete)
-            {
-                if (column < current.Length)
-                {
-                    _sourceLines[lineIndex] = current.Remove(column, 1);
-                }
-                else if (lineIndex + 1 < _sourceLines.Count)
-                {
-                    _sourceLines[lineIndex] = current + _sourceLines[lineIndex + 1];
-                    _sourceLines.RemoveAt(lineIndex + 1);
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else if (keyEvent.ConsoleKey == ConsoleKey.Enter)
-            {
-                _sourceLines[lineIndex] = current[..column];
-                _sourceLines.Insert(lineIndex + 1, current[column..]);
-                lineIndex++;
-                column = 0;
-            }
-            else
-            {
-                string inserted = keyEvent.ConsoleKey == ConsoleKey.Tab ? "    " : keyEvent.KeyChar.ToString();
-                _sourceLines[lineIndex] = current.Insert(column, inserted);
-                column += inserted.Length;
-            }
-
-            _sourceDirty = true;
-            _sourceVersion++;
-        }
-
-        RebuildEditor();
-        _editorListBox.ScrollableModel.CursorPosition.Y = lineIndex;
-        _editorListBox.ScrollableModel.CursorPosition.X = column + GutterWidth;
-        StateHasChanged();
-        return true;
-    }
+    private bool IsEditorKey(KeyEvent keyEvent) =>
+        FocusedPanelKind() == StudioPanelKind.Editor && SourceOpen
+        && keyEvent.ConsoleKey is not (ConsoleKey.Escape or ConsoleKey.F5 or ConsoleKey.F6 or ConsoleKey.F7 or ConsoleKey.F8
+            or ConsoleKey.F9 or ConsoleKey.F10 or ConsoleKey.F11);
 
     /// <summary>
-    /// Ctrl+S: writes the open file on a background task. The file is clean again only when the write has landed and
-    /// nothing was typed after it was taken.
+    /// Ctrl+S: writes the open file on a background task. The editor is clean again on the idle pass, if its text is still the text
+    /// that was written; typing after the save leaves it dirty.
     /// </summary>
     private void SaveSource()
     {
         string path;
-        string text;
-        long version;
-        lock (_stateLock)
+        lock (_stateLock) path = _sourcePath;
+        if (path.Length == 0) return;
+        if (!IsSourceDirty)
         {
-            if (_sourcePath.Length == 0) return;
-            if (!_sourceDirty)
-            {
-                SetStatus(UiText.Get("DevelopmentStudio.NothingToSave", "No unsaved changes."), StatusSeverity.Info);
-                return;
-            }
-
-            path = _sourcePath;
-            version = _sourceVersion;
-            text = string.Join(_sourceLineEnding, _sourceLines) + _sourceLineEnding;
+            SetStatus(UiText.Get("DevelopmentStudio.NothingToSave", "No unsaved changes."), StatusSeverity.Info);
+            return;
         }
 
+        string text = TextOfSource();
         _ = Task.Run(() =>
         {
             string? error = null;
@@ -2566,9 +2550,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 error = exception.Message;
             }
 
-            lock (_stateLock)
+            if (error is null)
             {
-                if (error is null && _sourcePath == path && _sourceVersion == version) _sourceDirty = false;
+                lock (_stateLock) _savedWrite = (path, text);
+                if (path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)) _languageServer.SaveFile(ServerFolder, path, text);
             }
 
             SetStatus(error is null
@@ -2576,6 +2561,22 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 : string.Format(UiText.Get("DevelopmentStudio.SaveFailed", "Save failed: {0}"), error),
                 error is null ? StatusSeverity.Success : StatusSeverity.Error);
         }, CancellationToken.None);
+    }
+
+    /// <summary>On the idle pass: clears the editor's dirty flag when its text is still the text the last save wrote.</summary>
+    private void ApplySavedText()
+    {
+        (string Path, string Text)? saved;
+        string path;
+        lock (_stateLock)
+        {
+            saved = _savedWrite;
+            _savedWrite = null;
+            path = _sourcePath;
+        }
+
+        if (saved is not { } written || !written.Path.Equals(path, StringComparison.OrdinalIgnoreCase)) return;
+        if (IsSourceDirty && TextOfSource() == written.Text) _editor.IsDirty = false;
     }
 
     #endregion
@@ -2779,9 +2780,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         lock (_stateLock) path = _sourcePath;
         if (path.Length == 0) return UiText.Get("DevelopmentStudio.SourceHeading", "Source");
 
-        var cursor = _editorListBox.ScrollableModel.CursorPosition;
-        int column = Math.Max(1, (int)cursor.X - GutterWidth + 1);
-        string position = string.Format(UiText.Get("DevelopmentStudio.EditorPosition", "Ln {0}, Col {1}"), (int)cursor.Y + 1, column);
+        var cursor = _editor.ScrollableModel.CursorPosition;
+        string position = string.Format(UiText.Get("DevelopmentStudio.EditorPosition", "Ln {0}, Col {1}"), (int)cursor.Y + 1, (int)cursor.X + 1);
         return $"{Path.GetFileName(path)}{(IsSourceDirty ? " *" : string.Empty)}   {position}";
     }
 

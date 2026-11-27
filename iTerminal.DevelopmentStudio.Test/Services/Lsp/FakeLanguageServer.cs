@@ -133,6 +133,9 @@ public sealed class FakeLanguageServer : ILanguageServerLauncher
                         case "textDocument/didOpen":
                             PublishFor(message);
                             break;
+                        case "textDocument/didChange":
+                            PublishChanged(message);
+                            break;
                     }
                 }
             }
@@ -149,6 +152,14 @@ public sealed class FakeLanguageServer : ILanguageServerLauncher
                 _serverIn.Dispose();
                 _serverOut.Dispose();
             }
+        }
+
+        private void PublishChanged(JsonObject message)
+        {
+            var parameters = (JsonObject)message["params"]!;
+            string uri = ((JsonObject)parameters["textDocument"]!)["uri"]!.GetValue<string>();
+            string text = ((JsonObject)parameters["contentChanges"]![0]!)["text"]!.GetValue<string>();
+            Publish(uri, _owner.Diagnostics?.Invoke(uri, text) ?? []);
         }
 
         private void PublishFor(JsonObject message)

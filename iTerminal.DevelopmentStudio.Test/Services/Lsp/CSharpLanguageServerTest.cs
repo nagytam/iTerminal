@@ -38,6 +38,36 @@ public class CSharpLanguageServerTest
 
     [Timeout(30_000)]
     [TestMethod]
+    public async Task ASavedFileReachesTheServerWithItsNewTextAndItsDiagnosticsFollow()
+    {
+        var fake = new FakeLanguageServer { Diagnostics = ErrorWhenMarked };
+        await using var server = new CSharpLanguageServer(fake);
+        server.OpenFile(Folder, ProgramPath, "int x;");
+        await WaitUntilAsync(() => server.State == LanguageServerState.Ready && fake.Methods.Contains("textDocument/didOpen"), "the file to be opened");
+
+        server.SaveFile(Folder, ProgramPath, "int x = ERROR;");
+
+        await WaitUntilAsync(() => server.DiagnosticsFor(ProgramPath).Count == 1, "the saved text's diagnostic to arrive");
+        CollectionAssert.Contains(fake.Methods.ToList(), "textDocument/didChange");
+    }
+
+    [Timeout(30_000)]
+    [TestMethod]
+    public async Task ASaveOfAFileTheServerDoesNotHoldOpenIsNotSent()
+    {
+        var fake = new FakeLanguageServer { Diagnostics = ErrorWhenMarked };
+        await using var server = new CSharpLanguageServer(fake);
+        server.OpenFile(Folder, ProgramPath, "int x;");
+        await WaitUntilAsync(() => server.State == LanguageServerState.Ready && fake.Methods.Contains("textDocument/didOpen"), "the file to be opened");
+
+        server.SaveFile(Folder, OtherPath, "ERROR");
+
+        await Task.Delay(200);
+        Assert.IsFalse(fake.Methods.Contains("textDocument/didChange"));
+    }
+
+    [Timeout(30_000)]
+    [TestMethod]
     public async Task TheFileThatStartsTheServerIsSentAfterInitializeAndOnlyOnce()
     {
         var fake = new FakeLanguageServer { Diagnostics = ErrorWhenMarked };

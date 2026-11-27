@@ -92,6 +92,32 @@ public sealed class CSharpLanguageServer : IAsyncDisposable
         Touch();
     }
 
+    /// <summary>
+    /// Tells the server that the open file was saved with <paramref name="text"/>, so its diagnostics follow the text on disk. The
+    /// server is told of a save, not of each keystroke. A file the server does not hold open is left alone. Returns at once.
+    /// </summary>
+    public void SaveFile(string folder, string path, string text)
+    {
+        LspClient? client = null;
+        int version = 0;
+        lock (_lock)
+        {
+            if (_session is null || !string.Equals(_session.Folder, folder, StringComparison.OrdinalIgnoreCase) || !_session.Opened.ContainsKey(path))
+            {
+                return;
+            }
+
+            // A session still starting replays the file with its newest text when it is ready, so only a ready one is sent to now.
+            _session.Opened[path] = text;
+            version = _session.Versions.GetValueOrDefault(path, 1) + 1;
+            _session.Versions[path] = version;
+            if (_session.State == LanguageServerState.Ready) client = _session.Client;
+        }
+
+        if (client is not null) _ = DidChangeAsync(client, path, version, text);
+        Touch();
+    }
+
     /// <summary>The live diagnostics of one open file, in the order the server reported them.</summary>
     public IReadOnlyList<LiveDiagnostic> DiagnosticsFor(string path)
     {
@@ -217,6 +243,27 @@ public sealed class CSharpLanguageServer : IAsyncDisposable
         if (client is not null) await client.DisposeAsync();
     }
 
+    private async Task DidChangeAsync(LspClient client, string path, int version, string text)
+    {
+        try
+        {
+            await client.NotifyAsync("textDocument/didChange", new JsonObject
+            {
+                ["textDocument"] = new JsonObject
+                {
+                    ["uri"] = ToUri(path),
+                    ["version"] = version,
+                },
+                // Without a range the change replaces the whole document.
+                ["contentChanges"] = new JsonArray(new JsonObject { ["text"] = text }),
+            }, CancellationToken.None);
+        }
+        catch (Exception exception) when (exception is LspException or IOException or ObjectDisposedException)
+        {
+            // The server went away: its diagnostics stop with it.
+        }
+    }
+
     private async Task DidOpenAsync(LspClient client, string path, string text)
     {
         try
@@ -308,6 +355,9 @@ public sealed class CSharpLanguageServer : IAsyncDisposable
     {
         public string Folder { get; } = folder;
         public Dictionary<string, string> Opened { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>The version the server was last told of each open file (1 when it was opened).</summary>
+        public Dictionary<string, int> Versions { get; } = new(StringComparer.OrdinalIgnoreCase);
         public LanguageServerState State { get; set; } = LanguageServerState.Starting;
         public bool Stopped { get; set; }
         public LspClient? Client { get; set; }
