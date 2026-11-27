@@ -2356,6 +2356,9 @@
   <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
     <value>Liste des erreurs</value>
   </data>
+  <data name="DevelopmentStudio.ErrorsTab" xml:space="preserve">
+    <value>Erreurs</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} fehlgeschlagen (Exit {1}).</value>
   </data>
@@ -2518,6 +2521,9 @@
   <data name="DevelopmentStudio.NothingFound" xml:space="preserve">
     <value>In diesem Ordner wurden keine Lösungen, Projekte oder Skripte gefunden.</value>
   </data>
+  <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
+    <value>Aucune modification non enregistrée.</value>
+  </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Nur .NET-Projekte können markiert werden.</value>
   </data>
@@ -2559,6 +2565,12 @@
   </data>
   <data name="DevelopmentStudio.RunningState" xml:space="preserve">
     <value>Läuft.</value>
+  </data>
+  <data name="DevelopmentStudio.SaveFailed" xml:space="preserve">
+    <value>Échec de l'enregistrement : {0}</value>
+  </data>
+  <data name="DevelopmentStudio.SavedFile" xml:space="preserve">
+    <value>{0} enregistré.</value>
   </data>
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>SBOM wird geschrieben ...</value>
@@ -2613,6 +2625,9 @@
   </data>
   <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
     <value>Die Datei ist zu groß, um sie hier anzuzeigen.</value>
+  </data>
+  <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
+    <value>Modifications non enregistrées dans l'éditeur : Ctrl+S les enregistre d'abord.</value>
   </data>
   <data name="DevelopmentStudio.Watch" xml:space="preserve">
     <value>Überwachung</value>
@@ -6461,6 +6476,18 @@
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:Debuggen F9:Haltepunkt F10/F11:Schritt Space:markieren B/C/T/R:bauen/säubern/testen/ausführen V:SDK K:SDKs S/F:SBOM F6/F7:Bereiche F8:Disposition Enter:öffnen Esc:schließen</value>
+  </data>
+  <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
+    <value>Saisir pour modifier  Ctrl+S:enregistrer  F9:point d'arrêt  F5:déboguer  F7:onglet  Échap:fermer</value>
+  </data>
+  <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
+    <value>Entrée:ouvrir l'erreur à sa ligne  F7:onglet  Échap:fermer</value>
+  </data>
+  <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
+    <value>Entrée:ouvrir  Gauche/Droite:déplier  Space:cocher  B/C/T/R:compiler/nettoyer/tester/lancer  M:principal  K:SDK  Échap:fermer</value>
+  </data>
+  <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
+    <value>Haut/Bas/PgUp/PgDn:défiler  F7:onglet  X:annuler  Échap:fermer</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:chercher/lire  Tab:champ  F3:entier  F2:navigateur  Esc:fermer</value>

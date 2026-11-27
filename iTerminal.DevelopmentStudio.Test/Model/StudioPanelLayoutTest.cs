@@ -14,8 +14,8 @@ public class StudioPanelLayoutTest
         Assert.AreEqual(DockSide.Fill, layout.SideOf(StudioPanelKind.Editor));
         Assert.AreEqual(DockSide.Right, layout.SideOf(StudioPanelKind.Explorer));
         Assert.AreEqual(DockSide.Bottom, layout.SideOf(StudioPanelKind.Output));
-        Assert.AreEqual(DockSide.Top, layout.SideOf(StudioPanelKind.Errors));
         Assert.IsNull(layout.At(DockSide.Left), "the left edge is free by default");
+        Assert.IsNull(layout.At(DockSide.Top), "the top edge is free by default");
     }
 
     [TestMethod]
@@ -23,7 +23,7 @@ public class StudioPanelLayoutTest
     {
         var docked = StudioPanelLayout.Default().Docked().Select(panel => panel.Kind).ToList();
 
-        CollectionAssert.AreEqual(new[] { StudioPanelKind.Errors, StudioPanelKind.Output, StudioPanelKind.Explorer, StudioPanelKind.Editor }, docked);
+        CollectionAssert.AreEqual(new[] { StudioPanelKind.Output, StudioPanelKind.Explorer, StudioPanelKind.Editor }, docked);
     }
 
     [TestMethod]
@@ -42,10 +42,10 @@ public class StudioPanelLayoutTest
     {
         var layout = StudioPanelLayout.Default();
 
-        Assert.AreEqual(StudioPanelMove.Swapped, layout.Move(StudioPanelKind.Explorer, DockSide.Top));
+        Assert.AreEqual(StudioPanelMove.Swapped, layout.Move(StudioPanelKind.Explorer, DockSide.Bottom));
 
-        Assert.AreEqual(DockSide.Top, layout.SideOf(StudioPanelKind.Explorer));
-        Assert.AreEqual(DockSide.Right, layout.SideOf(StudioPanelKind.Errors));
+        Assert.AreEqual(DockSide.Bottom, layout.SideOf(StudioPanelKind.Explorer));
+        Assert.AreEqual(DockSide.Right, layout.SideOf(StudioPanelKind.Output));
     }
 
     [TestMethod]
@@ -64,10 +64,10 @@ public class StudioPanelLayoutTest
     {
         var layout = StudioPanelLayout.Default();
 
-        Assert.AreEqual(StudioPanelMove.Swapped, layout.Move(StudioPanelKind.Editor, DockSide.Top));
+        Assert.AreEqual(StudioPanelMove.Swapped, layout.Move(StudioPanelKind.Editor, DockSide.Bottom));
 
-        Assert.AreEqual(DockSide.Top, layout.SideOf(StudioPanelKind.Editor));
-        Assert.AreEqual(StudioPanelKind.Errors, layout.At(DockSide.Fill), "the Error List took the centre");
+        Assert.AreEqual(DockSide.Bottom, layout.SideOf(StudioPanelKind.Editor));
+        Assert.AreEqual(StudioPanelKind.Output, layout.At(DockSide.Fill), "the output panel took the centre");
         Assert.AreEqual(StudioPanelMove.Swapped, layout.Move(StudioPanelKind.Editor, DockSide.Fill), "and swaps back");
         Assert.AreEqual(DockSide.Fill, layout.SideOf(StudioPanelKind.Editor));
     }
@@ -106,9 +106,9 @@ public class StudioPanelLayoutTest
     {
         var layout = StudioPanelLayout.Default();
 
-        Assert.IsTrue(layout.Resize(StudioPanelKind.Errors, -100));
-        Assert.AreEqual(StudioPanelLayout.MinPercent, layout.PercentOf(StudioPanelKind.Errors));
-        Assert.IsFalse(layout.Resize(StudioPanelKind.Errors, -5), "already at the minimum");
+        Assert.IsTrue(layout.Resize(StudioPanelKind.Output, -100));
+        Assert.AreEqual(StudioPanelLayout.MinPercent, layout.PercentOf(StudioPanelKind.Output));
+        Assert.IsFalse(layout.Resize(StudioPanelKind.Output, -5), "already at the minimum");
     }
 
     [TestMethod]

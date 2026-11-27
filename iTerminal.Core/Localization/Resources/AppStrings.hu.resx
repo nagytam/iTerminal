@@ -2356,6 +2356,9 @@
   <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
     <value>Hibalista</value>
   </data>
+  <data name="DevelopmentStudio.ErrorsTab" xml:space="preserve">
+    <value>Hibák</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} non riuscito (uscita {1}).</value>
   </data>
@@ -2518,6 +2521,9 @@
   <data name="DevelopmentStudio.NothingFound" xml:space="preserve">
     <value>In questa cartella non sono state trovate soluzioni, progetti o script.</value>
   </data>
+  <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
+    <value>Nincs nem mentett módosítás.</value>
+  </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Solo i progetti .NET possono essere selezionati.</value>
   </data>
@@ -2559,6 +2565,12 @@
   </data>
   <data name="DevelopmentStudio.RunningState" xml:space="preserve">
     <value>In esecuzione.</value>
+  </data>
+  <data name="DevelopmentStudio.SaveFailed" xml:space="preserve">
+    <value>A mentés sikertelen: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.SavedFile" xml:space="preserve">
+    <value>A(z) {0} mentve.</value>
   </data>
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Scrittura della SBOM...</value>
@@ -2613,6 +2625,9 @@
   </data>
   <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
     <value>Il file è troppo grande per essere mostrato qui.</value>
+  </data>
+  <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
+    <value>Nem mentett módosítások a szerkesztőben: a Ctrl+S menti őket először.</value>
   </data>
   <data name="DevelopmentStudio.Watch" xml:space="preserve">
     <value>Espressioni di controllo</value>
@@ -6461,6 +6476,18 @@
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:debug F9:punto di interruzione F10/F11:passo Spazio:seleziona B/C/T/R:compila/pulisci/testa/esegui V:SDK K:SDKs S/F:SBOM F6/F7:pannelli Invio:apri Esc:chiudi</value>
+  </data>
+  <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
+    <value>Gépelés a szerkesztéshez  Ctrl+S:mentés  F9:töréspont  F5:hibakeresés  F7:fül  Esc:bezár</value>
+  </data>
+  <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
+    <value>Enter:a hiba megnyitása a sorában  F7:fül  Esc:bezár</value>
+  </data>
+  <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
+    <value>Enter:megnyitás  Bal/Jobb:kibontás  Space:jelöl  B/C/T/R:build/tisztítás/teszt/futtatás  M:fő  K:SDK-k  Esc:bezár</value>
+  </data>
+  <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
+    <value>Fel/Le/PgUp/PgDn:görgetés  F7:fül  X:megszakítás  Esc:bezár</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:keresés/olvasás  Tab:mező  F3:teljes  F2:böngésző  Esc:bezár</value>
