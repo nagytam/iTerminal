@@ -34,7 +34,7 @@ public class DevelopmentStudioDialogTest
     {
         dotnet ??= new FakeDotnetSolutionService { Solution = TwoProjects, Sdks = [new DotnetSdk("9.0.100", "/sdk/9")] };
         runner ??= new FakeProcessRunner();
-        var breakpoints = new BreakpointStore();
+        var breakpoints = new BreakpointStore(new TestDatabase());
         var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()), SyntaxHighlightingService.Default, new FakeSdkManager())
         {
             Folder = "/src",
@@ -46,6 +46,17 @@ public class DevelopmentStudioDialogTest
 
     private static async Task WaitIdleAsync(DevelopmentStudioDialog dialog) =>
         await WaitUntilAsync(() => !dialog.IsBusy, "the command to finish");
+
+    /// <summary>
+    /// Waits for a condition on the editor. A file read in the background is put in the editor on the UI thread's idle pass, so
+    /// each check runs one idle pass first, as the application's loop does.
+    /// </summary>
+    private static async Task WaitUntilOpenAsync(DevelopmentStudioDialog dialog, Func<bool> condition, string because) =>
+        await WaitUntilAsync(() =>
+        {
+            dialog.OnIdle();
+            return condition();
+        }, because);
 
     private static async Task WaitForStatusAsync(DevelopmentStudioDialog dialog, string text) =>
         await WaitUntilAsync(() => dialog.Status.Contains(text, StringComparison.Ordinal), $"the status line to show '{text}'");
@@ -364,7 +375,13 @@ public class DevelopmentStudioDialogTest
                 return harness.Dialog.ErrorLines.Any(line => line.Contains("error CS0029", StringComparison.Ordinal));
             }, "the live error to reach the Error List");
 
-            StringAssert.StartsWith(harness.Dialog.EditorLines[2], "!", "the line with the error has the error mark");
+            // The marks are rebuilt on the idle pass that sees the server's new version, one pass after the Error List has the error.
+            await WaitUntilAsync(() =>
+            {
+                harness.Dialog.OnIdle();
+                return harness.Dialog.EditorMark(3) == "!";
+            }, "the line with the error to get the error mark");
+            Assert.AreEqual("!", harness.Dialog.EditorMark(3), "the line with the error has the error mark");
         }
         finally
         {
@@ -401,7 +418,7 @@ public class DevelopmentStudioDialogTest
                 return harness.Dialog.ErrorLines.Any(line => line.Contains("error CS0029", StringComparison.Ordinal));
             }, "the live error to reach the Error List");
 
-            StringAssert.StartsWith(harness.Dialog.EditorLines[2], "●", "the breakpoint wins over the error mark on its line");
+            Assert.AreEqual("●", harness.Dialog.EditorMark(3), "the breakpoint wins over the error mark on its line");
         }
         finally
         {
@@ -423,11 +440,11 @@ public class DevelopmentStudioDialogTest
             var harness = await OpenAsync([script]);
 
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
-            await WaitUntilAsync(() => harness.Dialog.EditorLines.Any(line => line.Contains("print('hi')", StringComparison.Ordinal)), "the file to open");
+            await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.EditorLines.Any(line => line.Contains("print('hi')", StringComparison.Ordinal)), "the file to open");
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F9));
 
             Assert.IsTrue(harness.Breakpoints.Contains(path, 1));
-            StringAssert.StartsWith(harness.Dialog.EditorLines[0], "●");
+            Assert.AreEqual("●", harness.Dialog.EditorMark(1));
         }
         finally
         {
@@ -474,7 +491,7 @@ public class DevelopmentStudioDialogTest
             var harness = await OpenAsync([script]);
 
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
-            await WaitUntilAsync(() => harness.Dialog.EditorLines.Any(line => line.Contains("return", StringComparison.Ordinal)), "the file to open");
+            await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.EditorLines.Any(line => line.Contains("return", StringComparison.Ordinal)), "the file to open");
 
             // The cursor starts on line 1 and the selected row is drawn in the selection colours, so the test reads line 2.
             var screen = Render(harness.Dialog);
@@ -633,7 +650,7 @@ public class DevelopmentStudioDialogTest
             CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), $"{path}(3,5): error CS1002: ; expected", "F7 shows the Errors tab in the output panel");
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
-            await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, $"the editor to open the file at line 3 (opened: {harness.Dialog.CursorLineNumber}, focus: {harness.Dialog.FocusedPanel}, status: {harness.Dialog.Status})");
+            await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.CursorLineNumber == 3, $"the editor to open the file at line 3 (opened: {harness.Dialog.CursorLineNumber}, focus: {harness.Dialog.FocusedPanel}, status: {harness.Dialog.Status})");
             StringAssert.Contains(harness.Dialog.EditorLines[2], "three");
         }
         finally
@@ -758,7 +775,7 @@ public class DevelopmentStudioDialogTest
             FocusPanel(harness.Dialog, StudioPanelKind.Output);
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
-            await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, "the editor to open the file at line 3");
+            await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.CursorLineNumber == 3, "the editor to open the file at line 3");
 
             FocusPanel(harness.Dialog, StudioPanelKind.Editor);
             await harness.Dialog.HandleKeyEventAsync(Char('X'));
@@ -786,4 +803,75 @@ public class DevelopmentStudioDialogTest
         FocusPanel(harness.Dialog, StudioPanelKind.Explorer);
         AssertScreenContains(Render(harness.Dialog), "Left/Right:expand");
     }
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task OpeningAFileMovesTheFocusToTheEditor()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "tool.py");
+        File.WriteAllText(path, "print('hi')\n");
+        try
+        {
+            var script = new DevelopmentProject("tool.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, path);
+            var harness = await OpenAsync([script]);
+            Assert.AreEqual(StudioPanelKind.Explorer, harness.Dialog.FocusedPanel);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+            Assert.AreEqual(StudioPanelKind.Editor, harness.Dialog.FocusedPanel, "the editor has the focus as soon as the file is opened");
+            await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.EditorLines.Contains("print('hi')"), "the file to open");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheEditorTakesTheCursorKeysPunctuationAndUndo()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "tool.py");
+        File.WriteAllText(path, "one\ntwo\nthree\n");
+        try
+        {
+            var script = new DevelopmentProject("tool.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, path);
+            var harness = await OpenAsync([script]);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+            await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.EditorLines.Contains("three"), "the file to open");
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+            Assert.AreEqual(3, harness.Dialog.CursorLineNumber, "the arrows move the cursor through the file");
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.End));
+            await harness.Dialog.HandleKeyEventAsync(Char('('));
+            Assert.AreEqual("three()", harness.Dialog.EditorLines[2], "a punctuation mark is typed, and a bracket is closed as in the other editors");
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Z, 'z', control: true));
+            Assert.AreEqual("three", harness.Dialog.EditorLines[2], "Ctrl+Z takes the typing back");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ARunSelectsTheOutputTabWithTheBuildResultsAndTakesTheFocus()
+    {
+        var runner = new FakeProcessRunner { Output = ["Build succeeded."] };
+        var harness = await OpenAsync([Solution, App], runner: runner);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+
+        Assert.AreEqual(StudioPanelKind.Output, harness.Dialog.FocusedPanel, "the output panel has the focus after a build");
+        Assert.IsTrue(harness.Dialog.OutputLines.Any(line => line.StartsWith("$ ", StringComparison.Ordinal)), "the Output tab lists the command that built");
+    }
+
 }

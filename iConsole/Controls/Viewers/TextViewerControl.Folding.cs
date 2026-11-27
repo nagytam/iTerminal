@@ -353,6 +353,12 @@ public partial class TextViewerControl
         }
     }
 
+    /// <summary>
+    /// The mark an editor draws in the gutter of a text line (a breakpoint, say), or null for none. It takes the fold marker's
+    /// place in the gutter when folding is on, so a viewer with folding off never shows one. Only a line's first row shows it.
+    /// </summary>
+    protected virtual string? GutterMark(int line) => null;
+
     /// <summary>The gutter text of a screen row: fold marker, right-aligned number and a space; blank for a wrapped continuation row.</summary>
     internal string GutterText(TextRow row)
     {
@@ -367,6 +373,7 @@ public partial class TextViewerControl
                 marker = " ";
                 if (IsFolded(row.Line)) marker = "▸";
                 else if (CanFold(row.Line)) marker = "▾";
+                if (GutterMark(row.Line) is { } mark) marker = mark;
             }
 
             if (_showLineNumbers)
