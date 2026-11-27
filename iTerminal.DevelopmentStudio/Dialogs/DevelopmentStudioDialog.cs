@@ -10,6 +10,7 @@ using iConsole.Layouts;
 using iConsole.Display;
 using iConsole.Localization;
 using iConsole.Model;
+using iConsole.Prompts;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services;
@@ -19,6 +20,7 @@ using iTerminal.Core.Model.Dotnet;
 using iTerminal.DevelopmentStudio.Services.Analysis;
 using iTerminal.DevelopmentStudio.Services.Dap;
 using iTerminal.DevelopmentStudio.Services.Lsp;
+using iTerminal.DevelopmentStudio.Services.NuGet;
 using iTerminal.Core.Services.Dotnet;
 using iTerminal.Core.Services.Sdk;
 
@@ -116,6 +118,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly IDotnetSolutionService _dotnet;
     private readonly ISyntaxHighlightingService _highlighting;
     private readonly ISdkManager _sdkManager;
+    private readonly INuGetPackageService _nuGetPackages;
+    private readonly IPromptService _prompts;
     private readonly ISettingsService _settings;
     /// <summary>Shows the explorer's context menu (the Menu key). Null where no popover service is registered, as in the tests.</summary>
     private readonly IPopoverService? _popover;
@@ -293,6 +297,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         ISyntaxHighlightingService highlighting,
         ISdkManager sdkManager,
         ISettingsService settings,
+        INuGetPackageService nuGetPackages,
+        IPromptService prompts,
         IPopoverService? popoverService = null)
         : base(nameof(DevelopmentStudioDialog), themeService)
     {
@@ -305,6 +311,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _mainProgram = mainProgram;
         _dotnet = dotnetSolutionService;
         _sdkManager = sdkManager;
+        _nuGetPackages = nuGetPackages;
+        _prompts = prompts;
         _settings = settings;
         _popover = popoverService;
 
@@ -509,6 +517,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
         yield return ("V", UiText.Get("DevelopmentStudio.HintSdk", "Switch to the next .NET SDK"));
         yield return ("K", UiText.Get("DevelopmentStudio.HintSdkManager", "Install .NET SDKs and JDKs, and choose the JDK that Java builds and runs use"));
+        yield return ("N", UiText.Get("DevelopmentStudio.HintNuGet", "Manage the NuGet packages of the selected solution or project"));
         yield return ("S / F", UiText.Get("DevelopmentStudio.HintSbom", "Write a CycloneDX SBOM of the solution / switch it between XML and JSON"));
         yield return ("O / P", UiText.Get("DevelopmentStudio.HintCoverage", "Measure the coverage of the selected item / profile the selected Python script"));
         yield return ("N", UiText.Get("DevelopmentStudio.HintAnalysis", "Analyze the code of the selected item: the Analysis tab lists the findings, and Enter or a click opens one"));
@@ -635,6 +644,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.K when plain:
                 await OpenSdkManagerAsync();
+                return true;
+            case ConsoleKey.N when plain:
+                await OpenNuGetManagerAsync();
                 return true;
             case ConsoleKey.X when plain:
                 if (_runCts is not null) await _runCts.CancelAsync();
@@ -2377,6 +2389,34 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         chosen ??= DotnetSdk.Default(sdks);
         _sdks = sdks;
         _sdkIndex = chosen is null ? -1 : sdks.ToList().IndexOf(chosen);
+    }
+
+    /// <summary>
+    /// N: the NuGet packages of the selected solution or .NET project. A project opens with its own scope chosen, inside its
+    /// solution when it has one.
+    /// </summary>
+    private async Task OpenNuGetManagerAsync()
+    {
+        var item = SelectedItem;
+        string? target = item?.Kind switch
+        {
+            DevelopmentProjectKind.Solution => item.Path,
+            DevelopmentProjectKind.DotNetProject => item.SolutionPath ?? item.Path,
+            _ => null,
+        };
+        if (item is null || target is null)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.NuGetNoTarget", "Select a .NET solution or project to manage its NuGet packages."), StatusSeverity.Info);
+            return;
+        }
+
+        var manager = new NuGetManagerDialog(_nuGetPackages, _prompts, ThemeService)
+        {
+            TargetPath = target,
+            InitialProjectPath = item.Kind == DevelopmentProjectKind.DotNetProject ? item.Path : null,
+            DotnetHost = SelectedSdk?.HostPath ?? "dotnet",
+        };
+        await ShowDialogAsync(manager);
     }
 
     /// <summary>K: the SDK manager. When it closes, the SDKs and the chosen JDK are read again.</summary>

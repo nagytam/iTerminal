@@ -4,6 +4,7 @@ using iTerminal.DevelopmentStudio.Contributions;
 using iTerminal.DevelopmentStudio.Dialogs;
 using iTerminal.DevelopmentStudio.Services;
 using iTerminal.DevelopmentStudio.Services.Lsp;
+using iTerminal.DevelopmentStudio.Services.NuGet;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -28,6 +29,8 @@ public static class DevelopmentStudioApplicationBuilderExtension
         // The C# language server is a singleton: one server per folder, shared by every studio dialog.
         services.TryAddSingleton<ILanguageServerLauncher, LanguageServerLauncher>();
         services.AddSingleton<CSharpLanguageServer>();
+        // The NuGet packages of a solution or project: the studio dialog opens its manager with this service.
+        services.AddSingleton<INuGetPackageService, NuGetPackageService>();
         services.AddTransient<DevelopmentStudioDialog>();
 
         // Tools > Development studio, in the "sys" submenu.

@@ -2431,6 +2431,9 @@
   <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
     <value>Az elem menüje: parancsai és a Beállítás főprojektként</value>
   </data>
+  <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
+    <value>Gestire i pacchetti NuGet della soluzione o del progetto selezionato</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Apri il file (o esegui il test)</value>
   </data>
@@ -2583,6 +2586,9 @@
   </data>
   <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
     <value>Nincs nem mentett módosítás.</value>
+  </data>
+  <data name="DevelopmentStudio.NuGetNoTarget" xml:space="preserve">
+    <value>Seleziona una soluzione o un progetto .NET per gestirne i pacchetti NuGet.</value>
   </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Solo i progetti .NET possono essere selezionati.</value>
@@ -8385,6 +8391,123 @@
   </data>
   <data name="Notify.WipeStoppedBody" xml:space="preserve">
     <value>{0} törölve a megszakítás előtt.</value>
+  </data>
+  <data name="NuGet.AlreadyNewest" xml:space="preserve">
+    <value>{0} è aggiornato.</value>
+  </data>
+  <data name="NuGet.BadArgument" xml:space="preserve">
+    <value>Non è un identificatore di pacchetto né una versione accettata da NuGet.</value>
+  </data>
+  <data name="NuGet.Busy" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla.</value>
+  </data>
+  <data name="NuGet.Cancelled" xml:space="preserve">
+    <value>Annullato.</value>
+  </data>
+  <data name="NuGet.ConfirmRemove" xml:space="preserve">
+    <value>Rimuovere {0} da {1} progetto/i? (y/n)</value>
+  </data>
+  <data name="NuGet.ConfirmUpdateAll" xml:space="preserve">
+    <value>Aggiornare {0} riferimenti a pacchetti in {1} progetto/i? (y/n)</value>
+  </data>
+  <data name="NuGet.CouldNotCheckNewer" xml:space="preserve">
+    <value>Impossibile verificare le origini per versioni più recenti.</value>
+  </data>
+  <data name="NuGet.CouldNotRun" xml:space="preserve">
+    <value>Impossibile eseguire dotnet per elencare i pacchetti.</value>
+  </data>
+  <data name="NuGet.Done" xml:space="preserve">
+    <value>{0}: {1} riuscito/i, {2} non riuscito/i.</value>
+  </data>
+  <data name="NuGet.Header" xml:space="preserve">
+    <value>{0}   ({1} pacchetti, {2} obsoleti)</value>
+  </data>
+  <data name="NuGet.HintCancel" xml:space="preserve">
+    <value>Annullare il comando in esecuzione</value>
+  </data>
+  <data name="NuGet.HintClose" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="NuGet.HintInstall" xml:space="preserve">
+    <value>Installare un pacchetto nel progetto selezionato</value>
+  </data>
+  <data name="NuGet.HintPane" xml:space="preserve">
+    <value>Passare dall'ambito ai pacchetti</value>
+  </data>
+  <data name="NuGet.HintRefresh" xml:space="preserve">
+    <value>Rileggere i pacchetti</value>
+  </data>
+  <data name="NuGet.HintRemove" xml:space="preserve">
+    <value>Rimuovere il pacchetto dall'ambito</value>
+  </data>
+  <data name="NuGet.HintUpdate" xml:space="preserve">
+    <value>Aggiornare il pacchetto sotto il cursore alla versione più recente</value>
+  </data>
+  <data name="NuGet.HintUpdateAll" xml:space="preserve">
+    <value>Aggiornare tutti i pacchetti obsoleti dell'ambito</value>
+  </data>
+  <data name="NuGet.Hints" xml:space="preserve">
+    <value>Invio:aggiorna  Maiusc+U:aggiorna tutto  Canc:rimuovi  I:installa  F5:rileggi  X:annulla  Tab:cambia  Esc:chiudi</value>
+  </data>
+  <data name="NuGet.InstallAsk" xml:space="preserve">
+    <value>Identificatore del pacchetto da installare in {0}</value>
+  </data>
+  <data name="NuGet.InstallInvalidId" xml:space="preserve">
+    <value>Un identificatore di pacchetto contiene lettere, cifre, punti, trattini e trattini bassi, e inizia con una lettera o una cifra.</value>
+  </data>
+  <data name="NuGet.InstallNeedsProject" xml:space="preserve">
+    <value>Seleziona un progetto in cui installare; una soluzione non accetta pacchetti.</value>
+  </data>
+  <data name="NuGet.ListingUnreadable" xml:space="preserve">
+    <value>dotnet non ha stampato alcun elenco di pacchetti.</value>
+  </data>
+  <data name="NuGet.NoPackages" xml:space="preserve">
+    <value>Nessun pacchetto in questo ambito.</value>
+  </data>
+  <data name="NuGet.NothingOutdated" xml:space="preserve">
+    <value>Tutti i pacchetti di questo ambito sono aggiornati.</value>
+  </data>
+  <data name="NuGet.Packages" xml:space="preserve">
+    <value>Pacchetti</value>
+  </data>
+  <data name="NuGet.ReadAgain" xml:space="preserve">
+    <value>F5 rilegge i pacchetti.</value>
+  </data>
+  <data name="NuGet.ReadFailed" xml:space="preserve">
+    <value>Impossibile leggere i pacchetti: {0}</value>
+  </data>
+  <data name="NuGet.Reading" xml:space="preserve">
+    <value>Lettura dei pacchetti…</value>
+  </data>
+  <data name="NuGet.RowProjects" xml:space="preserve">
+    <value>{0} progetto/i</value>
+  </data>
+  <data name="NuGet.ScopeSolution" xml:space="preserve">
+    <value>Tutti i progetti di {0}</value>
+  </data>
+  <data name="NuGet.SelectPackage" xml:space="preserve">
+    <value>Seleziona prima un pacchetto.</value>
+  </data>
+  <data name="NuGet.Summary" xml:space="preserve">
+    <value>{0} pacchetti in {1} progetti; {2} obsoleti.</value>
+  </data>
+  <data name="NuGet.Title" xml:space="preserve">
+    <value>Pacchetti NuGet</value>
+  </data>
+  <data name="NuGet.TitleInstall" xml:space="preserve">
+    <value>Installa {0}</value>
+  </data>
+  <data name="NuGet.TitleRemove" xml:space="preserve">
+    <value>Rimuovi {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdate" xml:space="preserve">
+    <value>Aggiorna {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdateAll" xml:space="preserve">
+    <value>Aggiorna tutto</value>
+  </data>
+  <data name="NuGet.UpToDate" xml:space="preserve">
+    <value>aggiornato</value>
   </data>
   <data name="OAuth.Expired" xml:space="preserve">
     <value>A bejelentkezés lejárt: {0}</value>
