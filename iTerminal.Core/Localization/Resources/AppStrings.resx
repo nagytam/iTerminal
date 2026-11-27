@@ -2498,6 +2498,9 @@
   <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
     <value>Error List</value>
   </data>
+  <data name="DevelopmentStudio.ErrorsTab" xml:space="preserve">
+    <value>Errors</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} failed (exit {1}).</value>
   </data>
@@ -2660,6 +2663,9 @@
   <data name="DevelopmentStudio.NothingFound" xml:space="preserve">
     <value>No solutions, projects or scripts were found in this folder.</value>
   </data>
+  <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
+    <value>No unsaved changes.</value>
+  </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Only .NET projects can be checked.</value>
   </data>
@@ -2701,6 +2707,12 @@
   </data>
   <data name="DevelopmentStudio.RunningState" xml:space="preserve">
     <value>Running.</value>
+  </data>
+  <data name="DevelopmentStudio.SaveFailed" xml:space="preserve">
+    <value>Save failed: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.SavedFile" xml:space="preserve">
+    <value>Saved {0}.</value>
   </data>
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Writing the SBOM...</value>
@@ -2755,6 +2767,9 @@
   </data>
   <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
     <value>The file is too large to show here.</value>
+  </data>
+  <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
+    <value>Unsaved changes in the editor: Ctrl+S saves them first.</value>
   </data>
   <data name="DevelopmentStudio.Watch" xml:space="preserve">
     <value>Watch</value>
@@ -6667,6 +6682,18 @@
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
+    <value>Type to edit  Ctrl+S:save  F9:breakpoint  F5:debug  F7:output tab  Esc:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
+    <value>Enter:open the error at its line  F7:output tab  Esc:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
+    <value>Enter:open  Left/Right:expand  Space:check  B/C/T/R:build/clean/test/run  M:main  K:SDKs  Esc:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
+    <value>Up/Down/PgUp/PgDn:scroll  F7:output tab  X:cancel  Esc:close</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:search/read  Tab:field  F3:whole  F2:browser  Esc:close</value>
