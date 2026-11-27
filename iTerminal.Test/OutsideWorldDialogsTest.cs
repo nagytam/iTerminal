@@ -27,7 +27,7 @@ public class OutsideWorldDialogsTest
     [TestMethod]
     public async Task CtrlNScansTheNetworkAndListsWhatItFinds()
     {
-        Assert.IsTrue(await _app.PressAsync("Ctrl+N"));
+        Assert.IsTrue(await _app.PressAsync("Alt+Shift+F8"));
 
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.NetworkBrowserDialog, "the network browser");
         await _app.WaitForTextAsync(SandboxServices.HostAddress.ToString());

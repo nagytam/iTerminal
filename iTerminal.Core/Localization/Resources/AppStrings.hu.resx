@@ -9513,7 +9513,7 @@
     <value>Mappák, kedvencek és távoli gépek: Mappaválasztó (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Mentett gépek és hitelesítő adataik: Hálózatböngésző (Ctrl+N).</value>
+    <value>Mentett gépek és hitelesítő adataik: Hálózatböngésző (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Hálózati csatolók: Hálózatkezelő.</value>

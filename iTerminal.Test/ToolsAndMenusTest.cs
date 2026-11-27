@@ -28,12 +28,43 @@ public class ToolsAndMenusTest
 
     [Timeout(120_000)]
     [TestMethod]
-    public async Task CtrlEOpensTheUnitConverterNotTheEditMenu()
+    public async Task AltShiftF5OpensTheUnitConverter()
     {
-        Assert.IsTrue(await _app.PressAsync("Ctrl+E"));
+        Assert.IsTrue(await _app.PressAsync("Alt+Shift+F5"));
 
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.UnitConverter.UnitConverterDialog,
-            "Ctrl+E — the key on the converter's own button and in the Tools menu — to open the converter");
+            "Alt+Shift+F5 — the key on the converter's own button and in the Tools menu — to open the converter");
+    }
+
+    /// <summary>
+    /// The menu hot keys work from a file panel, and no panel or global command takes them: Ctrl+E used to open the unit
+    /// converter and Ctrl+T the Brief listing, so from a panel the Edit and Tools menus never opened.
+    /// </summary>
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheMenuHotKeysOpenTheirMenuFromAFilePanel()
+    {
+        (string Chord, string Entry)[] menus =
+        [
+            ("Ctrl+F", "Quick View"),
+            ("Ctrl+E", "Copy to Clipboard"),
+            ("Ctrl+N", "Go To Folder"),
+            ("Ctrl+T", "Disk Manager"),
+            ("Ctrl+H", "About"),
+        ];
+
+        foreach (var (chord, entry) in menus)
+        {
+            Assert.IsTrue(await _app.PressAsync(chord), $"{chord} should be handled");
+
+            await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar,
+                $"{chord} to open a menu from the file panel");
+            await _app.WaitForTextAsync(entry);
+
+            await _app.PressAsync("Esc");
+            await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not Core.Controls.MenuBar.TerminalMenuBar,
+                $"{chord}'s menu to close");
+        }
     }
 
     /// <summary>On Linux and Windows the Virtual machine manager is listed directly under Calculator in the Tools menu; elsewhere it is not listed at all.</summary>

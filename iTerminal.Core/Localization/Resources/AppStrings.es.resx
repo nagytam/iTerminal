@@ -9513,7 +9513,7 @@
     <value>Carpetas, favoritos y hosts remotos: selector de carpetas (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Hosts guardados y sus credenciales: explorador de red (Ctrl+N).</value>
+    <value>Hosts guardados y sus credenciales: explorador de red (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Interfaces de red: administrador de red.</value>

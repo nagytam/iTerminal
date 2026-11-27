@@ -9513,7 +9513,7 @@
     <value>Dossiers, favoris et hôtes distants : sélecteur de dossiers (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Hôtes enregistrés et leurs identifiants : navigateur réseau (Ctrl+N).</value>
+    <value>Hôtes enregistrés et leurs identifiants : navigateur réseau (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Interfaces réseau : gestionnaire réseau.</value>

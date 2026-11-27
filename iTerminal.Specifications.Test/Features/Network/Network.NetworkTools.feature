@@ -1,6 +1,6 @@
 @ignore
 Feature: Network manager and network browser
-  Ctrl+F5 shows network connections and their state. Ctrl+N browses the machines on the local network.
+  Ctrl+F5 shows network connections and their state. Alt+Shift+F8 browses the machines on the local network.
 
   Background:
     Given iTerminal has just started
@@ -14,8 +14,8 @@ Feature: Network manager and network browser
     When I press "F5"
     Then the list is read again
 
-  Scenario: Ctrl+N browses the machines on the local network
-    When I press "Ctrl+N"
+  Scenario: Alt+Shift+F8 browses the machines on the local network
+    When I press "Alt+Shift+F8"
     Then the network browser lists the computers it finds
 
   Scenario: Enter on a computer in the network browser opens its shares

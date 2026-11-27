@@ -16,7 +16,7 @@ public class SettingsNetworkTabPageTest
 
         var labels = page.Controls.AsSnapshot().OfType<Label>().Select(l => l.Text).ToList();
 
-        Assert.IsTrue(labels.Any(l => l.Contains("Network browser (Ctrl+N)")));
+        Assert.IsTrue(labels.Any(l => l.Contains("Network browser (Alt+Shift+F8)")));
     }
 
     [Timeout(60_000)]
