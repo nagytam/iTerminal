@@ -124,6 +124,21 @@ public sealed class MtpDriveService(IMtpBackend backend) : IMtpDriveService
 
     public bool ExistsFile(Url url) => Find(url) is { IsFolder: false };
 
+    public async Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => await FindAsync(url, cancellationToken).ConfigureAwait(false) is { IsFolder: false };
+
+    public async Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken)
+    {
+        var (_, path) = Split(url);
+        if (path.Length == 0)
+        {
+            // The root and a device's list of storages are folders; whether a device is plugged in
+            // is the listing's to say.
+            return true;
+        }
+
+        return !path.Contains('/') || await FindAsync(url, cancellationToken).ConfigureAwait(false) is { IsFolder: true };
+    }
+
     public bool ExistsFolder(Url url)
     {
         var (_, path) = Split(url);
@@ -138,6 +153,27 @@ public sealed class MtpDriveService(IMtpBackend backend) : IMtpDriveService
     }
 
     /// <summary>The row <paramref name="url"/> names, found by listing its folder; null when there is none or the device is gone.</summary>
+    private async Task<MtpItem?> FindAsync(Url url, CancellationToken cancellationToken)
+    {
+        var (device, path) = Split(url);
+        var slash = path.LastIndexOf('/');
+        if (device.Length == 0 || slash < 0)
+        {
+            return null;
+        }
+
+        try
+        {
+            var items = await backend.ListAsync(device, path[..slash], cancellationToken).ConfigureAwait(false);
+            return items.FirstOrDefault(i => string.Equals(i.Name, path[(slash + 1)..], StringComparison.Ordinal));
+        }
+        catch (Exception exception) when (exception is IOException or NotSupportedException or InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>The synchronous form of <see cref="FindAsync"/>, for the synchronous members.</summary>
     private MtpItem? Find(Url url)
     {
         var (device, path) = Split(url);
@@ -191,6 +227,21 @@ public sealed class MtpDriveService(IMtpBackend backend) : IMtpDriveService
     {
         var (device, path) = RequireInsideStorage(url);
         return backend.CreateFolderAsync(device, path.TrimEnd('/'), CancellationToken.None);
+    }
+
+    // A phone has no recycle bin: the flag is ignored, as on the other remote drives.
+    public async Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken)
+    {
+        var (device, path) = RequireInsideStorage(url);
+        await backend.DeleteAsync(device, path, isFolder: false, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken)
+    {
+        var (device, path) = RequireInsideStorage(url);
+        await backend.DeleteAsync(device, path, isFolder: true, cancellationToken).ConfigureAwait(false);
+        return true;
     }
 
     public bool DeleteFile(Url url, bool moveToRecycleBin)

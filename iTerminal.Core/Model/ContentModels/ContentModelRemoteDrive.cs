@@ -152,6 +152,10 @@ public abstract class ContentModelRemoteDrive(
         return remoteFileSystemService.ExistsFolder(url);
     }
 
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => remoteFileSystemService.ExistsFileAsync(url, cancellationToken);
+
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => remoteFileSystemService.ExistsFolderAsync(url, cancellationToken);
+
     public override async Task<IMemoryFile?> ReadFileAsync(Url url)
     {
         return await remoteFileSystemService.ReadFileAsync(url);

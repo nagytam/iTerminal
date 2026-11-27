@@ -13,6 +13,31 @@ public interface IFileSystem
     Task CopyAsync(Url sourceUrl, Url targetUrl, bool overwrite);
     bool ExistsFile(Url url);
     bool ExistsFolder(Url url);
+
+    /// <summary>
+    /// Whether a file is at <paramref name="url"/>. Asks the drive without blocking the caller; a cancelled token is
+    /// rethrown rather than read as "not there". The default answers through <see cref="ExistsFile"/>.
+    /// </summary>
+    Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => Task.FromResult(ExistsFile(url));
+
+    /// <summary>
+    /// Whether a folder is at <paramref name="url"/>. Asks the drive without blocking the caller; a cancelled token is
+    /// rethrown rather than read as "not there". The default answers through <see cref="ExistsFolder"/>.
+    /// </summary>
+    Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => Task.FromResult(ExistsFolder(url));
+
+    /// <summary>
+    /// Deletes the file at <paramref name="url"/> without blocking the caller. The result is false when there was
+    /// nothing to delete. The default deletes through <see cref="DeleteFile"/>.
+    /// </summary>
+    Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => Task.FromResult(DeleteFile(url, moveToRecycleBin));
+
+    /// <summary>
+    /// Deletes the folder at <paramref name="url"/> without blocking the caller. The result is false when there was
+    /// nothing to delete. The default deletes through <see cref="DeleteFolder"/>.
+    /// </summary>
+    Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken) => Task.FromResult(DeleteFolder(url, recursive, moveToRecycleBin));
+
     Task CreateFolderAsync(Url url);
 
     /// <summary>

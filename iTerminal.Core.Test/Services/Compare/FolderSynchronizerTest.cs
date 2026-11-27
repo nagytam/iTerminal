@@ -196,8 +196,8 @@ public class FolderSynchronizerTest
         var task = new FolderSyncTask(plan, Folder("L"), _fileSystem, Folder("R"), target.Object);
         await task.RunAsync();
 
-        target.Verify(f => f.DeleteFile(It.Is<Url>(u => u.FullName.EndsWith("extra.txt")), true), Times.Once);
-        target.Verify(f => f.DeleteFolder(It.Is<Url>(u => u.FullName.TrimEnd('/', '\\').EndsWith("extra-folder")), true, true), Times.Once);
+        target.Verify(f => f.DeleteFileAsync(It.Is<Url>(u => u.FullName.EndsWith("extra.txt")), true, It.IsAny<CancellationToken>()), Times.Once);
+        target.Verify(f => f.DeleteFolderAsync(It.Is<Url>(u => u.FullName.TrimEnd('/', '\\').EndsWith("extra-folder")), true, true, It.IsAny<CancellationToken>()), Times.Once);
         Assert.AreEqual(2, task.Deleted);
     }
 

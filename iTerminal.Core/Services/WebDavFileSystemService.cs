@@ -337,6 +337,53 @@ public class WebDavFileSystemService : IWebDavFileSystemService, IFolderListingF
 
     public bool ExistsFolder(Url url) => Exists(url, folder: true);
 
+    // The async members do not take _gate: a lock cannot be held across an await. They work on the client they read at
+    // the start. A connect or disconnect that lands during the request disposes that client, so the request fails with
+    // an error (the exact type depends on the handler), and an existence check may then read as "not there".
+    private async Task<List<Resource>?> PropFindAtAsync(Url url, int depth, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(PropFind, RequestUri(url))
+        {
+            Content = new StringContent(PropFindBody, System.Text.Encoding.UTF8, "application/xml"),
+        };
+        request.Headers.Add("Depth", depth.ToString(CultureInfo.InvariantCulture));
+        using var response = await Client.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken).ConfigureAwait(false);
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        if (!response.IsSuccessStatusCode && (int)response.StatusCode != 207)
+        {
+            throw Failure("listing", response);
+        }
+
+        return ParseMultiStatus(await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
+    }
+
+    private async Task<bool> ExistsAsync(Url url, bool folder, CancellationToken cancellationToken)
+    {
+        if (_client is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            var found = await PropFindAtAsync(url, 0, cancellationToken).ConfigureAwait(false);
+            return found is { Count: > 0 } && found[0].IsFolder == folder;
+        }
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
+        {
+            _logger?.Warning(exception, "WebDAV exists check failed for {Url}", url.FullUrl);
+            return false;
+        }
+    }
+
+    public Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, folder: false, cancellationToken);
+
+    public Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, folder: true, cancellationToken);
+
     public Task<IMemoryFile?> ReadFileAsync(Url url)
     {
         lock (_gate)
@@ -386,6 +433,20 @@ public class WebDavFileSystemService : IWebDavFileSystemService, IFolderListingF
         return Task.CompletedTask;
     }
 
+    private async Task<bool> DeleteAsync(Url url, bool folder, CancellationToken cancellationToken)
+    {
+        var target = folder && !url.Path.EndsWith('/') ? new Url(url.FullUrl + "/") : url;
+        using var request = new HttpRequestMessage(HttpMethod.Delete, RequestUri(target));
+        using var response = await Client.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken).ConfigureAwait(false);
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return false;
+        }
+
+        EnsureSuccess("delete", response);
+        return true;
+    }
+
     private bool Delete(Url url, bool folder)
     {
         var target = folder && !url.Path.EndsWith('/') ? new Url(url.FullUrl + "/") : url;
@@ -404,6 +465,10 @@ public class WebDavFileSystemService : IWebDavFileSystemService, IFolderListingF
     }
 
     // The server has no recycle bin to offer, so the flag is ignored — as on the other remote drives.
+    public Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => DeleteAsync(url, folder: false, cancellationToken);
+
+    public Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken) => DeleteAsync(url, folder: true, cancellationToken);
+
     public bool DeleteFile(Url url, bool moveToRecycleBin) => Delete(url, folder: false);
 
     public bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin) => Delete(url, folder: true);

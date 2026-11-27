@@ -45,7 +45,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
             // than being written to a path that is the folder's. Asked here, on the task's thread: on a
             // remote drive it is a round trip.
             var asFolder = new Url(UrlPath.TrimFolder(_targetUrl.FullUrl) + UrlPath.SeparatorOf(_targetUrl.FullUrl));
-            if (target.ExistsFolder(asFolder) && !target.ExistsFile(_targetUrl))
+            if (await target.ExistsFolderAsync(asFolder, CancellationToken).ConfigureAwait(false) && !await target.ExistsFileAsync(_targetUrl, CancellationToken).ConfigureAwait(false))
             {
                 _targetUrl = new Url(UrlPath.Child(_targetUrl.FullUrl, FocusedEntry.NameOf(sourceUrl), isFolder: false));
             }
@@ -73,8 +73,9 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
             // A conflict is decided before anything is reserved or written: a skipped file neither
             // triggers the space warning nor touches the target.
             var replace = false;
-            if (target.ExistsFile(_targetUrl))
+            if (await target.ExistsFileAsync(_targetUrl, CancellationToken).ConfigureAwait(false))
             {
+                // The resolver asks by name, several times, so it keeps the synchronous check (a Func<Url, bool>).
                 var decision = await resolver.DecideAsync(sourceUrl, _targetUrl, target.ExistsFile, CancellationToken);
                 if (decision.Skip)
                 {
@@ -126,7 +127,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                 }
                 catch (OperationCanceledException)
                 {
-                    TryDeletePartialTarget();
+                    await TryDeletePartialTargetAsync().ConfigureAwait(false);
                     throw;
                 }
 
@@ -142,7 +143,8 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
 
                 if (DeletesSource)
                 {
-                    source.DeleteFile(sourceUrl, moveToRecycleBin: false);
+                    // The copy is complete and verified, so this runs without the token: a cancel must not leave both files.
+                    await source.DeleteFileAsync(sourceUrl, moveToRecycleBin: false, CancellationToken.None).ConfigureAwait(false);
                 }
             }
 
@@ -168,11 +170,12 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
         return string.Equals(Norm(first.FullUrl), Norm(second.FullUrl), StringComparison.Ordinal);
     }
 
-    private void TryDeletePartialTarget()
+    // The cleanup runs after a cancel, so it takes no token: it must still run once the task's own token is cancelled.
+    private async Task TryDeletePartialTargetAsync()
     {
         try
         {
-            target.DeleteFile(_targetUrl, moveToRecycleBin: false);
+            await target.DeleteFileAsync(_targetUrl, moveToRecycleBin: false, CancellationToken.None).ConfigureAwait(false);
         }
         catch
         {

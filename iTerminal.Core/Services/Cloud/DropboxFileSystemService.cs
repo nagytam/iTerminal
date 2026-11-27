@@ -205,22 +205,22 @@ public class DropboxFileSystemService : HttpFileSystemServiceBase, IDropboxFileS
         return document is null ? null : document.RootElement.GetProperty(".tag").GetString();
     }
 
-    private bool Exists(Url url, string kind)
+    private async Task<bool> ExistsAsync(Url url, string kind, CancellationToken cancellationToken)
     {
         try
         {
-            return KindAsync(url).GetAwaiter().GetResult() == kind;
+            return await KindAsync(url, cancellationToken).ConfigureAwait(false) == kind;
         }
-        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException)
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
         {
             Logger?.Warning(exception, "Dropbox exists check failed for {Url}", url.FullUrl);
             return false;
         }
     }
 
-    public override bool ExistsFile(Url url) => Exists(url, "file");
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, "file", cancellationToken);
 
-    public override bool ExistsFolder(Url url) => Exists(url, "folder");
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, "folder", cancellationToken);
 
     // --- transfer -----------------------------------------------------------------------------
 
@@ -365,28 +365,28 @@ public class DropboxFileSystemService : HttpFileSystemServiceBase, IDropboxFileS
         }
     }
 
-    private bool Delete(Url url)
+    private async Task<bool> DeleteAsync(Url url, CancellationToken cancellationToken)
     {
         if (DropboxPath(url).Length == 0)
         {
             return false;
         }
 
-        using var document = CallAsync("delete", "/2/files/delete_v2", new Dictionary<string, object> { ["path"] = DropboxPath(url) }, url, notFoundIsNull: true).GetAwaiter().GetResult();
+        using var document = await CallAsync("delete", "/2/files/delete_v2", new Dictionary<string, object> { ["path"] = DropboxPath(url) }, url, notFoundIsNull: true, cancellationToken).ConfigureAwait(false);
         return document is not null;
     }
 
-    public override bool DeleteFile(Url url, bool moveToRecycleBin) => Delete(url);
+    public override Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => DeleteAsync(url, cancellationToken);
 
-    public override bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin)
+    public override async Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken)
     {
         // Dropbox's delete takes the whole subtree, so a folder that is not to be deleted recursively must be empty first.
-        if (!recursive && ListAsync(url, CancellationToken.None).GetAwaiter().GetResult().Count > 0)
+        if (!recursive && (await ListAsync(url, cancellationToken).ConfigureAwait(false)).Count > 0)
         {
             throw new IOException("Dropbox: the folder is not empty. Delete its contents first.");
         }
 
-        return Delete(url);
+        return await DeleteAsync(url, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>The source must be there before anything at the target is deleted; otherwise an overwrite would lose the target and move nothing.</summary>
@@ -418,7 +418,7 @@ public class DropboxFileSystemService : HttpFileSystemServiceBase, IDropboxFileS
 
         if (await KindAsync(targetUrl).ConfigureAwait(false) is not null)
         {
-            Delete(targetUrl);
+            await DeleteAsync(targetUrl, CancellationToken.None).ConfigureAwait(false);
         }
 
         using var document = await CallAsync("move", "/2/files/move_v2", new Dictionary<string, object>
@@ -445,7 +445,7 @@ public class DropboxFileSystemService : HttpFileSystemServiceBase, IDropboxFileS
 
         if (await KindAsync(targetUrl).ConfigureAwait(false) is not null)
         {
-            Delete(targetUrl);
+            await DeleteAsync(targetUrl, CancellationToken.None).ConfigureAwait(false);
         }
 
         using var document = await CallAsync("copy", "/2/files/copy_v2", new Dictionary<string, object>

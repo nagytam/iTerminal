@@ -310,13 +310,13 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
         return XDocument.Parse(body);
     }
 
-    private async Task<HttpResponseMessage> HeadAsync(string account, string address)
+    private async Task<HttpResponseMessage> HeadAsync(string account, string address, CancellationToken cancellationToken = default)
     {
-        return await SendAsync(() => Request(Head, account, address)).ConfigureAwait(false);
+        return await SendAsync(() => Request(Head, account, address), cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Whether a blob (not a folder) is there: a HEAD answers 200 for it.</summary>
-    private bool BlobExists(Url url)
+    private async Task<bool> BlobExistsAsync(Url url, CancellationToken cancellationToken)
     {
         var name = BlobNameOf(url);
         if (ContainerOf(url).Length == 0 || name.Length == 0)
@@ -326,10 +326,10 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
 
         try
         {
-            using var response = HeadAsync(AccountOf(url), BlobPath(ContainerOf(url), name)).GetAwaiter().GetResult();
+            using var response = await HeadAsync(AccountOf(url), BlobPath(ContainerOf(url), name), cancellationToken).ConfigureAwait(false);
             return response.IsSuccessStatusCode;
         }
-        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException)
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
         {
             Logger?.Warning(exception, "Azure Blob exists check failed for {Url}", url.FullUrl);
             return false;
@@ -337,7 +337,7 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
     }
 
     /// <summary>A folder is there when its container is, or when anything is listed under its prefix.</summary>
-    private bool FolderExists(Url url)
+    private async Task<bool> FolderExistsAsync(Url url, CancellationToken cancellationToken)
     {
         var container = ContainerOf(url);
         if (container.Length == 0)
@@ -350,26 +350,26 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
         try
         {
             var address = "/" + Uri.EscapeDataString(container) + Query(("restype", "container"), ("comp", "list"), ("prefix", prefix), ("maxresults", "1"));
-            using var response = SendAsync(() => Request(HttpMethod.Get, AccountOf(url), address)).GetAwaiter().GetResult();
+            using var response = await SendAsync(() => Request(HttpMethod.Get, AccountOf(url), address), cancellationToken: cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
                 return false;
             }
 
-            var document = XDocument.Parse(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+            var document = XDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             var blobs = document.Root?.Element("Blobs");
             return name.Length == 0 || (blobs is not null && (blobs.Elements().Any()));
         }
-        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException or System.Xml.XmlException)
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException or System.Xml.XmlException && !cancellationToken.IsCancellationRequested)
         {
             Logger?.Warning(exception, "Azure Blob folder check failed for {Url}", url.FullUrl);
             return false;
         }
     }
 
-    public override bool ExistsFile(Url url) => BlobExists(url);
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => BlobExistsAsync(url, cancellationToken);
 
-    public override bool ExistsFolder(Url url) => FolderExists(url);
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => FolderExistsAsync(url, cancellationToken);
 
     // --- transfer -----------------------------------------------------------------------------
 
@@ -498,9 +498,9 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
         }
     }
 
-    private async Task<bool> DeleteBlobAsync(string account, string container, string blobName)
+    private async Task<bool> DeleteBlobAsync(string account, string container, string blobName, CancellationToken cancellationToken)
     {
-        using var response = await SendAsync(() => Request(HttpMethod.Delete, account, BlobPath(container, blobName))).ConfigureAwait(false);
+        using var response = await SendAsync(() => Request(HttpMethod.Delete, account, BlobPath(container, blobName)), cancellationToken: cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return false;
@@ -514,7 +514,7 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
         return true;
     }
 
-    private bool Delete(Url url, bool recursive, bool isFolder)
+    private async Task<bool> DeleteAsync(Url url, bool recursive, bool isFolder, CancellationToken cancellationToken)
     {
         var account = AccountOf(url);
         var container = ContainerOf(url);
@@ -527,12 +527,12 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
         if (name.Length == 0)
         {
             // Deleting a container takes its blobs with it, so only the recursive delete does that.
-            if (!recursive && ListFlatAsync(account, container, string.Empty, CancellationToken.None).GetAwaiter().GetResult().Count > 0)
+            if (!recursive && (await ListFlatAsync(account, container, string.Empty, cancellationToken).ConfigureAwait(false)).Count > 0)
             {
                 throw new IOException("Azure Blob Storage: the container is not empty. Delete its contents first, or delete the container recursively.");
             }
 
-            using var response = SendAsync(() => Request(HttpMethod.Delete, account, "/" + Uri.EscapeDataString(container) + Query(("restype", "container")))).GetAwaiter().GetResult();
+            using var response = await SendAsync(() => Request(HttpMethod.Delete, account, "/" + Uri.EscapeDataString(container) + Query(("restype", "container"))), cancellationToken: cancellationToken).ConfigureAwait(false);
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return false;
@@ -540,7 +540,7 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
 
             if (!response.IsSuccessStatusCode)
             {
-                throw Failure("delete", response, ErrorCode(response.Content.ReadAsStringAsync().GetAwaiter().GetResult()));
+                throw Failure("delete", response, ErrorCode(await response.Content.ReadAsStringAsync().ConfigureAwait(false)));
             }
 
             return true;
@@ -549,23 +549,23 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
         if (!recursive)
         {
             // A folder's own entry is its marker, "name/"; a file is the blob itself.
-            return DeleteBlobAsync(account, container, isFolder ? name + "/" : name).GetAwaiter().GetResult();
+            return await DeleteBlobAsync(account, container, isFolder ? name + "/" : name, cancellationToken).ConfigureAwait(false);
         }
 
         var removed = false;
-        foreach (var blob in ListFlatAsync(account, container, name + "/", CancellationToken.None).GetAwaiter().GetResult())
+        foreach (var blob in await ListFlatAsync(account, container, name + "/", cancellationToken).ConfigureAwait(false))
         {
-            removed = DeleteBlobAsync(account, container, blob).GetAwaiter().GetResult() || removed;
+            removed = await DeleteBlobAsync(account, container, blob, cancellationToken).ConfigureAwait(false) || removed;
         }
 
         // The marker is deleted too, whatever the children did: both results are needed, so neither call is skipped.
-        var markerRemoved = DeleteBlobAsync(account, container, name + "/").GetAwaiter().GetResult();
+        var markerRemoved = await DeleteBlobAsync(account, container, name + "/", cancellationToken).ConfigureAwait(false);
         return removed || markerRemoved;
     }
 
-    public override bool DeleteFile(Url url, bool moveToRecycleBin) => Delete(url, recursive: false, isFolder: false);
+    public override Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => DeleteAsync(url, recursive: false, isFolder: false, cancellationToken);
 
-    public override bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin) => Delete(url, recursive, isFolder: true);
+    public override Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken) => DeleteAsync(url, recursive, isFolder: true, cancellationToken);
 
     /// <summary>Every blob name under <paramref name="prefix"/>, markers included, with no delimiter.</summary>
     private async Task<List<string>> ListFlatAsync(string account, string container, string prefix, CancellationToken cancellationToken)
@@ -621,7 +621,7 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
 
                     if (delete)
                     {
-                        await DeleteBlobAsync(AccountOf(sourceUrl), ContainerOf(sourceUrl), blob).ConfigureAwait(false);
+                        await DeleteBlobAsync(AccountOf(sourceUrl), ContainerOf(sourceUrl), blob, CancellationToken.None).ConfigureAwait(false);
                     }
 
                     continue;
@@ -642,7 +642,7 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
 
     private async Task TransferOneAsync(Url sourceUrl, Url targetUrl, bool overwrite, bool delete)
     {
-        if (!overwrite && BlobExists(targetUrl))
+        if (!overwrite && await BlobExistsAsync(targetUrl, CancellationToken.None).ConfigureAwait(false))
         {
             return;
         }
@@ -675,7 +675,7 @@ public class AzureBlobFileSystemService : HttpFileSystemServiceBase, IAzureBlobF
 
         if (delete)
         {
-            await DeleteBlobAsync(sourceAccount, ContainerOf(sourceUrl), BlobNameOf(sourceUrl)).ConfigureAwait(false);
+            await DeleteBlobAsync(sourceAccount, ContainerOf(sourceUrl), BlobNameOf(sourceUrl), CancellationToken.None).ConfigureAwait(false);
         }
     }
 

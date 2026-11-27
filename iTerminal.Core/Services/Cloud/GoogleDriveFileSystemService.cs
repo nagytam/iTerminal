@@ -254,23 +254,23 @@ public class GoogleDriveFileSystemService : HttpFileSystemServiceBase, IGoogleDr
         return Arrange(rows);
     }
 
-    private bool Exists(Url url, bool folder)
+    private async Task<bool> ExistsAsync(Url url, bool folder, CancellationToken cancellationToken)
     {
         try
         {
-            var item = ResolveAsync(url, CancellationToken.None).GetAwaiter().GetResult();
+            var item = await ResolveAsync(url, cancellationToken).ConfigureAwait(false);
             return item is not null && item.IsFolder == folder;
         }
-        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException)
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
         {
             Logger?.Warning(exception, "Google Drive exists check failed for {Url}", url.FullUrl);
             return false;
         }
     }
 
-    public override bool ExistsFile(Url url) => Exists(url, folder: false);
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, folder: false, cancellationToken);
 
-    public override bool ExistsFolder(Url url) => Exists(url, folder: true);
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, folder: true, cancellationToken);
 
     // --- transfer -----------------------------------------------------------------------------
 
@@ -418,9 +418,9 @@ public class GoogleDriveFileSystemService : HttpFileSystemServiceBase, IGoogleDr
         Forget(url);
     }
 
-    private async Task<bool> TrashAsync(Url url)
+    private async Task<bool> TrashAsync(Url url, CancellationToken cancellationToken)
     {
-        var item = await ResolveAsync(url, CancellationToken.None).ConfigureAwait(false);
+        var item = await ResolveAsync(url, cancellationToken).ConfigureAwait(false);
         if (item is null || Segments(url).Length == 0)
         {
             return false;
@@ -430,7 +430,7 @@ public class GoogleDriveFileSystemService : HttpFileSystemServiceBase, IGoogleDr
         using var response = await SendAsync(() => new HttpRequestMessage(new HttpMethod("PATCH"), address)
         {
             Content = Json(new Dictionary<string, object> { ["trashed"] = true }),
-        }).ConfigureAwait(false);
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw await ErrorAsync("delete", response).ConfigureAwait(false);
@@ -441,9 +441,9 @@ public class GoogleDriveFileSystemService : HttpFileSystemServiceBase, IGoogleDr
     }
 
     // Trashed, so recoverable from Drive's own bin; the flag has nothing to choose.
-    public override bool DeleteFile(Url url, bool moveToRecycleBin) => TrashAsync(url).GetAwaiter().GetResult();
+    public override Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => TrashAsync(url, cancellationToken);
 
-    public override bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin) => TrashAsync(url).GetAwaiter().GetResult();
+    public override Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken) => TrashAsync(url, cancellationToken);
 
     public override async Task MoveAsync(Url sourceUrl, Url targetUrl, bool overwrite)
     {
@@ -459,7 +459,7 @@ public class GoogleDriveFileSystemService : HttpFileSystemServiceBase, IGoogleDr
                 return;
             }
 
-            await TrashAsync(targetUrl).ConfigureAwait(false);
+            await TrashAsync(targetUrl, CancellationToken.None).ConfigureAwait(false);
         }
 
         var name = Segments(targetUrl)[^1];
@@ -509,7 +509,7 @@ public class GoogleDriveFileSystemService : HttpFileSystemServiceBase, IGoogleDr
                 return;
             }
 
-            await TrashAsync(targetUrl).ConfigureAwait(false);
+            await TrashAsync(targetUrl, CancellationToken.None).ConfigureAwait(false);
         }
 
         var address = $"{_api}/files/{Uri.EscapeDataString(item.Id)}/copy?fields=id&supportsAllDrives=true";
