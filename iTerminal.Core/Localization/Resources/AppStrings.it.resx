@@ -2399,7 +2399,10 @@
     <value>Sposta e ridimensiona i pannelli: le frecce spostano il pannello attivo verso quel bordo, Maiusc+frecce ne cambiano le dimensioni</value>
   </data>
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
-    <value>Rendi l'elemento sotto il cursore il programma principale: F5 e Ctrl+F5 lo avviano</value>
+    <value>Imposta il progetto principale (M): F5 e Ctrl+F5 lo avviano</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Il menu dell'elemento: i suoi comandi e Imposta come progetto principale</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Abrir el archivo (o ejecutar la prueba)</value>
@@ -2466,6 +2469,27 @@
   </data>
   <data name="DevelopmentStudio.MainTag" xml:space="preserve">
     <value>principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Compila</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Pulisci</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Rimuovi il progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Esegui il debug</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Esegui</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Imposta come progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Testa</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Abra un archivo (Intro) y coloque el cursor en una línea para poner un punto de interrupción.</value>

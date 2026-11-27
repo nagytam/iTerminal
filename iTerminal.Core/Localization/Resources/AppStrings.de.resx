@@ -2399,7 +2399,10 @@
     <value>Panels verschieben und in der Größe ändern: Pfeile verschieben das markierte Panel zu dieser Kante, Umschalt+Pfeile ändern die Größe</value>
   </data>
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
-    <value>Den Eintrag unter dem Cursor zum Hauptprogramm machen: F5 und Strg+F5 starten es</value>
+    <value>Das Hauptprojekt festlegen (M): F5 und Strg+F5 starten es</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Das Menü des Elements: seine Befehle und Als Hauptprojekt festlegen</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Open the file (or run the test)</value>
@@ -2466,6 +2469,27 @@
   </data>
   <data name="DevelopmentStudio.MainTag" xml:space="preserve">
     <value>Start</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Bereinigen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Hauptprojekt aufheben</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Debuggen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Ausführen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Als Hauptprojekt festlegen</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Testen</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Open a file (Enter) and put the cursor on a line to set a breakpoint.</value>

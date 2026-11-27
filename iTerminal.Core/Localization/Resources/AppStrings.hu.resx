@@ -2399,7 +2399,10 @@
     <value>Panelek mozgatása és átméretezése: a nyilak a kijelölt panelt az adott szélre viszik, a Shift+nyilak átméretezik</value>
   </data>
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
-    <value>A kurzor alatti elem legyen a főprogram: az F5 és a Ctrl+F5 ezt indítja</value>
+    <value>Főprojekt beállítása (M): az F5 és a Ctrl+F5 ezt indítja</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Az elem menüje: parancsai és a Beállítás főprojektként</value>
   </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Apri il file (o esegui il test)</value>
@@ -2466,6 +2469,27 @@
   </data>
   <data name="DevelopmentStudio.MainTag" xml:space="preserve">
     <value>fő</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Fordítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Tisztítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Főprojekt törlése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Hibakeresés</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Futtatás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Beállítás főprojektként</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Tesztelés</value>
   </data>
   <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
     <value>Apri un file (Invio) e posiziona il cursore su una riga per impostare un punto di interruzione.</value>
