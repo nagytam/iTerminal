@@ -2489,6 +2489,9 @@
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>Ln {0}, Col {1}</value>
   </data>
+  <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
+    <value>Elapsed {0}</value>
+  </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nothing here)</value>
   </data>

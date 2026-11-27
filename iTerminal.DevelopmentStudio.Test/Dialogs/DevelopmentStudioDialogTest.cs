@@ -30,12 +30,12 @@ public class DevelopmentStudioDialogTest
 
     private sealed record Harness(DevelopmentStudioDialog Dialog, FakeProcessRunner Runner, FakeDotnetSolutionService Dotnet, BreakpointStore Breakpoints);
 
-    private static async Task<Harness> OpenAsync(IReadOnlyList<DevelopmentProject> items, FakeDotnetSolutionService? dotnet = null, string? solutionPath = null, FakeProcessRunner? runner = null, MainProgramStore? mainProgram = null, CSharpLanguageServer? server = null)
+    private static async Task<Harness> OpenAsync(IReadOnlyList<DevelopmentProject> items, FakeDotnetSolutionService? dotnet = null, string? solutionPath = null, FakeProcessRunner? runner = null, MainProgramStore? mainProgram = null, CSharpLanguageServer? server = null, FakeSettingsService? settings = null)
     {
         dotnet ??= new FakeDotnetSolutionService { Solution = TwoProjects, Sdks = [new DotnetSdk("9.0.100", "/sdk/9")] };
         runner ??= new FakeProcessRunner();
         var breakpoints = new BreakpointStore(new TestDatabase());
-        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()), SyntaxHighlightingService.Default, new FakeSdkManager())
+        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()), SyntaxHighlightingService.Default, new FakeSdkManager(), settings ?? new FakeSettingsService())
         {
             Folder = "/src",
         };
@@ -306,7 +306,7 @@ public class DevelopmentStudioDialogTest
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.T, 't'));
         await WaitIdleAsync(harness.Dialog);
 
-        Assert.AreEqual("Tests: 4 passed, 0 failed, 1 skipped.", harness.Dialog.Status);
+        StringAssert.StartsWith(harness.Dialog.Status, "Tests: 4 passed, 0 failed, 1 skipped. Elapsed ");
     }
 
     [Timeout(60_000)]
@@ -582,6 +582,75 @@ public class DevelopmentStudioDialogTest
         var harness = await OpenAsync([Solution, App]);
 
         Assert.AreEqual(StudioPanelKind.Explorer, harness.Dialog.FocusedPanel);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheLayoutSbomFormatAndOutputTabAreKeptForTheNextOpening()
+    {
+        var settings = new FakeSettingsService();
+        var first = await OpenAsync([Solution, App], settings: settings);
+
+        // F8 and Left move the focused Explorer to the empty left edge; F8 ends the layout mode.
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F, 'f'));
+
+        var second = await OpenAsync([Solution, App], settings: settings);
+
+        Assert.AreEqual(DockSide.Left, SideOf(second.Dialog, StudioPanelKind.Explorer), "the Explorer keeps the edge it was moved to");
+        Assert.AreEqual(DockSide.Fill, SideOf(second.Dialog, StudioPanelKind.Editor), "the centre is still the editor");
+        Assert.AreEqual("Errors", settings.Get(StudioSettings.OutputTabKey), "the output tab is saved");
+
+        // The SBOM format was saved as JSON, so the next F switches it back to XML.
+        Assert.AreEqual("Json", settings.Get(StudioSettings.SbomFormatKey));
+        await second.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F, 'f'));
+        Assert.AreEqual("Xml", settings.Get(StudioSettings.SbomFormatKey), "the SBOM format is restored on opening");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheExplorerExpansionAndCursorRowAreKeptForTheNextOpening()
+    {
+        var settings = new FakeSettingsService();
+        var firstRunner = new FakeProcessRunner();
+        var first = await OpenAsync([Solution, App, AppTest, Script, Java], runner: firstRunner, settings: settings);
+
+        // Left collapses the solution under the cursor; Down moves onto the script below it.
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        first.Dialog.OnIdle();
+
+        Assert.AreEqual("/src/tool.py", settings.Get(StudioSettings.SelectedPathKey), "the cursor row is saved");
+        Assert.AreEqual(0, StudioSettings.DecodeList(settings.Get(StudioSettings.ExpandedFoldersKey)).Count, "the collapsed solution is saved as collapsed");
+
+        var secondRunner = new FakeProcessRunner();
+        var second = await OpenAsync([Solution, App, AppTest, Script, Java], runner: secondRunner, settings: settings);
+
+        CollectionAssert.Contains(second.Dialog.ExplorerRows.ToList(), "▸ Solution  App", "the solution stays collapsed");
+        Assert.IsFalse(second.Dialog.ExplorerRows.Any(row => row.Contains("App.Test", StringComparison.Ordinal)), "its projects stay hidden");
+
+        // B builds the item under the cursor, so the saved row is the one it builds.
+        await second.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(second.Dialog);
+        CollectionAssert.Contains(secondRunner.Commands.Single().Arguments.ToList(), "/src/tool.py", "the cursor is back on the script");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ACommandsElapsedTimeIsWrittenToTheOutputAndTheStatus()
+    {
+        var runner = new FakeProcessRunner { OnRun = _ => Thread.Sleep(1100), Output = ["Build succeeded."] };
+        var harness = await OpenAsync([Solution, App, AppTest], runner: runner);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+
+        string elapsed = harness.Dialog.OutputLines.Single(line => line.StartsWith("Elapsed ", StringComparison.Ordinal));
+        Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(elapsed, @"^Elapsed \d+:\d{2}$"), $"'{elapsed}' is the elapsed time");
+        Assert.IsTrue(harness.Dialog.Status.EndsWith(elapsed, StringComparison.Ordinal), "the status line ends with the same elapsed time");
     }
 
     [Timeout(60_000)]
