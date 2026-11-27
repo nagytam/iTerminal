@@ -2329,6 +2329,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Rimosse {0} cartelle di cache di {1}.</value>
   </data>
+  <data name="DevelopmentStudio.ConfirmDeepClean" xml:space="preserve">
+    <value>Töröljem a(z) {0} bin és obj mappáit? y/n</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Lefedettség-mérés megszakítva.</value>
   </data>
@@ -2344,11 +2347,23 @@
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Debug</value>
   </data>
+  <data name="DevelopmentStudio.DeepCleanCancelled" xml:space="preserve">
+    <value>A bin és obj mappák törlése megszakítva.</value>
+  </data>
+  <data name="DevelopmentStudio.DeepCleanFailed" xml:space="preserve">
+    <value>Nem sikerült eltávolítani: {0}: {1}</value>
+  </data>
+  <data name="DevelopmentStudio.DeepCleaned" xml:space="preserve">
+    <value>{0} bin és obj mappa törölve ebből: {1}.</value>
+  </data>
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>{0}. sor, {1}. oszlop</value>
   </data>
   <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
     <value>Eltelt idő {0}</value>
+  </data>
+  <data name="DevelopmentStudio.ElapsedEstimate" xml:space="preserve">
+    <value>Eltelt {0}, becsült {1}</value>
   </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(niente qui)</value>
@@ -2391,6 +2406,9 @@
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>A kijelölt elem lefedettségének mérése / a kijelölt Python-szkript profilozása</value>
+  </data>
+  <data name="DevelopmentStudio.HintDeepClean" xml:space="preserve">
+    <value>A bin és obj mappák törlése is (előbb kérdez)</value>
   </data>
   <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
     <value>A kurzor alatti megoldás, projekt vagy mappa összecsukása vagy kibontása</value>
@@ -2478,6 +2496,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
     <value>Tisztítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCleanFolders" xml:space="preserve">
+    <value>bin és obj törlése</value>
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Főprojekt törlése</value>
@@ -2587,6 +2608,9 @@
   <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
     <value>{0} lefedettségének mérése...</value>
   </data>
+  <data name="DevelopmentStudio.RunningEstimate" xml:space="preserve">
+    <value>{0} {1} fut, becsült idő: {2}...</value>
+  </data>
   <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
     <value>{0} profilozása...</value>
   </data>
@@ -2638,11 +2662,23 @@
   <data name="DevelopmentStudio.Succeeded" xml:space="preserve">
     <value>{0} riuscito: {1}.</value>
   </data>
+  <data name="DevelopmentStudio.TestCounts" xml:space="preserve">
+    <value>{0} sikeres, {1} sikertelen, {2} kihagyott</value>
+  </data>
   <data name="DevelopmentStudio.TestExplorer" xml:space="preserve">
     <value>Esplora test: Invio o T esegue l'elemento di test sotto il cursore.</value>
   </data>
   <data name="DevelopmentStudio.TestExplorerHeading" xml:space="preserve">
     <value>Esplora test</value>
+  </data>
+  <data name="DevelopmentStudio.TestNoSummary" xml:space="preserve">
+    <value>nincs összesítés (kilépési kód: {0})</value>
+  </data>
+  <data name="DevelopmentStudio.TestOverall" xml:space="preserve">
+    <value>Összesen: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.TestRunHeading" xml:space="preserve">
+    <value>Az utolsó tesztfuttatás</value>
   </data>
   <data name="DevelopmentStudio.TestTotals" xml:space="preserve">
     <value>Test: {0} superati, {1} falliti, {2} saltati.</value>

@@ -974,4 +974,121 @@ public class DevelopmentStudioDialogTest
         Assert.IsTrue(harness.Dialog.OutputLines.Any(line => line.StartsWith("$ ", StringComparison.Ordinal)), "the Output tab lists the command that built");
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ATestRunSwitchesToTheTestViewerAndListsItsOverview()
+    {
+        var runner = new FakeProcessRunner
+        {
+            Output = ["Passed!  - Failed: 0, Passed: 4, Skipped: 1, Total: 5, Duration: 1 s - App.dll"],
+        };
+        var settings = new FakeSettingsService();
+        var harness = await OpenAsync([Solution, App, AppTest], runner: runner, settings: settings);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.T, 't'));
+        await WaitIdleAsync(harness.Dialog);
+
+        Assert.AreEqual("Last test run", harness.Dialog.ExplorerRows[0]);
+        Assert.AreEqual("  Overall: 4 passed, 0 failed, 1 skipped", harness.Dialog.ExplorerRows[1]);
+        Assert.AreEqual("  [pass] C#  App: 4 passed, 0 failed, 1 skipped", harness.Dialog.ExplorerRows[2]);
+        Assert.AreEqual("Tests", settings.Get(StudioSettings.ExplorerModeKey), "the Test Viewer is the left pane's mode, kept for the next opening");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFailedTestRunShowsItsFailuresInTheOverview()
+    {
+        var runner = new FakeProcessRunner
+        {
+            OutputFor = command => command.Arguments.Contains("/src/App.slnx")
+                ? ["Failed!  - Failed: 2, Passed: 3, Skipped: 0, Total: 5, Duration: 1 s - App.dll"]
+                : ["no summary here"],
+            ExitCode = 1,
+        };
+        var harness = await OpenAsync([Solution, App, AppTest], runner: runner);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.T, 't'));
+        await WaitIdleAsync(harness.Dialog);
+
+        Assert.AreEqual("  Overall: 3 passed, 2 failed, 0 skipped", harness.Dialog.ExplorerRows[1]);
+        Assert.AreEqual("  [fail] C#  App: 3 passed, 2 failed, 0 skipped", harness.Dialog.ExplorerRows[2]);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ShiftCAsksThenYDeletesTheBinAndObjFoldersAfterTheClean()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), "devstudio-deep-" + Guid.NewGuid().ToString("N"));
+        string projectDirectory = Path.Combine(folder, "App");
+        Directory.CreateDirectory(Path.Combine(projectDirectory, "bin", "Debug"));
+        Directory.CreateDirectory(Path.Combine(projectDirectory, "obj"));
+        File.WriteAllText(Path.Combine(projectDirectory, "bin", "Debug", "App.dll"), "x");
+        try
+        {
+            var project = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, Path.Combine(projectDirectory, "App.csproj"));
+            var runner = new FakeProcessRunner();
+            var harness = await OpenAsync([project], runner: runner);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.C, 'C', shift: true));
+
+            StringAssert.Contains(harness.Dialog.Status, "Delete the bin and obj folders of App? y/n");
+            Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectory, "bin")), "nothing is deleted before the answer");
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Y, 'y'));
+            await WaitIdleAsync(harness.Dialog);
+
+            Assert.AreEqual("clean", runner.Commands.Single().Arguments.First(), "the clean runs first");
+            Assert.IsFalse(Directory.Exists(Path.Combine(projectDirectory, "bin")));
+            Assert.IsFalse(Directory.Exists(Path.Combine(projectDirectory, "obj")));
+        }
+        finally
+        {
+            if (Directory.Exists(folder)) Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnswerOtherThanYLeavesTheBinAndObjFoldersAndCancelsTheQuestion()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), "devstudio-deep-" + Guid.NewGuid().ToString("N"));
+        string projectDirectory = Path.Combine(folder, "App");
+        Directory.CreateDirectory(Path.Combine(projectDirectory, "obj"));
+        try
+        {
+            var project = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, Path.Combine(projectDirectory, "App.csproj"));
+            var runner = new FakeProcessRunner();
+            var harness = await OpenAsync([project], runner: runner);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.C, 'C', shift: true));
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.N, 'n'));
+
+            StringAssert.Contains(harness.Dialog.Status, "cancelled");
+            Assert.AreEqual(0, runner.Commands.Count, "no clean ran");
+            Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectory, "obj")));
+        }
+        finally
+        {
+            if (Directory.Exists(folder)) Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ARunIsEstimatedFromItsMeasuredTimeOnTheNextOpening()
+    {
+        var settings = new FakeSettingsService();
+        var first = await OpenAsync([Solution, App, AppTest], runner: new FakeProcessRunner { OnRun = _ => Thread.Sleep(1100), Output = ["Build succeeded."] }, settings: settings);
+        await first.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(first.Dialog);
+
+        Assert.IsFalse(first.Dialog.Status.Contains("estimated", StringComparison.Ordinal), "a first run has nothing to estimate it by");
+        Assert.IsNotNull(settings.Get(StudioSettings.EstimatesKey), "the measured time is kept in the settings");
+
+        var second = await OpenAsync([Solution, App, AppTest], runner: new FakeProcessRunner { OnRun = _ => Thread.Sleep(1100), Output = ["Build succeeded."] }, settings: settings);
+        await second.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(second.Dialog);
+
+        Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(second.Dialog.Status, @"Elapsed \d+:\d{2}, estimated \d+:\d{2}$"), second.Dialog.Status);
+    }
 }

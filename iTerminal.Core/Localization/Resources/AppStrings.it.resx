@@ -2329,6 +2329,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Se quitaron {0} carpetas de caché de {1}.</value>
   </data>
+  <data name="DevelopmentStudio.ConfirmDeepClean" xml:space="preserve">
+    <value>Eliminare le cartelle bin e obj di {0}? y/n</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Misura della copertura annullata.</value>
   </data>
@@ -2344,11 +2347,23 @@
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Depuración</value>
   </data>
+  <data name="DevelopmentStudio.DeepCleanCancelled" xml:space="preserve">
+    <value>Pulizia delle cartelle bin e obj annullata.</value>
+  </data>
+  <data name="DevelopmentStudio.DeepCleanFailed" xml:space="preserve">
+    <value>Impossibile rimuovere {0}: {1}</value>
+  </data>
+  <data name="DevelopmentStudio.DeepCleaned" xml:space="preserve">
+    <value>Rimosse {0} cartelle bin e obj di {1}.</value>
+  </data>
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>Riga {0}, Col {1}</value>
   </data>
   <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
     <value>Tempo trascorso {0}</value>
+  </data>
+  <data name="DevelopmentStudio.ElapsedEstimate" xml:space="preserve">
+    <value>Durata {0}, stimata {1}</value>
   </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(nada aquí)</value>
@@ -2391,6 +2406,9 @@
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Misura la copertura dell'elemento selezionato / profila lo script Python selezionato</value>
+  </data>
+  <data name="DevelopmentStudio.HintDeepClean" xml:space="preserve">
+    <value>Pulire anche le cartelle bin e obj (chiede prima)</value>
   </data>
   <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
     <value>Comprimi o espandi la soluzione, il progetto o la cartella sotto il cursore</value>
@@ -2478,6 +2496,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
     <value>Pulisci</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCleanFolders" xml:space="preserve">
+    <value>Pulire bin e obj</value>
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Rimuovi il progetto principale</value>
@@ -2587,6 +2608,9 @@
   <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
     <value>Misura della copertura di {0}...</value>
   </data>
+  <data name="DevelopmentStudio.RunningEstimate" xml:space="preserve">
+    <value>Esecuzione di {0} {1}, stimata {2}...</value>
+  </data>
   <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
     <value>Profilo di {0}...</value>
   </data>
@@ -2638,11 +2662,23 @@
   <data name="DevelopmentStudio.Succeeded" xml:space="preserve">
     <value>{0} correcto: {1}.</value>
   </data>
+  <data name="DevelopmentStudio.TestCounts" xml:space="preserve">
+    <value>{0} superati, {1} falliti, {2} saltati</value>
+  </data>
   <data name="DevelopmentStudio.TestExplorer" xml:space="preserve">
     <value>Explorador de pruebas: Intro o T ejecuta el elemento de prueba bajo el cursor.</value>
   </data>
   <data name="DevelopmentStudio.TestExplorerHeading" xml:space="preserve">
     <value>Explorador de pruebas</value>
+  </data>
+  <data name="DevelopmentStudio.TestNoSummary" xml:space="preserve">
+    <value>nessun riepilogo (uscita {0})</value>
+  </data>
+  <data name="DevelopmentStudio.TestOverall" xml:space="preserve">
+    <value>Totale: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.TestRunHeading" xml:space="preserve">
+    <value>Ultima esecuzione dei test</value>
   </data>
   <data name="DevelopmentStudio.TestTotals" xml:space="preserve">
     <value>Pruebas: {0} correctas, {1} fallidas, {2} omitidas.</value>
