@@ -2441,7 +2441,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         try
         {
             // The tools print paths relative to the folder they ran in, which is the studio's folder or the solution's.
-            path = Path.GetFullPath(diagnostic.File, folder);
+            // The base must be fully qualified: a rooted path such as "/src" is not, on Windows, and would throw.
+            path = Path.GetFullPath(diagnostic.File, Path.GetFullPath(folder));
         }
         catch (ArgumentException)
         {
