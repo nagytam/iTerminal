@@ -24,6 +24,20 @@ public class MenuItemMnemonicTest
         }
     }
 
+    private sealed class UnavailableCommand(Key key) : Command
+    {
+        public int Runs { get; private set; }
+        public override Key? Key { get; init; } = key;
+
+        public override bool CanExecute() => false;
+
+        public override Task ExecuteAsync(object? args)
+        {
+            Runs++;
+            return Task.CompletedTask;
+        }
+    }
+
     private static (Control Root, MenuItem Edit) CreateScreen(params ICommand[] boundCommands)
     {
         var theme = new TestThemeService();
@@ -64,6 +78,20 @@ public class MenuItemMnemonicTest
 
         Assert.AreEqual(1, converter.Runs);
         Assert.IsFalse(edit.IsOpened);
+    }
+
+    /// <summary>A file panel's Ctrl+T cannot run while another panel has the focus, so Ctrl+T still opens the Tools menu.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ACommandBoundToTheChordThatCannotRun_LeavesTheMnemonicOpen()
+    {
+        var unavailable = new UnavailableCommand(new Key(ConsoleKey.E, false, false, true));
+        var (root, edit) = CreateScreen(unavailable);
+
+        Assert.IsTrue(await root.HandleKeyEventAsync(CtrlE));
+
+        Assert.AreEqual(0, unavailable.Runs);
+        Assert.IsTrue(edit.IsOpened);
     }
 
     [Timeout(60_000)]

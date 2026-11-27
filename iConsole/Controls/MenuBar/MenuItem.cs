@@ -543,22 +543,23 @@ public class MenuItem : PopUpWindow
     }
 
     /// <summary>
-    /// A menu's Ctrl+letter mnemonic gives way to a command bound to that same chord anywhere on the
-    /// screen. The menu bar is offered keys ahead of the controls below it, so the Edit menu's Ctrl+E
-    /// used to take the key from the unit converter — whose own button, and the Tools menu entry
-    /// for it, both told the user to press Ctrl+E. A mnemonic is a shortcut to a menu that ←/→
-    /// also reach once any menu is open; the command has no other key.
+    /// A menu's Ctrl+letter mnemonic gives way to a command bound to that same chord that can run right now,
+    /// anywhere on the screen. The menu bar is offered keys ahead of the controls below it, so the Edit menu's
+    /// Ctrl+E used to take the key from the unit converter — whose own button, and the Tools menu entry
+    /// for it, both told the user to press Ctrl+E. A command that cannot run (a file panel's Ctrl+T while
+    /// another panel or a dialog has the focus) does not take the chord, so the mnemonic still opens its menu.
+    /// A mnemonic is a shortcut to a menu that ←/→ also reach once any menu is open.
     /// </summary>
     public override Task<bool> HandleHotKeyEventAsync(KeyEvent keyEvent)
     {
-        if (HotKeyChar is not null && keyEvent.Control && IsBoundToACommand(GetRootControl(), keyEvent))
+        if (HotKeyChar is not null && keyEvent.Control && IsBoundToARunnableCommand(GetRootControl(), keyEvent))
         {
             return Task.FromResult(false);
         }
         return base.HandleHotKeyEventAsync(keyEvent);
     }
 
-    private static bool IsBoundToACommand(IControl control, KeyEvent keyEvent)
+    private static bool IsBoundToARunnableCommand(IControl control, KeyEvent keyEvent)
     {
         // A menu's own entries name their commands' keys, but run them only from the menu.
         if (control is MenuItem || control is not Control concrete)
@@ -566,9 +567,11 @@ public class MenuItem : PopUpWindow
             return false;
         }
 
-        if (concrete.Commands.AsSnapshot().Any(command => command.ActiveKey is not null && command.ActiveKey.IsIdentical(keyEvent))) return true;
+        if (concrete.Commands.AsSnapshot().Any(command => command.ActiveKey is not null
+            && command.ActiveKey.IsIdentical(keyEvent)
+            && command.CanExecute())) return true;
 
-        return concrete.Controls.AsArray().Any(child => IsBoundToACommand(child, keyEvent));
+        return concrete.Controls.AsArray().Any(child => IsBoundToARunnableCommand(child, keyEvent));
     }
 
     public override Task TriggerHotKeyAsync()
