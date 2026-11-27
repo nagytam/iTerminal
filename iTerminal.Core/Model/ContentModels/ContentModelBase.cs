@@ -861,6 +861,15 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
         throw new NotImplementedException();
     }
 
+    // The async members default to the synchronous ones, so a drive that does not override them behaves as before.
+    public virtual Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => Task.FromResult(ExistsFile(url));
+
+    public virtual Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => Task.FromResult(ExistsFolder(url));
+
+    public virtual Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => Task.FromResult(DeleteFile(url, moveToRecycleBin));
+
+    public virtual Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken) => Task.FromResult(DeleteFolder(url, recursive, moveToRecycleBin));
+
     public virtual Task CreateFolderAsync(Url url)
     {
         throw new NotImplementedException();

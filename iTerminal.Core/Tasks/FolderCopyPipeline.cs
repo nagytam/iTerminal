@@ -31,7 +31,7 @@ internal static class FolderCopyPipeline
         string operationName,
         CancellationToken cancellationToken,
         Action<long, long> reportProgress,
-        Action<Url>? onItemSucceeded = null,
+        Func<Url, Task>? onItemSucceeded = null,
         Action<long>? reportBytes = null,
         Action<Url>? onFileStarted = null,
         Func<CancellationToken, Task>? beforeFile = null,
@@ -107,7 +107,10 @@ internal static class FolderCopyPipeline
                             await verify(item.Source, item.Target, linkedCts.Token);
                         }
 
-                        onItemSucceeded?.Invoke(item.Source);
+                        if (onItemSucceeded is not null)
+                        {
+                            await onItemSucceeded(item.Source).ConfigureAwait(false);
+                        }
                     }
                     catch (OperationCanceledException)
                     {
@@ -132,7 +135,7 @@ internal static class FolderCopyPipeline
                         if (ex is not VerificationFailedException)
                         {
                             // A copy that failed its check is complete and kept for the user to look at.
-                            TryDeletePartialTarget(target, item.Target);
+                            await TryDeletePartialTargetAsync(target, item.Target).ConfigureAwait(false);
                         }
                     }
 
@@ -177,11 +180,12 @@ internal static class FolderCopyPipeline
         return failedItems;
     }
 
-    private static void TryDeletePartialTarget(IFileSystem target, Url targetUrl)
+    // Takes no token: the cleanup must still run after the copy was cancelled.
+    private static async Task TryDeletePartialTargetAsync(IFileSystem target, Url targetUrl)
     {
         try
         {
-            target.DeleteFile(targetUrl, moveToRecycleBin: false);
+            await target.DeleteFileAsync(targetUrl, moveToRecycleBin: false, CancellationToken.None).ConfigureAwait(false);
         }
         catch
         {

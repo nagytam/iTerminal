@@ -163,7 +163,7 @@ public class OneDriveFileSystemService : HttpFileSystemServiceBase, IOneDriveFil
         return Arrange(rows);
     }
 
-    private async Task<bool?> IsFolderAsync(Url url)
+    private async Task<bool?> IsFolderAsync(Url url, CancellationToken cancellationToken = default)
     {
         if (RawPath(url) == "/")
         {
@@ -171,7 +171,7 @@ public class OneDriveFileSystemService : HttpFileSystemServiceBase, IOneDriveFil
         }
 
         var address = ItemAddress(RawPath(url)) + "?$select=folder,file";
-        using var response = await SendAsync(() => Request(HttpMethod.Get, address)).ConfigureAwait(false);
+        using var response = await SendAsync(() => Request(HttpMethod.Get, address), cancellationToken: cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return null;
@@ -186,22 +186,22 @@ public class OneDriveFileSystemService : HttpFileSystemServiceBase, IOneDriveFil
         return document.RootElement.TryGetProperty("folder", out _);
     }
 
-    private bool Exists(Url url, bool folder)
+    private async Task<bool> ExistsAsync(Url url, bool folder, CancellationToken cancellationToken)
     {
         try
         {
-            return IsFolderAsync(url).GetAwaiter().GetResult() is { } isFolder && isFolder == folder;
+            return await IsFolderAsync(url, cancellationToken).ConfigureAwait(false) is { } isFolder && isFolder == folder;
         }
-        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException)
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
         {
             Logger?.Warning(exception, "OneDrive exists check failed for {Url}", url.FullUrl);
             return false;
         }
     }
 
-    public override bool ExistsFile(Url url) => Exists(url, folder: false);
+    public override Task<bool> ExistsFileAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, folder: false, cancellationToken);
 
-    public override bool ExistsFolder(Url url) => Exists(url, folder: true);
+    public override Task<bool> ExistsFolderAsync(Url url, CancellationToken cancellationToken) => ExistsAsync(url, folder: true, cancellationToken);
 
     // --- transfer -----------------------------------------------------------------------------
 
@@ -322,7 +322,7 @@ public class OneDriveFileSystemService : HttpFileSystemServiceBase, IOneDriveFil
         }
     }
 
-    private bool Delete(Url url)
+    private async Task<bool> DeleteAsync(Url url, CancellationToken cancellationToken)
     {
         var raw = RawPath(url);
         if (raw == "/")
@@ -330,7 +330,7 @@ public class OneDriveFileSystemService : HttpFileSystemServiceBase, IOneDriveFil
             return false;
         }
 
-        using var response = SendAsync(() => Request(HttpMethod.Delete, ItemAddress(raw))).GetAwaiter().GetResult();
+        using var response = await SendAsync(() => Request(HttpMethod.Delete, ItemAddress(raw)), cancellationToken: cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return false;
@@ -338,16 +338,16 @@ public class OneDriveFileSystemService : HttpFileSystemServiceBase, IOneDriveFil
 
         if (!response.IsSuccessStatusCode)
         {
-            throw ErrorAsync("delete", response).GetAwaiter().GetResult();
+            throw await ErrorAsync("delete", response).ConfigureAwait(false);
         }
 
         return true;
     }
 
     // OneDrive's own recycle bin takes everything deleted through the API, so the flag has nothing to choose.
-    public override bool DeleteFile(Url url, bool moveToRecycleBin) => Delete(url);
+    public override Task<bool> DeleteFileAsync(Url url, bool moveToRecycleBin, CancellationToken cancellationToken) => DeleteAsync(url, cancellationToken);
 
-    public override bool DeleteFolder(Url url, bool recursive, bool moveToRecycleBin) => Delete(url);
+    public override Task<bool> DeleteFolderAsync(Url url, bool recursive, bool moveToRecycleBin, CancellationToken cancellationToken) => DeleteAsync(url, cancellationToken);
 
     private static (string ParentRaw, string Name) Split(string raw)
     {
@@ -390,7 +390,7 @@ public class OneDriveFileSystemService : HttpFileSystemServiceBase, IOneDriveFil
                 return;
             }
 
-            Delete(targetUrl);
+            await DeleteAsync(targetUrl, CancellationToken.None).ConfigureAwait(false);
         }
 
         string? monitor;

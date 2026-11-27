@@ -117,7 +117,7 @@ public abstract class ContentModelFolderTransferTask(
                         UpdateProgress();
                     },
                     onItemSucceeded: DeletesSource
-                        ? url => source.DeleteFile(url, moveToRecycleBin: false)
+                        ? url => source.DeleteFileAsync(url, moveToRecycleBin: false, CancellationToken.None)
                         : null,
                     reportBytes: bytes =>
                     {
@@ -155,7 +155,7 @@ public abstract class ContentModelFolderTransferTask(
                 if (DeletesSource && failedItems.Count == 0)
                 {
                     Description = string.Join(Environment.NewLine, UiText.Get("Task.RemovingSource", "Removing source folder"), sourceUrl.FullName.Shrink(60));
-                    source.DeleteFolder(sourceUrl, recursive: true, moveToRecycleBin: false);
+                    await source.DeleteFolderAsync(sourceUrl, recursive: true, moveToRecycleBin: false, CancellationToken.None).ConfigureAwait(false);
                 }
             }
 
