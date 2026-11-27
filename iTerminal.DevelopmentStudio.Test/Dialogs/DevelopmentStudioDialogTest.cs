@@ -545,17 +545,87 @@ public class DevelopmentStudioDialogTest
         var harness = await OpenAsync([Solution]);
         var editorBefore = harness.Dialog.EditorLines.ToList();
 
-        // Output, then Errors, then Debug: the Errors tab sits between Output and Debug.
-        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
-        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+        // Output, Errors, Analysis, then Debug: the Errors and Analysis tabs sit between Output and Debug.
+        for (int i = 0; i < 3; i++) await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
 
-        CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), "Watch", "F7 twice moves the output panel to the debug tab");
+        CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), "Watch", "F7 three times moves the output panel to the debug tab");
         CollectionAssert.AreEqual(editorBefore, harness.Dialog.EditorLines.ToList(), "the editor keeps the source");
 
+        // Debug, Coverage, Profile, then back to Output.
         for (int i = 0; i < 3; i++) await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
 
         CollectionAssert.AreEqual(editorBefore, harness.Dialog.EditorLines.ToList(), "the editor keeps the source through the whole cycle");
-        CollectionAssert.DoesNotContain(harness.Dialog.OutputLines.ToList(), "Watch", "four presses come back to the output log");
+        CollectionAssert.DoesNotContain(harness.Dialog.OutputLines.ToList(), "Watch", "six presses come back to the output log");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task NRunsTheCodeAnalysisAndListsItsFindingsOnTheAnalysisTab()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "Program.cs");
+        File.WriteAllText(path, "one\ntwo\nthree\nfour\n");
+        try
+        {
+            // The analyzers report the same warning once per target framework: it is listed once.
+            var runner = new FakeProcessRunner
+            {
+                Output =
+                [
+                    $"{path}(3,5): warning CA1822: Member 'Run' does not access instance data [App.csproj]",
+                    $"{path}(3,5): warning CA1822: Member 'Run' does not access instance data [App.csproj]",
+                    $"{path}(4,1): error CS1002: ; expected [App.csproj]",
+                ],
+            };
+            var settings = new FakeSettingsService();
+            var harness = await OpenAsync([Solution, App], runner: runner, settings: settings);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.N, 'n'));
+            await WaitIdleAsync(harness.Dialog);
+
+            Assert.IsTrue(harness.Runner.Commands.Single().Arguments.Contains("--no-incremental"), "the analysis builds without the incremental cache, so the analyzers run");
+            Assert.AreEqual(StudioPanelKind.Output, harness.Dialog.FocusedPanel, "the Analysis tab takes the focus");
+
+            var lines = harness.Dialog.OutputLines.ToList();
+            Assert.AreEqual(3, lines.Count, "the summary, then one row per finding");
+            StringAssert.Contains(lines[0], "1 error(s), 1 warning(s)", "the summary counts the findings");
+            CollectionAssert.Contains(lines, $"{path}(3,5): warning CA1822: Member 'Run' does not access instance data [App.csproj]");
+            Assert.IsTrue(StudioSettings.DecodeDurations(settings.Get(StudioSettings.AnalysisDurationsKey)).ContainsKey(Solution.Path), "the time it took is kept as the next estimate");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EnterOnAnAnalysisFindingOpensItsFileAtItsLine()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "Program.cs");
+        File.WriteAllText(path, "one\ntwo\nthree\nfour\n");
+        try
+        {
+            var runner = new FakeProcessRunner { Output = [$"{path}(3,5): warning CA1822: Member 'Run' does not access instance data [App.csproj]"] };
+            var harness = await OpenAsync([Solution, App], runner: runner);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.N, 'n'));
+            await WaitIdleAsync(harness.Dialog);
+
+            // Row 0 is the summary, so the finding is one Down away.
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+            await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.CursorLineNumber == 3, $"the editor to open the file at line 3 (opened: {harness.Dialog.CursorLineNumber}, status: {harness.Dialog.Status})");
+            StringAssert.Contains(harness.Dialog.EditorLines[2], "three");
+            Assert.AreEqual(StudioPanelKind.Editor, harness.Dialog.FocusedPanel, "the opened file takes the focus");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
     }
 
     private static DockSide SideOf(DevelopmentStudioDialog dialog, StudioPanelKind kind) =>
@@ -751,7 +821,8 @@ public class DevelopmentStudioDialogTest
             // No FocusPanel here: the key goes straight to the file the user just opened.
             Assert.AreEqual(StudioPanelKind.Editor, harness.Dialog.FocusedPanel, "the opened file has the focus without another key");
             await harness.Dialog.HandleKeyEventAsync(Char('X'));
-            StringAssert.Contains(harness.Dialog.EditorLines[2], "Xthree", "a key pressed right after opening goes into the file");
+            // The error names column 5, so the cursor is before the fifth character of "three".
+            StringAssert.Contains(harness.Dialog.EditorLines[2], "threXe", "a key pressed right after opening goes into the file, at the column the error names");
         }
         finally
         {
@@ -879,11 +950,11 @@ public class DevelopmentStudioDialogTest
 
             FocusPanel(harness.Dialog, StudioPanelKind.Editor);
             await harness.Dialog.HandleKeyEventAsync(Char('X'));
-            StringAssert.Contains(harness.Dialog.EditorLines[2], "Xthree", "a typed letter goes into the file, not to a command");
+            StringAssert.Contains(harness.Dialog.EditorLines[2], "threXe", "a typed letter goes into the file, not to a command");
 
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.S, 's', control: true));
-            await WaitUntilAsync(() => File.ReadAllText(path).Contains("Xthree", StringComparison.Ordinal), "Ctrl+S to write the file");
-            StringAssert.Contains(File.ReadAllText(path), "Xthree");
+            await WaitUntilAsync(() => File.ReadAllText(path).Contains("threXe", StringComparison.Ordinal), "Ctrl+S to write the file");
+            StringAssert.Contains(File.ReadAllText(path), "threXe");
         }
         finally
         {

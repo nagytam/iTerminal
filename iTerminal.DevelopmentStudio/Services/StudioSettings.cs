@@ -25,11 +25,31 @@ public static class StudioSettings
     /// <summary>The tab of the output panel: <c>Output</c>, <c>Errors</c>, <c>Debug</c>, <c>Coverage</c> or <c>Profile</c>.</summary>
     public const string OutputTabKey = "DevelopmentStudio.OutputTab";
 
+    /// <summary>The seconds the last code analysis of each item took, as a JSON object (path to seconds): the estimate of the next one.</summary>
+    public const string AnalysisDurationsKey = "DevelopmentStudio.AnalysisDurations";
+
     /// <summary>The paths of the expanded solutions, projects and folders of the Solution Explorer, as a JSON list.</summary>
     public const string ExpandedFoldersKey = "DevelopmentStudio.ExpandedFolders";
 
     /// <summary>The path of the row the Solution Explorer's cursor is on. Empty or absent when none was saved.</summary>
     public const string SelectedPathKey = "DevelopmentStudio.SelectedPath";
+
+    /// <summary>The durations as a JSON object of seconds keyed by item path.</summary>
+    public static string EncodeDurations(IReadOnlyDictionary<string, double> durations) => JsonSerializer.Serialize(durations);
+
+    /// <summary>The durations a stored value holds; a missing or damaged value gives none, as <see cref="DecodeList"/> does.</summary>
+    public static IReadOnlyDictionary<string, double> DecodeDurations(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return new Dictionary<string, double>();
+        try
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, double>>(text) ?? new Dictionary<string, double>();
+        }
+        catch (JsonException)
+        {
+            return new Dictionary<string, double>();
+        }
+    }
 
     /// <summary>A list as a JSON array of strings.</summary>
     public static string EncodeList(IEnumerable<string> items) => JsonSerializer.Serialize(items);

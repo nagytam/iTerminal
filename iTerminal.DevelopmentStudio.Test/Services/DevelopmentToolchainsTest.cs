@@ -66,6 +66,20 @@ public class DevelopmentToolchainsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void DotnetAnalysisBuildsTheSolutionWithTheAnalyzersOnAndNoIncrementalBuild()
+    {
+        var solution = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.Solution, "/src/App.slnx");
+        var script = new DevelopmentProject("tool.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, "/src/tool.py");
+
+        var command = Toolchains.For(solution).Analyze(solution)!;
+
+        // --no-incremental: an up-to-date build runs no analyzer, so it would report nothing.
+        CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx", "--no-incremental", "-p:EnforceCodeStyleInBuild=true", "-p:AnalysisLevel=latest-recommended" }, command.Arguments.ToArray());
+        Assert.IsNull(Toolchains.For(script).Analyze(script), "Python has no code analysis here");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void DotnetCoverageRunsTheTestsUnderCoverletIntoTheResultsFolder()
     {
         var project = new DevelopmentProject("App.Test", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App.Test/App.Test.csproj", IsTest: true);
