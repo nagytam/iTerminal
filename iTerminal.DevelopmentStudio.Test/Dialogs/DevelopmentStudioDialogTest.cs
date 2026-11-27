@@ -635,6 +635,37 @@ public class DevelopmentStudioDialogTest
 
             await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, $"the editor to open the file at line 3 (opened: {harness.Dialog.CursorLineNumber}, focus: {harness.Dialog.FocusedPanel}, status: {harness.Dialog.Status})");
             StringAssert.Contains(harness.Dialog.EditorLines[2], "three");
+            Assert.AreEqual(StudioPanelKind.Editor, harness.Dialog.FocusedPanel, "the opened file takes the focus");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFileOpenedFromTheErrorListHasTheFocusAndTakesTyping()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "Program.cs");
+        File.WriteAllText(path, "one\ntwo\nthree\nfour\n");
+        try
+        {
+            var runner = new FakeProcessRunner { Output = [$"{path}(3,5): error CS1002: ; expected"] };
+            var harness = await OpenAsync([Solution, App], runner: runner);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+            await WaitIdleAsync(harness.Dialog);
+            FocusPanel(harness.Dialog, StudioPanelKind.Output);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+            await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, "the editor to open the file at line 3");
+
+            // No FocusPanel here: the key goes straight to the file the user just opened.
+            Assert.AreEqual(StudioPanelKind.Editor, harness.Dialog.FocusedPanel, "the opened file has the focus without another key");
+            await harness.Dialog.HandleKeyEventAsync(Char('X'));
+            StringAssert.Contains(harness.Dialog.EditorLines[2], "Xthree", "a key pressed right after opening goes into the file");
         }
         finally
         {

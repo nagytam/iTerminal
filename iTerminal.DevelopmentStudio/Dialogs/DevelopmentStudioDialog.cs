@@ -1320,6 +1320,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
 
         _sourceRequest = path;
+
+        // The file the user opened takes the focus at once, so the next key types into it; the read below fills it in.
+        ResetFocus();
+        _panels[StudioPanelKind.Editor].Body.SetFocus();
         _ = Task.Run(() =>
         {
             string[] lines;
