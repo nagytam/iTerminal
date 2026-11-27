@@ -31,6 +31,9 @@ public static class StudioSettings
     /// <summary>The path of the row the Solution Explorer's cursor is on. Empty or absent when none was saved.</summary>
     public const string SelectedPathKey = "DevelopmentStudio.SelectedPath";
 
+    /// <summary>The measured run times of the build, clean and test commands, as <see cref="DurationEstimator"/> writes them.</summary>
+    public const string EstimatesKey = "DevelopmentStudio.Estimates";
+
     /// <summary>A list as a JSON array of strings.</summary>
     public static string EncodeList(IEnumerable<string> items) => JsonSerializer.Serialize(items);
 

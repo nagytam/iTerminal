@@ -53,6 +53,13 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The result of the last test run of one test item.</summary>
     private sealed record TestOutcome(bool Passed, TestTotals Totals);
 
+    /// <summary>One target of the last test run: its summary's totals, and the exit code of its test command.</summary>
+    private sealed record TestRunEntry(DevelopmentProject Item, TestTotals Totals, int ExitCode)
+    {
+        /// <summary>Passed when the command exited 0 and no test failed; the same rule the Test Explorer's markers use.</summary>
+        public bool Passed => ExitCode == 0 && Totals.Failed == 0;
+    }
+
     /// <summary>A source file read in the background: its lines, its line ending, and why it could not be shown (null when it was read).</summary>
     private sealed record LoadedSource(string Path, string[] Lines, string LineEnding, string? Error);
 
@@ -113,6 +120,18 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     /// <summary>The whole second the header last showed for the running command; the dialog redraws when the second changes.</summary>
     private long _shownSeconds = -1;
+
+    /// <summary>The measured run times the estimates come from. Each measured command is added, and the settings are written after it.</summary>
+    private readonly DurationEstimator _estimates;
+
+    /// <summary>The estimated time of the running command (the sum over its targets), or null when one of them has no estimate yet.</summary>
+    private TimeSpan? _runEstimate;
+
+    /// <summary>The targets of the last test run, one entry each. The Test Viewer lists them above the tests.</summary>
+    private readonly List<TestRunEntry> _testRun = [];
+
+    /// <summary>The targets waiting for the y or n of a deep clean (the bin and obj folders too); null when none is waiting.</summary>
+    private IReadOnlyList<DevelopmentProject>? _pendingDeepClean;
 
     /// <summary>The JDK home Java builds and runs use, or null for the javac and java on the PATH. Read when the studio opens and when the SDK manager closes.</summary>
     private string? _javaHome;
@@ -279,6 +298,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _sbomFormat = ParseSetting(settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
         _explorerMode = ParseSetting(settings.Get(StudioSettings.ExplorerModeKey), ExplorerMode.Solution);
         _outputTab = ParseSetting(settings.Get(StudioSettings.OutputTabKey), OutputTab.Output);
+        _estimates = DurationEstimator.Decode(settings.Get(StudioSettings.EstimatesKey));
         foreach (string folder in StudioSettings.DecodeList(settings.Get(StudioSettings.ExpandedFoldersKey))) _expandedFolders.Add(folder);
         Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
 
@@ -459,6 +479,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("F10 / F11", UiText.Get("DevelopmentStudio.HintStep", "Step over / step into"));
         yield return ("Shift+F11", UiText.Get("DevelopmentStudio.HintStepOut", "Step out"));
         yield return ("B / C / T / R", UiText.Get("DevelopmentStudio.HintCommands", "Build, clean, test, run the selected item"));
+        yield return ("Shift+C", UiText.Get("DevelopmentStudio.HintDeepClean", "Clean the bin and obj folders too (asks first)"));
         yield return ("W", UiText.Get("DevelopmentStudio.HintWatch", "Watch the word under the cursor (in the debug view, remove it)"));
         yield return ("F6 / F7", UiText.Get("DevelopmentStudio.HintPanes", "Explorer tab (Solution, Tests, Files) / output panel tab (Output, Debug, Coverage, Profile)"));
         yield return ("F8", UiText.Get("DevelopmentStudio.HintLayout", "Move and resize the panels: arrows move the focused one to that edge, Shift+arrows resize it"));
@@ -480,6 +501,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     {
         // In the layout mode Esc ends the mode rather than closing the dialog.
         if (_layoutMode && HandleLayoutKey(keyEvent)) return true;
+
+        // A deep clean waits for its y or n; any other key drops the question and goes on to its own command.
+        if (_pendingDeepClean is not null && HandleDeepCleanAnswer(keyEvent)) return true;
 
         // While the editor has the focus and a file is open, the editor takes the keys: its letters are text, not commands, and the
         // cursor, selection, undo and clipboard keys are its own. A key it declines goes on to the studio's commands.
@@ -544,6 +568,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.C when plain:
                 RunSelected("clean");
+                return true;
+            case ConsoleKey.C when shift:
+                AskDeepClean();
                 return true;
             case ConsoleKey.T when plain:
                 RunSelected("test");
@@ -729,6 +756,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuDebug", "Debug"), "F5", StartOrContinueDebugging));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuTest", "Test"), "T", () => RunSelected("test")));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuClean", "Clean"), "C", () => RunSelected("clean")));
+        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuCleanFolders", "Clean bin and obj"), "Shift+C", AskDeepClean));
 
         // The menu opens beside the cursor row, as a click on that row would.
         var list = _explorerListBox.ScrollableModel;
@@ -907,6 +935,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
         else
         {
+            AddTestOverview(rows);
             foreach (var item in _items.Where(i => i.IsTest))
             {
                 string marker = "    ";
@@ -1402,12 +1431,22 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         ShowServerStatus();
     }
 
-    /// <summary>The elapsed time of the running command as the header shows it (m:ss, or h:mm:ss from an hour), or null when none is running.</summary>
+    /// <summary>
+    /// The elapsed time of the running command as the header shows it (m:ss, or h:mm:ss from an hour), with its estimate after a
+    /// slash when it has one, or null when none is running.
+    /// </summary>
     private string? RunningElapsedText()
     {
         TimeSpan? elapsed;
-        lock (_stateLock) elapsed = _runClock is { IsRunning: true } clock ? clock.Elapsed : null;
-        return elapsed is { } time ? FormatElapsed(time) : null;
+        TimeSpan? estimate;
+        lock (_stateLock)
+        {
+            elapsed = _runClock is { IsRunning: true } clock ? clock.Elapsed : null;
+            estimate = _runEstimate;
+        }
+
+        if (elapsed is not { } time) return null;
+        return estimate is { } expected ? $"{FormatElapsed(time)} / ~{FormatElapsed(expected)}" : FormatElapsed(time);
     }
 
     /// <summary>The time a command took, as the status and the output show it: m:ss, or h:mm:ss from an hour.</summary>
@@ -1902,7 +1941,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// Runs the verb on each target, one after another, in one run: the output of all of them is one log, and a test run's
     /// totals are summed over the targets. A target without that command is noted and skipped.
     /// </summary>
-    private void RunCommand(IReadOnlyList<DevelopmentProject> targets, string verb)
+    private void RunCommand(IReadOnlyList<DevelopmentProject> targets, string verb, bool deepClean = false)
     {
         if (_busy)
         {
@@ -1954,15 +1993,31 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _runCts = cts;
         _busy = true;
         var clock = Stopwatch.StartNew();
+        TimeSpan? estimate = EstimateOf(verb, plan.Select(step => step.Item));
+        Dictionary<string, List<string>> deepFolders = deepClean ? DeepCleanFolders(targets) : new();
         lock (_stateLock)
         {
             ClearOutputLocked();
             _runClock = clock;
+            _runEstimate = estimate;
+            if (verb == "test") _testRun.Clear();
         }
 
-        SetStatus(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, targetLabel), StatusSeverity.Info);
+        SetStatus(estimate is { } expected
+            ? string.Format(UiText.Get("DevelopmentStudio.RunningEstimate", "Running {0} {1}, estimated {2}..."), verb, targetLabel, FormatElapsed(expected))
+            : string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, targetLabel), StatusSeverity.Info);
         _outputTab = OutputTab.Output;
-        _outputListBox.SetFocus();
+        if (verb == "test")
+        {
+            // A test run switches to the Test Viewer, whose overview is the run's result, and gives it the focus.
+            ShowTestViewer();
+            _explorerListBox.SetFocus();
+        }
+        else
+        {
+            _outputListBox.SetFocus();
+        }
+
         RebuildView();
 
         _ = Task.Run(async () =>
@@ -1981,8 +2036,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                         ? string.Format(UiText.Get("DevelopmentStudio.SdkNote", "   (.NET SDK {0})"), sdk.Version)
                         : string.Empty;
                     AppendOutput($"$ {command.Display}{sdkNote}");
+                    var stepClock = Stopwatch.StartNew();
                     int exitCode = await _runner.RunAsync(command, AppendOutput, cts.Token);
+                    stepClock.Stop();
                     if (exitCode != 0 && firstFailure == 0) firstFailure = exitCode;
+                    if (!cts.IsCancellationRequested) RecordDuration(verb, item, stepClock.Elapsed);
 
                     if (verb == "test")
                     {
@@ -1990,14 +2048,20 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                         lock (_stateLock) segment = _output.Skip(start).ToList();
                         var totals = TestOutputParser.Parse(segment);
                         _testOutcomes[item.Path] = new TestOutcome(exitCode == 0 && totals.Failed == 0, totals);
+                        lock (_stateLock) _testRun.Add(new TestRunEntry(item, totals, exitCode));
                         runTotals = runTotals.Add(totals);
                         RebuildExplorer();
+                    }
+
+                    if (deepClean && !cts.IsCancellationRequested)
+                    {
+                        RemoveBuildFolders(item, deepFolders.GetValueOrDefault(item.Path) ?? new List<string>());
                     }
 
                     AppendOutput(string.Empty);
                 }
 
-                // The run's time stops with its last command; the output and the status both say how long it took.
+                // The run's time stops with its last command; the output and the status both say how long it took, and what was estimated.
                 TimeSpan elapsed;
                 lock (_stateLock)
                 {
@@ -2005,7 +2069,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                     elapsed = clock.Elapsed;
                 }
 
-                string tookText = string.Format(UiText.Get("DevelopmentStudio.Elapsed", "Elapsed {0}"), FormatElapsed(elapsed));
+                string tookText = estimate is { } expectedTime
+                    ? string.Format(UiText.Get("DevelopmentStudio.ElapsedEstimate", "Elapsed {0}, estimated {1}"), FormatElapsed(elapsed), FormatElapsed(expectedTime))
+                    : string.Format(UiText.Get("DevelopmentStudio.Elapsed", "Elapsed {0}"), FormatElapsed(elapsed));
                 AppendOutput(tookText);
 
                 if (cts.IsCancellationRequested)
@@ -2033,13 +2099,185 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             }
             finally
             {
-                lock (_stateLock) clock.Stop();
+                lock (_stateLock)
+                {
+                    clock.Stop();
+                    _runEstimate = null;
+                }
+
                 _busy = false;
                 _runCts = null;
                 RebuildView();
                 StateHasChanged();
             }
         }, CancellationToken.None);
+    }
+
+    /// <summary>
+    /// The Test Viewer's overview, above the test items: the targets of the last test run with their totals, and the overall
+    /// totals of the run. Nothing is listed before a test run.
+    /// </summary>
+    private void AddTestOverview(List<ExplorerRow> rows)
+    {
+        List<TestRunEntry> run;
+        lock (_stateLock) run = _testRun.ToList();
+        if (run.Count == 0) return;
+
+        var overall = run.Aggregate(TestTotals.Empty, (sum, entry) => sum.Add(entry.Totals));
+        rows.Add(new ExplorerRow(UiText.Get("DevelopmentStudio.TestRunHeading", "Last test run"), null, null));
+        rows.Add(new ExplorerRow(
+            "  " + string.Format(UiText.Get("DevelopmentStudio.TestOverall", "Overall: {0}"), TestCounts(overall)),
+            null,
+            run.All(entry => entry.Passed) ? Color.Green : Color.Red));
+        foreach (var entry in run)
+        {
+            string counts = entry.Totals.Total > 0
+                ? TestCounts(entry.Totals)
+                : string.Format(UiText.Get("DevelopmentStudio.TestNoSummary", "no summary (exit {0})"), entry.ExitCode);
+            string marker = entry.Passed ? "pass" : "fail";
+            rows.Add(new ExplorerRow(
+                $"  [{marker}] {LanguageLabel(entry.Item.Language)}  {entry.Item.Name}: {counts}",
+                null,
+                entry.Passed ? Color.Green : Color.Red));
+        }
+    }
+
+    /// <summary>The pass, fail and skip counts as one line.</summary>
+    private static string TestCounts(TestTotals totals) =>
+        string.Format(UiText.Get("DevelopmentStudio.TestCounts", "{0} passed, {1} failed, {2} skipped"), totals.Passed, totals.Failed, totals.Skipped);
+
+    /// <summary>Switches the left pane to the Test Explorer, the Test Viewer, which is where a test run's overview is shown.</summary>
+    private void ShowTestViewer()
+    {
+        _explorerMode = ExplorerMode.Tests;
+        _settings.Set(StudioSettings.ExplorerModeKey, _explorerMode.ToString());
+        RebuildExplorer();
+    }
+
+    /// <summary>
+    /// The estimated time of a command on the items: the sum of their estimates, or null when one of them has none yet (a
+    /// partial sum would be too short, so the run is shown without an estimate instead).
+    /// </summary>
+    private TimeSpan? EstimateOf(string verb, IEnumerable<DevelopmentProject> items)
+    {
+        lock (_stateLock)
+        {
+            TimeSpan total = TimeSpan.Zero;
+            foreach (DevelopmentProject item in items)
+            {
+                if (_estimates.Estimate(verb, item) is not { } estimate) return null;
+                total += estimate;
+            }
+
+            return total;
+        }
+    }
+
+    /// <summary>
+    /// Adds a measured command to the estimates and writes them to the settings. Build, clean and test are measured; a run is
+    /// not, since its time is the program's own.
+    /// </summary>
+    private void RecordDuration(string verb, DevelopmentProject item, TimeSpan elapsed)
+    {
+        if (verb is not ("build" or "clean" or "test")) return;
+        string encoded;
+        lock (_stateLock)
+        {
+            _estimates.Record(verb, item, elapsed, DateTime.UtcNow.Ticks);
+            encoded = _estimates.Encode();
+        }
+
+        _settings.Set(StudioSettings.EstimatesKey, encoded);
+    }
+
+    /// <summary>
+    /// Shift+C and the menu's Clean bin and obj: asks on the status line before the bin and obj folders of the targets are
+    /// deleted, after their clean. Nothing is deleted until y.
+    /// </summary>
+    private void AskDeepClean()
+    {
+        if (_busy)
+        {
+            SetStatus(string.Format(UiText.Get("DevelopmentStudio.Busy", "A command is still running; X cancels it ({0} was not started)."), "clean"), StatusSeverity.Info);
+            return;
+        }
+
+        var targets = ResolveTargets();
+        if (targets.Count == 0)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.SelectItem", "Select an item first."), StatusSeverity.Info);
+            return;
+        }
+
+        _pendingDeepClean = targets;
+        string label = targets.Count == 1 ? targets[0].Name : string.Format(UiText.Get("DevelopmentStudio.ProjectCount", "{0} projects"), targets.Count);
+        SetStatus(string.Format(UiText.Get("DevelopmentStudio.ConfirmDeepClean", "Delete the bin and obj folders of {0}? y/n"), label), StatusSeverity.Info);
+    }
+
+    /// <summary>
+    /// The answer to the deep clean's question: y runs it, n and Esc drop it. Another key drops the question too, and that key
+    /// is not used up: it goes on to its own command.
+    /// </summary>
+    private bool HandleDeepCleanAnswer(KeyEvent keyEvent)
+    {
+        var targets = _pendingDeepClean;
+        _pendingDeepClean = null;
+        if (targets is null) return false;
+
+        if (keyEvent.ConsoleKey == ConsoleKey.Y && !keyEvent.Alt && !keyEvent.Control)
+        {
+            RunCommand(targets, "clean", deepClean: true);
+            return true;
+        }
+
+        SetStatus(UiText.Get("DevelopmentStudio.DeepCleanCancelled", "Clean of the bin and obj folders cancelled."), StatusSeverity.Info);
+        return keyEvent.ConsoleKey is ConsoleKey.N or ConsoleKey.Escape;
+    }
+
+    /// <summary>
+    /// The bin and obj folders a deep clean removes for each target: a .NET project's own, and for a solution those of the
+    /// projects it lists. Read on the UI thread, since the explorer's rows are.
+    /// </summary>
+    private Dictionary<string, List<string>> DeepCleanFolders(IReadOnlyList<DevelopmentProject> targets)
+    {
+        var folders = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var target in targets)
+        {
+            IEnumerable<DevelopmentProject> projects = target.Kind == DevelopmentProjectKind.Solution
+                ? _items.Where(item => string.Equals(item.SolutionPath, target.Path, StringComparison.OrdinalIgnoreCase))
+                : new[] { target };
+            folders[target.Path] = projects
+                .Where(project => project.Language == DevelopmentLanguage.DotNet && project.Kind == DevelopmentProjectKind.DotNetProject)
+                .SelectMany(project => new[] { Path.Combine(project.Directory, "bin"), Path.Combine(project.Directory, "obj") })
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        return folders;
+    }
+
+    /// <summary>Deletes the bin and obj folders of one item, after its clean; a folder that cannot be deleted is reported and left.</summary>
+    private void RemoveBuildFolders(DevelopmentProject item, IReadOnlyList<string> folders)
+    {
+        int removed = 0;
+        foreach (string folder in folders)
+        {
+            try
+            {
+                if (!Directory.Exists(folder)) continue;
+                Directory.Delete(folder, recursive: true);
+                removed++;
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                AppendOutput(string.Format(UiText.Get("DevelopmentStudio.DeepCleanFailed", "Could not remove {0}: {1}"), folder, exception.Message));
+            }
+        }
+
+        if (folders.Count > 0)
+        {
+            AppendOutput(string.Format(UiText.Get("DevelopmentStudio.DeepCleaned", "Removed {0} bin and obj folders of {1}."), removed, item.Name));
+        }
     }
 
     /// <summary>Re-scans the folder. The Test Explorer keeps the results of the items still there.</summary>

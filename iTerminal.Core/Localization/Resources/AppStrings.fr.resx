@@ -2329,6 +2329,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>{0} Cache-Ordner von {1} entfernt.</value>
   </data>
+  <data name="DevelopmentStudio.ConfirmDeepClean" xml:space="preserve">
+    <value>Supprimer les dossiers bin et obj de {0} ? y/n</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Mesure de couverture annulée.</value>
   </data>
@@ -2344,11 +2347,23 @@
   <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
     <value>Debuggen</value>
   </data>
+  <data name="DevelopmentStudio.DeepCleanCancelled" xml:space="preserve">
+    <value>Le nettoyage des dossiers bin et obj est annulé.</value>
+  </data>
+  <data name="DevelopmentStudio.DeepCleanFailed" xml:space="preserve">
+    <value>Impossible de supprimer {0} : {1}</value>
+  </data>
+  <data name="DevelopmentStudio.DeepCleaned" xml:space="preserve">
+    <value>{0} dossiers bin et obj de {1} supprimés.</value>
+  </data>
   <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
     <value>Ligne {0}, Col {1}</value>
   </data>
   <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
     <value>Durée {0}</value>
+  </data>
+  <data name="DevelopmentStudio.ElapsedEstimate" xml:space="preserve">
+    <value>Durée {0}, estimée {1}</value>
   </data>
   <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
     <value>(hier ist nichts)</value>
@@ -2391,6 +2406,9 @@
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Mesurer la couverture de l'élément sélectionné / profiler le script Python sélectionné</value>
+  </data>
+  <data name="DevelopmentStudio.HintDeepClean" xml:space="preserve">
+    <value>Vider aussi les dossiers bin et obj (demande d'abord)</value>
   </data>
   <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
     <value>Replier ou déplier la solution, le projet ou le dossier sous le curseur</value>
@@ -2478,6 +2496,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
     <value>Nettoyer</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCleanFolders" xml:space="preserve">
+    <value>Vider bin et obj</value>
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Retirer le projet principal</value>
@@ -2587,6 +2608,9 @@
   <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
     <value>Mesure de la couverture de {0}...</value>
   </data>
+  <data name="DevelopmentStudio.RunningEstimate" xml:space="preserve">
+    <value>{0} {1} en cours, environ {2}...</value>
+  </data>
   <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
     <value>Profilage de {0}...</value>
   </data>
@@ -2638,11 +2662,23 @@
   <data name="DevelopmentStudio.Succeeded" xml:space="preserve">
     <value>{0} erfolgreich: {1}.</value>
   </data>
+  <data name="DevelopmentStudio.TestCounts" xml:space="preserve">
+    <value>{0} réussis, {1} échoués, {2} ignorés</value>
+  </data>
   <data name="DevelopmentStudio.TestExplorer" xml:space="preserve">
     <value>Test-Explorer: Enter oder T führt das Testelement unter dem Cursor aus.</value>
   </data>
   <data name="DevelopmentStudio.TestExplorerHeading" xml:space="preserve">
     <value>Test-Explorer</value>
+  </data>
+  <data name="DevelopmentStudio.TestNoSummary" xml:space="preserve">
+    <value>pas de résumé (sortie {0})</value>
+  </data>
+  <data name="DevelopmentStudio.TestOverall" xml:space="preserve">
+    <value>Total : {0}</value>
+  </data>
+  <data name="DevelopmentStudio.TestRunHeading" xml:space="preserve">
+    <value>Dernière exécution des tests</value>
   </data>
   <data name="DevelopmentStudio.TestTotals" xml:space="preserve">
     <value>Tests: {0} bestanden, {1} fehlgeschlagen, {2} übersprungen.</value>
