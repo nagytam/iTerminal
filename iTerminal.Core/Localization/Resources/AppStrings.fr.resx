@@ -2401,6 +2401,9 @@
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
     <value>Faire de l'élément sous le curseur le programme principal : F5 et Ctrl+F5 le lancent</value>
   </data>
+  <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
+    <value>NuGet-Pakete der gewählten Projektmappe oder des Projekts verwalten</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Datei öffnen (oder Test ausführen)</value>
   </data>
@@ -2523,6 +2526,9 @@
   </data>
   <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
     <value>Aucune modification non enregistrée.</value>
+  </data>
+  <data name="DevelopmentStudio.NuGetNoTarget" xml:space="preserve">
+    <value>Wählen Sie eine .NET-Projektmappe oder ein .NET-Projekt, um dessen NuGet-Pakete zu verwalten.</value>
   </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Nur .NET-Projekte können markiert werden.</value>
@@ -8319,6 +8325,123 @@
   </data>
   <data name="Notify.WipeStoppedBody" xml:space="preserve">
     <value>{0} effacé(s) avant l'annulation.</value>
+  </data>
+  <data name="NuGet.AlreadyNewest" xml:space="preserve">
+    <value>{0} ist aktuell.</value>
+  </data>
+  <data name="NuGet.BadArgument" xml:space="preserve">
+    <value>Das ist keine Paket-ID und keine Version, die NuGet akzeptiert.</value>
+  </data>
+  <data name="NuGet.Busy" xml:space="preserve">
+    <value>Ein Befehl läuft noch; X bricht ihn ab.</value>
+  </data>
+  <data name="NuGet.Cancelled" xml:space="preserve">
+    <value>Abgebrochen.</value>
+  </data>
+  <data name="NuGet.ConfirmRemove" xml:space="preserve">
+    <value>{0} aus {1} Projekten entfernen? (y/n)</value>
+  </data>
+  <data name="NuGet.ConfirmUpdateAll" xml:space="preserve">
+    <value>{0} Paketverweise in {1} Projekten aktualisieren? (y/n)</value>
+  </data>
+  <data name="NuGet.CouldNotCheckNewer" xml:space="preserve">
+    <value>Die Quellen konnten nicht auf neuere Versionen geprüft werden.</value>
+  </data>
+  <data name="NuGet.CouldNotRun" xml:space="preserve">
+    <value>dotnet konnte nicht gestartet werden, um die Pakete aufzulisten.</value>
+  </data>
+  <data name="NuGet.Done" xml:space="preserve">
+    <value>{0}: {1} erfolgreich, {2} fehlgeschlagen.</value>
+  </data>
+  <data name="NuGet.Header" xml:space="preserve">
+    <value>{0}   ({1} Pakete, {2} veraltet)</value>
+  </data>
+  <data name="NuGet.HintCancel" xml:space="preserve">
+    <value>Den laufenden Befehl abbrechen</value>
+  </data>
+  <data name="NuGet.HintClose" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="NuGet.HintInstall" xml:space="preserve">
+    <value>Ein Paket in das gewählte Projekt installieren</value>
+  </data>
+  <data name="NuGet.HintPane" xml:space="preserve">
+    <value>Zwischen Bereich und Paketen wechseln</value>
+  </data>
+  <data name="NuGet.HintRefresh" xml:space="preserve">
+    <value>Die Pakete erneut lesen</value>
+  </data>
+  <data name="NuGet.HintRemove" xml:space="preserve">
+    <value>Das Paket aus dem Bereich entfernen</value>
+  </data>
+  <data name="NuGet.HintUpdate" xml:space="preserve">
+    <value>Das Paket unter dem Cursor auf die neueste Version aktualisieren</value>
+  </data>
+  <data name="NuGet.HintUpdateAll" xml:space="preserve">
+    <value>Alle veralteten Pakete im Bereich aktualisieren</value>
+  </data>
+  <data name="NuGet.Hints" xml:space="preserve">
+    <value>Enter:aktualisieren  Shift+U:alle aktualisieren  Entf:entfernen  I:installieren  F5:neu lesen  X:abbrechen  Tab:wechseln  Esc:schließen</value>
+  </data>
+  <data name="NuGet.InstallAsk" xml:space="preserve">
+    <value>Paket-ID zum Installieren in {0}</value>
+  </data>
+  <data name="NuGet.InstallInvalidId" xml:space="preserve">
+    <value>Eine Paket-ID besteht aus Buchstaben, Ziffern, Punkten, Bindestrichen und Unterstrichen und beginnt mit einem Buchstaben oder einer Ziffer.</value>
+  </data>
+  <data name="NuGet.InstallNeedsProject" xml:space="preserve">
+    <value>Wählen Sie ein Projekt für die Installation aus; eine Projektmappe nimmt kein Paket auf.</value>
+  </data>
+  <data name="NuGet.ListingUnreadable" xml:space="preserve">
+    <value>dotnet hat keine Paketliste ausgegeben.</value>
+  </data>
+  <data name="NuGet.NoPackages" xml:space="preserve">
+    <value>Keine Pakete in diesem Bereich.</value>
+  </data>
+  <data name="NuGet.NothingOutdated" xml:space="preserve">
+    <value>Alle Pakete in diesem Bereich sind aktuell.</value>
+  </data>
+  <data name="NuGet.Packages" xml:space="preserve">
+    <value>Pakete</value>
+  </data>
+  <data name="NuGet.ReadAgain" xml:space="preserve">
+    <value>F5 liest die Pakete erneut.</value>
+  </data>
+  <data name="NuGet.ReadFailed" xml:space="preserve">
+    <value>Die Pakete konnten nicht gelesen werden: {0}</value>
+  </data>
+  <data name="NuGet.Reading" xml:space="preserve">
+    <value>Pakete werden gelesen…</value>
+  </data>
+  <data name="NuGet.RowProjects" xml:space="preserve">
+    <value>{0} Projekt(e)</value>
+  </data>
+  <data name="NuGet.ScopeSolution" xml:space="preserve">
+    <value>Alle Projekte in {0}</value>
+  </data>
+  <data name="NuGet.SelectPackage" xml:space="preserve">
+    <value>Wählen Sie zuerst ein Paket aus.</value>
+  </data>
+  <data name="NuGet.Summary" xml:space="preserve">
+    <value>{0} Pakete in {1} Projekten; {2} veraltet.</value>
+  </data>
+  <data name="NuGet.Title" xml:space="preserve">
+    <value>NuGet-Pakete</value>
+  </data>
+  <data name="NuGet.TitleInstall" xml:space="preserve">
+    <value>{0} installieren</value>
+  </data>
+  <data name="NuGet.TitleRemove" xml:space="preserve">
+    <value>{0} entfernen</value>
+  </data>
+  <data name="NuGet.TitleUpdate" xml:space="preserve">
+    <value>{0} aktualisieren</value>
+  </data>
+  <data name="NuGet.TitleUpdateAll" xml:space="preserve">
+    <value>Alle aktualisieren</value>
+  </data>
+  <data name="NuGet.UpToDate" xml:space="preserve">
+    <value>aktuell</value>
   </data>
   <data name="OAuth.Expired" xml:space="preserve">
     <value>La connexion à {0} a expiré</value>

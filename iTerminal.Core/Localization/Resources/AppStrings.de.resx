@@ -2401,6 +2401,9 @@
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
     <value>Den Eintrag unter dem Cursor zum Hauptprogramm machen: F5 und Strg+F5 starten es</value>
   </data>
+  <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
+    <value>Manage the NuGet packages of the selected solution or project</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Open the file (or run the test)</value>
   </data>
@@ -2523,6 +2526,9 @@
   </data>
   <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
     <value>Keine ungespeicherten Änderungen.</value>
+  </data>
+  <data name="DevelopmentStudio.NuGetNoTarget" xml:space="preserve">
+    <value>Select a .NET solution or project to manage its NuGet packages.</value>
   </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Only .NET projects can be checked.</value>
@@ -8383,6 +8389,123 @@
   </data>
   <data name="Notify.WipeStoppedBody" xml:space="preserve">
     <value>{0} gelöscht, bevor abgebrochen wurde.</value>
+  </data>
+  <data name="NuGet.AlreadyNewest" xml:space="preserve">
+    <value>{0} is up to date.</value>
+  </data>
+  <data name="NuGet.BadArgument" xml:space="preserve">
+    <value>That is not a package id or a version NuGet accepts.</value>
+  </data>
+  <data name="NuGet.Busy" xml:space="preserve">
+    <value>A command is still running; X cancels it.</value>
+  </data>
+  <data name="NuGet.Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="NuGet.ConfirmRemove" xml:space="preserve">
+    <value>Remove {0} from {1} project(s)? (y/n)</value>
+  </data>
+  <data name="NuGet.ConfirmUpdateAll" xml:space="preserve">
+    <value>Update {0} package references in {1} project(s)? (y/n)</value>
+  </data>
+  <data name="NuGet.CouldNotCheckNewer" xml:space="preserve">
+    <value>Could not check the sources for newer versions.</value>
+  </data>
+  <data name="NuGet.CouldNotRun" xml:space="preserve">
+    <value>Could not run dotnet to list the packages.</value>
+  </data>
+  <data name="NuGet.Done" xml:space="preserve">
+    <value>{0}: {1} succeeded, {2} failed.</value>
+  </data>
+  <data name="NuGet.Header" xml:space="preserve">
+    <value>{0}   ({1} packages, {2} outdated)</value>
+  </data>
+  <data name="NuGet.HintCancel" xml:space="preserve">
+    <value>Cancel the running command</value>
+  </data>
+  <data name="NuGet.HintClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="NuGet.HintInstall" xml:space="preserve">
+    <value>Install a package into the selected project</value>
+  </data>
+  <data name="NuGet.HintPane" xml:space="preserve">
+    <value>Switch between the scope and the packages</value>
+  </data>
+  <data name="NuGet.HintRefresh" xml:space="preserve">
+    <value>Read the packages again</value>
+  </data>
+  <data name="NuGet.HintRemove" xml:space="preserve">
+    <value>Remove the package from the scope</value>
+  </data>
+  <data name="NuGet.HintUpdate" xml:space="preserve">
+    <value>Update the package under the cursor to its newest version</value>
+  </data>
+  <data name="NuGet.HintUpdateAll" xml:space="preserve">
+    <value>Update every outdated package in the scope</value>
+  </data>
+  <data name="NuGet.Hints" xml:space="preserve">
+    <value>Enter:update  Shift+U:update all  Del:remove  I:install  F5:read again  X:cancel  Tab:switch  Esc:close</value>
+  </data>
+  <data name="NuGet.InstallAsk" xml:space="preserve">
+    <value>Package id to install into {0}</value>
+  </data>
+  <data name="NuGet.InstallInvalidId" xml:space="preserve">
+    <value>A package id has letters, digits, dots, dashes and underscores, and starts with a letter or digit.</value>
+  </data>
+  <data name="NuGet.InstallNeedsProject" xml:space="preserve">
+    <value>Select a project to install into; a solution takes no package.</value>
+  </data>
+  <data name="NuGet.ListingUnreadable" xml:space="preserve">
+    <value>dotnet printed no package listing.</value>
+  </data>
+  <data name="NuGet.NoPackages" xml:space="preserve">
+    <value>No packages in this scope.</value>
+  </data>
+  <data name="NuGet.NothingOutdated" xml:space="preserve">
+    <value>Every package in this scope is up to date.</value>
+  </data>
+  <data name="NuGet.Packages" xml:space="preserve">
+    <value>Packages</value>
+  </data>
+  <data name="NuGet.ReadAgain" xml:space="preserve">
+    <value>F5 reads the packages again.</value>
+  </data>
+  <data name="NuGet.ReadFailed" xml:space="preserve">
+    <value>Could not read the packages: {0}</value>
+  </data>
+  <data name="NuGet.Reading" xml:space="preserve">
+    <value>Reading the packages…</value>
+  </data>
+  <data name="NuGet.RowProjects" xml:space="preserve">
+    <value>{0} project(s)</value>
+  </data>
+  <data name="NuGet.ScopeSolution" xml:space="preserve">
+    <value>All projects in {0}</value>
+  </data>
+  <data name="NuGet.SelectPackage" xml:space="preserve">
+    <value>Select a package first.</value>
+  </data>
+  <data name="NuGet.Summary" xml:space="preserve">
+    <value>{0} packages in {1} projects; {2} outdated.</value>
+  </data>
+  <data name="NuGet.Title" xml:space="preserve">
+    <value>NuGet packages</value>
+  </data>
+  <data name="NuGet.TitleInstall" xml:space="preserve">
+    <value>Install {0}</value>
+  </data>
+  <data name="NuGet.TitleRemove" xml:space="preserve">
+    <value>Remove {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdate" xml:space="preserve">
+    <value>Update {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdateAll" xml:space="preserve">
+    <value>Update all</value>
+  </data>
+  <data name="NuGet.UpToDate" xml:space="preserve">
+    <value>up to date</value>
   </data>
   <data name="OAuth.Expired" xml:space="preserve">
     <value>Anmeldung bei {0} abgelaufen</value>

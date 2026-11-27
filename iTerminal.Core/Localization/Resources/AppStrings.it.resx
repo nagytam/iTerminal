@@ -2401,6 +2401,9 @@
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
     <value>Rendi l'elemento sotto il cursore il programma principale: F5 e Ctrl+F5 lo avviano</value>
   </data>
+  <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
+    <value>Administrar los paquetes NuGet de la solución o del proyecto seleccionado</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Abrir el archivo (o ejecutar la prueba)</value>
   </data>
@@ -2523,6 +2526,9 @@
   </data>
   <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
     <value>Nessuna modifica da salvare.</value>
+  </data>
+  <data name="DevelopmentStudio.NuGetNoTarget" xml:space="preserve">
+    <value>Seleccione una solución o un proyecto .NET para administrar sus paquetes NuGet.</value>
   </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Solo se pueden marcar proyectos .NET.</value>
@@ -8319,6 +8325,123 @@
   </data>
   <data name="Notify.WipeStoppedBody" xml:space="preserve">
     <value>{0} cancellato/i prima dell'annullamento.</value>
+  </data>
+  <data name="NuGet.AlreadyNewest" xml:space="preserve">
+    <value>{0} está actualizado.</value>
+  </data>
+  <data name="NuGet.BadArgument" xml:space="preserve">
+    <value>Eso no es un identificador de paquete ni una versión que NuGet acepte.</value>
+  </data>
+  <data name="NuGet.Busy" xml:space="preserve">
+    <value>Un comando sigue en marcha; X lo cancela.</value>
+  </data>
+  <data name="NuGet.Cancelled" xml:space="preserve">
+    <value>Cancelado.</value>
+  </data>
+  <data name="NuGet.ConfirmRemove" xml:space="preserve">
+    <value>¿Quitar {0} de {1} proyecto(s)? (y/n)</value>
+  </data>
+  <data name="NuGet.ConfirmUpdateAll" xml:space="preserve">
+    <value>¿Actualizar {0} referencias de paquetes en {1} proyecto(s)? (y/n)</value>
+  </data>
+  <data name="NuGet.CouldNotCheckNewer" xml:space="preserve">
+    <value>No se pudieron comprobar los orígenes por versiones más recientes.</value>
+  </data>
+  <data name="NuGet.CouldNotRun" xml:space="preserve">
+    <value>No se pudo ejecutar dotnet para listar los paquetes.</value>
+  </data>
+  <data name="NuGet.Done" xml:space="preserve">
+    <value>{0}: {1} correcto(s), {2} fallido(s).</value>
+  </data>
+  <data name="NuGet.Header" xml:space="preserve">
+    <value>{0}   ({1} paquetes, {2} desactualizados)</value>
+  </data>
+  <data name="NuGet.HintCancel" xml:space="preserve">
+    <value>Cancelar el comando en curso</value>
+  </data>
+  <data name="NuGet.HintClose" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="NuGet.HintInstall" xml:space="preserve">
+    <value>Instalar un paquete en el proyecto seleccionado</value>
+  </data>
+  <data name="NuGet.HintPane" xml:space="preserve">
+    <value>Cambiar entre el ámbito y los paquetes</value>
+  </data>
+  <data name="NuGet.HintRefresh" xml:space="preserve">
+    <value>Volver a leer los paquetes</value>
+  </data>
+  <data name="NuGet.HintRemove" xml:space="preserve">
+    <value>Quitar el paquete del ámbito</value>
+  </data>
+  <data name="NuGet.HintUpdate" xml:space="preserve">
+    <value>Actualizar el paquete bajo el cursor a su versión más reciente</value>
+  </data>
+  <data name="NuGet.HintUpdateAll" xml:space="preserve">
+    <value>Actualizar todos los paquetes desactualizados del ámbito</value>
+  </data>
+  <data name="NuGet.Hints" xml:space="preserve">
+    <value>Intro:actualizar  Mayús+U:actualizar todo  Supr:quitar  I:instalar  F5:releer  X:cancelar  Tab:cambiar  Esc:cerrar</value>
+  </data>
+  <data name="NuGet.InstallAsk" xml:space="preserve">
+    <value>Identificador del paquete a instalar en {0}</value>
+  </data>
+  <data name="NuGet.InstallInvalidId" xml:space="preserve">
+    <value>Un identificador de paquete tiene letras, dígitos, puntos, guiones y guiones bajos, y empieza por una letra o un dígito.</value>
+  </data>
+  <data name="NuGet.InstallNeedsProject" xml:space="preserve">
+    <value>Seleccione un proyecto donde instalar; una solución no admite paquetes.</value>
+  </data>
+  <data name="NuGet.ListingUnreadable" xml:space="preserve">
+    <value>dotnet no mostró ninguna lista de paquetes.</value>
+  </data>
+  <data name="NuGet.NoPackages" xml:space="preserve">
+    <value>No hay paquetes en este ámbito.</value>
+  </data>
+  <data name="NuGet.NothingOutdated" xml:space="preserve">
+    <value>Todos los paquetes de este ámbito están actualizados.</value>
+  </data>
+  <data name="NuGet.Packages" xml:space="preserve">
+    <value>Paquetes</value>
+  </data>
+  <data name="NuGet.ReadAgain" xml:space="preserve">
+    <value>F5 vuelve a leer los paquetes.</value>
+  </data>
+  <data name="NuGet.ReadFailed" xml:space="preserve">
+    <value>No se pudieron leer los paquetes: {0}</value>
+  </data>
+  <data name="NuGet.Reading" xml:space="preserve">
+    <value>Leyendo los paquetes…</value>
+  </data>
+  <data name="NuGet.RowProjects" xml:space="preserve">
+    <value>{0} proyecto(s)</value>
+  </data>
+  <data name="NuGet.ScopeSolution" xml:space="preserve">
+    <value>Todos los proyectos de {0}</value>
+  </data>
+  <data name="NuGet.SelectPackage" xml:space="preserve">
+    <value>Seleccione primero un paquete.</value>
+  </data>
+  <data name="NuGet.Summary" xml:space="preserve">
+    <value>{0} paquetes en {1} proyectos; {2} desactualizados.</value>
+  </data>
+  <data name="NuGet.Title" xml:space="preserve">
+    <value>Paquetes NuGet</value>
+  </data>
+  <data name="NuGet.TitleInstall" xml:space="preserve">
+    <value>Instalar {0}</value>
+  </data>
+  <data name="NuGet.TitleRemove" xml:space="preserve">
+    <value>Quitar {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdate" xml:space="preserve">
+    <value>Actualizar {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdateAll" xml:space="preserve">
+    <value>Actualizar todo</value>
+  </data>
+  <data name="NuGet.UpToDate" xml:space="preserve">
+    <value>actualizado</value>
   </data>
   <data name="OAuth.Expired" xml:space="preserve">
     <value>Accesso a {0} scaduto</value>

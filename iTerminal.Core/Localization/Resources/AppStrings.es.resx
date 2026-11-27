@@ -2401,6 +2401,9 @@
   <data name="DevelopmentStudio.HintMain" xml:space="preserve">
     <value>Hacer del elemento bajo el cursor el programa principal: F5 y Ctrl+F5 lo inician</value>
   </data>
+  <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
+    <value>Gérer les packages NuGet de la solution ou du projet sélectionné</value>
+  </data>
   <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
     <value>Ouvrir le fichier (ou lancer le test)</value>
   </data>
@@ -2523,6 +2526,9 @@
   </data>
   <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
     <value>No hay cambios sin guardar.</value>
+  </data>
+  <data name="DevelopmentStudio.NuGetNoTarget" xml:space="preserve">
+    <value>Sélectionnez une solution ou un projet .NET pour gérer ses packages NuGet.</value>
   </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Seuls les projets .NET peuvent être cochés.</value>
@@ -8319,6 +8325,123 @@
   </data>
   <data name="Notify.WipeStoppedBody" xml:space="preserve">
     <value>{0} borrado(s) antes de cancelar.</value>
+  </data>
+  <data name="NuGet.AlreadyNewest" xml:space="preserve">
+    <value>{0} est à jour.</value>
+  </data>
+  <data name="NuGet.BadArgument" xml:space="preserve">
+    <value>Ce n'est ni un identifiant de package ni une version acceptée par NuGet.</value>
+  </data>
+  <data name="NuGet.Busy" xml:space="preserve">
+    <value>Une commande est encore en cours ; X l'annule.</value>
+  </data>
+  <data name="NuGet.Cancelled" xml:space="preserve">
+    <value>Annulé.</value>
+  </data>
+  <data name="NuGet.ConfirmRemove" xml:space="preserve">
+    <value>Retirer {0} de {1} projet(s) ? (y/n)</value>
+  </data>
+  <data name="NuGet.ConfirmUpdateAll" xml:space="preserve">
+    <value>Mettre à jour {0} références de packages dans {1} projet(s) ? (y/n)</value>
+  </data>
+  <data name="NuGet.CouldNotCheckNewer" xml:space="preserve">
+    <value>Impossible de vérifier les sources pour des versions plus récentes.</value>
+  </data>
+  <data name="NuGet.CouldNotRun" xml:space="preserve">
+    <value>Impossible de lancer dotnet pour lister les packages.</value>
+  </data>
+  <data name="NuGet.Done" xml:space="preserve">
+    <value>{0} : {1} réussi(s), {2} échoué(s).</value>
+  </data>
+  <data name="NuGet.Header" xml:space="preserve">
+    <value>{0}   ({1} packages, {2} obsolètes)</value>
+  </data>
+  <data name="NuGet.HintCancel" xml:space="preserve">
+    <value>Annuler la commande en cours</value>
+  </data>
+  <data name="NuGet.HintClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="NuGet.HintInstall" xml:space="preserve">
+    <value>Installer un package dans le projet sélectionné</value>
+  </data>
+  <data name="NuGet.HintPane" xml:space="preserve">
+    <value>Passer de la portée aux packages</value>
+  </data>
+  <data name="NuGet.HintRefresh" xml:space="preserve">
+    <value>Relire les packages</value>
+  </data>
+  <data name="NuGet.HintRemove" xml:space="preserve">
+    <value>Retirer le package de la portée</value>
+  </data>
+  <data name="NuGet.HintUpdate" xml:space="preserve">
+    <value>Mettre le package sous le curseur à sa version la plus récente</value>
+  </data>
+  <data name="NuGet.HintUpdateAll" xml:space="preserve">
+    <value>Mettre à jour tous les packages obsolètes de la portée</value>
+  </data>
+  <data name="NuGet.Hints" xml:space="preserve">
+    <value>Entrée:mettre à jour  Maj+U:tout mettre à jour  Suppr:retirer  I:installer  F5:relire  X:annuler  Tab:changer  Échap:fermer</value>
+  </data>
+  <data name="NuGet.InstallAsk" xml:space="preserve">
+    <value>Identifiant du package à installer dans {0}</value>
+  </data>
+  <data name="NuGet.InstallInvalidId" xml:space="preserve">
+    <value>Un identifiant de package contient des lettres, des chiffres, des points, des tirets et des tirets bas, et commence par une lettre ou un chiffre.</value>
+  </data>
+  <data name="NuGet.InstallNeedsProject" xml:space="preserve">
+    <value>Sélectionnez un projet où installer ; une solution n'accepte aucun package.</value>
+  </data>
+  <data name="NuGet.ListingUnreadable" xml:space="preserve">
+    <value>dotnet n'a affiché aucune liste de packages.</value>
+  </data>
+  <data name="NuGet.NoPackages" xml:space="preserve">
+    <value>Aucun package dans cette portée.</value>
+  </data>
+  <data name="NuGet.NothingOutdated" xml:space="preserve">
+    <value>Tous les packages de cette portée sont à jour.</value>
+  </data>
+  <data name="NuGet.Packages" xml:space="preserve">
+    <value>Packages</value>
+  </data>
+  <data name="NuGet.ReadAgain" xml:space="preserve">
+    <value>F5 relit les packages.</value>
+  </data>
+  <data name="NuGet.ReadFailed" xml:space="preserve">
+    <value>Impossible de lire les packages : {0}</value>
+  </data>
+  <data name="NuGet.Reading" xml:space="preserve">
+    <value>Lecture des packages…</value>
+  </data>
+  <data name="NuGet.RowProjects" xml:space="preserve">
+    <value>{0} projet(s)</value>
+  </data>
+  <data name="NuGet.ScopeSolution" xml:space="preserve">
+    <value>Tous les projets de {0}</value>
+  </data>
+  <data name="NuGet.SelectPackage" xml:space="preserve">
+    <value>Sélectionnez d'abord un package.</value>
+  </data>
+  <data name="NuGet.Summary" xml:space="preserve">
+    <value>{0} packages dans {1} projets ; {2} obsolètes.</value>
+  </data>
+  <data name="NuGet.Title" xml:space="preserve">
+    <value>Packages NuGet</value>
+  </data>
+  <data name="NuGet.TitleInstall" xml:space="preserve">
+    <value>Installer {0}</value>
+  </data>
+  <data name="NuGet.TitleRemove" xml:space="preserve">
+    <value>Retirer {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdate" xml:space="preserve">
+    <value>Mettre à jour {0}</value>
+  </data>
+  <data name="NuGet.TitleUpdateAll" xml:space="preserve">
+    <value>Tout mettre à jour</value>
+  </data>
+  <data name="NuGet.UpToDate" xml:space="preserve">
+    <value>à jour</value>
   </data>
   <data name="OAuth.Expired" xml:space="preserve">
     <value>La sesión de {0} expiró</value>

@@ -35,7 +35,7 @@ public class DevelopmentStudioDialogTest
         dotnet ??= new FakeDotnetSolutionService { Solution = TwoProjects, Sdks = [new DotnetSdk("9.0.100", "/sdk/9")] };
         runner ??= new FakeProcessRunner();
         var breakpoints = new BreakpointStore();
-        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()), SyntaxHighlightingService.Default, new FakeSdkManager())
+        var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), breakpoints, mainProgram ?? new MainProgramStore(), dotnet, TestTheme(), server ?? new CSharpLanguageServer(new FakeLanguageServer()), SyntaxHighlightingService.Default, new FakeSdkManager(), new FakeNuGetPackageService(), new FakePromptService())
         {
             Folder = "/src",
         };

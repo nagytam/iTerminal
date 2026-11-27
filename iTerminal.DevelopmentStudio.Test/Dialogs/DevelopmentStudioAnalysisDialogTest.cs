@@ -16,7 +16,7 @@ public class DevelopmentStudioAnalysisDialogTest
     private static async Task<DevelopmentStudioDialog> OpenAsync(string folder, IReadOnlyList<DevelopmentProject> items, FakeProcessRunner runner)
     {
         var dialog = new DevelopmentStudioDialog(new FakeWorkspaceScanner(items), runner, new DevelopmentToolchains(), new BreakpointStore(),
-            new MainProgramStore(), new FakeDotnetSolutionService { Sdks = [] }, TestTheme(), new CSharpLanguageServer(new FakeLanguageServer()), iConsole.Services.SyntaxHighlightingService.Default, new FakeSdkManager())
+            new MainProgramStore(), new FakeDotnetSolutionService { Sdks = [] }, TestTheme(), new CSharpLanguageServer(new FakeLanguageServer()), iConsole.Services.SyntaxHighlightingService.Default, new FakeSdkManager(), new FakeNuGetPackageService(), new FakePromptService())
         {
             Folder = folder,
         };
