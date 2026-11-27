@@ -2689,6 +2689,87 @@
   <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
     <value>Die Datei ist zu groß, um sie hier anzuzeigen.</value>
   </data>
+  <data name="DevelopmentStudio.Toolbar.Breakpoint" xml:space="preserve">
+    <value>Point d'arrêt</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Build" xml:space="preserve">
+    <value>Générer</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Check" xml:space="preserve">
+    <value>Cocher</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Clean" xml:space="preserve">
+    <value>Nettoyer</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Coverage" xml:space="preserve">
+    <value>Couverture</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Debug" xml:space="preserve">
+    <value>Déboguer</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.DebugTests" xml:space="preserve">
+    <value>Déboguer les tests</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Expand" xml:space="preserve">
+    <value>Développer/réduire</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.GoToFile" xml:space="preserve">
+    <value>Ouvrir le fichier</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Layout" xml:space="preserve">
+    <value>Disposition</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Main" xml:space="preserve">
+    <value>Programme principal</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.NextTab" xml:space="preserve">
+    <value>Onglet suivant</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Open" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Panes" xml:space="preserve">
+    <value>Volets</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Refresh" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.RemoveWatch" xml:space="preserve">
+    <value>Retirer le suivi</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Run" xml:space="preserve">
+    <value>Exécuter</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.RunTests" xml:space="preserve">
+    <value>Exécuter les tests</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.SdkManager" xml:space="preserve">
+    <value>SDK</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.StepInto" xml:space="preserve">
+    <value>Pas à pas détaillé</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.StepOut" xml:space="preserve">
+    <value>Sortir</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.StepOver" xml:space="preserve">
+    <value>Pas à pas</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Stop" xml:space="preserve">
+    <value>Arrêter</value>
+  </data>
   <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
     <value>Modifications non enregistrées dans l'éditeur : Ctrl+S les enregistre d'abord.</value>
   </data>
