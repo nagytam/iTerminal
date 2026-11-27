@@ -21,6 +21,38 @@ public static class SandboxServices
     /// Path completion over the sandbox only: a folder under the sandbox root is listed from disk, any other lists as
     /// empty, so typing <c>C:\</c> or <c>/</c> in a path box never reads the machine's own folders.
     /// </summary>
+    /// <summary>Reports no language server, so a test that opens a .cs file never starts csharp-ls.</summary>
+    public sealed class LanguageServers : iTerminal.DevelopmentStudio.Services.Lsp.ILanguageServerLauncher
+    {
+        public string? Locate() => null;
+
+        public iTerminal.DevelopmentStudio.Services.Lsp.ILanguageServerProcess? Launch(string fileName, string workingDirectory) => null;
+    }
+
+    /// <summary>Installs nothing and lists nothing: the Development studio's SDK manager never reaches the publishers or the runtimes folder from a test.</summary>
+    public sealed class Sdks : iTerminal.Core.Services.Sdk.ISdkManager
+    {
+        public IReadOnlyList<iTerminal.Core.Model.Dotnet.DotnetSdk> InstalledDotNetSdks() => [];
+
+        public IReadOnlyList<iTerminal.Core.Services.Sdk.InstalledJdk> InstalledJdks() => [];
+
+        public string? ActiveJavaHome => null;
+
+        public void UseJavaHome(string? home)
+        {
+        }
+
+        public Task<IReadOnlyList<iTerminal.Core.Services.Sdk.AvailableSdk>> ListAvailableAsync(iTerminal.Core.Services.Sdk.SdkKind kind, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<iTerminal.Core.Services.Sdk.AvailableSdk>>([]);
+
+        public Task<string> InstallAsync(iTerminal.Core.Services.Sdk.AvailableSdk sdk, IProgress<string>? progress, CancellationToken cancellationToken) =>
+            throw new InvalidOperationException("The end-to-end suite installs no SDK.");
+
+        public void Uninstall(string versionFolder)
+        {
+        }
+    }
+
     public sealed class DirectoryLister(string root) : IDirectoryLister
     {
         private readonly Core.Services.DirectoryLister _real = new();
@@ -964,6 +996,20 @@ public static class SandboxServices
         public void Update(iConsole.Services.TerminalProgressState state, long percentage)
         {
         }
+    }
+
+    /// <summary>
+    /// The network of the machine a run is on is never reached: every request an HTTP-backed drive makes is
+    /// answered with a refusal, so a drive that was reached by mistake fails in its footer and does nothing else.
+    /// </summary>
+    public sealed class RefusedNetwork : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(HttpStatusCode.Forbidden)
+            {
+                ReasonPhrase = "No network in the test sandbox",
+                RequestMessage = request,
+            });
     }
 
     /// <summary>

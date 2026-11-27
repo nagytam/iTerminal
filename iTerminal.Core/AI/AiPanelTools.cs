@@ -51,6 +51,8 @@ public partial class AiPanelTools(
             "Describe a file panel: its path, the number of entries, the entry under the cursor, the marked count, the sort and the filter. panel: left, right, focused (default) or other."),
         AIFunctionFactory.Create(ListPanelEntries, "list_panel_entries",
             "List the entries a panel shows now (after its filter and sort). Folders end in '/', '>' marks the cursor row, '*' a marked row. panel: left, right, focused or other. max defaults to 100."),
+        AIFunctionFactory.Create(ListFolder, "list_folder",
+            "List the files and folders of the focused panel (no path), of a panel by its folder path, or of any other folder path. Folders are shown in [brackets], folders first. Prefer the panel tools: they show the same rows the user sees."),
         AIFunctionFactory.Create(GetFocusedEntry, "get_focused_entry",
             "Get the name, size and date of the entry under a panel's cursor."),
         AIFunctionFactory.Create(ReadPanelFile, "read_panel_file",
@@ -205,6 +207,76 @@ public partial class AiPanelTools(
         }
         return sb.ToString().TrimEnd();
     }
+
+    /// <summary>
+    /// The names in a folder, folders first, as <c>list_folder</c> shows them. With no path it lists the focused
+    /// panel. A path that a file panel already shows is read from that panel, so every drive works (archives,
+    /// FTP, git, docker) and the rows match what the user sees. Only a folder no panel shows is read from disk.
+    /// </summary>
+    internal string ListFolder(string? path = null)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return TryPanel("focused", out IContentModel focused, out string error) ? ListPanelNames(focused) : error;
+        }
+
+        string wanted = path.Trim();
+        foreach (IContentModel model in new[] { Find(Content.Left), Find(Content.Right) }.OfType<IContentModel>())
+        {
+            if (model.Url is not null && string.Equals(TrimSeparators(model.Url.Path), TrimSeparators(wanted), StringComparison.Ordinal))
+            {
+                return ListPanelNames(model);
+            }
+        }
+
+        try
+        {
+            var entries = Directory.GetFileSystemEntries(wanted)
+                .Select(e => (isDir: Directory.Exists(e), name: Path.GetFileName(e)))
+                .OrderBy(e => e.isDir ? 0 : 1)
+                .ThenBy(e => e.name, StringComparer.OrdinalIgnoreCase)
+                .Select(e => e.isDir ? $"[{e.name}]" : e.name)
+                .ToList();
+            return FormatNames(entries);
+        }
+        catch (Exception ex)
+        {
+            return $"Error: {ex.Message}";
+        }
+    }
+
+    private static string ListPanelNames(IContentModel model)
+    {
+        var rows = model.FilteredEntries
+            .Where(e => e.DisplayName?.Trim() != "..")
+            .Select(e => (isDir: e.Url?.PathType == PathType.Folder, name: e.DisplayName?.Trim() ?? e.Name))
+            .OrderBy(e => e.isDir ? 0 : 1)
+            .ThenBy(e => e.name, StringComparer.OrdinalIgnoreCase)
+            .Select(e => e.isDir ? $"[{e.name}]" : e.name)
+            .ToList();
+        return FormatNames(rows);
+    }
+
+    private static string FormatNames(IList<string> names)
+    {
+        if (names.Count == 0)
+        {
+            return "(empty)";
+        }
+
+        var sb = new StringBuilder();
+        foreach (string name in names.Take(MaxListedEntries))
+        {
+            sb.AppendLine(name);
+        }
+        if (names.Count > MaxListedEntries)
+        {
+            sb.AppendLine($"... {names.Count - MaxListedEntries} more not shown (use set_panel_filter to narrow the panel).");
+        }
+        return sb.ToString().TrimEnd();
+    }
+
+    private static string TrimSeparators(string? path) => (path ?? string.Empty).TrimEnd('/', '\\');
 
     internal string GetFocusedEntry(string? panel = null)
     {

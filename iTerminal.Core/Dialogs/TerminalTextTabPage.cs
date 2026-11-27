@@ -19,8 +19,19 @@ public abstract class TerminalTextTabPage : TabPage
 {
     internal static string NoCommandText => iConsole.Localization.UiText.Get("Terminal.NoCommand", "No terminal command has been run yet.");
 
+    internal static string RunningText => iConsole.Localization.UiText.Get("Terminal.Running", "The command is running. Its output appears here when it finishes.");
+
+    /// <summary>
+    /// The command the terminal dialog shows: the one running now, otherwise the last one that finished. A command started from
+    /// a panel is shown while it runs, so the dialog opened on it is not empty for as long as it takes.
+    /// </summary>
+    internal static ITerminalCommand? ShownCommand(ITerminalModel terminalModel) =>
+        terminalModel.Command.CommandTask is not null ? terminalModel.Command : terminalModel.History.LastOrDefault();
+
     private ITerminalModel _terminalModel { get; set; }
     private TextViewerControl _textViewerControl { get; set; }
+    private ITerminalCommand? _shown;
+    private bool _shownRunning;
 
     protected TerminalTextTabPage(
         string title,
@@ -46,7 +57,31 @@ public abstract class TerminalTextTabPage : TabPage
 
     public override async Task OnInitializeAsync()
     {
-        var command = _terminalModel.History.LastOrDefault();
+        Load();
+        await base.OnInitializeAsync();
+    }
+
+    /// <summary>
+    /// The command starts and ends while the dialog is open: the page reloads when the shown command changes or
+    /// finishes. It runs on the idle pass, on the thread that owns the controls, so the worker that finished the
+    /// command never touches them.
+    /// </summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        var command = ShownCommand(_terminalModel);
+        if (!ReferenceEquals(command, _shown) || (command?.CommandTask is not null) != _shownRunning)
+        {
+            Load();
+        }
+    }
+
+    private void Load()
+    {
+        var command = ShownCommand(_terminalModel);
+        _shown = command;
+        _shownRunning = command?.CommandTask is not null;
+
         List<string> lines;
         if (command is null)
         {
@@ -55,14 +90,18 @@ public abstract class TerminalTextTabPage : TabPage
         else
         {
             var text = SelectText(command);
-            lines = string.IsNullOrWhiteSpace(text)
-                ? [EmptyText]
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                lines = [_shownRunning ? RunningText : EmptyText];
+            }
+            else
+            {
                 // Either line ending: a tool's output is not bound to the OS's.
-                : [.. text.TrimEnd().Split('\n').Select(line => line.TrimEnd('\r'))];
+                lines = [.. text.TrimEnd().Split('\n').Select(line => line.TrimEnd('\r'))];
+            }
         }
 
         _textViewerControl.TextModel.Lines.FromList(lines);
-        await base.OnInitializeAsync();
     }
 
     public override void OnInitializeLayout()

@@ -8,6 +8,8 @@ namespace iTerminal.Core.Services.VirtualMachines.Test;
 [TestClass]
 public class HyperVVirtualMachineServiceTest
 {
+    private static VirtualMachine Vm(string name) => new(name, VirtualMachineState.Running, "running", "test");
+
     private static (HyperVVirtualMachineService Service, Mock<IExternalProcessRunner> Runner, List<(string File, string[] Arguments)> Calls) Create(
         ProcessOutput? output = null,
         Func<string, IReadOnlyList<string>, bool>? launch = null)
@@ -52,7 +54,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, calls) = Create();
 
-        var result = await service.RunAsync("web", action);
+        var result = await service.RunAsync(Vm("web"), action);
 
         Assert.IsTrue(result.Success);
         var script = ScriptOf(Assert.ContainsSingle(calls));
@@ -66,7 +68,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, calls) = Create();
 
-        await service.RunAsync("a*", VirtualMachineAction.PowerOff);
+        await service.RunAsync(Vm("a*"), VirtualMachineAction.PowerOff);
 
         var script = ScriptOf(Assert.ContainsSingle(calls));
         Assert.IsFalse(script.Contains("Get-VM -Name", StringComparison.Ordinal), "-Name reads * and ? as wildcards");
@@ -79,7 +81,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, calls) = Create();
 
-        await service.RunAsync("it's; Remove-VM x", VirtualMachineAction.Start);
+        await service.RunAsync(Vm("it's; Remove-VM x"), VirtualMachineAction.Start);
 
         StringAssert.Contains(ScriptOf(Assert.ContainsSingle(calls)), "$_.Name -eq 'it''s; Remove-VM x'");
     }
@@ -94,7 +96,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, runner, _) = Create();
 
-        var result = await service.RunAsync(name, VirtualMachineAction.PowerOff);
+        var result = await service.RunAsync(Vm(name), VirtualMachineAction.PowerOff);
 
         Assert.IsFalse(result.Success);
         runner.Verify(r => r.RunAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -113,7 +115,7 @@ public class HyperVVirtualMachineServiceTest
             return true;
         });
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Console);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Console);
 
         Assert.IsTrue(result.Success);
         Assert.AreEqual("vmconnect", launched);
@@ -127,7 +129,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, _) = Create(launch: (_, _) => false);
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Console);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Console);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "Hyper-V Management Tools");
@@ -139,7 +141,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, _) = Create(new ProcessOutput(1, string.Empty, HyperVVirtualMachineService.MissingMarker));
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Start);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Start);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "Turn on the Hyper-V feature");
@@ -151,7 +153,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, _) = Create(new ProcessOutput(1, string.Empty, HyperVVirtualMachineService.DeniedMarker));
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Start);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Start);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "Hyper-V Administrators");
@@ -163,7 +165,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, _) = Create(new ProcessOutput(1, string.Empty, HyperVVirtualMachineService.NoMachineMarker));
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Start);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Start);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "no such virtual machine");
@@ -175,7 +177,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, _) = Create(new ProcessOutput(-1, string.Empty, "powershell did not answer within 30 seconds."));
 
-        var result = await service.RunAsync("web", VirtualMachineAction.SaveState);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.SaveState);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "press F5");
@@ -187,7 +189,7 @@ public class HyperVVirtualMachineServiceTest
     {
         var (service, _, _) = Create(new ProcessOutput(1, string.Empty, "The virtual machine is busy.\nsecond line"));
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Start);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Start);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "The virtual machine is busy.");

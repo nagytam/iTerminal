@@ -4,6 +4,7 @@ using iConsole.Inputs.Posix.Extensions;
 using iConsole.Inputs.Windows.Extensions;
 using iTerminal.Core.Application;
 using iTerminal.Widgets.Application;
+using iTerminal.DevelopmentStudio.Application;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Elevation;
 using iTerminal.Core.Services.Updates;
@@ -55,6 +56,7 @@ else
 
 builder.Services.AddiTerminal(builder.Configuration);
 builder.Services.AddWidgets(builder.Configuration);
+builder.Services.AddDevelopmentStudio();
 builder.UseDesktop<Desktop>();
 builder.UseScreen<TerminalScreen>();
 

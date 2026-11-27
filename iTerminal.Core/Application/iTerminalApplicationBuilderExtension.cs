@@ -20,6 +20,7 @@ using iTerminal.Core.Services;
 using iTerminal.Core.Services.Documents;
 using iTerminal.Core.Services.Labels;
 using iTerminal.Core.Services.RuntimeDependencies;
+using iTerminal.Core.Services.Sdk;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -189,6 +190,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
         services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Recipes.IRecipeService, iTerminal.Core.Services.Recipes.RecipeService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Recipes.RecipeEditDialog>();
+        services.AddSingleton<Func<iTerminal.Core.Dialogs.Recipes.RecipeEditDialog>>(provider => () => provider.GetRequiredService<iTerminal.Core.Dialogs.Recipes.RecipeEditDialog>());
+        services.AddTransient<iTerminal.Core.Dialogs.Recipes.RecipeManagerDialog>();
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISessionEnvironment, iTerminal.Core.Services.SystemSettings.SessionEnvironment>();
         services.AddTransient<iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog>();
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
@@ -234,7 +239,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Plugins.IPluginManagerService, iTerminal.Core.Services.Plugins.PluginManagerService>();
         services.AddTransient<iTerminal.Core.Dialogs.Plugins.PluginManagerDialog>();
         services.AddSingleton<iTerminal.Core.Services.Dotnet.IDotnetSolutionService, iTerminal.Core.Services.Dotnet.DotnetSolutionService>();
-        services.AddTransient<iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog>();
         services.AddSingleton<iTerminal.Core.Services.PackageManager.IPackageManagerService>(_ =>
             OperatingSystem.IsWindows()
                 ? new iTerminal.Core.Services.PackageManager.WinGetPackageManagerService()
@@ -342,12 +346,11 @@ public static class iTerminalApplicationBuilderExtension
         // quick-view panel behind preview://. Singletons: each holds state the panels share —
         // the remembered repositories, the last search's results.
         services.AddSingleton<iTerminal.Core.Services.Processes.IExternalProcessRunner, iTerminal.Core.Services.Processes.ExternalProcessRunner>();
+        // The Virtual Machine Manager lists every hypervisor installed here (libvirt, GNOME Boxes, Hyper-V, VirtualBox).
         services.AddSingleton<iTerminal.Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
-            OperatingSystem.IsWindows()
-                ? new iTerminal.Core.Services.VirtualMachines.HyperVVirtualMachineService(
-                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())
-                : new iTerminal.Core.Services.VirtualMachines.LibvirtVirtualMachineService(
-                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
+            new iTerminal.Core.Services.VirtualMachines.CombinedVirtualMachineService(
+                iTerminal.Core.Services.VirtualMachines.VirtualMachineBackends.ForThisComputer(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())));
         services.AddSingleton<iTerminal.Core.Services.Git.IGitDriveService, iTerminal.Core.Services.Git.GitDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Docker.IDockerDriveService, iTerminal.Core.Services.Docker.DockerDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Search.IFileSearchService, iTerminal.Core.Services.Search.FileSearchService>();
@@ -584,6 +587,10 @@ public static class iTerminalApplicationBuilderExtension
                 : new iTerminal.Core.Services.Mtp.UnavailableMtpBackend("MTP devices cannot be browsed on this system.");
         });
         services.AddSingleton<iTerminal.Core.Services.Mtp.IMtpDriveService, iTerminal.Core.Services.Mtp.MtpDriveService>();
+        // nfs://: NFSv3 exports through NfsSharp.Client (managed, so every platform). One mount per export for the run,
+        // shared by both panels; the factory is the only thing that names the library, and a test replaces it.
+        services.AddSingleton<iTerminal.Core.Services.Nfs.INfsMountFactory, iTerminal.Core.Services.Nfs.NfsV3MountFactory>();
+        services.AddSingleton<iTerminal.Core.Services.Nfs.INfsDriveService, iTerminal.Core.Services.Nfs.NfsDriveService>();
         // The cloud drives: s3://, onedrive:// and gdrive://. One client for the run each; the OAuth
         // ones sign in through the device flow and keep their refresh token in the password manager.
         services.AddSingleton<iTerminal.Core.Services.Cloud.IS3FileSystemService>(provider =>
@@ -608,6 +615,35 @@ public static class iTerminalApplicationBuilderExtension
                 provider.GetService<Serilog.ILogger>());
             return new iTerminal.Core.Services.Cloud.GoogleDriveFileSystemService(tokens, provider.GetService<Serilog.ILogger>());
         });
+        // Dropbox and Azure Blob Storage: dropbox:// and azblob://. Each request names its account, so one client serves them all.
+        services.AddSingleton<iTerminal.Core.Services.Cloud.IDropboxFileSystemService>(provider =>
+        {
+            var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>>().Value;
+            var tokens = new iTerminal.Core.Services.Cloud.DropboxTokenProvider(
+                options.Dropbox,
+                provider.GetService<IPasswordManager>(),
+                provider.GetService<Serilog.ILogger>());
+            return new iTerminal.Core.Services.Cloud.DropboxFileSystemService(tokens, provider.GetService<Serilog.ILogger>());
+        });
+        services.AddSingleton<iTerminal.Core.Services.Cloud.IAzureBlobFileSystemService>(provider =>
+        {
+            var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>>().Value;
+            var passwords = provider.GetService<IPasswordManager>();
+            return new iTerminal.Core.Services.Cloud.AzureBlobFileSystemService(
+                account => iTerminal.Core.Services.Cloud.AzureBlobCredentialResolver.Resolve(account, passwords, options.AzureBlob),
+                provider.GetService<Serilog.ILogger>());
+        });
+        // Bluetooth file transfer (obex://): BlueZ's obexd on Linux. Windows and macOS say so in the drive's footer.
+        services.AddSingleton<iTerminal.Core.Services.Obex.IObexBackend>(provider =>
+        {
+            if (OperatingSystem.IsLinux())
+            {
+                return new iTerminal.Core.Services.Obex.BlueZObexBackend(provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>());
+            }
+
+            return new iTerminal.Core.Services.Obex.UnavailableObexBackend("Bluetooth file transfer can only be browsed on Linux (BlueZ).");
+        });
+        services.AddSingleton<iTerminal.Core.Services.Obex.IObexDriveService, iTerminal.Core.Services.Obex.ObexDriveService>();
         services.AddSingleton<IIPhoneFileSystemService, IPhoneFileSystemService>();
         services.AddSingleton<IIPhoneDeviceService, IPhoneDeviceService>();
         services.AddTransient<IArchiveFileSystemService, ArchiveFileSystemService>();
@@ -633,6 +669,13 @@ public static class iTerminalApplicationBuilderExtension
         // PowerShell 7 for remote PowerShell sessions and Ctrl+O on Windows, downloaded from its GitHub release. A
         // PowerShell that is installed already is used as it is.
         services.AddSingleton<IRuntimeDependency>(_ => new PowerShellRuntimeDependency(Path.Combine(runtimesDirectory, "powershell")));
+
+        // The .NET SDKs and JDKs the Development studio's SDK manager downloads (dotnet/ and jdk/ under the runtimes folder).
+        // Each archive is checked against the digest its publisher lists. The download can be long, so the client has no timeout.
+        services.AddSingleton<ISdkManager>(provider => new SdkManager(
+            new HttpClient { Timeout = Timeout.InfiniteTimeSpan },
+            runtimesDirectory,
+            provider.GetRequiredService<ISettingsService>()));
 
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.

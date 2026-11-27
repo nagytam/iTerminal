@@ -922,6 +922,9 @@
   <data name="CmdDesc.59bf9cc1" xml:space="preserve">
     <value>Apre il file selezionato nel visualizzatore.</value>
   </data>
+  <data name="CmdDesc.5b1ccbaa" xml:space="preserve">
+    <value>Esegue il comando digitato nella riga di comando, nella cartella di questo pannello, e mostra il suo output nella finestra del terminale.</value>
+  </data>
   <data name="CmdDesc.5efc92aa" xml:space="preserve">
     <value>Mostra il meteo dei luoghi salvati: ora, le prossime 24 ore e i prossimi 7 giorni.</value>
   </data>
@@ -1009,9 +1012,6 @@
   <data name="CmdDesc.85281618" xml:space="preserve">
     <value>Cifra i file contrassegnati (o quello sotto il cursore) con una passphrase in file .enc separati, o decifra i file .enc.</value>
   </data>
-  <data name="CmdDesc.86cc06e0" xml:space="preserve">
-    <value>Esegue il programma selezionato nel registro dei comandi.</value>
-  </data>
   <data name="CmdDesc.86d5c50c" xml:space="preserve">
     <value>Apre il file di testo selezionato nell’editor.</value>
   </data>
@@ -1033,6 +1033,9 @@
   </data>
   <data name="CmdDesc.8f7a1d59" xml:space="preserve">
     <value>Sovrascrive ed elimina i file e le cartelle contrassegnati (o quello sotto il cursore) in modo che non siano recuperabili.</value>
+  </data>
+  <data name="CmdDesc.8fd2e348" xml:space="preserve">
+    <value>Esegue il programma selezionato nel registro dei comandi e mostra il suo output nella finestra del terminale.</value>
   </data>
   <data name="CmdDesc.919dae4f" xml:space="preserve">
     <value>Diminuisce il volume di riproduzione del 5%.</value>
@@ -1102,9 +1105,6 @@
   </data>
   <data name="CmdDesc.adc840e9" xml:space="preserve">
     <value>Esplora e si connette agli host SSH/SMB della rete locale.</value>
-  </data>
-  <data name="CmdDesc.aec2e334" xml:space="preserve">
-    <value>Esegue il comando digitato nella riga di comando, nella cartella di questo pannello.</value>
   </data>
   <data name="CmdDesc.b2cf0726" xml:space="preserve">
     <value>Toglie il brano selezionato dalla coda di riproduzione. Il file non viene toccato.</value>
@@ -1216,11 +1216,17 @@
   <data name="CmdDesc.e5eb05a0" xml:space="preserve">
     <value>Mostra le voci in più colonne di nomi, o di nuovo in una sola.</value>
   </data>
+  <data name="CmdDesc.e662ef41" xml:space="preserve">
+    <value>Salva la ricetta.</value>
+  </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, poi push: la sincronizzazione git.</value>
   </data>
   <data name="CmdDesc.e710dca5" xml:space="preserve">
     <value>Va alla cartella preferita sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.e902212e" xml:space="preserve">
+    <value>Sfogliare le ricette preferite di Svizzera, Germania, Francia, Italia e Ungheria, e conservare le proprie con ingredienti e procedimento.</value>
   </data>
   <data name="CmdDesc.e9d16235" xml:space="preserve">
     <value>Cerca, connette, associa e dimentica dispositivi Bluetooth.</value>
@@ -1867,6 +1873,9 @@
   <data name="CmdTitle.d5d0a30b" xml:space="preserve">
     <value>Calendario</value>
   </data>
+  <data name="CmdTitle.d664282e" xml:space="preserve">
+    <value>Ricette</value>
+  </data>
   <data name="CmdTitle.d7977505" xml:space="preserve">
     <value>Seleziona tutto</value>
   </data>
@@ -2281,6 +2290,378 @@
   <data name="Dep.WhisperReady" xml:space="preserve">
     <value>Il modello Whisper {0} è pronto</value>
   </data>
+  <data name="DevelopmentStudio.AlreadyRunning" xml:space="preserve">
+    <value>El programa se está ejecutando. Se detiene en un punto de interrupción.</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
+    <value>El depurador no aceptó el punto de interrupción: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointRemoved" xml:space="preserve">
+    <value>Punto de interrupción quitado de la línea {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointSet" xml:space="preserve">
+    <value>Punto de interrupción en la línea {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.Breakpoints" xml:space="preserve">
+    <value>Puntos de interrupción</value>
+  </data>
+  <data name="DevelopmentStudio.BuildFailedNoDebug" xml:space="preserve">
+    <value>La compilación falló, por lo que no se inició {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.Busy" xml:space="preserve">
+    <value>Un comando sigue en ejecución; X lo cancela ({0} no se inició).</value>
+  </data>
+  <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla prima della misura.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyDebug" xml:space="preserve">
+    <value>Un comando sigue en ejecución; X lo cancela antes de depurar.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyProfile" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla prima del profilo.</value>
+  </data>
+  <data name="DevelopmentStudio.CallStack" xml:space="preserve">
+    <value>Pila de llamadas</value>
+  </data>
+  <data name="DevelopmentStudio.Cancelled" xml:space="preserve">
+    <value>{0} cancelado.</value>
+  </data>
+  <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
+    <value>Se quitaron {0} carpetas de caché de {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
+    <value>Misura della copertura annullata.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageHeading" xml:space="preserve">
+    <value>Copertura</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageSummary" xml:space="preserve">
+    <value>Copertura {0:0.0}%: {1} di {2} righe in {3} file.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageTotal" xml:space="preserve">
+    <value>Copertura {0:0.0}%: {1} di {2} righe in {3} file.</value>
+  </data>
+  <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
+    <value>Depuración</value>
+  </data>
+  <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
+    <value>Riga {0}, Col {1}</value>
+  </data>
+  <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
+    <value>Tempo trascorso {0}</value>
+  </data>
+  <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
+    <value>(nada aquí)</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorCounts" xml:space="preserve">
+    <value>{0} errori, {1} avvisi</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
+    <value>Elenco errori</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorsTab" xml:space="preserve">
+    <value>Errori</value>
+  </data>
+  <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
+    <value>{0} falló (código de salida {1}).</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorer" xml:space="preserve">
+    <value>Esplora file: Invio espande una cartella o apre un file.</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorerHeading" xml:space="preserve">
+    <value>Esplora file</value>
+  </data>
+  <data name="DevelopmentStudio.Found" xml:space="preserve">
+    <value>{0} elementos encontrados. Intro abre un archivo; F5 inicia la depuración.</value>
+  </data>
+  <data name="DevelopmentStudio.HintBreakpoint" xml:space="preserve">
+    <value>Alternar un punto de interrupción en la línea del cursor</value>
+  </data>
+  <data name="DevelopmentStudio.HintCancel" xml:space="preserve">
+    <value>Cancelar el comando en ejecución</value>
+  </data>
+  <data name="DevelopmentStudio.HintCheck" xml:space="preserve">
+    <value>Marcar o desmarcar el proyecto .NET; B, C, T y R actúan sobre los marcados</value>
+  </data>
+  <data name="DevelopmentStudio.HintCheckAll" xml:space="preserve">
+    <value>Marcar todos los proyectos / todos los proyectos de prueba</value>
+  </data>
+  <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
+    <value>Compilar, limpiar, probar o ejecutar el elemento seleccionado</value>
+  </data>
+  <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
+    <value>Misura la copertura dell'elemento selezionato / profila lo script Python selezionato</value>
+  </data>
+  <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
+    <value>Comprimi o espandi la soluzione, il progetto o la cartella sotto il cursore</value>
+  </data>
+  <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
+    <value>Nella vista copertura, apri il file sotto il cursore</value>
+  </data>
+  <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
+    <value>Sposta e ridimensiona i pannelli: le frecce spostano il pannello attivo verso quel bordo, Maiusc+frecce ne cambiano le dimensioni</value>
+  </data>
+  <data name="DevelopmentStudio.HintMain" xml:space="preserve">
+    <value>Imposta il progetto principale (M): F5 e Ctrl+F5 lo avviano</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Il menu dell'elemento: i suoi comandi e Imposta come progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
+    <value>Abrir el archivo (o ejecutar la prueba)</value>
+  </data>
+  <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
+    <value>Scheda dell'esplora (Soluzione, Test, File) / scheda del pannello di output (Output, Debug, Copertura, Profilo)</value>
+  </data>
+  <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
+    <value>Ejecutar sin depurar</value>
+  </data>
+  <data name="DevelopmentStudio.HintSbom" xml:space="preserve">
+    <value>Escribir una SBOM CycloneDX de la solución / cambiar entre XML y JSON</value>
+  </data>
+  <data name="DevelopmentStudio.HintSdk" xml:space="preserve">
+    <value>Cambiar al siguiente SDK de .NET</value>
+  </data>
+  <data name="DevelopmentStudio.HintSdkManager" xml:space="preserve">
+    <value>Installa SDK .NET e JDK, e scegli il JDK per le compilazioni e le esecuzioni Java</value>
+  </data>
+  <data name="DevelopmentStudio.HintStart" xml:space="preserve">
+    <value>Iniciar la depuración o continuar</value>
+  </data>
+  <data name="DevelopmentStudio.HintStep" xml:space="preserve">
+    <value>Paso a paso por encima / paso a paso dentro</value>
+  </data>
+  <data name="DevelopmentStudio.HintStepOut" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="DevelopmentStudio.HintStop" xml:space="preserve">
+    <value>Detener la depuración</value>
+  </data>
+  <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
+    <value>Vigilar la palabra bajo el cursor (en la vista de depuración, quitarla)</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
+    <value>csharp-ls non è stato trovato. Installarlo con dotnet tool install -g csharp-ls.</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerStarting" xml:space="preserve">
+    <value>Avvio del server di linguaggio C#...</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
+    <value>Il pannello centrale può solo scambiarsi di posto con un altro pannello: sposta al centro quello desiderato.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentreResize" xml:space="preserve">
+    <value>Il pannello centrale occupa lo spazio rimasto; ridimensiona invece un pannello di bordo.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutOn" xml:space="preserve">
+    <value>Disposizione dei pannelli: le frecce spostano il pannello attivo verso quel bordo, Maiusc+frecce ne cambiano le dimensioni, F8 o Esc termina.</value>
+  </data>
+  <data name="DevelopmentStudio.Locals" xml:space="preserve">
+    <value>Variables locales</value>
+  </data>
+  <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
+    <value>Nessun programma principale: F5 avvia l'elemento sotto il cursore.</value>
+  </data>
+  <data name="DevelopmentStudio.MainNotStartable" xml:space="preserve">
+    <value>{0} non ha un programma da avviare. Solo un progetto console o web, oppure uno script, può essere il programma principale.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSet" xml:space="preserve">
+    <value>{0} è il programma principale. F5 e Ctrl+F5 lo avviano.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSolution" xml:space="preserve">
+    <value>Una soluzione non può essere il programma principale. Seleziona un progetto o uno script.</value>
+  </data>
+  <data name="DevelopmentStudio.MainTag" xml:space="preserve">
+    <value>principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Compila</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Pulisci</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Rimuovi il progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Esegui il debug</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Esegui</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Imposta come progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Testa</value>
+  </data>
+  <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
+    <value>Abra un archivo (Intro) y coloque el cursor en una línea para poner un punto de interrupción.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCommand" xml:space="preserve">
+    <value>{0} no puede {1} {2}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverage" xml:space="preserve">
+    <value>Nessuna copertura ancora. O misura la copertura dell'elemento selezionato.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageFor" xml:space="preserve">
+    <value>{0} non ha una misura della copertura qui.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageReport" xml:space="preserve">
+    <value>L'esecuzione non ha lasciato un report di copertura. Controlla l'output.</value>
+  </data>
+  <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
+    <value>La depuración de {0} no está disponible aquí para {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoErrors" xml:space="preserve">
+    <value>Nessun errore o avviso. Build, esecuzione e test li segnalano qui.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
+    <value>Nessun profilo ancora. P profila lo script Python selezionato.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfileWritten" xml:space="preserve">
+    <value>Il profiler non ha scritto alcun profilo. Controlla l'output.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfilerFor" xml:space="preserve">
+    <value>{0} non ha un profiler qui.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProjectsToCheck" xml:space="preserve">
+    <value>No hay proyectos .NET que marcar.</value>
+  </data>
+  <data name="DevelopmentStudio.NoSolutionForSbom" xml:space="preserve">
+    <value>No hay aquí una solución para la que escribir una SBOM.</value>
+  </data>
+  <data name="DevelopmentStudio.NoSource" xml:space="preserve">
+    <value>Seleccione un archivo en el explorador y pulse Intro para abrirlo aquí.</value>
+  </data>
+  <data name="DevelopmentStudio.NoWord" xml:space="preserve">
+    <value>Coloque el cursor sobre un nombre para vigilarlo.</value>
+  </data>
+  <data name="DevelopmentStudio.NotDebugging" xml:space="preserve">
+    <value>No se está depurando.</value>
+  </data>
+  <data name="DevelopmentStudio.NotEvaluated" xml:space="preserve">
+    <value>(no evaluado)</value>
+  </data>
+  <data name="DevelopmentStudio.NotStopped" xml:space="preserve">
+    <value>El programa se está ejecutando. Se detiene en un punto de interrupción.</value>
+  </data>
+  <data name="DevelopmentStudio.NothingFound" xml:space="preserve">
+    <value>No se encontraron soluciones, proyectos ni scripts en esta carpeta.</value>
+  </data>
+  <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
+    <value>Nessuna modifica da salvare.</value>
+  </data>
+  <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
+    <value>Solo se pueden marcar proyectos .NET.</value>
+  </data>
+  <data name="DevelopmentStudio.OutputHeading" xml:space="preserve">
+    <value>Salida</value>
+  </data>
+  <data name="DevelopmentStudio.Paused" xml:space="preserve">
+    <value>Detenido en {0}:{1}</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileEmpty" xml:space="preserve">
+    <value>Il profilo non ha funzioni.</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeader" xml:space="preserve">
+    <value>     chiamate   totale s   cumul. s  funzione</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeading" xml:space="preserve">
+    <value>Profilo</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileSummary" xml:space="preserve">
+    <value>{0} profilato: {1} funzioni. Più tempo: {2}.</value>
+  </data>
+  <data name="DevelopmentStudio.ProjectCount" xml:space="preserve">
+    <value>{0} proyectos</value>
+  </data>
+  <data name="DevelopmentStudio.ReadingFolder" xml:space="preserve">
+    <value>(lettura della cartella...)</value>
+  </data>
+  <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
+    <value>{0} elementos encontrados.</value>
+  </data>
+  <data name="DevelopmentStudio.Running" xml:space="preserve">
+    <value>Ejecutando {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
+    <value>Misura della copertura di {0}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
+    <value>Profilo di {0}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningState" xml:space="preserve">
+    <value>En ejecución.</value>
+  </data>
+  <data name="DevelopmentStudio.SaveFailed" xml:space="preserve">
+    <value>Salvataggio non riuscito: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.SavedFile" xml:space="preserve">
+    <value>Salvato {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
+    <value>Escribiendo la SBOM...</value>
+  </data>
+  <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
+    <value>   (SDK de .NET {0})</value>
+  </data>
+  <data name="DevelopmentStudio.SelectFile" xml:space="preserve">
+    <value>Seleccione un proyecto o un script para abrir.</value>
+  </data>
+  <data name="DevelopmentStudio.SelectItem" xml:space="preserve">
+    <value>Seleccione primero un elemento.</value>
+  </data>
+  <data name="DevelopmentStudio.SelectToDebug" xml:space="preserve">
+    <value>Seleccione un proyecto o un script para depurar. Una solución no se puede depurar.</value>
+  </data>
+  <data name="DevelopmentStudio.SolutionExplorer" xml:space="preserve">
+    <value>Explorador de soluciones.</value>
+  </data>
+  <data name="DevelopmentStudio.SolutionExplorerHeading" xml:space="preserve">
+    <value>Explorador de soluciones</value>
+  </data>
+  <data name="DevelopmentStudio.SourceHeading" xml:space="preserve">
+    <value>Código</value>
+  </data>
+  <data name="DevelopmentStudio.StackFailed" xml:space="preserve">
+    <value>No se pudo leer el estado del programa: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.Started" xml:space="preserve">
+    <value>Depurando {0}. F5 continúa, F10 paso a paso por encima.</value>
+  </data>
+  <data name="DevelopmentStudio.Stopped" xml:space="preserve">
+    <value>Depuración detenida.</value>
+  </data>
+  <data name="DevelopmentStudio.StoppedAt" xml:space="preserve">
+    <value>Detenido ({0}) en {1}:{2}.</value>
+  </data>
+  <data name="DevelopmentStudio.Succeeded" xml:space="preserve">
+    <value>{0} correcto: {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.TestExplorer" xml:space="preserve">
+    <value>Explorador de pruebas: Intro o T ejecuta el elemento de prueba bajo el cursor.</value>
+  </data>
+  <data name="DevelopmentStudio.TestExplorerHeading" xml:space="preserve">
+    <value>Explorador de pruebas</value>
+  </data>
+  <data name="DevelopmentStudio.TestTotals" xml:space="preserve">
+    <value>Pruebas: {0} correctas, {1} fallidas, {2} omitidas.</value>
+  </data>
+  <data name="DevelopmentStudio.Title" xml:space="preserve">
+    <value>Estudio de desarrollo</value>
+  </data>
+  <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
+    <value>El archivo es demasiado grande para mostrarlo aquí.</value>
+  </data>
+  <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
+    <value>Modifiche non salvate nell'editor: Ctrl+S le salva prima.</value>
+  </data>
+  <data name="DevelopmentStudio.Watch" xml:space="preserve">
+    <value>Inspección</value>
+  </data>
+  <data name="DevelopmentStudio.Watching" xml:space="preserve">
+    <value>Vigilando {0}.</value>
+  </data>
   <data name="Dialog.AddServer" xml:space="preserve">
     <value>Aggiungi un server</value>
   </data>
@@ -2442,6 +2823,12 @@
   </data>
   <data name="Dialog.PropertiesOf" xml:space="preserve">
     <value>Proprietà di {0}</value>
+  </data>
+  <data name="Dialog.RecipeEdit" xml:space="preserve">
+    <value>Ricetta</value>
+  </data>
+  <data name="Dialog.Recipes" xml:space="preserve">
+    <value>Ricette</value>
   </data>
   <data name="Dialog.RemoteConnections" xml:space="preserve">
     <value>Connessioni remote</value>
@@ -3340,6 +3727,30 @@
   <data name="DialogHint.RecentOnly" xml:space="preserve">
     <value>Mostra le ultime cinque stazioni ascoltate</value>
   </data>
+  <data name="DialogHint.RecipeBrowse" xml:space="preserve">
+    <value>Scorrere le ricette</value>
+  </data>
+  <data name="DialogHint.RecipeCancel" xml:space="preserve">
+    <value>Chiudi senza salvare</value>
+  </data>
+  <data name="DialogHint.RecipeClose" xml:space="preserve">
+    <value>Chiudi le ricette</value>
+  </data>
+  <data name="DialogHint.RecipeDelete" xml:space="preserve">
+    <value>Elimina la tua ricetta (chiede conferma)</value>
+  </data>
+  <data name="DialogHint.RecipeEdit" xml:space="preserve">
+    <value>Modifica la tua ricetta (non quelle preinstallate)</value>
+  </data>
+  <data name="DialogHint.RecipeEnter" xml:space="preserve">
+    <value>Salva sul pulsante Salva; in un editor, una nuova riga</value>
+  </data>
+  <data name="DialogHint.RecipeFirstLast" xml:space="preserve">
+    <value>Vai alla prima o all'ultima ricetta</value>
+  </data>
+  <data name="DialogHint.RecipeNew" xml:space="preserve">
+    <value>Aggiungi una ricetta personale</value>
+  </data>
   <data name="DialogHint.Refresh" xml:space="preserve">
     <value>Aggiorna</value>
   </data>
@@ -3895,14 +4306,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Maiusc+F9: avvia/ferma  Ctrl+Maiusc+F9: riavvia</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>Nessun container per ora — creane uno con docker run.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>Docker non è installato — installa Docker Desktop o lo strumento a riga di comando docker per esplorare i container.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>Docker non è in esecuzione — avvia Docker Desktop o il servizio docker.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Apri un container, o posiziona il cursore su uno, per eseguirvi comandi.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>Docker è installato, ma questo utente non può raggiungerne il daemon — aggiungilo al gruppo «docker» e accedi di nuovo.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>Il container è fermo — avvialo prima (Maiusc+F9 sulla sua riga).</value>
+    <value>Il container è fermo — avvialo dalla lista dei container (Maiusc+F9 sulla sua riga).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>Cartella di documenti non trovata: {0}</value>
@@ -4728,6 +5148,18 @@
   </data>
   <data name="Field.ReadTextFromImages" xml:space="preserve">
     <value>Leggi il testo dalle immagini (OCR)</value>
+  </data>
+  <data name="Field.RecipeIngredients" xml:space="preserve">
+    <value>Ingredienti, uno per riga</value>
+  </data>
+  <data name="Field.RecipeOrigin" xml:space="preserve">
+    <value>Origine</value>
+  </data>
+  <data name="Field.RecipeSteps" xml:space="preserve">
+    <value>Procedimento, uno per riga</value>
+  </data>
+  <data name="Field.RecipeTitle" xml:space="preserve">
+    <value>Titolo</value>
   </data>
   <data name="Field.RecursivelyDeleteFolder" xml:space="preserve">
     <value>Elimina la cartella ricorsivamente</value>
@@ -6069,6 +6501,21 @@
   <data name="Hints.CurrencyConverter" xml:space="preserve">
     <value>Tab:campo successivo  Su/Giù:scegli  F5:aggiorna tassi  F6:scambia  Esc:chiudi</value>
   </data>
+  <data name="Hints.DevelopmentStudio" xml:space="preserve">
+    <value>F5:depurar F9:punto de interrupción F10/F11:paso Espacio:marcar B/C/T/R:compilar/limpiar/probar/ejecutar V:SDK K:SDKs S/F:SBOM F6/F7:paneles Intro:abrir Esc:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
+    <value>Scrivi per modificare  Ctrl+S:salva  F9:punto di interruzione  F5:debug  F7:scheda  Esc:chiudi</value>
+  </data>
+  <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
+    <value>Invio:apri l'errore alla sua riga  F7:scheda  Esc:chiudi</value>
+  </data>
+  <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
+    <value>Invio:apri  Sin/Des:espandi  Space:seleziona  B/C/T/R:compila/pulisci/test/esegui  M:principale  K:SDK  Esc:chiudi</value>
+  </data>
+  <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
+    <value>Su/Giù/PgSu/PgGiù:scorri  F7:scheda  X:annulla  Esc:chiudi</value>
+  </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:cerca/leggi  Tab:campo  F3:intero  F2:browser  Esc:chiudi</value>
   </data>
@@ -7024,6 +7471,9 @@
   <data name="Menu.Quit" xml:space="preserve">
     <value>Esci</value>
   </data>
+  <data name="Menu.Recipes" xml:space="preserve">
+    <value>Ricette</value>
+  </data>
   <data name="Menu.RecycleBin" xml:space="preserve">
     <value>Cestino</value>
   </data>
@@ -7750,6 +8200,24 @@
   <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
     <value>Chiede al registro chi detiene un dominio o un indirizzo.</value>
   </data>
+  <data name="Nfs.ConnectionFailed" xml:space="preserve">
+    <value>Connessione NFS a {0} non riuscita: {1}</value>
+  </data>
+  <data name="Nfs.ExportIsNotFile" xml:space="preserve">
+    <value>Un'esportazione è un mount, non un file: aprirla per lavorare su ciò che contiene.</value>
+  </data>
+  <data name="Nfs.Header" xml:space="preserve">
+    <value>NFS: {0}</value>
+  </data>
+  <data name="Nfs.HostsNotListed" xml:space="preserve">
+    <value>NFS non ha un elenco di server: digitare nfs://host/ per elencarne le esportazioni.</value>
+  </data>
+  <data name="Nfs.MoveFolderUnsupported" xml:space="preserve">
+    <value>Una cartella non può essere spostata tra esportazioni; copiarla, poi eliminarla.</value>
+  </data>
+  <data name="Nfs.ReadOnlyExport" xml:space="preserve">
+    <value>Host ed esportazioni sono in sola lettura qui: creare, copiare, spostare ed eliminare funzionano all'interno di un'esportazione.</value>
+  </data>
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Posizioni il cursore su un file o una cartella, oppure ne selezioni prima alcuni.</value>
   </data>
@@ -8254,6 +8722,9 @@
   <data name="Prompt.DeleteNamed" xml:space="preserve">
     <value>Eliminare "{0}"? (s/n)</value>
   </data>
+  <data name="Prompt.DeleteRecipe" xml:space="preserve">
+    <value>Eliminare "{0}"? (s/n)</value>
+  </data>
   <data name="Properties.Cap.Accessed" xml:space="preserve">
     <value>Accesso</value>
   </data>
@@ -8436,6 +8907,60 @@
   </data>
   <data name="Radio.Title" xml:space="preserve">
     <value>Radio online</value>
+  </data>
+  <data name="Recipe.ColKind" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Recipe.Count" xml:space="preserve">
+    <value>{0} ricette</value>
+  </data>
+  <data name="Recipe.Deleted" xml:space="preserve">
+    <value>Ricetta eliminata.</value>
+  </data>
+  <data name="Recipe.ErrIngredient" xml:space="preserve">
+    <value>Una ricetta richiede almeno un ingrediente.</value>
+  </data>
+  <data name="Recipe.ErrLineBreak" xml:space="preserve">
+    <value>Ogni titolo, origine, ingrediente e passaggio deve stare su una riga.</value>
+  </data>
+  <data name="Recipe.ErrStep" xml:space="preserve">
+    <value>Una ricetta richiede almeno un passaggio.</value>
+  </data>
+  <data name="Recipe.ErrTitle" xml:space="preserve">
+    <value>Una ricetta ha bisogno di un titolo.</value>
+  </data>
+  <data name="Recipe.ErrTooLong" xml:space="preserve">
+    <value>Testo troppo lungo: un titolo ha al massimo 256 caratteri, un'origine 128, un ingrediente o passaggio 1000.</value>
+  </data>
+  <data name="Recipe.ErrTooMany" xml:space="preserve">
+    <value>Una ricetta ha al massimo 100 ingredienti e 100 passaggi.</value>
+  </data>
+  <data name="Recipe.Failed" xml:space="preserve">
+    <value>Impossibile leggere o salvare le ricette: {0}</value>
+  </data>
+  <data name="Recipe.Hint" xml:space="preserve">
+    <value>Su/Giù scorrere  N nuova  E modifica  D elimina  Esc chiudi</value>
+  </data>
+  <data name="Recipe.Ingredients" xml:space="preserve">
+    <value>Ingredienti</value>
+  </data>
+  <data name="Recipe.OriginLine" xml:space="preserve">
+    <value>Da {0}</value>
+  </data>
+  <data name="Recipe.Own" xml:space="preserve">
+    <value>Personale</value>
+  </data>
+  <data name="Recipe.Preloaded" xml:space="preserve">
+    <value>Preinstallata</value>
+  </data>
+  <data name="Recipe.PreloadedReadOnly" xml:space="preserve">
+    <value>Le ricette preinstallate non possono essere modificate.</value>
+  </data>
+  <data name="Recipe.Saved" xml:space="preserve">
+    <value>Ricetta salvata.</value>
+  </data>
+  <data name="Recipe.Steps" xml:space="preserve">
+    <value>Procedimento</value>
   </data>
   <data name="Recycle.Drive.Hints" xml:space="preserve">
     <value>Invio:ripristina  F8:elimina definitivamente</value>
@@ -8839,6 +9364,96 @@
   <data name="ScreenSaver.Wake" xml:space="preserve">
     <value>Riattiva lo schermo</value>
     </data>
+  <data name="SdkManager.ActiveJava" xml:space="preserve">
+    <value>Installato, usato per Java</value>
+  </data>
+  <data name="SdkManager.AlreadyActive" xml:space="preserve">
+    <value>{0} è già il Java in uso.</value>
+  </data>
+  <data name="SdkManager.Available" xml:space="preserve">
+    <value>Disponibile</value>
+  </data>
+  <data name="SdkManager.Busy" xml:space="preserve">
+    <value>L'ultima richiesta è ancora in corso.</value>
+  </data>
+  <data name="SdkManager.Cancelled" xml:space="preserve">
+    <value>Annullato.</value>
+  </data>
+  <data name="SdkManager.ConfirmRemove" xml:space="preserve">
+    <value>Rimuovere {0} {1} da iTerminal? (s/n)</value>
+  </data>
+  <data name="SdkManager.Details" xml:space="preserve">
+    <value>I SDK e i JDK installati sono conservati nella cartella dati di iTerminal. Invio su un JDK installato lo rende il Java usato per compilare ed eseguire.</value>
+  </data>
+  <data name="SdkManager.Done" xml:space="preserve">
+    <value>{0} è installato.</value>
+  </data>
+  <data name="SdkManager.DotNetUsed" xml:space="preserve">
+    <value>Gli SDK .NET installati qui entrano nel ciclo di V dello studio.</value>
+  </data>
+  <data name="SdkManager.Downloading" xml:space="preserve">
+    <value>Download di {0}…</value>
+  </data>
+  <data name="SdkManager.Failed" xml:space="preserve">
+    <value>Impossibile installare {0}: {1}</value>
+  </data>
+  <data name="SdkManager.HintClose" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="SdkManager.HintInstall" xml:space="preserve">
+    <value>Installa l'SDK, o usa il JDK installato per Java</value>
+  </data>
+  <data name="SdkManager.HintRefresh" xml:space="preserve">
+    <value>Rileggi gli elenchi</value>
+  </data>
+  <data name="SdkManager.HintRemove" xml:space="preserve">
+    <value>Rimuovi un SDK o JDK installato</value>
+  </data>
+  <data name="SdkManager.Installed" xml:space="preserve">
+    <value>Installato</value>
+  </data>
+  <data name="SdkManager.JavaChosen" xml:space="preserve">
+    <value>Le compilazioni e le esecuzioni Java usano {0}.</value>
+  </data>
+  <data name="SdkManager.KindDotNet" xml:space="preserve">
+    <value>SDK .NET</value>
+  </data>
+  <data name="SdkManager.KindJdk" xml:space="preserve">
+    <value>JDK Java</value>
+  </data>
+  <data name="SdkManager.Latest" xml:space="preserve">
+    <value>Disponibile, la più recente</value>
+  </data>
+  <data name="SdkManager.ListFailed" xml:space="preserve">
+    <value>Impossibile contattare l'editore: {0}</value>
+  </data>
+  <data name="SdkManager.None" xml:space="preserve">
+    <value> Nessun SDK trovato.</value>
+  </data>
+  <data name="SdkManager.NotAnInstall" xml:space="preserve">
+    <value>{0} non contiene un'installazione di {1}.</value>
+  </data>
+  <data name="SdkManager.NotInstalled" xml:space="preserve">
+    <value>Questo non è installato, quindi non c'è nulla da rimuovere.</value>
+  </data>
+  <data name="SdkManager.Preview" xml:space="preserve">
+    <value>Disponibile, un'anteprima</value>
+  </data>
+  <data name="SdkManager.Reading" xml:space="preserve">
+    <value> Lettura degli SDK…</value>
+  </data>
+  <data name="SdkManager.Refreshing" xml:space="preserve">
+    <value>Aggiornamento…</value>
+  </data>
+  <data name="SdkManager.Removed" xml:space="preserve">
+    <value>{0} è stato rimosso.</value>
+  </data>
+  <data name="SdkManager.Title" xml:space="preserve">
+    <value>Gestione SDK</value>
+  </data>
+  <data name="SdkManager.Unpacking" xml:space="preserve">
+    <value>Estrazione di {0}…</value>
+  </data>
   <data name="Search.Line" xml:space="preserve">
     <value>Riga {0}: {1}</value>
   </data>
@@ -10030,6 +10645,9 @@
   </data>
   <data name="Terminal.NoCommand" xml:space="preserve">
     <value>Nessun comando del terminale è ancora stato eseguito.</value>
+  </data>
+  <data name="Terminal.Running" xml:space="preserve">
+    <value>Il comando è in esecuzione. Il suo output compare qui al termine.</value>
   </data>
   <data name="Terminal.SandboxBusy" xml:space="preserve">
     <value>Un comando è in esecuzione: il sandbox può essere cambiato al termine.</value>

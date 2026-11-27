@@ -490,7 +490,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 musicFileViewerDialog: CreateMusicDialog(themeService));
 
             Assert.IsTrue(command.CanExecute(), "F3 must open an audio file when the music viewer is wired up.");
@@ -511,7 +511,7 @@ public class ViewFileDialogCommandTest
         var command = new ViewFileDialogCommand(
             CreateDialog(themeService),
             CreateServiceForFile(Path.Combine(Path.GetTempPath(), $"MissingTrack_{Guid.NewGuid():N}.mp3")),
-            solutionViewerDialog: null,
+            solutionDialogFactory: null,
             musicFileViewerDialog: CreateMusicDialog(themeService));
 
         Assert.IsFalse(command.CanExecute());
@@ -531,7 +531,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 musicFileViewerDialog: musicDialog);
 
             // Control is null here, so the dialog is not actually shown — the routing decision is what matters.
@@ -566,7 +566,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 xmlViewerDialog: xmlDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -597,7 +597,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 jsonViewerDialog: jsonDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -633,7 +633,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 csvViewerDialog: csvDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -664,7 +664,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 sqliteViewerDialog: sqliteDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -696,7 +696,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 fileViewer,
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 sqliteViewerDialog: sqliteDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -727,7 +727,7 @@ public class ViewFileDialogCommandTest
         var command = new ViewFileDialogCommand(
             fileViewer,
             CreateServiceForFile(path),
-            solutionViewerDialog: null,
+            solutionDialogFactory: null,
             sqliteViewerDialog: sqliteDialog);
 
         command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -755,7 +755,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 parquetViewerDialog: parquetDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -783,7 +783,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 fileViewer,
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 parquetViewerDialog: parquetDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -814,7 +814,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 harViewerDialog: harDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -868,7 +868,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 CreateDialog(themeService),
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 hdfViewerDialog: hdfDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -897,7 +897,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 fileViewer,
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 hdfViewerDialog: hdfDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -926,7 +926,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 fileViewer,
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 hdfViewerDialog: hdfDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -953,7 +953,7 @@ public class ViewFileDialogCommandTest
         var command = new ViewFileDialogCommand(
             fileViewer,
             CreateServiceForFile(path),
-            solutionViewerDialog: null,
+            solutionDialogFactory: null,
             hdfViewerDialog: hdfDialog);
 
         command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -980,7 +980,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 fileViewer,
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 xpsViewerDialog: xpsDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();
@@ -1152,7 +1152,7 @@ public class ViewFileDialogCommandTest
             var command = new ViewFileDialogCommand(
                 fileViewer,
                 CreateServiceForFile(path),
-                solutionViewerDialog: null,
+                solutionDialogFactory: null,
                 executableAnalysisDialog: executableDialog);
 
             command.ExecuteAsync(null).GetAwaiter().GetResult();

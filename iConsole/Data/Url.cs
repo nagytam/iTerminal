@@ -256,12 +256,28 @@ public partial class Url
                 // The archive's own top level, not the (empty) drive root: archive://<archive>/.
                 return new Url(Data.Container.ARCHIVE + Host + "/");
             }
+            else if (ContainerType == ContainerType.Nfs)
+            {
+                // The export's own root (nfs://<host>/<export>/), the host's list of exports (nfs://<host>/), or the bare scheme.
+                var segments = Path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                if (segments.Length >= 2)
+                {
+                    return new Url(Data.Container.NFS + segments[0] + "/" + segments[1] + "/");
+                }
+
+                return segments.Length == 1 ? new Url(Data.Container.NFS + segments[0] + "/") : new Url(Data.Container.NFS);
+            }
             else if (ContainerType == ContainerType.Mtp)
             {
                 // The storage's own root (mtp://<device>/<storage>/), or the device's list of storages.
                 var segments = Path.Split('/', StringSplitOptions.RemoveEmptyEntries);
                 var storageRoot = segments.Length == 1 ? segments[0] + "/" : string.Empty;
                 return segments.Length >= 2 ? new Url(Data.Container.MTP + segments[0] + "/" + segments[1] + "/") : new Url(Data.Container.MTP + storageRoot);
+            }
+            else if (ContainerType == ContainerType.Obex && Path.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries).Length <= 1)
+            {
+                // A device's root goes back to the list of devices (obex://), as a storage goes back to the device.
+                return new Url(Data.Container.OBEX);
             }
             else if (ContainerType == ContainerType.Git)
             {
@@ -625,15 +641,20 @@ public partial class Url
             }
             else if (_url.StartsWith(Data.Container.S3)
                      || _url.StartsWith(Data.Container.ONEDRIVE)
-                     || _url.StartsWith(Data.Container.GOOGLE_DRIVE))
+                     || _url.StartsWith(Data.Container.GOOGLE_DRIVE)
+                     || _url.StartsWith(Data.Container.DROPBOX)
+                     || _url.StartsWith(Data.Container.AZURE_BLOB))
             {
-                // s3://[accessKeyId@]bucket/key, onedrive://[account]/path and gdrive://[account]/path.
-                // The authority is the bucket or the account label (empty lists the buckets / uses the
+                // s3://[accessKeyId@]bucket/key, onedrive://[account]/path, gdrive://[account]/path,
+                // dropbox://[account]/path and azblob://account/container/path. The authority is the
+                // bucket, the account label or the storage account (empty lists the buckets / uses the
                 // default account); the path is raw, as for WebDAV; no secret is ever part of a URL.
                 string cloudScheme;
                 ContainerType cloudType;
                 if (_url.StartsWith(Data.Container.S3)) { cloudScheme = Data.Container.S3; cloudType = ContainerType.S3; }
                 else if (_url.StartsWith(Data.Container.ONEDRIVE)) { cloudScheme = Data.Container.ONEDRIVE; cloudType = ContainerType.OneDrive; }
+                else if (_url.StartsWith(Data.Container.DROPBOX)) { cloudScheme = Data.Container.DROPBOX; cloudType = ContainerType.Dropbox; }
+                else if (_url.StartsWith(Data.Container.AZURE_BLOB)) { cloudScheme = Data.Container.AZURE_BLOB; cloudType = ContainerType.AzureBlob; }
                 else { cloudScheme = Data.Container.GOOGLE_DRIVE; cloudType = ContainerType.GoogleDrive; }
                 var cloudRest = _url[cloudScheme.Length..];
                 var cloudSlash = cloudRest.IndexOf('/');
@@ -869,6 +890,8 @@ public partial class Url
             && !url.StartsWith(Data.Container.S3)
             && !url.StartsWith(Data.Container.ONEDRIVE)
             && !url.StartsWith(Data.Container.GOOGLE_DRIVE)
+            && !url.StartsWith(Data.Container.DROPBOX)
+            && !url.StartsWith(Data.Container.AZURE_BLOB)
             && !url.StartsWith(Data.Container.IPHONE)
             && !url.StartsWith(Data.Container.ZIP_ARCHIVE)
             && !url.StartsWith(Data.Container.GZ_ARCHIVE)
@@ -895,6 +918,8 @@ public partial class Url
             (Data.Container.RECYCLE, ContainerType.Recycle),
             (Data.Container.EVIDENCE, ContainerType.EvidenceNotebook),
             (Data.Container.MTP, ContainerType.Mtp),
+            (Data.Container.OBEX, ContainerType.Obex),
+            (Data.Container.NFS, ContainerType.Nfs),
         ];
         foreach (var (candidate, type) in drives)
         {
@@ -923,11 +948,13 @@ public partial class Url
             or ContainerType.Archive
             or ContainerType.Recycle
             or ContainerType.EvidenceNotebook
-            or ContainerType.Mtp;
+            or ContainerType.Mtp
+            or ContainerType.Obex or ContainerType.Nfs;
 
     /// <summary>The HTTP-backed drives whose URL is <c>scheme://[user@]authority/raw/path</c>.</summary>
     private bool IsHttpPathDrive =>
-        ContainerType is ContainerType.WebDav or ContainerType.S3 or ContainerType.OneDrive or ContainerType.GoogleDrive;
+        ContainerType is ContainerType.WebDav or ContainerType.S3 or ContainerType.OneDrive or ContainerType.GoogleDrive
+            or ContainerType.Dropbox or ContainerType.AzureBlob;
 
     private void UpdatePathType()
     {

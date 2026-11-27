@@ -5,44 +5,57 @@ using iTerminal.Core.Services.Processes;
 namespace iTerminal.Core.Services.VirtualMachines;
 
 /// <summary>
-/// The Linux backend: libvirt, through the <c>virsh</c> command-line client on the system connection
-/// (<c>qemu:///system</c>, which needs membership of the <c>libvirt</c> group). Like the docker drive,
-/// it goes through a CLI rather than a binding, so nothing native is packaged.
+/// A libvirt backend, through the <c>virsh</c> command-line client. Like the docker drive, it goes through a CLI
+/// rather than a binding, so nothing native is packaged.
+///
+/// <para>Two instances are registered on Linux. The default is the system connection (<c>qemu:///system</c>,
+/// which needs membership of the <c>libvirt</c> group), labelled <c>libvirt</c>. The second is GNOME Boxes'
+/// session connection (<c>qemu:///session</c>, no group needed), labelled <c>GNOME Boxes</c>: Boxes keeps its
+/// machines there.</para>
 ///
 /// <para>Names are passed as arguments, never quoted by hand; a name that starts with a dash is refused
 /// so it cannot be read as an option. Console opens <c>virt-viewer</c> detached and does not wait for it.</para>
 /// </summary>
 public sealed class LibvirtVirtualMachineService(
     IExternalProcessRunner processRunner,
-    Func<string, IReadOnlyList<string>, bool>? launchDetached = null) : IVirtualMachineService
+    Func<string, IReadOnlyList<string>, bool>? launchDetached = null,
+    string connection = LibvirtVirtualMachineService.SystemConnection,
+    string hypervisor = LibvirtVirtualMachineService.SystemLabel) : IVirtualMachineBackend
 {
     public const string Virsh = "virsh";
     public const string VirtViewer = "virt-viewer";
-    public const string Connection = "qemu:///system";
-
-    private static readonly string[] ConnectArguments = ["-c", Connection];
+    public const string SystemConnection = "qemu:///system";
+    public const string SessionConnection = "qemu:///session";
+    public const string SystemLabel = "libvirt";
+    public const string BoxesLabel = "GNOME Boxes";
 
     /// <summary>The message the runner gives when a command outlives its 30-second limit.</summary>
     internal const string TimeoutMarker = "did not answer within";
 
-    /// <summary>What the user is told when a hypervisor call outlives that limit; shared with the Hyper-V backend.</summary>
+    /// <summary>What the user is told when a hypervisor call outlives that limit; shared with the other backends.</summary>
     internal const string TimeoutSentence = "the hypervisor did not answer in time. A save or a shutdown can take longer; press F5 to see the state.";
 
     private readonly Func<string, IReadOnlyList<string>, bool> _launchDetached = launchDetached ?? LaunchDetached;
+    private readonly string[] _connectArguments = ["-c", connection];
+
+    public string Hypervisor { get; } = hypervisor;
 
     public async Task<IReadOnlyList<VirtualMachine>> ListAsync(CancellationToken cancellationToken = default)
     {
-        var result = await processRunner.RunAsync(Virsh, [.. ConnectArguments, "list", "--all"], cancellationToken: cancellationToken);
+        var result = await processRunner.RunAsync(Virsh, [.. _connectArguments, "list", "--all"], cancellationToken: cancellationToken);
         if (!result.Success)
         {
             throw new InvalidOperationException(DescribeFailure(result));
         }
 
-        return VirshListParser.Parse(result.StandardOutput);
+        return VirshListParser.Parse(result.StandardOutput)
+            .Select(machine => machine with { Hypervisor = Hypervisor })
+            .ToList();
     }
 
-    public async Task<VirtualMachineActionResult> RunAsync(string name, VirtualMachineAction action, CancellationToken cancellationToken = default)
+    public async Task<VirtualMachineActionResult> RunAsync(VirtualMachine machine, VirtualMachineAction action, CancellationToken cancellationToken = default)
     {
+        var name = machine.Name;
         if (string.IsNullOrWhiteSpace(name) || name.StartsWith('-'))
         {
             return new VirtualMachineActionResult(false, $"Not a virtual machine name: {name}");
@@ -50,12 +63,12 @@ public sealed class LibvirtVirtualMachineService(
 
         if (action == VirtualMachineAction.Console)
         {
-            return _launchDetached(VirtViewer, [.. ConnectArguments, name])
+            return _launchDetached(VirtViewer, [.. _connectArguments, name])
                 ? new VirtualMachineActionResult(true, $"Opening the console of {name}.")
                 : new VirtualMachineActionResult(false, "virt-viewer is not installed. Install it with: sudo apt install virt-viewer");
         }
 
-        var result = await processRunner.RunAsync(Virsh, [.. ConnectArguments, VirtualMachineActions.Verb(action), name], cancellationToken: cancellationToken);
+        var result = await processRunner.RunAsync(Virsh, [.. _connectArguments, VirtualMachineActions.Verb(action), name], cancellationToken: cancellationToken);
         return result.Success
             ? new VirtualMachineActionResult(true, $"{name}: {Done(action)}.")
             : new VirtualMachineActionResult(false, $"{name}: {DescribeFailure(result)}");
@@ -74,7 +87,7 @@ public sealed class LibvirtVirtualMachineService(
     };
 
     /// <summary>Turns virsh's output into a sentence a footer can hold.</summary>
-    internal static string DescribeFailure(ProcessOutput result)
+    internal string DescribeFailure(ProcessOutput result)
     {
         if (result.ExitCode == -1 && result.StandardError.Contains(TimeoutMarker, StringComparison.Ordinal))
         {
@@ -84,7 +97,9 @@ public sealed class LibvirtVirtualMachineService(
         if (result.StandardError.Contains("Permission denied", StringComparison.OrdinalIgnoreCase)
             || result.StandardError.Contains("failed to connect", StringComparison.OrdinalIgnoreCase))
         {
-            return "libvirt refused the connection. Add your user to the libvirt group (sudo usermod -aG libvirt $USER), then log in again.";
+            return connection == SystemConnection
+                ? "libvirt refused the connection. Add your user to the libvirt group (sudo usermod -aG libvirt $USER), then log in again."
+                : $"libvirt refused the connection to {connection}.";
         }
 
         if (result.ExitCode == -1)

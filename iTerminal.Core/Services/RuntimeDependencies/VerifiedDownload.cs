@@ -13,12 +13,27 @@ internal static class VerifiedDownload
 {
     private static readonly TimeSpan ProgressInterval = TimeSpan.FromSeconds(1);
 
-    public static async Task DownloadAsync(
+    public static Task DownloadAsync(
         HttpClient httpClient,
         string address,
         string destinationPath,
         long expectedSize,
         string expectedSha256,
+        IProgress<string>? progress,
+        CancellationToken cancellationToken) =>
+        DownloadAsync(httpClient, address, destinationPath, expectedSize, expectedSha256, HashAlgorithmName.SHA256, progress, cancellationToken);
+
+    /// <summary>
+    /// The same check with the digest's algorithm given (SHA-256 or SHA-512) and the size optional: a publisher that lists
+    /// no size is checked by the digest alone.
+    /// </summary>
+    public static async Task DownloadAsync(
+        HttpClient httpClient,
+        string address,
+        string destinationPath,
+        long? expectedSize,
+        string expectedDigest,
+        HashAlgorithmName algorithm,
         IProgress<string>? progress,
         CancellationToken cancellationToken)
     {
@@ -48,23 +63,28 @@ internal static class VerifiedDownload
                     if (progress is not null && (lastReport is null || clock.Elapsed - lastReport.Value >= ProgressInterval))
                     {
                         lastReport = clock.Elapsed;
-                        progress.Report(string.Format(UiText.Get("Dep.DownloadingOf", "Downloading {0}: {1} of {2} MB"), name, Megabytes(received), Megabytes(expectedSize)));
+                        progress.Report(expectedSize is { } total
+                            ? string.Format(UiText.Get("Dep.DownloadingOf", "Downloading {0}: {1} of {2} MB"), name, Megabytes(received), Megabytes(total))
+                            : string.Format(UiText.Get("Dep.Downloading", "Downloading {0}: {1} MB"), name, Megabytes(received)));
                     }
                 }
             }
 
-            if (received != expectedSize)
+            if (expectedSize is { } size && received != size)
             {
-                throw new InvalidDataException($"The download of {name} is {received} bytes, not the {expectedSize} expected.");
+                throw new InvalidDataException($"The download of {name} is {received} bytes, not the {size} expected.");
             }
 
             string actual;
             await using (FileStream written = File.OpenRead(partial))
             {
-                actual = Convert.ToHexString(await SHA256.HashDataAsync(written, cancellationToken)).ToLowerInvariant();
+                byte[] digest = algorithm == HashAlgorithmName.SHA512
+                    ? await SHA512.HashDataAsync(written, cancellationToken)
+                    : await SHA256.HashDataAsync(written, cancellationToken);
+                actual = Convert.ToHexString(digest).ToLowerInvariant();
             }
 
-            if (actual != expectedSha256.ToLowerInvariant())
+            if (actual != expectedDigest.ToLowerInvariant())
             {
                 throw new InvalidDataException($"The download of {name} does not match its published checksum.");
             }

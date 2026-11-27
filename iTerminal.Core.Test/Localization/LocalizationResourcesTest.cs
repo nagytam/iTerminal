@@ -93,7 +93,7 @@ public class LocalizationResourcesTest
     public void MenuLabelsMapToTheKeysTheResourcesHold()
     {
         Localizer localizer = new([new ResourceLocalizationSource(new ResourceManager(AppResources, typeof(iTerminal.Core.Data.Settings).Assembly))]);
-        string[] labels = ["File", "Edit", "Navigate", "Tools", "Help", "Quit", "Edit With…", "Sort By…", "Copy to Clipboard", "Language…", "iPhone Browser"];
+        string[] labels = ["File", "Edit", "Navigate", "Tools", "Help", "Quit", "Edit With…", "Sort By…", "Copy to Clipboard", "Language…", "iPhone Browser", "Recipes"];
 
         foreach (string label in labels)
         {

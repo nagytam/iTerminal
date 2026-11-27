@@ -1051,6 +1051,9 @@
   <data name="Hint.FindPrevious" xml:space="preserve">
     <value>Trouver l’occurrence précédente</value>
   </data>
+  <data name="Hint.FindStart" xml:space="preserve">
+    <value>Rechercher du texte dans le journal</value>
+  </data>
   <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
     <value>Premier ou dernier jour du mois</value>
   </data>
@@ -1455,6 +1458,9 @@
   </data>
   <data name="Key.Writable" xml:space="preserve">
     <value>F6-Modifiable</value>
+  </data>
+  <data name="LogView.FindPrompt" xml:space="preserve">
+    <value>Rechercher : </value>
   </data>
   <data name="Msg.EnterLineNumber" xml:space="preserve">
     <value>Saisissez un numéro de ligne.</value>

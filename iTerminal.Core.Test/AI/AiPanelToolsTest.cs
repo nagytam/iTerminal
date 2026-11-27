@@ -269,6 +269,70 @@ public class AiPanelToolsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ListFolder_NoPath_ListsTheFocusedPanelFoldersFirstAndSkipsTheParentRow()
+    {
+        var f = new Fixture();
+        f.AddEntry("b.txt");
+        f.AddEntry("docs", folder: true);
+        f.AddEntry("..", folder: true);
+
+        string text = f.Tools.ListFolder();
+
+        Assert.AreEqual("[docs]" + Environment.NewLine + "b.txt", text);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ListFolder_PanelFolderPath_ReadsThePanelEvenWhenNoDiskFolderExists()
+    {
+        // A drive such as an archive or FTP has no folder on disk; the panel's own rows must still answer.
+        var f = new Fixture();
+        string archive = Path.Combine(Path.GetTempPath(), "no-such-archive-" + Guid.NewGuid().ToString("N")) + Path.DirectorySeparatorChar;
+        f.Right.Setup(m => m.Url).Returns(new Url(archive));
+        var rows = new List<IEntry>();
+        var entry = new Mock<IEntry>();
+        entry.Setup(e => e.DisplayName).Returns("inside.md");
+        entry.Setup(e => e.Name).Returns("inside.md");
+        entry.Setup(e => e.Url).Returns(new Url(archive + "inside.md"));
+        rows.Add(entry.Object);
+        f.Right.Setup(m => m.FilteredEntries).Returns(rows);
+
+        string text = f.Tools.ListFolder(archive.TrimEnd(Path.DirectorySeparatorChar));
+
+        Assert.AreEqual("inside.md", text);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ListFolder_OtherPath_ReadsTheDiskFolder()
+    {
+        var f = new Fixture();
+        string folder = Path.Combine(Path.GetTempPath(), "list-folder-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(Path.Combine(folder, "sub"));
+        File.WriteAllText(Path.Combine(folder, "file.txt"), "x");
+        try
+        {
+            string text = f.Tools.ListFolder(folder);
+
+            Assert.AreEqual("[sub]" + Environment.NewLine + "file.txt", text);
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ListFolder_MissingDiskFolder_ReportsAnErrorInsteadOfThrowing()
+    {
+        var f = new Fixture();
+
+        StringAssert.StartsWith(f.Tools.ListFolder(Path.Combine(Path.GetTempPath(), "missing-" + Guid.NewGuid().ToString("N"))), "Error:");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void MarkEntries_PassesPatternsToTheModel()
     {
         var f = new Fixture();

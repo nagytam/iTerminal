@@ -42,6 +42,15 @@ A two-panel, keyboard-driven file manager and developer toolbox for the terminal
 ### Documents
 - Document manager (Alt+F3) with full-text search (SQLite FTS5) over text, Markup, Office, OpenDocument, PDF and image metadata, optional OCR through Tesseract
 
+### Docker containers
+Ctrl+F9 points the focused panel at the containers on this machine. Press it again to go back to the folder you came from.
+- **Container list**: every container, running ones first, with its image and state. Enter opens the container's file system.
+- **Inside a container**: browse its folders, copy files out with F5 (and in with F5 from the other panel), create folders with Shift+F7, delete with F8, and open a shell with Ctrl+O. The terminal runs commands inside it, in the folder you are in.
+- **Operate a container** from its row on the list: Shift+F9 starts a stopped container or stops a running one, Ctrl+Shift+F9 restarts it.
+- **Quick view** (Ctrl+F3) on a container row shows its state and the last 200 lines of its log; Ctrl+R there reloads it.
+- Requires the `docker` command-line tool and a running daemon (Docker Desktop, or the `docker` service on Linux). A stopped container's folders cannot be listed, so start it before you browse it.
+- **If it does not work**: the footer says what is missing. "Docker is not installed" means the `docker` tool is not on the PATH; "Docker is not running" means the daemon is not reachable; "permission denied" on Linux means the user is not in the `docker` group (`sudo usermod -aG docker $USER`, then log in again).
+
 ### Developer tools
 - Git client (Ctrl+G): stage, commit, branches, stashes, push/pull, diffs
 - .NET solution viewer with build/test/run

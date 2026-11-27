@@ -222,6 +222,15 @@ public static class AnsiRenderer
         return to;
     }
 
+    private static void AppendCursorPosition(StringBuilder sb, int x, int y)
+    {
+        sb.Append(CSI);
+        sb.Append(y + 1);
+        sb.Append(SEMICOLON);
+        sb.Append(x + 1);
+        sb.Append(H);
+    }
+
     /// <summary>
     /// Renders a <see cref="ConxelString"/> to ANSI with a single cursor-position command
     /// followed by per-character text output; a new color/style escape is emitted only when
@@ -237,23 +246,27 @@ public static class AnsiRenderer
         var sb = new StringBuilder(list.Count * 2 + 40);
 
         // Position cursor once for the whole string.
-        sb.Append(CSI);
-        sb.Append(y + 1);
-        sb.Append(SEMICOLON);
-        sb.Append(x + 1);
-        sb.Append(H);
+        AppendCursorPosition(sb, x, y);
 
         Conxel last = default;
         bool haveLast = false;
         bool attributesOn = false;
         ushort openLink = Hyperlinks.None;
 
-        foreach (var c in list)
+        for (var index = 0; index < list.Count; index++)
         {
+            var c = list[index];
+
             // The second column of a wide character is covered by the character before it.
             if (c.Char == TextWidth.Continuation)
             {
                 continue;
+            }
+
+            // A cell next to a character the terminal may draw at another width gets its own cursor position.
+            if (index > 0 && TextWidth.NeedsAbsolutePosition(list[index - 1].Char, c.Char))
+            {
+                AppendCursorPosition(sb, x + index, y);
             }
 
             if (!haveLast || !SameStyle(c, last))

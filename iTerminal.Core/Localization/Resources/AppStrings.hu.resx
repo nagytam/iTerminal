@@ -922,6 +922,9 @@
   <data name="CmdDesc.59bf9cc1" xml:space="preserve">
     <value>A kijelölt fájl megnyitása a megjelenítőben.</value>
   </data>
+  <data name="CmdDesc.5b1ccbaa" xml:space="preserve">
+    <value>A parancssorba beírt parancsot a panel mappájában futtatja, és a kimenetét a terminál párbeszédablakban jeleníti meg.</value>
+  </data>
   <data name="CmdDesc.5efc92aa" xml:space="preserve">
     <value>A mentett helyek időjárása: most, a következő 24 óra és a következő 7 nap.</value>
   </data>
@@ -1009,9 +1012,6 @@
   <data name="CmdDesc.85281618" xml:space="preserve">
     <value>A megjelölt fájlok (vagy a kurzor alatti) titkosítása jelmondattal külön .enc fájlokba, vagy .enc fájlok visszafejtése.</value>
   </data>
-  <data name="CmdDesc.86cc06e0" xml:space="preserve">
-    <value>A kijelölt program futtatása a parancsnaplóban.</value>
-  </data>
   <data name="CmdDesc.86d5c50c" xml:space="preserve">
     <value>A kijelölt szövegfájl megnyitása a szerkesztőben.</value>
   </data>
@@ -1033,6 +1033,9 @@
   </data>
   <data name="CmdDesc.8f7a1d59" xml:space="preserve">
     <value>A megjelölt fájlok és mappák (vagy a kurzor alatti) felülírása és törlése úgy, hogy ne legyenek helyreállíthatók.</value>
+  </data>
+  <data name="CmdDesc.8fd2e348" xml:space="preserve">
+    <value>A kijelölt programot a parancsnaplóban futtatja, és a kimenetét a terminál párbeszédablakban jeleníti meg.</value>
   </data>
   <data name="CmdDesc.919dae4f" xml:space="preserve">
     <value>A lejátszás hangerejének csökkentése 5%-kal.</value>
@@ -1102,9 +1105,6 @@
   </data>
   <data name="CmdDesc.adc840e9" xml:space="preserve">
     <value>SSH/SMB-gépek böngészése és csatlakozás a helyi hálózaton.</value>
-  </data>
-  <data name="CmdDesc.aec2e334" xml:space="preserve">
-    <value>A parancssorba beírt parancs futtatása a panel mappájában.</value>
   </data>
   <data name="CmdDesc.b2cf0726" xml:space="preserve">
     <value>A kijelölt szám eltávolítása a lejátszási sorból. A fájl érintetlen marad.</value>
@@ -1216,11 +1216,17 @@
   <data name="CmdDesc.e5eb05a0" xml:space="preserve">
     <value>A bejegyzések megjelenítése több névoszlopban, vagy újra egyben.</value>
   </data>
+  <data name="CmdDesc.e662ef41" xml:space="preserve">
+    <value>Recept mentése.</value>
+  </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Lehúzás, majd feltöltés: a git-szinkronizálás.</value>
   </data>
   <data name="CmdDesc.e710dca5" xml:space="preserve">
     <value>Ugrás a kurzor alatti kedvenc mappába.</value>
+  </data>
+  <data name="CmdDesc.e902212e" xml:space="preserve">
+    <value>Svájc, Németország, Franciaország, Olaszország és Magyarország kedvenc receptjeinek böngészése, a saját receptek hozzávalókkal és lépésekkel való mentése.</value>
   </data>
   <data name="CmdDesc.e9d16235" xml:space="preserve">
     <value>Bluetooth-eszközök keresése, csatlakoztatása, párosítása és elfelejtése.</value>
@@ -1867,6 +1873,9 @@
   <data name="CmdTitle.d5d0a30b" xml:space="preserve">
     <value>Naptár</value>
   </data>
+  <data name="CmdTitle.d664282e" xml:space="preserve">
+    <value>Receptek</value>
+  </data>
   <data name="CmdTitle.d7977505" xml:space="preserve">
     <value>Összes kijelölése</value>
   </data>
@@ -2281,6 +2290,378 @@
   <data name="Dep.WhisperReady" xml:space="preserve">
     <value>A Whisper {0} modell kész</value>
   </data>
+  <data name="DevelopmentStudio.AlreadyRunning" xml:space="preserve">
+    <value>Il programma è in esecuzione. Si ferma su un punto di interruzione.</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
+    <value>Il debugger non ha accettato il punto di interruzione: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointRemoved" xml:space="preserve">
+    <value>Punto di interruzione rimosso dalla riga {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.BreakpointSet" xml:space="preserve">
+    <value>Punto di interruzione impostato alla riga {0}.</value>
+  </data>
+  <data name="DevelopmentStudio.Breakpoints" xml:space="preserve">
+    <value>Punti di interruzione</value>
+  </data>
+  <data name="DevelopmentStudio.BuildFailedNoDebug" xml:space="preserve">
+    <value>La compilazione non è riuscita, quindi {0} non è stato avviato.</value>
+  </data>
+  <data name="DevelopmentStudio.Busy" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla ({0} non è stato avviato).</value>
+  </data>
+  <data name="DevelopmentStudio.BusyCoverage" xml:space="preserve">
+    <value>Egy parancs még fut; a mérés előtt az X megszakítja.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyDebug" xml:space="preserve">
+    <value>Un comando è ancora in esecuzione; X lo annulla prima del debug.</value>
+  </data>
+  <data name="DevelopmentStudio.BusyProfile" xml:space="preserve">
+    <value>Egy parancs még fut; a profilozás előtt az X megszakítja.</value>
+  </data>
+  <data name="DevelopmentStudio.CallStack" xml:space="preserve">
+    <value>Stack di chiamate</value>
+  </data>
+  <data name="DevelopmentStudio.Cancelled" xml:space="preserve">
+    <value>{0} annullato.</value>
+  </data>
+  <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
+    <value>Rimosse {0} cartelle di cache di {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
+    <value>Lefedettség-mérés megszakítva.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageHeading" xml:space="preserve">
+    <value>Lefedettség</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageSummary" xml:space="preserve">
+    <value>Lefedettség {0:0.0}%: {1} / {2} sor {3} fájlban.</value>
+  </data>
+  <data name="DevelopmentStudio.CoverageTotal" xml:space="preserve">
+    <value>Lefedettség {0:0.0}%: {1} / {2} sor {3} fájlban.</value>
+  </data>
+  <data name="DevelopmentStudio.DebugHeading" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="DevelopmentStudio.EditorPosition" xml:space="preserve">
+    <value>{0}. sor, {1}. oszlop</value>
+  </data>
+  <data name="DevelopmentStudio.Elapsed" xml:space="preserve">
+    <value>Eltelt idő {0}</value>
+  </data>
+  <data name="DevelopmentStudio.EmptyExplorer" xml:space="preserve">
+    <value>(niente qui)</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorCounts" xml:space="preserve">
+    <value>{0} hiba, {1} figyelmeztetés</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
+    <value>Hibalista</value>
+  </data>
+  <data name="DevelopmentStudio.ErrorsTab" xml:space="preserve">
+    <value>Hibák</value>
+  </data>
+  <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
+    <value>{0} non riuscito (uscita {1}).</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorer" xml:space="preserve">
+    <value>Fájlböngésző: az Enter kibontja a mappát vagy megnyitja a fájlt.</value>
+  </data>
+  <data name="DevelopmentStudio.FileExplorerHeading" xml:space="preserve">
+    <value>Fájlböngésző</value>
+  </data>
+  <data name="DevelopmentStudio.Found" xml:space="preserve">
+    <value>Trovati {0} elementi. Invio apre un file; F5 avvia il debug.</value>
+  </data>
+  <data name="DevelopmentStudio.HintBreakpoint" xml:space="preserve">
+    <value>Attiva o disattiva un punto di interruzione sulla riga del cursore</value>
+  </data>
+  <data name="DevelopmentStudio.HintCancel" xml:space="preserve">
+    <value>Annulla il comando in esecuzione</value>
+  </data>
+  <data name="DevelopmentStudio.HintCheck" xml:space="preserve">
+    <value>Seleziona o deseleziona il progetto .NET; B, C, T e R agiscono sui selezionati</value>
+  </data>
+  <data name="DevelopmentStudio.HintCheckAll" xml:space="preserve">
+    <value>Seleziona tutti i progetti / tutti i progetti di test</value>
+  </data>
+  <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
+    <value>Compila, pulisci, testa o esegui l'elemento selezionato</value>
+  </data>
+  <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
+    <value>A kijelölt elem lefedettségének mérése / a kijelölt Python-szkript profilozása</value>
+  </data>
+  <data name="DevelopmentStudio.HintExpand" xml:space="preserve">
+    <value>A kurzor alatti megoldás, projekt vagy mappa összecsukása vagy kibontása</value>
+  </data>
+  <data name="DevelopmentStudio.HintGoToFile" xml:space="preserve">
+    <value>A lefedettségi nézetben a kurzor alatti fájl megnyitása</value>
+  </data>
+  <data name="DevelopmentStudio.HintLayout" xml:space="preserve">
+    <value>Panelek mozgatása és átméretezése: a nyilak a kijelölt panelt az adott szélre viszik, a Shift+nyilak átméretezik</value>
+  </data>
+  <data name="DevelopmentStudio.HintMain" xml:space="preserve">
+    <value>Főprojekt beállítása (M): az F5 és a Ctrl+F5 ezt indítja</value>
+  </data>
+  <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
+    <value>Az elem menüje: parancsai és a Beállítás főprojektként</value>
+  </data>
+  <data name="DevelopmentStudio.HintOpen" xml:space="preserve">
+    <value>Apri il file (o esegui il test)</value>
+  </data>
+  <data name="DevelopmentStudio.HintPanes" xml:space="preserve">
+    <value>Böngésző-fül (Megoldás, Tesztek, Fájlok) / kimeneti panel fül (Kimenet, Hibakeresés, Lefedettség, Profil)</value>
+  </data>
+  <data name="DevelopmentStudio.HintRunNoDebug" xml:space="preserve">
+    <value>Esegui senza debug</value>
+  </data>
+  <data name="DevelopmentStudio.HintSbom" xml:space="preserve">
+    <value>Scrive una SBOM CycloneDX della soluzione / passa tra XML e JSON</value>
+  </data>
+  <data name="DevelopmentStudio.HintSdk" xml:space="preserve">
+    <value>Passa al prossimo SDK .NET</value>
+  </data>
+  <data name="DevelopmentStudio.HintSdkManager" xml:space="preserve">
+    <value>.NET SDK-k és JDK-k telepítése, és a Java fordításokhoz és futtatásokhoz használt JDK kiválasztása</value>
+  </data>
+  <data name="DevelopmentStudio.HintStart" xml:space="preserve">
+    <value>Avvia il debug o continua</value>
+  </data>
+  <data name="DevelopmentStudio.HintStep" xml:space="preserve">
+    <value>Passo successivo / passo dentro</value>
+  </data>
+  <data name="DevelopmentStudio.HintStepOut" xml:space="preserve">
+    <value>Esci dalla funzione</value>
+  </data>
+  <data name="DevelopmentStudio.HintStop" xml:space="preserve">
+    <value>Interrompi il debug</value>
+  </data>
+  <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
+    <value>Osserva la parola sotto il cursore (nella vista debug, rimuovila)</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
+    <value>A csharp-ls nem található. Telepítse a dotnet tool install -g csharp-ls paranccsal.</value>
+  </data>
+  <data name="DevelopmentStudio.LanguageServerStarting" xml:space="preserve">
+    <value>A C# nyelvi kiszolgáló indítása...</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentre" xml:space="preserve">
+    <value>A középső panel csak másik panellel cserélhet helyet: a kívánt panelt vidd a középre.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutCentreResize" xml:space="preserve">
+    <value>A középső panel kitölti a többi helyet; inkább egy szélső panel méretét változtasd.</value>
+  </data>
+  <data name="DevelopmentStudio.LayoutOn" xml:space="preserve">
+    <value>Panelelrendezés: a nyilak a kijelölt panelt az adott szélre viszik, a Shift+nyilak átméretezik, az F8 vagy az Esc befejezi.</value>
+  </data>
+  <data name="DevelopmentStudio.Locals" xml:space="preserve">
+    <value>Variabili locali</value>
+  </data>
+  <data name="DevelopmentStudio.MainCleared" xml:space="preserve">
+    <value>Nincs főprogram: az F5 a kurzor alatti elemet indítja.</value>
+  </data>
+  <data name="DevelopmentStudio.MainNotStartable" xml:space="preserve">
+    <value>{0} nincs indítható programja. Főprogram csak konzol- vagy webprojekt, illetve szkript lehet.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSet" xml:space="preserve">
+    <value>A(z) {0} a főprogram. Az F5 és a Ctrl+F5 ezt indítja.</value>
+  </data>
+  <data name="DevelopmentStudio.MainSolution" xml:space="preserve">
+    <value>A megoldás nem lehet a főprogram. Válasszon projektet vagy szkriptet.</value>
+  </data>
+  <data name="DevelopmentStudio.MainTag" xml:space="preserve">
+    <value>fő</value>
+  </data>
+  <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
+    <value>Fordítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
+    <value>Tisztítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
+    <value>Főprojekt törlése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
+    <value>Hibakeresés</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
+    <value>Futtatás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
+    <value>Beállítás főprojektként</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
+    <value>Tesztelés</value>
+  </data>
+  <data name="DevelopmentStudio.NoBreakpointTarget" xml:space="preserve">
+    <value>Apri un file (Invio) e posiziona il cursore su una riga per impostare un punto di interruzione.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCommand" xml:space="preserve">
+    <value>{0} non può {1} {2}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverage" xml:space="preserve">
+    <value>Még nincs lefedettség. Az O a kijelölt elem lefedettségét méri.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageFor" xml:space="preserve">
+    <value>A(z) {0} itt nem mér lefedettséget.</value>
+  </data>
+  <data name="DevelopmentStudio.NoCoverageReport" xml:space="preserve">
+    <value>A futás nem hagyott lefedettségi jelentést. Ellenőrizze a kimenetet.</value>
+  </data>
+  <data name="DevelopmentStudio.NoDebugger" xml:space="preserve">
+    <value>Il debug di {0} non è disponibile qui per {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.NoErrors" xml:space="preserve">
+    <value>Nincs hiba vagy figyelmeztetés. A build, a futtatás és a tesztek itt jelenítik meg őket.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfile" xml:space="preserve">
+    <value>Még nincs profil. A P a kijelölt Python-szkriptet profilozza.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfileWritten" xml:space="preserve">
+    <value>A profilozó nem írt profilt. Ellenőrizze a kimenetet.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProfilerFor" xml:space="preserve">
+    <value>A(z) {0} itt nem profilozható.</value>
+  </data>
+  <data name="DevelopmentStudio.NoProjectsToCheck" xml:space="preserve">
+    <value>Nessun progetto .NET da selezionare.</value>
+  </data>
+  <data name="DevelopmentStudio.NoSolutionForSbom" xml:space="preserve">
+    <value>Qui non c'è una soluzione per cui scrivere una SBOM.</value>
+  </data>
+  <data name="DevelopmentStudio.NoSource" xml:space="preserve">
+    <value>Seleziona un file nell'esplora e premi Invio per aprirlo qui.</value>
+  </data>
+  <data name="DevelopmentStudio.NoWord" xml:space="preserve">
+    <value>Posiziona il cursore su un nome per osservarlo.</value>
+  </data>
+  <data name="DevelopmentStudio.NotDebugging" xml:space="preserve">
+    <value>Non in debug.</value>
+  </data>
+  <data name="DevelopmentStudio.NotEvaluated" xml:space="preserve">
+    <value>(non valutato)</value>
+  </data>
+  <data name="DevelopmentStudio.NotStopped" xml:space="preserve">
+    <value>Il programma è in esecuzione. Si ferma su un punto di interruzione.</value>
+  </data>
+  <data name="DevelopmentStudio.NothingFound" xml:space="preserve">
+    <value>In questa cartella non sono state trovate soluzioni, progetti o script.</value>
+  </data>
+  <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
+    <value>Nincs nem mentett módosítás.</value>
+  </data>
+  <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
+    <value>Solo i progetti .NET possono essere selezionati.</value>
+  </data>
+  <data name="DevelopmentStudio.OutputHeading" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="DevelopmentStudio.Paused" xml:space="preserve">
+    <value>Fermo a {0}:{1}</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileEmpty" xml:space="preserve">
+    <value>A profilban nincs függvény.</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeader" xml:space="preserve">
+    <value>     hívások   összes s   halmozott s  függvény</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileHeading" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="DevelopmentStudio.ProfileSummary" xml:space="preserve">
+    <value>{0} profilozva: {1} függvény. A legtöbb idő: {2}.</value>
+  </data>
+  <data name="DevelopmentStudio.ProjectCount" xml:space="preserve">
+    <value>{0} progetti</value>
+  </data>
+  <data name="DevelopmentStudio.ReadingFolder" xml:space="preserve">
+    <value>(mappa olvasása...)</value>
+  </data>
+  <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
+    <value>Trovati {0} elementi.</value>
+  </data>
+  <data name="DevelopmentStudio.Running" xml:space="preserve">
+    <value>Esecuzione di {0} {1}...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningCoverage" xml:space="preserve">
+    <value>{0} lefedettségének mérése...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningProfile" xml:space="preserve">
+    <value>{0} profilozása...</value>
+  </data>
+  <data name="DevelopmentStudio.RunningState" xml:space="preserve">
+    <value>In esecuzione.</value>
+  </data>
+  <data name="DevelopmentStudio.SaveFailed" xml:space="preserve">
+    <value>A mentés sikertelen: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.SavedFile" xml:space="preserve">
+    <value>A(z) {0} mentve.</value>
+  </data>
+  <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
+    <value>Scrittura della SBOM...</value>
+  </data>
+  <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
+    <value>   (SDK .NET {0})</value>
+  </data>
+  <data name="DevelopmentStudio.SelectFile" xml:space="preserve">
+    <value>Seleziona un progetto o uno script da aprire.</value>
+  </data>
+  <data name="DevelopmentStudio.SelectItem" xml:space="preserve">
+    <value>Seleziona prima un elemento.</value>
+  </data>
+  <data name="DevelopmentStudio.SelectToDebug" xml:space="preserve">
+    <value>Seleziona un progetto o uno script da sottoporre a debug. Una soluzione non può essere sottoposta a debug.</value>
+  </data>
+  <data name="DevelopmentStudio.SolutionExplorer" xml:space="preserve">
+    <value>Esplora soluzioni.</value>
+  </data>
+  <data name="DevelopmentStudio.SolutionExplorerHeading" xml:space="preserve">
+    <value>Esplora soluzioni</value>
+  </data>
+  <data name="DevelopmentStudio.SourceHeading" xml:space="preserve">
+    <value>Sorgente</value>
+  </data>
+  <data name="DevelopmentStudio.StackFailed" xml:space="preserve">
+    <value>Impossibile leggere lo stato del programma: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.Started" xml:space="preserve">
+    <value>Debug di {0}. F5 continua, F10 passo successivo.</value>
+  </data>
+  <data name="DevelopmentStudio.Stopped" xml:space="preserve">
+    <value>Debug interrotto.</value>
+  </data>
+  <data name="DevelopmentStudio.StoppedAt" xml:space="preserve">
+    <value>Fermo ({0}) a {1}:{2}.</value>
+  </data>
+  <data name="DevelopmentStudio.Succeeded" xml:space="preserve">
+    <value>{0} riuscito: {1}.</value>
+  </data>
+  <data name="DevelopmentStudio.TestExplorer" xml:space="preserve">
+    <value>Esplora test: Invio o T esegue l'elemento di test sotto il cursore.</value>
+  </data>
+  <data name="DevelopmentStudio.TestExplorerHeading" xml:space="preserve">
+    <value>Esplora test</value>
+  </data>
+  <data name="DevelopmentStudio.TestTotals" xml:space="preserve">
+    <value>Test: {0} superati, {1} falliti, {2} saltati.</value>
+  </data>
+  <data name="DevelopmentStudio.Title" xml:space="preserve">
+    <value>Development studio</value>
+  </data>
+  <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
+    <value>Il file è troppo grande per essere mostrato qui.</value>
+  </data>
+  <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
+    <value>Nem mentett módosítások a szerkesztőben: a Ctrl+S menti őket először.</value>
+  </data>
+  <data name="DevelopmentStudio.Watch" xml:space="preserve">
+    <value>Espressioni di controllo</value>
+  </data>
+  <data name="DevelopmentStudio.Watching" xml:space="preserve">
+    <value>Osservo {0}.</value>
+  </data>
   <data name="Dialog.AddServer" xml:space="preserve">
     <value>Kiszolgáló hozzáadása</value>
   </data>
@@ -2442,6 +2823,12 @@
   </data>
   <data name="Dialog.PropertiesOf" xml:space="preserve">
     <value>{0} tulajdonságai</value>
+  </data>
+  <data name="Dialog.RecipeEdit" xml:space="preserve">
+    <value>Recept</value>
+  </data>
+  <data name="Dialog.Recipes" xml:space="preserve">
+    <value>Receptek</value>
   </data>
   <data name="Dialog.RemoteConnections" xml:space="preserve">
     <value>Távoli kapcsolatok</value>
@@ -3340,6 +3727,30 @@
   <data name="DialogHint.RecentOnly" xml:space="preserve">
     <value>Az utoljára lejátszott öt állomás megjelenítése</value>
   </data>
+  <data name="DialogHint.RecipeBrowse" xml:space="preserve">
+    <value>Mozgás a receptek között</value>
+  </data>
+  <data name="DialogHint.RecipeCancel" xml:space="preserve">
+    <value>Bezárás mentés nélkül</value>
+  </data>
+  <data name="DialogHint.RecipeClose" xml:space="preserve">
+    <value>Receptek bezárása</value>
+  </data>
+  <data name="DialogHint.RecipeDelete" xml:space="preserve">
+    <value>Saját recept törlése (előbb megkérdez)</value>
+  </data>
+  <data name="DialogHint.RecipeEdit" xml:space="preserve">
+    <value>Saját recept módosítása (nem az előre telepítettek)</value>
+  </data>
+  <data name="DialogHint.RecipeEnter" xml:space="preserve">
+    <value>Mentés a Mentés gombon; szerkesztőben új sor</value>
+  </data>
+  <data name="DialogHint.RecipeFirstLast" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó receptre</value>
+  </data>
+  <data name="DialogHint.RecipeNew" xml:space="preserve">
+    <value>Saját recept hozzáadása</value>
+  </data>
   <data name="DialogHint.Refresh" xml:space="preserve">
     <value>Frissítés</value>
   </data>
@@ -3895,14 +4306,23 @@
   <data name="Docker.Drive.Hints" xml:space="preserve">
     <value>Shift+F9: indít/leállít  Ctrl+Shift+F9: újraindít</value>
   </data>
+  <data name="Docker.NoContainers" xml:space="preserve">
+    <value>Még nincs konténer — hozzon létre egyet a docker run paranccsal.</value>
+  </data>
+  <data name="Docker.NotInstalled" xml:space="preserve">
+    <value>A Docker nincs telepítve — telepítse a Docker Desktopot vagy a docker parancssori eszközt a konténerek böngészéséhez.</value>
+  </data>
   <data name="Docker.NotRunning" xml:space="preserve">
     <value>A Docker nem fut — indítsa el a Docker Desktopot vagy a docker szolgáltatást.</value>
   </data>
   <data name="Docker.OpenContainer" xml:space="preserve">
     <value>Nyisson meg egy konténert, vagy álljon rá a kurzorral, hogy parancsokat futtasson benne.</value>
   </data>
+  <data name="Docker.Permission" xml:space="preserve">
+    <value>A Docker telepítve van, de ez a felhasználó nem éri el a démonját — vegye fel a „docker” csoportba, majd jelentkezzen be újra.</value>
+  </data>
   <data name="Docker.Stopped" xml:space="preserve">
-    <value>A konténer le van állítva — előbb indítsa el (Shift+F9 a során).</value>
+    <value>A konténer le van állítva — indítsa el a konténerlistából (Shift+F9 a során).</value>
   </data>
   <data name="Docs.FolderMissing" xml:space="preserve">
     <value>A dokumentummappa nem található: {0}</value>
@@ -4728,6 +5148,18 @@
   </data>
   <data name="Field.ReadTextFromImages" xml:space="preserve">
     <value>Szöveg olvasása képekből (OCR)</value>
+  </data>
+  <data name="Field.RecipeIngredients" xml:space="preserve">
+    <value>Hozzávalók, soronként egy</value>
+  </data>
+  <data name="Field.RecipeOrigin" xml:space="preserve">
+    <value>Származás</value>
+  </data>
+  <data name="Field.RecipeSteps" xml:space="preserve">
+    <value>Lépések, soronként egy</value>
+  </data>
+  <data name="Field.RecipeTitle" xml:space="preserve">
+    <value>Cím</value>
   </data>
   <data name="Field.RecursivelyDeleteFolder" xml:space="preserve">
     <value>Mappa rekurzív törlése</value>
@@ -6069,6 +6501,21 @@
   <data name="Hints.CurrencyConverter" xml:space="preserve">
     <value>Tab:következő mező  Fel/Le:választás  F5:árfolyamok frissítése  F6:csere  Esc:bezár</value>
   </data>
+  <data name="Hints.DevelopmentStudio" xml:space="preserve">
+    <value>F5:debug F9:punto di interruzione F10/F11:passo Spazio:seleziona B/C/T/R:compila/pulisci/testa/esegui V:SDK K:SDKs S/F:SBOM F6/F7:pannelli Invio:apri Esc:chiudi</value>
+  </data>
+  <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
+    <value>Gépelés a szerkesztéshez  Ctrl+S:mentés  F9:töréspont  F5:hibakeresés  F7:fül  Esc:bezár</value>
+  </data>
+  <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
+    <value>Enter:a hiba megnyitása a sorában  F7:fül  Esc:bezár</value>
+  </data>
+  <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
+    <value>Enter:megnyitás  Bal/Jobb:kibontás  Space:jelöl  B/C/T/R:build/tisztítás/teszt/futtatás  M:fő  K:SDK-k  Esc:bezár</value>
+  </data>
+  <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
+    <value>Fel/Le/PgUp/PgDn:görgetés  F7:fül  X:megszakítás  Esc:bezár</value>
+  </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:keresés/olvasás  Tab:mező  F3:teljes  F2:böngésző  Esc:bezár</value>
   </data>
@@ -7024,6 +7471,9 @@
   <data name="Menu.Quit" xml:space="preserve">
     <value>Kilépés</value>
   </data>
+  <data name="Menu.Recipes" xml:space="preserve">
+    <value>Receptek</value>
+  </data>
   <data name="Menu.RecycleBin" xml:space="preserve">
     <value>Lomtár</value>
   </data>
@@ -7750,6 +8200,24 @@
   <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
     <value>Lekérdezi, kihez tartozik egy domain vagy cím.</value>
   </data>
+  <data name="Nfs.ConnectionFailed" xml:space="preserve">
+    <value>Az NFS-kapcsolódás sikertelen: {0} ({1})</value>
+  </data>
+  <data name="Nfs.ExportIsNotFile" xml:space="preserve">
+    <value>Az export csatolás, nem fájl: nyissa meg a tartalmának eléréséhez.</value>
+  </data>
+  <data name="Nfs.Header" xml:space="preserve">
+    <value>NFS: {0}</value>
+  </data>
+  <data name="Nfs.HostsNotListed" xml:space="preserve">
+    <value>Az NFS-nek nincs kiszolgálólistája: írja be az nfs://gép/ címet az exportjai listázásához.</value>
+  </data>
+  <data name="Nfs.MoveFolderUnsupported" xml:space="preserve">
+    <value>Mappa nem helyezhető át exportok között; másolja, majd törölje.</value>
+  </data>
+  <data name="Nfs.ReadOnlyExport" xml:space="preserve">
+    <value>A gépek és az exportok itt csak olvashatók: létrehozás, másolás, áthelyezés és törlés az exporton belül működik.</value>
+  </data>
   <data name="Notice.NothingToAct.Message" xml:space="preserve">
     <value>Helyezze a kurzort egy fájlra vagy mappára, vagy előbb jelöljön ki néhányat.</value>
   </data>
@@ -8254,6 +8722,9 @@
   <data name="Prompt.DeleteNamed" xml:space="preserve">
     <value>Töröljük: "{0}"? (i/n)</value>
   </data>
+  <data name="Prompt.DeleteRecipe" xml:space="preserve">
+    <value>Törli: "{0}"? (i/n)</value>
+  </data>
   <data name="Properties.Cap.Accessed" xml:space="preserve">
     <value>Elérve</value>
   </data>
@@ -8436,6 +8907,60 @@
   </data>
   <data name="Radio.Title" xml:space="preserve">
     <value>Internetes rádió</value>
+  </data>
+  <data name="Recipe.ColKind" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Recipe.Count" xml:space="preserve">
+    <value>{0} recept</value>
+  </data>
+  <data name="Recipe.Deleted" xml:space="preserve">
+    <value>Recept törölve.</value>
+  </data>
+  <data name="Recipe.ErrIngredient" xml:space="preserve">
+    <value>A recepthez legalább egy hozzávaló kell.</value>
+  </data>
+  <data name="Recipe.ErrLineBreak" xml:space="preserve">
+    <value>Minden cím, származás, hozzávaló és lépés egy sorba férjen.</value>
+  </data>
+  <data name="Recipe.ErrStep" xml:space="preserve">
+    <value>A recepthez legalább egy lépés kell.</value>
+  </data>
+  <data name="Recipe.ErrTitle" xml:space="preserve">
+    <value>A recepthez cím kell.</value>
+  </data>
+  <data name="Recipe.ErrTooLong" xml:space="preserve">
+    <value>A szöveg túl hosszú: a cím legfeljebb 256, a származás 128, a hozzávaló vagy lépés 1000 karakter lehet.</value>
+  </data>
+  <data name="Recipe.ErrTooMany" xml:space="preserve">
+    <value>A recept legfeljebb 100 hozzávalót és 100 lépést tartalmazhat.</value>
+  </data>
+  <data name="Recipe.Failed" xml:space="preserve">
+    <value>A receptek nem olvashatók vagy nem menthetők: {0}</value>
+  </data>
+  <data name="Recipe.Hint" xml:space="preserve">
+    <value>Fel/Le mozgás  N új  E módosítás  D törlés  Esc bezár</value>
+  </data>
+  <data name="Recipe.Ingredients" xml:space="preserve">
+    <value>Hozzávalók</value>
+  </data>
+  <data name="Recipe.OriginLine" xml:space="preserve">
+    <value>Innen: {0}</value>
+  </data>
+  <data name="Recipe.Own" xml:space="preserve">
+    <value>Saját</value>
+  </data>
+  <data name="Recipe.Preloaded" xml:space="preserve">
+    <value>Előre telepített</value>
+  </data>
+  <data name="Recipe.PreloadedReadOnly" xml:space="preserve">
+    <value>Az előre telepített receptek nem módosíthatók.</value>
+  </data>
+  <data name="Recipe.Saved" xml:space="preserve">
+    <value>Recept mentve.</value>
+  </data>
+  <data name="Recipe.Steps" xml:space="preserve">
+    <value>Lépések</value>
   </data>
   <data name="Recycle.Drive.Hints" xml:space="preserve">
     <value>Enter:visszaállít  F8:végleges törlés</value>
@@ -8839,6 +9364,96 @@
   <data name="ScreenSaver.Wake" xml:space="preserve">
     <value>Képernyő felébresztése</value>
     </data>
+  <data name="SdkManager.ActiveJava" xml:space="preserve">
+    <value>Telepítve, Javához használva</value>
+  </data>
+  <data name="SdkManager.AlreadyActive" xml:space="preserve">
+    <value>A(z) {0} már a használt Java.</value>
+  </data>
+  <data name="SdkManager.Available" xml:space="preserve">
+    <value>Elérhető</value>
+  </data>
+  <data name="SdkManager.Busy" xml:space="preserve">
+    <value>Az utolsó kérés még fut.</value>
+  </data>
+  <data name="SdkManager.Cancelled" xml:space="preserve">
+    <value>Megszakítva.</value>
+  </data>
+  <data name="SdkManager.ConfirmRemove" xml:space="preserve">
+    <value>Eltávolítja a(z) {0} {1} verziót az iTerminalból? (i/n)</value>
+  </data>
+  <data name="SdkManager.Details" xml:space="preserve">
+    <value>A telepített SDK-k és JDK-k az iTerminal adatmappájában vannak. Telepített JDK-n az Enter teszi azt a Java-verzióvá, amellyel a fordítás és a futtatás történik.</value>
+  </data>
+  <data name="SdkManager.Done" xml:space="preserve">
+    <value>A(z) {0} telepítve.</value>
+  </data>
+  <data name="SdkManager.DotNetUsed" xml:space="preserve">
+    <value>Az itt telepített .NET SDK-k bekerülnek a stúdió V-ciklusába.</value>
+  </data>
+  <data name="SdkManager.Downloading" xml:space="preserve">
+    <value>{0} letöltése…</value>
+  </data>
+  <data name="SdkManager.Failed" xml:space="preserve">
+    <value>A(z) {0} nem telepíthető: {1}</value>
+  </data>
+  <data name="SdkManager.HintClose" xml:space="preserve">
+    <value>Bezárás</value>
+  </data>
+  <data name="SdkManager.HintInstall" xml:space="preserve">
+    <value>SDK telepítése, vagy a telepített JDK használata Javához</value>
+  </data>
+  <data name="SdkManager.HintRefresh" xml:space="preserve">
+    <value>Listák újraolvasása</value>
+  </data>
+  <data name="SdkManager.HintRemove" xml:space="preserve">
+    <value>Telepített SDK vagy JDK eltávolítása</value>
+  </data>
+  <data name="SdkManager.Installed" xml:space="preserve">
+    <value>Telepítve</value>
+  </data>
+  <data name="SdkManager.JavaChosen" xml:space="preserve">
+    <value>A Java fordítások és futtatások a(z) {0} verziót használják.</value>
+  </data>
+  <data name="SdkManager.KindDotNet" xml:space="preserve">
+    <value>.NET SDK</value>
+  </data>
+  <data name="SdkManager.KindJdk" xml:space="preserve">
+    <value>Java JDK</value>
+  </data>
+  <data name="SdkManager.Latest" xml:space="preserve">
+    <value>Elérhető, a legújabb</value>
+  </data>
+  <data name="SdkManager.ListFailed" xml:space="preserve">
+    <value>Nem érhető el a kiadó: {0}</value>
+  </data>
+  <data name="SdkManager.None" xml:space="preserve">
+    <value> Nem található SDK.</value>
+  </data>
+  <data name="SdkManager.NotAnInstall" xml:space="preserve">
+    <value>A(z) {0} nem tartalmaz {1} telepítést.</value>
+  </data>
+  <data name="SdkManager.NotInstalled" xml:space="preserve">
+    <value>Ez nincs telepítve, nincs mit eltávolítani.</value>
+  </data>
+  <data name="SdkManager.Preview" xml:space="preserve">
+    <value>Elérhető, előzetes verzió</value>
+  </data>
+  <data name="SdkManager.Reading" xml:space="preserve">
+    <value> SDK-k beolvasása…</value>
+  </data>
+  <data name="SdkManager.Refreshing" xml:space="preserve">
+    <value>Frissítés…</value>
+  </data>
+  <data name="SdkManager.Removed" xml:space="preserve">
+    <value>A(z) {0} eltávolítva.</value>
+  </data>
+  <data name="SdkManager.Title" xml:space="preserve">
+    <value>SDK-kezelő</value>
+  </data>
+  <data name="SdkManager.Unpacking" xml:space="preserve">
+    <value>{0} kicsomagolása…</value>
+  </data>
   <data name="Search.Line" xml:space="preserve">
     <value>{0}. sor: {1}</value>
   </data>
@@ -10030,6 +10645,9 @@
   </data>
   <data name="Terminal.NoCommand" xml:space="preserve">
     <value>Még nem futtattál terminálparancsot.</value>
+  </data>
+  <data name="Terminal.Running" xml:space="preserve">
+    <value>A parancs fut. A kimenete itt jelenik meg, amikor befejeződik.</value>
   </data>
   <data name="Terminal.SandboxBusy" xml:space="preserve">
     <value>Parancs fut: a homokozó a befejezés után módosítható.</value>

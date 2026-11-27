@@ -61,7 +61,50 @@ public class WideCharacterCellsTest
     {
         var output = AnsiRenderer.ConxelString2Ansi(0, 0, new ConxelString("日本", Color.White, Color.Black));
 
-        StringAssert.Contains(output, "日本");
+        StringAssert.Contains(output, "日");
+        StringAssert.Contains(output, "\u001b[1;3H本");
         Assert.IsFalse(output.Contains(TextWidth.Continuation));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnsiOutput_PositionsTheCellsAroundAWideCharacter()
+    {
+        // The cell after a wide character is at column 4 (cells: a, 日, continuation, b), so a terminal that drew 日
+        // wider or narrower than two columns cannot move b off its own column.
+        var output = AnsiRenderer.ConxelString2Ansi(0, 0, new ConxelString("a日b", Color.White, Color.Black));
+
+        StringAssert.Contains(output, "\u001b[1;2H日");
+        StringAssert.Contains(output, "\u001b[1;4Hb");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnsiOutput_KeepsAnAsciiRunOnItsOnePosition()
+    {
+        var output = AnsiRenderer.ConxelString2Ansi(0, 0, new ConxelString("abc", Color.White, Color.Black));
+
+        Assert.AreEqual(1, output.Split("\u001b[1;1H").Length - 1);
+        Assert.AreEqual(1, output.Split('H').Length - 1);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnsiOutput_DoesNotSplitASurrogatePair()
+    {
+        var output = AnsiRenderer.ConxelString2Ansi(0, 0, new ConxelString("a😀b", Color.White, Color.Black));
+
+        StringAssert.Contains(output, "\u001b[1;2H😀");
+        StringAssert.Contains(output, "\u001b[1;4Hb");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void NeedsAbsolutePosition_IsFalseBetweenPlainCharactersAndForASurrogatePairsHalves()
+    {
+        Assert.IsFalse(TextWidth.NeedsAbsolutePosition('a', 'b'));
+        Assert.IsFalse(TextWidth.NeedsAbsolutePosition('\uD83D', '\uDE00'));
+        Assert.IsTrue(TextWidth.NeedsAbsolutePosition('a', '日'));
+        Assert.IsTrue(TextWidth.NeedsAbsolutePosition(TextWidth.Continuation, 'b'));
     }
 }

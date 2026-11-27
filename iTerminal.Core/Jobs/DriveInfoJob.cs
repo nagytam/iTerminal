@@ -43,6 +43,11 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
                 AddCloudDrive(Container.ONEDRIVE, ContainerType.OneDrive, cloud.OneDrive.ClientId is { Length: > 0 });
                 AddCloudDrive(Container.GOOGLE_DRIVE, ContainerType.GoogleDrive,
                     cloud.GoogleDrive.ClientId is { Length: > 0 } && cloud.GoogleDrive.ClientSecret is { Length: > 0 });
+                AddCloudDrive(Container.DROPBOX, ContainerType.Dropbox, cloud.Dropbox.ClientId is { Length: > 0 });
+                // Azure Blob and S3 take their accounts and keys from the password manager, the environment or
+                // their own configuration when a panel opens, so there is no app registration to wait for here.
+                AddCloudDrive(Container.AZURE_BLOB, ContainerType.AzureBlob, isConfigured: true);
+                AddCloudDrive(Container.S3, ContainerType.S3, isConfigured: true);
                 var driveInfos = DriveInfo.GetDrives().ToList();
                 if (OperatingSystem.IsLinux())
                 {
@@ -107,9 +112,26 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
     private const int TypeWidth = 10;
 
     /// <summary>
+    /// Adds a local drive in front of the cloud rows, which always end the list. Inserting at the first cloud
+    /// row's index is safe while drives are added in parallel: the cloud rows are all listed before the
+    /// parallel pass starts, so that index only moves forward, and a local drive still lands before every cloud row.
+    /// </summary>
+    private void AddLocalDrive(Drive drive)
+    {
+        var drives = _driveInfoModel.Drives;
+        var firstCloud = drives.AsSnapshot().FirstOrDefault(d => d.IsCloud);
+        if (firstCloud is null)
+        {
+            drives.Add(drive);
+            return;
+        }
+        drives.Insert(drives.IndexOf(firstCloud), drive);
+    }
+
+    /// <summary>
     /// Lists one cloud row, once per run. A row is found by its URL type, not its name, because the name
     /// carries the "not configured" suffix. Enabled only when its app registration is set; otherwise the
-    /// name says why it cannot be opened.
+    /// name says why it cannot be opened. The row is appended, so it stays behind the local drives.
     /// </summary>
     private void AddCloudDrive(string scheme, ContainerType containerType, bool isConfigured)
     {
@@ -195,7 +217,7 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel, IOptions<CloudOptions> 
         }
         else
         {
-            _driveInfoModel.Drives.Add(drive);
+            AddLocalDrive(drive);
         }
     }
 }

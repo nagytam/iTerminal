@@ -1,6 +1,7 @@
 ﻿using iConsole.Interfaces;
 using iConsole.Jobs;
 using iTerminal.Widgets.Application;
+using iTerminal.DevelopmentStudio.Application;
 using iTerminal.Widgets.Jobs;
 using iConsole.Test.Core.Automation;
 using iTerminal.Core.Application;
@@ -202,6 +203,8 @@ public sealed class TerminalApp : IAsyncDisposable
             {
                 services.AddiTerminal(configuration);
                 services.AddWidgets(configuration);
+                services.AddDevelopmentStudio();
+                services.AddSingleton<iTerminal.DevelopmentStudio.Services.Lsp.ILanguageServerLauncher, SandboxServices.LanguageServers>();
 
                 foreach (var descriptor in services
                     .Where(d => d.ServiceType == typeof(IJob) && OmittedJobs.Contains(d.ImplementationType))
@@ -222,6 +225,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
+                services.AddSingleton<Core.Services.Sdk.ISdkManager, SandboxServices.Sdks>();
                 services.AddSingleton<Widgets.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();
                 // Evidence entries are time-stamped by no authority: no request leaves the sandbox.
                 services.AddSingleton<Core.Services.Timestamps.ITimestampAuthority, SandboxServices.TimestampAuthority>();
@@ -266,13 +270,42 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.VirtCli>();
                 services.AddSingleton<Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
                 {
+                    // Every backend runs on the sandboxed CLI, whichever operating system the suite is on, so no test
+                    // reaches a real hypervisor. Only the system libvirt answers; the other two are left out of the list.
                     var cli = provider.GetRequiredService<SandboxServices.VirtCli>();
-                    return new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer);
+                    return new Core.Services.VirtualMachines.CombinedVirtualMachineService(
+                    [
+                        new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer),
+                        new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer,
+                            Core.Services.VirtualMachines.LibvirtVirtualMachineService.SessionConnection,
+                            Core.Services.VirtualMachines.LibvirtVirtualMachineService.BoxesLabel),
+                        new Core.Services.VirtualMachines.VirtualBoxVirtualMachineService(cli, cli.LaunchViewer),
+                    ]);
                 });
 
                 // No test asks the machine it runs on for its phones: mtp:// is there, and empty-handed.
                 services.AddSingleton<Core.Services.Mtp.IMtpBackend>(
                     new Core.Services.Mtp.UnavailableMtpBackend("No MTP devices in the test sandbox."));
+
+                // No test browses a phone or a headset over Bluetooth: obex:// is there, and empty-handed.
+                services.AddSingleton<Core.Services.Obex.IObexBackend>(
+                    new Core.Services.Obex.UnavailableObexBackend("No Bluetooth file transfer in the test sandbox."));
+
+                // No test reaches Dropbox or Azure: their clients are there, and every request they make is refused.
+                services.AddSingleton<Core.Services.Cloud.IDropboxFileSystemService>(
+                    new Core.Services.Cloud.DropboxFileSystemService(
+                        new Core.Services.Cloud.DropboxTokenProvider(new Core.Services.Cloud.OAuthClientOptions()),
+                        new SandboxServices.RefusedNetwork(),
+                        "https://api.dropboxapi.com",
+                        "https://content.dropboxapi.com"));
+                services.AddSingleton<Core.Services.Cloud.IAzureBlobFileSystemService>(
+                    new Core.Services.Cloud.AzureBlobFileSystemService(
+                        account => new Core.Services.Cloud.AzureBlobCredentials(account, null, null),
+                        new SandboxServices.RefusedNetwork()));
+
+                // No test reaches an NFS server: nfs:// is there, and every mount is refused.
+                services.AddSingleton<Core.Services.Nfs.INfsMountFactory>(
+                    new Core.Services.Nfs.UnavailableNfsMountFactory("No NFS servers in the test sandbox."));
 
                 // The clipboard stays in the process — a run must neither overwrite what the person
                 // running it had copied nor paste what they had — and no test ejects, formats or

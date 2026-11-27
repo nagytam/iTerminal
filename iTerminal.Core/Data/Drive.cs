@@ -40,10 +40,11 @@ public class Drive
     public bool IsCloudConfigured { get; set; }
 
     /// <summary>
-    /// True for the OneDrive and Google Drive rows. It is read from the URL, not the name: the name carries
-    /// a "not configured" suffix, and a row built without a URL is not a cloud drive.
+    /// True for the cloud provider rows (OneDrive, Google Drive, Dropbox, Azure Blob, S3). It is read from the URL,
+    /// not the name: the name carries a "not configured" suffix, and a row built without a URL is not a cloud drive.
     /// </summary>
-    public bool IsCloud => Url?.ContainerType is ContainerType.OneDrive or ContainerType.GoogleDrive;
+    public bool IsCloud => Url?.ContainerType is ContainerType.OneDrive or ContainerType.GoogleDrive
+        or ContainerType.Dropbox or ContainerType.AzureBlob or ContainerType.S3;
 
     public bool IsEnabled
     {

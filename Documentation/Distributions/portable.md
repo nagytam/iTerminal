@@ -7,8 +7,10 @@ A portable copy is iTerminal without setup: unpack it anywhere and start the exe
 | `iTerminal-<v>-x64-portable.zip` | Windows x64 | `iTerminal.exe` |
 | `iTerminal-<v>-linux-x64-portable.tar.gz` | Linux x64 | `./iTerminal` |
 | `iTerminal-<v>-linux-arm64-portable.tar.gz` | Linux arm64 | `./iTerminal` |
+| `iTerminal-<v>-osx-arm64-portable.tar.gz` | macOS on Apple silicon | `./iTerminal` |
+| `iTerminal-<v>-osx-x64-portable.tar.gz` | macOS on Intel | `./iTerminal` |
 
-All three are self-contained (no .NET runtime needed) and are attached to every GitHub release `v<version>` next to the MSI and the Linux packages. The installers are described in [windows-msi.md](windows-msi.md) and [linux.md](linux.md).
+All of them are self-contained (no .NET runtime needed) and are attached to every GitHub release `v<version>` next to the MSI and the Linux packages. The installers are described in [windows-msi.md](windows-msi.md) and [linux.md](linux.md).
 
 ## The marker
 
@@ -26,6 +28,8 @@ The marker is added by `release.yml` after the publish and never by the project,
 **Windows**: unzip (the files are in the root of the archive, no wrapping folder) to a folder you can write to, and run `iTerminal.exe`. For `PATH` access add the folder to your own `PATH`. The `.zip` carries no shortcut; make one if you want it.
 
 **Linux**: `tar -xzf iTerminal-<v>-linux-x64-portable.tar.gz` unpacks to a folder named after the archive; run `./iTerminal` from it. Unlike the deb and rpm it installs nothing, needs no root, and the folder can be anywhere.
+
+**macOS**: `tar -xzf iTerminal-<v>-osx-arm64-portable.tar.gz` (or `osx-x64` on Intel Macs) unpacks to a folder named after the archive; run `./iTerminal` from it in Terminal. The archives are not signed or notarized, and a file downloaded through a browser carries the quarantine flag, so macOS may refuse to start `iTerminal` until the flag is removed with `xattr -dr com.apple.quarantine <folder>`. Only the portable archive is published for macOS; there is no `.app` bundle, `.dmg` or `.pkg` yet.
 
 The app keeps its settings, database and vault in its data directory (Windows `%APPDATA%\iTerminal`, Linux `~/.config/iTerminal`) and not in the portable folder, so a portable copy shares them with any other copy of the same user. The `DataDirectory` configuration key moves that folder if a copy must be fully self-contained.
 

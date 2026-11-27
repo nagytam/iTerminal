@@ -1,0 +1,41 @@
+using iTerminal.Core.Extensions;
+using iTerminal.DevelopmentStudio.Commands;
+using iTerminal.DevelopmentStudio.Contributions;
+using iTerminal.DevelopmentStudio.Dialogs;
+using iTerminal.DevelopmentStudio.Services;
+using iTerminal.DevelopmentStudio.Services.Lsp;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
+namespace iTerminal.DevelopmentStudio.Application;
+
+/// <summary>
+/// Registers the Development Studio: its scanner, process runner, toolchains and breakpoints, the dialog, the Tools menu
+/// entry and the solution dialog that F3 on a <c>.sln</c> or <c>.slnx</c> opens. The composition root calls this after
+/// <c>AddiTerminal</c>, as it calls <c>AddWidgets</c>; iTerminal.Core cannot call it, since it does not reference this project.
+/// </summary>
+public static class DevelopmentStudioApplicationBuilderExtension
+{
+    public static IServiceCollection AddDevelopmentStudio(this IServiceCollection services)
+    {
+        services.AddSingleton<IDevelopmentWorkspaceScanner, DevelopmentWorkspaceScanner>();
+        services.AddSingleton<IDevelopmentProcessRunner, DevelopmentProcessRunner>();
+        services.AddSingleton(_ => new DevelopmentToolchains());
+        // The breakpoints are a singleton, so they survive closing the dialog.
+        services.AddSingleton<BreakpointStore>();
+        // The Main program is a singleton too, so the choice survives closing the dialog.
+        services.AddSingleton<MainProgramStore>();
+        // The C# language server is a singleton: one server per folder, shared by every studio dialog.
+        services.TryAddSingleton<ILanguageServerLauncher, LanguageServerLauncher>();
+        services.AddSingleton<CSharpLanguageServer>();
+        services.AddTransient<DevelopmentStudioDialog>();
+
+        // Tools > Development studio, in the "sys" submenu.
+        services.AddSingleton<IToolsMenuContribution>(provider =>
+            new DevelopmentStudioToolsMenuEntry("sys", new DevelopmentStudioDialogCommand(provider.GetRequiredService<DevelopmentStudioDialog>())));
+
+        // F3 on a solution opens it in the studio, scoped to that solution.
+        services.TryAddSingleton<ISolutionDialogFactory, DevelopmentStudioSolutionDialogFactory>();
+        return services;
+    }
+}

@@ -8,6 +8,23 @@ namespace iTerminal.Core.Services.VirtualMachines.Test;
 [TestClass]
 public class LibvirtVirtualMachineServiceTest
 {
+    private static async Task<InvalidOperationException> ThrownByAsync(Func<Task> action)
+    {
+        try
+        {
+            await action();
+        }
+        catch (InvalidOperationException exception)
+        {
+            return exception;
+        }
+
+        Assert.Fail("The call was expected to throw InvalidOperationException.");
+        return null!;
+    }
+
+    private static VirtualMachine Vm(string name) => new(name, VirtualMachineState.Running, "running", "test");
+
     private static readonly string[] Connection = ["-c", "qemu:///system"];
 
     private static (LibvirtVirtualMachineService Service, Mock<IExternalProcessRunner> Runner, List<(string File, string[] Arguments)> Calls) Create(
@@ -48,7 +65,7 @@ public class LibvirtVirtualMachineServiceTest
     {
         var (service, _, calls) = Create();
 
-        var result = await service.RunAsync("web", action);
+        var result = await service.RunAsync(Vm("web"), action);
 
         Assert.IsTrue(result.Success);
         var call = Assert.ContainsSingle(calls);
@@ -61,7 +78,7 @@ public class LibvirtVirtualMachineServiceTest
     {
         var (service, runner, _) = Create();
 
-        var result = await service.RunAsync("--connect=evil", VirtualMachineAction.PowerOff);
+        var result = await service.RunAsync(Vm("--connect=evil"), VirtualMachineAction.PowerOff);
 
         Assert.IsFalse(result.Success);
         runner.Verify(r => r.RunAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -80,7 +97,7 @@ public class LibvirtVirtualMachineServiceTest
             return true;
         });
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Console);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Console);
 
         Assert.IsTrue(result.Success);
         Assert.AreEqual("virt-viewer", launched);
@@ -94,7 +111,7 @@ public class LibvirtVirtualMachineServiceTest
     {
         var (service, _, _) = Create(launch: (_, _) => false);
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Console);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Console);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "sudo apt install virt-viewer");
@@ -106,7 +123,7 @@ public class LibvirtVirtualMachineServiceTest
     {
         var (service, _, _) = Create(new ProcessOutput(1, string.Empty, "error: Failed to connect socket: Permission denied"));
 
-        var result = await service.RunAsync("web", VirtualMachineAction.Start);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.Start);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "libvirt group");
@@ -118,7 +135,7 @@ public class LibvirtVirtualMachineServiceTest
     {
         var (service, _, _) = Create(new ProcessOutput(-1, string.Empty, "virsh did not answer within 30 seconds."));
 
-        var result = await service.RunAsync("web", VirtualMachineAction.SaveState);
+        var result = await service.RunAsync(Vm("web"), VirtualMachineAction.SaveState);
 
         Assert.IsFalse(result.Success);
         StringAssert.Contains(result.Message, "press F5");
@@ -142,5 +159,56 @@ public class LibvirtVirtualMachineServiceTest
 
         Assert.IsNotNull(thrown, "a failed listing must throw");
         StringAssert.Contains(thrown.Message, "libvirt group");
+    }
+
+    private static (LibvirtVirtualMachineService Service, List<(string File, string[] Arguments)> Calls) CreateForBoxes(
+        ProcessOutput? output = null,
+        Func<string, IReadOnlyList<string>, bool>? launch = null)
+    {
+        var calls = new List<(string, string[])>();
+        var runner = new Mock<IExternalProcessRunner>();
+        runner.Setup(r => r.RunAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()))
+            .Callback<string, IReadOnlyList<string>, string?, CancellationToken>((file, arguments, _, _) => calls.Add((file, arguments.ToArray())))
+            .ReturnsAsync(output ?? new ProcessOutput(0, string.Empty, string.Empty));
+        var service = new LibvirtVirtualMachineService(runner.Object, launch,
+            LibvirtVirtualMachineService.SessionConnection, LibvirtVirtualMachineService.BoxesLabel);
+        return (service, calls);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task GnomeBoxesUsesTheSessionConnectionAndLabelsItsMachines()
+    {
+        var (service, calls) = CreateForBoxes(new ProcessOutput(0, " Id   Name   State\n--------------------\n -    desk   shut off\n", string.Empty));
+
+        var machines = await service.ListAsync();
+
+        Assert.AreEqual("GNOME Boxes", service.Hypervisor);
+        CollectionAssert.AreEqual(new[] { "-c", "qemu:///session", "list", "--all" }, Assert.ContainsSingle(calls).Arguments);
+        var machine = Assert.ContainsSingle(machines);
+        Assert.AreEqual(("desk", "GNOME Boxes"), (machine.Name, machine.Hypervisor));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task GnomeBoxesConsoleOpensVirtViewerOnTheSessionConnection()
+    {
+        IReadOnlyList<string>? seen = null;
+        var (service, _) = CreateForBoxes(launch: (_, arguments) => { seen = arguments; return true; });
+
+        await service.RunAsync(new VirtualMachine("desk", VirtualMachineState.Running, "running", "GNOME Boxes"), VirtualMachineAction.Console);
+
+        CollectionAssert.AreEqual(new[] { "-c", "qemu:///session", "desk" }, seen!.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task GnomeBoxesRefusedConnectionDoesNotNameTheLibvirtGroup()
+    {
+        var (service, _) = CreateForBoxes(new ProcessOutput(1, string.Empty, "error: Failed to connect socket to '/run/user/1000/libvirt/virtqemud-sock'"));
+
+        var exception = await ThrownByAsync(() => service.ListAsync());
+
+        Assert.AreEqual("libvirt refused the connection to qemu:///session.", exception.Message);
     }
 }

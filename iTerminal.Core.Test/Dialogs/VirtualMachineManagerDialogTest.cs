@@ -34,11 +34,11 @@ public class VirtualMachineManagerDialogTest
             return _gate is { } gate ? gate.Task : Task.FromResult<IReadOnlyList<VirtualMachine>>(machines);
         }
 
-        public Task<VirtualMachineActionResult> RunAsync(string name, VirtualMachineAction action, CancellationToken cancellationToken = default)
+        public Task<VirtualMachineActionResult> RunAsync(VirtualMachine machine, VirtualMachineAction action, CancellationToken cancellationToken = default)
         {
             lock (_lock)
             {
-                _calls.Add((name, action));
+                _calls.Add((machine.Name, action));
             }
 
             return Task.FromResult(Result);

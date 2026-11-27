@@ -169,6 +169,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null,
         IEnumerable<IMenuBarIndicator>? indicators = null,
         iTerminal.Core.Dialogs.Voice.VoiceRecorderDialog? voiceRecorderDialog = null,
+        iTerminal.Core.Dialogs.Recipes.RecipeManagerDialog? recipeManagerDialog = null,
         IEnumerable<IToolsMenuContribution>? toolsMenuContributions = null
         )
         : base([], themeService)
@@ -311,6 +312,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             pluginManagerDialog: pluginManagerDialog,
             fileTransferDialog: fileTransferDialog,
             voiceRecorderDialog: voiceRecorderDialog,
+            recipeManagerDialog: recipeManagerDialog,
             widgetContributions: toolsMenuContributions));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));

@@ -63,6 +63,7 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Plugins.PluginManagerDialog? pluginManagerDialog = null,
         iTerminal.Core.Dialogs.FileTransfer.FileTransferDialog? fileTransferDialog = null,
         iTerminal.Core.Dialogs.Voice.VoiceRecorderDialog? voiceRecorderDialog = null,
+        iTerminal.Core.Dialogs.Recipes.RecipeManagerDialog? recipeManagerDialog = null,
         IEnumerable<IToolsMenuContribution>? widgetContributions = null)
         : base("Tools", null, [], themeService)
     {
@@ -128,6 +129,7 @@ public class ToolsMenuItem : MenuItem
         if (pluginManagerDialog is not null) groups["sys"].Add(new PluginManagerDialogCommand(pluginManagerDialog));
         if (passwordManagerDialog is not null) groups["office"].Add(new PasswordManagerDialogCommand(passwordManagerDialog));
         if (voiceRecorderDialog is not null) groups["office"].Add(new VoiceRecorderDialogCommand(voiceRecorderDialog));
+        if (recipeManagerDialog is not null) groups["office"].Add(new RecipeManagerDialogCommand(recipeManagerDialog));
         if (systemSettingsDialog is not null) groups["sys"].Add(new SystemSettingsDialogCommand(systemSettingsDialog));
         if (runtimeDependencyDialog is not null) groups["sys"].Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
         if (diskUsageDialog is not null) groups["files"].Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));

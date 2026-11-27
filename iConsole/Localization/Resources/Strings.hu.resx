@@ -1051,6 +1051,9 @@
   <data name="Hint.FindPrevious" xml:space="preserve">
     <value>Előző találat keresése</value>
   </data>
+  <data name="Hint.FindStart" xml:space="preserve">
+    <value>Szöveg keresése a naplóban</value>
+  </data>
   <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
     <value>A hónap első vagy utolsó napja</value>
   </data>
@@ -1455,6 +1458,9 @@
   </data>
   <data name="Key.Writable" xml:space="preserve">
     <value>F6-Írható</value>
+  </data>
+  <data name="LogView.FindPrompt" xml:space="preserve">
+    <value>Keresés: </value>
   </data>
   <data name="Msg.EnterLineNumber" xml:space="preserve">
     <value>Adjon meg egy sorszámot.</value>

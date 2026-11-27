@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The Development Studio: the Tools menu dialog for .NET solutions, Python, PowerShell and Java projects (build, run,
+    clean and test, a test explorer, and a debugger over the Debug Adapter Protocol). It sits above iTerminal.Core, which
+    does not reference it: Core exposes the extension points (the tools menu, the solution dialog factory) and this project
+    contributes to them through AddDevelopmentStudio().
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Static analysis for every non-test project. PrivateAssets keeps the analyzer out of consumers. -->
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.37.0.15768" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

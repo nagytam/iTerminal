@@ -23,6 +23,7 @@
     <ProjectReference Include="..\iConsole.Test.Core\iConsole.Test.Core.csproj" />
     <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
     <ProjectReference Include="..\iTerminal.Widgets\iTerminal.Widgets.csproj" />
+    <ProjectReference Include="..\iTerminal.DevelopmentStudio\iTerminal.DevelopmentStudio.csproj" />
   </ItemGroup>
 
   <ItemGroup>
