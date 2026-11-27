@@ -528,9 +528,11 @@ public class DevelopmentStudioDialogTest
         var harness = await OpenAsync([Solution]);
         var editorBefore = harness.Dialog.EditorLines.ToList();
 
+        // Output, then Errors, then Debug: the Errors tab sits between Output and Debug.
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
 
-        CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), "Watch", "F7 moves the output panel to the debug tab");
+        CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), "Watch", "F7 twice moves the output panel to the debug tab");
         CollectionAssert.AreEqual(editorBefore, harness.Dialog.EditorLines.ToList(), "the editor keeps the source");
 
         for (int i = 0; i < 3; i++) await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
@@ -624,10 +626,14 @@ public class DevelopmentStudioDialogTest
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
             await WaitIdleAsync(harness.Dialog);
 
-            FocusPanel(harness.Dialog, StudioPanelKind.Errors);
+            // The Errors tab of the output panel: focus the panel, then F7 from Output to Errors.
+            FocusPanel(harness.Dialog, StudioPanelKind.Output);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+            Assert.AreEqual(1, harness.Dialog.ErrorLines.Count, "the build's error is listed for the Errors tab");
+            CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), $"{path}(3,5): error CS1002: ; expected", "F7 shows the Errors tab in the output panel");
             await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
-            await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, "the editor to open the file at line 3");
+            await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, $"the editor to open the file at line 3 (opened: {harness.Dialog.CursorLineNumber}, focus: {harness.Dialog.FocusedPanel}, status: {harness.Dialog.Status})");
             StringAssert.Contains(harness.Dialog.EditorLines[2], "three");
         }
         finally
@@ -652,7 +658,7 @@ public class DevelopmentStudioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task AnArrowMovesThePanelOntoAnOccupiedEdgeBySwapping()
+    public async Task AnArrowMovesThePanelOntoAnEmptyEdge()
     {
         var harness = await OpenAsync([Solution, App]);
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
@@ -660,7 +666,7 @@ public class DevelopmentStudioDialogTest
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.UpArrow));
 
         Assert.AreEqual(DockSide.Top, SideOf(harness.Dialog, StudioPanelKind.Explorer));
-        Assert.AreEqual(DockSide.Right, SideOf(harness.Dialog, StudioPanelKind.Errors));
+        Assert.AreEqual(DockSide.Bottom, SideOf(harness.Dialog, StudioPanelKind.Output), "the output panel keeps its edge");
     }
 
     [Timeout(60_000)]
@@ -720,19 +726,64 @@ public class DevelopmentStudioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task TheErrorListIsDockedToTheTopEdgeAboveTheExplorer()
+    public async Task TheErrorsAreAnOutputTabNextToOutput()
     {
         var runner = new FakeProcessRunner { Output = ["/src/App/Program.cs(3,5): error CS1002: ; expected"] };
         var harness = await OpenAsync([Solution, App], runner: runner);
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
         await WaitIdleAsync(harness.Dialog);
 
-        var screen = Render(harness.Dialog);
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
 
-        var errors = Locate(screen, "Error List");
-        var explorer = Locate(screen, " Solution Explorer");
-        Assert.IsTrue(errors.Row < explorer.Row, "the Error List sits on the top edge, above the Explorer's band");
-        StringAssert.Contains(screen.Line(errors.Row), "1 errors, 0 warnings");
+        var screen = Render(harness.Dialog);
+        AssertScreenContains(screen, "Errors");
         AssertScreenContains(screen, "Program.cs(3,5): error CS1002");
+        Assert.AreEqual(1, harness.Dialog.ErrorLines.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TypingInTheEditorEditsTheFileAndCtrlSSavesIt()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, "Program.cs");
+        File.WriteAllText(path, "one\ntwo\nthree\nfour\n");
+        try
+        {
+            var runner = new FakeProcessRunner { Output = [$"{path}(3,5): error CS1002: ; expected"] };
+            var harness = await OpenAsync([Solution, App], runner: runner);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+            await WaitIdleAsync(harness.Dialog);
+            FocusPanel(harness.Dialog, StudioPanelKind.Output);
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+            await WaitUntilAsync(() => harness.Dialog.CursorLineNumber == 3, "the editor to open the file at line 3");
+
+            FocusPanel(harness.Dialog, StudioPanelKind.Editor);
+            await harness.Dialog.HandleKeyEventAsync(Char('X'));
+            StringAssert.Contains(harness.Dialog.EditorLines[2], "Xthree", "a typed letter goes into the file, not to a command");
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.S, 's', control: true));
+            await WaitUntilAsync(() => File.ReadAllText(path).Contains("Xthree", StringComparison.Ordinal), "Ctrl+S to write the file");
+            StringAssert.Contains(File.ReadAllText(path), "Xthree");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheFooterNamesTheKeysOfThePanelThatHasTheFocus()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        FocusPanel(harness.Dialog, StudioPanelKind.Output);
+        AssertScreenContains(Render(harness.Dialog), "F7:output tab");
+
+        FocusPanel(harness.Dialog, StudioPanelKind.Explorer);
+        AssertScreenContains(Render(harness.Dialog), "Left/Right:expand");
     }
 }

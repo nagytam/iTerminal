@@ -11,11 +11,8 @@ public enum StudioPanelKind
     /// <summary>The Solution, Test or File Explorer (the right edge by default).</summary>
     Explorer,
 
-    /// <summary>The output panel: Output, Debug, Coverage and Profile (the bottom edge by default).</summary>
+    /// <summary>The output panel: Output, Errors, Debug, Coverage and Profile tabs (the bottom edge by default).</summary>
     Output,
-
-    /// <summary>The Error List of the errors and warnings the commands printed (the top edge by default).</summary>
-    Errors,
 }
 
 /// <summary>The result of <see cref="StudioPanelLayout.Move"/>.</summary>
@@ -35,8 +32,8 @@ public enum StudioPanelMove
 }
 
 /// <summary>
-/// Where each panel of the studio is docked. Five slots (the four edges and the centre) hold four panels, so one slot is
-/// always empty, and the centre is never empty: a panel moved onto a taken slot swaps places with its occupant, and the
+/// Where each panel of the studio is docked. Five slots (the four edges and the centre) hold three panels, so two slots are
+/// empty by default, and the centre is never empty: a panel moved onto a taken slot swaps places with its occupant, and the
 /// centre panel can only swap. An edge panel has a share of the studio's width or height (<see cref="Percent"/>), which
 /// <see cref="Resize"/> changes in steps. This class holds the arrangement only; the dialog builds the controls from it.
 /// </summary>
@@ -54,10 +51,9 @@ public sealed class StudioPanelLayout
         [StudioPanelKind.Editor] = (DockSide.Fill, 0),
         [StudioPanelKind.Explorer] = (DockSide.Right, 34),
         [StudioPanelKind.Output] = (DockSide.Bottom, 33),
-        [StudioPanelKind.Errors] = (DockSide.Top, 15),
     };
 
-    /// <summary>The arrangement the studio opens with: the editor in the centre, the Explorer on the right, the output at the bottom and the Error List on top.</summary>
+    /// <summary>The arrangement the studio opens with: the editor in the centre, the Explorer on the right and the output at the bottom.</summary>
     public static StudioPanelLayout Default() => new();
 
     /// <summary>The side a panel is docked to.</summary>

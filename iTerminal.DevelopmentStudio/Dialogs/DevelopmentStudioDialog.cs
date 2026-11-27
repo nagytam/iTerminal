@@ -35,7 +35,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private enum ExplorerMode { Solution, Tests, Files }
 
     /// <summary>The tabs of the bottom output panel: the output log, the debug view, the coverage and the profile.</summary>
-    private enum OutputTab { Output, Debug, Coverage, Profile }
+    private enum OutputTab { Output, Errors, Debug, Coverage, Profile }
 
     private enum StatusSeverity { Info, Success, Error }
 
@@ -141,8 +141,6 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly ExplorerListBox _explorerListBox;
     private readonly ViewListBox _editorListBox;
     private readonly ViewListBox _outputListBox;
-    private readonly ConcurrentObservableCollection<string> _errorItems = new();
-    private readonly ViewListBox _errorListBox;
 
     /// <summary>Guards everything the background tasks write: output, the debug state and the source.</summary>
     private readonly Lock _stateLock = new();
@@ -158,6 +156,12 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private bool _missingAnnounced;
     private readonly List<string> _sourceLines = [];
     private string _sourcePath = string.Empty;
+    /// <summary>Whether the open file has edits not yet saved. <see cref="_sourceVersion"/> counts every edit, so a save
+    /// that lands after more typing does not clear the flag.</summary>
+    private bool _sourceDirty;
+    private long _sourceVersion;
+    /// <summary>The line ending the open file is saved with, as the file had it.</summary>
+    private string _sourceLineEnding = "\n";
     private string _sourceRequest = string.Empty;
     private IReadOnlyList<DebugStackFrame> _stack = [];
     private readonly List<DebugVariable> _locals = [];
@@ -278,13 +282,6 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             new ListBoxModel<string>(_outputItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
             themeService);
 
-        _errorListBox = new ViewListBox(
-            new ListBoxModel<string>(_errorItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
-            themeService)
-        {
-            EmptyText = UiText.Get("DevelopmentStudio.NoErrors", "No errors or warnings. Build, run and test report theirs here."),
-        };
-
         // Each panel is a component of its own; the dock places them in the order _layout gives.
         _dock = new DockPanel(themeService) { Gap = 1 };
         _panels[StudioPanelKind.Editor] = new StudioPanel(StudioPanelKind.Editor, _editorListBox, EditorTitle, themeService);
@@ -293,7 +290,6 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         {
             BandPainter = (buffer, x, y, width, colorScheme, focused) => DrawOutputTabs(buffer, x, y, width, colorScheme, focused),
         };
-        _panels[StudioPanelKind.Errors] = new StudioPanel(StudioPanelKind.Errors, _errorListBox, ErrorHeading, themeService);
         AddControl(_dock);
         RebuildDock();
     }
@@ -317,7 +313,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     public IReadOnlyList<string> OutputLines => [.. _outputItems];
 
     /// <summary>The Error List rows as they are drawn, in order.</summary>
-    public IReadOnlyList<string> ErrorLines => [.. _errorItems];
+    public IReadOnlyList<string> ErrorLines => [.. MergedDiagnostics().Select(diagnostic => diagnostic.Text)];
 
     /// <summary>The panels in the order they are docked, each with its edge (or the centre) and its share of the space in percent.</summary>
     public IReadOnlyList<(StudioPanelKind Kind, DockSide Side, int Percent)> Panels => _layout.Docked();
@@ -459,6 +455,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         // In the layout mode Esc ends the mode rather than closing the dialog.
         if (_layoutMode && HandleLayoutKey(keyEvent)) return true;
 
+        // While the editor has the focus and a file is open, the keys type into the file: its letters are text, not commands.
+        if (TryEditSource(keyEvent)) return true;
+
         bool plain = !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;
         bool shift = keyEvent.Shift && !keyEvent.Alt && !keyEvent.Control;
         bool ctrl = keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
@@ -506,6 +505,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.R when ctrl:
                 _ = RefreshAsync();
+                return true;
+            case ConsoleKey.S when ctrl:
+                SaveSource();
                 return true;
             case ConsoleKey.R when plain:
                 RunSelected("run");
@@ -572,7 +574,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private void EnterPressed()
     {
-        if (_errorListBox.IsFocused)
+        if (FocusedPanelKind() == StudioPanelKind.Output && _outputTab == OutputTab.Errors)
         {
             OpenDiagnosticAtCursor();
             return;
@@ -737,17 +739,22 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
     }
 
-    /// <summary>F7 cycles the output panel's tabs: Output, Debug, Coverage, Profile. The editor is not affected.</summary>
+    /// <summary>F7 cycles the output panel's tabs: Output, Errors, Debug, Coverage, Profile. The editor is not affected.</summary>
     private void CycleOutputTab()
     {
         _outputTab = _outputTab switch
         {
-            OutputTab.Output => OutputTab.Debug,
+            OutputTab.Output => OutputTab.Errors,
+            OutputTab.Errors => OutputTab.Debug,
             OutputTab.Debug => OutputTab.Coverage,
             OutputTab.Coverage => OutputTab.Profile,
             _ => OutputTab.Output,
         };
         RebuildOutputPanel();
+
+        // The cursor row belongs to the list it was on; a new tab starts at its first row, so Enter reads the row shown.
+        _outputListBox.ScrollableModel.CursorPosition.Y = 0;
+        _outputListBox.ScrollableModel.ScrollPosition.Y = 0;
         StateHasChanged();
     }
 
@@ -994,7 +1001,6 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     {
         RebuildEditor();
         RebuildOutputPanel();
-        RebuildErrorPanel();
     }
 
     /// <summary>Rebuilds the editor: the open file with its gutter (breakpoint, stop line, coverage), or the hint when none is open.</summary>
@@ -1062,6 +1068,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 case OutputTab.Output:
                     lines.AddRange(_output);
                     break;
+                case OutputTab.Errors:
+                    lines.AddRange(MergedDiagnostics().Select(diagnostic => diagnostic.Text));
+                    break;
                 case OutputTab.Coverage:
                     lines.AddRange(CoverageLines());
                     break;
@@ -1076,7 +1085,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         if (lines.Count == 0)
         {
-            lines.Add(string.Empty);
+            lines.Add(_outputTab == OutputTab.Errors
+                ? UiText.Get("DevelopmentStudio.NoErrors", "No errors or warnings. Build, run and test report theirs here.")
+                : string.Empty);
         }
 
         _outputItems.ReplaceAll(lines);
@@ -1301,10 +1312,18 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>Opens a source file in the editor. The read runs on a background task; the newest request wins.</summary>
     private void OpenSource(string path, int line = 1)
     {
+        if (IsSourceDirty)
+        {
+            // Opening another file, or reloading this one, would throw the unsaved edits away.
+            SetStatus(UiText.Get("DevelopmentStudio.UnsavedSource", "Unsaved changes in the editor: Ctrl+S saves them first."), StatusSeverity.Error);
+            return;
+        }
+
         _sourceRequest = path;
         _ = Task.Run(() =>
         {
             string[] lines;
+            string lineEnding = "\n";
             string? error = null;
             try
             {
@@ -1316,6 +1335,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 else
                 {
                     lines = File.ReadAllLines(path);
+                    lineEnding = File.ReadAllText(path).Contains("\r\n", StringComparison.Ordinal) ? "\r\n" : "\n";
                 }
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
@@ -1330,6 +1350,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 _sourcePath = path;
                 _sourceLines.Clear();
                 _sourceLines.AddRange(lines);
+                _sourceLineEnding = lineEnding;
+                _sourceDirty = false;
+                _sourceVersion++;
             }
 
             if (error is null && path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
@@ -2399,26 +2422,164 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         DrawFooter(buffer, x0 + 1, y0 + footerRow, innerWidth, colorScheme);
     }
 
+    #region Editing
+
+    /// <summary>Whether a file is open in the editor.</summary>
+    private bool SourceOpen
+    {
+        get
+        {
+            lock (_stateLock) return _sourcePath.Length > 0;
+        }
+    }
+
+    /// <summary>Whether the open file has edits not yet saved.</summary>
+    private bool IsSourceDirty
+    {
+        get
+        {
+            lock (_stateLock) return _sourceDirty;
+        }
+    }
+
+    /// <summary>
+    /// Types, deletes or splits lines in the open file while the editor has the focus. Returns false for a key the editor
+    /// does not use, so the commands and the arrows still get it. Breakpoints and the stop line keep their line numbers.
+    /// </summary>
+    private bool TryEditSource(KeyEvent keyEvent)
+    {
+        if (FocusedPanelKind() != StudioPanelKind.Editor) return false;
+
+        // Typed text: a character with Control and Alt both held (AltGr) or with neither. Control or Alt alone is a command.
+        bool typed = keyEvent.KeyChar != '\0' && !char.IsControl(keyEvent.KeyChar) && keyEvent.Control == keyEvent.Alt;
+        bool editing = keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete or ConsoleKey.Enter or ConsoleKey.Tab;
+        if (!typed && !editing) return false;
+
+        int lineIndex;
+        int column;
+        lock (_stateLock)
+        {
+            if (_sourcePath.Length == 0) return false;
+            if (_sourceLines.Count == 0) _sourceLines.Add(string.Empty);
+
+            lineIndex = Math.Clamp(CursorLine - 1, 0, _sourceLines.Count - 1);
+            string current = _sourceLines[lineIndex];
+            column = Math.Clamp((int)_editorListBox.ScrollableModel.CursorPosition.X - GutterWidth, 0, current.Length);
+
+            if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
+            {
+                if (column > 0)
+                {
+                    _sourceLines[lineIndex] = current.Remove(column - 1, 1);
+                    column--;
+                }
+                else if (lineIndex > 0)
+                {
+                    string previous = _sourceLines[lineIndex - 1];
+                    _sourceLines[lineIndex - 1] = previous + current;
+                    _sourceLines.RemoveAt(lineIndex);
+                    lineIndex--;
+                    column = previous.Length;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else if (keyEvent.ConsoleKey == ConsoleKey.Delete)
+            {
+                if (column < current.Length)
+                {
+                    _sourceLines[lineIndex] = current.Remove(column, 1);
+                }
+                else if (lineIndex + 1 < _sourceLines.Count)
+                {
+                    _sourceLines[lineIndex] = current + _sourceLines[lineIndex + 1];
+                    _sourceLines.RemoveAt(lineIndex + 1);
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else if (keyEvent.ConsoleKey == ConsoleKey.Enter)
+            {
+                _sourceLines[lineIndex] = current[..column];
+                _sourceLines.Insert(lineIndex + 1, current[column..]);
+                lineIndex++;
+                column = 0;
+            }
+            else
+            {
+                string inserted = keyEvent.ConsoleKey == ConsoleKey.Tab ? "    " : keyEvent.KeyChar.ToString();
+                _sourceLines[lineIndex] = current.Insert(column, inserted);
+                column += inserted.Length;
+            }
+
+            _sourceDirty = true;
+            _sourceVersion++;
+        }
+
+        RebuildEditor();
+        _editorListBox.ScrollableModel.CursorPosition.Y = lineIndex;
+        _editorListBox.ScrollableModel.CursorPosition.X = column + GutterWidth;
+        StateHasChanged();
+        return true;
+    }
+
+    /// <summary>
+    /// Ctrl+S: writes the open file on a background task. The file is clean again only when the write has landed and
+    /// nothing was typed after it was taken.
+    /// </summary>
+    private void SaveSource()
+    {
+        string path;
+        string text;
+        long version;
+        lock (_stateLock)
+        {
+            if (_sourcePath.Length == 0) return;
+            if (!_sourceDirty)
+            {
+                SetStatus(UiText.Get("DevelopmentStudio.NothingToSave", "No unsaved changes."), StatusSeverity.Info);
+                return;
+            }
+
+            path = _sourcePath;
+            version = _sourceVersion;
+            text = string.Join(_sourceLineEnding, _sourceLines) + _sourceLineEnding;
+        }
+
+        _ = Task.Run(() =>
+        {
+            string? error = null;
+            try
+            {
+                File.WriteAllText(path, text);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                error = exception.Message;
+            }
+
+            lock (_stateLock)
+            {
+                if (error is null && _sourcePath == path && _sourceVersion == version) _sourceDirty = false;
+            }
+
+            SetStatus(error is null
+                ? string.Format(UiText.Get("DevelopmentStudio.SavedFile", "Saved {0}."), Path.GetFileName(path))
+                : string.Format(UiText.Get("DevelopmentStudio.SaveFailed", "Save failed: {0}"), error),
+                error is null ? StatusSeverity.Success : StatusSeverity.Error);
+        }, CancellationToken.None);
+    }
+
+    #endregion
+
     #region Panels and layout
 
-    /// <summary>The Error List's band: its name and how many errors and warnings the commands printed.</summary>
-    private string ErrorHeading()
-    {
-        List<BuildDiagnostic> merged = MergedDiagnostics();
-        int errors = merged.Count(diagnostic => diagnostic.IsError);
-        int warnings = merged.Count - errors;
-
-        return UiText.Get("DevelopmentStudio.ErrorListHeading", "Error List") + "   "
-            + string.Format(UiText.Get("DevelopmentStudio.ErrorCounts", "{0} errors, {1} warnings"), errors, warnings);
-    }
-
-    /// <summary>Rebuilds the Error List from the diagnostics the output holds, in the order they were printed.</summary>
-    private void RebuildErrorPanel()
-    {
-        List<string> lines = MergedDiagnostics().Select(diagnostic => diagnostic.Text).ToList();
-        _errorItems.ReplaceAll(lines);
-        _errorListBox.UpdateModel();
-    }
+    /// <summary>Rebuilds what shows the errors: the Errors tab of the output panel, when it is the one shown.</summary>
+    private void RebuildErrorPanel() => RebuildOutputPanel();
 
     /// <summary>Clears the output and the errors it held, for a new command. The caller holds <see cref="_stateLock"/>.</summary>
     private void ClearOutputLocked()
@@ -2431,7 +2592,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>Enter on an Error List row: opens the file the diagnostic names, at the line it names.</summary>
     private void OpenDiagnosticAtCursor()
     {
-        int row = (int)_errorListBox.ScrollableModel.CursorPosition.Y;
+        int row = (int)_outputListBox.ScrollableModel.CursorPosition.Y;
         List<BuildDiagnostic> merged = MergedDiagnostics();
         if (row < 0 || row >= merged.Count) return;
         BuildDiagnostic diagnostic = merged[row];
@@ -2441,8 +2602,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         try
         {
             // The tools print paths relative to the folder they ran in, which is the studio's folder or the solution's.
-            // The base must be fully qualified: a rooted path such as "/src" is not, on Windows, and would throw.
-            path = Path.GetFullPath(diagnostic.File, Path.GetFullPath(folder));
+            // A diagnostic's path is usually absolute already; a base path is only for a relative one, and it must be absolute itself.
+            path = Path.IsPathRooted(diagnostic.File) || !Path.IsPathRooted(folder)
+                ? Path.GetFullPath(diagnostic.File)
+                : Path.GetFullPath(diagnostic.File, folder);
         }
         catch (ArgumentException)
         {
@@ -2615,7 +2778,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         var cursor = _editorListBox.ScrollableModel.CursorPosition;
         int column = Math.Max(1, (int)cursor.X - GutterWidth + 1);
         string position = string.Format(UiText.Get("DevelopmentStudio.EditorPosition", "Ln {0}, Col {1}"), (int)cursor.Y + 1, column);
-        return $"{Path.GetFileName(path)}   {position}";
+        return $"{Path.GetFileName(path)}{(IsSourceDirty ? " *" : string.Empty)}   {position}";
     }
 
     /// <summary>The Solution Explorer's band: the heading of the mode F6 has shown.</summary>
@@ -2651,6 +2814,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private static string OutputTabHeading(OutputTab tab) => tab switch
     {
         OutputTab.Output => UiText.Get("DevelopmentStudio.OutputHeading", "Output"),
+        OutputTab.Errors => UiText.Get("DevelopmentStudio.ErrorsTab", "Errors"),
         OutputTab.Coverage => UiText.Get("DevelopmentStudio.CoverageHeading", "Coverage"),
         OutputTab.Profile => UiText.Get("DevelopmentStudio.ProfileHeading", "Profile"),
         _ => UiText.Get("DevelopmentStudio.DebugHeading", "Debug"),
@@ -2664,9 +2828,36 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         WriteLine(buffer, x, y, w, $"{folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
     }
 
+    /// <summary>
+    /// The footer's hints for the panel that has the keys: the editing keys in the editor, the tab's keys in the output
+    /// panel, the explorer's keys in the explorer. Anything else gets the default line.
+    /// </summary>
+    private string ContextHints()
+    {
+        StudioPanelKind? focused = FocusedPanelKind();
+        if (focused == StudioPanelKind.Editor && SourceOpen)
+        {
+            return UiText.Get("Hints.DevelopmentStudioEditor", "Type to edit  Ctrl+S:save  F9:breakpoint  F5:debug  F7:output tab  Esc:close");
+        }
+
+        if (focused == StudioPanelKind.Output)
+        {
+            return _outputTab == OutputTab.Errors
+                ? UiText.Get("Hints.DevelopmentStudioErrors", "Enter:open the error at its line  F7:output tab  Esc:close")
+                : UiText.Get("Hints.DevelopmentStudioOutput", "Up/Down/PgUp/PgDn:scroll  F7:output tab  X:cancel  Esc:close");
+        }
+
+        if (focused == StudioPanelKind.Explorer)
+        {
+            return UiText.Get("Hints.DevelopmentStudioExplorer", "Enter:open  Left/Right:expand  Space:check  B/C/T/R:build/clean/test/run  M:main  K:SDKs  Esc:close");
+        }
+
+        return UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close");
+    }
+
     private void DrawFooter(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
-        string hints = UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close");
+        string hints = ContextHints();
         DrawStatusAndHints(buffer, x, y, w, _status, _statusSeverity switch
         {
             StatusSeverity.Error => colorScheme.Error,

@@ -2356,6 +2356,9 @@
   <data name="DevelopmentStudio.ErrorListHeading" xml:space="preserve">
     <value>Lista de errores</value>
   </data>
+  <data name="DevelopmentStudio.ErrorsTab" xml:space="preserve">
+    <value>Errores</value>
+  </data>
   <data name="DevelopmentStudio.FailedExit" xml:space="preserve">
     <value>{0} a échoué (code de sortie {1}).</value>
   </data>
@@ -2518,6 +2521,9 @@
   <data name="DevelopmentStudio.NothingFound" xml:space="preserve">
     <value>Aucune solution, aucun projet ni script trouvé dans ce dossier.</value>
   </data>
+  <data name="DevelopmentStudio.NothingToSave" xml:space="preserve">
+    <value>No hay cambios sin guardar.</value>
+  </data>
   <data name="DevelopmentStudio.OnlyCheckProjects" xml:space="preserve">
     <value>Seuls les projets .NET peuvent être cochés.</value>
   </data>
@@ -2559,6 +2565,12 @@
   </data>
   <data name="DevelopmentStudio.RunningState" xml:space="preserve">
     <value>En cours d'exécution.</value>
+  </data>
+  <data name="DevelopmentStudio.SaveFailed" xml:space="preserve">
+    <value>Error al guardar: {0}</value>
+  </data>
+  <data name="DevelopmentStudio.SavedFile" xml:space="preserve">
+    <value>Guardado {0}.</value>
   </data>
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Écriture de la SBOM...</value>
@@ -2613,6 +2625,9 @@
   </data>
   <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
     <value>Le fichier est trop volumineux pour être affiché ici.</value>
+  </data>
+  <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
+    <value>Cambios sin guardar en el editor: Ctrl+S los guarda primero.</value>
   </data>
   <data name="DevelopmentStudio.Watch" xml:space="preserve">
     <value>Espions</value>
@@ -6461,6 +6476,18 @@
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
     <value>F5:débogage F9:point d'arrêt F10/F11:pas Espace:cocher B/C/T/R:compiler/nettoyer/tester/lancer V:SDK K:SDKs S/F:SBOM F6/F7:volets F8:disposición Entrée:ouvrir Échap:fermer</value>
+  </data>
+  <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
+    <value>Escribir para editar  Ctrl+S:guardar  F9:punto de interrupción  F5:depurar  F7:pestaña  Esc:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
+    <value>Intro:abrir el error en su línea  F7:pestaña  Esc:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
+    <value>Intro:abrir  Izq/Der:desplegar  Space:marcar  B/C/T/R:compilar/limpiar/probar/ejecutar  M:principal  K:SDK  Esc:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
+    <value>Arriba/Abajo/PgUp/PgDn:desplazar  F7:pestaña  X:cancelar  Esc:cerrar</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:buscar/leer  Tab:campo  F3:completo  F2:navegador  Esc:cerrar</value>
