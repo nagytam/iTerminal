@@ -44,6 +44,12 @@ public interface IDevelopmentToolchain
     /// </summary>
     IReadOnlyList<ProcessCommand> Coverage(DevelopmentProject project, string resultsFolder) => [];
 
+    /// <summary>
+    /// The command that analyses the item's code. Its findings come out as build diagnostics (file, line, column and a
+    /// severity), so the Analysis tab reads them the way the Error List reads a build's. Null when the language has no analyzer here.
+    /// </summary>
+    ProcessCommand? Analyze(DevelopmentProject project) => null;
+
     /// <summary>The Cobertura report a coverage run left under <paramref name="resultsFolder"/>, or null when there is none.</summary>
     string? FindCoverageReport(string resultsFolder)
     {

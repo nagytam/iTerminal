@@ -23,6 +23,16 @@ public class StudioSettingsTest
     }
 
     [TestMethod]
+    public void TheAnalysisDurationsReadBackAsTheyWereWritten()
+    {
+        var durations = new Dictionary<string, double> { ["/src/App.slnx"] = 12.5 };
+
+        Assert.AreEqual(12.5, StudioSettings.DecodeDurations(StudioSettings.EncodeDurations(durations))["/src/App.slnx"]);
+        Assert.AreEqual(0, StudioSettings.DecodeDurations(null).Count);
+        Assert.AreEqual(0, StudioSettings.DecodeDurations("{not json").Count);
+    }
+
+    [TestMethod]
     public void AnEmptyEntryInTheListIsLeftOut()
     {
         CollectionAssert.AreEqual(new[] { "/src/App" }, StudioSettings.DecodeList("[\"\",null,\"/src/App\"]").ToArray());
