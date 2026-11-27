@@ -159,6 +159,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     private readonly StudioSourceEditor _editor;
     private readonly ViewListBox _outputListBox;
 
+    /// <summary>
+    /// The hotkey toolbar under the header: the commands of the component that has the focus. It never takes the focus (the keys
+    /// stay with the panels); a click on an item runs the command, as its key does.
+    /// </summary>
+    private readonly Toolbar _toolbar;
+
+    /// <summary>The commands the toolbar shows now, in its order: the index of a clicked item names one of them.</summary>
+    private IReadOnlyList<StudioCommand> _toolbarCommands = [];
+
     /// <summary>Guards everything the background tasks write: output, the debug state and the source.</summary>
     private readonly Lock _stateLock = new();
     private readonly List<string> _output = [];
@@ -310,6 +319,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             new ListBoxModel<string>(_outputItems) { TransformItem = (line, _) => new ListItem<string>(line) { Value = line, IsEnabled = true } },
             themeService);
 
+        _toolbar = new Toolbar(themeService) { CanFocus = false };
+        _toolbar.ItemInvoked += (_, index) => ToolbarItemInvoked(index);
+
         // Each panel is a component of its own; the dock places them in the order _layout gives.
         _dock = new DockPanel(themeService) { Gap = 1 };
         _panels[StudioPanelKind.Editor] = new StudioPanel(StudioPanelKind.Editor, _editor, EditorTitle, themeService);
@@ -319,6 +331,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             BandPainter = (buffer, x, y, width, colorScheme, focused) => DrawOutputTabs(buffer, x, y, width, colorScheme, focused),
         };
         ShowNoSource();
+        AddControl(_toolbar);
         AddControl(_dock);
         RebuildDock();
     }
@@ -424,9 +437,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             Position = new Position(0, 0);
         }
 
-        // The panels fill the frame between the header row (row 1) and the footer row (the second to last).
-        _dock.Position = new Position(1, 2);
-        _dock.ViewSize = new Size(Math.Max(0, (int)ViewSize.Width - 2), Math.Max(0, (int)ViewSize.Height - 4));
+        // The header row (row 1) and the hotkey toolbar (row 2) come first; the panels fill the frame down to the footer row (the second to last).
+        _toolbar.Position = new Position(1, 2);
+        _toolbar.ViewSize = new Size(Math.Max(0, (int)ViewSize.Width - 2), 1);
+        _dock.Position = new Position(1, 3);
+        _dock.ViewSize = new Size(Math.Max(0, (int)ViewSize.Width - 2), Math.Max(0, (int)ViewSize.Height - 5));
         base.OnInitializeLayout();
         LayoutPanelBodies();
     }
@@ -527,6 +542,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             case ConsoleKey.F5 when plain:
                 StartOrContinueDebugging();
                 return true;
+            case ConsoleKey.F5 when keyEvent.Control && keyEvent.Shift && !keyEvent.Alt:
+                StartOrContinueDebugging(debugTests: true);
+                return true;
             case ConsoleKey.F6 when plain:
                 ToggleExplorerMode();
                 return true;
@@ -621,12 +639,152 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 await OpenSdkManagerAsync();
                 return true;
             case ConsoleKey.X when plain:
-                if (_runCts is not null) await _runCts.CancelAsync();
+                await CancelRunAsync();
                 return true;
         }
 
         // Keys the dialog does not use (the arrows, Page Up and Down) go to the focused list.
         return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>
+    /// Shows the commands of the component that has the focus: the explorer's mode, the editor while a file is open, and the
+    /// output panel's tab. The toolbar is set only when its commands change, so a redraw costs a comparison.
+    /// </summary>
+    private void RefreshToolbar()
+    {
+        IReadOnlyList<StudioCommand> commands = StudioToolbar.CommandsFor(CurrentToolbarContext());
+        _toolbarCommands = commands;
+        var items = commands.Select(command => new ToolbarItem(StudioToolbar.CaptionOf(command), StudioToolbar.KeyOf(command))).ToList();
+        if (!items.SequenceEqual(_toolbar.Items)) _toolbar.Items = items;
+    }
+
+    private StudioToolbarContext CurrentToolbarContext()
+    {
+        switch (FocusedPanelKind())
+        {
+            case StudioPanelKind.Editor when SourceOpen:
+                return StudioToolbarContext.Editor;
+            case StudioPanelKind.Explorer:
+                return _explorerMode switch
+                {
+                    ExplorerMode.Solution => StudioToolbarContext.SolutionExplorer,
+                    ExplorerMode.Tests => StudioToolbarContext.TestExplorer,
+                    _ => StudioToolbarContext.FileExplorer,
+                };
+            case StudioPanelKind.Output:
+                return _outputTab switch
+                {
+                    OutputTab.Errors => StudioToolbarContext.ErrorsPanel,
+                    OutputTab.Debug => StudioToolbarContext.DebugPanel,
+                    OutputTab.Coverage => StudioToolbarContext.CoveragePanel,
+                    OutputTab.Profile => StudioToolbarContext.ProfilePanel,
+                    _ => StudioToolbarContext.OutputPanel,
+                };
+            default:
+                return StudioToolbarContext.Default;
+        }
+    }
+
+    /// <summary>A click on a toolbar item runs its command, as the command's key does.</summary>
+    private void ToolbarItemInvoked(int index)
+    {
+        if (index < 0 || index >= _toolbarCommands.Count) return;
+        RunStudioCommand(_toolbarCommands[index]);
+    }
+
+    /// <summary>Runs a toolbar command: the same action as its key in <see cref="HandleKeyEventAsync"/>.</summary>
+    private void RunStudioCommand(StudioCommand command)
+    {
+        switch (command)
+        {
+            case StudioCommand.Build:
+                RunSelected("build");
+                break;
+            case StudioCommand.Clean:
+                RunSelected("clean");
+                break;
+            case StudioCommand.Debug:
+                StartOrContinueDebugging();
+                break;
+            case StudioCommand.DebugTests:
+                StartOrContinueDebugging(debugTests: true);
+                break;
+            case StudioCommand.Run:
+                RunMainOrSelected("run");
+                break;
+            case StudioCommand.RunTests:
+                RunSelected("test");
+                break;
+            case StudioCommand.Stop:
+                StopDebugging();
+                break;
+            case StudioCommand.Cancel:
+                _ = CancelRunAsync();
+                break;
+            case StudioCommand.StepOver:
+                DebugStep(session => session.StepOverAsync());
+                break;
+            case StudioCommand.StepInto:
+                DebugStep(session => session.StepInAsync());
+                break;
+            case StudioCommand.StepOut:
+                DebugStep(session => session.StepOutAsync());
+                break;
+            case StudioCommand.Breakpoint:
+                ToggleBreakpointAtCursor();
+                break;
+            case StudioCommand.Save:
+                SaveSource();
+                break;
+            case StudioCommand.Open:
+                EnterPressed();
+                break;
+            case StudioCommand.Expand:
+                ExpandOrCollapseAtCursor(expand: true);
+                break;
+            case StudioCommand.Check:
+                ToggleCheckAtCursor();
+                break;
+            case StudioCommand.Main:
+                ToggleMainProgramAtCursor();
+                break;
+            case StudioCommand.Menu:
+                _ = ShowExplorerMenuAsync();
+                break;
+            case StudioCommand.SdkManager:
+                _ = OpenSdkManagerAsync();
+                break;
+            case StudioCommand.Coverage:
+                RunCoverage();
+                break;
+            case StudioCommand.Profile:
+                RunProfile();
+                break;
+            case StudioCommand.GoToFile:
+                OpenCoverageFileAtCursor();
+                break;
+            case StudioCommand.RemoveWatch:
+                RemoveWatchAtCursor();
+                break;
+            case StudioCommand.NextTab:
+                CycleOutputTab();
+                break;
+            case StudioCommand.Refresh:
+                _ = RefreshAsync();
+                break;
+            case StudioCommand.Panes:
+                ToggleExplorerMode();
+                break;
+            case StudioCommand.Layout:
+                ToggleLayoutMode();
+                break;
+        }
+    }
+
+    private async Task CancelRunAsync()
+    {
+        if (_runCts is not null) await _runCts.CancelAsync();
     }
 
     private void EnterPressed()
@@ -753,7 +911,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuBuild", "Build"), "B", () => RunSelected("build")));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuRun", "Run"), "R", () => RunSelected("run")));
-        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuDebug", "Debug"), "F5", StartOrContinueDebugging));
+        menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuDebug", "Debug"), "F5", () => StartOrContinueDebugging()));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuTest", "Test"), "T", () => RunSelected("test")));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuClean", "Clean"), "C", () => RunSelected("clean")));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuCleanFolders", "Clean bin and obj"), "Shift+C", AskDeepClean));
@@ -2535,7 +2693,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     #region Debugging
 
     /// <summary>F5: starts debugging the Main program (or the selected item when none is set), or continues the program when it is stopped.</summary>
-    private void StartOrContinueDebugging()
+    private void StartOrContinueDebugging(bool debugTests = false)
     {
         if (_session is not null)
         {
@@ -2560,7 +2718,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         // The build's output is what the user looks at first: the Output tab shows it, and the panel takes the focus.
         _outputTab = OutputTab.Output;
         _outputListBox.SetFocus();
-        _ = StartDebuggingAsync(item, ToolchainFor(item), debugTests: _explorerMode == ExplorerMode.Tests);
+        _ = StartDebuggingAsync(item, ToolchainFor(item), debugTests: debugTests || _explorerMode == ExplorerMode.Tests);
     }
 
     private async Task StartDebuggingAsync(DevelopmentProject item, IDevelopmentToolchain toolchain, bool debugTests)
@@ -2838,6 +2996,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     public override void Draw(IBuffer buffer)
     {
+        RefreshToolbar();
         base.Draw(buffer);
 
         if (ViewSize.IsEmpty) return;

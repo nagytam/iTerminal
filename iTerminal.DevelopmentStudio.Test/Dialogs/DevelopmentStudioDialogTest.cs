@@ -1,5 +1,6 @@
 using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iConsole.Controls;
+using iConsole.Data;
 using iConsole.Services;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
@@ -903,6 +904,75 @@ public class DevelopmentStudioDialogTest
         FocusPanel(harness.Dialog, StudioPanelKind.Explorer);
         AssertScreenContains(Render(harness.Dialog), "Left/Right:expand");
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheHotKeyToolbarOffersTheCommandsOfTheFocusedComponent()
+    {
+        var harness = await OpenAsync([Solution, App, AppTest]);
+
+        // The Solution Explorer has the focus when the studio opens.
+        var screen = Render(harness.Dialog);
+        AssertScreenContains(screen, "Build B", "the toolbar names the Build key");
+        AssertScreenContains(screen, "Clean C");
+        AssertScreenContains(screen, "Debug F5");
+        AssertScreenContains(screen, "Run Ctrl+F5");
+        AssertScreenContains(screen, "Debug tests Ctrl+Shift+F5");
+        AssertScreenContains(screen, "Run tests T");
+
+        FocusPanel(harness.Dialog, StudioPanelKind.Output);
+        screen = Render(harness.Dialog);
+        AssertScreenContains(screen, "Next tab F7", "the output panel offers its tab key");
+        AssertScreenDoesNotContain(screen, "Debug tests", "the output panel does not offer the explorer's commands");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheHotKeyToolbarChangesWithTheExplorerMode()
+    {
+        var harness = await OpenAsync([Solution, App, AppTest]);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F6));
+        AssertScreenContains(Render(harness.Dialog), "Coverage O", "the Test Explorer offers the coverage of the test project");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F6));
+        var screen = Render(harness.Dialog);
+        AssertScreenContains(screen, "Refresh Ctrl+R", "the File Explorer offers a refresh");
+        AssertScreenDoesNotContain(screen, "Debug tests", "the File Explorer has no test commands");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ClickingAToolbarItemRunsItsCommandAsItsKeyDoes()
+    {
+        var runner = new FakeProcessRunner { Output = ["Build succeeded."] };
+        var harness = await OpenAsync([Solution, App, AppTest], runner: runner);
+
+        var (row, column) = Locate(Render(harness.Dialog), "Build B");
+        await harness.Dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(column + 1, row), LeftClicked = true });
+        await WaitIdleAsync(harness.Dialog);
+
+        var command = runner.Commands.Single();
+        CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx" }, command.Arguments.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CtrlShiftF5StartsTheDebugOfTestsOnTheSolutionExplorer()
+    {
+        var runner = new FakeProcessRunner();
+        var harness = await OpenAsync([Solution, App, AppTest], runner: runner);
+
+        // The cursor moves from the solution to its first project, which is the item a debug starts.
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F5, shift: true, control: true));
+        await WaitIdleAsync(harness.Dialog);
+
+        // The build runs first; .NET tests have no debugger yet, so the studio says so instead of starting one.
+        Assert.AreEqual(1, runner.Commands.Count, "the project is built before the debug");
+        await WaitForStatusAsync(harness.Dialog, "not available");
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningAFileMovesTheFocusToTheEditor()

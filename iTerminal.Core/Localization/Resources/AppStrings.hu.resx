@@ -2689,6 +2689,87 @@
   <data name="DevelopmentStudio.TooLarge" xml:space="preserve">
     <value>Il file è troppo grande per essere mostrato qui.</value>
   </data>
+  <data name="DevelopmentStudio.Toolbar.Breakpoint" xml:space="preserve">
+    <value>Töréspont</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Build" xml:space="preserve">
+    <value>Fordítás</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Cancel" xml:space="preserve">
+    <value>Megszakítás</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Check" xml:space="preserve">
+    <value>Kijelölés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Clean" xml:space="preserve">
+    <value>Tisztítás</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Coverage" xml:space="preserve">
+    <value>Lefedettség</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Debug" xml:space="preserve">
+    <value>Hibakeresés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.DebugTests" xml:space="preserve">
+    <value>Tesztek hibakeresése</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Expand" xml:space="preserve">
+    <value>Kibontás/összecsukás</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.GoToFile" xml:space="preserve">
+    <value>Fájl megnyitása</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Layout" xml:space="preserve">
+    <value>Elrendezés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Main" xml:space="preserve">
+    <value>Főprogram</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Menu" xml:space="preserve">
+    <value>Menü</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.NextTab" xml:space="preserve">
+    <value>Következő fül</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Open" xml:space="preserve">
+    <value>Megnyitás</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Panes" xml:space="preserve">
+    <value>Panelek</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Refresh" xml:space="preserve">
+    <value>Frissítés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.RemoveWatch" xml:space="preserve">
+    <value>Figyelő törlése</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Run" xml:space="preserve">
+    <value>Futtatás</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.RunTests" xml:space="preserve">
+    <value>Tesztek futtatása</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Save" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.SdkManager" xml:space="preserve">
+    <value>SDK</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.StepInto" xml:space="preserve">
+    <value>Belépés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.StepOut" xml:space="preserve">
+    <value>Kilépés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.StepOver" xml:space="preserve">
+    <value>Átlépés</value>
+  </data>
+  <data name="DevelopmentStudio.Toolbar.Stop" xml:space="preserve">
+    <value>Leállítás</value>
+  </data>
   <data name="DevelopmentStudio.UnsavedSource" xml:space="preserve">
     <value>Nem mentett módosítások a szerkesztőben: a Ctrl+S menti őket először.</value>
   </data>
