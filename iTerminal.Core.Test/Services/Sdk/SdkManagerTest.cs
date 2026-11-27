@@ -81,19 +81,49 @@ public class SdkManagerTest
 
     private static string Hex(HashAlgorithm algorithm, byte[] bytes) => Convert.ToHexString(algorithm.ComputeHash(bytes)).ToLowerInvariant();
 
+    /// <summary>The .NET host's file name on this platform: the Windows archive holds <c>dotnet.exe</c>.</summary>
+    private static string DotNetHost => OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet";
+
+    /// <summary>The archive the feed lists for this platform: a zip on Windows, a tar.gz elsewhere.</summary>
+    private static string DotNetExtension => OperatingSystem.IsWindows() ? ".zip" : ".tar.gz";
+
+    /// <summary>An SDK archive of the given files, in the format the feed lists for this platform.</summary>
+    private static byte[] DotNetArchive(params (string Path, string Content)[] files)
+    {
+        if (!OperatingSystem.IsWindows()) return TarGz(files);
+        string staging = Path.Combine(Path.GetTempPath(), "SdkArchive_" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            foreach (var (path, content) in files)
+            {
+                string full = Path.Combine(staging, path);
+                Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+                File.WriteAllText(full, content);
+            }
+
+            using var memory = new MemoryStream();
+            ZipFile.CreateFromDirectory(staging, memory, CompressionLevel.Fastest, includeBaseDirectory: false);
+            return memory.ToArray();
+        }
+        finally
+        {
+            if (Directory.Exists(staging)) Directory.Delete(staging, recursive: true);
+        }
+    }
+
     private static AvailableSdk DotNet(byte[] archive, string digest, string version = "10.0.404") => new(
-        SdkKind.DotNet, version, "10.0", "https://example.test/" + version + ".tar.gz", version + ".tar.gz", digest, HashAlgorithmName.SHA512, archive.Length, IsLatest: true);
+        SdkKind.DotNet, version, "10.0", "https://example.test/" + version + DotNetExtension, version + DotNetExtension, digest, HashAlgorithmName.SHA512, archive.Length, IsLatest: true);
 
     [TestMethod]
     public async Task InstallsADotNetSdkWhoseDigestMatchesAndListsIt()
     {
-        byte[] archive = TarGz(("dotnet", "host"), ("sdk/10.0.404/dotnet.dll", "sdk"));
+        byte[] archive = DotNetArchive((DotNetHost, "host"), ("sdk/10.0.404/dotnet.dll", "sdk"));
         var manager = new SdkManager(new HttpClient(new StubHandler(archive)), Runtimes, new MemorySettings());
 
         string home = await manager.InstallAsync(DotNet(archive, Hex(SHA512.Create(), archive)), null, CancellationToken.None);
 
         Assert.AreEqual(Path.Combine(Runtimes, "dotnet", "10.0.404"), home);
-        Assert.IsTrue(File.Exists(Path.Combine(home, "dotnet")));
+        Assert.IsTrue(File.Exists(Path.Combine(home, DotNetHost)));
         var installed = manager.InstalledDotNetSdks();
         Assert.AreEqual(1, installed.Count);
         Assert.AreEqual("10.0.404", installed[0].Version);
@@ -105,7 +135,7 @@ public class SdkManagerTest
     [TestMethod]
     public async Task RefusesAnArchiveWhoseDigestDoesNotMatchAndLeavesNothingBehind()
     {
-        byte[] archive = TarGz(("dotnet", "host"), ("sdk/10.0.404/dotnet.dll", "sdk"));
+        byte[] archive = DotNetArchive((DotNetHost, "host"), ("sdk/10.0.404/dotnet.dll", "sdk"));
         var manager = new SdkManager(new HttpClient(new StubHandler(archive)), Runtimes, new MemorySettings());
 
         await Assert.ThrowsExactlyAsync<InvalidDataException>(() =>
@@ -120,7 +150,7 @@ public class SdkManagerTest
     [TestMethod]
     public async Task RefusesAnArchiveThatIsNotAnSdk()
     {
-        byte[] archive = TarGz(("readme.txt", "not an SDK"));
+        byte[] archive = DotNetArchive(("readme.txt", "not an SDK"));
         var manager = new SdkManager(new HttpClient(new StubHandler(archive)), Runtimes, new MemorySettings());
 
         var error = await Assert.ThrowsExactlyAsync<InvalidDataException>(() =>
@@ -153,7 +183,7 @@ public class SdkManagerTest
     [TestMethod]
     public async Task AnInstalledVersionIsNotDownloadedAgain()
     {
-        byte[] archive = TarGz(("dotnet", "host"), ("sdk/10.0.404/dotnet.dll", "sdk"));
+        byte[] archive = DotNetArchive((DotNetHost, "host"), ("sdk/10.0.404/dotnet.dll", "sdk"));
         var manager = new SdkManager(new HttpClient(new StubHandler(archive)), Runtimes, new MemorySettings());
         var sdk = DotNet(archive, Hex(SHA512.Create(), archive));
         string first = await manager.InstallAsync(sdk, null, CancellationToken.None);
