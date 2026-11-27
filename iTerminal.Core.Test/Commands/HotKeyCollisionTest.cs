@@ -49,6 +49,23 @@ public class HotKeyCollisionTest
     }
 
     /// <summary>The calendar is a global command on Ctrl+D; git sync is offered in the panel and must not share it.</summary>
+    /// <summary>
+    /// The menus' Ctrl+letter hot keys (F, E, N, T, H) open the menus from a file panel, so no command may take one.
+    /// The unit converter, the Network Browser and the Brief listing used to be on Ctrl+E, Ctrl+N and Ctrl+T.
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void NoCommandTakesAMenuHotKey()
+    {
+        Assert.IsFalse(IsMenuHotKey(new UnitConverterDialogCommand(null!).Key), "Ctrl+E is the Edit menu's");
+        Assert.IsFalse(IsMenuHotKey(new NetworkBrowserDialogCommand(null!).Key), "Ctrl+N is the Navigate menu's");
+        Assert.IsFalse(IsMenuHotKey(new iTerminal.Core.Commands.Listing.ToggleListingModeCommand(Mock.Of<iConsole.Interfaces.IContentModelService>(), null!).Key),
+            "Ctrl+T is the Tools menu's");
+    }
+
+    private static bool IsMenuHotKey(Key? key) =>
+        key is { Control: true, Shift: false, Alt: false } && key.ConsoleKey is ConsoleKey.F or ConsoleKey.E or ConsoleKey.N or ConsoleKey.T or ConsoleKey.H;
+
     [Timeout(60_000)]
     [TestMethod]
     public void GitSyncAndTheCalendarHaveDifferentChords()

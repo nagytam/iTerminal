@@ -22,16 +22,16 @@ public class UnitConverterDialogCommandTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void Constructor_SetsCtrlEKey()
+    public void Constructor_SetsAltShiftF5Key()
     {
         var themeService = CreateThemeService();
         var command = new UnitConverterDialogCommand(CreateDialog(themeService));
 
         Assert.IsNotNull(command.Key);
-        Assert.AreEqual(ConsoleKey.E, command.Key!.ConsoleKey);
-        Assert.IsTrue(command.Key.Control);
-        Assert.IsFalse(command.Key.Shift);
-        Assert.IsFalse(command.Key.Alt);
+        Assert.AreEqual(ConsoleKey.F5, command.Key!.ConsoleKey);
+        Assert.IsFalse(command.Key.Control);
+        Assert.IsTrue(command.Key.Shift);
+        Assert.IsTrue(command.Key.Alt);
     }
 
     [Timeout(60_000)]

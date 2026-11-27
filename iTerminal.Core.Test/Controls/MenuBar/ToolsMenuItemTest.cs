@@ -39,7 +39,7 @@ public class ToolsMenuItemTest
         var entries = Entries(menu).Select(m => m.Text).ToList();
 
         CollectionAssert.Contains(entries, "Calculator" + (char)9 + "Ctrl+A");
-        CollectionAssert.Contains(entries, "Unit Converter" + (char)9 + "Ctrl+E");
+        CollectionAssert.Contains(entries, "Unit Converter" + (char)9 + "Shift+Alt+F5");
     }
 
     [Timeout(60_000)]

@@ -667,7 +667,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
     /// <summary>
     /// The listing a file panel shows. Full is the one-column row (name, size, date, time). Brief is names in
-    /// columns (Ctrl+T). Long is the one-column row with an attributes column and no size (palette). Info shows
+    /// columns (Alt+Shift+F11). Long is the one-column row with an attributes column and no size (palette). Info shows
     /// the other panel's cursor entry as label/value rows and is read-only here (palette; Esc leaves it).
     /// </summary>
     public enum PanelListingMode
@@ -1295,10 +1295,17 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
     private bool IsCommandLineVisible() => FindContent()?.IsCommandLineVisible ?? false;
 
-    /// <summary>The keys that still work while Info is on: navigation without modifiers, Tab, F1, F10, Ctrl+T and Ctrl+F.</summary>
+    /// <summary>The keys that still work while Info is on: navigation without modifiers, Tab, F1, F10, the Brief toggle and the menu hot keys.</summary>
     private static bool IsInfoPassThroughKey(KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey is ConsoleKey.Tab or ConsoleKey.F1 or ConsoleKey.F10)
+        {
+            return true;
+        }
+
+        // The Brief toggle (Alt+Shift+F11) and the menus' Ctrl+letter hot keys: the menus take no action on the hidden cursor
+        // themselves, and what they run is the user's own choice.
+        if (keyEvent.Alt && keyEvent.Shift && !keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.F11)
         {
             return true;
         }
@@ -1310,7 +1317,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             return true;
         }
 
-        return keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt && keyEvent.ConsoleKey is ConsoleKey.T or ConsoleKey.F;
+        return keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt
+            && keyEvent.ConsoleKey is ConsoleKey.F or ConsoleKey.E or ConsoleKey.N or ConsoleKey.T or ConsoleKey.H;
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

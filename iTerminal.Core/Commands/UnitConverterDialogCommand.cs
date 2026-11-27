@@ -8,7 +8,8 @@ public class UnitConverterDialogCommand(UnitConverterDialog unitConverterDialog)
     public override string Title => "Unit Converter";
     public override string Description => "Open the unit converter (length, mass, temperature and more).";
 
-    // Ctrl+E. Key constructor order is (consoleKey, shift, alt, control).
+    // Alt+Shift+F5. Not Ctrl+E: that is the Edit menu's hot key, which a file panel must open.
+    // Key constructor order is (consoleKey, shift, alt, control).
     public override Key? Key { get; init; } =
-        new Key(ConsoleKey.E, false, false, true);
+        new Key(ConsoleKey.F5, true, true, false);
 }

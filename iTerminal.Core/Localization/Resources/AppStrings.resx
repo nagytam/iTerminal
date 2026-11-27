@@ -9104,7 +9104,7 @@
     <value>Folders, favourites and remote hosts: Folder selector (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Saved hosts and their credentials: Network browser (Ctrl+N).</value>
+    <value>Saved hosts and their credentials: Network browser (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Network interfaces: Network manager.</value>

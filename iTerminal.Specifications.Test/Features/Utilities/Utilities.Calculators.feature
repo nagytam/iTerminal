@@ -1,6 +1,6 @@
 @ignore
 Feature: Calculator, unit converter, calendar and to-do list
-  Ctrl+A opens the calculator, Ctrl+E the unit converter, Ctrl+D the calendar and Ctrl+Y the to-do list.
+  Ctrl+A opens the calculator, Alt+Shift+F5 the unit converter, Ctrl+D the calendar and Ctrl+Y the to-do list.
 
   Background:
     Given iTerminal has just started
@@ -17,12 +17,12 @@ Feature: Calculator, unit converter, calendar and to-do list
     Then the result says the division is not defined
 
   Scenario: The unit converter changes kilometres to miles
-    When I press "Ctrl+E"
+    When I press "Alt+Shift+F5"
     And I convert 10 kilometres to miles
     Then the result shows about 6.21 miles
 
   Scenario: The unit converter refuses units of different kinds
-    When I press "Ctrl+E"
+    When I press "Alt+Shift+F5"
     And I convert 10 kilograms to metres
     Then the converter says the units are of different kinds
 

@@ -8898,7 +8898,7 @@
     <value>Cartelle, preferiti e host remoti: selettore cartelle (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Host salvati e loro credenziali: esplora rete (Ctrl+N).</value>
+    <value>Host salvati e loro credenziali: esplora rete (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Interfacce di rete: gestione rete.</value>

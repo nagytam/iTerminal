@@ -371,10 +371,10 @@ public class HotKeys : StatusBarItem
         };
         AddControl(calculatorDialogButton);
 
-        var unitConverterDialogButton = new Button("Ctrl-E-Convert", new UnitConverterDialogCommand(unitConverterDialog), themeService)
+        var unitConverterDialogButton = new Button("Shift-Alt-F5-Convert", new UnitConverterDialogCommand(unitConverterDialog), themeService)
         {
             Position = new Position(0, 0),
-            ViewSize = new Size(15, 1),
+            ViewSize = new Size(21, 1),
             IsVisible = false
         };
         AddControl(unitConverterDialogButton);

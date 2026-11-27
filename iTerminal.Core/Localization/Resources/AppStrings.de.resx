@@ -8962,7 +8962,7 @@
     <value>Ordner, Favoriten und Remote-Hosts: Ordnerauswahl (Ctrl+F1).</value>
   </data>
   <data name="SettingsPage.Hosts" xml:space="preserve">
-    <value>Gespeicherte Hosts und ihre Zugangsdaten: Netzwerkbrowser (Ctrl+N).</value>
+    <value>Gespeicherte Hosts und ihre Zugangsdaten: Netzwerkbrowser (Alt+Shift+F8).</value>
   </data>
   <data name="SettingsPage.Interfaces" xml:space="preserve">
     <value>Netzwerkschnittstellen: Netzwerkverwaltung.</value>

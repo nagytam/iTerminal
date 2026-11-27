@@ -46,7 +46,7 @@ public class DialogsTest
     [DataRow("F12", "ScreenManagerDialog")]
     [DataRow("Ctrl+F1", "FolderSelectorDialog")]
     [DataRow("Ctrl+A", "CalculatorDialog")]
-    [DataRow("Ctrl+E", "UnitConverterDialog")]
+    [DataRow("Alt+Shift+F5", "UnitConverterDialog")]
     [DataRow("Ctrl+D", "CalendarDialog")]
     [DataRow("Ctrl+Y", "ToDoListDialog")]
     [DataRow("Ctrl+W", "MailDialog")]

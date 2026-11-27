@@ -1,13 +1,13 @@
 @ignore
 Feature: Panel views and navigation keys
-  Ctrl+T shows the names in columns, Ctrl+U swaps the panels, Ctrl+R re-reads a folder and Ctrl+Space shows a folder's size.
+  Alt+Shift+F11 shows the names in columns, Ctrl+U swaps the panels, Ctrl+R re-reads a folder and Ctrl+Space shows a folder's size.
 
   Background:
     Given iTerminal has just started
 
-  Scenario: Ctrl+T shows the names in several columns
+  Scenario: Alt+Shift+F11 shows the names in several columns
     Given the left panel lists many files
-    When I press "Ctrl+T"
+    When I press "Alt+Shift+F11"
     Then the names are shown in several columns, filled row by row
 
   Scenario: Arrow keys move between columns in brief view
@@ -48,5 +48,5 @@ Feature: Panel views and navigation keys
 
   Scenario: The Preview panel offers no brief view
     Given the right panel is the preview of "readme.txt"
-    When I press "Ctrl+T" in the right panel
+    When I press "Alt+Shift+F11" in the right panel
     Then the right panel stays in its normal view

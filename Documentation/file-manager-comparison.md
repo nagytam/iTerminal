@@ -52,7 +52,7 @@ verified.
 | Horizontal split (panels stacked) | - | Y | Y | Y | Y | Y | - | - | - | - | - |
 | Adjustable panel width ratio | - | Y | Y | Y | Y | Y | Y | - | - | Y | Y |
 | Hide one panel | - | Y | Y | Y | Y | Y | Y | - | - | - | - |
-| Brief (multi-column names) | Y (Ctrl+T) | Y | Y | Y | Y | Y | Y | - | - | - | - |
+| Brief (multi-column names) | Y (Alt+Shift+F11) | Y | Y | Y | Y | Y | Y | - | - | - | - |
 | Long (attributes column) | Y (palette) | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | Full detail (size, date, attributes) | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | Info panel (other panel's entry details) | Y (palette) | Y | Y | Y | Y | Y | Y | - | Y | - | - |
