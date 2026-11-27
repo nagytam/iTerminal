@@ -2410,6 +2410,9 @@
   <data name="DevelopmentStudio.HintCheckAll" xml:space="preserve">
     <value>Cocher tous les projets / tous les projets de test</value>
   </data>
+  <data name="DevelopmentStudio.HintClose" xml:space="preserve">
+    <value>Cerrar el estudio. Esc no lo cierra.</value>
+  </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Compiler, nettoyer, tester ou exécuter l'élément sélectionné</value>
   </data>
@@ -2451,6 +2454,9 @@
   </data>
   <data name="DevelopmentStudio.HintSdkManager" xml:space="preserve">
     <value>Instalar SDK de .NET y JDK, y elegir el JDK de las compilaciones y ejecuciones de Java</value>
+  </data>
+  <data name="DevelopmentStudio.HintSettings" xml:space="preserve">
+    <value>Ajustes: pestañas iniciales, SDK y formato SBOM, disposición y estimaciones de análisis</value>
   </data>
   <data name="DevelopmentStudio.HintStart" xml:space="preserve">
     <value>Démarrer le débogage ou continuer</value>
@@ -2703,6 +2709,51 @@
   </data>
   <data name="DevelopmentStudio.Watching" xml:space="preserve">
     <value>Surveillance de {0}.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.AnalysisHint" xml:space="preserve">
+    <value>Un análisis de código muestra cuánto tardó el último de su elemento. Al olvidarlo no se muestra estimación hasta el siguiente análisis.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
+    <value>V cambia el SDK y F el formato del SBOM; los cambios se conservan.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
+    <value>Pestaña Explorador al iniciar</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ForgetDurations" xml:space="preserve">
+    <value>Olvidar las estimaciones de tiempo del análisis</value>
+  </data>
+  <data name="DevelopmentStudioSettings.GeneralHint" xml:space="preserve">
+    <value>F6 y F7 también cambian estos ajustes: el estudio se abre en la pestaña en la que estaba por última vez.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.LayoutHint" xml:space="preserve">
+    <value>Devuelve los paneles a la disposición con la que empieza un estudio nuevo. F8 también los mueve.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.OutputAtStart" xml:space="preserve">
+    <value>Pestaña Salida al iniciar</value>
+  </data>
+  <data name="DevelopmentStudioSettings.RestoreLayout" xml:space="preserve">
+    <value>Restaurar la disposición predeterminada</value>
+  </data>
+  <data name="DevelopmentStudioSettings.SbomFormat" xml:space="preserve">
+    <value>Formato del SBOM</value>
+  </data>
+  <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
+    <value>SDK para compilar, ejecutar y probar</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
+    <value>4-Análisis</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
+    <value>2-Compilación</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
+    <value>1-General</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
+    <value>3-Disposición</value>
+  </data>
+  <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
+    <value>Ajustes del estudio de desarrollo</value>
   </data>
   <data name="Dialog.AddServer" xml:space="preserve">
     <value>Añadir un servidor</value>
@@ -6544,22 +6595,34 @@
     <value>Tab:campo siguiente  Arriba/Abajo:elegir  F5:actualizar tasas  F6:intercambiar  Esc:cerrar</value>
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
-    <value>F5:débogage F9:point d'arrêt F10/F11:pas Espace:cocher B/C/T/R:compiler/nettoyer/tester/lancer V:SDK K:SDKs S/F:SBOM F6/F7:volets F8:disposición Entrée:ouvrir Échap:fermer</value>
+    <value>F5:depurar  F9:punto de interrupción  F10/F11:paso  Mayús+F5:detener  Espacio:marcar  B/C/T/R:compilar/limpiar/probar/ejecutar  V:SDK  K:SDK  N:analizar  U:NuGet  S/F:SBOM  O/P:cobertura/perfil  F6/F7:pestañas  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
   </data>
   <data name="Hints.DevelopmentStudioAnalysis" xml:space="preserve">
-    <value>Intro o clic:abrir el hallazgo en su línea  N:analizar  F7:pestaña  X:cancelar  Esc:cerrar</value>
+    <value>Arriba/Abajo/RePág/AvPág:desplazar  Intro o clic:abrir el hallazgo en su línea  N:analizar  X:cancelar  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioCoverage" xml:space="preserve">
+    <value>Arriba/Abajo/RePág/AvPág:desplazar  G:abrir el archivo bajo el cursor  O:medir la cobertura  X:cancelar  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioDebug" xml:space="preserve">
+    <value>Arriba/Abajo/RePág/AvPág:desplazar  W:vigilar la palabra bajo el cursor  Supr:quitar la vigilancia  F5:iniciar o continuar  Mayús+F5:detener  F9:punto de interrupción  F10/F11:paso  Mayús+F11:paso a paso saliente  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
   </data>
   <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
-    <value>Escribir para editar  Ctrl+S:guardar  F9:punto de interrupción  F5:depurar  F7:pestaña  Esc:cerrar</value>
+    <value>Escriba para editar  Ctrl+S:guardar  Ctrl+R:actualizar  F5:depurar  Mayús+F5:detener  F9:punto de interrupción  F10/F11:paso  Mayús+F11:paso a paso saliente  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
   </data>
   <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
-    <value>Intro:abrir el error en su línea  F7:pestaña  Esc:cerrar</value>
+    <value>Arriba/Abajo/RePág/AvPág:desplazar  Intro:abrir el error en su línea  X:cancelar  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
   </data>
   <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
-    <value>Intro:abrir  Izq/Der:desplegar  Space:marcar  B/C/T/R:compilar/limpiar/probar/ejecutar  M:principal  K:SDK  Esc:cerrar</value>
+    <value>Arriba/Abajo:mover  Intro:abrir, ejecutar una prueba o expandir  Izq/Der:contraer o expandir  Espacio:marcar  A:marcar todo  Mayús+T:marcar pruebas  B/C/T/R:compilar/limpiar/probar/ejecutar  Ctrl+F5:ejecutar  F5:depurar  M:principal  V:SDK  K:SDK  N:analizar  U:NuGet  S/F:SBOM  O/P:cobertura/perfil  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+R:actualizar  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioLayout" xml:space="preserve">
+    <value>Flechas:mover el panel a ese borde  Mayús+flechas:cambiar tamaño  Esc o F8:salir del modo de disposición</value>
   </data>
   <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
-    <value>Arriba/Abajo/PgUp/PgDn:desplazar  F7:pestaña  X:cancelar  Esc:cerrar</value>
+    <value>Arriba/Abajo/RePág/AvPág:desplazar  B/C/T/R:compilar/limpiar/probar/ejecutar  F5:depurar  Mayús+F5:detener  X:cancelar  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
+  </data>
+  <data name="Hints.DevelopmentStudioProfile" xml:space="preserve">
+    <value>Arriba/Abajo/RePág/AvPág:desplazar  P:perfilar el script seleccionado  X:cancelar  F6:pestaña Explorador  F7:pestaña Salida  F8:disposición  Ctrl+,:ajustes  Ctrl+W:cerrar</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:buscar/leer  Tab:campo  F3:completo  F2:navegador  Esc:cerrar</value>

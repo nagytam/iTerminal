@@ -15,7 +15,7 @@
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="3.0.0" />
     <PackageReference Include="FluentFTP" Version="55.1.0" />
-    <PackageReference Include="NfsSharp.Client" Version="1.2.0" />
+    <PackageReference Include="NfsSharp.Client" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="11.0.0" />
@@ -40,7 +40,7 @@
     <!-- SkiaSharp and Svg.Skia (the SVG and picture decoders) arrive through iConsole.Media.Video and iConsole.Formats,
          which own their versions and natives; do not repeat them here. -->
     <!-- The zstd decoder for the Ollama release, which Linux ships as .tar.zst (.NET has none in its BCL). -->
-    <PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.9.1" />
   </ItemGroup>
 
   <ItemGroup>
