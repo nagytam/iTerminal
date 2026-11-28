@@ -1177,6 +1177,21 @@ public class DevelopmentStudioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task CtrlLetterOpensEachMenuTitle()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        (ConsoleKey Key, char Letter)[] titles = [(ConsoleKey.F, 'f'), (ConsoleKey.B, 'b'), (ConsoleKey.G, 'g'), (ConsoleKey.E, 'e'), (ConsoleKey.T, 't')];
+        foreach ((ConsoleKey key, char letter) in titles)
+        {
+            bool handled = await harness.Dialog.HandleKeyEventAsync(Key(key, letter, control: true));
+
+            Assert.IsTrue(handled, $"Ctrl+{char.ToUpperInvariant(letter)} is the studio's menu hot key");
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task AMenuEntryRunsTheCommandItsHotKeyRuns()
     {
         var runner = new FakeProcessRunner();

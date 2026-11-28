@@ -520,7 +520,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F12", UiText.Get("DevelopmentStudio.HintMenuBar", "The menu bar: File, Build, Debug, View and Tools (a click on a title opens its menu too)"));
+        yield return ("F12, Ctrl+F/B/G/E/T",UiText.Get("DevelopmentStudio.HintMenuBar", "The menu bar: File, Build, Debug, View and Tools (a click on a title opens its menu too)"));
         yield return ("F5", UiText.Get("DevelopmentStudio.HintStart", "Start debugging, or continue"));
         yield return ("D", UiText.Get("DevelopmentStudio.HintConfiguration", "Switch the build configuration: Debug or Release (Release disables debugging)"));
         yield return ("Ctrl+F5", UiText.Get("DevelopmentStudio.HintRunNoDebug", "Run without debugging"));
@@ -596,6 +596,22 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.F12 when plain:
                 await OpenMenuBarAsync(MenuBarTitle.File);
+                return true;
+            // Ctrl+letter opens a title's menu, as the main window's menus do. The editor keeps Ctrl+D (duplicate line), so Debug is Ctrl+G.
+            case ConsoleKey.F when ctrl:
+                await OpenMenuBarAsync(MenuBarTitle.File);
+                return true;
+            case ConsoleKey.B when ctrl:
+                await OpenMenuBarAsync(MenuBarTitle.Build);
+                return true;
+            case ConsoleKey.G when ctrl:
+                await OpenMenuBarAsync(MenuBarTitle.Debug);
+                return true;
+            case ConsoleKey.E when ctrl:
+                await OpenMenuBarAsync(MenuBarTitle.View);
+                return true;
+            case ConsoleKey.T when ctrl:
+                await OpenMenuBarAsync(MenuBarTitle.Tools);
                 return true;
             case ConsoleKey.F9 when plain:
                 ToggleBreakpointAtCursor();

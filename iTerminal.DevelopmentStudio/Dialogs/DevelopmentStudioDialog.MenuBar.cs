@@ -5,8 +5,8 @@ using iConsole.Localization;
 namespace iTerminal.DevelopmentStudio.Dialogs;
 
 /// <summary>
-/// The studio's menu bar. Its titles lead the header row, and F12 (File) or a click on a title opens that title's menu below
-/// the header. Every entry runs the method its hot key runs, and shows the hot key beside it, so the menus list every command
+/// The studio's menu bar. Its titles lead the header row. F12 (File), Ctrl+F, Ctrl+B, Ctrl+G, Ctrl+E and Ctrl+T, or a click on a
+/// title, opens that title's menu below the header. Every entry runs the method its hot key runs, and shows the hot key beside it, so the menus list every command
 /// of the studio: the keys stay as they are, and the menus are a second way to reach them.
 /// </summary>
 public partial class DevelopmentStudioDialog
