@@ -199,3 +199,84 @@ Features considered and skipped: Docker Compose launch profiles (VS; needs a con
 - Persisting breakpoints: present; item 25 is built.
 - Git operations and file diff in the file manager: present outside the studio (`GitClientDialog`, `DiffFilesDialogCommand`); items 39 and 42 only concern the studio's editor.
 - Toggle comment and line tools in the editor: present (`TextEditorControl`).
+
+#### Survey 3: PyCharm: Python environments, run configurations, packages, tests, inspections, tools
+
+Basis: the official documentation, not run-time behaviour. PyCharm from www.jetbrains.com/help/pycharm (the pages show "PyCharm 2026.3 Help" with page dates between 2026-02-13 and 2026-11-17; the Professional edition is named where a page says so). Surveyed on 2026-11-28 at branch `feature/devstudio-menu-bar`, commit `f40c66ec`, edited in the working tree (no branch switch, no commit). "Not found" means a case-insensitive grep of `*.cs` in `iTerminal.DevelopmentStudio/`, `iTerminal.Core/` and `iConsole/` on that commit found nothing for the listed terms; a "partly present" item says what exists. Items 1 to 42 are not repeated: where PyCharm offers what an earlier item already covers, the item number is given instead.
+
+Sources (every IDE named under "Seen in" appears here; rows marked unverified come from a search result only):
+
+| IDE | Feature | Area | Source | Version or date | Description |
+| --- | --- | --- | --- | --- | --- |
+| PyCharm | Interpreter kinds (system, venv, conda, uv, Poetry, pipenv, Hatch; remote over SSH, Docker, WSL), per-project and per-subproject choice, status bar switcher | Solution and projects | https://www.jetbrains.com/help/pycharm/configuring-python-interpreter.html | 2026.3, updated 2026-11-17 | A project names the interpreter whose packages it uses, and the choice can be changed from the status bar. |
+| PyCharm | Python run configuration: script or module, parameters, environment variables, working directory, interpreter options, run with Python console, emulated terminal, redirect input from a file | Build and tasks | https://www.jetbrains.com/help/pycharm/run-debug-configuration-python.html | 2026.3, 2026-11-17 | Saved settings for how one script or module runs. |
+| PyCharm | Rerun failed tests, rerun automatically on source change, drop into the debugger on failed tests (also setup and teardown errors) | Testing | https://www.jetbrains.com/help/pycharm/rerunning-tests.html | 2026.3, 2026-02-13 | The test runner repeats failures and can stop the debugger at a failing assertion. |
+| PyCharm | requirements.txt: detection, unsatisfied-requirements notification with Install, version specifier policy, creating a virtual environment from the file | Packages | https://www.jetbrains.com/help/pycharm/managing-dependencies.html | 2026.3, 2026-08-17 | The editor checks the interpreter against the requirements file and offers to install what is missing. |
+| PyCharm | Python Packages tool window listing installed packages and PyPI and conda repositories, with a search field | Packages | https://jetbrains.com/help/pycharm/available-packages.html | not fetched | Known from a search snippet only: unverified. |
+| PyCharm | Refactoring list (Ctrl+Alt+Shift+T), Preview in the Find window, conflict list, undo; Change Signature | Refactoring | https://www.jetbrains.com/help/pycharm/refactoring-source-code.html | 2026.3, 2026-08-17 | Refactorings are previewed, conflicts are listed first, and Ctrl+Z reverts them. The fetched page did not name rename or extract method for Python; those come from a search snippet (Shift+F6, Ctrl+Alt+M): unverified. |
+| PyCharm | Code inspections: severities, profiles, scopes (whole project, production code, modified files), Qodana and command-line runs | Diagnostics | https://www.jetbrains.com/help/pycharm/code-inspection.html | 2026.3, 2026-10-05 | Static checks with a severity each, grouped in profiles and run over a chosen scope. The page did not cover quick fixes or suppression. |
+| PyCharm | Django: manage.py tasks, run server configuration, debug templates, test runner choice | Frameworks | https://www.jetbrains.com/help/pycharm/django-support7.html | 2026.3, 2026-10-16 | Framework commands run from the IDE with their own run configurations. |
+| PyCharm | HTTP Client: `.http` files, requests separated by `###`, environments, response history, response handler scripts, cURL and Postman import | Tools | https://www.jetbrains.com/help/pycharm/http-client-in-product-code-editor.html | 2026.3, 2026-09-25 | Requests written and run from a text file, with variables per environment. |
+| PyCharm | Python console: project interpreter, environment variables, starting script, working directory | Tools | https://www.jetbrains.com/help/pycharm/python-console.html | 2026.3, 2026-10-24 | A REPL on the project's interpreter. The page covers its settings only; sending a selection to it and the variables view were not read: unverified. |
+| PyCharm | Built-in terminal: tabs, sessions saved between runs, Open in Terminal | Tools | https://www.jetbrains.com/help/pycharm/terminal-emulator.html | 2026.3, 2026-10-23 | Shell sessions inside the IDE. The page did not say the virtual environment is activated, so that is unverified. |
+
+Features considered and skipped: remote interpreters over SSH, Docker, Docker Compose and WSL (PyCharm Professional; the studio runs processes on the local machine, and remote drives belong to `iTerminal.Core`), Qodana and CI quality gates (a hosted service, not a terminal feature), Django template debugging (needs a template debug protocol the studio does not reach), HTTP/2, WebSocket and GraphQL requests of the HTTP Client (only the `.http` file runner is proposed), Python scientific mode and Jupyter notebooks (a GUI notebook view; no PyCharm page for them was read), the Services tool window (a GUI dock), inspection profiles in a settings UI (see item 53 for the cheaper part). Rerun failed tests and auto rerun are covered by items 17 and 13; Python rename is covered by item 23.
+
+**Solution and projects**
+
+43. **Choose the Python interpreter and virtual environment.** A project names the interpreter (system, venv, conda, uv, Poetry, pipenv, Hatch) and the build, run, test and debug commands use it. Seen in PyCharm. Partly present: `PythonToolchain.Interpreter` is one `init`-only property, `python` on Windows and `python3` elsewhere, shared by every Python project. Not found: `VIRTUAL_ENV`, `pyvenv.cfg`, `.python-version`, `conda`, `poetry`, `Scripts\python`, `bin/python` (the strings `venv` and `.venv` occur only in folder skip lists in `DevelopmentWorkspaceScanner`, `DevelopmentStudioDialog` and `PythonToolchain.SafeSubfolders`). A cheap start: detect `.venv` or `venv` next to the project and use its interpreter.
+44. **Create a virtual environment.** A new venv from a base interpreter, or from a requirements file. Seen in PyCharm. Not found: `-m venv`, `ensurepip`, `virtualenv`, `uv venv`. Depends on item 43.
+45. **Switch the interpreter from the status line.** Seen in PyCharm (status bar widget). Not found: `Interpreter` in `StudioSettings`, `SelectInterpreter`. Depends on item 43; `StudioBuildSettingsTabPage` already holds the build configuration (item 27, built).
+
+**Packages**
+
+46. **Install, list and update Python packages.** A packages view for the project's interpreter with search. Seen in PyCharm (the tool window is unverified, search snippet). Partly present: `NuGetManagerDialog` and `INuGetPackageService` do this for .NET projects. Not found: `pip install`, `pip list`, `pip freeze`, `pip-audit`, `PyPI`, `pypi.org`. `PackageManagerDialog` in `iTerminal.Core` manages system packages, not Python ones.
+47. **Requirements file check.** Opening a project with `requirements.txt` warns when the interpreter lacks a listed package and offers Install requirements. Seen in PyCharm (verified). Not found: `requirements.txt`, `Install requirements`, `pyproject`. Depends on items 43 and 46.
+
+**Build and tasks**
+
+48. **Per-script run settings: arguments, environment variables, interpreter options, working directory.** Saved with the project and used by run and debug. Seen in PyCharm (VS Code's launch configuration is item 12). Partly present: `ProcessCommand` carries `Environment` and `WorkingDirectory` (the Java toolchain sets `JAVA_HOME` through it), and `DevelopmentProcessRunner` honours both; `PythonToolchain.Run` passes the script path only and `PlanDebug` sends `args = []`. Not found: `ScriptArguments`, `Parameters`, `PYTHONUNBUFFERED`, `interpreter options`, `Run configuration`. Related to items 11 and 12.
+49. **Run a module with `-m`.** The run configuration can name a module instead of a file. Seen in PyCharm. Not found: `ModuleName`, `module name`; only `py_compile`, `pytest`, `coverage` and `cProfile` are fixed module calls in `PythonToolchain`.
+50. **Feed standard input from a file.** A script that reads input runs without typing. Seen in PyCharm ("Redirect input from"). Not found in `DevelopmentProcessRunner`: `RedirectStandardInput`, `Redirect input`. Only the debug adapter and language server processes redirect input.
+51. **Framework run tasks (Django manage.py and run server; Flask and FastAPI are not covered by any page read).** Seen in PyCharm (Django, verified). Not found: `manage.py`, `django`, `flask`, `fastapi`, `uvicorn`. **Fit: low.** Items 48 and 49 give the same result for a user who types the arguments.
+
+**Testing**
+
+52. **Stop the debugger when a test fails.** "Drop into debugger on failed tests": failures and setup and teardown errors stop at the cause with variables visible. Seen in PyCharm (verified). Partly present: `PythonToolchain.PlanDebug` with `debugTests` starts `pytest` under debugpy. Not found: `--pdb`, `breakOnFailure`, `exceptionBreakpoint`, `setExceptionBreakpoints`. Related to item 4.
+
+**Diagnostics**
+
+53. **Static analysis for Python.** A check of the whole project or a scope, with a severity per problem, shown in the Errors panel. Seen in PyCharm (inspections, verified: scope and severity). Partly present: `IDevelopmentToolchain.Analyze` returns a command for .NET only (`DotNetToolchain.Analyze`, the `n` key); `PythonToolchain` does not override it, so `n` has no command for Python, and `PythonToolchain.Build` is `py_compile` of one file, which finds syntax errors only. Not found: `ruff`, `flake8`, `pylint`, `mypy`, `pyright`, `pycodestyle`. A cheap start: `Analyze` returns a ruff or flake8 command when installed, parsed by `BuildDiagnosticParser`.
+54. **A Python language server for the live gutter marks.** Seen in PyCharm (live inspections; the page did not cover quick fixes). Not found: `pylsp`, `pyright`, `python-lsp-server`; `LanguageServerLauncher` and `CSharpLanguageServer` serve C# only. Depends on item 41 and relates to items 23 and 32.
+55. **Refactoring with preview, conflict list and undo (Python).** Preview, conflicts and undo are verified for PyCharm; rename and extract method are unverified (search snippet). Needs requests on the language server client (items 23, 32, 54). Not found: `Refactor`, `RefactorPreview`, `Conflicts` in the studio.
+
+**Tools**
+
+56. **Python console (REPL) on the project interpreter.** Seen in PyCharm; the settings page is verified, sending a selection to it is unverified. Not found: `python -i`, `PythonConsole`, `Repl` in the studio. Partly present: Ctrl+O lends the terminal to a shell (`ConsoleOwnership`), where `python` can be typed, but not in the project's environment. Related to item 10.
+57. **HTTP request files (`.http`).** Run the requests of a text file, choose an environment, keep the response history. Seen in PyCharm (verified). Not found: `.http`, `http-client.private.env.json`, `HttpRequestFile`. `HarViewerDialog` in `iConsole` reads recorded traffic and sends nothing. **Fit: medium** for a console tool; it needs no language support.
+
+**Improvement opportunities**
+
+58. **Start a shell from the studio in the project's folder and environment.** Existing: `ConsoleOwnership` (Ctrl+O) and the terminal panel in `iTerminal.Core/Controls/Terminals`. PyCharm keeps terminal sessions and opens one at a file's folder (verified); that it activates the virtual environment is unverified. **Proposal, unverified**: no code was read that starts elsewhere. Benefit: a shell opened from the studio starts in the project folder with the project's interpreter first on `PATH`. Search terms: `TerminalPanel`, `WorkingDirectory` found no hand-over from `DevelopmentStudioDialog`.
+59. **Recognise virtual environments by content, not by name.** Existing: `DevelopmentWorkspaceScanner` skips `.venv`, `venv` and `env` by name, `PythonToolchain.SafeSubfolders` skips `venv` and `env`, and `DevelopmentStudioDialog` holds a third list. PyCharm treats an environment as a project interpreter, not as a folder name (verified, interpreter page). **Proposal, unverified**: a venv with another name would be scanned for projects and cache folders; no such case was run. Benefit: one rule (`pyvenv.cfg` present) in place of three lists, and the same detection feeds item 43.
+60. **Python Build with a useful result.** Existing: `PythonToolchain.Build` runs `py_compile` on the project's file. PyCharm has no compile step and reports problems through inspections (verified, item 53). Benefit: `b` on a Python item would list lint problems in the Errors tab. Proposal; the current command works as built.
+
+**Suggested order** (new items only, by value to iTerminal)
+
+1. Items 43, then 47 and 44: the interpreter and virtual environment choice is the base; every Python command already goes through the one `Interpreter` property.
+2. Items 53 and 60: Python static analysis through `Analyze`, shown in the Errors tab.
+3. Items 48, 49, 50: run settings (arguments, environment, module, input file); shares work with items 11 and 12.
+4. Item 46: pip package view, modelled on `NuGetManagerDialog`.
+5. Item 52, with item 4: debug a failing test.
+6. Items 56, 58, 59, 45: console and terminal in the project environment.
+7. Item 57: `.http` files.
+8. Items 54 and 55 last: a Python language server and refactorings; item 51 is low.
+
+**Candidates already covered**
+
+- Rerun failed tests, auto rerun: items 17 and 13 (PyCharm's page matches both).
+- Rename and symbol navigation for Python: item 23.
+- Test results as a list of tests: item 15 (PyCharm shows a tree with a result each).
+- Run configurations saved with the project and shared by VCS: items 11, 12, 28.
+- Running a script, pytest, coverage and a profiler: present (`r`, `t`, `o`, `PythonToolchain.Coverage` and `Profile`).
+- Debugging a Python script or its tests under debugpy: present (`PythonToolchain.PlanDebug`).

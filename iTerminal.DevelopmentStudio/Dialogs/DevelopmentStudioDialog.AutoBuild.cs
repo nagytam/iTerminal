@@ -139,6 +139,9 @@ public partial class DevelopmentStudioDialog
     {
         try
         {
+            // The bar counts a build, a test listing and a test run for each target: one step each.
+            var testProjects = TestProjectsOf(targets);
+            BeginProgress(targets.Count * 2 + testProjects.Count);
             _backgroundPhase = BackgroundPhase.Building;
             int buildFailures = 0;
             foreach (var item in targets)
@@ -146,8 +149,14 @@ public partial class DevelopmentStudioDialog
                 token.ThrowIfCancellationRequested();
                 _backgroundTarget = item.Name;
                 var build = ToolchainFor(item).Build(item);
-                if (build is null) continue;
-                if (await _runner.RunAsync(build, _ => { }, token) != 0) buildFailures++;
+                if (build is not null)
+                {
+                    int exitCode = await _runner.RunAsync(build, _ => { }, token);
+                    if (exitCode != 0) buildFailures++;
+                    lock (_stateLock) _buildOutcomes[item.Path] = exitCode == 0;
+                }
+
+                StepProgress(string.Format(CultureInfo.InvariantCulture, UiText.Get("DevelopmentStudio.BackgroundBuilding", "building {0} in the background"), item.Name));
             }
 
             if (buildFailures > 0)
@@ -156,15 +165,24 @@ public partial class DevelopmentStudioDialog
                 return;
             }
 
+            // The tests are listed from the build that has just passed, before they run, so the Test Explorer can show their names.
             _backgroundPhase = BackgroundPhase.Testing;
+            foreach (var discovered in testProjects)
+            {
+                token.ThrowIfCancellationRequested();
+                _backgroundTarget = discovered.Name;
+                await DiscoverTestsAsync(discovered, token);
+                StepProgress(UiText.Get("DevelopmentStudio.BackgroundTesting", "testing in the background"));
+            }
+
             var lines = new List<string>();
             foreach (var item in targets)
             {
                 token.ThrowIfCancellationRequested();
                 _backgroundTarget = item.Name;
                 var test = ToolchainFor(item).Test(item);
-                if (test is null) continue;
-                await _runner.RunAsync(test, line => { lock (lines) lines.Add(line); }, token);
+                if (test is not null) await _runner.RunAsync(test, line => { lock (lines) lines.Add(line); }, token);
+                StepProgress(UiText.Get("DevelopmentStudio.BackgroundTesting", "testing in the background"));
             }
 
             TestTotals totals;
@@ -187,8 +205,38 @@ public partial class DevelopmentStudioDialog
                 _backgroundPhase = BackgroundPhase.Idle;
             }
 
+            EndProgress();
             StateHasChanged();
         }
+    }
+
+    /// <summary>
+    /// The .NET test projects the background run has built: those of each target solution, or the target project itself. The
+    /// Test Explorer lists test projects, so the names are kept per project.
+    /// </summary>
+    private IReadOnlyList<DevelopmentProject> TestProjectsOf(IReadOnlyList<DevelopmentProject> targets) =>
+        _items.Where(item => item.IsTest && item.Kind == DevelopmentProjectKind.DotNetProject
+            && targets.Any(target => target.Kind == DevelopmentProjectKind.Solution
+                ? item.SolutionPath?.Equals(target.Path, StringComparison.OrdinalIgnoreCase) == true
+                : target.Path.Equals(item.Path, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+
+    /// <summary>
+    /// Lists the names of one test project's tests and keeps them for the Test Explorer. A failed listing leaves the project with
+    /// no names, so a stale list never outlives its build.
+    /// </summary>
+    private async Task DiscoverTestsAsync(DevelopmentProject item, CancellationToken token)
+    {
+        var command = ToolchainFor(item).ListTests(item);
+        if (command is null) return;
+
+        var lines = new List<string>();
+        int exitCode = await _runner.RunAsync(command, line => { lock (lines) lines.Add(line); }, token);
+
+        IReadOnlyList<string> names = [];
+        if (exitCode == 0) lock (lines) names = TestDiscoveryParser.Parse(item.Language, lines);
+        lock (_stateLock) _discoveredTests[item.Path] = names;
+        RebuildExplorer();
     }
 
     /// <summary>The header's note on the background run, or empty when it is idle (and off): what it builds, tests, or that it is paused.</summary>

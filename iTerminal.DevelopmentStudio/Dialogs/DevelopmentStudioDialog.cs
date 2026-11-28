@@ -206,6 +206,23 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
 
     private IReadOnlyList<DevelopmentProject> _items = [];
     private readonly Dictionary<string, TestOutcome> _testOutcomes = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>The test names each item's background discovery listed, keyed by the item's path. Guarded by <see cref="_stateLock"/>.</summary>
+    private readonly Dictionary<string, IReadOnlyList<string>> _discoveredTests = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Whether each item's last build passed, keyed by the item's path. Guarded by <see cref="_stateLock"/>.</summary>
+    private readonly Dictionary<string, bool> _buildOutcomes = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>The cells of the Solution Explorer's progress bar.</summary>
+    private const int ProgressCells = 20;
+
+    /// <summary>The steps done of the running build or test, out of its total (0 when none runs), and what the last step was. Guarded by <see cref="_stateLock"/>.</summary>
+    private int _progressDone;
+    private int _progressTotal;
+    private string _progressLabel = string.Empty;
+
+    /// <summary>Whether the progress bar row is listed, so the cursor can keep its item when the row comes or goes.</summary>
+    private bool _progressRowShown;
     private ExplorerMode _explorerMode = ExplorerMode.Solution;
     /// <summary>The panels, docked by <see cref="_dock"/> in the arrangement <see cref="_layout"/> gives them. F8 changes the arrangement.</summary>
     private readonly DockPanel _dock;
@@ -417,6 +434,13 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
 
         _checked.Clear();
         _testOutcomes.Clear();
+        lock (_stateLock)
+        {
+            _discoveredTests.Clear();
+            _buildOutcomes.Clear();
+            _progressTotal = 0;
+        }
+
         _treeGeneration++;
         _projectFiles.Clear();
         _loadingProjects.Clear();
@@ -1024,12 +1048,30 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
                 }
 
                 rows.Add(new ExplorerRow($" [{marker}] {LanguageLabel(item.Language)}  {item.Name}", item, tint));
+
+                // The names the background discovery listed, under their item; a row with no item is not selectable.
+                IReadOnlyList<string> names = [];
+                lock (_stateLock)
+                {
+                    if (_discoveredTests.TryGetValue(item.Path, out var discovered)) names = discovered;
+                }
+
+                foreach (string name in names) rows.Add(new ExplorerRow("        " + name, null, null));
             }
         }
 
         if (rows.Count == 0)
         {
             rows.Add(new ExplorerRow(UiText.Get("DevelopmentStudio.EmptyExplorer", "(nothing here)"), null, null));
+        }
+
+        // The progress bar of a running build or test sits at the top; the cursor keeps its item when the bar comes or goes.
+        string? bar = _explorerMode == ExplorerMode.Files ? null : ProgressBarText();
+        if (bar is not null) rows.Insert(0, new ExplorerRow(bar, null, null));
+        if ((bar is not null) != _progressRowShown)
+        {
+            _progressRowShown = bar is not null;
+            _explorerListBox.ScrollableModel.CursorPosition.Y = Math.Max(0, _explorerListBox.ScrollableModel.CursorPosition.Y + (_progressRowShown ? 1 : -1));
         }
 
         _explorerItems.ReplaceAll(rows);
@@ -1209,8 +1251,67 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         StateHasChanged();
     }
 
-    private static Color? TintFor(DevelopmentProject item) =>
-        item.Kind == DevelopmentProjectKind.Solution ? Color.Cyan : null;
+    /// <summary>
+    /// The colour of an item's row: red when its last build failed, otherwise its test result (green or red), green when its build
+    /// passed, and cyan for a solution. An item not built yet keeps the plain colour.
+    /// </summary>
+    private Color? TintFor(DevelopmentProject item)
+    {
+        bool? built = null;
+        lock (_stateLock)
+        {
+            if (_buildOutcomes.TryGetValue(item.Path, out bool value)) built = value;
+        }
+
+        if (built == false) return Color.Red;
+        if (_testOutcomes.TryGetValue(item.Path, out var outcome)) return outcome.Passed ? Color.Green : Color.Red;
+        if (built == true) return Color.Green;
+        return item.Kind == DevelopmentProjectKind.Solution ? Color.Cyan : null;
+    }
+
+    /// <summary>The progress bar's text: the share of the running build's or test's steps done, or null when none runs.</summary>
+    private string? ProgressBarText()
+    {
+        lock (_stateLock)
+        {
+            if (_progressTotal <= 0) return null;
+            int percent = Math.Min(100, _progressDone * 100 / _progressTotal);
+            int filled = percent * ProgressCells / 100;
+            return $" [{new string('█', filled)}{new string('░', ProgressCells - filled)}] {percent,3}%  {_progressLabel}";
+        }
+    }
+
+    /// <summary>Starts the progress bar for a run of <paramref name="total"/> steps, none done yet.</summary>
+    private void BeginProgress(int total)
+    {
+        lock (_stateLock)
+        {
+            _progressDone = 0;
+            _progressTotal = total;
+            _progressLabel = string.Empty;
+        }
+
+        RebuildExplorer();
+    }
+
+    /// <summary>Counts one step done and names it in the bar.</summary>
+    private void StepProgress(string label)
+    {
+        lock (_stateLock)
+        {
+            _progressDone++;
+            _progressLabel = label;
+        }
+
+        RebuildExplorer();
+    }
+
+    /// <summary>Hides the progress bar.</summary>
+    private void EndProgress()
+    {
+        lock (_stateLock) _progressTotal = 0;
+        RebuildExplorer();
+    }
 
     private static string LanguageLabel(DevelopmentLanguage language) => language switch
     {
@@ -2261,6 +2362,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             try
             {
                 await waitForBackground;
+                BeginProgress(plan.Count);
                 foreach (var (item, command) in plan)
                 {
                     if (cts.IsCancellationRequested) break;
@@ -2273,6 +2375,12 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
                     AppendOutput($"$ {command.Display}{sdkNote}");
                     int exitCode = await _runner.RunAsync(command, AppendOutput, cts.Token);
                     if (exitCode != 0 && firstFailure == 0) firstFailure = exitCode;
+                    if (verb == "build")
+                    {
+                        lock (_stateLock) _buildOutcomes[item.Path] = exitCode == 0;
+                    }
+
+                    StepProgress(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, item.Name));
 
                     if (verb == "test")
                     {
@@ -2324,6 +2432,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             finally
             {
                 lock (_stateLock) clock.Stop();
+                EndProgress();
                 _busy = false;
                 _runCts = null;
                 RebuildView();

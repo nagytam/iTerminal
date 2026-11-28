@@ -36,6 +36,15 @@ public class DevelopmentToolchainsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void DotnetListsTheTestsOfTheBuildWithoutBuildingAgain()
+    {
+        var project = new DevelopmentProject("App.Test", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App.Test/App.Test.csproj", IsTest: true);
+
+        CollectionAssert.AreEqual(new[] { "test", "/src/App.Test/App.Test.csproj", "--no-build", "--list-tests", "-c", "Debug" }, Toolchains.For(project).ListTests(project)!.Arguments.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void ASolutionCannotBeRun()
     {
         var solution = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.Solution, "/src/App.slnx");

@@ -45,6 +45,9 @@ public sealed class DotNetToolchain : IDevelopmentToolchain
 
     public ProcessCommand Test(DevelopmentProject project) => Dotnet(project, "test", project.Path);
 
+    /// <summary>The VSTest names of the tests, from the build the background run has just made (<c>--no-build</c>).</summary>
+    public ProcessCommand ListTests(DevelopmentProject project) => Dotnet(project, "test", project.Path, "--no-build", "--list-tests");
+
     public ProcessCommand Clean(DevelopmentProject project) => Dotnet(project, "clean", project.Path);
 
     public IReadOnlyList<string> CacheFolders(DevelopmentProject project) => [];

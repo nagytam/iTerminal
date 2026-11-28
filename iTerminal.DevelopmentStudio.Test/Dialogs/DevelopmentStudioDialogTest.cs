@@ -1218,6 +1218,25 @@ public class DevelopmentStudioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheBackgroundListsTheTestNamesUnderTheirTestProjectInTheTestExplorer()
+    {
+        var runner = new FakeProcessRunner
+        {
+            OutputFor = command => command.Arguments.Contains("--list-tests")
+                ? ["The following Tests are available:", "    App.Test.SumTests.Adds", "    App.Test.SumTests.Subtracts"]
+                : [],
+        };
+        var harness = await OpenAsync([Solution, App, AppTest], settings: SettingsWithAutoBuild(true), runner: runner);
+        await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.Background == DevelopmentStudioDialog.BackgroundPhase.Idle && runner.Commands.Count == 3, "the background build, listing and test to finish");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F6, '\0'));
+
+        CollectionAssert.Contains(harness.Dialog.ExplorerRows.ToList(), "        App.Test.SumTests.Adds", "the discovered tests are listed in the Test Explorer");
+        CollectionAssert.Contains(harness.Dialog.ExplorerRows.ToList(), "        App.Test.SumTests.Subtracts");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task AForcedBuildPausesTheBackgroundAndItStartsAgainAfterIt()
     {
         var harness = await OpenAsync([Solution, App], settings: SettingsWithAutoBuild(true));
