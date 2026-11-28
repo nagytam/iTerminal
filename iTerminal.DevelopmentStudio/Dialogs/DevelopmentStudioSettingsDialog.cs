@@ -11,7 +11,7 @@ namespace iTerminal.DevelopmentStudio.Dialogs;
 
 /// <summary>
 /// The Development studio's settings (Ctrl+,), in one tab per category: the tabs the studio opens on, the .NET SDK and the SBOM
-/// format, the panel layout, and the analysis time estimates. Like the application's own settings there is no OK: each change is
+/// format, the build configuration, the panel layout, and the analysis time estimates. Like the application's own settings there is no OK: each change is
 /// saved as it is made, and the studio reads the choices again when this dialog closes (<see cref="Closed"/>). Esc closes it.
 /// </summary>
 public class DevelopmentStudioSettingsDialog : Dialog
@@ -31,6 +31,7 @@ public class DevelopmentStudioSettingsDialog : Dialog
         AddControl(_hintLabel);
         _tab.AddTabPage(new StudioGeneralSettingsTabPage(settings, themeService));
         _tab.AddTabPage(new StudioBuildSettingsTabPage(settings, sdks, themeService));
+        _tab.AddTabPage(new StudioConfigurationSettingsTabPage(settings, themeService));
         _tab.AddTabPage(new StudioLayoutSettingsTabPage(settings, themeService));
         _tab.AddTabPage(new StudioAnalysisSettingsTabPage(settings, themeService));
     }
