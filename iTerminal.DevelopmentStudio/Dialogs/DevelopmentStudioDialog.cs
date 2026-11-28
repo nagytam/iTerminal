@@ -2187,10 +2187,23 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         return item is null ? [] : [item];
     }
 
-    /// <summary>The toolchain of an item. A .NET item uses the SDK chosen with V, so each command runs on that SDK's host.</summary>
+    /// <summary>
+    /// The SDK a .NET item's commands run with. A global.json at or above the item's folder pins it: the installed SDK it selects
+    /// (null, with the pin, when none is installed). Without one, the SDK chosen with V.
+    /// </summary>
+    private ItemSdk SdkFor(DevelopmentProject item)
+    {
+        DotnetGlobalJson? pin = DotnetGlobalJson.Find(item.Directory);
+        return pin is null ? new ItemSdk(SelectedSdk, null) : new ItemSdk(pin.Match(_sdks), pin);
+    }
+
+    /// <summary>The SDK an item builds with (<see cref="Sdk"/>, null when a pin names one that is not installed) and the global.json that pins it.</summary>
+    private sealed record ItemSdk(DotnetSdk? Sdk, DotnetGlobalJson? Pin);
+
+    /// <summary>The toolchain of an item. A .NET item runs on the SDK its folder's global.json pins, or else the SDK chosen with V.</summary>
     private IDevelopmentToolchain ToolchainFor(DevelopmentProject item)
     {
-        if (item.Language == DevelopmentLanguage.DotNet) return new DotNetToolchain { Host = SelectedSdk?.HostPath ?? "dotnet", Configuration = _configuration };
+        if (item.Language == DevelopmentLanguage.DotNet) return new DotNetToolchain { Host = SdkFor(item).Sdk?.HostPath ?? "dotnet", Configuration = _configuration };
         if (item.Language == DevelopmentLanguage.Java && _javaHome is not null) return new JavaToolchain { JavaHome = _javaHome };
         return _toolchains.For(item);
     }
@@ -2207,11 +2220,18 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             return;
         }
 
-        var plan = new List<(DevelopmentProject Item, ProcessCommand Command)>();
+        var plan = new List<(DevelopmentProject Item, ProcessCommand Command, string SdkNote)>();
         var cleanable = new List<DevelopmentProject>();
         var notes = new List<string>();
         foreach (var item in targets)
         {
+            ItemSdk? itemSdk = item.Language == DevelopmentLanguage.DotNet ? SdkFor(item) : null;
+            if (itemSdk is { Pin: { } pin, Sdk: null })
+            {
+                notes.Add(string.Format(UiText.Get("DevelopmentStudio.SdkMissing", "{0} needs .NET SDK {1} from {2}, which is not installed (K installs SDKs)."), item.Name, pin.Version, pin.FilePath));
+                continue;
+            }
+
             var toolchain = ToolchainFor(item);
             ProcessCommand? command = verb switch
             {
@@ -2223,7 +2243,10 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
 
             if (command is not null)
             {
-                plan.Add((item, command));
+                string sdkNote = itemSdk?.Sdk is { } sdk
+                    ? string.Format(UiText.Get("DevelopmentStudio.SdkNote", "   (.NET SDK {0})"), sdk.Version)
+                    : string.Empty;
+                plan.Add((item, command, sdkNote));
             }
             else if (verb == "clean" && toolchain.CacheFolders(item).Count > 0)
             {
@@ -2268,15 +2291,12 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             var runTotals = TestTotals.Empty;
             try
             {
-                foreach (var (item, command) in plan)
+                foreach (var (item, command, sdkNote) in plan)
                 {
                     if (cts.IsCancellationRequested) break;
                     int start;
                     lock (_stateLock) start = _output.Count;
 
-                    string sdkNote = item.Language == DevelopmentLanguage.DotNet && SelectedSdk is { } sdk
-                        ? string.Format(UiText.Get("DevelopmentStudio.SdkNote", "   (.NET SDK {0})"), sdk.Version)
-                        : string.Empty;
                     AppendOutput($"$ {command.Display}{sdkNote}");
                     int exitCode = await _runner.RunAsync(command, AppendOutput, cts.Token);
                     if (exitCode != 0 && firstFailure == 0) firstFailure = exitCode;
@@ -2471,7 +2491,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         {
             TargetPath = target,
             InitialProjectPath = item.Kind == DevelopmentProjectKind.DotNetProject ? item.Path : null,
-            DotnetHost = SelectedSdk?.HostPath ?? "dotnet",
+            DotnetHost = SdkFor(item).Sdk?.HostPath ?? "dotnet",
         };
         await ShowDialogAsync(manager);
     }
