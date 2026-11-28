@@ -2497,6 +2497,18 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Osserva la parola sotto il cursore (nella vista debug, rimuovila)</value>
   </data>
+  <data name="DevelopmentStudio.IndicatorBuild" xml:space="preserve">
+    <value>Fordítás</value>
+  </data>
+  <data name="DevelopmentStudio.IndicatorDiscover" xml:space="preserve">
+    <value>Felismerés</value>
+  </data>
+  <data name="DevelopmentStudio.IndicatorTestCounts" xml:space="preserve">
+    <value>{0} sikeres, {1} sikertelen</value>
+  </data>
+  <data name="DevelopmentStudio.IndicatorTests" xml:space="preserve">
+    <value>Tesztelés</value>
+  </data>
   <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
     <value>A csharp-ls nem található. Telepítse a dotnet tool install -g csharp-ls paranccsal.</value>
   </data>

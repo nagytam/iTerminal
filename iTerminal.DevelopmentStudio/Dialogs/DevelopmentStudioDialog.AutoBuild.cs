@@ -1,10 +1,23 @@
 using System.Diagnostics;
 using System.Globalization;
+using iConsole.Display;
 using iConsole.Localization;
 using iTerminal.DevelopmentStudio.Model;
 using iTerminal.DevelopmentStudio.Services;
 
 namespace iTerminal.DevelopmentStudio.Dialogs;
+
+/// <summary>What one background activity is doing: waiting, running, how it ended, paused by a forced command, or not needed.</summary>
+public enum BackgroundStep { Waiting, Running, Passed, Failed, Paused, Skipped }
+
+/// <summary>
+/// The background build, the test discovery and the test run, each with its step. The discovery carries the number of test
+/// projects it listed, and the test run the totals it counted.
+/// </summary>
+public sealed record BackgroundActivities(BackgroundStep Build, BackgroundStep Discover, BackgroundStep Tests, int TestProjects, TestTotals Totals)
+{
+    public static BackgroundActivities Waiting { get; } = new(BackgroundStep.Waiting, BackgroundStep.Waiting, BackgroundStep.Waiting, 0, TestTotals.Empty);
+}
 
 /// <summary>
 /// The background build and test: with <see cref="StudioSettings.AutoBuildTestKey"/> on, the studio builds the solutions, then
@@ -15,7 +28,7 @@ namespace iTerminal.DevelopmentStudio.Dialogs;
 public partial class DevelopmentStudioDialog
 {
     /// <summary>What the background build and test is doing: nothing, building, testing, or paused by a forced command.</summary>
-    public enum BackgroundPhase { Idle, Building, Testing, Paused }
+    public enum BackgroundPhase { Idle, Building, Discovering, Testing, Paused }
 
     /// <summary>Whether the studio builds and tests in the background. Read from the settings when the studio opens and when they change.</summary>
     private bool _autoBuildTest = true;
@@ -25,6 +38,12 @@ public partial class DevelopmentStudioDialog
 
     /// <summary>The project or solution the background run is building or testing, for the header.</summary>
     private volatile string _backgroundTarget = string.Empty;
+
+    /// <summary>The step of each background activity, for the indicators at the right of the menu row. Volatile: the run writes it on a worker thread.</summary>
+    private volatile BackgroundActivities _activities = BackgroundActivities.Waiting;
+
+    /// <summary>The steps of the background build, discovery and test run, as the indicators show them.</summary>
+    public BackgroundActivities Activities => _activities;
 
     /// <summary>The background run in progress, cancelled when a forced command pauses it or a newer run replaces it.</summary>
     private CancellationTokenSource? _backgroundCts;
@@ -75,6 +94,7 @@ public partial class DevelopmentStudioDialog
         _backgroundPaused = true;
         _backgroundRequested = false;
         _backgroundPhase = BackgroundPhase.Paused;
+        SetActivities(activities => activities with { Build = PausedStep(activities.Build), Discover = PausedStep(activities.Discover), Tests = PausedStep(activities.Tests) });
         _backgroundCts?.Cancel();
     }
 
@@ -132,8 +152,8 @@ public partial class DevelopmentStudioDialog
     }
 
     /// <summary>
-    /// The build of each target, then, when it passed, the tests. A cancelled run leaves the phase to whoever cancelled it: a pause
-    /// sets it to paused, and a newer run sets its own.
+    /// The build of each target, then, when it passed, the test discovery and the tests. A cancelled run leaves the phase to whoever
+    /// cancelled it: a pause sets it to paused, and a newer run sets its own.
     /// </summary>
     private async Task BackgroundBuildAndTestAsync(IReadOnlyList<DevelopmentProject> targets, CancellationToken token)
     {
@@ -142,6 +162,7 @@ public partial class DevelopmentStudioDialog
             // The bar counts a build, a test listing and a test run for each target: one step each.
             var testProjects = TestProjectsOf(targets);
             BeginProgress(targets.Count * 2 + testProjects.Count);
+            _activities = BackgroundActivities.Waiting with { Build = BackgroundStep.Running };
             _backgroundPhase = BackgroundPhase.Building;
             int buildFailures = 0;
             foreach (var item in targets)
@@ -161,27 +182,39 @@ public partial class DevelopmentStudioDialog
 
             if (buildFailures > 0)
             {
+                SetActivities(activities => activities with { Build = BackgroundStep.Failed, Discover = BackgroundStep.Skipped, Tests = BackgroundStep.Skipped });
                 SetStatus(string.Format(UiText.Get("DevelopmentStudio.BackgroundBuildFailed", "Background build failed for {0} item(s)."), buildFailures), StatusSeverity.Error);
                 return;
             }
 
             // The tests are listed from the build that has just passed, before they run, so the Test Explorer can show their names.
-            _backgroundPhase = BackgroundPhase.Testing;
+            SetActivities(activities => activities with { Build = BackgroundStep.Passed, Discover = BackgroundStep.Running, TestProjects = testProjects.Count });
+            _backgroundPhase = BackgroundPhase.Discovering;
+            int discoverFailures = 0;
             foreach (var discovered in testProjects)
             {
                 token.ThrowIfCancellationRequested();
                 _backgroundTarget = discovered.Name;
-                await DiscoverTestsAsync(discovered, token);
+                if (!await DiscoverTestsAsync(discovered, token)) discoverFailures++;
                 StepProgress(UiText.Get("DevelopmentStudio.BackgroundTesting", "testing in the background"));
             }
 
+            BackgroundStep discoverStep = discoverFailures > 0 ? BackgroundStep.Failed : testProjects.Count == 0 ? BackgroundStep.Skipped : BackgroundStep.Passed;
+            SetActivities(activities => activities with { Discover = discoverStep, Tests = BackgroundStep.Running });
+            _backgroundPhase = BackgroundPhase.Testing;
             var lines = new List<string>();
+            int testFailures = 0;
             foreach (var item in targets)
             {
                 token.ThrowIfCancellationRequested();
                 _backgroundTarget = item.Name;
                 var test = ToolchainFor(item).Test(item);
-                if (test is not null) await _runner.RunAsync(test, line => { lock (lines) lines.Add(line); }, token);
+                if (test is not null)
+                {
+                    int exitCode = await _runner.RunAsync(test, line => { lock (lines) lines.Add(line); }, token);
+                    if (exitCode != 0) testFailures++;
+                }
+
                 StepProgress(UiText.Get("DevelopmentStudio.BackgroundTesting", "testing in the background"));
             }
 
@@ -189,6 +222,7 @@ public partial class DevelopmentStudioDialog
             lock (lines) totals = TestOutputParser.Parse(lines);
             SetStatus(string.Format(UiText.Get("DevelopmentStudio.BackgroundTests", "Background tests: {0} passed, {1} failed, {2} skipped."), totals.Passed, totals.Failed, totals.Skipped),
                 totals.Failed == 0 ? StatusSeverity.Success : StatusSeverity.Error);
+            SetActivities(activities => activities with { Tests = totals.Failed == 0 && testFailures == 0 ? BackgroundStep.Passed : BackgroundStep.Failed, Totals = totals });
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
@@ -225,10 +259,10 @@ public partial class DevelopmentStudioDialog
     /// Lists the names of one test project's tests and keeps them for the Test Explorer. A failed listing leaves the project with
     /// no names, so a stale list never outlives its build.
     /// </summary>
-    private async Task DiscoverTestsAsync(DevelopmentProject item, CancellationToken token)
+    private async Task<bool> DiscoverTestsAsync(DevelopmentProject item, CancellationToken token)
     {
         var command = ToolchainFor(item).ListTests(item);
-        if (command is null) return;
+        if (command is null) return true;
 
         var lines = new List<string>();
         int exitCode = await _runner.RunAsync(command, line => { lock (lines) lines.Add(line); }, token);
@@ -237,26 +271,58 @@ public partial class DevelopmentStudioDialog
         if (exitCode == 0) lock (lines) names = TestDiscoveryParser.Parse(item.Language, lines);
         lock (_stateLock) _discoveredTests[item.Path] = names;
         RebuildExplorer();
+        return exitCode == 0;
     }
 
-    /// <summary>The header's note on the background run, or empty when it is idle (and off): what it builds, tests, or that it is paused.</summary>
-    private string BackgroundText()
+    /// <summary>
+    /// The background indicators at the right of the menu row: the build, the test discovery and the test run, each with a glyph for
+    /// its step and its label, with the count once it has one. Empty when the background run is off.
+    /// </summary>
+    private IReadOnlyList<(string Text, Color? Color)> BackgroundIndicators()
     {
-        return _backgroundPhase switch
+        if (!_autoBuildTest) return [];
+        BackgroundActivities activities = _activities;
+
+        string discoverLabel = UiText.Get("DevelopmentStudio.IndicatorDiscover", "Discover");
+        if (activities.Discover == BackgroundStep.Passed) discoverLabel += $" ({activities.TestProjects})";
+
+        string testsLabel = UiText.Get("DevelopmentStudio.IndicatorTests", "Tests");
+        if (activities.Tests is BackgroundStep.Passed or BackgroundStep.Failed && activities.Totals.Total > 0)
         {
-            BackgroundPhase.Building => "   ◐ " + string.Format(CultureInfo.InvariantCulture, UiText.Get("DevelopmentStudio.BackgroundBuilding", "building {0} in the background"), _backgroundTarget) + BackgroundElapsedText(),
-            BackgroundPhase.Testing => "   ◐ " + UiText.Get("DevelopmentStudio.BackgroundTesting", "testing in the background") + BackgroundElapsedText(),
-            BackgroundPhase.Paused => "   ❚❚ " + UiText.Get("DevelopmentStudio.BackgroundPaused", "background build paused"),
-            _ => string.Empty,
-        };
+            testsLabel += " " + string.Format(CultureInfo.InvariantCulture, UiText.Get("DevelopmentStudio.IndicatorTestCounts", "{0} passed, {1} failed"), activities.Totals.Passed, activities.Totals.Failed);
+        }
+
+        return
+        [
+            BackgroundIndicator(UiText.Get("DevelopmentStudio.IndicatorBuild", "Build"), activities.Build),
+            BackgroundIndicator(discoverLabel, activities.Discover),
+            BackgroundIndicator(testsLabel, activities.Tests),
+        ];
     }
 
-    private string BackgroundElapsedText() => _backgroundClock is { IsRunning: true } clock ? " " + FormatElapsed(clock.Elapsed) : string.Empty;
+    /// <summary>One indicator: a glyph for its step, then its label. Waiting and skipped keep the header's colour.</summary>
+    private static (string Text, Color? Color) BackgroundIndicator(string label, BackgroundStep step) => step switch
+    {
+        BackgroundStep.Running => ("▶ " + label, Color.Cyan),
+        BackgroundStep.Passed => ("✓ " + label, Color.Green),
+        BackgroundStep.Failed => ("✗ " + label, Color.Red),
+        BackgroundStep.Paused => ("❚❚ " + label, Color.Yellow),
+        BackgroundStep.Skipped => ("· " + label, null),
+        _ => ("○ " + label, null),
+    };
+
+    private static BackgroundStep PausedStep(BackgroundStep step) => step == BackgroundStep.Running ? BackgroundStep.Paused : step;
+
+    private void SetActivities(Func<BackgroundActivities, BackgroundActivities> change)
+    {
+        _activities = change(_activities);
+        StateHasChanged();
+    }
 
     /// <summary>The header's background note moves while the run goes, so the dialog redraws when the second on screen changes.</summary>
     private void RedrawBackgroundClock()
     {
-        if (_backgroundPhase is not (BackgroundPhase.Building or BackgroundPhase.Testing) || _backgroundClock is not { IsRunning: true } clock) return;
+        if (_backgroundPhase is not (BackgroundPhase.Building or BackgroundPhase.Discovering or BackgroundPhase.Testing) || _backgroundClock is not { IsRunning: true } clock) return;
         long seconds = (long)clock.Elapsed.TotalSeconds;
         if (seconds == _backgroundShownSeconds) return;
         _backgroundShownSeconds = seconds;
@@ -281,5 +347,6 @@ public partial class DevelopmentStudioDialog
         _backgroundPaused = false;
         _backgroundCts?.Cancel();
         _backgroundPhase = BackgroundPhase.Idle;
+        _activities = BackgroundActivities.Waiting;
     }
 }
