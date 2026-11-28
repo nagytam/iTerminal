@@ -24,8 +24,11 @@ approach before you spend time on it.
 
 ## Getting set up
 
-You need the [.NET 11 SDK](https://dotnet.microsoft.com/download). Optional tools (`git`, `docker`,
-`ffmpeg`, 7-Zip, Tesseract) are only needed for the features that use them.
+You need the [.NET 11 SDK](https://dotnet.microsoft.com/download). The repository's `global.json`
+pins the version (11.0.100, and any later 11.0 feature band), so `dotnet` uses that SDK inside the
+repository. Before the first build, `Tools/ensure-sdk.sh` (Linux and macOS) or `Tools\ensure-sdk.ps1`
+(Windows) checks that it is installed and, in an interactive terminal, offers to install it.
+Optional tools (`git`, `docker`, `ffmpeg`, 7-Zip, Tesseract) are only needed for the features that use them.
 
 ```bash
 git clone https://github.com/nagytam/iTerminal.git

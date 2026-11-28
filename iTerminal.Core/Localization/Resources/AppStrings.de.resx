@@ -2785,6 +2785,9 @@
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Writing the SBOM...</value>
   </data>
+  <data name="DevelopmentStudio.SdkMissing" xml:space="preserve">
+    <value>{0} benötigt das .NET-SDK {1} aus {2}, das nicht installiert ist (K installiert SDKs).</value>
+  </data>
   <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
     <value>   (.NET SDK {0})</value>
   </data>
@@ -2854,6 +2857,12 @@
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>V wechselt das SDK und F das SBOM-Format; beide Änderungen bleiben erhalten.</value>
   </data>
+  <data name="DevelopmentStudioSettings.Configuration" xml:space="preserve">
+    <value>Build-Konfiguration</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ConfigurationHint" xml:space="preserve">
+    <value>D wechselt zwischen Debug und Release; Release wird optimiert gebaut und startet den Debugger nicht.</value>
+  </data>
   <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
     <value>Explorer-Reiter beim Start</value>
   </data>
@@ -2876,19 +2885,22 @@
     <value>SBOM-Format</value>
   </data>
   <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
-    <value>SDK für Erstellen, Ausführen und Testen</value>
+    <value>SDK für Projekte ohne global.json</value>
   </data>
   <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
-    <value>4-Analyse</value>
+    <value>5-Analyse</value>
   </data>
   <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
     <value>2-Erstellen</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabConfiguration" xml:space="preserve">
+    <value>3-Konfiguration</value>
   </data>
   <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
     <value>1-Allgemein</value>
   </data>
   <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
-    <value>3-Layout</value>
+    <value>4-Layout</value>
   </data>
   <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
     <value>Einstellungen der Development studio</value>

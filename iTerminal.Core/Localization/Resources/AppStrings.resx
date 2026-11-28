@@ -2927,6 +2927,9 @@
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Writing the SBOM...</value>
   </data>
+  <data name="DevelopmentStudio.SdkMissing" xml:space="preserve">
+    <value>{0} needs .NET SDK {1} from {2}, which is not installed (K installs SDKs).</value>
+  </data>
   <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
     <value>   (.NET SDK {0})</value>
   </data>
@@ -2996,6 +2999,12 @@
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>V switches the SDK and F the SBOM format; both changes are kept.</value>
   </data>
+  <data name="DevelopmentStudioSettings.Configuration" xml:space="preserve">
+    <value>Build configuration</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ConfigurationHint" xml:space="preserve">
+    <value>D switches Debug and Release; Release builds optimised and does not start the debugger.</value>
+  </data>
   <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
     <value>Explorer tab at start</value>
   </data>
@@ -3018,19 +3027,22 @@
     <value>SBOM format</value>
   </data>
   <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
-    <value>SDK for build, run and test</value>
+    <value>SDK for projects without a global.json</value>
   </data>
   <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
-    <value>4-Analysis</value>
+    <value>5-Analysis</value>
   </data>
   <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
     <value>2-Build</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabConfiguration" xml:space="preserve">
+    <value>3-Configuration</value>
   </data>
   <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
     <value>1-General</value>
   </data>
   <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
-    <value>3-Layout</value>
+    <value>4-Layout</value>
   </data>
   <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
     <value>Development studio settings</value>

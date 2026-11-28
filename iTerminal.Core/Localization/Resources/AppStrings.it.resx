@@ -2785,6 +2785,9 @@
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Escribiendo la SBOM...</value>
   </data>
+  <data name="DevelopmentStudio.SdkMissing" xml:space="preserve">
+    <value>{0} richiede l'SDK di .NET {1} di {2}, che non è installato (K installa gli SDK).</value>
+  </data>
   <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
     <value>   (SDK de .NET {0})</value>
   </data>
@@ -2854,6 +2857,12 @@
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>V cambia l'SDK e F il formato SBOM; le modifiche vengono mantenute.</value>
   </data>
+  <data name="DevelopmentStudioSettings.Configuration" xml:space="preserve">
+    <value>Configurazione di build</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ConfigurationHint" xml:space="preserve">
+    <value>D passa tra Debug e Release; Release compila ottimizzato e non avvia il debugger.</value>
+  </data>
   <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
     <value>Scheda Esplora all'avvio</value>
   </data>
@@ -2876,19 +2885,22 @@
     <value>Formato SBOM</value>
   </data>
   <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
-    <value>SDK per compilazione, esecuzione e test</value>
+    <value>SDK per i progetti senza global.json</value>
   </data>
   <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
-    <value>4-Analisi</value>
+    <value>5-Analisi</value>
   </data>
   <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
     <value>2-Compilazione</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabConfiguration" xml:space="preserve">
+    <value>3-Configurazione</value>
   </data>
   <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
     <value>1-Generale</value>
   </data>
   <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
-    <value>3-Layout</value>
+    <value>4-Layout</value>
   </data>
   <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
     <value>Impostazioni dello studio di sviluppo</value>

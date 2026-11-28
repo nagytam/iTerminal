@@ -2785,6 +2785,9 @@
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>SBOM wird geschrieben ...</value>
   </data>
+  <data name="DevelopmentStudio.SdkMissing" xml:space="preserve">
+    <value>{0} a besoin du SDK .NET {1} de {2}, qui n'est pas installé (K installe les SDK).</value>
+  </data>
   <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
     <value>   (.NET-SDK {0})</value>
   </data>
@@ -2854,6 +2857,12 @@
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>V change le SDK et F le format SBOM ; ces changements sont conservés.</value>
   </data>
+  <data name="DevelopmentStudioSettings.Configuration" xml:space="preserve">
+    <value>Configuration de build</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ConfigurationHint" xml:space="preserve">
+    <value>D bascule entre Debug et Release ; Release compile optimisé et ne lance pas le débogueur.</value>
+  </data>
   <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
     <value>Onglet Explorateur au démarrage</value>
   </data>
@@ -2876,19 +2885,22 @@
     <value>Format SBOM</value>
   </data>
   <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
-    <value>SDK pour build, exécution et tests</value>
+    <value>SDK pour les projets sans global.json</value>
   </data>
   <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
-    <value>4-Analyse</value>
+    <value>5-Analyse</value>
   </data>
   <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
     <value>2-Build</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabConfiguration" xml:space="preserve">
+    <value>3-Configuration</value>
   </data>
   <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
     <value>1-Général</value>
   </data>
   <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
-    <value>3-Disposition</value>
+    <value>4-Disposition</value>
   </data>
   <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
     <value>Paramètres du studio de développement</value>

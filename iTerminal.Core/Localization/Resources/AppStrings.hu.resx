@@ -2785,6 +2785,9 @@
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Scrittura della SBOM...</value>
   </data>
+  <data name="DevelopmentStudio.SdkMissing" xml:space="preserve">
+    <value>{0} a(z) {2} fájlban megadott {1} .NET SDK-t igényli, amely nincs telepítve (az SDK-kat a K gombbal telepítheti).</value>
+  </data>
   <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
     <value>   (SDK .NET {0})</value>
   </data>
@@ -2854,6 +2857,12 @@
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>A V az SDK-t, az F az SBOM-formátumot váltja; a változtatások megmaradnak.</value>
   </data>
+  <data name="DevelopmentStudioSettings.Configuration" xml:space="preserve">
+    <value>Build-konfiguráció</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ConfigurationHint" xml:space="preserve">
+    <value>A D a Debug és a Release között vált; a Release optimalizáltan épít, és nem indítja el a hibakeresőt.</value>
+  </data>
   <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
     <value>Explorer fül induláskor</value>
   </data>
@@ -2876,19 +2885,22 @@
     <value>SBOM-formátum</value>
   </data>
   <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
-    <value>A build, futtatás és teszt SDK-ja</value>
+    <value>A global.json nélküli projektek SDK-ja</value>
   </data>
   <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
-    <value>4-Elemzés</value>
+    <value>5-Elemzés</value>
   </data>
   <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
     <value>2-Build</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabConfiguration" xml:space="preserve">
+    <value>3-Konfiguráció</value>
   </data>
   <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
     <value>1-Általános</value>
   </data>
   <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
-    <value>3-Elrendezés</value>
+    <value>4-Elrendezés</value>
   </data>
   <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
     <value>A fejlesztőstúdió beállításai</value>

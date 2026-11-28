@@ -226,6 +226,61 @@ public class DevelopmentStudioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task BuildOfASolutionUnderAGlobalJsonRunsOnTheSdkItPins_NotTheChosenOne()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(root);
+        try
+        {
+            File.WriteAllText(Path.Combine(root, "global.json"), """{ "sdk": { "version": "8.0.400" } }""");
+            var solution = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.Solution, Path.Combine(root, "App.slnx"));
+            var dotnet = new FakeDotnetSolutionService
+            {
+                Solution = TwoProjects,
+                Sdks = [new DotnetSdk("9.0.100", "/sdk/9"), new DotnetSdk("8.0.400", "/sdk/8")],
+            };
+            var runner = new FakeProcessRunner();
+            var harness = await OpenAsync([solution], dotnet: dotnet, runner: runner);
+            Assert.AreEqual("9.0.100", harness.Dialog.SelectedSdk!.Version, "V's choice is the newest stable SDK");
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+            await WaitIdleAsync(harness.Dialog);
+
+            Assert.AreEqual(new DotnetSdk("8.0.400", "/sdk/8").HostPath, runner.Commands.Single().FileName);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task BuildOfAProjectWhosePinnedSdkIsNotInstalledRunsNothingAndSaysWhy()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"DevStudio_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(root);
+        try
+        {
+            File.WriteAllText(Path.Combine(root, "global.json"), """{ "sdk": { "version": "7.0.100" } }""");
+            var solution = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.Solution, Path.Combine(root, "App.slnx"));
+            var runner = new FakeProcessRunner();
+            var harness = await OpenAsync([solution], runner: runner);
+
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+            await WaitIdleAsync(harness.Dialog);
+
+            Assert.AreEqual(0, runner.Commands.Count);
+            StringAssert.Contains(harness.Dialog.Status, "needs .NET SDK 7.0.100");
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task SpaceChecksProjectsAndBuildRunsOnlyTheCheckedOnes()
     {
         var runner = new FakeProcessRunner();
@@ -1173,6 +1228,21 @@ public class DevelopmentStudioDialogTest
             "F5", "Shift+F5", "F9", "F10", "F11", "Shift+F11", "W", "Delete", "M", "F6", "F7", "F8", "Right", "Left", "G", "N", "O", "P", "S", "F",
         ];
         CollectionAssert.IsSubsetOf(hotKeys, listed.ToArray(), "every key the studio handles is also an entry of a menu");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CtrlLetterOpensEachMenuTitle()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        (ConsoleKey Key, char Letter)[] titles = [(ConsoleKey.F, 'f'), (ConsoleKey.B, 'b'), (ConsoleKey.G, 'g'), (ConsoleKey.E, 'e'), (ConsoleKey.T, 't')];
+        foreach ((ConsoleKey key, char letter) in titles)
+        {
+            bool handled = await harness.Dialog.HandleKeyEventAsync(Key(key, letter, control: true));
+
+            Assert.IsTrue(handled, $"Ctrl+{char.ToUpperInvariant(letter)} is the studio's menu hot key");
+        }
     }
 
     [Timeout(60_000)]
