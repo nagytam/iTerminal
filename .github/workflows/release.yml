@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '11.0.x'
+          global-json-file: global.json
 
       - name: Build the MSI
         run: dotnet build iTerminal.Installer/iTerminal.Installer.wixproj -c Release -p:Version=$env:VERSION
@@ -74,7 +74,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '11.0.x'
+          global-json-file: global.json
 
       - name: Build the packages
         run: >-
@@ -115,7 +115,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '11.0.x'
+          global-json-file: global.json
 
       - name: Build the portable archives
         run: |
