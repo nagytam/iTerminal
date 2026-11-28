@@ -335,6 +335,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         _explorerMode = ParseSetting(settings.Get(StudioSettings.ExplorerModeKey), ExplorerMode.Solution);
         _outputTab = ParseSetting(settings.Get(StudioSettings.OutputTabKey), OutputTab.Output);
         _analysisDurations = new Dictionary<string, double>(StudioSettings.DecodeDurations(settings.Get(StudioSettings.AnalysisDurationsKey)));
+        ReadAutoBuildSetting();
         foreach (string folder in StudioSettings.DecodeList(settings.Get(StudioSettings.ExpandedFoldersKey))) _expandedFolders.Add(folder);
         Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
 
@@ -434,6 +435,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             : string.Format(UiText.Get("DevelopmentStudio.Found", "Found {0} items. Enter opens a file; F5 starts debugging."), _items.Count);
         _statusSeverity = StatusSeverity.Info;
         RebuildExplorer();
+        RequestBackgroundBuild();
         if (_pendingSelection is null) SelectSolutionRow();
         if (_explorerMode == ExplorerMode.Files && !_fileTreeBuilt) _ = LoadFileTreeAsync();
         RebuildView();
@@ -1545,6 +1547,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         if (_marksStale) RefreshEditorMarks();
         RevealPending();
         RedrawRunningClock();
+        ApplyBackgroundRequests();
+        RedrawBackgroundClock();
         SaveExplorerSelection();
         long version = _languageServer.Version;
         if (version == _seenServerVersion) return;
@@ -2231,6 +2235,10 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         }
 
         string targetLabel = plan.Count == 1 ? plan[0].Item.Name : string.Format(UiText.Get("DevelopmentStudio.ProjectCount", "{0} projects"), plan.Count);
+
+        // A forced command stops the background build and test, and waits until its process has ended before it starts.
+        PauseBackground();
+        var waitForBackground = _backgroundTask;
         var cts = new CancellationTokenSource();
         _runCts = cts;
         _busy = true;
@@ -2252,6 +2260,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             var runTotals = TestTotals.Empty;
             try
             {
+                await waitForBackground;
                 foreach (var (item, command) in plan)
                 {
                     if (cts.IsCancellationRequested) break;
@@ -2334,6 +2343,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         OpenSolutionsInTree();
         RebuildExplorer();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Refreshed", "Found {0} items."), _items.Count), StatusSeverity.Info);
+        RequestBackgroundBuild();
     }
 
     /// <summary>The items to list: the folder's, or, when the dialog was opened on a solution, that solution and the projects it lists.</summary>
@@ -2487,6 +2497,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
     /// </summary>
     private void ReloadSettings()
     {
+        ApplyAutoBuildSetting(!bool.TryParse(_settings.Get(StudioSettings.AutoBuildTestKey), out bool autoBuildTest) || autoBuildTest);
         _sbomFormat = ParseSetting(_settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
 
         string? sdkHost = _settings.Get(StudioSettings.SdkHostKey);
@@ -2703,6 +2714,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         // The build's output is what the user looks at first: the Output tab shows it, and the panel takes the focus.
         _outputTab = OutputTab.Output;
         _outputListBox.SetFocus();
+        // Debugging holds the background off until the session has ended (see ApplyBackgroundRequests).
+        PauseBackground();
         _ = StartDebuggingAsync(item, ToolchainFor(item), debugTests: _explorerMode == ExplorerMode.Tests);
     }
 
@@ -2713,6 +2726,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         _runCts = cts;
         try
         {
+            await _backgroundTask;
             string? assembly = null;
             if (item.Language == DevelopmentLanguage.DotNet)
             {
@@ -3039,6 +3053,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         }
 
         string text = TextOfSource();
+        RequestBackgroundBuild();
         _ = Task.Run(() =>
         {
             string? error = null;
@@ -3354,7 +3369,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
         string debugState = _session is null ? string.Empty : _paused ? "   ● paused" : "   ▶ running";
         string busy = _busy ? "   * " + (RunningElapsedText() ?? string.Empty) : string.Empty;
-        WriteLine(buffer, x + column, y, w - column, $"   {folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
+        string background = BackgroundText();
+        WriteLine(buffer, x + column, y, w - column, $"   {folder}   ({_items.Count} items){debugState}{busy}{background}", Color.Cyan, colorScheme.Background);
     }
 
     /// <summary>

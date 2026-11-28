@@ -2311,6 +2311,21 @@
   <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
     <value>Análisis</value>
   </data>
+  <data name="DevelopmentStudio.BackgroundBuildFailed" xml:space="preserve">
+    <value>La compilación en segundo plano falló en {0} elemento(s).</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundBuilding" xml:space="preserve">
+    <value>compilando {0} en segundo plano</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundPaused" xml:space="preserve">
+    <value>compilación en segundo plano en pausa</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTesting" xml:space="preserve">
+    <value>probando en segundo plano</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTests" xml:space="preserve">
+    <value>Pruebas en segundo plano: {0} superadas, {1} fallidas, {2} omitidas.</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>Le débogueur n'a pas pris le point d'arrêt : {0}</value>
   </data>
@@ -2832,6 +2847,9 @@
   </data>
   <data name="DevelopmentStudioSettings.AnalysisHint" xml:space="preserve">
     <value>Un análisis de código muestra cuánto tardó el último de su elemento. Al olvidarlo no se muestra estimación hasta el siguiente análisis.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.AutoBuildTest" xml:space="preserve">
+    <value>Compilar y probar las soluciones en segundo plano</value>
   </data>
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>V cambia el SDK y F el formato del SBOM; los cambios se conservan.</value>

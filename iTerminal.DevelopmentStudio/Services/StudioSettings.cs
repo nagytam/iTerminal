@@ -37,6 +37,12 @@ public static class StudioSettings
     /// <summary>The path of the row the Solution Explorer's cursor is on. Empty or absent when none was saved.</summary>
     public const string SelectedPathKey = "DevelopmentStudio.SelectedPath";
 
+    /// <summary>
+    /// Whether the studio builds the solutions and then tests them in the background, as the studio is opened and files are saved.
+    /// <c>true</c> (the default) or <c>false</c>. A forced build, test, run or debug pauses it.
+    /// </summary>
+    public const string AutoBuildTestKey = "DevelopmentStudio.AutoBuildTest";
+
     /// <summary>The durations as a JSON object of seconds keyed by item path.</summary>
     public static string EncodeDurations(IReadOnlyDictionary<string, double> durations) => JsonSerializer.Serialize(durations);
 

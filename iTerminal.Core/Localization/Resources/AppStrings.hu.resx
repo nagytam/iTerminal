@@ -2311,6 +2311,21 @@
   <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
     <value>Elemzés</value>
   </data>
+  <data name="DevelopmentStudio.BackgroundBuildFailed" xml:space="preserve">
+    <value>A háttérbeli build {0} elemnél sikertelen.</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundBuilding" xml:space="preserve">
+    <value>{0} építése háttérben</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundPaused" xml:space="preserve">
+    <value>háttérbeli build szüneteltetve</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTesting" xml:space="preserve">
+    <value>tesztelés háttérben</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTests" xml:space="preserve">
+    <value>Háttérteszt: {0} sikeres, {1} sikertelen, {2} kihagyott.</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>Il debugger non ha accettato il punto di interruzione: {0}</value>
   </data>
@@ -2832,6 +2847,9 @@
   </data>
   <data name="DevelopmentStudioSettings.AnalysisHint" xml:space="preserve">
     <value>A kódelemzés megmutatja, mennyi ideig tartott az elemére az utolsó elemzés. Elfelejtés után a következő elemzésig nem jelenik meg becslés.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.AutoBuildTest" xml:space="preserve">
+    <value>A megoldások építése és tesztelése háttérben</value>
   </data>
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>A V az SDK-t, az F az SBOM-formátumot váltja; a változtatások megmaradnak.</value>
