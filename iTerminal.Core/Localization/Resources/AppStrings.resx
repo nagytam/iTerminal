@@ -2555,6 +2555,9 @@
   <data name="DevelopmentStudio.HintCheckAll" xml:space="preserve">
     <value>Check all projects / all test projects</value>
   </data>
+  <data name="DevelopmentStudio.HintClose" xml:space="preserve">
+    <value>Close the studio. Esc does not close it.</value>
+  </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Build, clean, test, run the selected item</value>
   </data>
@@ -2599,6 +2602,9 @@
   </data>
   <data name="DevelopmentStudio.HintSdkManager" xml:space="preserve">
     <value>Install .NET SDKs and JDKs, and choose the JDK that Java builds and runs use</value>
+  </data>
+  <data name="DevelopmentStudio.HintSettings" xml:space="preserve">
+    <value>Settings: the start-up tabs, the SDK and SBOM format, the layout and the analysis estimates</value>
   </data>
   <data name="DevelopmentStudio.HintStart" xml:space="preserve">
     <value>Start debugging, or continue</value>
@@ -2857,6 +2863,51 @@
   </data>
   <data name="DevelopmentStudio.Watching" xml:space="preserve">
     <value>Watching {0}.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.AnalysisHint" xml:space="preserve">
+    <value>A code analysis shows how long the last one of its item took. Forgetting it shows no estimate until the next analysis.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
+    <value>V switches the SDK and F the SBOM format; both changes are kept.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
+    <value>Explorer tab at start</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ForgetDurations" xml:space="preserve">
+    <value>Forget the analysis time estimates</value>
+  </data>
+  <data name="DevelopmentStudioSettings.GeneralHint" xml:space="preserve">
+    <value>F6 and F7 change these too: the studio opens on the tab it was last left on.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.LayoutHint" xml:space="preserve">
+    <value>Moves the panels back to the arrangement a new studio starts with. F8 moves them too.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.OutputAtStart" xml:space="preserve">
+    <value>Output tab at start</value>
+  </data>
+  <data name="DevelopmentStudioSettings.RestoreLayout" xml:space="preserve">
+    <value>Restore the default layout</value>
+  </data>
+  <data name="DevelopmentStudioSettings.SbomFormat" xml:space="preserve">
+    <value>SBOM format</value>
+  </data>
+  <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
+    <value>SDK for build, run and test</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
+    <value>4-Analysis</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
+    <value>2-Build</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
+    <value>1-General</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
+    <value>3-Layout</value>
+  </data>
+  <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
+    <value>Development studio settings</value>
   </data>
   <data name="Dialog.AddServer" xml:space="preserve">
     <value>Add a server</value>
@@ -6762,22 +6813,34 @@
     <value>Tab:next field  Up/Down:choose  F5:refresh rates  F6:swap  Esc:close</value>
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
-    <value>F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close</value>
+    <value>F5:debug  F9:breakpoint  F10/F11:step  Shift+F5:stop  Space:check  B/C/T/R:build/clean/test/run  V:SDK  K:SDKs  N:analyze  U:NuGet  S/F:SBOM  O/P:coverage/profile  F6/F7:tabs  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
   </data>
   <data name="Hints.DevelopmentStudioAnalysis" xml:space="preserve">
-    <value>Enter or click:open the finding at its line  N:analyze  F7:output tab  X:cancel  Esc:close</value>
+    <value>Up/Down/PgUp/PgDn:scroll  Enter or click:open the finding at its line  N:analyze  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioCoverage" xml:space="preserve">
+    <value>Up/Down/PgUp/PgDn:scroll  G:open the file under the cursor  O:measure coverage  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioDebug" xml:space="preserve">
+    <value>Up/Down/PgUp/PgDn:scroll  W:watch the word under the cursor  Delete:remove the watch  F5:start or continue  Shift+F5:stop  F9:breakpoint  F10/F11:step  Shift+F11:step out  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
   </data>
   <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
-    <value>Type to edit  Ctrl+S:save  F9:breakpoint  F5:debug  F7:output tab  Esc:close</value>
+    <value>Type to edit  Ctrl+S:save  Ctrl+R:refresh  F5:debug  Shift+F5:stop  F9:breakpoint  F10/F11:step  Shift+F11:step out  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
   </data>
   <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
-    <value>Enter:open the error at its line  F7:output tab  Esc:close</value>
+    <value>Up/Down/PgUp/PgDn:scroll  Enter:open the error at its line  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
   </data>
   <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
-    <value>Enter:open  Left/Right:expand  Space:check  B/C/T/R:build/clean/test/run  M:main  K:SDKs  Esc:close</value>
+    <value>Up/Down:move  Enter:open, run a test or expand  Left/Right:collapse or expand  Space:check  A:check all  Shift+T:check tests  B/C/T/R:build/clean/test/run  Ctrl+F5:run  F5:debug  M:main  V:SDK  K:SDKs  N:analyze  U:NuGet  S/F:SBOM  O/P:coverage/profile  F6:explorer tab  F7:output tab  F8:layout  Ctrl+R:refresh  Ctrl+,:settings  Ctrl+W:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioLayout" xml:space="preserve">
+    <value>Arrows:move the panel to that edge  Shift+arrows:resize it  Esc or F8:end the layout mode</value>
   </data>
   <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
-    <value>Up/Down/PgUp/PgDn:scroll  F7:output tab  X:cancel  Esc:close</value>
+    <value>Up/Down/PgUp/PgDn:scroll  B/C/T/R:build/clean/test/run  F5:debug  Shift+F5:stop  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
+  </data>
+  <data name="Hints.DevelopmentStudioProfile" xml:space="preserve">
+    <value>Up/Down/PgUp/PgDn:scroll  P:profile the selected script  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:search/read  Tab:field  F3:whole  F2:browser  Esc:close</value>

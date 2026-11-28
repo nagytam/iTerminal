@@ -38,10 +38,16 @@ namespace iTerminal.DevelopmentStudio.Dialogs;
 public class DevelopmentStudioDialog : SplitPaneDialog
 {
     /// <summary>What the left pane lists: the Solution Explorer, or the Test Explorer.</summary>
-    private enum ExplorerMode { Solution, Tests, Files }
+    public enum ExplorerMode { Solution, Tests, Files }
 
     /// <summary>The tabs of the bottom output panel: the output log, the error list, the code analysis, the debug view, the coverage and the profile.</summary>
-    private enum OutputTab { Output, Errors, Analysis, Debug, Coverage, Profile }
+    public enum OutputTab { Output, Errors, Analysis, Debug, Coverage, Profile }
+
+    /// <summary>
+    /// The focus the hot key bar follows: the panel that has the keys, and for the output panel its tab. <see cref="Default"/> is
+    /// what no panel has the focus of.
+    /// </summary>
+    private enum HotKeyContext { Default, Layout, Editor, Explorer, Output, Errors, Analysis, Debug, Coverage, Profile }
 
     /// <summary>The result of the last code analysis: its counts, how long it took, and whether it was cancelled.</summary>
     private sealed record AnalysisSummary(string Target, int Errors, int Warnings, TimeSpan Elapsed, bool Cancelled, int ExitCode);
@@ -204,8 +210,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The panels, docked by <see cref="_dock"/> in the arrangement <see cref="_layout"/> gives them. F8 changes the arrangement.</summary>
     private readonly DockPanel _dock;
     private readonly Dictionary<StudioPanelKind, StudioPanel> _panels = [];
-    private readonly StudioPanelLayout _layout;
+    private StudioPanelLayout _layout;
     private bool _layoutMode;
+
+    /// <summary>The rows the hot key bar takes under the panels: the most any focus needs at the current width, so the panels do not move when the focus does.</summary>
+    private int _hotKeyRows = 1;
     private string _statusBeforeLayout = string.Empty;
     private StatusSeverity _statusSeverityBeforeLayout = StatusSeverity.Info;
     /// <summary>The tab the bottom output panel shows (F7 cycles it). The editor always shows the source.</summary>
@@ -455,9 +464,14 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             Position = new Position(0, 0);
         }
 
-        // The panels fill the frame between the header row (row 1) and the footer row (the second to last).
+        // The panels fill the frame between the header row (row 1) and the footer: the status row and the hot key rows, which are
+        // the most rows any focus needs at this width (the bottom row is the frame's).
+        int innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
+        _hotKeyRows = Enum.GetValues<HotKeyContext>().Max(context => WrapHotKeys(HotKeyText(context), innerWidth).Count);
+        _hotKeyRows = Math.Max(1, _hotKeyRows);
+        int footerRows = 1 + _hotKeyRows;
         _dock.Position = new Position(1, 2);
-        _dock.ViewSize = new Size(Math.Max(0, (int)ViewSize.Width - 2), Math.Max(0, (int)ViewSize.Height - 4));
+        _dock.ViewSize = new Size(innerWidth, Math.Max(0, (int)ViewSize.Height - 3 - footerRows));
         base.OnInitializeLayout();
         LayoutPanelBodies();
     }
@@ -477,7 +491,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         _explorerListBox.SetFocus();
     }
 
-    /// <summary>Esc: stops a running command and the debugged program, then closes.</summary>
+    /// <summary>
+    /// Ctrl+W: stops a running command and the debugged program, then closes the studio. Esc does not close it: a menu or a
+    /// popup open on the studio takes Esc, and otherwise Esc does nothing.
+    /// </summary>
     private async Task CloseAsync()
     {
         if (_runCts is not null) await _runCts.CancelAsync();
@@ -522,12 +539,14 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         yield return ("A / Shift+T", UiText.Get("DevelopmentStudio.HintCheckAll", "Check all projects / all test projects"));
         yield return ("V", UiText.Get("DevelopmentStudio.HintSdk", "Switch to the next .NET SDK"));
         yield return ("K", UiText.Get("DevelopmentStudio.HintSdkManager", "Install .NET SDKs and JDKs, and choose the JDK that Java builds and runs use"));
-        yield return ("N", UiText.Get("DevelopmentStudio.HintNuGet", "Manage the NuGet packages of the selected solution or project"));
+        yield return ("U", UiText.Get("DevelopmentStudio.HintNuGet", "Manage the NuGet packages of the selected solution or project"));
         yield return ("S / F", UiText.Get("DevelopmentStudio.HintSbom", "Write a CycloneDX SBOM of the solution / switch it between XML and JSON"));
         yield return ("O / P", UiText.Get("DevelopmentStudio.HintCoverage", "Measure the coverage of the selected item / profile the selected Python script"));
         yield return ("N", UiText.Get("DevelopmentStudio.HintAnalysis", "Analyze the code of the selected item: the Analysis tab lists the findings, and Enter or a click opens one"));
         yield return ("G", UiText.Get("DevelopmentStudio.HintGoToFile", "In the coverage view, open the file under the cursor"));
         yield return ("X", UiText.Get("DevelopmentStudio.HintCancel", "Cancel the running command"));
+        yield return ("Ctrl+,", UiText.Get("DevelopmentStudio.HintSettings", "Settings: the start-up tabs, the SDK and SBOM format, the layout and the analysis estimates"));
+        yield return ("Ctrl+W", UiText.Get("DevelopmentStudio.HintClose", "Close the studio. Esc does not close it."));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -546,7 +565,15 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.Escape:
+                // Esc never closes the studio (Ctrl+W does). It closes one open overlay at a time, and is otherwise swallowed here so
+                // the dialog's own Esc, which closes it, never runs.
+                if (ITransientOverlayHost.TryCloseInnermostOverlay(this)) StateHasChanged();
+                return true;
+            case ConsoleKey.W when ctrl:
                 await CloseAsync();
+                return true;
+            case ConsoleKey.OemComma when ctrl:
+                await OpenSettingsAsync();
                 return true;
             case ConsoleKey.F5 when ctrl:
                 RunMainOrSelected("run");
@@ -653,7 +680,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             case ConsoleKey.K when plain:
                 await OpenSdkManagerAsync();
                 return true;
-            case ConsoleKey.N when plain:
+            case ConsoleKey.U when plain:
                 await OpenNuGetManagerAsync();
                 return true;
             case ConsoleKey.X when plain:
@@ -2439,6 +2466,61 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         await ShowDialogAsync(manager);
     }
 
+    /// <summary>Ctrl+,: the studio's settings, in tabs. Each change is saved as it is made; when the dialog closes the studio reads them again.</summary>
+    private async Task OpenSettingsAsync()
+    {
+        var settings = new DevelopmentStudioSettingsDialog(_settings, _sdks, ThemeService)
+        {
+            Closed = ReloadSettings,
+        };
+        await ShowDialogAsync(settings);
+    }
+
+    /// <summary>
+    /// Applies what the settings dialog saved to the open studio: the SDK, the SBOM format, the explorer and output tabs, the
+    /// layout and the analysis estimates. The studio keeps its own copies of these, so each one is read again here.
+    /// </summary>
+    private void ReloadSettings()
+    {
+        _sbomFormat = ParseSetting(_settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
+
+        string? sdkHost = _settings.Get(StudioSettings.SdkHostKey);
+        int sdkIndex = sdkHost is null ? -1 : _sdks.ToList().FindIndex(sdk => sdk.HostPath.Equals(sdkHost, StringComparison.OrdinalIgnoreCase));
+        if (sdkIndex >= 0) _sdkIndex = sdkIndex;
+
+        var explorerMode = ParseSetting(_settings.Get(StudioSettings.ExplorerModeKey), _explorerMode);
+        if (explorerMode != _explorerMode)
+        {
+            _explorerMode = explorerMode;
+            RebuildExplorer();
+            if (_explorerMode == ExplorerMode.Files && !_fileTreeBuilt) _ = LoadFileTreeAsync();
+        }
+
+        var outputTab = ParseSetting(_settings.Get(StudioSettings.OutputTabKey), _outputTab);
+        if (outputTab != _outputTab)
+        {
+            _outputTab = outputTab;
+            RebuildOutputPanel();
+            _outputListBox.ScrollableModel.CursorPosition.Y = 0;
+            _outputListBox.ScrollableModel.ScrollPosition.Y = 0;
+        }
+
+        _layout = StudioPanelLayout.Parse(_settings.Get(StudioSettings.LayoutKey));
+        RebuildDock();
+
+        lock (_stateLock)
+        {
+            _analysisDurations.Clear();
+            foreach ((string path, double seconds) in StudioSettings.DecodeDurations(_settings.Get(StudioSettings.AnalysisDurationsKey)))
+            {
+                _analysisDurations[path] = seconds;
+            }
+        }
+
+        RebuildView();
+        StateHasChanged();
+    }
+
     /// <summary>Reads the SDKs and the JDK choice on a background task; <see cref="ApplySdkReload"/> applies them on the UI thread.</summary>
     private void RequestSdkReload(DotnetSdk? keep)
     {
@@ -2903,7 +2985,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         int x0 = (int)AbsolutePosition.X;
         int y0 = (int)AbsolutePosition.Y;
         int innerWidth = (int)ViewSize.Width - 2;
-        int footerRow = (int)ViewSize.Height - 2;
+        int footerRow = (int)ViewSize.Height - 2 - _hotKeyRows;
 
         DrawHeader(buffer, x0 + 1, y0 + 1, innerWidth, colorScheme);
         DrawFooter(buffer, x0 + 1, y0 + footerRow, innerWidth, colorScheme);
@@ -3210,7 +3292,10 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     }
 
     /// <summary>The Solution Explorer's band: the heading of the mode F6 has shown.</summary>
-    private string ExplorerHeading() => _explorerMode switch
+    private string ExplorerHeading() => ExplorerModeHeading(_explorerMode);
+
+    /// <summary>The name of an explorer mode as the studio shows it.</summary>
+    public static string ExplorerModeHeading(ExplorerMode mode) => mode switch
     {
         ExplorerMode.Solution => UiText.Get("DevelopmentStudio.SolutionExplorerHeading", "Solution Explorer"),
         ExplorerMode.Tests => UiText.Get("DevelopmentStudio.TestExplorerHeading", "Test Explorer"),
@@ -3239,7 +3324,8 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         }
     }
 
-    private static string OutputTabHeading(OutputTab tab) => tab switch
+    /// <summary>The name of an output tab as the studio shows it.</summary>
+    public static string OutputTabHeading(OutputTab tab) => tab switch
     {
         OutputTab.Output => UiText.Get("DevelopmentStudio.OutputHeading", "Output"),
         OutputTab.Errors => UiText.Get("DevelopmentStudio.ErrorsTab", "Errors"),
@@ -3258,44 +3344,94 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     }
 
     /// <summary>
-    /// The footer's hints for the panel that has the keys: the editing keys in the editor, the tab's keys in the output
-    /// panel, the explorer's keys in the explorer. Anything else gets the default line.
+    /// The context the hot key bar follows: the layout mode, the editor while a file is open, the output tab shown while the
+    /// output panel has the focus, or the explorer. Anything else (the default line) lists the studio's main commands.
     /// </summary>
-    private string ContextHints()
+    private HotKeyContext CurrentHotKeyContext()
     {
-        StudioPanelKind? focused = FocusedPanelKind();
-        if (focused == StudioPanelKind.Editor && SourceOpen)
+        if (_layoutMode) return HotKeyContext.Layout;
+        return FocusedPanelKind() switch
         {
-            return UiText.Get("Hints.DevelopmentStudioEditor", "Type to edit  Ctrl+S:save  F9:breakpoint  F5:debug  F7:output tab  Esc:close");
-        }
-
-        if (focused == StudioPanelKind.Output)
-        {
-            return _outputTab switch
+            StudioPanelKind.Editor when SourceOpen => HotKeyContext.Editor,
+            StudioPanelKind.Output => _outputTab switch
             {
-                OutputTab.Errors => UiText.Get("Hints.DevelopmentStudioErrors", "Enter:open the error at its line  F7:output tab  Esc:close"),
-                OutputTab.Analysis => UiText.Get("Hints.DevelopmentStudioAnalysis", "Enter or click:open the finding at its line  N:analyze  F7:output tab  X:cancel  Esc:close"),
-                _ => UiText.Get("Hints.DevelopmentStudioOutput", "Up/Down/PgUp/PgDn:scroll  F7:output tab  X:cancel  Esc:close"),
-            };
-        }
-
-        if (focused == StudioPanelKind.Explorer)
-        {
-            return UiText.Get("Hints.DevelopmentStudioExplorer", "Enter:open  Left/Right:expand  Space:check  B/C/T/R:build/clean/test/run  M:main  K:SDKs  Esc:close");
-        }
-
-        return UiText.Get("Hints.DevelopmentStudio", "F5:debug F9:breakpoint F10/F11:step Space:check B/C/T/R:build/clean/test/run V:SDK K:SDKs S/F:SBOM F6/F7:panes F8:layout Enter:open Esc:close");
+                OutputTab.Errors => HotKeyContext.Errors,
+                OutputTab.Analysis => HotKeyContext.Analysis,
+                OutputTab.Debug => HotKeyContext.Debug,
+                OutputTab.Coverage => HotKeyContext.Coverage,
+                OutputTab.Profile => HotKeyContext.Profile,
+                _ => HotKeyContext.Output,
+            },
+            StudioPanelKind.Explorer => HotKeyContext.Explorer,
+            _ => HotKeyContext.Default,
+        };
     }
 
+    /// <summary>The hot key bar's text for a context: its commands as "Key:action", two spaces between them.</summary>
+    private static string HotKeyText(HotKeyContext context) => context switch
+    {
+        HotKeyContext.Layout => UiText.Get("Hints.DevelopmentStudioLayout", "Arrows:move the panel to that edge  Shift+arrows:resize it  Esc or F8:end the layout mode"),
+        HotKeyContext.Editor => UiText.Get("Hints.DevelopmentStudioEditor", "Type to edit  Ctrl+S:save  Ctrl+R:refresh  F5:debug  Shift+F5:stop  F9:breakpoint  F10/F11:step  Shift+F11:step out  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+        HotKeyContext.Explorer => UiText.Get("Hints.DevelopmentStudioExplorer", "Up/Down:move  Enter:open, run a test or expand  Left/Right:collapse or expand  Space:check  A:check all  Shift+T:check tests  B/C/T/R:build/clean/test/run  Ctrl+F5:run  F5:debug  M:main  V:SDK  K:SDKs  N:analyze  U:NuGet  S/F:SBOM  O/P:coverage/profile  F6:explorer tab  F7:output tab  F8:layout  Ctrl+R:refresh  Ctrl+,:settings  Ctrl+W:close"),
+        HotKeyContext.Output => UiText.Get("Hints.DevelopmentStudioOutput", "Up/Down/PgUp/PgDn:scroll  B/C/T/R:build/clean/test/run  F5:debug  Shift+F5:stop  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+        HotKeyContext.Errors => UiText.Get("Hints.DevelopmentStudioErrors", "Up/Down/PgUp/PgDn:scroll  Enter:open the error at its line  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+        HotKeyContext.Analysis => UiText.Get("Hints.DevelopmentStudioAnalysis", "Up/Down/PgUp/PgDn:scroll  Enter or click:open the finding at its line  N:analyze  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+        HotKeyContext.Debug => UiText.Get("Hints.DevelopmentStudioDebug", "Up/Down/PgUp/PgDn:scroll  W:watch the word under the cursor  Delete:remove the watch  F5:start or continue  Shift+F5:stop  F9:breakpoint  F10/F11:step  Shift+F11:step out  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+        HotKeyContext.Coverage => UiText.Get("Hints.DevelopmentStudioCoverage", "Up/Down/PgUp/PgDn:scroll  G:open the file under the cursor  O:measure coverage  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+        HotKeyContext.Profile => UiText.Get("Hints.DevelopmentStudioProfile", "Up/Down/PgUp/PgDn:scroll  P:profile the selected script  X:cancel  F6:explorer tab  F7:output tab  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+        _ => UiText.Get("Hints.DevelopmentStudio", "F5:debug  F9:breakpoint  F10/F11:step  Shift+F5:stop  Space:check  B/C/T/R:build/clean/test/run  V:SDK  K:SDKs  N:analyze  U:NuGet  S/F:SBOM  O/P:coverage/profile  F6/F7:tabs  F8:layout  Ctrl+,:settings  Ctrl+W:close"),
+    };
+
+    /// <summary>The commands of the hot key bar now: the ones of the focused panel, in the order they are listed.</summary>
+    public IReadOnlyList<string> HotKeyCommands => SplitHotKeys(HotKeyText(CurrentHotKeyContext()));
+
+    /// <summary>Splits a hot key text into its commands: they are separated by two spaces, and a command has single spaces only.</summary>
+    private static List<string> SplitHotKeys(string text) => text.Split("  ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+
+    /// <summary>
+    /// The rows a hot key text takes at a width. The text is cut between its commands, so no command is split across two rows;
+    /// a command wider than the row is cut by the row.
+    /// </summary>
+    private static List<string> WrapHotKeys(string text, int width)
+    {
+        var rows = new List<string>();
+        var row = new StringBuilder();
+        foreach (string command in SplitHotKeys(text))
+        {
+            if (row.Length > 0 && row.Length + 2 + command.Length > width)
+            {
+                rows.Add(row.ToString());
+                row.Clear();
+            }
+
+            if (row.Length > 0) row.Append("  ");
+            row.Append(command);
+        }
+
+        if (row.Length > 0) rows.Add(row.ToString());
+        return rows;
+    }
+
+    /// <summary>
+    /// Draws the footer: the status on its own row, then the hot key rows of the focused panel's commands. The rows the bar
+    /// takes are the same whatever the focus, and a command that does not fit the rows is cut at the edge.
+    /// </summary>
     private void DrawFooter(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
-        string hints = ContextHints();
-        DrawStatusAndHints(buffer, x, y, w, _status, _statusSeverity switch
+        Color statusForeground = _statusSeverity switch
         {
             StatusSeverity.Error => colorScheme.Error,
             StatusSeverity.Success => Color.Green,
             _ => colorScheme.Foreground,
-        }, hints, colorScheme);
+        };
+        WriteLine(buffer, x, y, w, _status, statusForeground, colorScheme.Background);
+
+        // The status row and the hot key rows end on the frame's second to last row, as Draw placed them.
+        List<string> rows = WrapHotKeys(HotKeyText(CurrentHotKeyContext()), w);
+        for (int row = 0; row < _hotKeyRows; row++)
+        {
+            WriteLine(buffer, x, y + 1 + row, w, row < rows.Count ? rows[row] : string.Empty, colorScheme.Foreground, colorScheme.Background);
+        }
     }
 
     #endregion

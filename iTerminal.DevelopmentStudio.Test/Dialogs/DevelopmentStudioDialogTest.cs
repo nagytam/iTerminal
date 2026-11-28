@@ -931,7 +931,66 @@ public class DevelopmentStudioDialogTest
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
 
         Assert.IsFalse(harness.Dialog.IsLayoutMode);
-        Assert.IsTrue(harness.Dialog.IsVisible, "Esc ends the layout mode first; a second Esc closes the dialog");
+        Assert.IsTrue(harness.Dialog.IsVisible, "Esc ends the layout mode, and the studio stays open");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EscDoesNotCloseTheStudio()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+
+        Assert.IsTrue(harness.Dialog.IsVisible, "Esc does not close the studio");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CtrlWClosesTheStudio()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+
+        Assert.IsFalse(harness.Dialog.IsVisible, "Ctrl+W closes the studio");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheHotKeyBarListsTheCommandsOfThePanelThatHasTheFocus()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        // The explorer has the focus when the studio opens: its commands include the ones only it takes.
+        var explorer = harness.Dialog.HotKeyCommands;
+        CollectionAssert.Contains(explorer.ToList(), "Enter:open, run a test or expand");
+        CollectionAssert.Contains(explorer.ToList(), "U:NuGet");
+        CollectionAssert.Contains(explorer.ToList(), "Ctrl+,:settings");
+
+        // The Debug tab of the output panel lists the debugger's keys, and the explorer's do not appear there.
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+        for (int press = 0; press < 3; press++) await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F7));
+
+        Assert.AreEqual(StudioPanelKind.Output, harness.Dialog.FocusedPanel, "the output panel has the focus after a command");
+        var debug = harness.Dialog.HotKeyCommands.ToList();
+        CollectionAssert.Contains(debug, "W:watch the word under the cursor");
+        CollectionAssert.Contains(debug, "Shift+F5:stop");
+        CollectionAssert.DoesNotContain(debug, "Enter:open, run a test or expand");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheHotKeyBarIsDrawnBelowThePanels()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        var screen = Render(harness.Dialog);
+
+        AssertScreenContains(screen, "U:NuGet", "the explorer's commands are drawn in the hot key bar");
+        AssertScreenContains(screen, "Ctrl+W:close");
     }
 
     [Timeout(60_000)]
@@ -994,7 +1053,7 @@ public class DevelopmentStudioDialogTest
         AssertScreenContains(Render(harness.Dialog), "F7:output tab");
 
         FocusPanel(harness.Dialog, StudioPanelKind.Explorer);
-        AssertScreenContains(Render(harness.Dialog), "Left/Right:expand");
+        AssertScreenContains(Render(harness.Dialog), "Left/Right:collapse or expand");
     }
     [Timeout(60_000)]
     [TestMethod]

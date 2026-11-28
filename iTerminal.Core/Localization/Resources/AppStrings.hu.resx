@@ -2413,6 +2413,9 @@
   <data name="DevelopmentStudio.HintCheckAll" xml:space="preserve">
     <value>Seleziona tutti i progetti / tutti i progetti di test</value>
   </data>
+  <data name="DevelopmentStudio.HintClose" xml:space="preserve">
+    <value>A stúdió bezárása. Az Esc nem zárja be.</value>
+  </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Compila, pulisci, testa o esegui l'elemento selezionato</value>
   </data>
@@ -2457,6 +2460,9 @@
   </data>
   <data name="DevelopmentStudio.HintSdkManager" xml:space="preserve">
     <value>.NET SDK-k és JDK-k telepítése, és a Java fordításokhoz és futtatásokhoz használt JDK kiválasztása</value>
+  </data>
+  <data name="DevelopmentStudio.HintSettings" xml:space="preserve">
+    <value>Beállítások: induló fülek, SDK és SBOM-formátum, elrendezés és elemzési becslések</value>
   </data>
   <data name="DevelopmentStudio.HintStart" xml:space="preserve">
     <value>Avvia il debug o continua</value>
@@ -2715,6 +2721,51 @@
   </data>
   <data name="DevelopmentStudio.Watching" xml:space="preserve">
     <value>Osservo {0}.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.AnalysisHint" xml:space="preserve">
+    <value>A kódelemzés megmutatja, mennyi ideig tartott az elemére az utolsó elemzés. Elfelejtés után a következő elemzésig nem jelenik meg becslés.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
+    <value>A V az SDK-t, az F az SBOM-formátumot váltja; a változtatások megmaradnak.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ExplorerAtStart" xml:space="preserve">
+    <value>Explorer fül induláskor</value>
+  </data>
+  <data name="DevelopmentStudioSettings.ForgetDurations" xml:space="preserve">
+    <value>Az elemzési időbecslések elfelejtése</value>
+  </data>
+  <data name="DevelopmentStudioSettings.GeneralHint" xml:space="preserve">
+    <value>Az F6 és F7 ezeket is módosítja: a stúdió azon a fülön nyílik meg, amelyen utoljára volt.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.LayoutHint" xml:space="preserve">
+    <value>Visszahelyezi a paneleket az új stúdió elrendezésébe. Az F8 is mozgatja őket.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.OutputAtStart" xml:space="preserve">
+    <value>Kimeneti fül induláskor</value>
+  </data>
+  <data name="DevelopmentStudioSettings.RestoreLayout" xml:space="preserve">
+    <value>Alapértelmezett elrendezés visszaállítása</value>
+  </data>
+  <data name="DevelopmentStudioSettings.SbomFormat" xml:space="preserve">
+    <value>SBOM-formátum</value>
+  </data>
+  <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
+    <value>A build, futtatás és teszt SDK-ja</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
+    <value>4-Elemzés</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabBuild" xml:space="preserve">
+    <value>2-Build</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabGeneral" xml:space="preserve">
+    <value>1-Általános</value>
+  </data>
+  <data name="DevelopmentStudioSettings.TabLayout" xml:space="preserve">
+    <value>3-Elrendezés</value>
+  </data>
+  <data name="DevelopmentStudioSettings.Title" xml:space="preserve">
+    <value>A fejlesztőstúdió beállításai</value>
   </data>
   <data name="Dialog.AddServer" xml:space="preserve">
     <value>Kiszolgáló hozzáadása</value>
@@ -6556,22 +6607,34 @@
     <value>Tab:következő mező  Fel/Le:választás  F5:árfolyamok frissítése  F6:csere  Esc:bezár</value>
   </data>
   <data name="Hints.DevelopmentStudio" xml:space="preserve">
-    <value>F5:debug F9:punto di interruzione F10/F11:passo Spazio:seleziona B/C/T/R:compila/pulisci/testa/esegui V:SDK K:SDKs S/F:SBOM F6/F7:pannelli Invio:apri Esc:chiudi</value>
+    <value>F5:hibakeresés  F9:töréspont  F10/F11:lépés  Shift+F5:leállítás  Space:jelölés  B/C/T/R:build/tisztítás/teszt/futtatás  V:SDK  K:SDK-k  N:elemzés  U:NuGet  S/F:SBOM  O/P:lefedettség/profil  F6/F7:fülek  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
   </data>
   <data name="Hints.DevelopmentStudioAnalysis" xml:space="preserve">
-    <value>Enter vagy kattintás:az eredmény megnyitása a sorában  N:elemzés  F7:fül  X:megszakítás  Esc:bezárás</value>
+    <value>Fel/Le/PgUp/PgDn:görgetés  Enter vagy kattintás:a megállapítás megnyitása a sorában  N:elemzés  X:megszakítás  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
+  </data>
+  <data name="Hints.DevelopmentStudioCoverage" xml:space="preserve">
+    <value>Fel/Le/PgUp/PgDn:görgetés  G:a kurzor alatti fájl megnyitása  O:lefedettség mérése  X:megszakítás  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
+  </data>
+  <data name="Hints.DevelopmentStudioDebug" xml:space="preserve">
+    <value>Fel/Le/PgUp/PgDn:görgetés  W:a kurzor alatti szó figyelése  Delete:figyelés törlése  F5:indítás vagy folytatás  Shift+F5:leállítás  F9:töréspont  F10/F11:lépés  Shift+F11:lépés kilépés  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
   </data>
   <data name="Hints.DevelopmentStudioEditor" xml:space="preserve">
-    <value>Gépelés a szerkesztéshez  Ctrl+S:mentés  F9:töréspont  F5:hibakeresés  F7:fül  Esc:bezár</value>
+    <value>Gépelés a szerkesztéshez  Ctrl+S:mentés  Ctrl+R:frissítés  F5:hibakeresés  Shift+F5:leállítás  F9:töréspont  F10/F11:lépés  Shift+F11:lépés kilépés  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
   </data>
   <data name="Hints.DevelopmentStudioErrors" xml:space="preserve">
-    <value>Enter:a hiba megnyitása a sorában  F7:fül  Esc:bezár</value>
+    <value>Fel/Le/PgUp/PgDn:görgetés  Enter:a hiba megnyitása a sorában  X:megszakítás  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
   </data>
   <data name="Hints.DevelopmentStudioExplorer" xml:space="preserve">
-    <value>Enter:megnyitás  Bal/Jobb:kibontás  Space:jelöl  B/C/T/R:build/tisztítás/teszt/futtatás  M:fő  K:SDK-k  Esc:bezár</value>
+    <value>Fel/Le:mozgás  Enter:megnyitás, teszt futtatása vagy kibontás  Bal/Jobb:összecsukás vagy kibontás  Space:jelölés  A:mindent jelöl  Shift+T:teszteket jelöl  B/C/T/R:build/tisztítás/teszt/futtatás  Ctrl+F5:futtatás  F5:hibakeresés  M:főprogram  V:SDK  K:SDK-k  N:elemzés  U:NuGet  S/F:SBOM  O/P:lefedettség/profil  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+R:frissítés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
+  </data>
+  <data name="Hints.DevelopmentStudioLayout" xml:space="preserve">
+    <value>Nyilak:panel mozgatása ahhoz a szélhez  Shift+nyilak:átméretezés  Esc vagy F8:kilépés az elrendezési módból</value>
   </data>
   <data name="Hints.DevelopmentStudioOutput" xml:space="preserve">
-    <value>Fel/Le/PgUp/PgDn:görgetés  F7:fül  X:megszakítás  Esc:bezár</value>
+    <value>Fel/Le/PgUp/PgDn:görgetés  B/C/T/R:build/tisztítás/teszt/futtatás  F5:hibakeresés  Shift+F5:leállítás  X:megszakítás  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
+  </data>
+  <data name="Hints.DevelopmentStudioProfile" xml:space="preserve">
+    <value>Fel/Le/PgUp/PgDn:görgetés  P:a kijelölt szkript profilozása  X:megszakítás  F6:Explorer-fül  F7:kimeneti fül  F8:elrendezés  Ctrl+,:beállítások  Ctrl+W:bezárás</value>
   </data>
   <data name="Hints.Encyclopedia" xml:space="preserve">
     <value>Enter:keresés/olvasás  Tab:mező  F3:teljes  F2:böngésző  Esc:bezár</value>

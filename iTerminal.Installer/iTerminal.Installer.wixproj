@@ -17,7 +17,7 @@
     <!-- Set only on Windows: decides whether the WiX SDK is imported below. -->
     <BuildsInstaller Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</BuildsInstaller>
   </PropertyGroup>
-  <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
+  <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="7.0.1" Condition="'$(BuildsInstaller)' == 'true'" />
   <PropertyGroup>
     <Version Condition="'$(Version)' == ''">1.0.0</Version>
     <InstallerPlatform>x64</InstallerPlatform>
@@ -28,8 +28,8 @@
     <DefineConstants>PublishDir=$(AppPublishDir);ProductVersion=$(Version);IconPath=$(MSBuildProjectDirectory)\..\iTerminal\Assets\iTerminal.ico</DefineConstants>
   </PropertyGroup>
   <ItemGroup Condition="'$(BuildsInstaller)' == 'true'">
-    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
-    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="7.0.1" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="7.0.1" />
   </ItemGroup>
   <!--
     The folder is emptied first: Package.wxs packs everything it finds there, and a file left over
@@ -54,5 +54,5 @@
   <Target Name="VSTest" Condition="'$(BuildsInstaller)' != 'true'">
     <Message Importance="high" Text="Skipping the Windows installer tests (iTerminal.Installer): there are none, and the WiX toolset only runs on Windows." />
   </Target>
-  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk" Version="5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
+  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk" Version="7.0.1" Condition="'$(BuildsInstaller)' == 'true'" />
 </Project>
