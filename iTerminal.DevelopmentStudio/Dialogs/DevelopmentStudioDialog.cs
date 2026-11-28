@@ -3515,8 +3515,20 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
         string debugState = _session is null ? string.Empty : _paused ? "   ● paused" : "   ▶ running";
         string busy = _busy ? "   * " + (RunningElapsedText() ?? string.Empty) : string.Empty;
-        string background = BackgroundText();
-        WriteLine(buffer, x + column, y, w - column, $"   {folder}   ({_items.Count} items){debugState}{busy}{background}", Color.Cyan, colorScheme.Background);
+        // The background indicators sit at the right end of the row, two spaces apart; the folder keeps the room left of them.
+        var indicators = BackgroundIndicators();
+        int indicatorsWidth = indicators.Sum(indicator => indicator.Text.Length) + 2 * indicators.Count;
+        bool showIndicators = indicators.Count > 0 && w - column >= indicatorsWidth;
+        int folderWidth = showIndicators ? w - column - indicatorsWidth : w - column;
+        WriteLine(buffer, x + column, y, folderWidth, $"   {folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
+        if (!showIndicators) return;
+
+        int indicatorColumn = x + w - indicatorsWidth;
+        foreach (var (text, color) in indicators)
+        {
+            WriteLine(buffer, indicatorColumn, y, text.Length, text, color ?? colorScheme.Foreground, colorScheme.Background);
+            indicatorColumn += text.Length + 2;
+        }
     }
 
     /// <summary>

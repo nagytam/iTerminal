@@ -2497,6 +2497,18 @@
   <data name="DevelopmentStudio.HintWatch" xml:space="preserve">
     <value>Vigilar la palabra bajo el cursor (en la vista de depuración, quitarla)</value>
   </data>
+  <data name="DevelopmentStudio.IndicatorBuild" xml:space="preserve">
+    <value>Compila</value>
+  </data>
+  <data name="DevelopmentStudio.IndicatorDiscover" xml:space="preserve">
+    <value>Rileva</value>
+  </data>
+  <data name="DevelopmentStudio.IndicatorTestCounts" xml:space="preserve">
+    <value>{0} superati, {1} falliti</value>
+  </data>
+  <data name="DevelopmentStudio.IndicatorTests" xml:space="preserve">
+    <value>Testa</value>
+  </data>
   <data name="DevelopmentStudio.LanguageServerMissing" xml:space="preserve">
     <value>csharp-ls non è stato trovato. Installarlo con dotnet tool install -g csharp-ls.</value>
   </data>

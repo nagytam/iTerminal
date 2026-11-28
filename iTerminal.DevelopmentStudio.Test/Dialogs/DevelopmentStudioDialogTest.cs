@@ -1343,6 +1343,36 @@ public class DevelopmentStudioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheBackgroundIndicatorsShowEachStepInTheMenuRow()
+    {
+        var harness = await OpenAsync([Solution, App, AppTest], settings: SettingsWithAutoBuild(true));
+        await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.Background == DevelopmentStudioDialog.BackgroundPhase.Idle && harness.Runner.Commands.Count == 3, "the background build, listing and test to finish");
+
+        Assert.AreEqual(BackgroundStep.Passed, harness.Dialog.Activities.Build);
+        Assert.AreEqual(BackgroundStep.Passed, harness.Dialog.Activities.Discover);
+        Assert.AreEqual(BackgroundStep.Passed, harness.Dialog.Activities.Tests);
+        var screen = Render(harness.Dialog);
+        AssertScreenContains(screen, "✓ Build", "the build's indicator is drawn in the menu row");
+        AssertScreenContains(screen, "✓ Discover (1)", "the discovery shows the test projects it listed");
+        AssertScreenContains(screen, "✓ Tests");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFailedBackgroundBuildMarksTheDiscoveryAndTheTestsSkipped()
+    {
+        var runner = new FakeProcessRunner { ExitCode = 1 };
+        var harness = await OpenAsync([Solution, App, AppTest], settings: SettingsWithAutoBuild(true), runner: runner);
+        await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.Background == DevelopmentStudioDialog.BackgroundPhase.Idle && runner.Commands.Count == 1, "the background build to fail");
+
+        Assert.AreEqual(BackgroundStep.Failed, harness.Dialog.Activities.Build);
+        Assert.AreEqual(BackgroundStep.Skipped, harness.Dialog.Activities.Discover);
+        Assert.AreEqual(BackgroundStep.Skipped, harness.Dialog.Activities.Tests);
+        AssertScreenContains(Render(harness.Dialog), "✗ Build");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task TurnedOffTheBackgroundDoesNotRun()
     {
         var runner = new FakeProcessRunner();
