@@ -1126,4 +1126,44 @@ public class DevelopmentStudioDialogTest
         Assert.IsTrue(harness.Dialog.OutputLines.Any(line => line.StartsWith("$ ", StringComparison.Ordinal)), "the Output tab lists the command that built");
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheMenuBarTitlesLeadTheMenusInOrder()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        CollectionAssert.AreEqual(new[] { "File", "Build", "Debug", "View", "Tools" }, harness.Dialog.MenuTitles.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EveryHotKeyOfTheStudioIsListedInAMenu()
+    {
+        var harness = await OpenAsync([Solution, App]);
+        var listed = Enum.GetValues<DevelopmentStudioDialog.MenuBarTitle>()
+            .SelectMany(title => harness.Dialog.MenuItemsOf(title))
+            .Select(item => item.Shortcut)
+            .ToHashSet();
+
+        string[] hotKeys =
+        [
+            "Enter", "Ctrl+S", "Ctrl+R", "Ctrl+,", "Ctrl+W", "Ctrl+F5", "B", "R", "T", "C", "X", "Space", "A", "Shift+T", "D", "V", "K", "U",
+            "F5", "Shift+F5", "F9", "F10", "F11", "Shift+F11", "W", "Delete", "M", "F6", "F7", "F8", "Right", "Left", "G", "N", "O", "P", "S", "F",
+        ];
+        CollectionAssert.IsSubsetOf(hotKeys, listed.ToArray(), "every key the studio handles is also an entry of a menu");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AMenuEntryRunsTheCommandItsHotKeyRuns()
+    {
+        var runner = new FakeProcessRunner();
+        var harness = await OpenAsync([Solution, App], runner: runner);
+        var build = harness.Dialog.MenuItemsOf(DevelopmentStudioDialog.MenuBarTitle.Build).Single(item => item.Shortcut == "B");
+
+        await build.Execute!();
+        await WaitIdleAsync(harness.Dialog);
+
+        Assert.AreEqual(1, runner.Commands.Count, "the Build entry starts the build, as B does");
+    }
 }
