@@ -2770,6 +2770,9 @@
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Scrittura della SBOM...</value>
   </data>
+  <data name="DevelopmentStudio.SdkMissing" xml:space="preserve">
+    <value>{0} a(z) {2} fájlban megadott {1} .NET SDK-t igényli, amely nincs telepítve (az SDK-kat a K gombbal telepítheti).</value>
+  </data>
   <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
     <value>   (SDK .NET {0})</value>
   </data>
@@ -2864,7 +2867,7 @@
     <value>SBOM-formátum</value>
   </data>
   <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
-    <value>A build, futtatás és teszt SDK-ja</value>
+    <value>A global.json nélküli projektek SDK-ja</value>
   </data>
   <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
     <value>5-Elemzés</value>

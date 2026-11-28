@@ -2770,6 +2770,9 @@
   <data name="DevelopmentStudio.SbomWriting" xml:space="preserve">
     <value>Écriture de la SBOM...</value>
   </data>
+  <data name="DevelopmentStudio.SdkMissing" xml:space="preserve">
+    <value>{0} necesita el SDK de .NET {1} de {2}, que no está instalado (K instala los SDK).</value>
+  </data>
   <data name="DevelopmentStudio.SdkNote" xml:space="preserve">
     <value>   (SDK .NET {0})</value>
   </data>
@@ -2864,7 +2867,7 @@
     <value>Formato del SBOM</value>
   </data>
   <data name="DevelopmentStudioSettings.Sdk" xml:space="preserve">
-    <value>SDK para compilar, ejecutar y probar</value>
+    <value>SDK para los proyectos sin global.json</value>
   </data>
   <data name="DevelopmentStudioSettings.TabAnalysis" xml:space="preserve">
     <value>5-Análisis</value>
