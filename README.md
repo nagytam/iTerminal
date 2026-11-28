@@ -62,7 +62,7 @@ Ctrl+F9 points the focused panel at the containers on this machine. Press it aga
 - Calculator, unit converter, weather, process/task/disk/network/system managers, network browser, toast notifications
 
 ## Requirements
-- .NET 11 SDK to build; released packages are self-contained
+- .NET 11 SDK to build (version pinned by `global.json`; `Tools/ensure-sdk.sh` or `Tools\ensure-sdk.ps1` offers to install it); released packages are self-contained
 - Optional: `git`, `docker`, `ffmpeg`, 7-Zip, Tesseract for the features that use them. The AI bar's Ollama server and its model are downloaded by iTerminal (Tools > Runtime Dependencies) unless one already answers at the configured address
 
 ## Build, test and run
