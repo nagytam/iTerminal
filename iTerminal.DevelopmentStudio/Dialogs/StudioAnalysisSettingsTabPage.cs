@@ -17,9 +17,9 @@ public class StudioAnalysisSettingsTabPage : StudioSettingsTabPage
     private readonly Label _hintLabel;
 
     public StudioAnalysisSettingsTabPage(ISettingsService settings, IThemeService themeService)
-        : base(UiText.Get("DevelopmentStudioSettings.TabAnalysis", "4-Analysis"), settings, themeService)
+        : base(UiText.Get("DevelopmentStudioSettings.TabAnalysis", "5-Analysis"), settings, themeService)
     {
-        HotConsoleKey = ConsoleKey.D4;
+        HotConsoleKey = ConsoleKey.D5;
         _forget = new Button(UiText.Get("DevelopmentStudioSettings.ForgetDurations", "Forget the analysis time estimates"), new StudioActionCommand(UiText.Get("DevelopmentStudioSettings.ForgetDurations", "Forget the analysis time estimates"), ForgetDurations), themeService)
         {
             CanFocus = true,

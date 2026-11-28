@@ -15,9 +15,9 @@ public class StudioLayoutSettingsTabPage : StudioSettingsTabPage
     private readonly Label _hintLabel;
 
     public StudioLayoutSettingsTabPage(ISettingsService settings, IThemeService themeService)
-        : base(UiText.Get("DevelopmentStudioSettings.TabLayout", "3-Layout"), settings, themeService)
+        : base(UiText.Get("DevelopmentStudioSettings.TabLayout", "4-Layout"), settings, themeService)
     {
-        HotConsoleKey = ConsoleKey.D3;
+        HotConsoleKey = ConsoleKey.D4;
         _restore = new Button(UiText.Get("DevelopmentStudioSettings.RestoreLayout", "Restore the default layout"), new StudioActionCommand(UiText.Get("DevelopmentStudioSettings.RestoreLayout", "Restore the default layout"), RestoreDefaultLayout), themeService)
         {
             CanFocus = true,

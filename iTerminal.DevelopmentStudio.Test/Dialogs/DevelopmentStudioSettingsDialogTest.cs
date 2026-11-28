@@ -74,6 +74,37 @@ public class DevelopmentStudioSettingsDialogTest
     }
 
     [TestMethod]
+    public void TheConfigurationPageSavesTheConfigurationItIsSetTo()
+    {
+        var settings = new FakeSettingsService();
+        var page = new StudioConfigurationSettingsTabPage(settings, TestTheme());
+        page.Load();
+
+        page.Configuration = BuildConfiguration.Release;
+
+        Assert.AreEqual("Release", settings.Get(StudioSettings.BuildConfigurationKey));
+    }
+
+    [TestMethod]
+    public void TheConfigurationPageShowsTheSavedConfigurationAndDefaultsToDebug()
+    {
+        var settings = new FakeSettingsService();
+        var page = new StudioConfigurationSettingsTabPage(settings, TestTheme());
+
+        page.Load();
+        Assert.AreEqual(BuildConfiguration.Debug, page.Configuration, "a missing configuration is Debug");
+
+        settings.Set(StudioSettings.BuildConfigurationKey, "Release");
+        page.Load();
+        Assert.AreEqual(BuildConfiguration.Release, page.Configuration);
+        Assert.AreEqual("Release", settings.Get(StudioSettings.BuildConfigurationKey), "filling the page is not a change");
+
+        settings.Set(StudioSettings.BuildConfigurationKey, "Nonsense");
+        page.Load();
+        Assert.AreEqual(BuildConfiguration.Debug, page.Configuration, "a value that names no configuration gives Debug");
+    }
+
+    [TestMethod]
     public void TheLayoutPageRestoresTheDefaultArrangement()
     {
         var settings = new FakeSettingsService();
@@ -108,8 +139,9 @@ public class DevelopmentStudioSettingsDialogTest
         var screen = Render(dialog);
         AssertScreenContains(screen, "1-General");
         AssertScreenContains(screen, "2-Build");
-        AssertScreenContains(screen, "3-Layout");
-        AssertScreenContains(screen, "4-Analysis");
+        AssertScreenContains(screen, "3-Configuration");
+        AssertScreenContains(screen, "4-Layout");
+        AssertScreenContains(screen, "5-Analysis");
 
         dialog.Close();
         Assert.IsTrue(closed, "the studio reads the saved choices when the dialog closes");

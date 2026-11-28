@@ -2482,12 +2482,13 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
     }
 
     /// <summary>
-    /// Applies what the settings dialog saved to the open studio: the SDK, the SBOM format, the explorer and output tabs, the
-    /// layout and the analysis estimates. The studio keeps its own copies of these, so each one is read again here.
+    /// Applies what the settings dialog saved to the open studio: the SDK, the SBOM format, the build configuration, the explorer
+    /// and output tabs, the layout and the analysis estimates. The studio keeps its own copies of these, so each one is read again here.
     /// </summary>
     private void ReloadSettings()
     {
         _sbomFormat = ParseSetting(_settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
+        _configuration = ParseSetting(_settings.Get(StudioSettings.BuildConfigurationKey), _configuration);
 
         string? sdkHost = _settings.Get(StudioSettings.SdkHostKey);
         int sdkIndex = sdkHost is null ? -1 : _sdks.ToList().FindIndex(sdk => sdk.HostPath.Equals(sdkHost, StringComparison.OrdinalIgnoreCase));
