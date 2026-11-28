@@ -2440,6 +2440,9 @@
   <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
     <value>Az elem menüje: parancsai és a Beállítás főprojektként</value>
   </data>
+  <data name="DevelopmentStudio.HintMenuBar" xml:space="preserve">
+    <value>A menüsor: Fájl, Build, Hibakeresés, Nézet és Eszközök (a címre kattintva is megnyílik a menüje)</value>
+  </data>
   <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
     <value>Gestire i pacchetti NuGet della soluzione o del progetto selezionato</value>
   </data>
@@ -2515,8 +2518,23 @@
   <data name="DevelopmentStudio.MenuAnalyze" xml:space="preserve">
     <value>Kód elemzése</value>
   </data>
+  <data name="DevelopmentStudio.MenuBreakpoint" xml:space="preserve">
+    <value>Töréspont be- vagy kikapcsolása a kurzor során</value>
+  </data>
   <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
     <value>Fordítás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCancel" xml:space="preserve">
+    <value>A futó parancs megszakítása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCheck" xml:space="preserve">
+    <value>A projekt bejelölése vagy a jelölés törlése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCheckAll" xml:space="preserve">
+    <value>Összes projekt bejelölése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCheckAllTests" xml:space="preserve">
+    <value>Összes tesztprojekt bejelölése</value>
   </data>
   <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
     <value>Tisztítás</value>
@@ -2524,20 +2542,110 @@
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Főprojekt törlése</value>
   </data>
+  <data name="DevelopmentStudio.MenuClose" xml:space="preserve">
+    <value>A stúdió bezárása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCollapse" xml:space="preserve">
+    <value>A megoldás, projekt vagy mappa összecsukása</value>
+  </data>
   <data name="DevelopmentStudio.MenuConfiguration" xml:space="preserve">
     <value>Konfiguráció: {0}</value>
   </data>
   <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
     <value>Hibakeresés</value>
   </data>
+  <data name="DevelopmentStudio.MenuExpand" xml:space="preserve">
+    <value>A megoldás, projekt vagy mappa kibontása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuExplorerTab" xml:space="preserve">
+    <value>Felfedező fül: Megoldás, Tesztek vagy Fájlok</value>
+  </data>
+  <data name="DevelopmentStudio.MenuFile" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="DevelopmentStudio.MenuGoToCoverage" xml:space="preserve">
+    <value>A kurzor alatti lefedettségi fájl megnyitása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuLayout" xml:space="preserve">
+    <value>A panelek mozgatása és átméretezése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuMainProgram" xml:space="preserve">
+    <value>A fő program beállítása vagy törlése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuMeasureCoverage" xml:space="preserve">
+    <value>Lefedettség mérése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuNextSdk" xml:space="preserve">
+    <value>Következő .NET SDK</value>
+  </data>
+  <data name="DevelopmentStudio.MenuNuGet" xml:space="preserve">
+    <value>NuGet-csomagok</value>
+  </data>
+  <data name="DevelopmentStudio.MenuOpen" xml:space="preserve">
+    <value>A kijelölt fájl vagy projekt megnyitása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuOutputTab" xml:space="preserve">
+    <value>A kimeneti panel füle</value>
+  </data>
+  <data name="DevelopmentStudio.MenuProfile" xml:space="preserve">
+    <value>A Python-szkript profilozása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRefresh" xml:space="preserve">
+    <value>A megoldások és projektek frissítése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRemoveWatch" xml:space="preserve">
+    <value>Figyelés törlése</value>
+  </data>
   <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
     <value>Futtatás</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRunNoDebug" xml:space="preserve">
+    <value>Futtatás hibakeresés nélkül</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSave" xml:space="preserve">
+    <value>Fájl mentése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSbom" xml:space="preserve">
+    <value>SBOM írása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSbomFormat" xml:space="preserve">
+    <value>SBOM-formátum váltása: XML vagy JSON</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSdkManager" xml:space="preserve">
+    <value>SDK-k és JDK-k</value>
   </data>
   <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
     <value>Beállítás főprojektként</value>
   </data>
+  <data name="DevelopmentStudio.MenuSettings" xml:space="preserve">
+    <value>Beállítások...</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStartDebugging" xml:space="preserve">
+    <value>Hibakeresés indítása vagy folytatása</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStepInto" xml:space="preserve">
+    <value>Belépés a hívásba</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStepOut" xml:space="preserve">
+    <value>Kilépés a hívásból</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStepOver" xml:space="preserve">
+    <value>Lépés a hívás felett</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStop" xml:space="preserve">
+    <value>Hibakeresés leállítása</value>
+  </data>
   <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
     <value>Tesztelés</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTools" xml:space="preserve">
+    <value>Eszközök</value>
+  </data>
+  <data name="DevelopmentStudio.MenuView" xml:space="preserve">
+    <value>Nézet</value>
+  </data>
+  <data name="DevelopmentStudio.MenuWatch" xml:space="preserve">
+    <value>A kurzor alatti szó figyelése</value>
   </data>
   <data name="DevelopmentStudio.NoAnalysis" xml:space="preserve">
     <value>Még nincs kódelemzés. Az N a kijelölt elemet elemzi, az eredményei itt jelennek meg.</value>

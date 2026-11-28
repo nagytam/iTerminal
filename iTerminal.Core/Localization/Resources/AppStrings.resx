@@ -2582,6 +2582,9 @@
   <data name="DevelopmentStudio.HintMenu" xml:space="preserve">
     <value>The item's menu: its commands, and Set as main project</value>
   </data>
+  <data name="DevelopmentStudio.HintMenuBar" xml:space="preserve">
+    <value>The menu bar: File, Build, Debug, View and Tools (a click on a title opens its menu too)</value>
+  </data>
   <data name="DevelopmentStudio.HintNuGet" xml:space="preserve">
     <value>Manage the NuGet packages of the selected solution or project</value>
   </data>
@@ -2657,8 +2660,23 @@
   <data name="DevelopmentStudio.MenuAnalyze" xml:space="preserve">
     <value>Analyze code</value>
   </data>
+  <data name="DevelopmentStudio.MenuBreakpoint" xml:space="preserve">
+    <value>Toggle a breakpoint on the cursor line</value>
+  </data>
   <data name="DevelopmentStudio.MenuBuild" xml:space="preserve">
     <value>Build</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCancel" xml:space="preserve">
+    <value>Cancel the running command</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCheck" xml:space="preserve">
+    <value>Check or uncheck the project</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCheckAll" xml:space="preserve">
+    <value>Check all projects</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCheckAllTests" xml:space="preserve">
+    <value>Check all test projects</value>
   </data>
   <data name="DevelopmentStudio.MenuClean" xml:space="preserve">
     <value>Clean</value>
@@ -2666,20 +2684,110 @@
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Clear the main project</value>
   </data>
+  <data name="DevelopmentStudio.MenuClose" xml:space="preserve">
+    <value>Close the studio</value>
+  </data>
+  <data name="DevelopmentStudio.MenuCollapse" xml:space="preserve">
+    <value>Collapse the solution, project or folder</value>
+  </data>
   <data name="DevelopmentStudio.MenuConfiguration" xml:space="preserve">
     <value>Configuration: {0}</value>
   </data>
   <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
     <value>Debug</value>
   </data>
+  <data name="DevelopmentStudio.MenuExpand" xml:space="preserve">
+    <value>Expand the solution, project or folder</value>
+  </data>
+  <data name="DevelopmentStudio.MenuExplorerTab" xml:space="preserve">
+    <value>Explorer tab: Solution, Tests or Files</value>
+  </data>
+  <data name="DevelopmentStudio.MenuFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="DevelopmentStudio.MenuGoToCoverage" xml:space="preserve">
+    <value>Open the coverage file under the cursor</value>
+  </data>
+  <data name="DevelopmentStudio.MenuLayout" xml:space="preserve">
+    <value>Move and resize the panels</value>
+  </data>
+  <data name="DevelopmentStudio.MenuMainProgram" xml:space="preserve">
+    <value>Set or clear the main program</value>
+  </data>
+  <data name="DevelopmentStudio.MenuMeasureCoverage" xml:space="preserve">
+    <value>Measure coverage</value>
+  </data>
+  <data name="DevelopmentStudio.MenuNextSdk" xml:space="preserve">
+    <value>Next .NET SDK</value>
+  </data>
+  <data name="DevelopmentStudio.MenuNuGet" xml:space="preserve">
+    <value>NuGet packages</value>
+  </data>
+  <data name="DevelopmentStudio.MenuOpen" xml:space="preserve">
+    <value>Open the selected file or project</value>
+  </data>
+  <data name="DevelopmentStudio.MenuOutputTab" xml:space="preserve">
+    <value>Output panel tab</value>
+  </data>
+  <data name="DevelopmentStudio.MenuProfile" xml:space="preserve">
+    <value>Profile the Python script</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRefresh" xml:space="preserve">
+    <value>Refresh the solutions and projects</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRemoveWatch" xml:space="preserve">
+    <value>Remove the watch</value>
+  </data>
   <data name="DevelopmentStudio.MenuRun" xml:space="preserve">
     <value>Run</value>
+  </data>
+  <data name="DevelopmentStudio.MenuRunNoDebug" xml:space="preserve">
+    <value>Run without debugging</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSave" xml:space="preserve">
+    <value>Save the file</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSbom" xml:space="preserve">
+    <value>Write the SBOM</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSbomFormat" xml:space="preserve">
+    <value>Switch the SBOM format: XML or JSON</value>
+  </data>
+  <data name="DevelopmentStudio.MenuSdkManager" xml:space="preserve">
+    <value>SDKs and JDKs</value>
   </data>
   <data name="DevelopmentStudio.MenuSetMain" xml:space="preserve">
     <value>Set as main project</value>
   </data>
+  <data name="DevelopmentStudio.MenuSettings" xml:space="preserve">
+    <value>Settings...</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStartDebugging" xml:space="preserve">
+    <value>Start debugging, or continue</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStepInto" xml:space="preserve">
+    <value>Step into</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStepOut" xml:space="preserve">
+    <value>Step out</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStepOver" xml:space="preserve">
+    <value>Step over</value>
+  </data>
+  <data name="DevelopmentStudio.MenuStop" xml:space="preserve">
+    <value>Stop debugging</value>
+  </data>
   <data name="DevelopmentStudio.MenuTest" xml:space="preserve">
     <value>Test</value>
+  </data>
+  <data name="DevelopmentStudio.MenuTools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="DevelopmentStudio.MenuView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="DevelopmentStudio.MenuWatch" xml:space="preserve">
+    <value>Watch the word under the cursor</value>
   </data>
   <data name="DevelopmentStudio.NoAnalysis" xml:space="preserve">
     <value>No code analysis yet. N analyzes the selected item, and its findings are listed here.</value>

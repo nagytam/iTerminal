@@ -1,5 +1,6 @@
 using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iConsole.Controls;
+using iConsole.Display;
 using iConsole.Services;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
@@ -1126,4 +1127,65 @@ public class DevelopmentStudioDialogTest
         Assert.IsTrue(harness.Dialog.OutputLines.Any(line => line.StartsWith("$ ", StringComparison.Ordinal)), "the Output tab lists the command that built");
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheExplorerScrollsWithTheCursorAndShowsAScrollbar()
+    {
+        var scripts = Enumerable.Range(0, 60)
+            .Select(i => new DevelopmentProject($"tool{i:00}.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, $"/src/tool{i:00}.py"))
+            .ToList();
+        var harness = await OpenAsync(scripts);
+
+        for (int i = 0; i < 45; i++)
+        {
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        }
+
+        var screen = Render(harness.Dialog);
+        AssertScreenContains(screen, "tool45.py", "the cursor row is scrolled into view");
+        var rowsOnScreen = Enumerable.Range(0, (int)iTerminal.Core.Test.Helper.UiTestHelper.ScreenSize.Height).Select(row => screen.Line(row));
+        Assert.IsFalse(rowsOnScreen.Any(line => line.Contains("tool00.py", StringComparison.Ordinal)), "the rows above the cursor have scrolled out of the list");
+        AssertScreenContains(screen, Border.ArrowUp.ToString(), "the explorer draws its scrollbar");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheMenuBarTitlesLeadTheMenusInOrder()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        CollectionAssert.AreEqual(new[] { "File", "Build", "Debug", "View", "Tools" }, harness.Dialog.MenuTitles.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EveryHotKeyOfTheStudioIsListedInAMenu()
+    {
+        var harness = await OpenAsync([Solution, App]);
+        var listed = Enum.GetValues<DevelopmentStudioDialog.MenuBarTitle>()
+            .SelectMany(title => harness.Dialog.MenuItemsOf(title))
+            .Select(item => item.Shortcut)
+            .ToHashSet();
+
+        string[] hotKeys =
+        [
+            "Enter", "Ctrl+S", "Ctrl+R", "Ctrl+,", "Ctrl+W", "Ctrl+F5", "B", "R", "T", "C", "X", "Space", "A", "Shift+T", "D", "V", "K", "U",
+            "F5", "Shift+F5", "F9", "F10", "F11", "Shift+F11", "W", "Delete", "M", "F6", "F7", "F8", "Right", "Left", "G", "N", "O", "P", "S", "F",
+        ];
+        CollectionAssert.IsSubsetOf(hotKeys, listed.ToArray(), "every key the studio handles is also an entry of a menu");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AMenuEntryRunsTheCommandItsHotKeyRuns()
+    {
+        var runner = new FakeProcessRunner();
+        var harness = await OpenAsync([Solution, App], runner: runner);
+        var build = harness.Dialog.MenuItemsOf(DevelopmentStudioDialog.MenuBarTitle.Build).Single(item => item.Shortcut == "B");
+
+        await build.Execute!();
+        await WaitIdleAsync(harness.Dialog);
+
+        Assert.AreEqual(1, runner.Commands.Count, "the Build entry starts the build, as B does");
+    }
 }

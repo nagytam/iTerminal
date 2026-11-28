@@ -35,7 +35,7 @@ namespace iTerminal.DevelopmentStudio.Dialogs;
 /// The keys follow Visual Studio and VS Code: F5 starts or continues, Shift+F5 stops, F9 toggles a breakpoint, F10 steps
 /// over, F11 steps into and Shift+F11 steps out. Commands run on background tasks; key handlers and drawing never wait for them.
 /// </summary>
-public class DevelopmentStudioDialog : SplitPaneDialog
+public partial class DevelopmentStudioDialog : SplitPaneDialog
 {
     /// <summary>What the left pane lists: the Solution Explorer, or the Test Explorer.</summary>
     public enum ExplorerMode { Solution, Tests, Files }
@@ -353,7 +353,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         // Each panel is a component of its own; the dock places them in the order _layout gives.
         _dock = new DockPanel(themeService) { Gap = 1 };
         _panels[StudioPanelKind.Editor] = new StudioPanel(StudioPanelKind.Editor, _editor, EditorTitle, themeService);
-        _panels[StudioPanelKind.Explorer] = new StudioPanel(StudioPanelKind.Explorer, _explorerListBox, ExplorerHeading, themeService);
+        _panels[StudioPanelKind.Explorer] = new StudioPanel(StudioPanelKind.Explorer, _explorerListBox, ExplorerHeading, themeService, _explorerListBox.ScrollableModel);
         _panels[StudioPanelKind.Output] = new StudioPanel(StudioPanelKind.Output, _outputListBox, () => string.Empty, themeService)
         {
             BandPainter = (buffer, x, y, width, colorScheme, focused) => DrawOutputTabs(buffer, x, y, width, colorScheme, focused),
@@ -520,6 +520,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
+        yield return ("F12", UiText.Get("DevelopmentStudio.HintMenuBar", "The menu bar: File, Build, Debug, View and Tools (a click on a title opens its menu too)"));
         yield return ("F5", UiText.Get("DevelopmentStudio.HintStart", "Start debugging, or continue"));
         yield return ("D", UiText.Get("DevelopmentStudio.HintConfiguration", "Switch the build configuration: Debug or Release (Release disables debugging)"));
         yield return ("Ctrl+F5", UiText.Get("DevelopmentStudio.HintRunNoDebug", "Run without debugging"));
@@ -592,6 +593,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.F8 when plain:
                 ToggleLayoutMode();
+                return true;
+            case ConsoleKey.F12 when plain:
+                await OpenMenuBarAsync(MenuBarTitle.File);
                 return true;
             case ConsoleKey.F9 when plain:
                 ToggleBreakpointAtCursor();
@@ -834,10 +838,11 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         await menu.OpenAtAsync(this, point);
     }
 
-    private static ContextMenuItem CommandMenuItem(string title, string shortcut, Action run) =>
+    private static ContextMenuItem CommandMenuItem(string title, string shortcut, Action run, bool enabled = true) =>
         new(title)
         {
             Shortcut = shortcut,
+            IsEnabled = enabled,
             Execute = () =>
             {
                 run();
@@ -3337,10 +3342,19 @@ public class DevelopmentStudioDialog : SplitPaneDialog
 
     private void DrawHeader(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
+        // The menu titles lead the header, each in its own cell (see MenuBar.cs); the folder and its state follow them.
+        int column = 0;
+        foreach (MenuBarTitle title in Enum.GetValues<MenuBarTitle>())
+        {
+            string cell = MenuTitleCell(title);
+            WriteLine(buffer, x + column, y, w - column, cell, colorScheme.Foreground, colorScheme.Background);
+            column += cell.Length;
+        }
+
         string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
         string debugState = _session is null ? string.Empty : _paused ? "   ● paused" : "   ▶ running";
         string busy = _busy ? "   * " + (RunningElapsedText() ?? string.Empty) : string.Empty;
-        WriteLine(buffer, x, y, w, $"{folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
+        WriteLine(buffer, x + column, y, w - column, $"   {folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
     }
 
     /// <summary>
