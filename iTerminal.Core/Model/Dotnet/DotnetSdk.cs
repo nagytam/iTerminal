@@ -32,14 +32,33 @@ public sealed record DotnetSdk(string Version, string Root)
         [.. sdks.OrderByDescending(sdk => sdk.BaseVersion).ThenByDescending(sdk => sdk.Version, StringComparer.Ordinal)];
 
     /// <summary>
+    /// Several SDKs of one install are one <c>dotnet</c> host: an install root holds every SDK side by side. An SDK is one
+    /// entry per host and version, so they are kept apart, and the same SDK listed twice is kept once, newest first.
+    /// </summary>
+    public static IReadOnlyList<DotnetSdk> Merge(IEnumerable<DotnetSdk> sdks) =>
+        Newest(sdks.DistinctBy(sdk => (sdk.HostPath, sdk.Version)));
+
+    /// <summary>
+    /// The SDK a setting names: the one with this host and, when the setting holds one, this version. A setting that holds
+    /// only a host (kept by an earlier version) names the first SDK of that host. Null when none matches.
+    /// </summary>
+    public static DotnetSdk? Find(IEnumerable<DotnetSdk> sdks, string? hostPath, string? version) =>
+        string.IsNullOrEmpty(hostPath)
+            ? null
+            : sdks.FirstOrDefault(sdk => sdk.HostPath.Equals(hostPath, StringComparison.OrdinalIgnoreCase)
+                && (string.IsNullOrEmpty(version) || sdk.Version == version));
+
+    /// <summary>
     /// Reads the output of <c>dotnet --list-sdks</c>, one <c>10.0.113 [/usr/lib/dotnet/sdk]</c> line per SDK, newest first.
     /// Lines that do not match are skipped.
     /// </summary>
     public static IReadOnlyList<DotnetSdk> ParseListing(IEnumerable<string> lines)
     {
         List<DotnetSdk> sdks = [];
-        foreach (string line in lines)
+        foreach (string text in lines)
         {
+            // A Windows console writes CRLF, so the carriage return is trimmed before the line is read.
+            string line = text.Trim();
             int open = line.LastIndexOf(" [", StringComparison.Ordinal);
             if (open <= 0 || !line.EndsWith(']'))
             {

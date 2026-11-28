@@ -1,4 +1,6 @@
 using System.Text.Json;
+using iTerminal.Core.Model.Dotnet;
+using iTerminal.Core.Services;
 
 namespace iTerminal.DevelopmentStudio.Services;
 
@@ -19,8 +21,11 @@ public static class StudioSettings
     /// <summary>The build configuration of the .NET commands: <c>Debug</c> or <c>Release</c>. Release disables debugging.</summary>
     public const string BuildConfigurationKey = "DevelopmentStudio.BuildConfiguration";
 
-    /// <summary>The host path of the .NET SDK new commands run with.</summary>
+    /// <summary>The host path of the .NET SDK new commands run with. Several SDKs share one host, so <see cref="SdkVersionKey"/> names it.</summary>
     public const string SdkHostKey = "DevelopmentStudio.SdkHost";
+
+    /// <summary>The version of the .NET SDK new commands run with, saved beside <see cref="SdkHostKey"/>.</summary>
+    public const string SdkVersionKey = "DevelopmentStudio.SdkVersion";
 
     /// <summary>The left pane: <c>Solution</c>, <c>Tests</c> or <c>Files</c>.</summary>
     public const string ExplorerModeKey = "DevelopmentStudio.ExplorerMode";
@@ -52,6 +57,17 @@ public static class StudioSettings
         {
             return new Dictionary<string, double>();
         }
+    }
+
+    /// <summary>The SDK the settings name, one of <paramref name="sdks"/>; null when the settings name none that is listed.</summary>
+    public static DotnetSdk? ReadSdk(ISettingsService settings, IEnumerable<DotnetSdk> sdks) =>
+        DotnetSdk.Find(sdks, settings.Get(SdkHostKey), settings.Get(SdkVersionKey));
+
+    /// <summary>Saves the SDK new commands run with: its host and its version.</summary>
+    public static void WriteSdk(ISettingsService settings, DotnetSdk sdk)
+    {
+        settings.Set(SdkHostKey, sdk.HostPath);
+        settings.Set(SdkVersionKey, sdk.Version);
     }
 
     /// <summary>A list as a JSON array of strings.</summary>

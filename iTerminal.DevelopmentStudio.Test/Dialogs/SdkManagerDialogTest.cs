@@ -66,6 +66,39 @@ public class SdkManagerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AnSdkTheSystemHasIsListedAsInstalledAndNotOfferedForDownload()
+    {
+        // The system's 11.0.100 is installed in /usr/lib/dotnet beside 10.0.115, not by iTerminal: it must not show as a download.
+        var manager = new FakeSdkManager
+        {
+            Available =
+            [
+                new AvailableSdk(SdkKind.DotNet, "11.0.100", "11.0", "https://example.test/11", "11.tar.gz", new string('a', 128), System.Security.Cryptography.HashAlgorithmName.SHA512, null, IsLatest: true),
+                new AvailableSdk(SdkKind.DotNet, "9.0.300", "9.0", "https://example.test/9", "9.tar.gz", new string('d', 128), System.Security.Cryptography.HashAlgorithmName.SHA512, null, IsLatest: true),
+            ],
+        };
+        var system = new List<DotnetSdk> { new("11.0.100", "/usr/lib/dotnet"), new("10.0.115", "/usr/lib/dotnet") };
+        var dialog = new SdkManagerDialog(manager, TestTheme(), () => system);
+        await ShowAsync(dialog);
+        await WaitForRowsAsync(dialog);
+
+        CollectionAssert.AreEqual(new[]
+        {
+            ".NET SDK 11.0.100",
+            ".NET SDK 10.0.115",
+            ".NET SDK 9.0.300",
+        }, dialog.ListedRows().Select(row => $"{(row.Kind == SdkKind.DotNet ? ".NET SDK" : "Java JDK")} {row.Version}").ToArray());
+        Assert.AreEqual("Installed", dialog.ListedRows()[0].State);
+        Assert.AreEqual("Installed", dialog.ListedRows()[1].State);
+        Assert.IsNull(dialog.ListedRows()[0].Folder, "iTerminal does not own the system's SDK, so it cannot remove it");
+
+        await SelectAsync(dialog, row => row.Version == "11.0.100");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Delete));
+        Assert.IsFalse(dialog.Status.Contains("(y/n)", StringComparison.Ordinal), "a system SDK is not offered for removal");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task EnterInstallsTheDownloadUnderTheCursor()
     {
         var (dialog, manager) = await OpenAsync(Manager());
