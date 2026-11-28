@@ -46,6 +46,7 @@ public class StudioSettingsTest
             StudioSettings.LayoutKey,
             StudioSettings.SbomFormatKey,
             StudioSettings.SdkHostKey,
+            StudioSettings.SdkVersionKey,
             StudioSettings.ExplorerModeKey,
             StudioSettings.OutputTabKey,
             StudioSettings.ExpandedFoldersKey,

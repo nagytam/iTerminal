@@ -445,9 +445,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         _projectFiles.Clear();
         _loadingProjects.Clear();
         _items = await ScanAsync();
-        string? savedSdk = _settings.Get(StudioSettings.SdkHostKey);
         var sdks = await Task.Run(ReadSdks, CancellationToken.None);
-        ApplySdks(sdks, sdks.FirstOrDefault(sdk => sdk.HostPath.Equals(savedSdk, StringComparison.OrdinalIgnoreCase)));
+        ApplySdks(sdks, StudioSettings.ReadSdk(_settings, sdks));
         _javaHome = _sdkManager.ActiveJavaHome;
 
         // The explorer keeps the expansion and the cursor the user left it with. A studio that has never saved them opens its solutions.
@@ -2574,14 +2573,14 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         StateHasChanged();
     }
 
-    /// <summary>The .NET SDKs the system lists and the ones the SDK manager installed, one per host, newest first. Runs a process, so it is never called on the UI thread.</summary>
+    /// <summary>The .NET SDKs the system lists and the ones the SDK manager installed, newest first. Runs a process, so it is never called on the UI thread.</summary>
     private IReadOnlyList<DotnetSdk> ReadSdks() =>
-        DotnetSdk.Newest(_dotnet.ListSdks().Concat(_sdkManager.InstalledDotNetSdks()).DistinctBy(sdk => sdk.HostPath, StringComparer.OrdinalIgnoreCase));
+        DotnetSdk.Merge(_dotnet.ListSdks().Concat(_sdkManager.InstalledDotNetSdks()));
 
     /// <summary>Sets the SDK list; the SDK that was selected stays selected when it is still there, else the default one is.</summary>
     private void ApplySdks(IReadOnlyList<DotnetSdk> sdks, DotnetSdk? keep)
     {
-        DotnetSdk? chosen = keep is null ? null : sdks.FirstOrDefault(sdk => sdk.HostPath.Equals(keep.HostPath, StringComparison.OrdinalIgnoreCase));
+        DotnetSdk? chosen = keep is null ? null : DotnetSdk.Find(sdks, keep.HostPath, keep.Version);
         chosen ??= DotnetSdk.Default(sdks);
         _sdks = sdks;
         _sdkIndex = chosen is null ? -1 : sdks.ToList().IndexOf(chosen);
@@ -2619,7 +2618,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
     private async Task OpenSdkManagerAsync()
     {
         DotnetSdk? previous = SelectedSdk;
-        var manager = new SdkManagerDialog(_sdkManager, ThemeService)
+        var manager = new SdkManagerDialog(_sdkManager, ThemeService, _dotnet.ListSdks)
         {
             Closed = () => RequestSdkReload(previous),
         };
@@ -2646,9 +2645,10 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         _sbomFormat = ParseSetting(_settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
         _configuration = ParseSetting(_settings.Get(StudioSettings.BuildConfigurationKey), _configuration);
 
-        string? sdkHost = _settings.Get(StudioSettings.SdkHostKey);
-        int sdkIndex = sdkHost is null ? -1 : _sdks.ToList().FindIndex(sdk => sdk.HostPath.Equals(sdkHost, StringComparison.OrdinalIgnoreCase));
-        if (sdkIndex >= 0) _sdkIndex = sdkIndex;
+        if (StudioSettings.ReadSdk(_settings, _sdks) is { } selectedSdk)
+        {
+            _sdkIndex = _sdks.ToList().FindIndex(sdk => sdk.HostPath == selectedSdk.HostPath && sdk.Version == selectedSdk.Version);
+        }
 
         var explorerMode = ParseSetting(_settings.Get(StudioSettings.ExplorerModeKey), _explorerMode);
         if (explorerMode != _explorerMode)
@@ -2732,7 +2732,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
 
         _sdkIndex = (_sdkIndex + 1) % _sdks.Count;
         var chosen = SelectedSdk!;
-        _settings.Set(StudioSettings.SdkHostKey, chosen.HostPath);
+        StudioSettings.WriteSdk(_settings, chosen);
         string version = chosen.IsPrerelease ? string.Format(UiText.Get("Solution.SdkPreview", "{0} (preview)"), chosen.Version) : chosen.Version;
         SetStatus(string.Format(UiText.Get("Solution.UsingSdk", "Using .NET SDK {0}."), version), StatusSeverity.Info);
     }

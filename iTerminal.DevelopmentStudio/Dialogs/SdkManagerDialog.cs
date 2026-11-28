@@ -32,6 +32,7 @@ public class SdkManagerDialog : Dialog
     private const int DetailRows = 2;
 
     private readonly ISdkManager _manager;
+    private readonly Func<IReadOnlyList<DotnetSdk>>? _systemDotNetSdks;
     private readonly ConcurrentObservableCollection<SdkRow> _rows = [];
     private readonly ListBox<SdkRow> _listBox;
     private readonly ScrollBar _scrollBar;
@@ -56,10 +57,14 @@ public class SdkManagerDialog : Dialog
     /// <summary>Cancelled when the dialog closes: a listing or a download in progress stops with it.</summary>
     private readonly CancellationTokenSource _lifetime = new();
 
-    public SdkManagerDialog(ISdkManager manager, IThemeService themeService)
+    /// <param name="manager">The installs and the downloads.</param>
+    /// <param name="themeService">The theme.</param>
+    /// <param name="systemDotNetSdks">The .NET SDKs the system has (<c>dotnet --list-sdks</c>). They are listed as installed, though iTerminal does not own them, so they are not offered for download.</param>
+    public SdkManagerDialog(ISdkManager manager, IThemeService themeService, Func<IReadOnlyList<DotnetSdk>>? systemDotNetSdks = null)
         : base(nameof(SdkManagerDialog), themeService)
     {
         _manager = manager;
+        _systemDotNetSdks = systemDotNetSdks;
         Title = UiText.Get("SdkManager.Title", "SDK manager");
 
         var listModel = new ListBoxModel<SdkRow>(_rows)
@@ -276,8 +281,14 @@ public class SdkManagerDialog : Dialog
         string? error = null;
         string javaHome = _manager.ActiveJavaHome ?? string.Empty;
 
-        var installedDotNet = _manager.InstalledDotNetSdks();
-        rows.AddRange(installedDotNet.Select(sdk => new SdkRow(SdkKind.DotNet, sdk.Version, UiText.Get("SdkManager.Installed", "Installed"), sdk.Root, null, null)));
+        // The SDKs iTerminal installed can be removed; the system's are listed as installed and are left alone.
+        var managedDotNet = _manager.InstalledDotNetSdks();
+        rows.AddRange(managedDotNet.Select(sdk => new SdkRow(SdkKind.DotNet, sdk.Version, UiText.Get("SdkManager.Installed", "Installed"), sdk.Root, null, null)));
+        var managedVersions = managedDotNet.Select(sdk => sdk.Version).ToHashSet(StringComparer.Ordinal);
+        var systemDotNet = DotnetSdk.Merge(_systemDotNetSdks?.Invoke() ?? [])
+            .Where(sdk => !managedVersions.Contains(sdk.Version))
+            .DistinctBy(sdk => sdk.Version, StringComparer.Ordinal);
+        rows.AddRange(systemDotNet.Select(sdk => new SdkRow(SdkKind.DotNet, sdk.Version, UiText.Get("SdkManager.Installed", "Installed"), null, null, null)));
         var installedJdks = _manager.InstalledJdks();
         rows.AddRange(installedJdks.Select(jdk => new SdkRow(
             SdkKind.Jdk,
@@ -291,7 +302,7 @@ public class SdkManagerDialog : Dialog
         {
             try
             {
-                var installed = rows.Where(row => row.Kind == kind && row.Folder is not null).Select(row => row.Version).ToHashSet(StringComparer.Ordinal);
+                var installed = rows.Where(row => row.Kind == kind && row.Available is null).Select(row => row.Version).ToHashSet(StringComparer.Ordinal);
                 foreach (AvailableSdk sdk in await _manager.ListAvailableAsync(kind, cancellationToken))
                 {
                     if (installed.Contains(sdk.Version)) continue;

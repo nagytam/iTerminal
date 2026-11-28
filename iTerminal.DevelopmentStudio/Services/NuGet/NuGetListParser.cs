@@ -108,7 +108,9 @@ public static class NuGetListParser
                     continue;
                 }
 
-                var fullPath = Path.GetFullPath(path);
+                // A listing written on Windows spells a project with backslashes; GetFullPath only reads them as separators there,
+                // so they are made slashes first and the same project matches across the two listings on any platform.
+                var fullPath = Path.GetFullPath(path.Replace('\\', '/'));
                 if (!project.TryGetProperty("frameworks", out var frameworks) || frameworks.ValueKind != JsonValueKind.Array)
                 {
                     continue;

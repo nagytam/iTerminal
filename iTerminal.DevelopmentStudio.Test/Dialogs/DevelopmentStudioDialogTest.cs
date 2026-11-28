@@ -351,6 +351,27 @@ public class DevelopmentStudioDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task SdksOfOneInstallRootAreEachChosenWithVAndSavedWithTheirVersion()
+    {
+        // Every SDK of one install shares its dotnet host, so the choice is kept by version as well as by host.
+        var dotnet = new FakeDotnetSolutionService
+        {
+            Solution = TwoProjects,
+            Sdks = [new DotnetSdk("11.0.100", "/usr/lib/dotnet"), new DotnetSdk("10.0.115", "/usr/lib/dotnet")],
+        };
+        var settings = new FakeSettingsService();
+        var harness = await OpenAsync([Solution, App, AppTest], dotnet: dotnet, settings: settings);
+        Assert.AreEqual("11.0.100", harness.Dialog.SelectedSdk!.Version, "both SDKs are listed, and the newest is the default");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v'));
+
+        Assert.AreEqual("10.0.115", harness.Dialog.SelectedSdk!.Version);
+        Assert.AreEqual("10.0.115", settings.Get(StudioSettings.SdkVersionKey));
+        Assert.AreEqual(Path.Combine("/usr/lib/dotnet", OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet"), settings.Get(StudioSettings.SdkHostKey));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ATestRunSumsTheVsTestTotalsOfItsTargets()
     {
         var runner = new FakeProcessRunner

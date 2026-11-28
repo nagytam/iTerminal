@@ -32,6 +32,45 @@ public class DotnetSdkTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ParseListing_ReadsCrLfLines_AsAWindowsConsoleWritesThem()
+    {
+        string sdkFolder = Native("/usr/lib/dotnet/sdk");
+        List<DotnetSdk> sdks = [.. DotnetSdk.ParseListing([$"11.0.100 [{sdkFolder}]\r", $"10.0.115 [{sdkFolder}]\r"])];
+
+        CollectionAssert.AreEqual(new[] { "11.0.100", "10.0.115" }, sdks.Select(s => s.Version).ToList());
+        Assert.AreEqual(Native("/usr/lib/dotnet"), sdks[0].Root);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Merge_KeepsEverySdkOfOneInstallRoot_AndOnceTheSameSdkListedTwice()
+    {
+        // One install root is one dotnet host for all its SDKs: they share a host path and must stay apart.
+        List<DotnetSdk> sdks = [.. DotnetSdk.Merge(
+        [
+            new("10.0.115", "/usr/lib/dotnet"),
+            new("11.0.100", "/usr/lib/dotnet"),
+            new("11.0.100", "/usr/lib/dotnet"),
+        ])];
+
+        CollectionAssert.AreEqual(new[] { "11.0.100", "10.0.115" }, sdks.Select(s => s.Version).ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Find_NamesTheSdkByHostAndVersion_OrTheFirstOfTheHostWhenNoVersionIsGiven()
+    {
+        List<DotnetSdk> sdks = [new("11.0.100", "/usr/lib/dotnet"), new("10.0.115", "/usr/lib/dotnet")];
+        string host = Path.Combine("/usr/lib/dotnet", "dotnet");
+
+        Assert.AreEqual("10.0.115", DotnetSdk.Find(sdks, host, "10.0.115")!.Version);
+        Assert.IsNull(DotnetSdk.Find(sdks, host, "9.0.100"), "a version that is not listed names nothing");
+        Assert.AreEqual("11.0.100", DotnetSdk.Find(sdks, host, null)!.Version, "a setting that holds only a host (earlier versions) names the first of it");
+        Assert.IsNull(DotnetSdk.Find(sdks, null, null));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void Default_IsTheNewestStableSdk_EvenWhenAPreviewIsNewer()
     {
         List<DotnetSdk> sdks =

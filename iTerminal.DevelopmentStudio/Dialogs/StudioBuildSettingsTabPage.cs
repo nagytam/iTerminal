@@ -54,7 +54,7 @@ public class StudioBuildSettingsTabPage : StudioSettingsTabPage
         get => _sdks.Length == 0 || _sdk.SelectedIndex < 0 ? null : _sdks[_sdk.SelectedIndex];
         set
         {
-            int index = value is null ? -1 : Array.FindIndex(_sdks, sdk => sdk.HostPath.Equals(value.HostPath, StringComparison.OrdinalIgnoreCase));
+            int index = value is null ? -1 : Array.FindIndex(_sdks, sdk => sdk.HostPath == value.HostPath && sdk.Version == value.Version);
             if (index >= 0) _sdk.SelectedIndex = index;
         }
     }
@@ -68,14 +68,13 @@ public class StudioBuildSettingsTabPage : StudioSettingsTabPage
 
     protected override void OnLoad()
     {
-        string? host = Settings.Get(StudioSettings.SdkHostKey);
-        Sdk = _sdks.FirstOrDefault(sdk => sdk.HostPath.Equals(host, StringComparison.OrdinalIgnoreCase)) ?? DotnetSdk.Default(_sdks);
+        Sdk = StudioSettings.ReadSdk(Settings, _sdks) ?? DotnetSdk.Default(_sdks);
         Sbom = Parse(Settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
     }
 
     protected override void Save()
     {
-        if (Sdk is { } sdk) Settings.Set(StudioSettings.SdkHostKey, sdk.HostPath);
+        if (Sdk is { } sdk) StudioSettings.WriteSdk(Settings, sdk);
         Settings.Set(StudioSettings.SbomFormatKey, Sbom.ToString());
     }
 
