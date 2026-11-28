@@ -2311,6 +2311,21 @@
   <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
     <value>Analyse</value>
   </data>
+  <data name="DevelopmentStudio.BackgroundBuildFailed" xml:space="preserve">
+    <value>La compilation en arrière-plan a échoué pour {0} élément(s).</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundBuilding" xml:space="preserve">
+    <value>compile {0} en arrière-plan</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundPaused" xml:space="preserve">
+    <value>compilation en arrière-plan suspendue</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTesting" xml:space="preserve">
+    <value>teste en arrière-plan</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTests" xml:space="preserve">
+    <value>Tests en arrière-plan : {0} réussis, {1} échoués, {2} ignorés.</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>Der Debugger hat den Haltepunkt nicht übernommen: {0}</value>
   </data>
@@ -2835,6 +2850,9 @@
   </data>
   <data name="DevelopmentStudioSettings.AnalysisHint" xml:space="preserve">
     <value>Une analyse de code affiche la durée de la dernière analyse de son élément. Après l'oubli, aucune estimation n'apparaît avant la prochaine analyse.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.AutoBuildTest" xml:space="preserve">
+    <value>Compiler et tester les solutions en arrière-plan</value>
   </data>
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>V change le SDK et F le format SBOM ; ces changements sont conservés.</value>

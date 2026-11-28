@@ -1258,4 +1258,79 @@ public class DevelopmentStudioDialogTest
 
         Assert.AreEqual(1, runner.Commands.Count, "the Build entry starts the build, as B does");
     }
+
+    private static FakeSettingsService SettingsWithAutoBuild(bool enabled)
+    {
+        var settings = new FakeSettingsService();
+        settings.Set(StudioSettings.AutoBuildTestKey, enabled.ToString());
+        return settings;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AutoBuildTestIsOnByDefault()
+    {
+        var harness = await OpenAsync([Solution, App]);
+
+        Assert.IsTrue(harness.Dialog.AutoBuildTest, "the background build and test is on until the user turns it off");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheBackgroundBuildsTheSolutionThenTestsIt()
+    {
+        var harness = await OpenAsync([Solution, App], settings: SettingsWithAutoBuild(true));
+
+        await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.Background == DevelopmentStudioDialog.BackgroundPhase.Idle && harness.Runner.Commands.Count == 2, "the background build and test to finish");
+        Assert.IsTrue(harness.Runner.Commands[0].Arguments.Contains("build") && harness.Runner.Commands[0].Arguments.Contains("/src/App.slnx"), "the solution is built first");
+        Assert.IsTrue(harness.Runner.Commands[1].Arguments.Contains("test") && harness.Runner.Commands[1].Arguments.Contains("/src/App.slnx"), "then the solution is tested");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheBackgroundListsTheTestNamesUnderTheirTestProjectInTheTestExplorer()
+    {
+        var runner = new FakeProcessRunner
+        {
+            OutputFor = command => command.Arguments.Contains("--list-tests")
+                ? ["The following Tests are available:", "    App.Test.SumTests.Adds", "    App.Test.SumTests.Subtracts"]
+                : [],
+        };
+        var harness = await OpenAsync([Solution, App, AppTest], settings: SettingsWithAutoBuild(true), runner: runner);
+        await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.Background == DevelopmentStudioDialog.BackgroundPhase.Idle && runner.Commands.Count == 3, "the background build, listing and test to finish");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F6, '\0'));
+
+        CollectionAssert.Contains(harness.Dialog.ExplorerRows.ToList(), "        App.Test.SumTests.Adds", "the discovered tests are listed in the Test Explorer");
+        CollectionAssert.Contains(harness.Dialog.ExplorerRows.ToList(), "        App.Test.SumTests.Subtracts");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AForcedBuildPausesTheBackgroundAndItStartsAgainAfterIt()
+    {
+        var harness = await OpenAsync([Solution, App], settings: SettingsWithAutoBuild(true));
+        await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.Background == DevelopmentStudioDialog.BackgroundPhase.Idle && harness.Runner.Commands.Count == 2, "the background build and test to finish");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        Assert.AreEqual(DevelopmentStudioDialog.BackgroundPhase.Paused, harness.Dialog.Background, "a forced build pauses the background");
+
+        await WaitIdleAsync(harness.Dialog);
+        await WaitUntilOpenAsync(harness.Dialog, () => harness.Dialog.Background == DevelopmentStudioDialog.BackgroundPhase.Idle && harness.Runner.Commands.Count == 5,
+            "the background starts again, build then test, once the forced build has finished");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TurnedOffTheBackgroundDoesNotRun()
+    {
+        var runner = new FakeProcessRunner();
+        var harness = await OpenAsync([Solution, App], settings: SettingsWithAutoBuild(false), runner: runner);
+
+        for (int i = 0; i < 5; i++) harness.Dialog.OnIdle();
+
+        Assert.IsFalse(harness.Dialog.AutoBuildTest);
+        Assert.AreEqual(DevelopmentStudioDialog.BackgroundPhase.Idle, harness.Dialog.Background);
+        Assert.AreEqual(0, runner.Commands.Count, "with the setting off, nothing is built in the background");
+    }
 }

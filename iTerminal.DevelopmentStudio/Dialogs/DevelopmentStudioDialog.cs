@@ -206,6 +206,23 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
 
     private IReadOnlyList<DevelopmentProject> _items = [];
     private readonly Dictionary<string, TestOutcome> _testOutcomes = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>The test names each item's background discovery listed, keyed by the item's path. Guarded by <see cref="_stateLock"/>.</summary>
+    private readonly Dictionary<string, IReadOnlyList<string>> _discoveredTests = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Whether each item's last build passed, keyed by the item's path. Guarded by <see cref="_stateLock"/>.</summary>
+    private readonly Dictionary<string, bool> _buildOutcomes = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>The cells of the Solution Explorer's progress bar.</summary>
+    private const int ProgressCells = 20;
+
+    /// <summary>The steps done of the running build or test, out of its total (0 when none runs), and what the last step was. Guarded by <see cref="_stateLock"/>.</summary>
+    private int _progressDone;
+    private int _progressTotal;
+    private string _progressLabel = string.Empty;
+
+    /// <summary>Whether the progress bar row is listed, so the cursor can keep its item when the row comes or goes.</summary>
+    private bool _progressRowShown;
     private ExplorerMode _explorerMode = ExplorerMode.Solution;
     /// <summary>The panels, docked by <see cref="_dock"/> in the arrangement <see cref="_layout"/> gives them. F8 changes the arrangement.</summary>
     private readonly DockPanel _dock;
@@ -335,6 +352,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         _explorerMode = ParseSetting(settings.Get(StudioSettings.ExplorerModeKey), ExplorerMode.Solution);
         _outputTab = ParseSetting(settings.Get(StudioSettings.OutputTabKey), OutputTab.Output);
         _analysisDurations = new Dictionary<string, double>(StudioSettings.DecodeDurations(settings.Get(StudioSettings.AnalysisDurationsKey)));
+        ReadAutoBuildSetting();
         foreach (string folder in StudioSettings.DecodeList(settings.Get(StudioSettings.ExpandedFoldersKey))) _expandedFolders.Add(folder);
         Title = UiText.Get("DevelopmentStudio.Title", "Development studio");
 
@@ -416,6 +434,13 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
 
         _checked.Clear();
         _testOutcomes.Clear();
+        lock (_stateLock)
+        {
+            _discoveredTests.Clear();
+            _buildOutcomes.Clear();
+            _progressTotal = 0;
+        }
+
         _treeGeneration++;
         _projectFiles.Clear();
         _loadingProjects.Clear();
@@ -434,6 +459,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             : string.Format(UiText.Get("DevelopmentStudio.Found", "Found {0} items. Enter opens a file; F5 starts debugging."), _items.Count);
         _statusSeverity = StatusSeverity.Info;
         RebuildExplorer();
+        RequestBackgroundBuild();
         if (_pendingSelection is null) SelectSolutionRow();
         if (_explorerMode == ExplorerMode.Files && !_fileTreeBuilt) _ = LoadFileTreeAsync();
         RebuildView();
@@ -1038,12 +1064,30 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
                 }
 
                 rows.Add(new ExplorerRow($" [{marker}] {LanguageLabel(item.Language)}  {item.Name}", item, tint));
+
+                // The names the background discovery listed, under their item; a row with no item is not selectable.
+                IReadOnlyList<string> names = [];
+                lock (_stateLock)
+                {
+                    if (_discoveredTests.TryGetValue(item.Path, out var discovered)) names = discovered;
+                }
+
+                foreach (string name in names) rows.Add(new ExplorerRow("        " + name, null, null));
             }
         }
 
         if (rows.Count == 0)
         {
             rows.Add(new ExplorerRow(UiText.Get("DevelopmentStudio.EmptyExplorer", "(nothing here)"), null, null));
+        }
+
+        // The progress bar of a running build or test sits at the top; the cursor keeps its item when the bar comes or goes.
+        string? bar = _explorerMode == ExplorerMode.Files ? null : ProgressBarText();
+        if (bar is not null) rows.Insert(0, new ExplorerRow(bar, null, null));
+        if ((bar is not null) != _progressRowShown)
+        {
+            _progressRowShown = bar is not null;
+            _explorerListBox.ScrollableModel.CursorPosition.Y = Math.Max(0, _explorerListBox.ScrollableModel.CursorPosition.Y + (_progressRowShown ? 1 : -1));
         }
 
         _explorerItems.ReplaceAll(rows);
@@ -1223,8 +1267,67 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         StateHasChanged();
     }
 
-    private static Color? TintFor(DevelopmentProject item) =>
-        item.Kind == DevelopmentProjectKind.Solution ? Color.Cyan : null;
+    /// <summary>
+    /// The colour of an item's row: red when its last build failed, otherwise its test result (green or red), green when its build
+    /// passed, and cyan for a solution. An item not built yet keeps the plain colour.
+    /// </summary>
+    private Color? TintFor(DevelopmentProject item)
+    {
+        bool? built = null;
+        lock (_stateLock)
+        {
+            if (_buildOutcomes.TryGetValue(item.Path, out bool value)) built = value;
+        }
+
+        if (built == false) return Color.Red;
+        if (_testOutcomes.TryGetValue(item.Path, out var outcome)) return outcome.Passed ? Color.Green : Color.Red;
+        if (built == true) return Color.Green;
+        return item.Kind == DevelopmentProjectKind.Solution ? Color.Cyan : null;
+    }
+
+    /// <summary>The progress bar's text: the share of the running build's or test's steps done, or null when none runs.</summary>
+    private string? ProgressBarText()
+    {
+        lock (_stateLock)
+        {
+            if (_progressTotal <= 0) return null;
+            int percent = Math.Min(100, _progressDone * 100 / _progressTotal);
+            int filled = percent * ProgressCells / 100;
+            return $" [{new string('█', filled)}{new string('░', ProgressCells - filled)}] {percent,3}%  {_progressLabel}";
+        }
+    }
+
+    /// <summary>Starts the progress bar for a run of <paramref name="total"/> steps, none done yet.</summary>
+    private void BeginProgress(int total)
+    {
+        lock (_stateLock)
+        {
+            _progressDone = 0;
+            _progressTotal = total;
+            _progressLabel = string.Empty;
+        }
+
+        RebuildExplorer();
+    }
+
+    /// <summary>Counts one step done and names it in the bar.</summary>
+    private void StepProgress(string label)
+    {
+        lock (_stateLock)
+        {
+            _progressDone++;
+            _progressLabel = label;
+        }
+
+        RebuildExplorer();
+    }
+
+    /// <summary>Hides the progress bar.</summary>
+    private void EndProgress()
+    {
+        lock (_stateLock) _progressTotal = 0;
+        RebuildExplorer();
+    }
 
     private static string LanguageLabel(DevelopmentLanguage language) => language switch
     {
@@ -1561,6 +1664,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         if (_marksStale) RefreshEditorMarks();
         RevealPending();
         RedrawRunningClock();
+        ApplyBackgroundRequests();
+        RedrawBackgroundClock();
         SaveExplorerSelection();
         long version = _languageServer.Version;
         if (version == _seenServerVersion) return;
@@ -2270,6 +2375,10 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         }
 
         string targetLabel = plan.Count == 1 ? plan[0].Item.Name : string.Format(UiText.Get("DevelopmentStudio.ProjectCount", "{0} projects"), plan.Count);
+
+        // A forced command stops the background build and test, and waits until its process has ended before it starts.
+        PauseBackground();
+        var waitForBackground = _backgroundTask;
         var cts = new CancellationTokenSource();
         _runCts = cts;
         _busy = true;
@@ -2291,6 +2400,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             var runTotals = TestTotals.Empty;
             try
             {
+                await waitForBackground;
+                BeginProgress(plan.Count);
                 foreach (var (item, command, sdkNote) in plan)
                 {
                     if (cts.IsCancellationRequested) break;
@@ -2300,6 +2411,12 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
                     AppendOutput($"$ {command.Display}{sdkNote}");
                     int exitCode = await _runner.RunAsync(command, AppendOutput, cts.Token);
                     if (exitCode != 0 && firstFailure == 0) firstFailure = exitCode;
+                    if (verb == "build")
+                    {
+                        lock (_stateLock) _buildOutcomes[item.Path] = exitCode == 0;
+                    }
+
+                    StepProgress(string.Format(UiText.Get("DevelopmentStudio.Running", "Running {0} {1}..."), verb, item.Name));
 
                     if (verb == "test")
                     {
@@ -2351,6 +2468,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
             finally
             {
                 lock (_stateLock) clock.Stop();
+                EndProgress();
                 _busy = false;
                 _runCts = null;
                 RebuildView();
@@ -2370,6 +2488,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         OpenSolutionsInTree();
         RebuildExplorer();
         SetStatus(string.Format(UiText.Get("DevelopmentStudio.Refreshed", "Found {0} items."), _items.Count), StatusSeverity.Info);
+        RequestBackgroundBuild();
     }
 
     /// <summary>The items to list: the folder's, or, when the dialog was opened on a solution, that solution and the projects it lists.</summary>
@@ -2523,6 +2642,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
     /// </summary>
     private void ReloadSettings()
     {
+        ApplyAutoBuildSetting(!bool.TryParse(_settings.Get(StudioSettings.AutoBuildTestKey), out bool autoBuildTest) || autoBuildTest);
         _sbomFormat = ParseSetting(_settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
         _configuration = ParseSetting(_settings.Get(StudioSettings.BuildConfigurationKey), _configuration);
 
@@ -2740,6 +2860,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         // The build's output is what the user looks at first: the Output tab shows it, and the panel takes the focus.
         _outputTab = OutputTab.Output;
         _outputListBox.SetFocus();
+        // Debugging holds the background off until the session has ended (see ApplyBackgroundRequests).
+        PauseBackground();
         _ = StartDebuggingAsync(item, ToolchainFor(item), debugTests: _explorerMode == ExplorerMode.Tests);
     }
 
@@ -2750,6 +2872,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         _runCts = cts;
         try
         {
+            await _backgroundTask;
             string? assembly = null;
             if (item.Language == DevelopmentLanguage.DotNet)
             {
@@ -3076,6 +3199,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         }
 
         string text = TextOfSource();
+        RequestBackgroundBuild();
         _ = Task.Run(() =>
         {
             string? error = null;
@@ -3391,7 +3515,8 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         string folder = string.IsNullOrEmpty(Folder) ? Environment.CurrentDirectory : Folder;
         string debugState = _session is null ? string.Empty : _paused ? "   ● paused" : "   ▶ running";
         string busy = _busy ? "   * " + (RunningElapsedText() ?? string.Empty) : string.Empty;
-        WriteLine(buffer, x + column, y, w - column, $"   {folder}   ({_items.Count} items){debugState}{busy}", Color.Cyan, colorScheme.Background);
+        string background = BackgroundText();
+        WriteLine(buffer, x + column, y, w - column, $"   {folder}   ({_items.Count} items){debugState}{busy}{background}", Color.Cyan, colorScheme.Background);
     }
 
     /// <summary>

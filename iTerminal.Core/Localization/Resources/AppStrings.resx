@@ -2453,6 +2453,21 @@
   <data name="DevelopmentStudio.AnalysisTab" xml:space="preserve">
     <value>Analysis</value>
   </data>
+  <data name="DevelopmentStudio.BackgroundBuildFailed" xml:space="preserve">
+    <value>Background build failed for {0} item(s).</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundBuilding" xml:space="preserve">
+    <value>building {0} in the background</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundPaused" xml:space="preserve">
+    <value>background build paused</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTesting" xml:space="preserve">
+    <value>testing in the background</value>
+  </data>
+  <data name="DevelopmentStudio.BackgroundTests" xml:space="preserve">
+    <value>Background tests: {0} passed, {1} failed, {2} skipped.</value>
+  </data>
   <data name="DevelopmentStudio.BreakpointFailed" xml:space="preserve">
     <value>The debugger did not take the breakpoint: {0}</value>
   </data>
@@ -2977,6 +2992,9 @@
   </data>
   <data name="DevelopmentStudioSettings.AnalysisHint" xml:space="preserve">
     <value>A code analysis shows how long the last one of its item took. Forgetting it shows no estimate until the next analysis.</value>
+  </data>
+  <data name="DevelopmentStudioSettings.AutoBuildTest" xml:space="preserve">
+    <value>Build and test the solutions in the background</value>
   </data>
   <data name="DevelopmentStudioSettings.BuildHint" xml:space="preserve">
     <value>V switches the SDK and F the SBOM format; both changes are kept.</value>

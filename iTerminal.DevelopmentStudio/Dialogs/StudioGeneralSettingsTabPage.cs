@@ -17,6 +17,7 @@ public class StudioGeneralSettingsTabPage : StudioSettingsTabPage
 
     private readonly ComboBox<DevelopmentStudioDialog.ExplorerMode> _explorer;
     private readonly ComboBox<DevelopmentStudioDialog.OutputTab> _output;
+    private readonly CheckBox _autoBuildTest;
     private readonly Label _hintLabel;
 
     public StudioGeneralSettingsTabPage(ISettingsService settings, IThemeService themeService)
@@ -39,10 +40,17 @@ public class StudioGeneralSettingsTabPage : StudioSettingsTabPage
         _output.SetItems(OutputTabs);
         _output.SelectionChanged += OnChanged;
 
+        _autoBuildTest = new CheckBox(themeService)
+        {
+            Label = UiText.Get("DevelopmentStudioSettings.AutoBuildTest", "Build and test the solutions in the background"),
+        };
+        _autoBuildTest.CheckedChanged += OnChanged;
+
         _hintLabel = new Label(UiText.Get("DevelopmentStudioSettings.GeneralHint", "F6 and F7 change these too: the studio opens on the tab it was last left on."), themeService);
 
         AddControl(_explorer);
         AddControl(_output);
+        AddControl(_autoBuildTest);
         AddControl(_hintLabel);
     }
 
@@ -60,16 +68,25 @@ public class StudioGeneralSettingsTabPage : StudioSettingsTabPage
         set => _output.SelectedIndex = Array.IndexOf(OutputTabs, value);
     }
 
+    /// <summary>Whether the studio builds and tests the solutions in the background. On by default.</summary>
+    public bool AutoBuildTest
+    {
+        get => _autoBuildTest.IsChecked;
+        set => _autoBuildTest.IsChecked = value;
+    }
+
     protected override void OnLoad()
     {
         Explorer = Parse(Settings.Get(StudioSettings.ExplorerModeKey), DevelopmentStudioDialog.ExplorerMode.Solution);
         Output = Parse(Settings.Get(StudioSettings.OutputTabKey), DevelopmentStudioDialog.OutputTab.Output);
+        AutoBuildTest = !bool.TryParse(Settings.Get(StudioSettings.AutoBuildTestKey), out bool stored) || stored;
     }
 
     protected override void Save()
     {
         Settings.Set(StudioSettings.ExplorerModeKey, Explorer.ToString());
         Settings.Set(StudioSettings.OutputTabKey, Output.ToString());
+        Settings.Set(StudioSettings.AutoBuildTestKey, AutoBuildTest.ToString());
     }
 
     public override void OnInitializeLayout()
@@ -77,6 +94,7 @@ public class StudioGeneralSettingsTabPage : StudioSettingsTabPage
         base.OnInitializeLayout();
         Place(_explorer, 0, 1, ViewSize.Width);
         Place(_output, 0, 2, ViewSize.Width);
-        Place(_hintLabel, 0, 4, ViewSize.Width);
+        Place(_autoBuildTest, 0, 3, ViewSize.Width);
+        Place(_hintLabel, 0, 5, ViewSize.Width);
     }
 }

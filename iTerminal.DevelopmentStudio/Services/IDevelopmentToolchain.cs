@@ -23,6 +23,12 @@ public interface IDevelopmentToolchain
     /// <summary>Runs the item's tests.</summary>
     ProcessCommand? Test(DevelopmentProject project);
 
+    /// <summary>
+    /// Lists the item's tests without running them, after a build (see <see cref="TestDiscoveryParser"/>). Null when the language
+    /// has no discovery here.
+    /// </summary>
+    ProcessCommand? ListTests(DevelopmentProject project) => null;
+
     /// <summary>Removes what a build leaves behind: <c>dotnet clean</c>, or the cache folders of a script.</summary>
     ProcessCommand? Clean(DevelopmentProject project);
 
