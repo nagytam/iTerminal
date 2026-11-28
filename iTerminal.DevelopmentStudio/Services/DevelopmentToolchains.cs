@@ -35,6 +35,9 @@ public sealed class DotNetToolchain : IDevelopmentToolchain
     /// <summary>The debugger that speaks DAP: netcoredbg, on the PATH.</summary>
     public string Debugger { get; init; } = "netcoredbg";
 
+    /// <summary>The configuration every command passes to <c>dotnet</c> with <c>-c</c>. Release has no debugger (see <see cref="PlanDebug"/>).</summary>
+    public BuildConfiguration Configuration { get; init; } = BuildConfiguration.Debug;
+
     public ProcessCommand Build(DevelopmentProject project) => Dotnet(project, "build", project.Path);
 
     public ProcessCommand? Run(DevelopmentProject project) =>
@@ -57,8 +60,12 @@ public sealed class DotNetToolchain : IDevelopmentToolchain
     public IReadOnlyList<ProcessCommand> Coverage(DevelopmentProject project, string resultsFolder) =>
         [Dotnet(project, "test", project.Path, "--collect:XPlat Code Coverage", "--results-directory", resultsFolder)];
 
+    /// <summary>
+    /// The plan to debug the program. The Release configuration has none: debugging is disabled there, so only a Run (Ctrl+F5) starts it.
+    /// </summary>
     public DebugPlan? PlanDebug(DevelopmentProject project, string? builtAssembly, bool debugTests)
     {
+        if (Configuration == BuildConfiguration.Release) return null;
         if (project.Kind != DevelopmentProjectKind.DotNetProject || builtAssembly is null || debugTests) return null;
         return new DebugPlan(Debugger, ["--interpreter=vscode"], new JsonObject
         {
@@ -75,7 +82,7 @@ public sealed class DotNetToolchain : IDevelopmentToolchain
     public string? FindBuiltAssembly(DevelopmentProject project)
     {
         if (project.Kind != DevelopmentProjectKind.DotNetProject) return null;
-        string debugFolder = Path.Combine(project.Directory, "bin", "Debug");
+        string debugFolder = Path.Combine(project.Directory, "bin", Configuration.ToString());
         if (!Directory.Exists(debugFolder)) return null;
         string assemblyName = project.Name + ".dll";
         try
@@ -90,8 +97,9 @@ public sealed class DotNetToolchain : IDevelopmentToolchain
         }
     }
 
+    /// <summary>A <c>dotnet</c> command in the chosen configuration (<c>-c Debug</c> or <c>-c Release</c>).</summary>
     private ProcessCommand Dotnet(DevelopmentProject project, params string[] arguments) =>
-        new(Host, arguments, project.Directory);
+        new(Host, [.. arguments, "-c", Configuration.ToString()], project.Directory);
 }
 
 /// <summary>Python: <c>python</c> runs scripts, <c>py_compile</c> is the build, <c>pytest</c> runs tests, debugpy debugs.</summary>

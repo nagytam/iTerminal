@@ -30,22 +30,36 @@ public sealed class DebugSession : IAsyncDisposable
     public static readonly TimeSpan InitializeTimeout = TimeSpan.FromSeconds(20);
 
     private readonly Action<IDebugNotification> _notify;
-    private readonly Process _adapter;
+    private readonly IDebugAdapterProcess _adapter;
     private readonly DapClient _client;
     private readonly TaskCompletionSource _initialized = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly TaskCompletionSource<string> _ended = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private volatile int _threadId = 1;
     private int _endedFlag;
 
-    private DebugSession(Process adapter, Action<IDebugNotification> notify)
+    private DebugSession(IDebugAdapterProcess adapter, Action<IDebugNotification> notify)
     {
         _adapter = adapter;
         _notify = notify;
-        _client = new DapClient(adapter.StandardOutput.BaseStream, adapter.StandardInput.BaseStream, OnEvent);
+        _client = new DapClient(adapter.StandardOutput, adapter.StandardInput, OnEvent);
+        adapter.Exited += (_, _) => MarkEnded($"The debugger exited with code {adapter.ExitCode}.");
+        adapter.ErrorLine += (_, line) => notify(new DebugOutputNotification("stderr", line + "\n"));
     }
 
     /// <summary>The thread the program stopped on last; stepping and the stack use it.</summary>
     public int ThreadId => _threadId;
+
+    /// <summary>
+    /// Starts a session on an adapter process that is already running. <see cref="Start"/> is the production path; tests attach
+    /// a fake adapter here instead of launching a debugger.
+    /// </summary>
+    public static DebugSession Attach(IDebugAdapterProcess adapter, Action<IDebugNotification> notify)
+    {
+        var session = new DebugSession(adapter, notify);
+        session._client.Start();
+        adapter.BeginReading();
+        return session;
+    }
 
     /// <summary>Starts the adapter process. Throws <see cref="InvalidOperationException"/> when it cannot be started.</summary>
     public static DebugSession Start(DebugPlan plan, string workingDirectory, Action<IDebugNotification> notify)
@@ -78,12 +92,7 @@ public sealed class DebugSession : IAsyncDisposable
             throw new InvalidOperationException($"Could not start the debugger {plan.FileName}: {exception.Message}", exception);
         }
 
-        var session = new DebugSession(process, notify);
-        process.ErrorDataReceived += (_, e) => { if (e.Data is not null) notify(new DebugOutputNotification("stderr", e.Data + "\n")); };
-        process.Exited += (_, _) => session.MarkEnded($"The debugger exited with code {process.ExitCode}.");
-        process.BeginErrorReadLine();
-        session._client.Start();
-        return session;
+        return Attach(new SystemDebugAdapterProcess(process), notify);
     }
 
     /// <summary>
@@ -279,7 +288,7 @@ public sealed class DebugSession : IAsyncDisposable
     {
         try
         {
-            if (!_adapter.HasExited) _adapter.Kill(entireProcessTree: true);
+            if (!_adapter.HasExited) _adapter.Kill();
         }
         catch (InvalidOperationException)
         {
@@ -337,4 +346,68 @@ public sealed class DebugSession : IAsyncDisposable
         await _client.DisposeAsync();
         _adapter.Dispose();
     }
+}
+
+/// <summary>
+/// The debug adapter's process as a session uses it: the standard streams it speaks DAP over, its exit and its stderr lines.
+/// The session takes this interface rather than a <see cref="Process"/>, so tests can drive a scripted adapter in memory.
+/// </summary>
+public interface IDebugAdapterProcess : IDisposable
+{
+    /// <summary>What the session writes its requests to (the adapter's standard input).</summary>
+    Stream StandardInput { get; }
+
+    /// <summary>What the session reads the adapter's messages from (the adapter's standard output).</summary>
+    Stream StandardOutput { get; }
+
+    /// <summary>The exit code, once the adapter has exited.</summary>
+    int ExitCode { get; }
+
+    bool HasExited { get; }
+
+    /// <summary>Raised once when the adapter exits.</summary>
+    event EventHandler? Exited;
+
+    /// <summary>Raised for each line the adapter writes to its standard error.</summary>
+    event EventHandler<string>? ErrorLine;
+
+    /// <summary>Starts reading the standard error. Called after the session subscribed to <see cref="ErrorLine"/>.</summary>
+    void BeginReading();
+
+    /// <summary>Kills the adapter and everything it started.</summary>
+    void Kill();
+}
+
+/// <summary>The production adapter: a real debugger process started by <see cref="DebugSession.Start"/>.</summary>
+internal sealed class SystemDebugAdapterProcess : IDebugAdapterProcess
+{
+    private readonly Process _process;
+
+    public SystemDebugAdapterProcess(Process process)
+    {
+        _process = process;
+        _process.ErrorDataReceived += (_, e) => { if (e.Data is not null) ErrorLine?.Invoke(this, e.Data); };
+    }
+
+    public Stream StandardInput => _process.StandardInput.BaseStream;
+
+    public Stream StandardOutput => _process.StandardOutput.BaseStream;
+
+    public int ExitCode => _process.ExitCode;
+
+    public bool HasExited => _process.HasExited;
+
+    public event EventHandler? Exited
+    {
+        add => _process.Exited += value;
+        remove => _process.Exited -= value;
+    }
+
+    public event EventHandler<string>? ErrorLine;
+
+    public void BeginReading() => _process.BeginErrorReadLine();
+
+    public void Kill() => _process.Kill(entireProcessTree: true);
+
+    public void Dispose() => _process.Dispose();
 }

@@ -136,7 +136,8 @@ public class CSharpLanguageServerTest
     public async Task AFolderChangeReturnsWithoutWaitingForTheOldServerToShutDown()
     {
         var fake = new FakeLanguageServer { RespondToShutdown = false };
-        await using var server = new CSharpLanguageServer(fake, TimeSpan.FromSeconds(3));
+        // The shutdown bound is short so that the dispose at the end of the test does not wait for a silent server for long.
+        await using var server = new CSharpLanguageServer(fake, TimeSpan.FromMilliseconds(500));
         server.OpenFile(Folder, ProgramPath, "int x;");
         await WaitUntilAsync(() => server.State == LanguageServerState.Ready, "the first server to be ready");
 
@@ -144,7 +145,7 @@ public class CSharpLanguageServerTest
         server.OpenFile(Path.Combine(Path.GetTempPath(), "CSharpOther"), Path.Combine(Path.GetTempPath(), "CSharpOther", "Program.cs"), "int y;");
         clock.Stop();
 
-        Assert.IsTrue(clock.Elapsed < TimeSpan.FromSeconds(1), $"the caller waited {clock.Elapsed.TotalMilliseconds} ms; the shutdown bound is 3 s, and the key handler must not wait for it");
+        Assert.IsTrue(clock.Elapsed < TimeSpan.FromMilliseconds(250), $"the caller waited {clock.Elapsed.TotalMilliseconds} ms; the shutdown bound is 500 ms, and the key handler must not wait for it");
     }
 
     [Timeout(30_000)]

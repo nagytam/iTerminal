@@ -159,6 +159,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The serialisation S writes the SBOM in. XML by default; F switches it to JSON.</summary>
     private SbomFormat _sbomFormat = SbomFormat.Xml;
 
+    /// <summary>The build configuration of the .NET commands (D switches it). Release disables debugging.</summary>
+    private BuildConfiguration _configuration = BuildConfiguration.Debug;
+
     /// <summary>The solution the dialog was opened on (F3), or empty for the whole folder.</summary>
     private string _solutionPath = string.Empty;
 
@@ -328,6 +331,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         // The settings the studio keeps between openings; each one is written again when the user changes it.
         _layout = StudioPanelLayout.Parse(settings.Get(StudioSettings.LayoutKey));
         _sbomFormat = ParseSetting(settings.Get(StudioSettings.SbomFormatKey), SbomFormat.Xml);
+        _configuration = ParseSetting(settings.Get(StudioSettings.BuildConfigurationKey), BuildConfiguration.Debug);
         _explorerMode = ParseSetting(settings.Get(StudioSettings.ExplorerModeKey), ExplorerMode.Solution);
         _outputTab = ParseSetting(settings.Get(StudioSettings.OutputTabKey), OutputTab.Output);
         _analysisDurations = new Dictionary<string, double>(StudioSettings.DecodeDurations(settings.Get(StudioSettings.AnalysisDurationsKey)));
@@ -517,6 +521,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("F5", UiText.Get("DevelopmentStudio.HintStart", "Start debugging, or continue"));
+        yield return ("D", UiText.Get("DevelopmentStudio.HintConfiguration", "Switch the build configuration: Debug or Release (Release disables debugging)"));
         yield return ("Ctrl+F5", UiText.Get("DevelopmentStudio.HintRunNoDebug", "Run without debugging"));
         yield return ("Shift+F5", UiText.Get("DevelopmentStudio.HintStop", "Stop debugging"));
         yield return ("F9", UiText.Get("DevelopmentStudio.HintBreakpoint", "Toggle a breakpoint on the cursor line"));
@@ -653,6 +658,9 @@ public class DevelopmentStudioDialog : SplitPaneDialog
                 return true;
             case ConsoleKey.F when plain:
                 ToggleSbomFormat();
+                return true;
+            case ConsoleKey.D when plain:
+                ToggleBuildConfiguration();
                 return true;
             case ConsoleKey.O when plain:
                 RunCoverage();
@@ -812,6 +820,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             });
         }
 
+        menu.Items.Add(CommandMenuItem(string.Format(UiText.Get("DevelopmentStudio.MenuConfiguration", "Configuration: {0}"), _configuration), "D", ToggleBuildConfiguration));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuBuild", "Build"), "B", () => RunSelected("build")));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuRun", "Run"), "R", () => RunSelected("run")));
         menu.Items.Add(CommandMenuItem(UiText.Get("DevelopmentStudio.MenuDebug", "Debug"), "F5", StartOrContinueDebugging));
@@ -2160,7 +2169,7 @@ public class DevelopmentStudioDialog : SplitPaneDialog
     /// <summary>The toolchain of an item. A .NET item uses the SDK chosen with V, so each command runs on that SDK's host.</summary>
     private IDevelopmentToolchain ToolchainFor(DevelopmentProject item)
     {
-        if (item.Language == DevelopmentLanguage.DotNet && SelectedSdk is { } sdk) return new DotNetToolchain { Host = sdk.HostPath };
+        if (item.Language == DevelopmentLanguage.DotNet) return new DotNetToolchain { Host = SelectedSdk?.HostPath ?? "dotnet", Configuration = _configuration };
         if (item.Language == DevelopmentLanguage.Java && _javaHome is not null) return new JavaToolchain { JavaHome = _javaHome };
         return _toolchains.For(item);
     }
@@ -2618,6 +2627,17 @@ public class DevelopmentStudioDialog : SplitPaneDialog
         SetStatus(string.Format(UiText.Get("Solution.SbomFormat", "SBOM format: {0}."), _sbomFormat == SbomFormat.Json ? "JSON" : "XML"), StatusSeverity.Info);
     }
 
+    /// <summary>
+    /// D: switches the build configuration between Debug and Release. It applies to the next .NET command; a command already
+    /// running keeps the configuration it started with (the toolchain is made per command, see <see cref="ToolchainFor"/>).
+    /// </summary>
+    private void ToggleBuildConfiguration()
+    {
+        _configuration = _configuration == BuildConfiguration.Debug ? BuildConfiguration.Release : BuildConfiguration.Debug;
+        _settings.Set(StudioSettings.BuildConfigurationKey, _configuration.ToString());
+        SetStatus(string.Format(UiText.Get("DevelopmentStudio.ConfigurationSet", "Build configuration: {0}."), _configuration), StatusSeverity.Info);
+    }
+
     /// <summary>Clean of a script: deletes its cache folders (there is no clean command for Python).</summary>
     private void CleanCacheFolders(DevelopmentProject item, IReadOnlyList<string> folders)
     {
@@ -2656,10 +2676,16 @@ public class DevelopmentStudioDialog : SplitPaneDialog
             return;
         }
 
+        if (_configuration == BuildConfiguration.Release)
+        {
+            SetStatus(UiText.Get("DevelopmentStudio.ReleaseNoDebug", "Debugging is disabled in the Release configuration. D switches to Debug; Ctrl+F5 runs without debugging."), StatusSeverity.Info);
+            return;
+        }
+
         var item = MainItem ?? SelectedItem;
         if (item is null || item.Kind == DevelopmentProjectKind.Solution)
         {
-            SetStatus(UiText.Get("DevelopmentStudio.SelectToDebug", "Select a project or a script to debug. A solution cannot be debugged."), StatusSeverity.Info);
+            SetStatus(UiText.Get("DevelopmentStudio.SelectToDebug","Select a project or a script to debug. A solution cannot be debugged."), StatusSeverity.Info);
             return;
         }
 

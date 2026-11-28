@@ -2350,6 +2350,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Se quitaron {0} carpetas de caché de {1}.</value>
   </data>
+  <data name="DevelopmentStudio.ConfigurationSet" xml:space="preserve">
+    <value>Configurazione di build: {0}.</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Misura della copertura annullata.</value>
   </data>
@@ -2415,6 +2418,9 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Compilar, limpiar, probar o ejecutar el elemento seleccionado</value>
+  </data>
+  <data name="DevelopmentStudio.HintConfiguration" xml:space="preserve">
+    <value>Cambia la configurazione di build: Debug o Release (Release disattiva il debug)</value>
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Misura la copertura dell'elemento selezionato / profila lo script Python selezionato</value>
@@ -2517,6 +2523,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Rimuovi il progetto principale</value>
+  </data>
+  <data name="DevelopmentStudio.MenuConfiguration" xml:space="preserve">
+    <value>Configurazione: {0}</value>
   </data>
   <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
     <value>Esegui il debug</value>
@@ -2625,6 +2634,9 @@
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>{0} elementos encontrados.</value>
+  </data>
+  <data name="DevelopmentStudio.ReleaseNoDebug" xml:space="preserve">
+    <value>Il debug è disattivato nella configurazione Release. D passa a Debug; Ctrl+F5 esegue senza debug.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Ejecutando {0} {1}...</value>

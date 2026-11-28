@@ -118,3 +118,84 @@ Features considered and skipped: data breakpoints (VS Code; adapter-dependent, a
 - Running a test, a project or a script, and cancelling: present (`t`, `r`, `x`).
 - Text search inside files across a folder: present in the file manager (`FindFilesDialog`, F7), outside the studio.
 - Solution, test and file trees with a layout of dockable panels: present.
+
+#### Status after the pull of 2026-11-28
+
+Re-checked against branch `main`, commit `4b2323ea`, by a case-insensitive grep of `*.cs` in `iTerminal.DevelopmentStudio/`, `iTerminal.Core/` and `iConsole/`. Survey 1 is not edited; these lines supersede its statements.
+
+- Item 25 (keep breakpoints between sessions): **built**. `BreakpointStore` now takes an `IDbContextFactory<iTerminalDbContext>` and loads its rows in the background (`Loaded`, `PendingWrites`); the survey 1 text calling it an in-memory singleton is out of date.
+- Item 26 (edit the line in the studio): **built**. The source panel is `StudioSourceEditor`, a `TextEditorControl` subclass; `SaveSource` (Ctrl+S) writes the file.
+- Item 23 (symbol navigation): **partly changed**. The "studio ships no language server" premise no longer holds: `LspClient`, `CSharpLanguageServer` and `LanguageServerLauncher` exist, but only `textDocument/didOpen`, `didChange` and `publishDiagnostics` are used. Still not found: `definition`, `references`, `documentSymbol`, `rename`, `hover`, `completion`, `codeAction`. The item stays missing, and its "not applicable" label should read "needs requests on the existing client".
+- Item 22 (go to line in the studio): unchanged. The editor control's hint list names F5 for Go to line (`TextEditorControl`), but F5 is the studio's debug key and `IsEditorKey` excludes it, so the studio does not reach it. Not found in the studio: `GoToLine`.
+- Item 27 (build configurations): **built** on branch `feature/devstudio-build-configuration`. `D` switches Debug and Release; every .NET command passes `-c`; Release refuses to debug (`DotNetToolchain.Configuration`, `Model/BuildConfiguration.cs`). Still missing: a custom configuration name, and a Configuration Manager that maps configurations to projects.
+- Items 1 to 21, 24: unchanged; the terms listed in survey 1 still find nothing in `iTerminal.DevelopmentStudio/`.
+
+#### Survey 2: Visual Studio, Visual Studio Code and Eclipse: configurations and startup, editor actions, tasks, version control
+
+Basis: the official documentation, not run-time behaviour. Visual Studio (Windows, 2022 and the current release) from learn.microsoft.com; Visual Studio Code from code.visualstudio.com (pages dated 2026-11-25, no product version shown); Eclipse JDT from help.eclipse.org (pages carry no version or date). Surveyed on 2026-11-28 at branch `main`, commit `4b2323ea`, edited in the working tree because the user asked for no branch switch. "Not found" means a case-insensitive grep of `*.cs` in `iTerminal.DevelopmentStudio/`, `iTerminal.Core/` and `iConsole/` on that commit found nothing for the listed terms; a "partly present" item says what exists.
+
+Sources (every IDE named under "Seen in" appears here; rows marked unverified come from a search result only):
+
+| IDE | Feature | Area | Source | Version or date | Description |
+| --- | --- | --- | --- | --- | --- |
+| VS | Solution and project configurations, Configuration Manager, Batch Build | Solution and projects | https://learn.microsoft.com/en-us/visualstudio/ide/understanding-build-configurations | ms.date 2025-08-07 | Named sets of build settings, one active, with a project mapping per solution configuration; Batch Build builds several at once. |
+| VS | Multiple startup projects and multi-project launch profiles (`.slnLaunch`) | Solution and projects | https://learn.microsoft.com/visualstudio/ide/how-to-set-multiple-startup-projects | ms.date 2026-02-25 | Per project Start, Start without debugging or None, ordered, saved as a shareable profile. |
+| VS | Task List: TODO, HACK, UNDONE and custom comment tokens, task shortcuts, next and previous task | Diagnostics | https://learn.microsoft.com/en-us/visualstudio/ide/using-the-task-list | ms.date 2025-11-17 | A list of tagged code comments that opens the file at the line. |
+| VS | Format Document, Code Cleanup profiles, cleanup on save, EditorConfig precedence, Quick Actions | Editor | https://learn.microsoft.com/en-us/visualstudio/ide/code-styles-and-code-cleanup | ms.date 2026-01-06 | Style rules from an EditorConfig file win over user options; Cleanup applies chosen fixes, optionally on save. |
+| VS Code | Source Control view, diff editor, blame, graph, stage selected lines, merge editor, stash | Version control | https://code.visualstudio.com/docs/sourcecontrol/overview | 2026-11-25 | Git work inside the editor, down to single lines in a diff. |
+| VS Code | Code Actions, Quick Fix, Refactor Preview, `editor.codeActionsOnSave` | Editor | https://code.visualstudio.com/docs/editing/refactoring | 2026-11-25 | Fixes and refactorings at the cursor, previewed by change, and source actions on save. |
+| Eclipse | Source menu: Format, Organize Imports, Clean Up, Surround With, Toggle Comment, Generate and Override methods | Editor | https://help.eclipse.org/latest/topic/org.eclipse.jdt.doc.user/reference/ref-menu-source.htm | no date shown | Whole-file and selection edit commands with a key each. |
+| Eclipse | Quick Fix (Ctrl+1), Java templates | Editor | https://help.eclipse.org/latest/topic/org.eclipse.jdt.doc.user/reference/ref-java-editor-quickfix.htm | not fetched | Known from a search snippet only: unverified. |
+| VS Code | Multi-cursor editing, snippets, Format Document | Editor | https://code.visualstudio.com/docs/editing/codebasics | not fetched | Known from a search snippet only: unverified. |
+
+Features considered and skipped: Docker Compose launch profiles (VS; needs a container tool the studio does not drive), the Toolbox filtering by configuration (VS; GUI designer), Project Rank column in the Task List (VS; only meaningful with a project dependency graph, which the explorer does not build), the Source Control Graph and worktrees (VS Code; the Git client dialog in `iTerminal.Core` is the place for them, not the studio), the 3-way merge editor (VS Code; a file manager feature, see `iTerminal.Core`).
+
+**Solution and projects**
+
+27. **Build configurations (Debug, Release, custom).** A named configuration chosen once and used by build, run, test and debug. Seen in VS. Not found: `--configuration`, `BuildConfiguration`, `Configuration Manager`, `-c Release` (the .NET commands in `DevelopmentToolchains` pass no configuration, so every build is the SDK's default).
+28. **Multiple startup projects and saved launch profiles.** Start several projects together, each with or without the debugger, in an order, saved per solution. Seen in VS. Not found: `slnLaunch`, `StartupProject`, `launchSettings`, `Multiple startup`. Partly present: `MainProgramStore` holds one Main program. Related to item 12.
+29. **Batch build of several configurations.** Seen in VS. Not found: `BatchBuild`, `Batch build`. Depends on item 27.
+
+**Editor**
+
+30. **Format document and clean up code.** One command that applies white space and style fixes, and Organize Imports that removes unused usings or imports. Seen in VS (Format Document, Code Cleanup), Eclipse (Format, Organize Imports, Clean Up); VS Code is unverified for Format Document (search snippet) and verified for the organize-imports source action. Partly present: `TextEditorControl` has line tools (trim trailing spaces, join, remove blank lines). Not found: `dotnet format`, `FormatDocument`, `CodeCleanup`, `OrganizeImports`. A cheap start for .NET is the `dotnet format` command through `DotNetToolchain`.
+31. **Run format or fixes on save.** Seen in VS (Run Code Cleanup profile on save), VS Code (`editor.codeActionsOnSave`). Not found: `codeActionsOnSave`, `FormatOnSave`, `OnSave` as a setting (`SaveSource` only writes the file). Depends on item 30.
+32. **Code actions and quick fixes at the cursor.** A key lists the fixes for the problem under the cursor, with a preview for refactorings. Seen in VS (Quick Actions), VS Code (Quick Fix, Refactor Preview); Eclipse is unverified (Ctrl+1, search snippet). Not found: `codeAction`, `QuickFix`, `LightBulb`, `Refactor`. Needs a `textDocument/codeAction` request on the existing `LspClient` (see the status note on item 23).
+33. **EditorConfig applied to the editor.** Indent style, tab width, line ending and charset taken from the file's `.editorconfig`, which wins over the user's options. Seen in VS. Not found in the studio or `iConsole/Controls/Editors`: `editorconfig` (the only matches are the file-type lists in `SyntaxHighlighter` and `EditTextFileDialogCommand`). Build-time enforcement is already present: `DotNetToolchain.Analyze` passes `EnforceCodeStyleInBuild`.
+34. **Snippets, templates and Surround With.** Insert a named template, or wrap the selection in one. Seen in Eclipse (Surround With, verified; templates unverified), VS Code (snippets, unverified). Not found: `snippet`, `Surround`, `Template` in the editor.
+35. **Multiple cursors.** **Unverified**: known from a search snippet of the VS Code editing page. Not found: `multicursor`, `MultiCaret`, `AddCursor`.
+
+**Diagnostics**
+
+36. **Task List of TODO comments.** A panel (here, an output tab) listing comments tagged `TODO`, `HACK`, `UNDONE` or custom tokens, with Enter opening the file at the line and next and previous task keys. Seen in VS. Not found: `TODO`, `HACK`, `UNDONE`, `TaskList`, `comment token`. A cheap start: a scan of the solution's source files, in the style of the Errors tab (`BuildDiagnostic`, `OpenDiagnostic`).
+
+**Version control**
+
+37. **Changed-line markers in the editor gutter.** **Unverified**: the fetched VS Code overview page did not describe them; a search snippet of it did. Partly present: `StudioSourceEditor` has a mark column (`GutterMark`) used for the breakpoint, stop, diagnostic and coverage marks. Not found: `GitStatus`, `GitDiff`, `changed line` in the studio.
+38. **Blame for the cursor line.** Seen in VS Code. Not found: `blame`, `git blame`, `Annotate`.
+39. **Stage selected lines of a diff.** Seen in VS Code. Partly present: `GitClientDialog` (`iTerminal.Core/Dialogs/Git/`) stages whole files (`Unstaged` and `Staged` lists) and `DiffFilesDialogCommand` compares two files; neither is wired to the studio's editor. Not found: `hunk`, `StageLines`. Also not found in the studio: `GitClientDialog`.
+
+**Improvement opportunities**
+
+40. **Keep the Main program between restarts.** Existing: `MainProgramStore`, an in-memory singleton ("survives closing the studio", per its summary) with no persistence, where `BreakpointStore` now persists. **Proposal, unverified**: no page on where the IDEs keep the startup project was read in this survey. Benefit: F5 starts the same program after a restart. Search terms: `ISettingsService`, `DbContext` found nothing in `MainProgramStore.cs`; `StudioSettings` has no key for it.
+41. **Send each edit to the language server.** Existing: `CSharpLanguageServer.OpenFile`, `SaveFile` and the diagnostics marks (`!`, `~`); the architecture document lists "the server hears of a save, not of each keystroke" as a known limit. **Proposal, unverified**: the IDEs' behaviour here was not read in this survey. Benefit: the gutter marks follow typing, not only Ctrl+S. `DidChangeAsync` exists, so the work is calling it from the editor's change event, rate limited.
+42. **Open a diff or the Git client from the studio.** Existing: `GitClientDialog` and `DiffFilesDialogCommand` in `iTerminal.Core`. VS Code keeps the Source Control view in the same window as the editor (verified, overview page). Benefit: review the change to the open file without leaving the studio. Not found in the studio: `GitClientDialog`, `DiffFiles`. This is a proposal; the dialogs work as built.
+
+**Suggested order** (new items only, by value to iTerminal)
+
+1. Item 27, then 29: build configurations are one argument on the .NET commands and apply to build, run, test and debug.
+2. Item 30, then 31: `dotnet format` as a command, then on save.
+3. Item 36: the Task List, built on the Errors tab's machinery.
+4. Items 28 and 40: launch profiles and a persisted Main program.
+5. Items 42, 37, 38: Git in the studio, starting with opening the existing Git client.
+6. Items 41 and 32: language server follow-ups on the existing client.
+7. Items 33, 34, 39, 35.
+
+**Candidates already covered**
+
+- Enforce code style at build: present (`DotNetToolchain.Analyze`, the `n` key and the Analysis tab).
+- Cleaning, building, testing from one explorer: present (`b`, `c`, `t`, `r`).
+- Saving the edited file: present (`SaveSource`, Ctrl+S); item 26 is built.
+- Persisting breakpoints: present; item 25 is built.
+- Git operations and file diff in the file manager: present outside the studio (`GitClientDialog`, `DiffFilesDialogCommand`); items 39 and 42 only concern the studio's editor.
+- Toggle comment and line tools in the editor: present (`TextEditorControl`).

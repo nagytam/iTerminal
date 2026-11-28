@@ -2350,6 +2350,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Removed {0} cache folders of {1}.</value>
   </data>
+  <data name="DevelopmentStudio.ConfigurationSet" xml:space="preserve">
+    <value>Build-Konfiguration: {0}.</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Abdeckungsmessung abgebrochen.</value>
   </data>
@@ -2415,6 +2418,9 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Build, clean, test, run the selected item</value>
+  </data>
+  <data name="DevelopmentStudio.HintConfiguration" xml:space="preserve">
+    <value>Build-Konfiguration umschalten: Debug oder Release (Release deaktiviert das Debuggen)</value>
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Abdeckung des ausgewählten Elements messen / ausgewähltes Python-Skript profilieren</value>
@@ -2517,6 +2523,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Hauptprojekt aufheben</value>
+  </data>
+  <data name="DevelopmentStudio.MenuConfiguration" xml:space="preserve">
+    <value>Konfiguration: {0}</value>
   </data>
   <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
     <value>Debuggen</value>
@@ -2625,6 +2634,9 @@
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>Found {0} items.</value>
+  </data>
+  <data name="DevelopmentStudio.ReleaseNoDebug" xml:space="preserve">
+    <value>Das Debuggen ist in der Release-Konfiguration deaktiviert. D schaltet auf Debug um; Strg+F5 startet ohne Debuggen.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Running {0} {1}...</value>

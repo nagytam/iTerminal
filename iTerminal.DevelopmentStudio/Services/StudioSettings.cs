@@ -16,6 +16,9 @@ public static class StudioSettings
     /// <summary>The SBOM format: <c>Xml</c> or <c>Json</c>.</summary>
     public const string SbomFormatKey = "DevelopmentStudio.SbomFormat";
 
+    /// <summary>The build configuration of the .NET commands: <c>Debug</c> or <c>Release</c>. Release disables debugging.</summary>
+    public const string BuildConfigurationKey = "DevelopmentStudio.BuildConfiguration";
+
     /// <summary>The host path of the .NET SDK new commands run with.</summary>
     public const string SdkHostKey = "DevelopmentStudio.SdkHost";
 
