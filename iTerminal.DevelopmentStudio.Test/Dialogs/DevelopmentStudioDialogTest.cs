@@ -1,5 +1,6 @@
 using ScreenBuffer = iConsole.Test.Core.ScreenBuffer;
 using iConsole.Controls;
+using iConsole.Display;
 using iConsole.Services;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
@@ -1124,6 +1125,27 @@ public class DevelopmentStudioDialogTest
 
         Assert.AreEqual(StudioPanelKind.Output, harness.Dialog.FocusedPanel, "the output panel has the focus after a build");
         Assert.IsTrue(harness.Dialog.OutputLines.Any(line => line.StartsWith("$ ", StringComparison.Ordinal)), "the Output tab lists the command that built");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheExplorerScrollsWithTheCursorAndShowsAScrollbar()
+    {
+        var scripts = Enumerable.Range(0, 60)
+            .Select(i => new DevelopmentProject($"tool{i:00}.py", DevelopmentLanguage.Python, DevelopmentProjectKind.Script, $"/src/tool{i:00}.py"))
+            .ToList();
+        var harness = await OpenAsync(scripts);
+
+        for (int i = 0; i < 45; i++)
+        {
+            await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        }
+
+        var screen = Render(harness.Dialog);
+        AssertScreenContains(screen, "tool45.py", "the cursor row is scrolled into view");
+        var rowsOnScreen = Enumerable.Range(0, (int)iTerminal.Core.Test.Helper.UiTestHelper.ScreenSize.Height).Select(row => screen.Line(row));
+        Assert.IsFalse(rowsOnScreen.Any(line => line.Contains("tool00.py", StringComparison.Ordinal)), "the rows above the cursor have scrolled out of the list");
+        AssertScreenContains(screen, Border.ArrowUp.ToString(), "the explorer draws its scrollbar");
     }
 
     [Timeout(60_000)]

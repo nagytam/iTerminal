@@ -1,7 +1,9 @@
 using iConsole.Buffers;
 using iConsole.Controls;
+using iConsole.Controls.ScrollBar;
 using iConsole.Data;
 using iConsole.Display;
+using iConsole.Model;
 using iConsole.Services;
 using iTerminal.DevelopmentStudio.Model;
 using IBuffer = iConsole.Buffers.IBuffer;
@@ -19,7 +21,11 @@ internal delegate void StudioPanelBandPainter(IBuffer buffer, int x, int y, int 
 /// </summary>
 internal sealed class StudioPanel : Control
 {
-    public StudioPanel(StudioPanelKind kind, IControl body, Func<string> heading, IThemeService themeService)
+    /// <param name="scrollModel">
+    /// The scroll model of the body, when the body is a list that scrolls. The panel then draws a scrollbar on the body's
+    /// right edge, and keeps the model's view size equal to the rows the body shows.
+    /// </param>
+    public StudioPanel(StudioPanelKind kind, IControl body, Func<string> heading, IThemeService themeService, ScrollableModel? scrollModel = null)
         : base(themeService)
     {
         Kind = kind;
@@ -27,7 +33,16 @@ internal sealed class StudioPanel : Control
         Heading = heading;
         CanFocus = false;
         AddControl(body);
+        if (scrollModel is not null)
+        {
+            _scrollModel = scrollModel;
+            _scrollBar = new ScrollBar(themeService) { ScrollableModel = scrollModel };
+            AddControl(_scrollBar);
+        }
     }
+
+    private readonly ScrollableModel? _scrollModel;
+    private readonly ScrollBar? _scrollBar;
 
     /// <summary>Which panel this is. The dialog docks, moves and resizes it by this kind.</summary>
     public StudioPanelKind Kind { get; }
@@ -52,8 +67,19 @@ internal sealed class StudioPanel : Control
     {
         int width = (int)ViewSize.Width;
         int height = (int)ViewSize.Height;
+
+        // With a scrollbar the body gives up its right-hand column to the bar.
+        int bodyWidth = _scrollBar is null ? width : Math.Max(0, width - 1);
         Body.Position = new Position(0, 1);
-        Body.ViewSize = new Size(Math.Max(0, width), Math.Max(0, height - 1));
+        Body.ViewSize = new Size(Math.Max(0, bodyWidth), Math.Max(0, height - 1));
+
+        if (_scrollBar is null || _scrollModel is null) return;
+
+        // The list sizes its scroll model only when its own layout runs, which a panel-sized body does not trigger, so the model
+        // is given the rows the body shows here: the cursor then scrolls the list to keep it on screen.
+        _scrollModel.ViewSize = Body.ViewSize;
+        _scrollBar.Position = new Position(Math.Max(0, width - 1), 1);
+        _scrollBar.ViewSize = new Size(1, Math.Max(0, height - 1));
     }
 
     public override void Draw(IBuffer buffer)

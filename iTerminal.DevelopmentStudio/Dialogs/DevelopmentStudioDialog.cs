@@ -353,7 +353,7 @@ public partial class DevelopmentStudioDialog : SplitPaneDialog
         // Each panel is a component of its own; the dock places them in the order _layout gives.
         _dock = new DockPanel(themeService) { Gap = 1 };
         _panels[StudioPanelKind.Editor] = new StudioPanel(StudioPanelKind.Editor, _editor, EditorTitle, themeService);
-        _panels[StudioPanelKind.Explorer] = new StudioPanel(StudioPanelKind.Explorer, _explorerListBox, ExplorerHeading, themeService);
+        _panels[StudioPanelKind.Explorer] = new StudioPanel(StudioPanelKind.Explorer, _explorerListBox, ExplorerHeading, themeService, _explorerListBox.ScrollableModel);
         _panels[StudioPanelKind.Output] = new StudioPanel(StudioPanelKind.Output, _outputListBox, () => string.Empty, themeService)
         {
             BandPainter = (buffer, x, y, width, colorScheme, focused) => DrawOutputTabs(buffer, x, y, width, colorScheme, focused),
