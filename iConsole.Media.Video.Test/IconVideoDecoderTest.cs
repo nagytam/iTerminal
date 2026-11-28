@@ -1,5 +1,4 @@
 using iConsole.Media.Video;
-using SkiaSharp;
 
 namespace iConsole.Media.Video.Test;
 
@@ -24,19 +23,16 @@ public class IconVideoDecoderTest
         }
     }
 
-    /// <summary>A valid .ico file holding one PNG image of the given size, filled with red.</summary>
+    /// <summary>
+    /// A valid .ico file of the given size, filled with red. The image is a device-independent bitmap (BITMAPINFOHEADER, 32 bits
+    /// per pixel, bottom-up, with an opaque AND mask), the form most icons use, rather than an embedded PNG: the PNG-in-ICO path
+    /// is the one that crashed the Windows test host.
+    /// </summary>
     private string WriteRedIcon(string name, int size)
     {
-        byte[] png;
-        using (var bitmap = new SKBitmap(size, size, SKColorType.Rgba8888, SKAlphaType.Opaque))
-        {
-            bitmap.Erase(new SKColor(255, 0, 0));
-            using var image = SKImage.FromBitmap(bitmap);
-            using SKData data = image.Encode(SKEncodedImageFormat.Png, 100);
-            png = data.ToArray();
-        }
-
-        // ICONDIR (6 bytes), one ICONDIRENTRY (16 bytes), then the PNG itself, which Windows Vista and later icons may hold.
+        // ICONDIR (6 bytes) and one ICONDIRENTRY (16 bytes) put the image at offset 22.
+        const int ImageOffset = 22;
+        int maskRowBytes = (size + 31) / 32 * 4;
         var stream = new MemoryStream();
         using (var writer = new BinaryWriter(stream))
         {
@@ -49,9 +45,33 @@ public class IconVideoDecoderTest
             writer.Write((byte)0);
             writer.Write((ushort)1);
             writer.Write((ushort)32);
-            writer.Write((uint)png.Length);
-            writer.Write((uint)22);
-            writer.Write(png);
+            writer.Write((uint)(40 + size * size * 4 + maskRowBytes * size));
+            writer.Write((uint)ImageOffset);
+
+            // BITMAPINFOHEADER: the height counts the colour and the mask rows together.
+            writer.Write((uint)40);
+            writer.Write(size);
+            writer.Write(size * 2);
+            writer.Write((ushort)1);
+            writer.Write((ushort)32);
+            writer.Write((uint)0);
+            writer.Write((uint)(size * size * 4));
+            writer.Write(0);
+            writer.Write(0);
+            writer.Write((uint)0);
+            writer.Write((uint)0);
+
+            // Pixels are blue, green, red, alpha, rows from the bottom up.
+            for (int i = 0; i < size * size; i++)
+            {
+                writer.Write((byte)0);
+                writer.Write((byte)0);
+                writer.Write((byte)255);
+                writer.Write((byte)255);
+            }
+
+            // The AND mask is all zero: every pixel is opaque.
+            writer.Write(new byte[maskRowBytes * size]);
         }
 
         Directory.CreateDirectory(_folder);
