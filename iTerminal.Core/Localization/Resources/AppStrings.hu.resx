@@ -2350,6 +2350,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>Rimosse {0} cartelle di cache di {1}.</value>
   </data>
+  <data name="DevelopmentStudio.ConfigurationSet" xml:space="preserve">
+    <value>Build-konfiguráció: {0}.</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Lefedettség-mérés megszakítva.</value>
   </data>
@@ -2412,6 +2415,9 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Compila, pulisci, testa o esegui l'elemento selezionato</value>
+  </data>
+  <data name="DevelopmentStudio.HintConfiguration" xml:space="preserve">
+    <value>Build-konfiguráció váltása: Debug vagy Release (a Release kikapcsolja a hibakeresést)</value>
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>A kijelölt elem lefedettségének mérése / a kijelölt Python-szkript profilozása</value>
@@ -2511,6 +2517,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Főprojekt törlése</value>
+  </data>
+  <data name="DevelopmentStudio.MenuConfiguration" xml:space="preserve">
+    <value>Konfiguráció: {0}</value>
   </data>
   <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
     <value>Hibakeresés</value>
@@ -2619,6 +2628,9 @@
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>Trovati {0} elementi.</value>
+  </data>
+  <data name="DevelopmentStudio.ReleaseNoDebug" xml:space="preserve">
+    <value>A hibakeresés ki van kapcsolva a Release konfigurációban. A D a Debugra vált; a Ctrl+F5 hibakeresés nélkül futtat.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Esecuzione di {0} {1}...</value>

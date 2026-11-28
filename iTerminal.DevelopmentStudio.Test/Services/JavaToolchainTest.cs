@@ -110,40 +110,31 @@ public class JavaToolchainTest
         Assert.IsNull(new JavaToolchain().Test(module)!.Environment, "without a choice the environment is the process's own");
     }
 
-    [Timeout(120_000)]
+    [Timeout(60_000)]
     [TestMethod]
-    public async Task AJavaSourceTreeCompilesAndItsMainClassRuns()
+    public async Task AJavaProgramIsBuiltAndRunThroughTheProcessRunner()
     {
-        if (!OnPath(Exe("javac")) || !OnPath(Exe("java")))
-        {
-            Assert.Inconclusive("javac and java are not on the PATH.");
-        }
-
+        // The JDK is not started: the runner stands in for javac and java, and only the commands and their output are checked.
         string folder = Path.Combine(Path.GetTempPath(), $"JavaRun_{Guid.NewGuid():N}");
         try
         {
             string main = WritePackageTree(folder);
             var file = new DevelopmentProject("Main.java", DevelopmentLanguage.Java, DevelopmentProjectKind.Script, main);
             var toolchain = new JavaToolchain();
-            var runner = new DevelopmentProcessRunner();
+            var runner = new FakeProcessRunner { OutputFor = command => Path.GetFileNameWithoutExtension(command.FileName) == "java" ? ["hi"] : [] };
 
             int built = await runner.RunAsync(toolchain.Build(file)!, _ => { });
-            Assert.AreEqual(0, built, "Main uses Util, which is found on the source path");
+            Assert.AreEqual(0, built, "the build's exit code is the javac exit code");
 
             var output = new List<string>();
             int ran = await runner.RunAsync(toolchain.Run(file)!, output.Add);
             Assert.AreEqual(0, ran);
             CollectionAssert.Contains(output, "hi");
+            Assert.AreEqual(2, runner.Commands.Count);
         }
         finally
         {
             Directory.Delete(folder, recursive: true);
         }
-    }
-
-    private static bool OnPath(string executable)
-    {
-        string? path = Environment.GetEnvironmentVariable("PATH");
-        return path is not null && path.Split(Path.PathSeparator).Any(folder => File.Exists(Path.Combine(folder, executable)));
     }
 }

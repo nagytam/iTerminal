@@ -218,7 +218,7 @@ public class DevelopmentStudioDialogTest
 
         var command = runner.Commands.Single();
         Assert.AreEqual(new DotnetSdk("9.0.100", "/sdk/9").HostPath, command.FileName);
-        CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx" }, command.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx", "-c", "Debug" }, command.Arguments.ToArray());
         CollectionAssert.Contains(harness.Dialog.OutputLines.ToList(), "Build succeeded.");
         await WaitForStatusAsync(harness.Dialog, "build succeeded");
     }
@@ -238,7 +238,7 @@ public class DevelopmentStudioDialogTest
         await WaitIdleAsync(harness.Dialog);
 
         var command = runner.Commands.Single();
-        CollectionAssert.AreEqual(new[] { "build", "/src/App/App.csproj" }, command.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "build", "/src/App/App.csproj", "-c", "Debug" }, command.Arguments.ToArray());
     }
 
     [Timeout(60_000)]
@@ -450,6 +450,28 @@ public class DevelopmentStudioDialogTest
         {
             Directory.Delete(folder, recursive: true);
         }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task DSwitchesToReleaseWhereF5RefusesToDebugAndBuildsInRelease()
+    {
+        var app = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App/App.csproj");
+        var runner = new FakeProcessRunner();
+        var harness = await OpenAsync([app], runner: runner);
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.D, 'd'));
+        await WaitForStatusAsync(harness.Dialog, "Build configuration: Release");
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F5));
+        await WaitForStatusAsync(harness.Dialog, "Debugging is disabled");
+
+        Assert.IsFalse(harness.Dialog.IsDebugging);
+        Assert.AreEqual(0, runner.Commands.Count, "a refused debug starts no build");
+
+        await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));
+        await WaitIdleAsync(harness.Dialog);
+
+        CollectionAssert.AreEqual(new[] { "build", "/src/App/App.csproj", "-c", "Release" }, runner.Commands.Single().Arguments.ToArray());
     }
 
     [Timeout(60_000)]
@@ -712,7 +734,7 @@ public class DevelopmentStudioDialogTest
     [TestMethod]
     public async Task ACommandsElapsedTimeIsWrittenToTheOutputAndTheStatus()
     {
-        var runner = new FakeProcessRunner { OnRun = _ => Thread.Sleep(1100), Output = ["Build succeeded."] };
+        var runner = new FakeProcessRunner { Output = ["Build succeeded."] };
         var harness = await OpenAsync([Solution, App, AppTest], runner: runner);
 
         await harness.Dialog.HandleKeyEventAsync(Key(ConsoleKey.B, 'b'));

@@ -15,11 +15,23 @@ public class DevelopmentToolchainsTest
         var project = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App/App.csproj");
         var toolchain = Toolchains.For(project);
 
-        CollectionAssert.AreEqual(new[] { "build", "/src/App/App.csproj" }, toolchain.Build(project)!.Arguments.ToArray());
-        CollectionAssert.AreEqual(new[] { "test", "/src/App/App.csproj" }, toolchain.Test(project)!.Arguments.ToArray());
-        CollectionAssert.AreEqual(new[] { "clean", "/src/App/App.csproj" }, toolchain.Clean(project)!.Arguments.ToArray());
-        CollectionAssert.AreEqual(new[] { "run", "--project", "/src/App/App.csproj" }, toolchain.Run(project)!.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "build", "/src/App/App.csproj", "-c", "Debug" }, toolchain.Build(project)!.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "test", "/src/App/App.csproj", "-c", "Debug" }, toolchain.Test(project)!.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "clean", "/src/App/App.csproj", "-c", "Debug" }, toolchain.Clean(project)!.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "run", "--project", "/src/App/App.csproj", "-c", "Debug" }, toolchain.Run(project)!.Arguments.ToArray());
         Assert.AreEqual(Path.GetDirectoryName("/src/App/App.csproj"), toolchain.Build(project)!.WorkingDirectory);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ReleaseConfigurationBuildsAndRunsInReleaseAndHasNoDebugger()
+    {
+        var project = new DevelopmentProject("App", DevelopmentLanguage.DotNet, DevelopmentProjectKind.DotNetProject, "/src/App/App.csproj");
+        var toolchain = new DotNetToolchain { Configuration = BuildConfiguration.Release };
+
+        CollectionAssert.AreEqual(new[] { "build", "/src/App/App.csproj", "-c", "Release" }, toolchain.Build(project)!.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "run", "--project", "/src/App/App.csproj", "-c", "Release" }, toolchain.Run(project)!.Arguments.ToArray());
+        Assert.IsNull(toolchain.PlanDebug(project, "/src/App/bin/Release/net11.0/App.dll", debugTests: false), "debugging is disabled in Release");
     }
 
     [Timeout(60_000)]
@@ -74,7 +86,7 @@ public class DevelopmentToolchainsTest
         var command = Toolchains.For(solution).Analyze(solution)!;
 
         // --no-incremental: an up-to-date build runs no analyzer, so it would report nothing.
-        CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx", "--no-incremental", "-p:EnforceCodeStyleInBuild=true", "-p:AnalysisLevel=latest-recommended" }, command.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx", "--no-incremental", "-p:EnforceCodeStyleInBuild=true", "-p:AnalysisLevel=latest-recommended", "-c", "Debug" }, command.Arguments.ToArray());
         Assert.IsNull(Toolchains.For(script).Analyze(script), "Python has no code analysis here");
     }
 
@@ -86,7 +98,7 @@ public class DevelopmentToolchainsTest
 
         var command = Toolchains.For(project).Coverage(project, "/tmp/results").Single();
 
-        CollectionAssert.AreEqual(new[] { "test", "/src/App.Test/App.Test.csproj", "--collect:XPlat Code Coverage", "--results-directory", "/tmp/results" }, command.Arguments.ToArray());
+        CollectionAssert.AreEqual(new[] { "test", "/src/App.Test/App.Test.csproj", "--collect:XPlat Code Coverage", "--results-directory", "/tmp/results", "-c", "Debug" }, command.Arguments.ToArray());
     }
 
     [Timeout(60_000)]

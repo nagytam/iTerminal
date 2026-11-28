@@ -2350,6 +2350,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>{0} Cache-Ordner von {1} entfernt.</value>
   </data>
+  <data name="DevelopmentStudio.ConfigurationSet" xml:space="preserve">
+    <value>Configuration de compilation : {0}.</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Mesure de couverture annulée.</value>
   </data>
@@ -2412,6 +2415,9 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Ausgewähltes Element bauen, säubern, testen, ausführen</value>
+  </data>
+  <data name="DevelopmentStudio.HintConfiguration" xml:space="preserve">
+    <value>Basculer la configuration de compilation : Debug ou Release (Release désactive le débogage)</value>
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Mesurer la couverture de l'élément sélectionné / profiler le script Python sélectionné</value>
@@ -2511,6 +2517,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Retirer le projet principal</value>
+  </data>
+  <data name="DevelopmentStudio.MenuConfiguration" xml:space="preserve">
+    <value>Configuration : {0}</value>
   </data>
   <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
     <value>Déboguer</value>
@@ -2619,6 +2628,9 @@
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>{0} Elemente gefunden.</value>
+  </data>
+  <data name="DevelopmentStudio.ReleaseNoDebug" xml:space="preserve">
+    <value>Le débogage est désactivé dans la configuration Release. D passe à Debug ; Ctrl+F5 exécute sans débogage.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Läuft: {0} {1} ...</value>

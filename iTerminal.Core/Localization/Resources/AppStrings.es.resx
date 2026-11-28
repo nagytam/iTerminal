@@ -2350,6 +2350,9 @@
   <data name="DevelopmentStudio.Cleaned" xml:space="preserve">
     <value>{0} dossiers de cache de {1} supprimés.</value>
   </data>
+  <data name="DevelopmentStudio.ConfigurationSet" xml:space="preserve">
+    <value>Configuración de compilación: {0}.</value>
+  </data>
   <data name="DevelopmentStudio.CoverageCancelled" xml:space="preserve">
     <value>Medición de cobertura cancelada.</value>
   </data>
@@ -2412,6 +2415,9 @@
   </data>
   <data name="DevelopmentStudio.HintCommands" xml:space="preserve">
     <value>Compiler, nettoyer, tester ou exécuter l'élément sélectionné</value>
+  </data>
+  <data name="DevelopmentStudio.HintConfiguration" xml:space="preserve">
+    <value>Cambiar la configuración de compilación: Debug o Release (Release desactiva la depuración)</value>
   </data>
   <data name="DevelopmentStudio.HintCoverage" xml:space="preserve">
     <value>Medir la cobertura del elemento seleccionado / perfilar el script de Python seleccionado</value>
@@ -2511,6 +2517,9 @@
   </data>
   <data name="DevelopmentStudio.MenuClearMain" xml:space="preserve">
     <value>Quitar el proyecto principal</value>
+  </data>
+  <data name="DevelopmentStudio.MenuConfiguration" xml:space="preserve">
+    <value>Configuración: {0}</value>
   </data>
   <data name="DevelopmentStudio.MenuDebug" xml:space="preserve">
     <value>Depurar</value>
@@ -2619,6 +2628,9 @@
   </data>
   <data name="DevelopmentStudio.Refreshed" xml:space="preserve">
     <value>{0} éléments trouvés.</value>
+  </data>
+  <data name="DevelopmentStudio.ReleaseNoDebug" xml:space="preserve">
+    <value>La depuración está desactivada en la configuración Release. D cambia a Debug; Ctrl+F5 ejecuta sin depurar.</value>
   </data>
   <data name="DevelopmentStudio.Running" xml:space="preserve">
     <value>Exécution de {0} {1}...</value>
